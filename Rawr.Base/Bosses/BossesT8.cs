@@ -6,6 +6,7 @@ using System.Text;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
+#if FALSE
 namespace Rawr.Bosses {
     // ===== The Vault of Archavon ====================
     public class EmalonTheStormWatcher : MultiDiffBoss {
@@ -1151,3 +1152,4 @@ namespace Rawr.Bosses {
         }
     }
 }
+#endif

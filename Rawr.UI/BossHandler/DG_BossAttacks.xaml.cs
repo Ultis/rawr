@@ -81,7 +81,12 @@ namespace Rawr.UI
                     MaxNumTargets     = (float)NUD_MaxNumTargs.Value,
                     AttackSpeed       = (float)NUD_AtkSpeed.Value,
                     AttackType        = (ATTACK_TYPES)CB_AtkType.SelectedIndex,
-                    UseParryHaste     = CK_UseParryHaste.IsChecked.GetValueOrDefault(false),
+                    // DoT Stats
+                    IsDoT             = CK_IsDoT.IsChecked.GetValueOrDefault(false),
+                    DamagePerTick     = (float)NUD_DmgPerTick.Value,
+                    TickInterval      = (float)NUD_TickInterval.Value,
+                    NumTicks          = (float)NUD_NumTicks.Value,
+                    // Advanced
                     Interruptable     = CK_Interruptable.IsChecked.GetValueOrDefault(false),
                     IsTheDefaultMelee = CK_IsDefaultMelee.IsChecked.GetValueOrDefault(false),
                     IsDualWielding    = CK_IsDualWielding.IsChecked.GetValueOrDefault(false),
@@ -133,61 +138,71 @@ namespace Rawr.UI
             if (LB_TheList.SelectedIndex != -1) {
                 Attack selected = LB_TheList.SelectedItem as Attack;
                 // Basics
-                TB_Name.Text = selected.Name;
-                CB_DmgType.SelectedIndex = (int)selected.DamageType;
-                NUD_DmgPerHit.Value = selected.DamagePerHit;
+                TB_Name.Text              = selected.Name;
+                CB_DmgType.SelectedIndex  = (int)selected.DamageType;
+                NUD_DmgPerHit.Value       = selected.DamagePerHit;
                 CK_DamageIsPerc.IsChecked = selected.DamageIsPerc;
-                NUD_MaxNumTargs.Value = selected.MaxNumTargets;
-                NUD_AtkSpeed.Value = selected.AttackSpeed;
-                CB_AtkType.SelectedIndex = (int)selected.AttackType;
-                CK_UseParryHaste.IsChecked = selected.UseParryHaste;
-                CK_Interruptable.IsChecked = selected.Interruptable;
+                NUD_MaxNumTargs.Value     = selected.MaxNumTargets;
+                NUD_AtkSpeed.Value        = selected.AttackSpeed;
+                CB_AtkType.SelectedIndex  = (int)selected.AttackType;
+                // DoT Stats
+                CK_IsDoT.IsChecked        = selected.IsDoT;
+                NUD_DmgPerTick.Value      = selected.DamagePerTick;
+                NUD_TickInterval.Value    = selected.TickInterval;
+                NUD_NumTicks.Value        = selected.NumTicks;
+                // Advanced
+                CK_Interruptable.IsChecked  = selected.Interruptable;
                 CK_IsDefaultMelee.IsChecked = selected.IsTheDefaultMelee;
                 CK_IsDualWielding.IsChecked = selected.IsDualWielding;
                 // Player Avoidances
-                CK_Missable.IsChecked = selected.Missable;
-                CK_Dodgable.IsChecked = selected.Dodgable;
+                CK_Missable.IsChecked  = selected.Missable;
+                CK_Dodgable.IsChecked  = selected.Dodgable;
                 CK_Parryable.IsChecked = selected.Parryable;
                 CK_Blockable.IsChecked = selected.Blockable;
                 // Targeting Includes
-                CK_AffectsMTank.IsChecked = selected.AffectsRole[PLAYER_ROLES.MainTank];
-                CK_AffectsOTank.IsChecked = selected.AffectsRole[PLAYER_ROLES.OffTank];
-                CK_AffectsTTank.IsChecked = selected.AffectsRole[PLAYER_ROLES.TertiaryTank];
-                CK_AffectsMeleeDPS.IsChecked = selected.AffectsRole[PLAYER_ROLES.MeleeDPS];
-                CK_AffectsRangedDPS.IsChecked = selected.AffectsRole[PLAYER_ROLES.RangedDPS];
+                CK_AffectsMTank.IsChecked          = selected.AffectsRole[PLAYER_ROLES.MainTank];
+                CK_AffectsOTank.IsChecked          = selected.AffectsRole[PLAYER_ROLES.OffTank];
+                CK_AffectsTTank.IsChecked          = selected.AffectsRole[PLAYER_ROLES.TertiaryTank];
+                CK_AffectsMeleeDPS.IsChecked       = selected.AffectsRole[PLAYER_ROLES.MeleeDPS];
+                CK_AffectsRangedDPS.IsChecked      = selected.AffectsRole[PLAYER_ROLES.RangedDPS];
                 CK_AffectsMainTankHealer.IsChecked = selected.AffectsRole[PLAYER_ROLES.MainTankHealer];
-                CK_AffectsOffTankHealer.IsChecked = selected.AffectsRole[PLAYER_ROLES.OffAndTertTankHealer];
-                CK_AffectsRaidHealer.IsChecked = selected.AffectsRole[PLAYER_ROLES.RaidHealer];
+                CK_AffectsOffTankHealer.IsChecked  = selected.AffectsRole[PLAYER_ROLES.OffAndTertTankHealer];
+                CK_AffectsRaidHealer.IsChecked     = selected.AffectsRole[PLAYER_ROLES.RaidHealer];
                 //
                 isEditing = true;
             } else {
                 // Reset the UI to a blank melee attack
                 // Basics
-                TB_Name.Text = "Melee";
-                CB_DmgType.SelectedIndex = (int)ItemDamageType.Physical;
-                NUD_DmgPerHit.Value = 0;
+                TB_Name.Text              = "Melee";
+                CB_DmgType.SelectedIndex  = (int)ItemDamageType.Physical;
+                NUD_DmgPerHit.Value       = 0;
                 CK_DamageIsPerc.IsChecked = false;
-                NUD_MaxNumTargs.Value = 1;
-                NUD_AtkSpeed.Value = 2.0;
-                CB_AtkType.SelectedIndex = (int)ATTACK_TYPES.AT_MELEE;
-                CK_UseParryHaste.IsChecked = false;
-                CK_Interruptable.IsChecked = false;
+                NUD_MaxNumTargs.Value     = 1;
+                NUD_AtkSpeed.Value        = 2.0;
+                CB_AtkType.SelectedIndex  = (int)ATTACK_TYPES.AT_MELEE;
+                // DoT Stats
+                CK_IsDoT.IsChecked        = false;
+                NUD_DmgPerTick.Value      = 0;
+                NUD_TickInterval.Value    = 0;
+                NUD_NumTicks.Value        = 0;
+                // Advanced
+                CK_Interruptable.IsChecked  = false;
                 CK_IsDefaultMelee.IsChecked = true;
                 CK_IsDualWielding.IsChecked = false;
                 // Player Avoidances
-                CK_Missable.IsChecked = true;
-                CK_Dodgable.IsChecked = true;
+                CK_Missable.IsChecked  = true;
+                CK_Dodgable.IsChecked  = true;
                 CK_Parryable.IsChecked = true;
                 CK_Blockable.IsChecked = true;
                 // Targeting Includes
-                CK_AffectsMTank.IsChecked = false;
-                CK_AffectsOTank.IsChecked = true;
-                CK_AffectsTTank.IsChecked = true;
-                CK_AffectsMeleeDPS.IsChecked = true;
-                CK_AffectsRangedDPS.IsChecked = true;
+                CK_AffectsMTank.IsChecked          = false;
+                CK_AffectsOTank.IsChecked          = true;
+                CK_AffectsTTank.IsChecked          = true;
+                CK_AffectsMeleeDPS.IsChecked       = true;
+                CK_AffectsRangedDPS.IsChecked      = true;
                 CK_AffectsMainTankHealer.IsChecked = true;
-                CK_AffectsOffTankHealer.IsChecked = true;
-                CK_AffectsRaidHealer.IsChecked = true;
+                CK_AffectsOffTankHealer.IsChecked  = true;
+                CK_AffectsRaidHealer.IsChecked     = true;
                 //
                 isEditing = false;
             }

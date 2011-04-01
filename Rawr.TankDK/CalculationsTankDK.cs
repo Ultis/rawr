@@ -552,9 +552,6 @@ Points individually may be important.",
 
             // Set the Fight Duration to no larger than the Berserk Timer
             // Question: What is the units for Berserk & Speed Timer? MS/S/M?
-            // Does the boss have parry haste?
-            bool bParryHaste = TDK.bo.DefaultMeleeAttack != null ? TDK.bo.DefaultMeleeAttack.UseParryHaste : false;
-
             #endregion
 
             #region ***** Survival Rating *****

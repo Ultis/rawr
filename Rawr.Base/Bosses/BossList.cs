@@ -189,7 +189,7 @@ namespace Rawr {
                 #endregion
                 #region ==== Tier 11 Content ====
                 // Baradin Hold
-                Argaloth[0],Argaloth[1],
+                Argaloth[0], Argaloth[1],
                 // Blackwing Descent
                 Magmaw[0],Magmaw[1],Magmaw[2],Magmaw[3],
                 OmnitronDefenseSystem[0],OmnitronDefenseSystem[1],OmnitronDefenseSystem[2],OmnitronDefenseSystem[3],
@@ -237,22 +237,22 @@ namespace Rawr {
                 });
             }
         }
-        /// <summary>Checks all the bosses to find the easiest of each stat and combines them to a single boss. Does NOT pick the easiest boss in the list but MAKES a new one. This IS NOT affected by filters.</summary>
+        /// <summary>Checks all the bosses to find the easiest of each stat and combines them to a single boss. Does NOT pick An Easy Boss in the list but MAKES a new one. This IS NOT affected by filters.</summary>
         public BossHandler TheEZModeBoss;
         /// <summary>Checks all the bosses to total up stats and average them out and combines them to a single boss, this is what most users should base their characters against. This IS NOT affected by filters.</summary>
         public BossHandler TheAvgBoss;
-        /// <summary>Checks all the bosses to find the worst of each stat and combines them to a single boss. Does NOT pick the hardest boss in the list but MAKES a new one. This IS NOT affected by filters.</summary>
+        /// <summary>Checks all the bosses to find the worst of each stat and combines them to a single boss. Does NOT pick An Impossible Boss in the list but MAKES a new one. This IS NOT affected by filters.</summary>
         public BossHandler TheHardestBoss;
-        /// <summary>Checks all the bosses to find the easiest of each stat and combines them to a single boss. Does NOT pick the easiest boss in the list but MAKES a new one. This IS affected by filters.</summary>
+        /// <summary>Checks all the bosses to find the easiest of each stat and combines them to a single boss. Does NOT pick An Easy Boss in the list but MAKES a new one. This IS affected by filters.</summary>
         public BossHandler TheEZModeBoss_Called;
         /// <summary>Checks all the bosses to total up stats and average them out and combines them to a single boss, this is what most users should base their characters against. This IS affected by filters.</summary>
         public BossHandler TheAvgBoss_Called;
-        /// <summary>Checks all the bosses to find the worst of each stat and combines them to a single boss. Does NOT pick the hardest boss in the list but MAKES a new one. This IS affected by filters.</summary>
+        /// <summary>Checks all the bosses to find the worst of each stat and combines them to a single boss. Does NOT pick An Impossible Boss in the list but MAKES a new one. This IS affected by filters.</summary>
         public BossHandler TheHardestBoss_Called;
         #endregion
         #region Functions
         // Called List Generation and Interaction
-        public enum FilterType { Content=0, Instance, Version, Name }
+        public enum FilterType { Content=0, Instance, Name }
         public BossHandler[] GenCalledList(FilterType ftype, string Filter) {
             if (Filter.Equals("All",StringComparison.OrdinalIgnoreCase)) {
                 // Resets the calledList to the full, unfiltered List
@@ -267,7 +267,6 @@ namespace Rawr {
                 switch (ftype) {
                     case FilterType.Content:  { if (boss.ContentString.Equals( Filter,StringComparison.OrdinalIgnoreCase)) { retList.Add(boss); } break; }
                     case FilterType.Instance: { if (boss.Instance.Equals(Filter,StringComparison.OrdinalIgnoreCase)) { retList.Add(boss); } break; }
-                    case FilterType.Version:  { if (boss.VersionString.Equals( Filter,StringComparison.OrdinalIgnoreCase)) { retList.Add(boss); } break; }
                     case FilterType.Name:     { if (boss.Name.Equals(    Filter,StringComparison.OrdinalIgnoreCase)) { retList.Add(boss); } break; }
                     default: { /*Invalid type, do nothing*/ break; }
                 }
@@ -279,7 +278,7 @@ namespace Rawr {
             TheHardestBoss_Called = GenTheHardestBoss(retList2);
             return calledList = retList2;
         }
-        // Name Calling
+        #region Name Calling
         public List<string> GetBossNames() {
             List<string> names = new List<string>() { };
             names.Add(TheEZModeBoss.Name);
@@ -297,7 +296,7 @@ namespace Rawr {
             names.Add(TheAvgBoss.Name);
             names.Add(TheHardestBoss.Name);
             foreach (BossHandler boss in calledList) {
-                string name = boss.ContentString + " : " + boss.Instance + " (" + boss.VersionString + ") " + boss.Name;
+                string name = boss.ContentString + " : " + boss.Instance + " : " + boss.Name;
                 names.Add(name);
             }
             return names;
@@ -325,7 +324,7 @@ namespace Rawr {
             else if (TheHardestBoss_Called.Name == name) { retBoss = TheHardestBoss_Called; }
             else {
                 foreach (BossHandler boss in calledList) {
-                    string checkName = boss.ContentString + " : " + boss.Instance + " (" + boss.VersionString + ") " + boss.Name;
+                    string checkName = boss.ContentString + " : " + boss.Instance + " : " + boss.Name;
                     if(checkName == name){
                         retBoss = boss;
                         break;
@@ -358,13 +357,6 @@ namespace Rawr {
                     foreach (BossHandler boss in calledList) { if (!names.Contains(boss.Name)) { names.Add(boss.Name); } }
                     break;
                 }
-                case FilterType.Version: {
-                    if (!names.Contains(TheEZModeBoss_Called.VersionString)) { names.Add(TheEZModeBoss_Called.VersionString); }
-                    if (!names.Contains(TheAvgBoss_Called.VersionString)) { names.Add(TheAvgBoss_Called.VersionString); }
-                    if (!names.Contains(TheHardestBoss_Called.VersionString)) { names.Add(TheHardestBoss_Called.VersionString); }
-                    foreach (BossHandler boss in calledList) { if (!names.Contains(boss.VersionString)) { names.Add(boss.VersionString); } }
-                    break;
-                }
                 default: { /*Invalid type, do nothing*/ break; }
             }
             return names;
@@ -381,8 +373,18 @@ namespace Rawr {
             string retVal = boss.GenInfoString();
             return retVal;
         }
+        #endregion
         // The Special Bosses
+        #region Convert Lists
         bool useGoodBoyAvg = true;
+        private bool IsContent25Man(BossHandler.TierLevels tier) {
+            if (tier == BossHandler.TierLevels.T11_25
+                || tier == BossHandler.TierLevels.T11_25H)
+            {
+                return true;
+            }
+            return false;
+        }
         public void ConvertList_Move(BossHandler[] passedList, BossHandler retboss) {
             BossHandler dummy = new BossHandler(); dummy.BerserkTimer = retboss.BerserkTimer;
             Impedance s;
@@ -490,7 +492,7 @@ namespace Rawr {
             //
             foreach (BossHandler boss in passedList)
             {
-                s = boss.DynamicCompiler_Disarm;
+                s = boss.DynamicCompiler_Dsrm;
                 if (s.Frequency != -1f) {
                     disarms.Add(s);
                 } else if (useGoodBoyAvg) {
@@ -505,8 +507,246 @@ namespace Rawr {
                 }
             }
             dummy.Disarms = disarms;
-            s = dummy.DynamicCompiler_Disarm;
+            s = dummy.DynamicCompiler_Dsrm;
             if (s.Frequency != -1) { retboss.Disarms.Add(s); }
+        }
+        #endregion
+
+        private void CalculateEZAttack(List<Attack> attacks, int maxPlayers, string name, bool defaultmelee, out Attack toAdd) {
+            bool isDot = attacks[0].IsDoT;
+            float perhit = BossHandler.StandardMeleePerHit[(int)BossHandler.TierLevels.T11_25H], // start at normal attack, some bosses could be less and it will pick that up
+                pertick = BossHandler.StandardMeleePerHit[(int)BossHandler.TierLevels.T11_25H],
+                numticks = 800,
+                tickinterval = 0,
+                numtrg = maxPlayers,
+                atkspd = 0f;
+            Dictionary<ATTACK_TYPES, int> ATCounts = new Dictionary<ATTACK_TYPES, int>() {
+                { ATTACK_TYPES.AT_MELEE, 0 },
+                { ATTACK_TYPES.AT_RANGED, 0 },
+                { ATTACK_TYPES.AT_AOE, 0 },
+                { ATTACK_TYPES.AT_DOT, 0 },
+            };
+            Dictionary<ItemDamageType, int> DTCounts = new Dictionary<ItemDamageType, int>() {
+                { ItemDamageType.Physical, 0 },
+                { ItemDamageType.Arcane, 0 },
+                { ItemDamageType.Fire, 0 },
+                { ItemDamageType.Frost, 0 },
+                { ItemDamageType.Holy, 0 },
+                { ItemDamageType.Nature, 0 },
+                { ItemDamageType.Shadow, 0 },
+            };
+            Dictionary<PLAYER_ROLES, int> ARCounts = new Dictionary<PLAYER_ROLES, int>() {
+                { PLAYER_ROLES.MainTank, 0 },
+                { PLAYER_ROLES.OffTank, 0 },
+                { PLAYER_ROLES.TertiaryTank, 0 },
+                { PLAYER_ROLES.MeleeDPS, 0 },
+                { PLAYER_ROLES.RangedDPS, 0 },
+                { PLAYER_ROLES.RaidHealer, 0 },
+                { PLAYER_ROLES.MainTankHealer, 0 },
+                { PLAYER_ROLES.OffAndTertTankHealer, 0 },
+            };
+            foreach (Attack a in attacks) {
+                perhit = Math.Min(perhit, a.DamagePerHit);
+                if (isDot) {
+                    pertick = Math.Min(pertick, a.DamagePerTick);
+                    numticks = Math.Min(numticks, a.NumTicks);
+                    tickinterval = Math.Max(tickinterval, a.TickInterval);
+                }
+                numtrg = Math.Min(numtrg, a.MaxNumTargets);
+                atkspd = Math.Max(atkspd, a.AttackSpeed);
+                ATCounts[a.AttackType]++;
+                DTCounts[a.DamageType]++;
+                for (int i = 0; i < (int)PLAYER_ROLES.RaidHealer; i++)
+                {
+                    if (a.AffectsRole[(PLAYER_ROLES)i]) { ARCounts[(PLAYER_ROLES)i]++; }
+                }
+            }
+            ATTACK_TYPES at = ATTACK_TYPES.AT_MELEE;
+            foreach(ATTACK_TYPES t in ATCounts.Keys){
+                if (ATCounts[t] > ATCounts[at]) { at = t; }
+                if (ATCounts[at] == ATCounts[ATTACK_TYPES.AT_MELEE]) { at = ATTACK_TYPES.AT_MELEE; }
+            }
+            ItemDamageType dt = ItemDamageType.Physical;
+            foreach (ItemDamageType t in DTCounts.Keys) {
+                if (DTCounts[t] > DTCounts[dt]) { dt = t; }
+                if (DTCounts[dt] == DTCounts[ItemDamageType.Physical]) { dt = ItemDamageType.Physical; }
+            }
+            toAdd = new Attack {
+                Name = name,
+                IsDoT = isDot,
+                AttackType = at,
+                DamageType = dt,
+                DamagePerHit = perhit,
+                DamagePerTick = isDot ? pertick : 0,
+                NumTicks = isDot ? numticks : 0,
+                TickInterval = isDot ? tickinterval : 0,
+                MaxNumTargets = numtrg,
+                AttackSpeed = atkspd,
+                IsTheDefaultMelee = defaultmelee,
+            };
+            foreach (PLAYER_ROLES pr in ARCounts.Keys) {
+                toAdd.AffectsRole[pr] = ARCounts[pr] > 0;
+            }
+        }
+        private void CalculateAvgAttack(List<Attack> attacks, int maxPlayers, string name, bool defaultmelee, out Attack toAdd) {
+            bool isDot = attacks[0].IsDoT;
+            float perhit = 0,
+                pertick = 0,
+                numticks = 0,
+                tickinterval = 0,
+                numtrg = 0,
+                atkspd = 0f;
+            Dictionary<ATTACK_TYPES, int> ATCounts = new Dictionary<ATTACK_TYPES, int>() {
+                { ATTACK_TYPES.AT_MELEE, 0 },
+                { ATTACK_TYPES.AT_RANGED, 0 },
+                { ATTACK_TYPES.AT_AOE, 0 },
+                { ATTACK_TYPES.AT_DOT, 0 },
+            };
+            Dictionary<ItemDamageType, int> DTCounts = new Dictionary<ItemDamageType, int>() {
+                { ItemDamageType.Physical, 0 },
+                { ItemDamageType.Arcane, 0 },
+                { ItemDamageType.Fire, 0 },
+                { ItemDamageType.Frost, 0 },
+                { ItemDamageType.Holy, 0 },
+                { ItemDamageType.Nature, 0 },
+                { ItemDamageType.Shadow, 0 },
+            };
+            Dictionary<PLAYER_ROLES, int> ARCounts = new Dictionary<PLAYER_ROLES, int>() {
+                { PLAYER_ROLES.MainTank, 0 },
+                { PLAYER_ROLES.OffTank, 0 },
+                { PLAYER_ROLES.TertiaryTank, 0 },
+                { PLAYER_ROLES.MeleeDPS, 0 },
+                { PLAYER_ROLES.RangedDPS, 0 },
+                { PLAYER_ROLES.RaidHealer, 0 },
+                { PLAYER_ROLES.MainTankHealer, 0 },
+                { PLAYER_ROLES.OffAndTertTankHealer, 0 },
+            };
+            foreach (Attack a in attacks) {
+                perhit += a.DamagePerHit;
+                if (isDot) {
+                    pertick += a.DamagePerTick;
+                    numticks += a.NumTicks;
+                    tickinterval += a.TickInterval;
+                }
+                numtrg += a.MaxNumTargets;
+                atkspd += a.AttackSpeed;
+                ATCounts[a.AttackType]++;
+                DTCounts[a.DamageType]++;
+                for (int i = 0; i < (int)PLAYER_ROLES.RaidHealer; i++)
+                {
+                    if (a.AffectsRole[(PLAYER_ROLES)i]) { ARCounts[(PLAYER_ROLES)i]++; }
+                }
+            }
+            perhit /= (float)attacks.Count;
+            if (isDot) {
+                pertick /= (float)attacks.Count;
+                numticks /= (float)attacks.Count;
+                tickinterval /= (float)attacks.Count;
+            }
+            numtrg /= (float)attacks.Count;
+            atkspd /= (float)attacks.Count;
+            ATTACK_TYPES at = ATTACK_TYPES.AT_MELEE;
+            foreach(ATTACK_TYPES t in ATCounts.Keys){
+                if (ATCounts[t] > ATCounts[at]) { at = t; }
+                if (ATCounts[at] == ATCounts[ATTACK_TYPES.AT_MELEE]) { at = ATTACK_TYPES.AT_MELEE; }
+            }
+            ItemDamageType dt = ItemDamageType.Physical;
+            foreach (ItemDamageType t in DTCounts.Keys) {
+                if (DTCounts[t] > DTCounts[dt]) { dt = t; }
+                if (DTCounts[dt] == DTCounts[ItemDamageType.Physical]) { dt = ItemDamageType.Physical; }
+            }
+            toAdd = new Attack {
+                Name = name,
+                IsDoT = isDot,
+                AttackType = at,
+                DamageType = dt,
+                DamagePerHit = perhit,
+                DamagePerTick = isDot ? pertick : 0,
+                NumTicks = isDot ? numticks : 0,
+                TickInterval = isDot ? tickinterval : 0,
+                MaxNumTargets = numtrg,
+                AttackSpeed = atkspd,
+                IsTheDefaultMelee = defaultmelee,
+            };
+            foreach (PLAYER_ROLES pr in ARCounts.Keys) {
+                toAdd.AffectsRole[pr] = ARCounts[pr] / attacks.Count > 0.50f;
+            }
+        }
+        private void CalculateHardAttack(List<Attack> attacks, int maxPlayers, string name, bool defaultmelee, out Attack toAdd) {
+            bool isDot = attacks[0].IsDoT;
+            float perhit = 0,
+                pertick = 0,
+                numticks = 0,
+                tickinterval = 12*60,
+                numtrg = 0,
+                atkspd = 12*60;
+            Dictionary<ATTACK_TYPES, int> ATCounts = new Dictionary<ATTACK_TYPES, int>() {
+                { ATTACK_TYPES.AT_MELEE, 0 },
+                { ATTACK_TYPES.AT_RANGED, 0 },
+                { ATTACK_TYPES.AT_AOE, 0 },
+                { ATTACK_TYPES.AT_DOT, 0 },
+            };
+            Dictionary<ItemDamageType, int> DTCounts = new Dictionary<ItemDamageType, int>() {
+                { ItemDamageType.Physical, 0 },
+                { ItemDamageType.Arcane, 0 },
+                { ItemDamageType.Fire, 0 },
+                { ItemDamageType.Frost, 0 },
+                { ItemDamageType.Holy, 0 },
+                { ItemDamageType.Nature, 0 },
+                { ItemDamageType.Shadow, 0 },
+            };
+            Dictionary<PLAYER_ROLES, int> ARCounts = new Dictionary<PLAYER_ROLES, int>() {
+                { PLAYER_ROLES.MainTank, 0 },
+                { PLAYER_ROLES.OffTank, 0 },
+                { PLAYER_ROLES.TertiaryTank, 0 },
+                { PLAYER_ROLES.MeleeDPS, 0 },
+                { PLAYER_ROLES.RangedDPS, 0 },
+                { PLAYER_ROLES.RaidHealer, 0 },
+                { PLAYER_ROLES.MainTankHealer, 0 },
+                { PLAYER_ROLES.OffAndTertTankHealer, 0 },
+            };
+            foreach (Attack a in attacks) {
+                perhit = Math.Max(perhit, a.DamagePerHit);
+                if (isDot) {
+                    pertick = Math.Max(pertick, a.DamagePerTick);
+                    numticks = Math.Max(numticks, a.NumTicks);
+                    tickinterval = Math.Min(tickinterval, a.TickInterval);
+                }
+                numtrg = Math.Max(numtrg, a.MaxNumTargets);
+                atkspd = Math.Min(atkspd, a.AttackSpeed);
+                ATCounts[a.AttackType]++;
+                DTCounts[a.DamageType]++;
+                for (int i = 0; i < (int)PLAYER_ROLES.RaidHealer; i++)
+                {
+                    if (a.AffectsRole[(PLAYER_ROLES)i]) { ARCounts[(PLAYER_ROLES)i]++; }
+                }
+            }
+            ATTACK_TYPES at = ATTACK_TYPES.AT_MELEE;
+            foreach(ATTACK_TYPES t in ATCounts.Keys){
+                if (ATCounts[t] > ATCounts[at]) { at = t; }
+                if (ATCounts[at] == ATCounts[ATTACK_TYPES.AT_MELEE]) { at = ATTACK_TYPES.AT_MELEE; }
+            }
+            ItemDamageType dt = ItemDamageType.Physical;
+            foreach (ItemDamageType t in DTCounts.Keys) {
+                if (DTCounts[t] > DTCounts[dt]) { dt = t; }
+                if (DTCounts[dt] == DTCounts[ItemDamageType.Physical]) { dt = ItemDamageType.Physical; }
+            }
+            toAdd = new Attack {
+                Name = name,
+                IsDoT = isDot,
+                AttackType = at,
+                DamageType = dt,
+                DamagePerHit = perhit,
+                DamagePerTick = isDot ? pertick : 0,
+                NumTicks = isDot ? numticks : 0,
+                TickInterval = isDot ? tickinterval : 0,
+                MaxNumTargets = numtrg,
+                AttackSpeed = atkspd,
+                IsTheDefaultMelee = defaultmelee,
+            };
+            foreach (PLAYER_ROLES pr in ARCounts.Keys) {
+                toAdd.AffectsRole[pr] = ARCounts[pr] > 0;
+            }
         }
         private BossHandler GenTheEZModeBoss(BossHandler[] passedList) {
             useGoodBoyAvg = true;
@@ -514,9 +754,15 @@ namespace Rawr {
             if (passedList.Length < 1) { return retboss; }
             float value = 0f;
             #region Info
-            retboss.Name = "The Easiest Boss";
-            value = (int)BossHandler.TierLevels.T11_0; foreach (BossHandler boss in passedList) { value = Math.Min(value, (int)boss.Content); } retboss.Content = (BossHandler.TierLevels)Math.Floor(value);
-            // Instance, Version, Comment Skipped
+            retboss.Name = "An Easy Boss";
+            value = (int)BossHandler.TierLevels.T11_25H; foreach (BossHandler boss in passedList) { value = Math.Min(value, (int)boss.Content); } retboss.Content = (BossHandler.TierLevels)Math.Floor(value);
+            // Instance Skipped
+            retboss.Comment = "An Easy Boss is a compilation of every Boss in your current filter. "
+                            + "It takes the lightest values from every point of reference such as Health, "
+                            + "Attack Damage, Movement and brings them into a single target.\r\nThe "
+                            + "Primary intention of An Easy Boss is to help fresh 85's with getting ready "
+                            + "to raid. Once you have the appropriate ilevels for raiding and can surpass the "
+                            + "requirements listed above, you should move on to The Average Boss.";
             #endregion
             #region Basics
             value = passedList[0].Level; foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.Level); } retboss.Level = (int)value;
@@ -541,13 +787,11 @@ namespace Rawr {
             value = 1f; foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.SpeedKillTimer); } retboss.SpeedKillTimer = (int)Math.Ceiling(value);
             value = 0f; foreach (BossHandler boss in passedList) { value = Math.Max(value, (float)boss.InBackPerc_Melee); } retboss.InBackPerc_Melee = value;
             value = 0f; foreach (BossHandler boss in passedList) { value = Math.Max(value, (float)boss.InBackPerc_Ranged); } retboss.InBackPerc_Ranged = value;
-            bool is25 = false;
-            foreach (BossHandler boss in passedList) { if (boss.Version == BossHandler.Versions.V_25N || boss.Version == BossHandler.Versions.V_25H) { is25 = true; break; } }
-            retboss.Max_Players = is25 ? 25 : 10;
-            value = 0f; foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.Min_Tanks); } retboss.Min_Tanks = (int)Math.Ceiling(value);
-            value = 0f; foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.Min_Healers); } retboss.Min_Healers = (int)Math.Ceiling(value);
+            value = 25f; foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.Min_Tanks); } retboss.Min_Tanks = (int)Math.Ceiling(value);
+            value = 25f; foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.Min_Healers); } retboss.Min_Healers = (int)Math.Ceiling(value);
             #endregion
             #region Offensive
+            #region Multi-Targets
             {   // Multi-targs
                 float f = -1, d = -1, n = 1;
                 value = 0; foreach (BossHandler boss in passedList) { if (boss.MultiTargsFreq <= 0) { value = 0f; break; } else { value = Math.Max(value, boss.MultiTargsFreq); } } f = (value >= retboss.BerserkTimer || value <= 0 ? 0000 : value);
@@ -555,78 +799,68 @@ namespace Rawr {
                 value = 0; foreach (BossHandler boss in passedList) { value = Math.Min(value, (float)boss.MultiTargsNum); } n = value;
                 if (!(f <= 0 || d <= 0 || n <= 0)) { retboss.Targets.Add(new TargetGroup() { Frequency = f, Duration = d, Chance = 1f, NumTargs = n, NearBoss = true, }); }
             }
+            #endregion
             #region Attacks
             {
                 {
+                    // Regular Melee
                     List<Attack> attacks = new List<Attack>();
                     foreach (BossHandler boss in passedList) {
-                        attacks.AddRange(boss.GetFilteredAttackList(ATTACK_TYPES.AT_MELEE));
+                        attacks.AddRange(boss.Attacks.FindAll(a => (a.AttackType == ATTACK_TYPES.AT_MELEE) && a.Validate && a.AttackSpeed < 5 && !a.DamageIsPerc && !a.IsDoT));
                     }
-                    float perhit = 500000, numtrg = retboss.Max_Players, atkspd = 0f;
-                    foreach (Attack a in attacks) {
-                        if(a.Name != "Invalid" && a.AttackSpeed > 0)
-                        {
-                            perhit = Math.Min(perhit, a.DamagePerHit);
-                            numtrg = Math.Min(numtrg, a.MaxNumTargets);
-                            atkspd = Math.Max(atkspd, a.AttackSpeed);
-                        }
+                    if (attacks.Count > 0) {
+                        Attack toAdd;
+                        CalculateEZAttack(attacks, retboss.Max_Players, "Easy Melee", true, out toAdd);
+                        retboss.Attacks.Add(toAdd);
                     }
-                    retboss.Attacks.Add(new Attack {
-                        Name = "Avg Melee",
-                        AttackType = ATTACK_TYPES.AT_MELEE,
-                        DamageType = ItemDamageType.Physical,
-                        DamagePerHit = perhit,
-                        MaxNumTargets = numtrg,
-                        AttackSpeed = atkspd,
-                        IsTheDefaultMelee = true,
-                    });
                 }
                 {
+                    // Special Melee
                     List<Attack> attacks = new List<Attack>();
                     foreach (BossHandler boss in passedList) {
-                        attacks.AddRange(boss.GetFilteredAttackList(ATTACK_TYPES.AT_RANGED));
+                        attacks.AddRange(boss.Attacks.FindAll(a => (a.AttackType == ATTACK_TYPES.AT_MELEE) && a.Validate && a.AttackSpeed >= 5 && !a.DamageIsPerc && !a.IsDoT));
                     }
-                    float perhit = 500000, numtrg = retboss.Max_Players, atkspd = 0f;
-                    foreach (Attack a in attacks) {
-                        if (a.Name != "Invalid" && a.AttackSpeed > 0)
-                        {
-                            perhit = Math.Min(perhit, a.DamagePerHit);
-                            numtrg = Math.Min(numtrg, a.MaxNumTargets);
-                            atkspd = Math.Max(atkspd, a.AttackSpeed);
-                        }
+                    if (attacks.Count > 0) {
+                        Attack toAdd;
+                        CalculateEZAttack(attacks, retboss.Max_Players, "Easy Special Melee", false, out toAdd);
+                        retboss.Attacks.Add(toAdd);
                     }
-                    retboss.Attacks.Add(new Attack {
-                        Name = "Avg Ranged",
-                        AttackType = ATTACK_TYPES.AT_RANGED,
-                        DamageType = ItemDamageType.Physical,
-                        DamagePerHit = perhit,
-                        MaxNumTargets = numtrg,
-                        AttackSpeed = atkspd,
-                    });
                 }
                 {
+                    // Ranged
                     List<Attack> attacks = new List<Attack>();
-                    foreach (BossHandler boss in passedList)
-                    {
-                        attacks.AddRange(boss.GetFilteredAttackList(ATTACK_TYPES.AT_AOE));
+                    foreach (BossHandler boss in passedList) {
+                        attacks.AddRange(boss.Attacks.FindAll(a => (a.AttackType == ATTACK_TYPES.AT_RANGED) && a.Validate && !a.DamageIsPerc && !a.IsDoT));
                     }
-                    float perhit = 500000, numtrg = retboss.Max_Players, atkspd = 0f;
-                    foreach (Attack a in attacks) {
-                        if (a.Name != "Invalid" && a.AttackSpeed > 0)
-                        {
-                            perhit = Math.Min(perhit, a.DamagePerHit);
-                            numtrg = Math.Min(numtrg, a.MaxNumTargets);
-                            atkspd = Math.Max(atkspd, a.AttackSpeed);
-                        }
+                    if (attacks.Count > 0) {
+                        Attack toAdd;
+                        CalculateEZAttack(attacks, retboss.Max_Players, "Easy Ranged", false, out toAdd);
+                        retboss.Attacks.Add(toAdd);
                     }
-                    retboss.Attacks.Add(new Attack {
-                        Name = "Avg AoE",
-                        AttackType = ATTACK_TYPES.AT_AOE,
-                        DamageType = ItemDamageType.Arcane,
-                        DamagePerHit = perhit,
-                        MaxNumTargets = numtrg,
-                        AttackSpeed = atkspd,
-                    });
+                }
+                {
+                    // AoE
+                    List<Attack> attacks = new List<Attack>();
+                    foreach (BossHandler boss in passedList) {
+                        attacks.AddRange(boss.Attacks.FindAll(a => (a.AttackType == ATTACK_TYPES.AT_AOE) && a.Validate && !a.DamageIsPerc && !a.IsDoT));
+                    }
+                    if (attacks.Count > 0) {
+                        Attack toAdd;
+                        CalculateEZAttack(attacks, retboss.Max_Players, "Easy AoE", false, out toAdd);
+                        retboss.Attacks.Add(toAdd);
+                    }
+                }
+                {
+                    // DoTs
+                    List<Attack> attacks = new List<Attack>();
+                    foreach (BossHandler boss in passedList) {
+                        attacks.AddRange(boss.Attacks.FindAll(a => a.IsDoT && a.Validate && !a.DamageIsPerc));
+                    }
+                    if (attacks.Count > 0) {
+                        Attack toAdd;
+                        CalculateEZAttack(attacks, retboss.Max_Players, "Easy DoT", false, out toAdd);
+                        retboss.Attacks.Add(toAdd);
+                    }
                 }
             }
             #endregion
@@ -682,8 +916,13 @@ namespace Rawr {
             float value = 0f;
             #region Info
             retboss.Name = "The Average Boss";
-            value = (int)BossHandler.TierLevels.T11_5; foreach (BossHandler boss in passedList) { value += (int)boss.Content; } retboss.Content = (BossHandler.TierLevels)Math.Floor(value / (float)passedList.Length);
-            // Instance, Version, Comment Skipped
+            value = 0; foreach (BossHandler boss in passedList) { value += (int)boss.Content; } retboss.Content = (BossHandler.TierLevels)Math.Floor(value / (float)passedList.Length);
+            // Instance Skipped
+            retboss.Comment = "The Average Boss is a compilation of every Boss in your current filter. "
+                            + "It takes averaged values from every point of reference such as Health, "
+                            + "Attack Damage, Movement and brings them into a single target.\r\nMost "
+                            + "users should perform calculations against this specialized Boss to get a "
+                            + "solid view of your current preparedness for any given fight.";
             #endregion
             #region Basics
             value = 0f; foreach (BossHandler boss in passedList) { value += boss.Level; } value /= passedList.Length; retboss.Level = (int)value;
@@ -708,13 +947,14 @@ namespace Rawr {
             value = 0f; foreach (BossHandler boss in passedList) { value += (float)boss.InBackPerc_Melee; } value /= passedList.Length; retboss.InBackPerc_Melee = value;
             value = 0f; foreach (BossHandler boss in passedList) { value += (float)boss.InBackPerc_Ranged; } value /= passedList.Length; retboss.InBackPerc_Ranged = value;
             bool is25 = false;
-            foreach (BossHandler boss in passedList) { if (boss.Version == BossHandler.Versions.V_25N || boss.Version == BossHandler.Versions.V_25H) { is25 = true; break; } }
+            foreach (BossHandler boss in passedList) { if (IsContent25Man(boss.Content)) { is25 = true; break; } }
             retboss.Max_Players = is25 ? 25 : 10;
             value = 0f; foreach (BossHandler boss in passedList) { value += boss.Min_Tanks; } value /= passedList.Length; retboss.Min_Tanks = (int)Math.Floor(value);
             value = 0f; foreach (BossHandler boss in passedList) { value += boss.Min_Healers; } value /= passedList.Length; retboss.Min_Healers = (int)Math.Floor(value);
             #endregion
             #region Offensive
-            {   // Multi-targs
+            #region MultiTargs
+            {
                 float f = -1, d = -1, n = 1;
                 value = 0f; foreach (BossHandler boss in passedList) { value += (boss.MultiTargsFreq > 0 && boss.MultiTargsFreq < boss.BerserkTimer) ? boss.MultiTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; f = value;
                 value = 0f; foreach (BossHandler boss in passedList) { value += boss.MultiTargsDur; } value /= passedList.Length; d = value;
@@ -724,138 +964,77 @@ namespace Rawr {
                     retboss.Targets.Add(new TargetGroup() { Frequency = f, Duration = d, Chance = 1f, NumTargs = n, NearBoss = true, });
                 }
             }
+            #endregion
             #region Attacks
             {
                 {
-                    List<Attack> attacks = new List<Attack>();
-                    foreach (BossHandler boss in passedList) {
-                        attacks.AddRange(boss.GetFilteredAttackList(ATTACK_TYPES.AT_MELEE));
-                    }
-                    if (attacks.Count > 0)
-                    {
-                        float perhit = 0f, numtrg = 0f, atkspd = 0f;
-                        int counted = 0;
-                        foreach (Attack a in attacks)
-                        {
-                            if (a.Name != "Invalid" && 0 < a.AttackSpeed && a.AttackSpeed < 10)
-                            {
-                                perhit += a.DamagePerHit;
-                                numtrg += a.MaxNumTargets;
-                                atkspd += a.AttackSpeed;
-                                counted++;
-                            }
-                        }
-                        perhit /= (float)counted;
-                        numtrg /= (float)counted;
-                        atkspd /= (float)counted;
-                        retboss.Attacks.Add(new Attack
-                        {
-                            Name = "Avg Melee",
-                            AttackType = ATTACK_TYPES.AT_MELEE,
-                            DamageType = ItemDamageType.Physical,
-                            DamagePerHit = perhit,
-                            MaxNumTargets = numtrg,
-                            AttackSpeed = atkspd,
-                            IsTheDefaultMelee = true,
-                        });
-                    }
-                }
-                {
+                    // Regular Melee
                     List<Attack> attacks = new List<Attack>();
                     foreach (BossHandler boss in passedList)
                     {
-                        attacks.AddRange(boss.GetFilteredAttackList(ATTACK_TYPES.AT_MELEE));
+                        attacks.AddRange(boss.Attacks.FindAll(a => (a.AttackType == ATTACK_TYPES.AT_MELEE) && a.Validate && a.AttackSpeed < 5 && !a.DamageIsPerc && !a.IsDoT));
                     }
                     if (attacks.Count > 0)
                     {
-                        float perhit = 0f, numtrg = 0f, atkspd = 0f;
-                        int counted = 0;
-                        foreach (Attack a in attacks)
-                        {
-                            if (a.Name != "Invalid" && a.AttackSpeed >= 10)
-                            {
-                                perhit += a.DamagePerHit;
-                                numtrg += a.MaxNumTargets;
-                                atkspd += a.AttackSpeed;
-                                counted++;
-                            }
-                        }
-                        perhit /= (float)counted;
-                        numtrg /= (float)counted;
-                        atkspd /= (float)counted;
-                        retboss.Attacks.Add(new Attack
-                        {
-                            Name = "Avg Special Melee",
-                            AttackType = ATTACK_TYPES.AT_MELEE,
-                            DamageType = ItemDamageType.Physical,
-                            DamagePerHit = perhit,
-                            MaxNumTargets = numtrg,
-                            AttackSpeed = atkspd,
-                            IsTheDefaultMelee = true,
-                        });
+                        Attack toAdd;
+                        CalculateAvgAttack(attacks, retboss.Max_Players, "Easy Melee", true, out toAdd);
+                        retboss.Attacks.Add(toAdd);
                     }
                 }
                 {
-                    List<Attack> attacks = new List<Attack>();
-                    foreach (BossHandler boss in passedList) {
-                        attacks.AddRange(boss.GetFilteredAttackList(ATTACK_TYPES.AT_RANGED));
-                    }
-                    if (attacks.Count > 0)
-                    {
-                        float perhit = 0f, numtrg = 0f, atkspd = 0f;
-                        foreach (Attack a in attacks)
-                        {
-                            if (a.Name != "Invalid" && a.AttackSpeed > 0)
-                            {
-                                perhit += a.DamagePerHit;
-                                numtrg += a.MaxNumTargets;
-                                atkspd += a.AttackSpeed;
-                            }
-                        }
-                        perhit /= (float)attacks.Count;
-                        numtrg /= (float)attacks.Count;
-                        atkspd /= (float)attacks.Count;
-                        retboss.Attacks.Add(new Attack
-                        {
-                            Name = "Avg Ranged",
-                            AttackType = ATTACK_TYPES.AT_RANGED,
-                            DamageType = ItemDamageType.Physical,
-                            DamagePerHit = perhit,
-                            MaxNumTargets = numtrg,
-                            AttackSpeed = atkspd,
-                        });
-                    }
-                }
-                {
+                    // Special Melee
                     List<Attack> attacks = new List<Attack>();
                     foreach (BossHandler boss in passedList)
                     {
-                        attacks.AddRange(boss.GetFilteredAttackList(ATTACK_TYPES.AT_AOE));
+                        attacks.AddRange(boss.Attacks.FindAll(a => (a.AttackType == ATTACK_TYPES.AT_MELEE) && a.Validate && a.AttackSpeed >= 5 && !a.DamageIsPerc && !a.IsDoT));
                     }
                     if (attacks.Count > 0)
                     {
-                        float perhit = 0f, numtrg = 0f, atkspd = 0f;
-                        foreach (Attack a in attacks)
-                        {
-                            if (a.Name != "Invalid" && a.AttackSpeed > 0)
-                            {
-                                perhit += a.DamagePerHit;
-                                numtrg += a.MaxNumTargets;
-                                atkspd += a.AttackSpeed;
-                            }
-                        }
-                        perhit /= (float)attacks.Count;
-                        numtrg /= (float)attacks.Count;
-                        atkspd /= (float)attacks.Count;
-                        retboss.Attacks.Add(new Attack
-                        {
-                            Name = "Avg AoE",
-                            AttackType = ATTACK_TYPES.AT_AOE,
-                            DamageType = ItemDamageType.Arcane,
-                            DamagePerHit = perhit,
-                            MaxNumTargets = numtrg,
-                            AttackSpeed = atkspd,
-                        });
+                        Attack toAdd;
+                        CalculateAvgAttack(attacks, retboss.Max_Players, "Easy Special Melee", false, out toAdd);
+                        retboss.Attacks.Add(toAdd);
+                    }
+                }
+                {
+                    // Ranged
+                    List<Attack> attacks = new List<Attack>();
+                    foreach (BossHandler boss in passedList)
+                    {
+                        attacks.AddRange(boss.Attacks.FindAll(a => (a.AttackType == ATTACK_TYPES.AT_RANGED) && a.Validate && !a.DamageIsPerc && !a.IsDoT));
+                    }
+                    if (attacks.Count > 0)
+                    {
+                        Attack toAdd;
+                        CalculateAvgAttack(attacks, retboss.Max_Players, "Easy Ranged", false, out toAdd);
+                        retboss.Attacks.Add(toAdd);
+                    }
+                }
+                {
+                    // AoE
+                    List<Attack> attacks = new List<Attack>();
+                    foreach (BossHandler boss in passedList)
+                    {
+                        attacks.AddRange(boss.Attacks.FindAll(a => (a.AttackType == ATTACK_TYPES.AT_AOE) && a.Validate && !a.DamageIsPerc && !a.IsDoT));
+                    }
+                    if (attacks.Count > 0)
+                    {
+                        Attack toAdd;
+                        CalculateAvgAttack(attacks, retboss.Max_Players, "Easy AoE", false, out toAdd);
+                        retboss.Attacks.Add(toAdd);
+                    }
+                }
+                {
+                    // DoTs
+                    List<Attack> attacks = new List<Attack>();
+                    foreach (BossHandler boss in passedList)
+                    {
+                        attacks.AddRange(boss.Attacks.FindAll(a => a.IsDoT && a.Validate && !a.DamageIsPerc));
+                    }
+                    if (attacks.Count > 0)
+                    {
+                        Attack toAdd;
+                        CalculateAvgAttack(attacks, retboss.Max_Players, "Easy DoT", false, out toAdd);
+                        retboss.Attacks.Add(toAdd);
                     }
                 }
             }
@@ -932,9 +1111,15 @@ namespace Rawr {
             if (passedList.Length < 1) { return retboss; }
             float value = 0f;
             #region Info
-            retboss.Name = "The Hardest Boss";
-            value = (int)BossHandler.TierLevels.T11_9; foreach (BossHandler boss in passedList) { value = Math.Max(value, (int)boss.Content); } retboss.Content = (BossHandler.TierLevels)Math.Ceiling(value);
-            // Instance, Version, Comment Skipped
+            retboss.Name = "An Impossible Boss";
+            value = 0; foreach (BossHandler boss in passedList) { value = Math.Max(value, (int)boss.Content); } retboss.Content = (BossHandler.TierLevels)Math.Ceiling(value);
+            // Instance Skipped
+            retboss.Comment = "An Impossible Boss is a compilation of every Boss in your current filter. "
+                            + "It takes the hardest values from every point of reference such as Health, "
+                            + "Attack Damage, Movement and brings them into a single target.\r\nThe "
+                            + "Primary intention of An Impossible Boss is really just for kicks, you are not "
+                            + "expected to ever surpass these values and no boss in the game would ever be "
+                            + "as difficult to beat.";
             #endregion
             #region Basics
             value = 0f; foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.Level); } retboss.Level = (int)value;
@@ -959,12 +1144,13 @@ namespace Rawr {
             value = 1.00f;      foreach (BossHandler boss in passedList) { value = (float)Math.Min(value, boss.InBackPerc_Melee   ); } retboss.InBackPerc_Melee  = value;
             value = 1.00f;      foreach (BossHandler boss in passedList) { value = (float)Math.Min(value, boss.InBackPerc_Ranged  ); } retboss.InBackPerc_Ranged = value;
             bool is25 = false;
-            foreach (BossHandler boss in passedList) { if (boss.Version == BossHandler.Versions.V_25N || boss.Version == BossHandler.Versions.V_25H) { is25 = true; break; } }
+            foreach (BossHandler boss in passedList) { if (IsContent25Man(boss.Content)) { is25 = true; break; } }
             retboss.Max_Players = is25 ? 25 : 10;
             value = 0; foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.Min_Tanks); } retboss.Min_Tanks = (int)value;
             value = 0; foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.Min_Healers); } retboss.Min_Healers = (int)value;
             #endregion
             #region Offensive
+            #region MultiTargs
             {   // Multi-targs
                 float f = -1, d = -1, n = 1;
                 value = 0; foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.MultiTargsFreq > 0 ? boss.MultiTargsFreq : value); } f = value;
@@ -972,78 +1158,78 @@ namespace Rawr {
                 value = 0; foreach (BossHandler boss in passedList) { value = Math.Max(value, (float)boss.MultiTargsNum); } n = value;
                 if (!(f == 0 || d == 0)) { retboss.Targets.Add(new TargetGroup() { Frequency = f, Duration = d, Chance = 1f, NumTargs = n, NearBoss = false, }); }
             }
+            #endregion
             #region Attacks
             {
                 {
-                    List<Attack> attacks = new List<Attack>();
-                    foreach (BossHandler boss in passedList) {
-                        attacks.AddRange(boss.GetFilteredAttackList(ATTACK_TYPES.AT_MELEE));
-                    }
-                    float perhit = 0f, numtrg = 0f, atkspd = 45f;
-                    foreach (Attack a in attacks) {
-                        if (a.Name != "Invalid" && a.AttackSpeed > 0)
-                        {
-                            perhit = Math.Max(perhit, a.DamagePerHit);
-                            numtrg = Math.Max(numtrg, a.MaxNumTargets);
-                            atkspd = Math.Min(atkspd, a.AttackSpeed);
-                        }
-                    }
-                    retboss.Attacks.Add(new Attack {
-                        Name = "Avg Melee",
-                        AttackType = ATTACK_TYPES.AT_MELEE,
-                        DamageType = ItemDamageType.Physical,
-                        DamagePerHit = perhit,
-                        MaxNumTargets = numtrg,
-                        AttackSpeed = atkspd,
-                        IsTheDefaultMelee = true,
-                    });
-                }
-                {
-                    List<Attack> attacks = new List<Attack>();
-                    foreach (BossHandler boss in passedList) {
-                        attacks.AddRange(boss.GetFilteredAttackList(ATTACK_TYPES.AT_RANGED));
-                    }
-                    float perhit = 0f, numtrg = 0f, atkspd = 45f;
-                    foreach (Attack a in attacks) {
-                        if (a.Name != "Invalid" && a.AttackSpeed > 0)
-                        {
-                            perhit = Math.Max(perhit, a.DamagePerHit);
-                            numtrg = Math.Max(numtrg, a.MaxNumTargets);
-                            atkspd = Math.Min(atkspd, a.AttackSpeed);
-                        }
-                    }
-                    retboss.Attacks.Add(new Attack {
-                        Name = "Avg Ranged",
-                        AttackType = ATTACK_TYPES.AT_RANGED,
-                        DamageType = ItemDamageType.Physical,
-                        DamagePerHit = perhit,
-                        MaxNumTargets = numtrg,
-                        AttackSpeed = atkspd,
-                    });
-                }
-                {
+                    // Regular Melee
                     List<Attack> attacks = new List<Attack>();
                     foreach (BossHandler boss in passedList)
                     {
-                        attacks.AddRange(boss.GetFilteredAttackList(ATTACK_TYPES.AT_AOE));
+                        attacks.AddRange(boss.Attacks.FindAll(a => (a.AttackType == ATTACK_TYPES.AT_MELEE) && a.Validate && a.AttackSpeed < 5 && !a.DamageIsPerc && !a.IsDoT));
                     }
-                    float perhit = 0f, numtrg = 0f, atkspd = 45f;
-                    foreach (Attack a in attacks) {
-                        if (a.Name != "Invalid" && a.AttackSpeed > 0)
-                        {
-                            perhit = Math.Max(perhit, a.DamagePerHit);
-                            numtrg = Math.Max(numtrg, a.MaxNumTargets);
-                            atkspd = Math.Min(atkspd, a.AttackSpeed);
-                        }
+                    if (attacks.Count > 0)
+                    {
+                        Attack toAdd;
+                        CalculateHardAttack(attacks, retboss.Max_Players, "Avg Melee", true, out toAdd);
+                        retboss.Attacks.Add(toAdd);
                     }
-                    retboss.Attacks.Add(new Attack {
-                        Name = "Avg AoE",
-                        AttackType = ATTACK_TYPES.AT_AOE,
-                        DamageType = ItemDamageType.Arcane,
-                        DamagePerHit = perhit,
-                        MaxNumTargets = numtrg,
-                        AttackSpeed = atkspd,
-                    });
+                }
+                {
+                    // Special Melee
+                    List<Attack> attacks = new List<Attack>();
+                    foreach (BossHandler boss in passedList)
+                    {
+                        attacks.AddRange(boss.Attacks.FindAll(a => (a.AttackType == ATTACK_TYPES.AT_MELEE) && a.Validate && a.AttackSpeed >= 5 && !a.DamageIsPerc && !a.IsDoT));
+                    }
+                    if (attacks.Count > 0)
+                    {
+                        Attack toAdd;
+                        CalculateHardAttack(attacks, retboss.Max_Players, "Avg Special Melee", false, out toAdd);
+                        retboss.Attacks.Add(toAdd);
+                    }
+                }
+                {
+                    // Ranged
+                    List<Attack> attacks = new List<Attack>();
+                    foreach (BossHandler boss in passedList)
+                    {
+                        attacks.AddRange(boss.Attacks.FindAll(a => (a.AttackType == ATTACK_TYPES.AT_RANGED) && a.Validate && !a.DamageIsPerc && !a.IsDoT));
+                    }
+                    if (attacks.Count > 0)
+                    {
+                        Attack toAdd;
+                        CalculateHardAttack(attacks, retboss.Max_Players, "Avg Ranged", false, out toAdd);
+                        retboss.Attacks.Add(toAdd);
+                    }
+                }
+                {
+                    // AoE
+                    List<Attack> attacks = new List<Attack>();
+                    foreach (BossHandler boss in passedList)
+                    {
+                        attacks.AddRange(boss.Attacks.FindAll(a => (a.AttackType == ATTACK_TYPES.AT_AOE) && a.Validate && !a.DamageIsPerc && !a.IsDoT));
+                    }
+                    if (attacks.Count > 0)
+                    {
+                        Attack toAdd;
+                        CalculateHardAttack(attacks, retboss.Max_Players, "Avg AoE", false, out toAdd);
+                        retboss.Attacks.Add(toAdd);
+                    }
+                }
+                {
+                    // DoTs
+                    List<Attack> attacks = new List<Attack>();
+                    foreach (BossHandler boss in passedList)
+                    {
+                        attacks.AddRange(boss.Attacks.FindAll(a => a.IsDoT && a.Validate && !a.DamageIsPerc));
+                    }
+                    if (attacks.Count > 0)
+                    {
+                        Attack toAdd;
+                        CalculateHardAttack(attacks, retboss.Max_Players, "Avg DoT", false, out toAdd);
+                        retboss.Attacks.Add(toAdd);
+                    }
                 }
             }
             #endregion

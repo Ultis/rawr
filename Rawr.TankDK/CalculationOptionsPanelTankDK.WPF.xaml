@@ -78,9 +78,9 @@
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Row="5" Grid.ColumnSpan="2" Text="{Binding Mode=OneWay, Path=szRotReport}" TextWrapping="NoWrap" FontFamily="Simplified Arabic Fixed" Margin="0,6,0,0" Tag="Ability Usage" />
+                <TextBlock Grid.Row="10" Text="{Binding Mode=OneWay, Path=szRotReport}" TextWrapping="NoWrap" FontFamily="Simplified Arabic Fixed" Margin="0,6,0,0" Tag="Ability Usage" />
+
             </Grid>
         </layoutToolkit:AccordionItem>
     </layoutToolkit:Accordion>

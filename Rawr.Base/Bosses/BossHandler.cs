@@ -78,7 +78,6 @@ namespace Rawr {
                     { // Tanks
                         Dictionary<string, bool> custom = DuplicateDefaultSupports();
                         custom["InBack_Melee"] = custom["InBack_Ranged"] = false; // The boss is focused on you
-                        _MyModelSupportsThis.Add("Bear", custom);
                         _MyModelSupportsThis.Add("ProtWarr", custom);
                         _MyModelSupportsThis.Add("TankDK", custom);
                     }
@@ -96,6 +95,29 @@ namespace Rawr {
                         _MyModelSupportsThis.Add("RestoSham", custom);
                         _MyModelSupportsThis.Add("Tree", custom);
                     }
+                    #region Bear
+                    {
+                        Dictionary<string, bool> custom = DuplicateDefaultSupports();
+#if !DEBUG
+                        custom["InBack_Melee"] = custom["InBack_Ranged"] = false; // Not Ranged
+                        custom["MobType"] = false; // Your target isn't the boss
+                        custom["TargetGroups"] = false; // Your target isn't these groups
+                        custom["BuffStates"] = false;
+                        custom["Defensive"] = false;
+                        custom["Moves"] = false;
+                        custom["Stuns"] = false;
+                        custom["Fears"] = false;
+                        custom["Roots"] = false;
+                        custom["Silences"] = false;
+                        custom["Disarms"] = false;
+                        custom["Invulnerables"] = false; // Not UI'd yet
+                        //custom["TimeSub35"] = false; // No abilities tied to this // we are going to show this now for the 35% target trinkets
+#else
+                        custom["InBack_Ranged"] = false; // Not Ranged
+#endif
+                        _MyModelSupportsThis.Add("Bear", custom);
+                    }
+                    #endregion
                     #region DPSWarr
                     {
                         Dictionary<string, bool> custom = DuplicateDefaultSupports();
@@ -186,7 +208,6 @@ namespace Rawr {
             this.Name = clone.Name;
             this.Content = clone.Content;
             this.Instance = clone.Instance;
-            this.Version = clone.Version;
             this.Comment = clone.Comment;
             // Basics
             this.Level = clone.Level;
@@ -204,7 +225,6 @@ namespace Rawr {
             // Offensive
             this.Targets = clone.Targets; this.MultiTargs = this.Targets != null && this.Targets.Count > 0;
             this.BuffStates = clone.BuffStates; this.HasBuffStates = this.BuffStates != null && this.BuffStates.Count > 0;
-            this.DoTs = clone.DoTs;
             this.Attacks = clone.Attacks;
             this.DamagingTargs = (Attacks != null && Attacks.Count > 0);
             // Defensive
@@ -232,10 +252,12 @@ namespace Rawr {
         public bool InBack { get { return INBACK; } set { INBACK = value; OnPropertyChanged("InBack"); } }
 
         private bool MULTITARGS = false;
+        private bool DAMAGINGTARGS = false;
+        private bool HASBUFFSTATES = false;
         [DefaultValue(false)]
         public bool MultiTargs { get { return MULTITARGS; } set { MULTITARGS = value; OnPropertyChanged("MultiTargs"); } }
-
-        private bool HASBUFFSTATES = false;
+        [DefaultValue(false)]
+        public bool DamagingTargs { get { return DAMAGINGTARGS; } set { DAMAGINGTARGS = value; OnPropertyChanged("DamagingTargs"); } }
         [DefaultValue(false)]
         public bool HasBuffStates { get { return HASBUFFSTATES; } set { HASBUFFSTATES = value; OnPropertyChanged("HasBuffStates"); } }
 
@@ -257,9 +279,6 @@ namespace Rawr {
         private bool DISARMINGTARGS = false;
         [DefaultValue(false)]
         public bool DisarmingTargs { get { return DISARMINGTARGS; } set { DISARMINGTARGS = value; OnPropertyChanged("DisarmingTargs"); } }
-        private bool DAMAGINGTARGS = false;
-        [DefaultValue(false)]
-        public bool DamagingTargs { get { return DAMAGINGTARGS; } set { DAMAGINGTARGS = value; OnPropertyChanged("DamagingTargs"); } }
 
         private double UNDER35PERC = 0.10d;
         [DefaultValue(0.10d)]
@@ -304,8 +323,8 @@ namespace Rawr {
 
         #region Variables
         #region Enums/Convertors
-        protected readonly static string[] BossTierStrings = new string[] {
-            "Tier  7.0",
+        public readonly static string[] BossTierStrings = new string[] {
+          /*"Tier  7.0",
             "Tier  7.5",
             "Tier  8.0",
             "Tier  8.5",
@@ -313,21 +332,15 @@ namespace Rawr {
             "Tier  9.5",
             "Tier 10.0",
             "Tier 10.5",
-            "Tier 10.9",
-            "Tier 11.0",
-            "Tier 11.5",
-            "Tier 11.9",
+            "Tier 10.9",*/
+            "Tier 11 10N",
+            "Tier 11 25N",
+            "Tier 11 10H",
+            "Tier 11 25H",
         };
-        protected readonly static string[] BossVersionStrings = new string[] {
-            "10 Man",
-            "25 Man",
-            "10 Man (H)",
-            "25 Man (H)",
-        };
-        public enum Versions   : int { V_10N = 0, V_25N = 1, V_10H = 2, V_25H = 3, V_10 = 0, V_25 = 1 } // last two are for file compatibility between versions
-        public enum TierLevels : int { T7_0 = 0, T7_5, T8_0, T8_5, T9_0, T9_5, T10_0, T10_5, T10_9, T11_0, T11_5, T11_9 }
+        public enum TierLevels : int { T11_10 = 0, T11_25, T11_10H, T11_25H, } /*T7_0 = 0, T7_5, T8_0, T8_5, T9_0, T9_5, T10_0, T10_5, T10_9,*/
         public static readonly float[] StandardMeleePerHit = new float[] {
-                 5000f*2f, //T7_0,
+               /*5000f*2f, //T7_0,
                 10000f*2f, //T7_5,
                 20000f*2f, //T8_0,
                 30000f*2f, //T8_5,
@@ -335,10 +348,11 @@ namespace Rawr {
                 50000f*2f, //T9_5,
                 60000f*2f, //T10_0,
                 70000f*2f, //T10_5,
-                80000f*2f, //T10_9,
-                100000f*2f, //T11_0,
-                110000f*2f, //T11_5,
-                120000f*2f, //T11_9,
+                80000f*2f, //T10_9,*/
+               100000f*2f, //T11_10,
+               110000f*2f, //T11_25,
+               120000f*2f, //T11_10H,
+               130000f*2f, //T11_25H,
         };
         #endregion
         #region ==== Info ====
@@ -349,9 +363,9 @@ namespace Rawr {
         private string _name = "Generic";
         // Content
         /// <summary>The Boss's Tier Content Level, T10, T11, etc</summary>
-        [DefaultValue(TierLevels.T11_0)]
+        [DefaultValue(TierLevels.T11_10)]
         public TierLevels Content { get { return _content; } set { _content = value; OnPropertyChanged("Content"); } }
-        private TierLevels _content = TierLevels.T11_0;
+        private TierLevels _content = TierLevels.T11_10;
         public string ContentString { get { return GetContentString(_content); } }
         protected string GetContentString(TierLevels c) { return BossTierStrings[(int)c]; }
         // Instance
@@ -359,12 +373,6 @@ namespace Rawr {
         [DefaultValue("None")]
         public string Instance { get { return _instance; } set { _instance = value; OnPropertyChanged("Instance"); } }
         private string _instance = "None";
-        // Version
-        [DefaultValue(Versions.V_10N)]
-        public Versions Version { get { return _version; } set { _version = value; OnPropertyChanged("Version"); } }
-        private Versions _version = Versions.V_10N;
-        public string VersionString { get { return GetVersionString(_version); } }
-        protected string GetVersionString(Versions v) { return BossVersionStrings[(int)v]; }
         // Comment
         [DefaultValue("No comments have been written for this Boss.")]
         public string Comment { get { return _comment; } set { _comment = value; OnPropertyChanged("Comment"); } }
@@ -408,8 +416,6 @@ namespace Rawr {
         #endregion
         #region ==== Offensive ====
         public List<TargetGroup> Targets = new List<TargetGroup>();
-        /// <summary>WARNING! This variable is not presently used!</summary>
-        private List<DoT> DOTS = new List<DoT>();
         private List<Attack> ATTACKS = new List<Attack>();
         public List<BuffState> BuffStates = new List<BuffState>();
         #endregion
@@ -579,11 +585,40 @@ namespace Rawr {
                 } else { return false; }
             }
         }
+        public string DynamicString_MultiTargs {
+            get {
+                string retVal = "";
+                //
+                if (Targets.Count > 0) {
+                    foreach (TargetGroup i in Targets) {
+                        retVal += i.ToString() + "\n";
+                    }
+                } else {
+                    retVal = "No Target Groups other than Boss.";
+                }
+                //
+                return retVal.Trim('\n');
+            }
+        }
         #endregion
         #region Attacks
         // ==== Attacks ====
-        public List<DoT> DoTs { get { return DOTS; } set { DOTS = value; } }// not actually used! Don't even try!
         public List<Attack> Attacks { get { return ATTACKS; } set { ATTACKS = value; } }
+        public string DynamicString_Attacks {
+            get {
+                string retVal = "";
+                //
+                if (Attacks.Count > 0) {
+                    foreach (Attack i in Attacks) {
+                        retVal += i.ToString() + "\n";
+                    }
+                } else {
+                    retVal = "No Attacks.";
+                }
+                //
+                return retVal.Trim('\n');
+            }
+        }
         public Attack DynamicCompiler_Attacks
         {
             get
@@ -594,12 +629,11 @@ namespace Rawr {
                     // Basics
                     Name = "Dynamic",
                     DamageType = ItemDamageType.Physical,
-                    DamagePerHit = 80f * 1000f,
+                    DamagePerHit = StandardMeleePerHit[(int)TierLevels.T11_10],
                     DamageIsPerc = false,
                     MaxNumTargets = 1,
                     AttackSpeed = 2.0f,
                     AttackType = ATTACK_TYPES.AT_MELEE,
-                    UseParryHaste = false,
                     Interruptable = false,
                     // Player Avoidances
                     Missable = true,
@@ -640,12 +674,11 @@ namespace Rawr {
                 // Basics
                 Name = "DynamicFiltered",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 80f * 1000f,
+                DamagePerHit = StandardMeleePerHit[(int)TierLevels.T11_10],
                 DamageIsPerc = false,
                 MaxNumTargets = 1,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
-                UseParryHaste = false,
                 Interruptable = false,
                 // Player Avoidances
                 Missable = true,
@@ -677,21 +710,26 @@ namespace Rawr {
             return retVal;
         }
         // ==== Methods for Pulling Boss DPS ==========
-        public List<Attack> GetFilteredAttackList(ATTACK_TYPES type) {
-            List<Attack> attacks = new List<Attack>();
-            if (Attacks.Count <= 0) { return attacks; } // make sure there were some TO put in there
-            foreach (Attack a in Attacks) { if (a.AttackType == type) { attacks.Add(a); } }
-            return attacks;
+        public List<Attack> GetFilteredAttackList(ATTACK_TYPES type, bool includeDoTs = false) {
+            //List<Attack> attacks = new List<Attack>();
+            //if (Attacks.Count <= 0) { return attacks; } // make sure there were some TO put in there
+            //foreach (Attack a in Attacks) { if (a.AttackType == type) { attacks.Add(a); } }
+            //return attacks;
+            return Attacks.FindAll(attack => attack.AttackType == type);
         }
-        public List<Attack> GetFilteredAttackList(ItemDamageType type)
-        {
-            List<Attack> attacks = new List<Attack>();
-            if (Attacks.Count <= 0) { return attacks; } // make sure there were some TO put in there
-            foreach (Attack a in Attacks) 
-            { 
-                if (a.DamageType == type) { attacks.Add(a); } 
-            }
-            return attacks;
+        public List<Attack> GetFilteredAttackList(ItemDamageType type) {
+            //List<Attack> attacks = new List<Attack>();
+            //if (Attacks.Count <= 0) { return attacks; } // make sure there were some TO put in there
+            //foreach (Attack a in Attacks) { if (a.DamageType == type) { attacks.Add(a); } }
+            //return attacks;
+            return Attacks.FindAll(attack => attack.DamageType == type);
+        }
+        public List<Attack> GetFilteredAttackList(Type type) {
+            //List<Attack> attacks = new List<Attack>();
+            //if (Attacks.Count <= 0) { return attacks; } // make sure there were some TO put in there
+            //foreach (Attack a in Attacks) { if (a.DamageType == type) { attacks.Add(a); } }
+            //return attacks;
+            return Attacks.FindAll(attack => (attack.GetType() == type));
         }
         /// <summary>Public function for the DPS Gets so we can re-use code. Includes a full player defend table.</summary>
         /// <param name="type">The type of attack to check: AT_MELEE, AT_RANGED, AT_AOE</param>
@@ -925,8 +963,8 @@ namespace Rawr {
                     // Averages out the Root Durations
                     float TotalaAoEDmg = 0;
                     foreach (Attack s in attacks) { TotalaAoEDmg += s.DamagePerHit; }
-                    float dur = TotalaAoEDmg / attacks.Count;
-                    return dur;
+                    float dmg = TotalaAoEDmg / attacks.Count;
+                    return dmg;
                 } else {
                     return 1500f;
                 }
@@ -957,6 +995,21 @@ namespace Rawr {
                 }
                 // Return results
                 return retVal;
+            }
+        }
+        public string DynamicString_BuffStates {
+            get {
+                string retVal = "";
+                //
+                if (BuffStates.Count > 0) {
+                    foreach (BuffState i in BuffStates) {
+                        retVal += i.ToString() + "\n";
+                    }
+                } else {
+                    retVal = "No Buff States.";
+                }
+                //
+                return retVal.Trim('\n');
             }
         }
         public float BuffStatesFreq {
@@ -1110,6 +1163,21 @@ namespace Rawr {
                 return retVal;
             }
         }
+        public string DynamicString_Move {
+            get {
+                string retVal = "";
+                //
+                if (Moves.Count > 0) {
+                    foreach (Impedance i in Moves) {
+                        retVal += i.ToString() + "\n";
+                    }
+                } else {
+                    retVal = "No Movement.";
+                }
+                //
+                return retVal.Trim('\n');
+            }
+        }
         public float MovingTargsFreq      { get { return Moves.Count > 0 ? Freq(Moves) : -1; } }
         public float MovingTargsDur       { get { return Moves.Count > 0 ? Dur(Moves) : 0; } }
         public float MovingTargsChance    { get { return Moves.Count > 0 ? Chance(Moves) : 0; } }
@@ -1140,6 +1208,21 @@ namespace Rawr {
                 }
                 // Return results
                 return retVal;
+            }
+        }
+        public string DynamicString_Stun {
+            get {
+                string retVal = "";
+                //
+                if (Stuns.Count > 0) {
+                    foreach (Impedance i in Stuns) {
+                        retVal += i.ToString() + "\n";
+                    }
+                } else {
+                    retVal = "No Stuns.";
+                }
+                //
+                return retVal.Trim('\n');
             }
         }
         public float StunningTargsFreq    { get { return Stuns.Count > 0 ? Freq(Stuns) : -1; } }
@@ -1173,6 +1256,21 @@ namespace Rawr {
                 }
                 // Return results
                 return retVal;
+            }
+        }
+        public string DynamicString_Fear {
+            get {
+                string retVal = "";
+                //
+                if (Fears.Count > 0) {
+                    foreach (Impedance i in Fears) {
+                        retVal += i.ToString() + "\n";
+                    }
+                } else {
+                    retVal = "No Fears.";
+                }
+                //
+                return retVal.Trim('\n');
             }
         }
         public float FearingTargsFreq     { get { return Fears.Count > 0 ? Freq(Fears) : -1; } }
@@ -1209,12 +1307,27 @@ namespace Rawr {
                 return retVal;
             }
         }
+        public string DynamicString_Root {
+            get {
+                string retVal = "";
+                //
+                if (Roots.Count > 0) {
+                    foreach (Impedance i in Roots) {
+                        retVal += i.ToString() + "\n";
+                    }
+                } else {
+                    retVal = "No Roots.";
+                }
+                //
+                return retVal.Trim('\n');
+            }
+        }
         public float RootingTargsFreq     { get { return Roots.Count > 0 ? Freq(Roots) : -1; } }
         public float RootingTargsDur      { get { return Roots.Count > 0 ? Dur(Roots) : 0; } }
         public float RootingTargsChance   { get { return Roots.Count > 0 ? Chance(Roots) : 0; } }
         public float RootingTargsTime     { get { return Roots.Count > 0 ? Time(Roots) : 0; } }
         // Silencing Targets
-        public Impedance DynamicCompiler_Silence
+        public Impedance DynamicCompiler_Slnc
         {
             get {
                 // Make one
@@ -1243,12 +1356,27 @@ namespace Rawr {
                 return retVal;
             }
         }
+        public string DynamicString_Slnc {
+            get {
+                string retVal = "";
+                //
+                if (Silences.Count > 0) {
+                    foreach (Impedance i in Silences) {
+                        retVal += i.ToString() + "\n";
+                    }
+                } else {
+                    retVal = "No Silences.";
+                }
+                //
+                return retVal.Trim('\n');
+            }
+        }
         public float SilencingTargsFreq   { get { return Silences.Count > 0 ? Freq(Silences) : -1; } }
         public float SilencingTargsDur    { get { return Silences.Count > 0 ? Dur(Silences) : 0; } }
         public float SilencingTargsChance { get { return Silences.Count > 0 ? Chance(Silences) : 0; } }
         public float SilencingTargsTime   { get { return Silences.Count > 0 ? Time(Silences) : 0; } }
         // Disarming Targets
-        public Impedance DynamicCompiler_Disarm
+        public Impedance DynamicCompiler_Dsrm
         {
             get {
                 // Make one
@@ -1274,6 +1402,21 @@ namespace Rawr {
                 }
                 // Return results
                 return retVal;
+            }
+        }
+        public string DynamicString_Dsrm {
+            get {
+                string retVal = "";
+                //
+                if (Disarms.Count > 0) {
+                    foreach (Impedance i in Disarms) {
+                        retVal += i.ToString() + "\n";
+                    }
+                } else {
+                    retVal = "No Disarms.";
+                }
+                //
+                return retVal.Trim('\n');
             }
         }
         public float DisarmingTargsFreq   { get { return Disarms.Count > 0 ? Freq(Disarms) : -1; } }
@@ -1320,14 +1463,14 @@ namespace Rawr {
             float tankdps = (TotalDPSNeeded * ((float)Min_Tanks / ((float)Min_Tanks / 2f + (float)room)) / (float)Min_Tanks) / 2f;
             string retVal = "";
             //
-            retVal += string.Format("Name: {0}\r\nContent: {1}\r\nInstance: {2} ({3})\r\nHealth: {4:#,##0}\r\n",
-                Name, ContentString.Replace("  "," "), Instance, VersionString, Health);
+            /*retVal += string.Format("Name: {0}\r\nContent: {1}\r\nInstance: {2}\r\nHealth: {3:#,##0}\r\n",
+                Name, ContentString.Replace("  "," "), Instance, Health);*/
             //
-            retVal += string.Format("Enrage Timer: {0:mm} min {0:ss} sec\r\nSpeed Kill Timer: {1:mm} min {1:ss} sec\r\n\r\n",
-                TimeSpan.FromSeconds(BerserkTimer), TimeSpan.FromSeconds(SpeedKillTimer));
+            /*retVal += string.Format("Enrage Timer: {0:mm} min {0:ss} sec\r\nSpeed Kill Timer: {1:mm} min {1:ss} sec\r\n\r\n",
+                TimeSpan.FromSeconds(BerserkTimer), TimeSpan.FromSeconds(SpeedKillTimer));*/
             //
-            retVal += string.Format("Raid Setup: {0:0} man ({1:0} Tanks {2:0} Healers {3:0} DPS)\r\n\r\n",
-                Max_Players, Min_Tanks, Min_Healers, room);
+            /*retVal += string.Format("Raid Setup: {0:0} man ({1:0} Tanks {2:0} Healers {3:0} DPS)\r\n\r\n",
+                Max_Players, Min_Tanks, Min_Healers, room);*/
             //
             retVal += string.Format("To beat the Enrage Timer you need {0:#,##0} Total DPS\r\n"
                 + "{1:#,##0} from each Tank {2:#,##0} from each DPS\r\n\r\n",
@@ -1377,7 +1520,7 @@ namespace Rawr {
 
         public override string ToString()
         {
-            return Content.ToString() + " : " + Instance + " : (" + Version.ToString() + ") : " + Name;
+            return Content.ToString() + " : " + Instance + " : " + Name;
         }
 
         #region Statics
@@ -1393,12 +1536,11 @@ namespace Rawr {
                         // Basics
                         Name = "Generated Default Melee Attack",
                         DamageType = ItemDamageType.Physical,
-                        DamagePerHit = 120f * 1000f,
+                        DamagePerHit = StandardMeleePerHit[(int)TierLevels.T11_10],
                         DamageIsPerc = false,
-                        MaxNumTargets = 1,
+                        MaxNumTargets = 1f,
                         AttackSpeed = 2.0f,
                         AttackType = ATTACK_TYPES.AT_MELEE,
-                        UseParryHaste = false,
                         Interruptable = false,
                         // Player Avoidances
                         Missable = true,
@@ -1428,8 +1570,7 @@ namespace Rawr {
             this.Add(new BossHandler());
             this.Add(new BossHandler());
             // Basic Setups we don't want to repeat over and over again
-            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T10_0, BossHandler.TierLevels.T10_5, BossHandler.TierLevels.T10_5, BossHandler.TierLevels.T10_9 };
-            Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H };
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H };
             // Fight Requirements
             Min_Tanks = new int[] { 2, 2, 2, 2 };
             Min_Healers = new int[] { 2, 5, 2, 5 };
@@ -1476,26 +1617,6 @@ namespace Rawr {
                 this[i].Content = value[i]; i++;
                 this[i].Content = value[i]; i++;
                 this[i].Content = value[i];
-            }
-        }
-        public BossHandler.Versions[] Version
-        {
-            get
-            {
-                return new BossHandler.Versions[] {
-                    this[0].Version,
-                    this[1].Version,
-                    this[2].Version,
-                    this[3].Version,
-                };
-            }
-            set
-            {
-                int i = 0;
-                this[i].Version = value[i]; i++;
-                this[i].Version = value[i]; i++;
-                this[i].Version = value[i]; i++;
-                this[i].Version = value[i];
             }
         }
         public string Comment
@@ -1834,7 +1955,6 @@ namespace Rawr {
             }
         }
         // Methods
-        public BossHandler BossByVersion(BossHandler.Versions v) { return this[(int)v]; }
         public Attack GenAStandardMelee(BossHandler.TierLevels content) {
             Attack retVal = new Attack {
                 Name = "Melee",

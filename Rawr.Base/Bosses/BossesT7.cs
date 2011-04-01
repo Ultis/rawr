@@ -6,6 +6,7 @@ using System.Text;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
+#if FALSE
 namespace Rawr.Bosses {
     // ===== Naxxramas ================================
     // Spider Wing
@@ -1955,3 +1956,4 @@ namespace Rawr.Bosses {
         }
     }
 }
+#endif

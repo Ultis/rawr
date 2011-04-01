@@ -53,13 +53,6 @@ namespace Rawr.ProtPaladin
             set { _BossAttackSpeedMagic = value; OnPropertyChanged("BossAttackSpeedMagic"); }
         }
 
-        private bool _UseParryHaste = false;
-        public bool UseParryHaste
-        {
-            get { return _UseParryHaste; }
-            set { _UseParryHaste = value; OnPropertyChanged("UseParryHaste"); }
-        }
-
         private float _ThreatScale = 10.0f;
         public float ThreatScale
         {

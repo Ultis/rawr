@@ -18,8 +18,7 @@ namespace Rawr.Bosses
             #region Info
             Name = "Pit Lord Argaloth";
             Instance = "Baradin Hold";
-            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_0, BossHandler.TierLevels.T11_5, BossHandler.TierLevels.T11_0, BossHandler.TierLevels.T11_0, };
-            Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, };
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
             #endregion
             #region Basics
             Health = new float[] { 21473000f, 64419000f, 0, 0 };
@@ -45,7 +44,7 @@ namespace Rawr.Bosses
                 {
                     Name = "MT Melee",
                     DamageType = ItemDamageType.Physical,
-                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)Content[i]],
                     MaxNumTargets = 1f,
                     AttackSpeed = this[i].BerserkTimer / ((this[i].BerserkTimer - ((15f + 3f) * 2f)) / 4),
                     AttackType = ATTACK_TYPES.AT_MELEE,
@@ -57,7 +56,7 @@ namespace Rawr.Bosses
                 {
                     Name = "OT Melee",
                     DamageType = ItemDamageType.Physical,
-                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)Content[i]],
                     MaxNumTargets = 1f,
                     AttackSpeed = this[i].BerserkTimer / ((this[i].BerserkTimer - ((15f + 3f) * 2f)) / 4),
                     AttackType = ATTACK_TYPES.AT_MELEE,
@@ -75,8 +74,8 @@ namespace Rawr.Bosses
                     DamageType = ItemDamageType.Fire,
                     AttackType = ATTACK_TYPES.AT_AOE,
                     // Half the raid is getting hit with about 40k damage per attack.
-                    DamagePerHit = new float[] { 200000, 475000, 0, 0 }[i] / (.5f * this[i].Max_Players),
-                    MaxNumTargets = this[i].Max_Players / 2f,
+                    DamagePerHit = new float[] { 200000, 475000, 200000 * 1.25f, 475000 * 1.25f }[i],
+                    MaxNumTargets = Max_Players[i] / 2f,
                     // Berserk time minus Firestorm and Firestorm cast time (Firestorm (15 second spell + 3 second cast time; spell is cast 2 times in the fight) - 264 seconds
                     // Frequency is 16.5 seconds, with a 1.25 second cast time - 17.75 seconds
                     // Divide those two numbers to get the number of times in the fight that the spell is cast - 14.87324
@@ -94,11 +93,12 @@ namespace Rawr.Bosses
                 // .5s = 3k, 1s = 6k, 1.5s = 9k, ..., 15s = 90k
                 // total damage for the full duration is 1,395,000
                 // Can be dispelled
-                this[i].Attacks.Add(new DoT
+                this[i].Attacks.Add(new Attack
                 {
                     Name = "Consuming Darkness",
+                    IsDoT = true,
                     DamageType = ItemDamageType.Shadow,
-                    DamagePerHit = (2925f / 3075f) / 2f,
+                    DamagePerHit = (2925f + 3075f) / 2f,
                     // Assume it takes 5 seconds to remove all.
                     NumTicks = 10f,
                     TickInterval = .5f,
@@ -121,15 +121,16 @@ namespace Rawr.Bosses
                 //        These patches deal 8,287 - 8,712 Fire damage as long as you are standing in them and they can appear (or will only appear?) directly under a players feet.
                 //        Most of the room will be covered in flames at the end of this ability (think of Mimiron hardmode) before all flames will disappear and he will resume
                 //        attacking you with his normal abilities. 50,000 yards range. 3 sec cast. Lasts 15 seconds. 
-                this[i].Attacks.Add(new DoT
+                this[i].Attacks.Add(new Attack
                 {
                     Name = "Fel Firestorm",
+                    IsDoT = true,
                     DamageType = ItemDamageType.Fire,
                     TickInterval = 1f,
                     NumTicks = 15f,
                     // Adjusting damage to take into account for the 100% fire damage debuff from Meteor Strike Debuff
                     DamagePerTick = ((8287f + 8712f) / 2f) * 2,
-                    MaxNumTargets = this[i].Max_Players,
+                    MaxNumTargets = Max_Players[i],
                     AttackSpeed = 133f,
 
                     Dodgable = false,
@@ -184,8 +185,7 @@ namespace Rawr.Bosses
             #region Info
             Name = "Magmaw";
             Instance = "Blackwing Descent";
-            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_0, BossHandler.TierLevels.T11_5, BossHandler.TierLevels.T11_5, BossHandler.TierLevels.T11_9, };
-            Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
             #endregion
             #region Basics
             Health = new float[] { 33497880f, 104297000f, 46895800f, 120016400f };
@@ -249,7 +249,7 @@ namespace Rawr.Bosses
                     NearBoss = false,
                 });
                 // If player touches a Parasite they get a dot that does damage
-                this[i].DoTs.Add(new DoT
+                this[i].Attacks.Add(new Attack
                 {
                     Name = "Parasitc Infection",
                     AttackType = ATTACK_TYPES.AT_RANGED,
@@ -330,7 +330,7 @@ namespace Rawr.Bosses
                     = true;
                 #endregion
                 #region Mangle & Ignition
-                this[i].DoTs.Add(new DoT
+                this[i].Attacks.Add(new Attack
                 {
                     Name = "Mangle",
                     AttackType = ATTACK_TYPES.AT_MELEE,
@@ -342,8 +342,8 @@ namespace Rawr.Bosses
                     MaxNumTargets = 1f,
                     AttackSpeed = 90f,
                 });
-                this[i].DoTs[this[i].DoTs.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
-                    = this[i].DoTs[this[i].DoTs.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
                     = true;
 
                 // Tanks gain a 50% armor reduction after being affected by a Mangle
@@ -359,7 +359,7 @@ namespace Rawr.Bosses
 
                 // Well Mangle is used, half the room is hit with Ignition that affects everyone
                 // Assume 3 seconds to get out
-                this[i].DoTs.Add(new DoT
+                this[i].Attacks.Add(new Attack
                 {
                     Name = "Ignition",
                     AttackType = ATTACK_TYPES.AT_MELEE,
@@ -371,21 +371,21 @@ namespace Rawr.Bosses
                     MaxNumTargets = Max_Players[i],
                     AttackSpeed = 90f,
                 });
-                this[i].DoTs[this[i].DoTs.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
-                    = this[i].DoTs[this[i].DoTs.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS]
-                    = this[i].DoTs[this[i].DoTs.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer]
-                    = this[i].DoTs[this[i].DoTs.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer]
-                    = this[i].DoTs[this[i].DoTs.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer]
-                    = this[i].DoTs[this[i].DoTs.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
-                    = this[i].DoTs[this[i].DoTs.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
-                    = this[i].DoTs[this[i].DoTs.Count - 1].AffectsRole[PLAYER_ROLES.MeleeDPS]
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MeleeDPS]
                     = true;
                 this[i].Moves.Add(new Impedance
                 {
                     Chance = 1f,
                     Duration = 3f * 1000f,
                     Breakable = true,
-                    Frequency = this[i].DoTs[this[i].DoTs.Count - 1].AttackSpeed,
+                    Frequency = this[i].Attacks[this[i].Attacks.Count - 1].AttackSpeed,
                 });
                 #endregion
                 #region Exposed Head
@@ -400,328 +400,339 @@ namespace Rawr.Bosses
                     Stats = new Stats() { BonusDamageMultiplier = 1f },
                 });
                 #endregion
-                #region Blazing Skeltons
-                this[i].Targets.Add(new TargetGroup
+                #region Blazing Skeletons
+                if (i == 2 || i == 3)
                 {
-                    NearBoss = true,
-                    NumTargs = 1f,
-                    Chance = new float[] { 0f, 0f, 1f, 1f }[i],
-                    // TODO:
-                    // does not spawn in P3
-                    Frequency = new float[] { 0f, 0f, 30f, 30f }[i],
-                    Duration = new float[] { 0f, 0f, 30f, 30f }[i],
-                });
-                this[i].Attacks.Add(new Attack
-                {
-                    Name = "Blazing Skeleton",
-                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)Content[i]],
-                    MaxNumTargets = new float[] { 0f, 0f, 1f, 1f }[i],
-                    AttackSpeed = 2.0f,
-                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    this[i].Targets.Add(new TargetGroup
+                    {
+                        NearBoss = true,
+                        NumTargs = 1f,
+                        Chance = new float[] { 0f, 0f, 1f, 1f }[i],
+                        // TODO:
+                        // does not spawn in P3
+                        Frequency = new float[] { 0f, 0f, 30f, 30f }[i],
+                        Duration = new float[] { 0f, 0f, 30f, 30f }[i],
+                    });
+                    this[i].Attacks.Add(new Attack
+                    {
+                        Name = "Blazing Skeleton",
+                        DamagePerHit = BossHandler.StandardMeleePerHit[(int)Content[i]],
+                        MaxNumTargets = new float[] { 1f, 1f, 1f, 1f }[i],
+                        AttackSpeed = 2.0f,
+                        AttackType = ATTACK_TYPES.AT_MELEE,
 
-                    Blockable = true,
-                    Dodgable = true,
-                    Parryable = true,
-                    Missable = true,
-                    UseParryHaste = false,
-                });
-                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank] = true;
+                        Blockable = true,
+                        Dodgable = true,
+                        Parryable = true,
+                        Missable = true,
+                    });
+                    this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank] = true;
+                }
 
                 // These spawn from a Blazing Inferno
-                this[i].Attacks.Add(new Attack
+                if (i == 2 || i == 3)
                 {
-                    Name = "Blazing Inferno",
-                    AttackType = ATTACK_TYPES.AT_RANGED,
-                    DamagePerHit = new float[] { 0f, 0f, (50875f + 59125f), (50875f + 59125f) }[i] / 2f,
-                    DamageType = ItemDamageType.Fire,
-                    MaxNumTargets = Max_Players[i],
-                    // TODO
-                    // Not cast in P2
-                    AttackSpeed = new float[] { 0f, 0f, 30f, 30f }[i],
+                    this[i].Attacks.Add(new Attack
+                    {
+                        Name = "Blazing Inferno",
+                        AttackType = ATTACK_TYPES.AT_RANGED,
+                        DamagePerHit = new float[] { 0f, 0f, (50875f + 59125f), (50875f + 59125f) }[i] / 2f,
+                        DamageType = ItemDamageType.Fire,
+                        MaxNumTargets = Max_Players[i],
+                        // TODO
+                        // Not cast in P2
+                        AttackSpeed = new float[] { 0f, 0f, 30f, 30f }[i],
 
-                    // Range needs to run out of it.
-                    Interruptable = true,
-                });
-                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
-                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS]
-                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer]
-                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer]
-                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer]
-                    = true;
-                this[i].Moves.Add(new Impedance
-                {
-                    // Max Players - 2 players for the MT and OT and assume 1/3rd of the remainder is melee
-                    Chance = ((Max_Players[i] - 2f) * 2f / 3f) / Max_Players[i],
-                    // takes about 2 seconds to move out of the Pillar
-                    Duration = 2000f,
-                });
+                        // Range needs to run out of it.
+                        Interruptable = true,
+                    });
+                    this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer]
+                        = true;
+                    this[i].Moves.Add(new Impedance
+                    {
+                        // Max Players - 2 players for the MT and OT and assume 1/3rd of the remainder is melee
+                        Chance = ((Max_Players[i] - 2f) * 2f / 3f) / Max_Players[i],
+                        // takes about 2 seconds to move out of the Pillar
+                        Duration = 2000f,
+                    });
+                }
 
                 // At 20% HP these start casting an 8 second cast that if not killed, will wipe the raid
-                this[i].Attacks.Add(new Attack
+                if (i == 2 || i == 3)
                 {
-                    Name = "Armageddon",
-                    AttackType = ATTACK_TYPES.AT_AOE,
-                    DamageType = ItemDamageType.Fire,
-                    DamagePerHit =  new float[] { 0f, 0f, (118750f + 131250f), (118750f + 131250f)}[i] / 2f,
-                    AttackSpeed = 30f,
+                    this[i].Attacks.Add(new Attack
+                    {
+                        Name = "Armageddon",
+                        AttackType = ATTACK_TYPES.AT_AOE,
+                        DamageType = ItemDamageType.Fire,
+                        DamagePerHit = new float[] { 0f, 0f, (118750f + 131250f), (118750f + 131250f) }[i] / 2f,
+                        AttackSpeed = 30f,
 
-                    Interruptable = true,
-                });
-               this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
-                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS]
-                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer]
-                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer]
-                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer]
-                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
-                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
-                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MeleeDPS]
-                    = true;
+                        Interruptable = true,
+                    });
+                    this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MeleeDPS]
+                        = true;
+                }
                 #endregion
                 #region Shadowflame Barrage
-                this[i].Attacks.Add(new Attack
+                if (i == 2 || i == 3)
                 {
-                    Name = "Shadowflame Barrage",
-                    DamageType = ItemDamageType.Shadow,
-                    DamagePerHit = new float[] { 0f, 0f, (22500f + 27500f), (36000f + 44000f) }[i] / 2f,
-                    MaxNumTargets = new float[] { 0f, 0f, 2f, 2f }[i],
-                    // attacks every second in P3 (at 30%)
-                    AttackSpeed = new float[] { 0f, 0f, (BerserkTimer[i] / (BerserkTimer[i] * 0.3f)), (BerserkTimer[i] / (BerserkTimer[i] * 0.3f)) }[i],
-                    AttackType = ATTACK_TYPES.AT_AOE,
-                });
-                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
-                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS]
-                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer]
-                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer]
-                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer]
-                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
-                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
-                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MeleeDPS]
-                    = true;
+                    this[i].Attacks.Add(new Attack
+                    {
+                        Name = "Shadowflame Barrage",
+                        DamageType = ItemDamageType.Shadow,
+                        DamagePerHit = new float[] { 0, 0, (22500f + 27500f), (36000f + 44000f) }[i] / 2f,
+                        MaxNumTargets = new float[] { 0f, 0f, 2f, 2f }[i],
+                        // attacks every second in P3 (at 30%)
+                        AttackSpeed = new float[] { 0f, 0f, (BerserkTimer[i] / (BerserkTimer[i] * 0.3f)), (BerserkTimer[i] / (BerserkTimer[i] * 0.3f)) }[i],
+                        AttackType = ATTACK_TYPES.AT_AOE,
+                    });
+                    this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MeleeDPS]
+                        = true;
+                }
                 #endregion
             }
             #endregion
             #endregion
             #region Defensive
-                Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
-                #endregion
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
             #region Impedances
-                for (int i = 0; i < 2; i++)
-                {
-                    //Moves;
-                    //Stuns;
-                    //Fears;
-                    //Roots;
-                    //Disarms;
-                }
-                TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
-                #endregion
-             /* TODO:
+            for (int i = 0; i < 2; i++)
+            {
+                //Moves;
+                //Stuns;
+                //Fears;
+                //Roots;
+                //Disarms;
+            }
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
+            /* TODO:
              */
         }
     }
             
     public class OmnitronDefenseSystem : MultiDiffBoss
+    {
+        public OmnitronDefenseSystem()
         {
-            public OmnitronDefenseSystem()
+            // If not listed here use values from defaults
+            #region Info
+            Name = "Omnitron Defense System";
+            Instance = "Blackwing Descent";
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
+            #endregion
+            #region Basics
+            Health = new float[] { 32209000f, 98790000f, 45080000f, 164000000f };
+            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
+            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
+            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
+            Max_Players = new int[] { 10, 25, 10, 25 };
+            Min_Tanks = new int[] { 2, 2, 2, 2 };
+            Min_Healers = new int[] { 3, 5, 3, 5 };
+            #endregion
+            #region Offensive
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            #region Attacks
+            for (int i = 0; i < 2; i++)
             {
-                // If not listed here use values from defaults
-                #region Info
-                Name = "Omnitron Defense System";
-                Instance = "Blackwing Descent";
-                Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_0, BossHandler.TierLevels.T11_5, BossHandler.TierLevels.T11_5, BossHandler.TierLevels.T11_9, };
-                Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
-                #endregion
-                #region Basics
-                Health = new float[] { 32209000f, 98790000f, 45080000f, 164000000f };
-                BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
-                SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
-                InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
-                InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
-                Max_Players = new int[] { 10, 25, 10, 25 };
-                Min_Tanks = new int[] { 2, 2, 2, 2 };
-                Min_Healers = new int[] { 3, 5, 3, 5 };
-                #endregion
-                #region Offensive
-                //MaxNumTargets = new double[] { 1, 1, 0, 0 };
-                //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
-                #region Attacks
-                for (int i = 0; i < 2; i++)
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+            }
+            #endregion
+            #endregion
+            #region Defensive
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
+            #region Impedances
+            for (int i = 0; i < 2; i++)
+            {
+                //Moves;
+                //Stuns;
+                //Fears;
+                //Roots;
+                //Disarms;
+            }
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
+            for (int i = 0; i < 4; i++)
+            {
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+                // "Magmatron, the fire golem"
+                //  Barrier (10) / (25) - Magmatron "shield ability" in which he forms a barrier around himself, absorbing 300k(10m)/900k(25m) damage, and if broken, causes a
+                //      Backdraft (10) / (25), which deals 75k(10m)/115k(25m) to all raid members.
+                //      Basically, when he casts this, stop attacking Mamatron
+                this[i].Attacks.Add(new Attack
                 {
-                    this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
-                }
-                #endregion
-                #endregion
-                #region Defensive
-                Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
-                #endregion
-                #region Impedances
-                for (int i = 0; i < 2; i++)
-                {
-                    //Moves;
-                    //Stuns;
-                    //Fears;
-                    //Roots;
-                    //Disarms;
-                }
-                TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
-                #endregion
-                for (int i = 0; i < 4; i++)
-                {
-                    this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
-                    // "Magmatron, the fire golem"
-                    //  Barrier (10) / (25) - Magmatron "shield ability" in which he forms a barrier around himself, absorbing 300k(10m)/900k(25m) damage, and if broken, causes a
-                    //      Backdraft (10) / (25), which deals 75k(10m)/115k(25m) to all raid members.
-                    //      Basically, when he casts this, stop attacking Mamatron
-                    this[i].Attacks.Add(new Attack
-                    {
-                        Name = "Barrier - Broken",
-                        DamageType = ItemDamageType.Fire,
+                    Name = "Barrier - Broken",
+                    DamageType = ItemDamageType.Fire,
                         DamagePerHit = (73125 + 76875) / 2f,
-                        MaxNumTargets = this[i].Max_Players,
-                        // In reality you don't want this ability to proc
-                        AttackSpeed = 0f,
-                    });
+                    MaxNumTargets = Max_Players[i],
+                    // In reality you don't want this ability to proc
+                    AttackSpeed = 0f,
+                });
 
-                    // Incineration Security Measure (10) / (25) - This ability is a raid-wide spell that is channeled and does 10k(10m)/15k(25m) fire damage every second
-                    //      for 4 seconds.
-                    // Has a 1.5 second cast time
-                    this[i].Attacks.Add(new DoT
-                    {
-                        Name = "Incineration Security Measure",
-                        DamageType = ItemDamageType.Fire,
+                // Incineration Security Measure (10) / (25) - This ability is a raid-wide spell that is channeled and does 10k(10m)/15k(25m) fire damage every second
+                //      for 4 seconds.
+                // Has a 1.5 second cast time
+                this[i].Attacks.Add(new Attack
+                {
+                    Name = "Incineration Security Measure",
+                    IsDoT = true,
+                    DamageType = ItemDamageType.Fire,
                         DamagePerTick = (14625 + 15375) / 2f,
-                        NumTicks = 4f,
-                        TickInterval = 1f,
-                        MaxNumTargets = this[i].Max_Players,
-                        // TODO: Get attack speed for this ability
-                        AttackSpeed = 0f,
-                    });
+                    NumTicks = 4f,
+                    TickInterval = 1f,
+                    MaxNumTargets = Max_Players[i],
+                    // TODO: Get attack speed for this ability
+                    AttackSpeed = 8f,
+                });
 
-                    // Acquiring Target -> Flamethrower (10) / (25) - Magmatron will randomly target a raid member and channel a beam on them for 4 seconds to acquire his target.
-                    //      After that time, Magmatron will use Flamethrower to that target and everyone directly behind him in a small cone, dealing 35k(10m)/50k(25m) damage
-                    //      every second for 4 seconds.
-                    this[i].Attacks.Add(new DoT
-                    {
-                        Name = "Acquiring Target - Flamethrower",
-                        DamageType = ItemDamageType.Fire,
-                        DamagePerTick = (34125 + 35875) / 2f,
-                        NumTicks = 4f,
-                        TickInterval = 1f,
-                        // You really only want one person be hit by this.
-                        // Assume it does not target a tank
-                        MaxNumTargets = 1f / (this[i].Max_Players - this[i].Min_Tanks),
-                        // TODO: get attack speed for this ability
-                        AttackSpeed = 0f,
-                    });
-                    this[i].Moves.Add(new Impedance()
-                    {
-                        // TODO: get attack speed for this ability
-                        Frequency = 0f,
-                        // You have 4 seconds to get out of the way
-                        Duration = 4f * 1000f,
-                        // Let's assume half the raid moves out of the way
-                        Chance = .5f,
-                        Breakable = false,
-                    });
-                    /* TODO:
-                    /* "Arcanotron, the arcane golem"
-                    * Arcane Annihilator (10) / (25) - 1 second cast time spell used on a randomly targeted raid member, but is interruptable. It deals 40k(10m)/50k(25m) arcane
-                    *      damage if it does go through.
-                    *      
-                    * Power Generator (10) / (25) - Creates a whirling pool of energy underneath a golem that increases the damage of any raid member or boss mob standing in it
-                    *      by 50% and restores 250(10m)/500(25m) mana per every 0.5 second (Similar to Rune of Power from Iron Council). Lasts for 25 seconds (however it appears
-                    *      as if the buff lasts for 10-15 seconds after the Power Generator despawns).
-                    *      
-                    * Power Conversion - Arcanotron's "shield ability" in which he gains a stacking buff, Converted Power, when taking damage that increases his magic damage and
-                    *      cast speed by 10% per stack. Currently can be removed with a mage's Spellsteal.
-                    *      
-                    * "Toxitron, the poison golem"
-                    * Chemical Cloud (10) / (25) - Large raidus debuff that increases damage taken by 50% and deals 3k(10m)/4k(25m) damamge every 5 seconds.
-                    * 
-                    * Poison Protocol (10) / (25) - Channeled for 9 seconds, and spawns 3(10m)/6(25m) Poison Bombs, one every 3(10m)/1.5(25m) seconds. The Poison Bombs (10) / (25)
-                    *      have 78k(10m)/78k(25m) health and fixate on a target, then explode if they reach their target, dealing 90k(10m)/125k(25m) nature damage to players within
-                    *      the area and spawn a Slime Pool which deals additional damage to players that stand in it.
-                    *      
-                    * Poison Soaked Shell - Toxitron's "shield ability" which causes player that attacks him to gain a stacking debuff, Soaked in Poison (10) / (25), which causes
-                    *      that player to take 2k(10m)/5.5k(25m) nature damage every 2 seconds, however, they also will deal 10k additional nature damage to targets of their attacks.
-                    *      
-                    * "Electron, electricity golem"
-                    * Lightning Conductor (10) / (25) - A randomly targeted raid member will get this debuff which has a 10(10m)/15(25m) second duration and deals 25k damage to raid
-                    *      members with 8 yards every 2 seconds.
-                    *      
-                    * Electrical Discharge (10) / (25) - A chain lightning type ability which deals 30k(10m)40k(25m) nature damage to a target and then to up to 2 additional targets
-                    *      within 8 yards, damage increasing 20% each jump.
-                    *      
-                    * Unstable Shield - Electron's "shield ability" which causes at Static Shock at an attackers location, dealing 40k nature damage to raiders within 7 yards.
-                    */
-                }
+                // Acquiring Target -> Flamethrower (10) / (25) - Magmatron will randomly target a raid member and channel a beam on them for 4 seconds to acquire his target.
+                //      After that time, Magmatron will use Flamethrower to that target and everyone directly behind him in a small cone, dealing 35k(10m)/50k(25m) damage
+                //      every second for 4 seconds.
+                this[i].Attacks.Add(new Attack
+                {
+                    Name = "Acquiring Target - Flamethrower",
+                    IsDoT = true,
+                    DamageType = ItemDamageType.Fire,
+                    DamagePerTick = (34125 + 35875) / 2f,
+                    NumTicks = 4f,
+                    TickInterval = 1f,
+                    // You really only want one person be hit by this.
+                    // Assume it does not target a tank
+                    MaxNumTargets = 1f,
+                    // TODO: get attack speed for this ability
+                    AttackSpeed = 20f,
+                });
+                this[i].Moves.Add(new Impedance()
+                {
+                    // TODO: get attack speed for this ability
+                    Frequency = 0f,
+                    // You have 4 seconds to get out of the way
+                    Duration = 4f * 1000f,
+                    // Let's assume half the raid moves out of the way
+                    Chance = .5f,
+                    Breakable = false,
+                });
+                /* TODO:
+                /* "Arcanotron, the arcane golem"
+                * Arcane Annihilator (10) / (25) - 1 second cast time spell used on a randomly targeted raid member, but is interruptable. It deals 40k(10m)/50k(25m) arcane
+                *      damage if it does go through.
+                *      
+                * Power Generator (10) / (25) - Creates a whirling pool of energy underneath a golem that increases the damage of any raid member or boss mob standing in it
+                *      by 50% and restores 250(10m)/500(25m) mana per every 0.5 second (Similar to Rune of Power from Iron Council). Lasts for 25 seconds (however it appears
+                *      as if the buff lasts for 10-15 seconds after the Power Generator despawns).
+                *      
+                * Power Conversion - Arcanotron's "shield ability" in which he gains a stacking buff, Converted Power, when taking damage that increases his magic damage and
+                *      cast speed by 10% per stack. Currently can be removed with a mage's Spellsteal.
+                *      
+                * "Toxitron, the poison golem"
+                * Chemical Cloud (10) / (25) - Large raidus debuff that increases damage taken by 50% and deals 3k(10m)/4k(25m) damamge every 5 seconds.
+                * 
+                * Poison Protocol (10) / (25) - Channeled for 9 seconds, and spawns 3(10m)/6(25m) Poison Bombs, one every 3(10m)/1.5(25m) seconds. The Poison Bombs (10) / (25)
+                *      have 78k(10m)/78k(25m) health and fixate on a target, then explode if they reach their target, dealing 90k(10m)/125k(25m) nature damage to players within
+                *      the area and spawn a Slime Pool which deals additional damage to players that stand in it.
+                *      
+                * Poison Soaked Shell - Toxitron's "shield ability" which causes player that attacks him to gain a stacking debuff, Soaked in Poison (10) / (25), which causes
+                *      that player to take 2k(10m)/5.5k(25m) nature damage every 2 seconds, however, they also will deal 10k additional nature damage to targets of their attacks.
+                *      
+                * "Electron, electricity golem"
+                * Lightning Conductor (10) / (25) - A randomly targeted raid member will get this debuff which has a 10(10m)/15(25m) second duration and deals 25k damage to raid
+                *      members with 8 yards every 2 seconds.
+                *      
+                * Electrical Discharge (10) / (25) - A chain lightning type ability which deals 30k(10m)40k(25m) nature damage to a target and then to up to 2 additional targets
+                *      within 8 yards, damage increasing 20% each jump.
+                *      
+                * Unstable Shield - Electron's "shield ability" which causes at Static Shock at an attackers location, dealing 40k nature damage to raiders within 7 yards.
+                */
             }
         }
+    }
 
     public class Maloriak : MultiDiffBoss
+    {
+        public Maloriak()
         {
-            public Maloriak()
-            {
-                // If not listed here use values from defaults
-                #region Info
-                Name = "Maloriak";
-                Instance = "Blackwing Descent";
-                Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_0, BossHandler.TierLevels.T11_5, BossHandler.TierLevels.T11_5, BossHandler.TierLevels.T11_9, };
-                Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
-                #endregion
-                #region Basics
-                Health = new float[] { 24700000f, 86650000f, 34631000f, 121310000f };
-                BerserkTimer = new int[] { 7 * 60, 12 * 60, 7 * 60, 12 * 60 };
-                SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
-                InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
-                InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
-                Max_Players = new int[] { 10, 25, 10, 25 };
-                Min_Tanks = new int[] { 2, 2, 3, 3 };
-                Min_Healers = new int[] { 3, 5, 3, 5 };
-                #endregion
-                #region Offensive
-                //MaxNumTargets = new double[] { 1, 1, 0, 0 };
-                //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
-                #region Attacks
+            // If not listed here use values from defaults
+            #region Info
+            Name = "Maloriak";
+            Instance = "Blackwing Descent";
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
+            #endregion
+            #region Basics
+            Health = new float[] { 24700000f, 86650000f, 34631000f, 121310000f };
+            BerserkTimer = new int[] { 7 * 60, 12 * 60, 7 * 60, 12 * 60 };
+            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
+            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
+            Max_Players = new int[] { 10, 25, 10, 25 };
+            Min_Tanks = new int[] { 2, 2, 3, 3 };
+            Min_Healers = new int[] { 3, 5, 3, 5 };
+            #endregion
+            #region Offensive
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            #region Attacks
                 for (int i = 0; i < 4; i++)
-                {
-                    this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
-                }
-                #endregion
-                #endregion
-                #region Defensive
-                Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
-                #endregion
-                #region Impedances
-                for (int i = 0; i < 2; i++)
-                {
-                    //Moves;
-                    //Stuns;
-                    //Fears;
-                    //Roots;
-                    //Disarms;
-                }
-                TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
-                #endregion
-                /* TODO:
+            {
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+            }
+            #endregion
+            #endregion
+            #region Defensive
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
+            #region Impedances
+            for (int i = 0; i < 2; i++)
+            {
+                //Moves;
+                //Stuns;
+                //Fears;
+                //Roots;
+                //Disarms;
+            }
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
+            /* TODO:
              * Melee - Hits relatively hard at 15k-30k(10m)/45k-65k(25m) after mitigation, and after the Green Vial, doubled because of Debilitating Slime for 15 seconds.
              * 
              * Release Aberrations - This is a 1.5 second summon used by the boss about every 30 seconds and can be interrupted. There will be 4 casts before each Green
@@ -780,61 +791,60 @@ namespace Rawr.Bosses
              * Acid Nova (10) / (25) - This ability is only used by Maloriak after he has used Release All. This ability is as a blast that will place a 10 second debuff on everyone
              *      in the raid which deals 5k(10m)/7.5k(25m) nature damage per second.
              */
-            }
         }
+    }
 
     public class Atramedes : MultiDiffBoss
+    {
+        public Atramedes()
         {
-            public Atramedes()
-            {
-                // If not listed here use values from defaults
-                #region Info
-                Name = "Atramedes";
-                Instance = "Blackwing Descent";
-                Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_0, BossHandler.TierLevels.T11_5, BossHandler.TierLevels.T11_5, BossHandler.TierLevels.T11_9, };
-                Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
-                #endregion
-                #region Basics
-                Health = new float[] { 32632000f, 97916880f, 45684800f, 103070400f };
-                BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
-                SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
-                InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
-                InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
-                Max_Players = new int[] { 10, 25, 10, 25 };
-                Min_Tanks = new int[] { 1, 1, 1, 1 };
-                Min_Healers = new int[] { 3, 5, 3, 5 };
-                #endregion
-                #region Offensive
-                //MaxNumTargets = new double[] { 1, 1, 0, 0 };
-                //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
-                #region Attacks
+            // If not listed here use values from defaults
+            #region Info
+            Name = "Atramedes";
+            Instance = "Blackwing Descent";
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
+            #endregion
+            #region Basics
+            Health = new float[] { 32632000f, 97916880f, 45684800f, 103070400f };
+            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
+            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
+            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
+            Max_Players = new int[] { 10, 25, 10, 25 };
+            Min_Tanks = new int[] { 1, 1, 1, 1 };
+            Min_Healers = new int[] { 3, 5, 3, 5 };
+            #endregion
+            #region Offensive
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            #region Attacks
                 for (int i = 0; i < 4; i++)
-                {
-                    this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
-                }
-                #endregion
-                #endregion
-                #region Defensive
-                Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
-                #endregion
-                #region Impedances
-                for (int i = 0; i < 2; i++)
-                {
-                    //Moves;
-                    //Stuns;
-                    //Fears;
-                    //Roots;
-                    //Disarms;
-                }
-                TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
-                #endregion
-                /* TODO:
+            {
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+            }
+            #endregion
+            #endregion
+            #region Defensive
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
+            #region Impedances
+            for (int i = 0; i < 2; i++)
+            {
+                //Moves;
+                //Stuns;
+                //Fears;
+                //Roots;
+                //Disarms;
+            }
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
+            /* TODO:
              * "Ancient Dwarven Shield" - There are 8 of these (4 on each side of the room) and can be interacted with by any raid member. Using one
              *      causes a Resonating Clash which clears all sound meters and interrupts any spells being cast by Atramedes, as well as giving him a
              *      temporary feeling of Vertigo which causes a 5 second stun where he is vulnerable and takes 50% increased damage. Afterwards, he will
@@ -880,104 +890,103 @@ namespace Rawr.Bosses
              *      (*Note: During this phase if the chased player's sound level is getting high, someone use use an Ancient Dwarven Shield to reset all sound meters, stun
              *      Atramedes, and force him to start pursuit again at the slowest speed following whoever caused the Resonating Clash.
              */
-            }
         }
+    }
 
     public class Chimaron : MultiDiffBoss
+    {
+        public Chimaron()
         {
-            public Chimaron()
-            {
-                // If not listed here use values from defaults
-                #region Info
-                Name = "Chimaron";
-                Instance = "Blackwing Descent";
-                Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_0, BossHandler.TierLevels.T11_5, BossHandler.TierLevels.T11_5, BossHandler.TierLevels.T11_9, };
-                Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
-                #endregion
-                #region Basics
-                Health = new float[] { 25939000f, 90616064f, 36246000f, 126776592f };
-                BerserkTimer = new int[] { 10 * 60, 10 * 60, 450, 450 };
-                SpeedKillTimer = new int[] { 6 * 60, 6 * 60, 6 * 60, 6 * 60 };
-                InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
-                InBackPerc_Ranged = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
-                Max_Players = new int[] { 10, 25, 10, 25 };
-                Min_Tanks = new int[] { 2, 3, 2, 3 };
-                Min_Healers = new int[] { 3, 6, 3, 6 };
-                #endregion
-                #region Offensive
-                //MaxNumTargets = new double[] { 1, 1, 0, 0 };
-                //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
-                #region Attacks
+            // If not listed here use values from defaults
+            #region Info
+            Name = "Chimaron";
+            Instance = "Blackwing Descent";
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
+            #endregion
+            #region Basics
+            Health = new float[] { 25939000f, 90616064f, 36246000f, 126776592f };
+            BerserkTimer = new int[] { 10 * 60, 10 * 60, 450, 450 };
+            SpeedKillTimer = new int[] { 6 * 60, 6 * 60, 6 * 60, 6 * 60 };
+            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
+            InBackPerc_Ranged = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
+            Max_Players = new int[] { 10, 25, 10, 25 };
+            Min_Tanks = new int[] { 2, 3, 2, 3 };
+            Min_Healers = new int[] { 3, 6, 3, 6 };
+            #endregion
+            #region Offensive
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            #region Attacks
                 for (int i = 0; i < 4; i++)
+            {
+                // Chimaeron attack extremely slowly with 4-5 second between swings, however, hit hits are massive and deal 50k-65k(10m)/60k-75k(25m)
+                //      after mitigation and before the damage taken debuff he can place on tanks.
+                this[i].Attacks.Add(new Attack
                 {
-                    // Chimaeron attack extremely slowly with 4-5 second between swings, however, hit hits are massive and deal 50k-65k(10m)/60k-75k(25m)
-                    //      after mitigation and before the damage taken debuff he can place on tanks.
-                    this[i].Attacks.Add(new Attack
-                    {
-                        Name = "Melee",
-                        DamageType = ItemDamageType.Physical,
-                        DamagePerHit = BossHandler.StandardMeleePerHit[(int)Content[i]] * 2f,
-                        MaxNumTargets = 1f,
-                        AttackSpeed = 4.0f,
-                        AttackType = ATTACK_TYPES.AT_MELEE,
+                    Name = "Melee",
+                    DamageType = ItemDamageType.Physical,
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)Content[i]] * 2f,
+                    MaxNumTargets = 1f,
+                    AttackSpeed = 4.0f,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
 
-                        IsTheDefaultMelee = true,
-                    });
-                    this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
-                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
-                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
-                        = true;
+                    IsTheDefaultMelee = true,
+                });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = true;
 
-                    this[i].Attacks.Add(new Attack
-                    {
-                        // Assume that players are staying above the 10k mark for bile
-                        Name = "Caustic Slime in P1",
-                        DamageType = ItemDamageType.Nature,
-                        DamagePerHit = .999999f,
-                        DamageIsPerc = true,
-                        MaxNumTargets = new float[] { 1, 3, 1, 3 }[i],
-                        AttackType = ATTACK_TYPES.AT_AOE,
-                        // Only happens in P1 and until 23% where he stops casting it.
+                this[i].Attacks.Add(new Attack
+                {
+                    // Assume that players are staying above the 10k mark for bile
+                    Name = "Caustic Slime in P1",
+                    DamageType = ItemDamageType.Nature,
+                    DamagePerHit = .999999f,
+                    DamageIsPerc = true,
+                    MaxNumTargets = new float[] { 1, 3, 1, 3 }[i],
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    // Only happens in P1 and until 23% where he stops casting it.
                         AttackSpeed = this[i].BerserkTimer / ((((this[i].BerserkTimer * .80f) / 60f) / 2f) / 15f),
-                    });
-                    this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MeleeDPS] = true;
-                    this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS] = true;
-                    this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer] = true;
-                    this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer] = true;
-                    this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer] = true;
-                    this[i].BuffStates.Add(new BuffState
-                    {
-                        Name = "Caustic Slime in P1",
-                        Stats = new Stats() { PhysicalHit = -0.75f, SpellHit = -0.75f },
-                        Duration = 3f * 1000f,
-                        Frequency = this[i].BerserkTimer / ((((this[i].BerserkTimer * .77f) / 60f) / 2f) / 15f),
-                        Chance = new float[] { 1, 3, 1, 3 }[i] / (this[i].Max_Players - this[i].Min_Tanks),
-                        Breakable = false,
-                    });
-                }
-                #endregion
-                #endregion
-                #region Defensive
-                Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
-                #endregion
-                #region Impedances
-                for (int i = 0; i < 2; i++)
+                });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MeleeDPS] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer] = true;
+                this[i].BuffStates.Add(new BuffState
                 {
-                    //Moves;
-                    //Stuns;
-                    //Fears;
-                    //Roots;
-                    //Disarms;
-                }
-                TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
-                #endregion
-                /* TODO:
+                    Name =  "Caustic Slime in P1",
+                    Stats = new Stats() { PhysicalHit = -0.75f, SpellHit = -0.75f },
+                    Duration = 3f * 1000f,
+                    Frequency = this[i].BerserkTimer / ((((this[i].BerserkTimer * .77f) / 60f) / 2f) / 15f),
+                    Chance = new float[] { 1, 3, 1, 3 }[i] / (this[i].Max_Players - this[i].Min_Tanks),
+                    Breakable = false,
+                });
+            }
+            #endregion
+            #endregion
+            #region Defensive
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
+            #region Impedances
+            for (int i = 0; i < 2; i++)
+            {
+                //Moves;
+                //Stuns;
+                //Fears;
+                //Roots;
+                //Disarms;
+            }
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
+            /* TODO:
              * "Bile-O-Tron" - This is a minion of Finkle Einhorn (who is locked in a cage behind the boss) and plays a crucial role in this fight. It grants
              *      a buff, Finkle's Mixture, to the raid, however, will occasionally will go offline at which point the raid much change strategy.
              *      
@@ -1011,92 +1020,91 @@ namespace Rawr.Bosses
              * Mortality - Places a debuff on the entire raid, reducing healing effects by 99% This ability is used at 21% and also applies a Mortality buff to Chimaeron
              *      that increases his size by 30%, increases his damage taken by 20%, and make him immune to Taunt effects.
              */
-            }
         }
+    }
 
     public class Nefarian : MultiDiffBoss
+    {
+        public Nefarian()
         {
-            public Nefarian()
-            {
-                // If not listed here use values from defaults
-                #region Info
-                Name = "Nefarian";
-                Instance = "Blackwing Descent";
-                Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_0, BossHandler.TierLevels.T11_5, BossHandler.TierLevels.T11_5, BossHandler.TierLevels.T11_9, };
-                Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
-                #endregion
-                #region Basics
-                // Onyxia = 6,600,000 / 24,000,000 / 9,017,400 / 31,500,000
-                // Nefarion = 28,500,000 / 98000000 / 36,316,000 / 126,815,650
-                Health = new float[] { (6600000f + 25940000f), (24736896f + 98775800f), (9240000f + 36316000f), (34786000f + 179300000f) };
-                BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
-                SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
-                InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
-                InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
-                Max_Players = new int[] { 10, 25, 10, 25 };
-                // 1 tank to tank Oyxia, 1 for kiting (though a hunter or kiting class can do this), and 1 for Nafarion
-                Min_Tanks = new int[] { 3, 3, 3, 3 };
-                Min_Healers = new int[] { 3, 5, 3, 5 };
-                #endregion
-                #region Offensive
-                //MaxNumTargets = new double[] { 1, 1, 0, 0 };
-                //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
-                #region Attacks
+            // If not listed here use values from defaults
+            #region Info
+            Name = "Nefarian";
+            Instance = "Blackwing Descent";
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
+            #endregion
+            #region Basics
+            // Onyxia = 6,600,000 / 24,000,000 / 9,017,400 / 31,500,000
+            // Nefarion = 28,500,000 / 98000000 / 36,316,000 / 126,815,650
+            Health = new float[] { (6600000f + 25940000f), (24736896f + 98775800f), (9240000f + 36316000f), (34786000f + 179300000f) };
+            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
+            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
+            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
+            Max_Players = new int[] { 10, 25, 10, 25 };
+            // 1 tank to tank Oyxia, 1 for kiting (though a hunter or kiting class can do this), and 1 for Nafarion
+            Min_Tanks = new int[] { 3, 3, 3, 3 };
+            Min_Healers = new int[] { 3, 5, 3, 5 };
+            #endregion
+            #region Offensive
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            #region Attacks
                 for (int i = 0; i < 4; i++)
-                {
-                    this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+            {
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
 
-                    // Heroic Only
-                    // Mind Controlled part of
-                    // Free Your Mind - Focus your will to break Nefarian's dominion over your actions.
-                    // Stolen Power - Damage and healing of your next spell or ability is increased by 15%.
-                    // each stolen Power generates compounting stacking buff
-                    // 1, 2, 4, 7, 11, 16, 22, 29, 37, 46
-                    // Once at 46 stacks, use "Free Your Mind" to remove the mind control
-                    // Basically allow 10 seconds of MC for each person.
-                    // Only happens in P1 and P3
-                    // First one does not happen until a minute into the fight
-                    // each one happens every 18 seconds
-                    // 4 MCs in 25 man, possible 2 in 10 man
-                    // Does not target MT or OT
-                    // Gain a 15% damage bonus for 15 seconds
-                    // Does not affect Rip or Bane of Doom
+                // Heroic Only
+                // Mind Controlled part of
+                // Free Your Mind - Focus your will to break Nefarian's dominion over your actions.
+                // Stolen Power - Damage and healing of your next spell or ability is increased by 15%.
+                // each stolen Power generates compounting stacking buff
+                // 1, 2, 4, 7, 11, 16, 22, 29, 37, 46
+                // Once at 46 stacks, use "Free Your Mind" to remove the mind control
+                // Basically allow 10 seconds of MC for each person.
+                // Only happens in P1 and P3
+                // First one does not happen until a minute into the fight
+                // each one happens every 18 seconds
+                // 4 MCs in 25 man, possible 2 in 10 man
+                // Does not target MT or OT
+                // Gain a 15% damage bonus for 15 seconds
+                // Does not affect Rip or Bane of Doom
 
-                    // Heroic Only
-                    // Explosive Cinders - Burns several enemies at random, coating them in explosive residue that inflicts periodic fire damage. 
-                    //     The residue detonates after 8 sec, inflicting 42750 to 47250 Fire damage in a small area.
-                    // Only happens in P2
-                    // Basically the player needs to jump into the lava and let the explosion explode outside the piller group so as not to
-                    //      spread the explosion to the rest of the piller group
-                    // 3 people are targeted each time.
-                    // Targeted players will also have to deal with lava damage (4k damage every second) [assume 5 seconds of in the lava]
-                }
-                #endregion
-                #endregion
-                #region Defensive
-                Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
-                Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
-                #endregion
-                #region Impedances
-                for (int i = 0; i < 2; i++)
-                {
-                    //Moves;
-                    //Stuns;
-                    //Fears;
-                    //Roots;
-                    //Disarms;
-                }
-                TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
-                #endregion
-                /* TODO:
-             */
+                // Heroic Only
+                // Explosive Cinders - Burns several enemies at random, coating them in explosive residue that inflicts periodic fire damage. 
+                //     The residue detonates after 8 sec, inflicting 42750 to 47250 Fire damage in a small area.
+                // Only happens in P2
+                // Basically the player needs to jump into the lava and let the explosion explode outside the piller group so as not to
+                //      spread the explosion to the rest of the piller group
+                // 3 people are targeted each time.
+                // Targeted players will also have to deal with lava damage (4k damage every second) [assume 5 seconds of in the lava]
             }
+            #endregion
+            #endregion
+            #region Defensive
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
+            #region Impedances
+            for (int i = 0; i < 2; i++)
+            {
+                //Moves;
+                //Stuns;
+                //Fears;
+                //Roots;
+                //Disarms;
+            }
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
+            /* TODO:
+             */
         }
+    }
     #endregion
 
     #region The Bastion of Twilight
@@ -1109,8 +1117,7 @@ namespace Rawr.Bosses
             #region Info
             Name = "Halfus Wyrmbreaker";
             Instance = "The Bastion of Twilight";
-            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_0, BossHandler.TierLevels.T11_5, BossHandler.TierLevels.T11_5, BossHandler.TierLevels.T11_9, };
-            Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
             #endregion
             #region Basics
             // Kill 3 of the 4 dragons plus Halfus, tanked on top of the boss
@@ -1208,8 +1215,7 @@ namespace Rawr.Bosses
             #region Info
             Name = "Valiona & Theralion";
             Instance = "The Bastion of Twilight";
-            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_0, BossHandler.TierLevels.T11_5, BossHandler.TierLevels.T11_5, BossHandler.TierLevels.T11_9, };
-            Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
             #endregion
             #region Basics
             // Health is split between both Valiona and Theralion
@@ -1327,8 +1333,7 @@ namespace Rawr.Bosses
             #region Info
             Name = "Twilight Ascendant Council";
             Instance = "The Bastion of Twilight";
-            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_0, BossHandler.TierLevels.T11_5, BossHandler.TierLevels.T11_5, BossHandler.TierLevels.T11_9, };
-            Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
             #endregion
             #region Basics
             // Arion = 4,724,000 / 14,600,000 / 6,613,600 (Guess) / 20,440,000 (Guess)
@@ -1494,8 +1499,7 @@ namespace Rawr.Bosses
             #region Info
             Name = "Cho'gall";
             Instance = "The Bastion of Twilight";
-            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_0, BossHandler.TierLevels.T11_5, BossHandler.TierLevels.T11_5, BossHandler.TierLevels.T11_9, };
-            Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
             #endregion
             #region Basics
             Health = new float[] { 33497000f, 101352560f, 47000000f, 146000000f };
@@ -1621,8 +1625,8 @@ namespace Rawr.Bosses
             #region Info
             Name = "Lady Sinestra";
             Instance = "The Bastion of Twilight";
-            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_5, BossHandler.TierLevels.T11_9, BossHandler.TierLevels.T11_5, BossHandler.TierLevels.T11_9, };
-            Version = new BossHandler.Versions[] { BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
+            // She is only available in the Heroic version
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
             #endregion
             #region Basics
             // Her health starts at 60%
@@ -1660,7 +1664,7 @@ namespace Rawr.Bosses
                     DamageType = ItemDamageType.Fire,
                     AttackType = ATTACK_TYPES.AT_AOE,
                     DamagePerHit = 66000,
-                    MaxNumTargets = this[i].Max_Players,
+                    MaxNumTargets = Max_Players[i],
 
                     Blockable = false,
                     Parryable = false,
@@ -1676,7 +1680,7 @@ namespace Rawr.Bosses
                     DamageType = ItemDamageType.Shadow,
                     AttackType = ATTACK_TYPES.AT_MELEE,
                     DamagePerHit = 75000f,
-                    MaxNumTargets = 2f / this[i].Max_Players,
+                    MaxNumTargets = 2f,
                     // Assume it only hits the two targets and no more.
                     AttackSpeed = (float)this[i].BerserkTimer / (((float)this[i].BerserkTimer - 60f) / 30f ),
 
@@ -1692,9 +1696,10 @@ namespace Rawr.Bosses
                 this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer] = true;
                 this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer] = true;
                 this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer] = true;
-                this[i].Attacks.Add(new DoT
+                this[i].Attacks.Add(new Attack
                 {
                     Name = "Wrack",
+                    IsDoT = true,
                     DamageType = ItemDamageType.Shadow,
                     AttackType = ATTACK_TYPES.AT_AOE,
                     TickInterval = 2f,
@@ -1814,8 +1819,7 @@ namespace Rawr.Bosses
             #region Info
             Name = "Conclave Of Wind";
             Instance = "Throne of the Four Winds";
-            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_0, BossHandler.TierLevels.T11_5, BossHandler.TierLevels.T11_5, BossHandler.TierLevels.T11_9, };
-            Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
             #endregion
             #region Basics
             // Rohash = 4,120,000 / 14,429,856 / 5,768,000 / 20,201,799
@@ -1935,8 +1939,7 @@ namespace Rawr.Bosses
             #region Info
             Name = "Al'Akir";
             Instance = "Throne of the Four Winds";
-            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_0, BossHandler.TierLevels.T11_5, BossHandler.TierLevels.T11_5, BossHandler.TierLevels.T11_9, };
-            Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
             #endregion
             #region Basics
             Health = new float[] { 30100000f, 105200000f, 42140000f, 168300000f };

@@ -18,7 +18,7 @@ namespace Rawr {
     public enum MOB_TYPES { BEAST = 0, DEMON, DRAGONKIN, ELEMENTAL, GIANT, HUMANOID, UNDEAD }
     #region Attacks
     /// <summary>Enumerator for attack types, this mostly is for raid members that aren't being directly attacked to know when AoE damage is coming from the boss</summary>
-    public enum ATTACK_TYPES { AT_MELEE = 0, AT_RANGED, AT_AOE, }
+    public enum ATTACK_TYPES { AT_MELEE = 0, AT_RANGED, AT_AOE, AT_DOT }
     /// <summary>A single Attack of various types</summary>
     public partial class Attack {
         /// <summary>The Name of the Attack</summary>
@@ -29,27 +29,50 @@ namespace Rawr {
         /// <summary>This is so you can pull the Default Melee Attack more easily</summary>
         [DefaultValue(false)]
         public bool IsTheDefaultMelee = false;
-        /// <summary>The Unmitigated Damage per Hit for this attack, 5000f is 5,000 Raw Unmitigated Damage. When DamageIsPerc is true DamagePerHit = 0.75f; would be 75% of Player's Health</summary>
+        /// <summary>
+        /// The Unmitigated Damage per Hit for this attack, 5000f is 5,000 Raw Unmitigated Damage.<br/>
+        /// When DamageIsPerc is true DamagePerHit = 0.75f; would be 75% of Player's Health<br/>
+        /// When this is a DoT is true DamagePerHit is just the Initial Damage. The Tick contains the remaining Damage<br/>
+        /// </summary>
         [DefaultValue(100*1000)]
         public virtual float DamagePerHit { get; set; }
         /// <summary>When set to True, DamagePerHit will be seen as a Percentage. DamagePerHit = 0.75f; would be 75% of Player's Health</summary>
         [DefaultValue(false)]
         public bool DamageIsPerc = false;
         /// <summary>The maximum number of party/raid members this attack can hit</summary>
-        [DefaultValue(1)]
-        public float MaxNumTargets = 1;
+        [DefaultValue(1f)]
+        public float MaxNumTargets = 1f;
         /// <summary>The frequency of this attack (in seconds)</summary>
-        [DefaultValue(2)]
+        [DefaultValue(2.0f)]
         public float AttackSpeed = 2.0f;
         /// <summary>The Attack Type (for AoE vs. single-target Melee/Ranged)</summary>
         [DefaultValue(ATTACK_TYPES.AT_MELEE)]
         public ATTACK_TYPES AttackType = ATTACK_TYPES.AT_MELEE;
-        /// <summary>If the attack Parry Haste's, then the attacks that are parried will reset the swing timer.</summary>
-        [DefaultValue(false)]
-        public bool UseParryHaste = false;
         /// <summary>if the attack is part of a Dual Wield, there is an additional 20% chance to Miss<para>This should flag the Buff... sort of</para></summary>
         [DefaultValue(false)]
         public bool IsDualWielding = false;
+
+        #region DoT Stats
+        /// <summary>Whether this attack is a DoT</summary>
+        [DefaultValue(false)]
+        public bool IsDoT = false;
+        /// <summary>
+        /// The over time damage of the dot, separate from the initial portion<br/>
+        /// Calculated as Damage Divided by Number of Ticks<br/>
+        /// Example: 20000f/8f
+        /// </summary>
+        [DefaultValue(0)]
+        public float DamagePerTick = 0f;//20f*1000f/8f;
+        /// <summary>The total number of Ticks, 0 if not a DoT</summary>
+        [DefaultValue(0)]
+        public float NumTicks = 0;
+        /// <summary>Interval of the ticks, 1 = 1 sec. 0 if not a DoT</summary>
+        [DefaultValue(0)]
+        public float TickInterval = 0;
+        /// <summary>The full duration of the DoT, 2 sec Interval * 5 Ticks = 10 sec duration</summary>
+        public float Duration { get { return TickInterval * NumTicks; } }
+        #endregion
+
         #region Player Avoidance
         /// <summary>Returns True if any of the Avoidance types are true</summary>
         public bool Avoidable { get { return Missable || Dodgable || Parryable || Blockable; } }
@@ -92,33 +115,32 @@ namespace Rawr {
         public bool Interruptable = false;
         #endregion
 
+        /// <summary>
+        /// Returns False if
+        /// <para>Chance is <= 0</para>
+        /// <para>Frequency is <= 0 or > 20 min</para>
+        /// <para>Duration <= 0 or > 20 sec</para>
+        /// </summary>
+        public bool Validate
+        {
+            get
+            {
+                if (Name == "Invalid") { return false; }
+                if (AttackSpeed <= 0 || AttackSpeed > (20+1) * 60) { return false; }
+                if ((DamagePerHit + (DamagePerTick*NumTicks)) <= 0) { return false; }
+                return true;
+            }
+        }
         public override string ToString()
         {
-            if (AttackSpeed <= 0) { return "None"; }
-            return string.Format("Spd: {0:0.0#}sec D: {1:0}{2} #T: {3:0} {4}{5}",
-                AttackSpeed,
+            if (!Validate) { return "None"; }
+            return string.Format("{0:#,##0}{1}{2} every {3:0.#}s to {4:0} targets{5}",
                 DamagePerHit, DamageIsPerc ? "%" : "",
+                (DamagePerTick != 0 && NumTicks != 0) ? string.Format("+{0:#,##0}/{1:0.#}s(x{2:0.#})", DamagePerTick, TickInterval, NumTicks) : "",
+                AttackSpeed,
                 MaxNumTargets,
-                UseParryHaste ? ": PH" : "",
-                Name != "Dynamic" ? ": " + Name : "");
+                Name != "Dynamic" ? " [" + Name + "]" : "");
         }
-    }
-    /// <summary>A single Attack of type Damage over Time</summary>
-    public partial class DoT : Attack {
-        /// <summary>The initial damage of the dot, separate from the over time portion</summary>
-        [DefaultValue(1000)]
-        public override float DamagePerHit { get; set; }
-        /// <summary>The over time damage of the dot, separate from the initial portion</summary>
-        [DefaultValue(20*1000/8)]
-        public float DamagePerTick;
-        /// <summary>The total number of Ticks</summary>
-        [DefaultValue(8)]
-        public float NumTicks;
-        /// <summary>Interval of the ticks, 1 = 1 sec</summary>
-        [DefaultValue(2)]
-        public float TickInterval;
-        /// <summary>The full duration of the DoT, 2 sec Interval * 5 Ticks = 10 sec duration</summary>
-        public float Duration { get { return TickInterval * NumTicks; } }
     }
     #endregion
     #region Impedance

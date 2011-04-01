@@ -6,6 +6,7 @@ using System.Text;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
+#if FALSE
 namespace Rawr.Bosses
 {
     #region The Vault of Archavon
@@ -444,3 +445,4 @@ namespace Rawr.Bosses
     }
     #endregion
 }
+#endif

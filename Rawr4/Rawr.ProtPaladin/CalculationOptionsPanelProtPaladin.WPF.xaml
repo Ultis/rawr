@@ -48,7 +48,6 @@ x:Class="Rawr.ProtPaladin.CalculationOptionsPanelProtPaladin"
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <TextBlock Margin="2 2 2 10" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" FontWeight="Bold" Text="Attacker Statistics (Physical)" />
                             <TextBlock Margin="2" Grid.Row="1" Grid.Column="0" Text="Base Attack: *" ToolTipService.ToolTip="Base attacker damage before armor." />
@@ -59,7 +58,6 @@ x:Class="Rawr.ProtPaladin.CalculationOptionsPanelProtPaladin"
                             <Slider Margin="2" x:Name="sliBossAttackSpeed" Grid.Row="3" Grid.Column="1" Minimum="0.25" Maximum="5" LargeChange="1" SmallChange="0.25" Value="{Binding Mode=TwoWay, Path=BossAttackSpeed}" ValueChanged="sliBossAttackSpeed_ValueChanged" />
                             <Button Margin="2 2 2 10" x:Name="btnResetBossAttackSpeed" Grid.Row="4" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset the attack speed to 2 seconds." Click="btnResetBossAttackSpeed_Click" />
                             <TextBlock Margin="2 2 2 10" x:Name="tbBossAttackSpeed" Grid.Row="4" Grid.Column="1" />
-                            <CheckBox Margin="2" Grid.Row="5" Grid.Column="1" Content="Use Boss Parry Haste *" ToolTipService.ToolTip="Calculates the adjusted attacker speed based on parry hasting.  May not be applicable on all bosses.  (e.g. Patchwerk does not parry haste.)" IsChecked="{Binding Mode=TwoWay, Path=UseParryHaste}" />
                         </Grid>
                     </Border>
                     <Border Margin="0 2" Background="Transparent" BorderBrush="Black" BorderThickness="1">

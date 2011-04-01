@@ -551,6 +551,7 @@ the Threat Scale defined on the Options tab.",
             calculatedStats.SavageDefenseValue = (float)Math.Floor(blockValue);
             calculatedStats.SavageDefensePercent = (float)Math.Round(blockedPercent, 5);
 
+            /* Parry Haste doesn't exist in Cata right now
             float parryHasteDamageMuliplier = 1.0f;
             if (bossAttack.UseParryHaste)
             {
@@ -563,7 +564,7 @@ the Threat Scale defined on the Options tab.",
                 float chanceParryPerWindow = 1f - (float)Math.Pow(1f - chanceParry, parryableAttacksPerParryWindow);
                 float parryBonusDPSMultiplier = 1f / 0.6f - 1f; //When a parry happens, boss DPS gets muliplied by 1/0.6 for that swing
                 parryHasteDamageMuliplier = 1f + (parryBonusDPSMultiplier * chanceParryPerWindow);
-            }
+            }*/
 
             //Out of 100 attacks, you'll take...
             float crits = Math.Min(Math.Max(0f, 1f - calculatedStats.AvoidancePostDR), (0.05f + levelDifferenceAvoidance) - calculatedStats.CappedCritReduction);
@@ -573,7 +574,7 @@ the Threat Scale defined on the Options tab.",
             crits *= (1f - calculatedStats.TotalConstantDamageReduction) * 2f;
             //crushes *= (100f - calculatedStats.Mitigation) * .015f;
             hits *= (1f - calculatedStats.TotalConstantDamageReduction);
-            calculatedStats.DamageTaken = (hits + crits) * (1f - blockedPercent) * parryHasteDamageMuliplier * (1f + stats.BossAttackSpeedMultiplier);
+            calculatedStats.DamageTaken = (hits + crits) * (1f - blockedPercent) /** parryHasteDamageMuliplier*/ * (1f + stats.BossAttackSpeedMultiplier);
             calculatedStats.TotalMitigation = 1f - calculatedStats.DamageTaken;
 
             calculatedStats.SurvivalPointsRaw = (stats.Health / (1f - calculatedStats.TotalConstantDamageReduction));
@@ -1520,7 +1521,10 @@ the Threat Scale defined on the Options tab.",
 
             // Need a Boss Attack
             character.BossOptions.DamagingTargs = true;
-            character.BossOptions.Attacks.Add(BossHandler.ADefaultMeleeAttack);
+            if (character.BossOptions.DefaultMeleeAttack == null)
+            {
+                character.BossOptions.Attacks.Add(BossHandler.ADefaultMeleeAttack);
+            }
         }
     }
 }
