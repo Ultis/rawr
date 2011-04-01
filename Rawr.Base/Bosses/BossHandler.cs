@@ -599,7 +599,7 @@ namespace Rawr {
                     MaxNumTargets = 1,
                     AttackSpeed = 2.0f,
                     AttackType = ATTACK_TYPES.AT_MELEE,
-                    UseParryHaste = true,
+                    UseParryHaste = false,
                     Interruptable = false,
                     // Player Avoidances
                     Missable = true,
@@ -645,7 +645,7 @@ namespace Rawr {
                 MaxNumTargets = 1,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
-                UseParryHaste = true,
+                UseParryHaste = false,
                 Interruptable = false,
                 // Player Avoidances
                 Missable = true,
@@ -1398,7 +1398,7 @@ namespace Rawr {
                         MaxNumTargets = 1,
                         AttackSpeed = 2.0f,
                         AttackType = ATTACK_TYPES.AT_MELEE,
-                        UseParryHaste = true,
+                        UseParryHaste = false,
                         Interruptable = false,
                         // Player Avoidances
                         Missable = true,
