@@ -2603,7 +2603,7 @@
       <Name>Unknown/Not found on wowhead</Name>
       <Enabled>true</Enabled>
       <OtherRegexEnabled>true</OtherRegexEnabled>
-      <Pattern>Unknown|Not found on wowhead</Pattern>
+      <Pattern>(?&lt;!PvP.*)(Unknown|Not found on wowhead)</Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
       <BoP>true</BoP>
