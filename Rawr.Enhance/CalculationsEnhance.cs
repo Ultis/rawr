@@ -16,18 +16,19 @@ namespace Rawr.Enhance
             get
             {
                 //Meta
-                int chaotic = 52291;
+                //int chaotic = 52291;
+                int agile = 68778;
 
                 if (_defaultGemmingTemplates == null)
                 {
                     Gemming gemming = new Gemming();
                     _defaultGemmingTemplates = new List<GemmingTemplate>();
-                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Uncommon", 0, chaotic, false));
-                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Rare", 1, chaotic, true));
-                    //_defaultGemmingTemplates.AddRange(gemming.addTemplates("Epic", 2, chaotic, false));
-                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Jeweler", 3, chaotic, false));
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Uncommon", 0, agile, false));
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Rare", 1, agile, true));
+                    //_defaultGemmingTemplates.AddRange(gemming.addTemplates("Epic", 2, agile, false));
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Jeweler", 3, agile, false));
 
-                    _defaultGemmingTemplates.AddRange(gemming.addCogwheelTemplates("Cogwheels", 0, chaotic, false));
+                    _defaultGemmingTemplates.AddRange(gemming.addCogwheelTemplates("Cogwheels", 0, agile, false));
                 }
                 return _defaultGemmingTemplates;
             }
