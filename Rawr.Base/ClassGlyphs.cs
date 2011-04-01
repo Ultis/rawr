@@ -619,42 +619,88 @@ namespace Rawr
 
     public partial class WarlockTalents
     {
-        private bool[] _glyphData = new bool[15];
+        private bool[] _glyphData = new bool[34];
         public override bool[] GlyphData { get { return _glyphData; } }
-  
-        [GlyphData(0, "Glyph of Chaos Bolt", GlyphType.Prime, @"Reduces the cooldown on Chaos Bolt by 2 sec.")]
+
+        #region Prime
+        [GlyphData(3, 42456, "Glyph of Bane of Agony", GlyphType.Prime, @"Increases the duration of your Bane of Agony by 4 sec.")]
+        public bool GlyphCoA { get { return _glyphData[3]; } set { _glyphData[3] = value; } }
+        [GlyphData(0, 45781, "Glyph of Chaos Bolt", GlyphType.Prime, @"Reduces the cooldown on Chaos Bolt by 2 sec.")]
         public bool GlyphChaosBolt { get { return _glyphData[0]; } set { _glyphData[0] = value; } }
-        [GlyphData(1, "Glyph of Conflagrate", GlyphType.Prime, @"Reduces the cooldown of your Conflagrate by 2 sec.")]
+        [GlyphData(1, 42454, "Glyph of Conflagrate", GlyphType.Prime, @"Reduces the cooldown of your Conflagrate by 2 sec.")]
         public bool GlyphConflag { get { return _glyphData[1]; } set { _glyphData[1] = value; } }
-        [GlyphData(2, "Glyph of Corruption", GlyphType.Prime, @"Your Corruption spell has a 4% chance to cause you to enter a Shadow Trance state" +
+        [GlyphData(2, 42455, "Glyph of Corruption", GlyphType.Prime, @"Your Corruption spell has a 4% chance to cause you to enter a Shadow Trance state" +
                     " after damaging the opponent.  The Shadow Trance state reduces the casting time " +
                     "of your next Shadow Bolt spell by 100%.")]
         public bool GlyphCorruption { get { return _glyphData[2]; } set { _glyphData[2] = value; } }
-        [GlyphData(3, "Glyph of Bane of Agony", GlyphType.Prime, @"Increases the duration of your Bane of Agony by 4 sec.")]
-        public bool GlyphCoA { get { return _glyphData[3]; } set { _glyphData[3] = value; } }
-        [GlyphData(4, "Glyph of Felguard", GlyphType.Prime, @"Increases the damage done by your Felguard's Legion Strike by 5%.")]
+        [GlyphData(4, 42459, "Glyph of Felguard", GlyphType.Prime, @"Increases the damage done by your Felguard's Legion Strike by 5%.")]
         public bool GlyphFelguard { get { return _glyphData[4]; } set { _glyphData[4] = value; } }
-        [GlyphData(5, "Glyph of Haunt", GlyphType.Prime, @"The bonus damage granted by your Haunt spell is increased by an additional 3%.")]
+        [GlyphData(5, 45779, "Glyph of Haunt", GlyphType.Prime, @"The bonus damage granted by your Haunt spell is increased by an additional 3%.")]
         public bool GlyphHaunt { get { return _glyphData[5]; } set { _glyphData[5] = value; } }
-        [GlyphData(6, "Glyph of Immolate", GlyphType.Prime, @"Increases the periodic damage of your Immolate by 10%.")]
+        [GlyphData(6, 42464, "Glyph of Immolate", GlyphType.Prime, @"Increases the periodic damage of your Immolate by 10%.")]
         public bool GlyphImmolate { get { return _glyphData[6]; } set { _glyphData[6] = value; } }
-        [GlyphData(7, "Glyph of Imp", GlyphType.Prime, @"Increases the damage done by your Imp's Firebolt spell by 20%.")]
+        [GlyphData(7, 42465, "Glyph of Imp", GlyphType.Prime, @"Increases the damage done by your Imp's Firebolt spell by 20%.")]
         public bool GlyphImp { get { return _glyphData[7]; } set { _glyphData[7] = value; } }
-        [GlyphData(8, "Glyph of Incinerate", GlyphType.Prime, @"Increases the damage done by Incinerate by 5%.")]
+        [GlyphData(8, 42453, "Glyph of Incinerate", GlyphType.Prime, @"Increases the damage done by Incinerate by 5%.")]
         public bool GlyphIncinerate { get { return _glyphData[8]; } set { _glyphData[8] = value; } }
-        [GlyphData(9, "Glyph of Lash of Pain", GlyphType.Prime, @"Increases the damage done by your Succubus' Lash of Pain by 25%.")]
+        [GlyphData(9, 50077, "Glyph of Lash of Pain", GlyphType.Prime, @"Increases the damage done by your Succubus' Lash of Pain by 25%.")]
         public bool GlyphLashPain { get { return _glyphData[9]; } set { _glyphData[9] = value; } }
-        [GlyphData(10, "Glyph of Life Tap", GlyphType.Major, @"Reduces the global cooldown of your Life Tap by .5 sec.")]
-        public bool GlyphLifeTap { get { return _glyphData[10]; } set { _glyphData[10] = value; } }
-        [GlyphData(11, "Glyph of Metamorphosis", GlyphType.Prime, @"Increases the duration of your Metamorphosis by 6 sec.")]
+        [GlyphData(11, 45780, "Glyph of Metamorphosis", GlyphType.Prime, @"Increases the duration of your Metamorphosis by 6 sec.")]
         public bool GlyphMetamorphosis { get { return _glyphData[11]; } set { _glyphData[11] = value; } }
-        [GlyphData(12, "Glyph of Shadow Bolt", GlyphType.Major, @"Reduces the mana cost of your Shadow Bolt by 15%.")]
-        public bool GlyphSB { get { return _glyphData[12]; } set { _glyphData[12] = value; } }
-        [GlyphData(13, "Glyph of Shadowburn", GlyphType.Prime, @"If your Shadowburn fails to kill the target at or below 20% health, " +
+        [GlyphData(13, 42468, "Glyph of Shadowburn", GlyphType.Prime, @"If your Shadowburn fails to kill the target at or below 20% health, " +
                     "your Shadowburn's cooldown is instantly reset. This effect has a 6 sec cooldown.")]
         public bool GlyphShadowburn { get { return _glyphData[13]; } set { _glyphData[13] = value; } }
-        [GlyphData(14, "Glyph of Unstable Affliction", GlyphType.Prime, @"Decreases the casting time of your Unstable Affliction by 0.2 sec.")]
+        [GlyphData(14, 42472, "Glyph of Unstable Affliction", GlyphType.Prime, @"Decreases the casting time of your Unstable Affliction by 0.2 sec.")]
         public bool GlyphUA { get { return _glyphData[14]; } set { _glyphData[14] = value; } }
+        #endregion
+        #region Major
+        [GlyphData(16, 42457, "Glyph of Death Coil", GlyphType.Major, @"Increases the duration of your Death Coil by 0.5 sec.")]
+        public bool GlyphDeathCoil { get { return _glyphData[16]; } set { _glyphData[16] = value; } }
+        [GlyphData(17, 45782, "Glyph of Demonic Circle", GlyphType.Major, @"Reduces the cooldown on Demonic Circle by 4 sec.")]
+        public bool GlyphDemonicCircle { get { return _glyphData[17]; } set { _glyphData[17] = value; } }
+        [GlyphData(21, 42458, "Glyph of Fear", GlyphType.Major, @"Your Fear causes the target to tremble in place instead of fleeing in fear, but now causes Fear to have a 5 sec cooldown.")]
+        public bool GlyphFear { get { return _glyphData[21]; } set { _glyphData[21] = value; } }
+        [GlyphData(22, 42450, "Glyph of Felhunter", GlyphType.Major, @"When your Felhunter uses Devour Magic, you will also be healed for that amount.")]
+        public bool GlyphFelhunter { get { return _glyphData[22]; } set { _glyphData[22] = value; } }
+        [GlyphData(24, 42462, "Glyph of Healthstone", GlyphType.Major, @"You receive 30% more healing from using a healthstone.")]
+        public bool GlyphHealthstone { get { return _glyphData[24]; } set { _glyphData[24] = value; } }
+        [GlyphData(25, 42463, "Glyph of Howl of Terror", GlyphType.Major, @"Reduces the cooldown on your Howl of Terror spell by 8 sec.")]
+        public bool GlyphHowlTerror { get { return _glyphData[25]; } set { _glyphData[25] = value; } }
+        [GlyphData(10, 45785, "Glyph of Life Tap", GlyphType.Major, @"Reduces the global cooldown of your Life Tap by .5 sec.")]
+        public bool GlyphLifeTap { get { return _glyphData[10]; } set { _glyphData[10] = value; } }
+        [GlyphData(27, 42471, "Glyph of Seduction", GlyphType.Major, @"Your Succubus's Seduction ability also removes all damage over time effects from the target.")]
+        public bool GlyphSeduction { get { return _glyphData[27]; } set { _glyphData[27] = value; } }
+        [GlyphData(12, 42467, "Glyph of Shadow Bolt", GlyphType.Major, @"Reduces the mana cost of your Shadow Bolt by 15%.")]
+        public bool GlyphSB { get { return _glyphData[12]; } set { _glyphData[12] = value; } }
+        [GlyphData(28, 45783, "Glyph of Shadowflame", GlyphType.Major, @"Your Shadowflame also applies a 70% movement speed slow to its victims.")]
+        public bool GlyphShadowflame { get { return _glyphData[28]; } set { _glyphData[28] = value; } }
+        [GlyphData(29, 45789, "Glyph of Soul Link", GlyphType.Major, @"Increases the percentage of damage shared via your Soul Link by an additional 5%.")]
+        public bool GlyphSoulLink { get { return _glyphData[29]; } set { _glyphData[29] = value; } }
+        [GlyphData(30, 42466, "Glyph of Soul Swap", GlyphType.Major, @"Your Soul Swap leaves your damage-over-time spells behind on the target you Soul Swapped from, "
+            + "but gives Soul Swap a 10 sec. cooldown.")]
+        public bool GlyphSoulSwap { get { return _glyphData[30]; } set { _glyphData[30] = value; } }
+        [GlyphData(31, 42470, "Glyph of Soulstone", GlyphType.Major, @"Increases the amount of health you gain from resurrecting via a Soulstone by an additional 40%.")]
+        public bool GlyphSoulstone { get { return _glyphData[31]; } set { _glyphData[31] = value; } }
+        [GlyphData(33, 42473, "Glyph of Voidwalker", GlyphType.Major, @"Increases your Voidwalker's total health by 20%.")]
+        public bool GlyphVoidwalker { get { return _glyphData[33]; } set { _glyphData[33] = value; } }
+        #endregion
+        #region Minor
+        [GlyphData(15, 43392, "Glyph of Curse of Exhaustion", GlyphType.Minor, @"Increases the range of your Curse of Exhaustion spell by 5 yards.")]
+        public bool GlyphCurseOfExhaustion { get { return _glyphData[15]; } set { _glyphData[15] = value; } }
+        [GlyphData(18, 43390, "Glyph of Drain Soul", GlyphType.Minor, @"Your Drain Soul restores 10% of your total mana after you kill a target that yields experience or honor.")]
+        public bool GlyphDrainSoul { get { return _glyphData[18]; } set { _glyphData[18] = value; } }
+        [GlyphData(19, 43393, "Glyph of Enslave Demon", GlyphType.Minor, @"Reduces the cast time of your Enslave Demon spell by 50%.")]
+        public bool GlyphEnslaveDemon { get { return _glyphData[19]; } set { _glyphData[19] = value; } }
+        [GlyphData(20, 43391, "Glyph of Eye of Kilrogg", GlyphType.Minor, @"Increases the movement speed of your Eye of Kilrogg by 50% and allows it to fly in areas where "
+            + "flying mounts are enabled.")]
+        public bool GlyphEyeKilrogg { get { return _glyphData[20]; } set { _glyphData[20] = value; } }
+        [GlyphData(23, 42461, "Glyph of Health Funnel", GlyphType.Minor, @"Reduces the pushback suffered from damaging attacks while channeling your Health Funnel spell by 100%.")]
+        public bool GlyphHealthFunnel { get { return _glyphData[23]; } set { _glyphData[23] = value; } }
+        [GlyphData(26, 43394, "Glyph of Ritual of Souls", GlyphType.Minor, @"Reduces the mana cost of your Ritual of Souls spell by 70%.")]
+        public bool GlyphRitualSouls { get { return _glyphData[26]; } set { _glyphData[26] = value; } }
+        [GlyphData(32, 43389, "Glyph of Unending Breath", GlyphType.Minor, @"Increases the swim speed of targets affected by your Unending Breath spell by 20%.")]
+        public bool GlyphUnendingBreath { get { return _glyphData[32]; } set { _glyphData[32] = value; } }
+        #endregion       
     }
 
     public partial class RogueTalents
