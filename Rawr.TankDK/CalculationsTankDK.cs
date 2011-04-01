@@ -1331,10 +1331,10 @@ Points individually may be important.",
             fPhysicalSurvival = GetEffectiveHealth(stats.Health, ArmorDamageReduction, DamagePercentages[(int)SurvivalSub.Physical]);
 
             // Bleed damage:
-            fBleedSurvival = GetEffectiveHealth(stats.Health, 0, DamagePercentages[(int)SurvivalSub.Physical]);
+            fBleedSurvival = GetEffectiveHealth(stats.Health, 0, DamagePercentages[(int)SurvivalSub.Bleed]);
             
             // Magic Damage:
-            fMagicalSurvival = GetEffectiveHealth(stats.Health, fMagicDR, DamagePercentages[(int)SurvivalSub.Physical]);
+            fMagicalSurvival = GetEffectiveHealth(stats.Health, fMagicDR, DamagePercentages[(int)SurvivalSub.Magic]);
 
             // Since Armor plays a role in Survival, so shall the other damage taken adjusters.
             // Note, it's expected that (at least for tanks) that DamageTakenMultiplier will be Negative.
@@ -1396,7 +1396,8 @@ Points individually may be important.",
             }
             // Figure out what the new Physical DPS should be based on that.
             fSegmentDPS = TDK.bo.GetDPSByType(ATTACK_TYPES.AT_MELEE, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-            fNewIncPhysDPS = TDK.bo.GetDPSByType(ATTACK_TYPES.AT_MELEE, 0, 0, 0, fBossAttackSpeedReduction, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+//            fNewIncPhysDPS = TDK.bo.GetDPSByType(ATTACK_TYPES.AT_MELEE, 0, 0, 0, fBossAttackSpeedReduction, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+            fNewIncPhysDPS = fSegmentDPS / (1 + fBossAttackSpeedReduction);
             // Send the difference to the Mitigation value.
             fSegmentMitigation = fSegmentDPS - fNewIncPhysDPS;
             fTotalMitigation[(int)MitigationSub.Haste] += fSegmentMitigation;
@@ -1426,7 +1427,7 @@ Points individually may be important.",
             float amsDuration = (5f + (TDK.Char.DeathKnightTalents.GlyphofAntiMagicShell == true ? 2f : 0f));
             float amsUptimePct = amsDuration / 45f;
             // AMS reduces damage taken by 75% up to a max of 50% health.
-            float amsReduction = 0.75f * (1f + TDK.Char.DeathKnightTalents.MagicSuppression * 0.08f + (TDK.Char.DeathKnightTalents.MagicSuppression == 3 ? 0.01f : 0f));
+            float amsReduction = 0.75f * (1f + (TDK.Char.DeathKnightTalents.MagicSuppression * .25f / 3));
             float amsReductionMax = stats.Health * 0.5f;
             // up to 50% of health means that the amdDRvalue equates to the raw damage points removed.  
             // This means that toon health and INC damage values from the options pane are going to affect this quite a bit.
@@ -1441,7 +1442,7 @@ Points individually may be important.",
             fSegmentMitigation = fPhyDamageDPS * ArmorDamageReduction;
 //            calcs.ArmorMitigation = fSegmentMitigation;
             fTotalMitigation[(int)MitigationSub.Armor] += fSegmentMitigation;
-            fCurrentDTPS[(int)SurvivalSub.Physical] -= (fCurrentDTPS[(int)SurvivalSub.Physical] * ArmorDamageReduction);
+            fCurrentDTPS[(int)SurvivalSub.Physical] *= 1f - ArmorDamageReduction;
             #endregion
             #region ** Resistance Damage Mitigation **
             // For any physical only damage reductions. 
