@@ -147,7 +147,7 @@ namespace Rawr.TankDK
         public string szRotReport
         {
             get { return _szRotReport; }
-            set { _szRotReport = value; OnPropertyChanged("szRotReport"); }
+            set { _szRotReport = value.Replace("Dancing Rune Weapon", "Dancing Rune Wp"); OnPropertyChanged("szRotReport"); }
         }
 
         public DeathKnightTalents talents;

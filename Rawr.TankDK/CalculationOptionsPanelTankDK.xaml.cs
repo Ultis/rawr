@@ -18,7 +18,6 @@ namespace Rawr.TankDK
         public CalculationOptionsPanelTankDK()
         {
             InitializeComponent();
-            this.LayoutRoot.SelectAll();
         }
 
         #region ICalculationOptionsPanel Members
@@ -58,7 +57,6 @@ namespace Rawr.TankDK
             if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsTankDK();
             calcOpts = Character.CalculationOptions as CalculationOptionsTankDK;
             // Model Specific Code
-            this.LayoutRoot.SelectAll();
             //
             _loadingCalculationOptions = false;
         }

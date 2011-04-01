@@ -16,62 +16,71 @@
     <UserControl.Resources>
         <local:CalculationOptionsTankDK x:Key="CalculationOptionsTankDKDataSource" d:IsDataSource="True"/>
         <local:GraphTypeConverter x:Key="GraphTypeConverter"/>
+        <local:PercentConverter x:Key="PercentConverter"/>
     </UserControl.Resources>
 
-    <layoutToolkit:Accordion x:Name="LayoutRoot" 
-                             HorizontalAlignment="Stretch" 
-                             SelectionMode="ZeroOrMore" 
-                             DataContext="{Binding Source={StaticResource CalculationOptionsTankDKDataSource}}">
+    <Grid x:Name="LayoutRoot" HorizontalAlignment="Stretch" DataContext="{Binding Source={StaticResource CalculationOptionsTankDKDataSource}}">
+        <TabControl>
+            <TabItem Header="Basics">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
-        <layoutToolkit:AccordionItem HorizontalContentAlignment="Stretch" >
-            <layoutToolkit:AccordionItem.Header>
-                <TextBlock Margin="2">Fight Options</TextBlock>
-            </layoutToolkit:AccordionItem.Header>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" x:Name="VengeanceWeight"/>
-                    <RowDefinition Height="auto" x:Name="ThreatWeight"/>
-                    <RowDefinition Height="auto" x:Name="MitigationWeight"/>
-                    <RowDefinition Height="auto" x:Name="SurvivalWeight"/>
-                    <RowDefinition Height="auto" x:Name="BurstWeight"/>
-                    <RowDefinition Height="auto" x:Name="Overhealing"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="6*"/>
-                    <ColumnDefinition Width="4*"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Text="Vengeance Weight:" Grid.Row="0" VerticalAlignment="Center" Margin="2"/>
-                <TextBox Text="{Binding Path=VengeanceWeight, Mode=TwoWay, UpdateSourceTrigger=Default, StringFormat=F1}" Margin="2" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="0" />
+                    <TextBlock Text="Weighting Adjustments:" FontWeight="Bold" Grid.Row="0" VerticalAlignment="Center" Margin="4,2" Grid.ColumnSpan="3"/>
 
-                <TextBlock Text="Threat Weight:" Grid.Row="1" VerticalAlignment="Center" Margin="2"/>
-                <TextBox Text="{Binding Path=ThreatWeight, Mode=TwoWay, UpdateSourceTrigger=Default, StringFormat=F1}" Margin="2" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="1" />
+                    <TextBlock TextWrapping="Wrap" Grid.Row="1" VerticalAlignment="Center" Margin="2" Grid.ColumnSpan="3" FontSize="10"
+                               Text="The following settings will adjust the overall scores for each type. This does not involve Stat Weights as described by Pawn, SimCraft or other similar utilities."/>
 
-                <TextBlock Text="Mitigation Weight:" Grid.Row="2" VerticalAlignment="Center" Margin="2"/>
-                <TextBox Text="{Binding Path=MitigationWeight, Mode=TwoWay, UpdateSourceTrigger=Default, StringFormat=F1}" Margin="2" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="2"/>
+                    <TextBlock Text="Mitigation:" Grid.Row="2" VerticalAlignment="Center" Margin="4,2"/>
+                    <inputToolkit:NumericUpDown Name="NUD_Mitigation" Value="{Binding Path=MitigationWeight, Mode=TwoWay}" Margin="4,2" Grid.Column="2" Grid.Row="2" DecimalPlaces="1" MinWidth="50" Maximum="10" Increment="0.1" />
+                    <Slider Grid.Column="1" Grid.Row="2" Margin="4,2" Value="{Binding Path=MitigationWeight, Mode=TwoWay}" Minimum="{Binding ElementName=NUD_Mitigation, Path=Minimum}" Maximum="{Binding ElementName=NUD_Mitigation, Path=Maximum}" LargeChange="{Binding ElementName=NUD_Mitigation, Path=Increment}" />
 
-                <TextBlock Text="Survival Weight:" Grid.Row="3" Margin="2" VerticalAlignment="Center"/>
-                <TextBox Text="{Binding Path=SurvivalWeight, Mode=TwoWay, UpdateSourceTrigger=Default, StringFormat=F1}" Margin="2" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="3"/>
-            
-                <TextBlock Text="Burst Weight:" Grid.Row="4" Margin="2" VerticalAlignment="Center"/>
-                <TextBox Text="{Binding Path=BurstWeight, Mode=TwoWay, UpdateSourceTrigger=Default, StringFormat=F1}" Margin="2" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="4"/>
+                    <TextBlock Text="Survival:" Grid.Row="3" Margin="4,2" VerticalAlignment="Center"/>
+                    <inputToolkit:NumericUpDown Name="NUD_Survival" Value="{Binding Path=SurvivalWeight, Mode=TwoWay}" Margin="4,2" Grid.Column="2" Grid.Row="3" DecimalPlaces="1" MinWidth="50" Maximum="10" Increment="0.1" />
+                    <Slider Grid.Column="1" Grid.Row="3" Margin="4,2" Value="{Binding Path=SurvivalWeight, Mode=TwoWay}" Minimum="{Binding ElementName=NUD_Survival, Path=Minimum}" Maximum="{Binding ElementName=NUD_Survival, Path=Maximum}" LargeChange="{Binding ElementName=NUD_Survival, Path=Increment}" />
 
-                <TextBlock Text="Overhealing %:" Grid.Row="5" Margin="2" VerticalAlignment="Center" />
-                <TextBox Text="{Binding Path=pOverHealing, Mode=TwoWay, UpdateSourceTrigger=Default, StringFormat=P2}" Margin="2" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="5"/>
-            </Grid>
-        </layoutToolkit:AccordionItem>
-        <layoutToolkit:AccordionItem HorizontalContentAlignment="Stretch" >
-            <layoutToolkit:AccordionItem.Header>
-                <TextBlock Margin="2">Rotation Report</TextBlock>
-            </layoutToolkit:AccordionItem.Header>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" x:Name="RotationData"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Row="0" Text="{Binding Mode=OneWay, Path=szRotReport}" TextWrapping="NoWrap" FontFamily="Simplified Arabic Fixed" Margin="0,6,0,0" Tag="Ability Usage" />
-            </Grid>
-        </layoutToolkit:AccordionItem>
-    </layoutToolkit:Accordion>
+                    <TextBlock Text="Threat:" Grid.Row="4" VerticalAlignment="Center" Margin="4,2"/>
+                    <inputToolkit:NumericUpDown Name="NUD_Threat" Value="{Binding Path=ThreatWeight, Mode=TwoWay}" Margin="4,2" Grid.Column="2" Grid.Row="4" DecimalPlaces="1" MinWidth="50" Maximum="10" Increment="0.1" />
+                    <Slider Grid.Column="1" Grid.Row="4" Margin="4,2" Value="{Binding Path=ThreatWeight, Mode=TwoWay}" Minimum="{Binding ElementName=NUD_Threat, Path=Minimum}" Maximum="{Binding ElementName=NUD_Threat, Path=Maximum}" LargeChange="{Binding ElementName=NUD_Threat, Path=Increment}" />
+
+                    <TextBlock Text="Burst:" Grid.Row="5" Margin="4,2" VerticalAlignment="Center"/>
+                    <inputToolkit:NumericUpDown Name="NUD_Burst" Value="{Binding Path=BurstWeight, Mode=TwoWay}" Margin="4,2" Grid.Column="2" Grid.Row="5" DecimalPlaces="1" MinWidth="50" Maximum="10" Increment="0.1" />
+                    <Slider Grid.Column="1" Grid.Row="5" Margin="4,2" Value="{Binding Path=BurstWeight, Mode=TwoWay}" Minimum="{Binding ElementName=NUD_Burst, Path=Minimum}" Maximum="{Binding ElementName=NUD_Burst, Path=Maximum}" LargeChange="{Binding ElementName=NUD_Burst, Path=Increment}" />
+
+                    <TextBlock Text="Vengeance:" Grid.Row="6" VerticalAlignment="Center" Margin="4,2"/>
+                    <inputToolkit:NumericUpDown Name="NUD_Vengeance" Value="{Binding Path=VengeanceWeight, Mode=TwoWay}" Margin="4,2" Grid.Column="2" Grid.Row="6" DecimalPlaces="1" MinWidth="50" Maximum="10" Increment="0.1" />
+                    <Slider Grid.Column="1" Grid.Row="6" Margin="4,2" Value="{Binding Path=VengeanceWeight, Mode=TwoWay}" Minimum="{Binding ElementName=NUD_Vengeance, Path=Minimum}" Maximum="{Binding ElementName=NUD_Vengeance, Path=Maximum}" LargeChange="{Binding ElementName=NUD_Vengeance, Path=Increment}" />
+
+                    <TextBlock Text="Other Stats:" FontWeight="Bold" Grid.Row="7" VerticalAlignment="Center" Margin="4,2" Grid.ColumnSpan="3"/>
+
+                    <TextBlock Text="Overhealing %:" Grid.Row="8" Margin="4,2" VerticalAlignment="Center" />
+                    <inputToolkit:NumericUpDown Name="NUD_OverHealing" Value="{Binding Path=pOverHealing, Mode=TwoWay, Converter={StaticResource PercentConverter}}" Margin="4,2" Grid.Column="2" Grid.Row="8" MinWidth="50" DecimalPlaces="1" />
+                    <Slider Grid.Column="1" Grid.Row="8" Margin="4,2" Value="{Binding Path=pOverHealing, Mode=TwoWay, Converter={StaticResource PercentConverter}}" Minimum="{Binding ElementName=NUD_OverHealing, Path=Minimum}" Maximum="{Binding ElementName=NUD_OverHealing, Path=Maximum}" LargeChange="{Binding ElementName=NUD_OverHealing, Path=Increment}" />
+
+                    <TextBlock TextWrapping="Wrap" Grid.Row="9" Margin="2" Grid.ColumnSpan="3" FontSize="10"
+                               Text="Note that many of TankDK's stats are based on Boss Content. Please see the Boss Handler (next to Options in the Tabs above) for additional Fight Related settings you can adjust.&#x0a;&#x0a;A Fresh 85 should use An Easy Boss to start and once some gear has been gathered to appropriately defend against that, move on to The Average Boss. More details on this can be found on the Boss Handler Pane and in the Documentation of Rawr's website."/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Rotation Report">
+                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <TextBox Text="{Binding Mode=OneWay, Path=szRotReport}" TextWrapping="NoWrap" FontFamily="Simplified Arabic Fixed" Tag="Ability Usage" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" FontSize="10" />
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
 </UserControl>

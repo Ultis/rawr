@@ -9,7 +9,7 @@
     xmlns:localUI="clr-namespace:Rawr.UI"
     mc:Ignorable="d"
     x:Class="Rawr.UI.WelcomeWindow"
-    Title="Welcome to Rawr4"
+    Title="Welcome to Rawr4 Beta"
     Width="655" Height="500">
     
     <Grid>
