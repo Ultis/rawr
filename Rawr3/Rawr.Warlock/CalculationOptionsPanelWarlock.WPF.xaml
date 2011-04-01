@@ -109,6 +109,8 @@
                     <ComboBox Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="17" Margin="4,2" Name="executeCombo" Height="22" SelectionChanged="executeCombo_SelectedIndexChanged">
                         <System:String>None</System:String>
                         <System:String>Drain Soul</System:String>
+                        <System:String>Incinerate</System:String>
+                        <System:String>Shadow Bolt</System:String>
                         <System:String>Soul Fire</System:String>
                     </ComboBox>
                     <TextBlock Grid.Row="16" Margin="4,2" Name="LB_Filler" Text="Filler:" Padding="0,2,0,0" />

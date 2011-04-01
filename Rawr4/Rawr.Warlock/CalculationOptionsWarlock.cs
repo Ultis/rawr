@@ -116,7 +116,7 @@ namespace Rawr.Warlock
                     "Demonology", //name
                     "Shadow Bolt", //filler
                     "Shadow Bolt", //execute
-                // Hand of Gul'Dan (Under Immolate)
+                // Hand Of Gul'dan (Under Immolate)
                 // Immolate (Under Improved Soul Fire)
                 //"Soulburn",
                 //"Soul Fire (To Maintain Buff)",
@@ -124,8 +124,8 @@ namespace Rawr.Warlock
                     "Immolate",
                     "Immolation Aura",
                     "Corruption",
-                    "Shadowflame",
-                    "Hand of Gul'Dan",
+                    //"Shadowflame",
+                    "Hand Of Gul'dan",
                     "Incinerate (Under Molten Core)"//,
                 // Soulfire (Under Decimation)
                  //   "Summon Infernal"
@@ -142,7 +142,7 @@ namespace Rawr.Warlock
                     "Immolate",
                     "Conflagrate",
                     "Corruption",
-                    "Shadowflame",
+                    //"Shadowflame",
                     "Chaos Bolt"//,
                 // Soulfire (Under Empowered Imp)
                 // Soulfire (Under Soulburn)

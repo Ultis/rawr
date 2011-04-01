@@ -264,7 +264,10 @@ namespace Rawr.Warlock
             }
             timeRemaining -= lifeTap.GetAvgTimeUsed() * lifeTap.AddCastsForRegen(timeRemaining, totalMana - manaUsed, filler);
             filler.Spam(timeRemaining);
-            CastSpells.Add(Options.GetActiveRotation().Filler, filler);
+            if (!CastSpells.ContainsKey(Options.GetActiveRotation().Filler))
+            {
+                CastSpells.Add(Options.GetActiveRotation().Filler, filler);
+            }
 
             foreach (Spell spell in CastSpells.Values)
             {
@@ -921,6 +924,7 @@ namespace Rawr.Warlock
             string className = spellName.Replace(" ", "");
             className = className.Replace("(", "_");
             className = className.Replace(")", "");
+            className = className.Replace("'", "");
             Type type = Type.GetType("Rawr.Warlock." + className);
             Spell spell = (Spell)Activator.CreateInstance(type, new object[] { this });
             Spells[spellName] = spell;

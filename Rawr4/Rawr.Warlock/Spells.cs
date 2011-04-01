@@ -38,6 +38,7 @@ namespace Rawr.Warlock
                             i += 2;
                         }
                     }
+                    name = name.Replace("Guldan", "Gul'dan");
                     ALL_SPELLS.Add(name);
                 }
             }
@@ -717,7 +718,7 @@ namespace Rawr.Warlock
                 mommy,
                 MagicSchool.Shadow, // magic school
                 SpellTree.Affliction, // spell tree
-                .14f, // percent base mana
+                .06f, // percent base mana
                 0f, // cast time
                 0f, // cooldown
                 18f, // recast period
@@ -1031,7 +1032,7 @@ namespace Rawr.Warlock
     public class Haunt : Spell
     {
         private const float SCALE = 0.7369999886f;
-        private const float COEFF = 2f / 3.5f; //client tooltips show no scaling, but that contradicts experiments
+        private const float COEFF = (1.5f / 3.5f) * 1.25f; //client tooltips show no scaling, but that contradicts experiments
 
         private float AvgBonus;
 
@@ -1127,7 +1128,7 @@ namespace Rawr.Warlock
                 mommy,
                 MagicSchool.Fire,
                 SpellTree.Destruction,
-                .17f, // percentBaseMana,
+                .08f, // percentBaseMana,
                 2f - talentValues[mommy.Talents.Bane], // baseCastTime,
                 0f, // cooldown,
                 15f + (mommy.Talents.Inferno > 0 ? 6f : 0f), // recastPeriod,
