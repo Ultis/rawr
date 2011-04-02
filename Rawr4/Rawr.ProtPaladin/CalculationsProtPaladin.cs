@@ -449,8 +449,14 @@ focus on Survival Points.",
                     //calc.SurvivalPoints = Math.Min(CapSurvival(dm.EffectiveHealth, calcOpts), VALUE_CAP);
                     //calc.MitigationPoints = Math.Min(calcOpts.MitigationScale / dm.DamageTaken, VALUE_CAP);
                     //calc.ThreatPoints = Math.Min(calc.ThreatPoints, VALUE_CAP);
+#if FALSE // JOTHAY NOTE: Switch this over to try the other method
+                    calc.SurvivabilityPoints = CapSurvival(dm.EffectiveHealth, calcOpts, bossOpts);
+                    calc.MitigationPoints = StatConversion.MitigationScaler / (1f - dm.Mitigation);
+#else
                     calc.SurvivabilityPoints = Math.Min((dm.EffectiveHealth) / 10.0f, VALUE_CAP);
                     calc.MitigationPoints = Math.Min(dm.Mitigation * bossOpts.DefaultMeleeAttack.DamagePerHit * calcOpts.MitigationScale * 10.0f, VALUE_CAP);
+#endif
+                    //calc.MitigationPoints = Math.Min(dm.Mitigation * bossOpts.DefaultMeleeAttack.DamagePerHit /** calcOpts.MitigationScale*/ * 10.0f, VALUE_CAP);
                     calc.ThreatPoints = Math.Min(calc.ThreatPoints / 10.0f, VALUE_CAP);
                     calc.OverallPoints = calc.MitigationPoints + calc.SurvivabilityPoints + calc.ThreatPoints;
                     break;
@@ -460,10 +466,10 @@ focus on Survival Points.",
         }
 
         // Original code from CalculationsBear, thanks Astrylian!
-        private float CapSurvival(float survivalScore, CalculationOptionsProtPaladin calcOpts)
+        private float CapSurvival(float survivalScore, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts)
         {
-            double survivalCap = (double)calcOpts.SurvivalSoftCap / 1000d;
-            double survivalRaw = survivalScore / 1000f;
+            double survivalCap = (double)(bossOpts.DefaultMeleeAttack.DamagePerHit * calcOpts.HitsToSurvive) / 1000d;
+            double survivalRaw = (double)survivalScore / 1000d;
 
             //Implement Survival Soft Cap
             if (survivalRaw <= survivalCap) {
@@ -500,6 +506,26 @@ focus on Survival Points.",
 
             BossOptions bossOpts = character.BossOptions;
             if (bossOpts == null) bossOpts = new BossOptions();
+
+            // Make sure there is at least one attack in the list.
+            // If there's not, add a Default Melee Attack for processing
+            if (bossOpts.Attacks.Count < 1)
+            {
+                character.IsLoading = true;
+                bossOpts.DamagingTargs = true;
+                bossOpts.Attacks.Add(BossHandler.ADefaultMeleeAttack);
+                character.IsLoading = false;
+            }
+            // Make sure there is a default melee attack
+            // If the above processed, there will be one so this won't have to process
+            // If the above didn't process and there isn't one, add one now
+            if (bossOpts.DefaultMeleeAttack == null)
+            {
+                character.IsLoading = true;
+                bossOpts.DamagingTargs = true;
+                bossOpts.Attacks.Add(BossHandler.ADefaultMeleeAttack);
+                character.IsLoading = false;
+            }
 
             return GetCharacterStats(character, additionalItem, calcOpts, bossOpts);
         }

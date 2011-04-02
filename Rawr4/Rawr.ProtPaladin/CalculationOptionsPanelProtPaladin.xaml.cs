@@ -168,6 +168,10 @@ namespace Rawr.ProtPaladin
         private void btnResetMitigationScale_Click(object sender, RoutedEventArgs e) {
             calcOpts.MitigationScale = 0.125f;
         }
+        private void btnResetHitsToSurvive_Click(object sender, RoutedEventArgs e)
+        {
+            calcOpts.HitsToSurvive = 3.5f;
+        }
         #endregion
     }
 }

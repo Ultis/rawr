@@ -578,7 +578,7 @@ the Threat Scale defined on the Options tab.",
             calculatedStats.TotalMitigation = 1f - calculatedStats.DamageTaken;
 
             calculatedStats.SurvivalPointsRaw = (stats.Health / (1f - calculatedStats.TotalConstantDamageReduction));
-            double survivalCap = bossAttack.DamagePerHit * calcOpts.HitsToSurvive;
+            double survivalCap = bossAttack.DamagePerHit * calcOpts.HitsToSurvive / 1000d;
             double survivalRaw = calculatedStats.SurvivalPointsRaw / 1000d;
 
             //Implement Survival Soft Cap
@@ -596,7 +596,7 @@ the Threat Scale defined on the Options tab.",
                 calculatedStats.SurvivabilityPoints = 1000f * (float)y;
             }
 
-            calculatedStats.MitigationPoints = (78591f / calculatedStats.DamageTaken);
+            calculatedStats.MitigationPoints = (StatConversion.MitigationScaler / calculatedStats.DamageTaken);
 
             // Call new resistance formula and apply talent damage reduction
             // As for other survival, only use guaranteed reduction (MinimumResist), no luck

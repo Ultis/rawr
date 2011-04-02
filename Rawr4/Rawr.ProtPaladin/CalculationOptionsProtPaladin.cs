@@ -66,24 +66,30 @@ namespace Rawr.ProtPaladin
         #endregion
     }
 
-
 #if !SILVERLIGHT
     [Serializable]
 #endif
     public class CalculationOptionsProtPaladin : ICalculationOptionBase, INotifyPropertyChanged {
-
-        private float _ThreatScale = 5.0f;
-        public float ThreatScale
-        {
-            get { return _ThreatScale; }
-            set { _ThreatScale = value; OnPropertyChanged("ThreatScale"); }
-        }
 
         private float _MitigationScale = 0.125f;
         public float MitigationScale
         {
             get { return _MitigationScale; }
             set { _MitigationScale = value; OnPropertyChanged("MitigationScale"); }
+        }
+
+        private double _hitsToSurvive = 3.5d;
+        public double HitsToSurvive
+        {
+            get { return _hitsToSurvive; }
+            set { _hitsToSurvive = value; OnPropertyChanged("HitsToSurvive"); }
+        }
+
+        private float _ThreatScale = 5.0f;
+        public float ThreatScale
+        {
+            get { return _ThreatScale; }
+            set { _ThreatScale = value; OnPropertyChanged("ThreatScale"); }
         }
 
         private int _RankingMode = 0;
@@ -114,25 +120,11 @@ namespace Rawr.ProtPaladin
             set { _TrinketOnUseHandling = value; OnPropertyChanged("TrinketOnUseHandling"); }
         }
 
-        private PaladinTalents _talents = null;
-        public PaladinTalents talents
-        {
-            get { return _talents; }
-            set { _talents = value; OnPropertyChanged("talents"); }
-        }
-
         private bool _PTRMode = false;
         public bool PTRMode
         {
             get { return _PTRMode; }
             set { _PTRMode = value; OnPropertyChanged("PTRMode"); }
-        }
-
-        private int _survivalSoftCap = 300000;
-        public int SurvivalSoftCap
-        {
-            get { return _survivalSoftCap; }
-            set { _survivalSoftCap = value; OnPropertyChanged("SurvivalSoftCap"); }
         }
 
         private string _mainAttack = "Crusader Strike";

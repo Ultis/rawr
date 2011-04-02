@@ -38,6 +38,7 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
                             <TextBlock Margin="4,2" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" FontWeight="Bold" Text="Weighting Adjustments" VerticalAlignment="Center" />
@@ -54,21 +55,26 @@
 
                             <TextBlock FontSize="10" Grid.ColumnSpan="4" Margin="4,2" Text="The following settings will adjust the overall scores for each type. This does not involve Stat Weights as described by Pawn, SimCraft or other similar utilities. These are meant to describe your general importance to each point." TextWrapping="Wrap" Grid.Row="2" />
 
-                            <TextBlock Margin="4,2" x:Name="LB_Threat" Grid.Row="3" Grid.Column="0" Text="Threat Scale: *" ToolTipService.ToolTip="Threat scaling factor. PageUp/PageDown/Left Arrow/Right Arrow allows more accurate changes" VerticalAlignment="Center" />
-                            <ComboBox Margin="2" Grid.Row="3" Grid.Column="1" SelectedItem="{Binding ThreatScale, Converter={StaticResource ThreatValueConverter}, Mode=TwoWay}">
+                            <TextBlock Margin="4,2" x:Name="LB_Threat" Grid.Row="5" Grid.Column="0" Text="Threat Scale: *" ToolTipService.ToolTip="Threat scaling factor. PageUp/PageDown/Left Arrow/Right Arrow allows more accurate changes" VerticalAlignment="Center" />
+                            <ComboBox Margin="2" Grid.Row="5" Grid.Column="1" SelectedItem="{Binding ThreatScale, Converter={StaticResource ThreatValueConverter}, Mode=TwoWay}">
                                 <System:String>Almost None</System:String>
                                 <System:String>MT</System:String>
                                 <System:String>OT</System:String>
                                 <System:String>Crazy About Threat</System:String>
                                 <System:String>Custom...</System:String>
                             </ComboBox>
-                            <inputToolkit:NumericUpDown Margin="2" Name="NUD_Threat" Grid.Row="3" Grid.Column="2" Value="{Binding Path=ThreatScale, Mode=TwoWay}" DecimalPlaces="1" MinWidth="50" Maximum="50" Increment="0.1" />
-                            <Button Margin="2" x:Name="btnResetThreatScale" Grid.Row="3" Grid.Column="3" Content="Reset" ToolTipService.ToolTip="Click to reset the threat scale to 1.00." Click="btnResetThreatScale_Click" />
+                            <inputToolkit:NumericUpDown Margin="2" Name="NUD_Threat" Grid.Row="5" Grid.Column="2" Value="{Binding Path=ThreatScale, Mode=TwoWay}" DecimalPlaces="1" MinWidth="50" Maximum="50" Increment="0.1" />
+                            <Button Margin="2" x:Name="btnResetThreatScale" Grid.Row="5" Grid.Column="3" Content="Reset" ToolTipService.ToolTip="Click to reset the threat scale to 1.00." Click="btnResetThreatScale_Click" />
 
-                            <TextBlock Margin="4,2" x:Name="LB_Mitigation" Grid.Row="4" Grid.Column="0" Text="Mitigation Scale: *" ToolTipService.ToolTip="Mitigation scaling factor. PageUp/PageDown/Left Arrow/Right Arrow allows more accurate changes" VerticalAlignment="Center" />
-                            <Slider Margin="2" x:Name="silMitigationScale" Grid.Row="4" Grid.Column="1" Minimum="0" Maximum="0.375" LargeChange="0.0625" SmallChange="0.00125" Value="{Binding Mode=TwoWay, Path=MitigationScale}" />
-                            <inputToolkit:NumericUpDown Margin="2" Name="NUD_Mitigation" Grid.Row="4" Grid.Column="2" Value="{Binding Path=MitigationScale, Mode=TwoWay}" DecimalPlaces="3" MinWidth="50" Minimum="0" Maximum="0.375" Increment="0.0625" />
-                            <Button Margin="2" x:Name="btnResetMitigationScale" Grid.Row="4" Grid.Column="3" Content="Reset" ToolTipService.ToolTip="Click to reset the mitigation scale to 1.00." Click="btnResetMitigationScale_Click" />
+                            <TextBlock Margin="4,2" x:Name="LB_Mitigation" Grid.Row="3" Grid.Column="0" Text="Mitigation Scale: *" ToolTipService.ToolTip="Mitigation scaling factor. PageUp/PageDown/Left Arrow/Right Arrow allows more accurate changes" VerticalAlignment="Center" />
+                            <Slider Margin="2" x:Name="silMitigationScale" Grid.Row="3" Grid.Column="1" Minimum="0" Maximum="0.375" LargeChange="0.0625" SmallChange="0.00125" Value="{Binding Mode=TwoWay, Path=MitigationScale}" />
+                            <inputToolkit:NumericUpDown Margin="2" Name="NUD_Mitigation" Grid.Row="3" Grid.Column="2" Value="{Binding Path=MitigationScale, Mode=TwoWay}" DecimalPlaces="3" MinWidth="50" Minimum="0" Maximum="0.375" Increment="0.0625" />
+                            <Button Margin="2" x:Name="btnResetMitigationScale" Grid.Row="3" Grid.Column="3" Content="Reset" ToolTipService.ToolTip="Click to reset the mitigation scale to 1.00." Click="btnResetMitigationScale_Click" />
+
+                            <TextBlock Margin="4,2" x:Name="LB_HitsToSurvive" Grid.Row="4" Grid.Column="0" Text="Hits to Survive: *" ToolTipService.ToolTip="Affects the Survivability Soft Cap. PageUp/PageDown/Left Arrow/Right Arrow allows more accurate changes" VerticalAlignment="Center" />
+                            <Slider Margin="2" Grid.Row="4" Grid.Column="1" Minimum="0" Maximum="10" LargeChange="0.1" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=HitsToSurvive}" />
+                            <inputToolkit:NumericUpDown Margin="2" Name="NUD_HitsToSurvive" Grid.Row="4" Grid.Column="2" Value="{Binding Path=HitsToSurvive, Mode=TwoWay}" DecimalPlaces="1" MinWidth="50" Minimum="0" Maximum="10" Increment="0.1" />
+                            <Button Margin="2" x:Name="btnResetHitsToSurvive" Grid.Row="4" Grid.Column="3" Content="Reset" ToolTipService.ToolTip="Click to reset the Hits to Survive to 1.00." Click="btnResetHitsToSurvive_Click" />
                         </Grid>
                     </Border>
                     <Border Margin="0 2" Background="Transparent" BorderBrush="Black" BorderThickness="1">

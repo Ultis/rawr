@@ -499,6 +499,8 @@ namespace Rawr
 
         #region Functions for More complex things.
 
+        public const float MitigationScaler = 78591f; // Originally from Bear. This should be updated once per expansion
+
         // http://forums.worldofwarcraft.com/thread.html?topicId=16473618356&sid=1&pageNo=4 post 77.
         // Ghostcrawler vs theorycraft.
         // http://elitistjerks.com/f15/t29453-combat_ratings_level_85_cataclysm/p24/#post1841717
