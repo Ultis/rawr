@@ -46,7 +46,7 @@ namespace Rawr.ProtPaladin
         }
 
         public static float DamageReduction(Stats stats) {
-            return 1.0f * (1.0f + stats.DamageTakenMultiplier) * (1f + stats.BossPhysicalDamageDealtMultiplier);
+            return (1f - stats.DamageTakenReductionMultiplier) * (1f - stats.BossPhysicalDamageDealtReductionMultiplier);
         }
 
         public static float BonusExpertisePercentage(Stats stats) {

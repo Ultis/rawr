@@ -774,7 +774,7 @@ Points individually may be important.",
                     float BoneLossRate = Math.Max(2f, TDK.bo.DynamicCompiler_Attacks.AttackSpeed / fChanceToGetHit);  // 2 sec internal cooldown on loosing bones so the DK can't get spammed to death.  
                     float moveVal = character.DeathKnightTalents.GlyphofBoneShield ? 0.15f : 0f;
                     SpecialEffect primary = new SpecialEffect(Trigger.Use,
-                        new Stats() { DamageTakenMultiplier = -0.20f, BonusDamageMultiplier = 0.02f, MovementSpeed = moveVal, },
+                        new Stats() { DamageTakenReductionMultiplier = 0.20f, BonusDamageMultiplier = 0.02f, MovementSpeed = moveVal, },
                         BoneLossRate * BSStacks, 60);
                     statsTotal.AddSpecialEffect(primary);
                 }
@@ -783,7 +783,7 @@ Points individually may be important.",
                 // Vengence has the chance to increase AP.
                 int iVengenceMax = (int)(statsTotal.Stamina + (BaseStats.GetBaseStats(character).Health) * .1);
                 int iAttackPowerMax = (int)statsTotal.AttackPower + iVengenceMax;
-                float mitigatedDPS = TDK.bo.GetDPSByType(ATTACK_TYPES.AT_MELEE, 0, statsTotal.DamageTakenMultiplier,
+                float mitigatedDPS = TDK.bo.GetDPSByType(ATTACK_TYPES.AT_MELEE, 0, statsTotal.DamageTakenReductionMultiplier,
                     0, .14f, statsTotal.Miss, statsTotal.Dodge, statsTotal.EffectiveParry, 0, 0,
                     statsTotal.ArcaneResistance, statsTotal.FireResistance, statsTotal.FrostResistance, statsTotal.NatureResistance, statsTotal.ShadowResistance);
                 mitigatedDPS = mitigatedDPS * (1 - (float)StatConversion.GetArmorDamageReduction(TDK.bo.Level, statsTotal.Armor, 0f, 0f));
@@ -1052,10 +1052,10 @@ Points individually may be important.",
                 BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
                 BaseArmorMultiplier = stats.BaseArmorMultiplier,
                 BonusArmorMultiplier = stats.BonusArmorMultiplier,
-                DamageTakenMultiplier = stats.DamageTakenMultiplier,
-                SpellDamageTakenMultiplier = stats.SpellDamageTakenMultiplier,
-                PhysicalDamageTakenMultiplier = stats.PhysicalDamageTakenMultiplier,
-                BossPhysicalDamageDealtMultiplier = stats.BossPhysicalDamageDealtMultiplier,
+                DamageTakenReductionMultiplier = stats.DamageTakenReductionMultiplier,
+                SpellDamageTakenReductionMultiplier = stats.SpellDamageTakenReductionMultiplier,
+                PhysicalDamageTakenReductionMultiplier = stats.PhysicalDamageTakenReductionMultiplier,
+                BossPhysicalDamageDealtReductionMultiplier = stats.BossPhysicalDamageDealtReductionMultiplier,
                 BonusWhiteDamageMultiplier = stats.BonusWhiteDamageMultiplier,
 
                 ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
@@ -1246,13 +1246,14 @@ Points individually may be important.",
             bResults |= (stats.BonusAttackPowerMultiplier != 0);
             bResults |= (stats.BonusPhysicalDamageMultiplier != 0);
             bResults |= (stats.BonusDamageMultiplier != 0);
-            bResults |= (stats.DamageTakenMultiplier != 0);
-            bResults |= (stats.SpellDamageTakenMultiplier != 0);
-            bResults |= (stats.PhysicalDamageTakenMultiplier != 0);
-            bResults |= (stats.BossPhysicalDamageDealtMultiplier != 0);
             bResults |= (stats.ThreatIncreaseMultiplier != 0);
             bResults |= (stats.ThreatReductionMultiplier != 0);
             bResults |= (stats.BonusWhiteDamageMultiplier != 0);
+
+            bResults |= (stats.DamageTakenReductionMultiplier != 0);
+            bResults |= (stats.SpellDamageTakenReductionMultiplier != 0);
+            bResults |= (stats.PhysicalDamageTakenReductionMultiplier != 0);
+            bResults |= (stats.BossPhysicalDamageDealtReductionMultiplier != 0);
 
             // Damage Multipliers:
             bResults |= (stats.BonusShadowDamageMultiplier != 0);
@@ -1345,20 +1346,22 @@ Points individually may be important.",
             fPhysicalSurvival = GetEffectiveHealth(stats.Health, ArmorDamageReduction, DamagePercentages[(int)SurvivalSub.Physical]);
 
             // Bleed damage:
-            fBleedSurvival = GetEffectiveHealth(stats.Health, 0, DamagePercentages[(int)SurvivalSub.Bleed]);
+            fBleedSurvival    = GetEffectiveHealth(stats.Health, 0, DamagePercentages[(int)SurvivalSub.Bleed]);
             
             // Magic Damage:
-            fMagicalSurvival = GetEffectiveHealth(stats.Health, fMagicDR, DamagePercentages[(int)SurvivalSub.Magic]);
+            fMagicalSurvival  = GetEffectiveHealth(stats.Health, fMagicDR, DamagePercentages[(int)SurvivalSub.Magic]);
 
             // Since Armor plays a role in Survival, so shall the other damage taken adjusters.
             // Note, it's expected that (at least for tanks) that DamageTakenMultiplier will be Negative.
+            // JOTHAY NOTE: The above is no longer true. DamageTakenReductionMultiplier will now be positive, but must be handled multiplicatively and inversely
+            // JOTHAY NOTE: YOUR FORMULAS HAVE BEEN UPDATED TO REFLECT THIS CHANGE
             // So the next line should INCREASE survival because 
             // fPhysicalSurvival * (1 - [some negative value] * (1 - [0 or some negative value])
             // will look like:
             // fPhysicalSurvival * 1.xx * 1.xx
-            fPhysicalSurvival = fPhysicalSurvival * (1 - stats.DamageTakenMultiplier) * (1 - stats.PhysicalDamageTakenMultiplier);
-            fBleedSurvival = fBleedSurvival * (1 - stats.DamageTakenMultiplier) * (1 - stats.PhysicalDamageTakenMultiplier);
-            fMagicalSurvival = fMagicalSurvival * (1 - stats.DamageTakenMultiplier) * (1 - stats.SpellDamageTakenMultiplier);
+            fPhysicalSurvival       = fPhysicalSurvival / ((1f - stats.DamageTakenReductionMultiplier) * (1f - stats.PhysicalDamageTakenReductionMultiplier));
+            fBleedSurvival          = fBleedSurvival    / ((1f - stats.DamageTakenReductionMultiplier) * (1f - stats.PhysicalDamageTakenReductionMultiplier));
+            fMagicalSurvival        = fMagicalSurvival  / ((1f - stats.DamageTakenReductionMultiplier) * (1f - stats.SpellDamageTakenReductionMultiplier   ));
             float[] SurvivalResults = new float[EnumHelper.GetCount(typeof(SurvivalSub))];
             SurvivalResults[(int)SurvivalSub.Physical] = fPhysicalSurvival;
             SurvivalResults[(int)SurvivalSub.Bleed] = fBleedSurvival;
@@ -1466,13 +1469,13 @@ Points individually may be important.",
             fCurrentDTPS[(int)SurvivalSub.Magic] -= fCurrentDTPS[(int)SurvivalSub.Magic] * fMagicDR;
             #endregion
             #region ** Damage Taken Mitigation **
-            fTotalMitigation[(int)MitigationSub.DamageReduction] += Math.Abs(fMagicDamageDPS * stats.DamageTakenMultiplier) + Math.Abs(fMagicDamageDPS * stats.SpellDamageTakenMultiplier);
-            fTotalMitigation[(int)MitigationSub.DamageReduction] += Math.Abs(fBleedDamageDPS * stats.DamageTakenMultiplier) + Math.Abs(fBleedDamageDPS * stats.PhysicalDamageTakenMultiplier);
-            fTotalMitigation[(int)MitigationSub.DamageReduction] += Math.Abs(fPhyDamageDPS * stats.DamageTakenMultiplier) + Math.Abs(fPhyDamageDPS * stats.PhysicalDamageTakenMultiplier);
+            fTotalMitigation[(int)MitigationSub.DamageReduction] += fMagicDamageDPS * (1f - stats.DamageTakenReductionMultiplier) * (1f - stats.SpellDamageTakenReductionMultiplier   );
+            fTotalMitigation[(int)MitigationSub.DamageReduction] += fBleedDamageDPS * (1f - stats.DamageTakenReductionMultiplier) * (1f - stats.PhysicalDamageTakenReductionMultiplier);
+            fTotalMitigation[(int)MitigationSub.DamageReduction] += fPhyDamageDPS   * (1f - stats.DamageTakenReductionMultiplier) * (1f - stats.PhysicalDamageTakenReductionMultiplier);
             
-            fCurrentDTPS[(int)SurvivalSub.Magic] -= Math.Abs(fCurrentDTPS[(int)SurvivalSub.Magic] * stats.DamageTakenMultiplier) + Math.Abs(fCurrentDTPS[(int)SurvivalSub.Magic] * stats.SpellDamageTakenMultiplier);
-            fCurrentDTPS[(int)SurvivalSub.Bleed] -= Math.Abs(fCurrentDTPS[(int)SurvivalSub.Bleed] * stats.DamageTakenMultiplier) + Math.Abs(fCurrentDTPS[(int)SurvivalSub.Bleed] * stats.PhysicalDamageTakenMultiplier);
-            fCurrentDTPS[(int)SurvivalSub.Physical] -= Math.Abs(fCurrentDTPS[(int)SurvivalSub.Physical] * stats.DamageTakenMultiplier) + Math.Abs(fCurrentDTPS[(int)SurvivalSub.Physical] * stats.PhysicalDamageTakenMultiplier);
+            fCurrentDTPS[(int)SurvivalSub.Magic]    *= (1f - stats.DamageTakenReductionMultiplier) * (1f - stats.SpellDamageTakenReductionMultiplier   );
+            fCurrentDTPS[(int)SurvivalSub.Bleed]    *= (1f - stats.DamageTakenReductionMultiplier) * (1f - stats.PhysicalDamageTakenReductionMultiplier);
+            fCurrentDTPS[(int)SurvivalSub.Physical] *= (1f - stats.DamageTakenReductionMultiplier) * (1f - stats.PhysicalDamageTakenReductionMultiplier);
             #endregion
             #endregion
 
@@ -1609,14 +1612,13 @@ Points individually may be important.",
         #endregion 
 
         #region Static SpecialEffects
-        private static readonly SpecialEffect _SE_T10_4P = new SpecialEffect(Trigger.Use, new Stats() { DamageTakenMultiplier = -0.12f }, 10f, 60f);
         private static readonly SpecialEffect _SE_FC1 = new SpecialEffect(Trigger.DamageDone, new Stats() { BonusStrengthMultiplier = .15f }, 15f, 0f, -2f, 1);
         private static readonly SpecialEffect _SE_FC2 = new SpecialEffect(Trigger.DamageDone, new Stats() { HealthRestoreFromMaxHealth = .03f }, 0, 0f, -2f, 1);
         private static readonly SpecialEffect[] _SE_IBF = new SpecialEffect[] 
-            {   new SpecialEffect(Trigger.Use, new Stats() { StunDurReduc = 1f, DamageTakenMultiplier = -.2f }, 12 * 1.0f, 3 * 60  ), // Default IBF
-                new SpecialEffect(Trigger.Use, new Stats() { StunDurReduc = 1f, DamageTakenMultiplier = -.2f }, 12 * 1.5f, 3 * 60  ), // IBF w/ 4T11
+            {   new SpecialEffect(Trigger.Use, new Stats() { StunDurReduc = 1f, DamageTakenReductionMultiplier = 0.20f }, 12 * 1.0f, 3 * 60  ), // Default IBF
+                new SpecialEffect(Trigger.Use, new Stats() { StunDurReduc = 1f, DamageTakenReductionMultiplier = 0.20f }, 12 * 1.5f, 3 * 60  ), // IBF w/ 4T11
             };
-        private static readonly SpecialEffect _SE_AntiMagicZone = new SpecialEffect(Trigger.Use, new Stats() { SpellDamageTakenMultiplier = -0.75f }, 10f, 2f * 60f);
+        private static readonly SpecialEffect _SE_AntiMagicZone = new SpecialEffect(Trigger.Use, new Stats() { SpellDamageTakenReductionMultiplier = 0.75f }, 10f, 2f * 60f);
         private static readonly SpecialEffect _SE_RuneTap = new SpecialEffect(Trigger.Use, new Stats() { HealthRestoreFromMaxHealth = .1f }, 0, 30f);
         private static readonly SpecialEffect _SE_DeathPact = new SpecialEffect(Trigger.Use, new Stats() { HealthRestoreFromMaxHealth = .25f }, 0, 60 * 2f);
         #endregion

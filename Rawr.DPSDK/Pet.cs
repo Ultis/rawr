@@ -48,7 +48,7 @@ namespace Rawr.DK
                 m_Stats.Strength += (m_DKStats.Strength * .4f);
                 m_Stats.Stamina += (m_DKStats.Stamina * .4f);
             }
-            m_Stats.DamageTakenMultiplier -= .9f; // 90% passive AOE damage reduction.
+            m_Stats.DamageTakenReductionMultiplier = 1f - (1f - m_Stats.DamageTakenReductionMultiplier) * (1f - .90f); // 90% passive AOE damage reduction.
 
             // Apply ratings and such.
             m_Stats.AttackPower = (float)Math.Floor(m_Stats.Strength * 2);

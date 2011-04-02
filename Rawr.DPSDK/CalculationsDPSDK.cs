@@ -551,7 +551,7 @@ namespace Rawr.DPSDK
                         PresenceStats.MovementSpeed += .15f;
                     PresenceStats.BonusStaminaMultiplier += .08125f; 
                     PresenceStats.BaseArmorMultiplier += 0.3f;
-                    PresenceStats.DamageTakenMultiplier -= 0.08f;
+                    PresenceStats.DamageTakenReductionMultiplier = 1f - (1f - PresenceStats.DamageTakenReductionMultiplier) * (1f - 0.08f);
                     // Threat bonus.
                     PresenceStats.ThreatIncreaseMultiplier += 1f; 
                     break;
@@ -559,7 +559,7 @@ namespace Rawr.DPSDK
                 case Presence.Frost:
                 {
                     if (t.ImprovedBloodPresence > 0)
-                        PresenceStats.DamageTakenMultiplier -= 0.02f * t.ImprovedBloodPresence;
+                        PresenceStats.DamageTakenReductionMultiplier = 1f - (1f - PresenceStats.DamageTakenReductionMultiplier) * (1f - 0.02f * t.ImprovedBloodPresence);
                     else if (t.ImprovedUnholyPresence == 1)
                         PresenceStats.MovementSpeed += .08f;
                     else if (t.ImprovedUnholyPresence == 2)
@@ -572,7 +572,7 @@ namespace Rawr.DPSDK
                 case Presence.Unholy:
                 {
                     if (t.ImprovedBloodPresence > 0)
-                        PresenceStats.DamageTakenMultiplier -= 0.02f * t.ImprovedBloodPresence;
+                        PresenceStats.DamageTakenReductionMultiplier = 1f - (1f - PresenceStats.DamageTakenReductionMultiplier) * (1f - 0.02f * t.ImprovedBloodPresence);
                     else if (t.ImprovedFrostPresence > 0)
                         PresenceStats.BonusRPMultiplier += .02f * t.ImprovedFrostPresence;
                     else if (t.ImprovedUnholyPresence > 0)
@@ -910,7 +910,7 @@ namespace Rawr.DPSDK
             if (character.DeathKnightTalents.BladeBarrier > 0)
             {
                 // If you don't have your Blood Runes on CD, you're doing it wrong. 
-                FullCharacterStats.DamageTakenMultiplier -= (.02f * character.DeathKnightTalents.BladeBarrier);
+                FullCharacterStats.DamageTakenReductionMultiplier = 1f - (1f - FullCharacterStats.DamageTakenReductionMultiplier) * (1f - .02f * character.DeathKnightTalents.BladeBarrier);
             }
 
             // Bladed Armor
@@ -934,7 +934,8 @@ namespace Rawr.DPSDK
             {
                 // Like Blade Barrier, this should always be up.
                 // Be sure to put this in the rotation solver for Tanking Rotations.
-                FullCharacterStats.DamageTakenMultiplier -= (.05f * character.DeathKnightTalents.ScarletFever);
+                // JOTHAY TODO: Isn't this conflicting with the Buffs pane?
+                FullCharacterStats.DamageTakenReductionMultiplier = 1f - (1f - FullCharacterStats.DamageTakenReductionMultiplier) * (1f - .05f * character.DeathKnightTalents.ScarletFever);
             }
 
             // Hand of Doom
@@ -1780,8 +1781,6 @@ namespace Rawr.DPSDK
         }
 
         #region Static SpecialEffects
-        // Gear: T10 4P
-        public static readonly SpecialEffect _SE_T10_4P = new SpecialEffect(Trigger.Use, new Stats() { DamageTakenMultiplier = -0.12f }, 10f, 60f);
         // Enchant: Rune of Fallen Crusader
         public static readonly SpecialEffect _SE_FC1 = new SpecialEffect(Trigger.DamageDone, new Stats() { BonusStrengthMultiplier = .15f }, 15f, 0f, -2f, 1, false);
         public static readonly SpecialEffect _SE_FC2 = new SpecialEffect(Trigger.DamageDone, new Stats() { HealthRestoreFromMaxHealth = .03f }, 0, 0f, -2f, 1, false);
@@ -1806,9 +1805,9 @@ namespace Rawr.DPSDK
         /// </summary>
         public static readonly SpecialEffect[] _SE_WillOfTheNecropolis = new SpecialEffect[] {
             null,
-            new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenMultiplier = -(.25f / 3 * 1) }, 8, 45, 0.30f),
-            new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenMultiplier = -(.25f / 3 * 2) }, 8, 45, 0.30f),
-            new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenMultiplier = -(.25f / 3 * 3) }, 8, 45, 0.30f),
+            new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenReductionMultiplier = (0.25f / 3f * 1f) }, 8, 45, 0.30f),
+            new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenReductionMultiplier = (0.25f / 3f * 2f) }, 8, 45, 0.30f),
+            new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenReductionMultiplier = (0.25f / 3f * 3f) }, 8, 45, 0.30f),
         };
         public static readonly SpecialEffect[][] _SE_UnbreakableArmor = new SpecialEffect[][] {
             new SpecialEffect[] {
@@ -1820,7 +1819,7 @@ namespace Rawr.DPSDK
                     new SpecialEffect(Trigger.Use, new Stats() { BonusStrengthMultiplier = 0.20f, BaseArmorMultiplier = .25f + (true  ? .20f : 0f), BonusArmorMultiplier = .25f + (true  ? .20f : 0f) }, 20f, 60f - 1 * 10f),
             },
         };
-        public static readonly SpecialEffect _SE_AntiMagicZone = new SpecialEffect(Trigger.Use, new Stats() { SpellDamageTakenMultiplier = -0.75f }, 10f, 2f * 60f);
+        public static readonly SpecialEffect _SE_AntiMagicZone = new SpecialEffect(Trigger.Use, new Stats() { SpellDamageTakenReductionMultiplier = 0.75f }, 10f, 2f * 60f);
 
         public static readonly SpecialEffect _SE_PillarOfFrost = new SpecialEffect(Trigger.Use, new Stats() { BonusStrengthMultiplier = .2f }, 20f, 60);
         public static readonly SpecialEffect[] _SE_DRW = {

@@ -195,13 +195,6 @@ namespace Rawr
         BaseArmorMultiplier,
         BonusArmorMultiplier,
         BonusBlockValueMultiplier,
-        DamageTakenMultiplier,
-        SpellDamageTakenMultiplier,
-        PhysicalDamageTakenMultiplier,
-        #endregion
-        #region ===== Target Stats =====
-        BossAttackSpeedMultiplier,
-        BossPhysicalDamageDealtMultiplier,
         #endregion
         #region ===== Item Proc Stats =====
         #endregion
@@ -244,6 +237,11 @@ namespace Rawr
         ThreatReductionMultiplier,
         TargetArmorReduction,
         ManaCostReductionMultiplier,
+        DamageTakenReductionMultiplier,
+        SpellDamageTakenReductionMultiplier,
+        PhysicalDamageTakenReductionMultiplier,
+        BossAttackSpeedReductionMultiplier,
+        BossPhysicalDamageDealtMultiplier,
         #endregion
         #region Added by Death Knights        [Verified Jothay 2011-03-29]
         AntiMagicShellDamageReduction,
@@ -1729,31 +1727,31 @@ namespace Rawr
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusBlockValueMultiplier] = value; }
         }
         [DefaultValueAttribute(0f)]
-        [DisplayName("% Damage Taken")]
+        [DisplayName("% Damage Taken Reduction")]
         [Percentage]
         [Category("Buffs / Debuffs")]
-        public float DamageTakenMultiplier
+        public float DamageTakenReductionMultiplier
         {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.DamageTakenMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.DamageTakenMultiplier] = value; }
+            get { return _rawInverseMultiplicativeData[(int)InverseMultiplicativeStat.DamageTakenReductionMultiplier]; }
+            set { _rawInverseMultiplicativeData[(int)InverseMultiplicativeStat.DamageTakenReductionMultiplier] = value; }
         }
         [DefaultValueAttribute(0f)]
-        [DisplayName("% Spell Damage Taken")]
+        [DisplayName("% Spell Damage Taken Reduction")]
         [Percentage]
         [Category("Buffs / Debuffs")]
-        public float SpellDamageTakenMultiplier
+        public float SpellDamageTakenReductionMultiplier
         {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.SpellDamageTakenMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.SpellDamageTakenMultiplier] = value; }
+            get { return _rawInverseMultiplicativeData[(int)InverseMultiplicativeStat.SpellDamageTakenReductionMultiplier]; }
+            set { _rawInverseMultiplicativeData[(int)InverseMultiplicativeStat.SpellDamageTakenReductionMultiplier] = value; }
         }
         [DefaultValueAttribute(0f)]
-        [DisplayName("% Physical Damage Taken")]
+        [DisplayName("% Physical Damage Taken Reduction")]
         [Percentage]
         [Category("Buffs / Debuffs")]
-        public float PhysicalDamageTakenMultiplier
+        public float PhysicalDamageTakenReductionMultiplier
         {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.PhysicalDamageTakenMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.PhysicalDamageTakenMultiplier] = value; }
+            get { return _rawInverseMultiplicativeData[(int)InverseMultiplicativeStat.PhysicalDamageTakenReductionMultiplier]; }
+            set { _rawInverseMultiplicativeData[(int)InverseMultiplicativeStat.PhysicalDamageTakenReductionMultiplier] = value; }
         }
         #endregion
         #region ===== Target Stats =====
@@ -1761,19 +1759,19 @@ namespace Rawr
         [DisplayName("% Boss Attack Speed Reduction")]
         [Percentage]
         [Category("Buffs / Debuffs")]
-        public float BossAttackSpeedMultiplier
+        public float BossAttackSpeedReductionMultiplier
         {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BossAttackSpeedMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BossAttackSpeedMultiplier] = value; }
+            get { return _rawInverseMultiplicativeData[(int)InverseMultiplicativeStat.BossAttackSpeedReductionMultiplier]; }
+            set { _rawInverseMultiplicativeData[(int)InverseMultiplicativeStat.BossAttackSpeedReductionMultiplier] = value; }
         }
         [DefaultValueAttribute(0f)]
-        [DisplayName("% Boss Physical Damage Dealt")]
+        [DisplayName("% Boss Physical Damage Dealt Reduction")]
         [Percentage]
         [Category("Buffs / Debuffs")]
-        public float BossPhysicalDamageDealtMultiplier
+        public float BossPhysicalDamageDealtReductionMultiplier
         {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BossPhysicalDamageDealtMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BossPhysicalDamageDealtMultiplier] = value; }
+            get { return _rawInverseMultiplicativeData[(int)InverseMultiplicativeStat.BossPhysicalDamageDealtMultiplier]; }
+            set { _rawInverseMultiplicativeData[(int)InverseMultiplicativeStat.BossPhysicalDamageDealtMultiplier] = value; }
         }
         #endregion
         #region ===== Item Proc Stats =====

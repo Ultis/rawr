@@ -293,8 +293,8 @@ namespace Rawr.DPSWarr
         #endregion
         #region Demoralizing Shout
         public static SpecialEffect[/*Glyph of Demoralizing Shout*/] DemoralizingShout = {
-            new SpecialEffect(Trigger.Use, new Stats() { BossPhysicalDamageDealtMultiplier = -0.10f, }, 30f + (false ? 15f : 0f), 1.5f),
-            new SpecialEffect(Trigger.Use, new Stats() { BossPhysicalDamageDealtMultiplier = -0.10f, }, 30f + (true  ? 15f : 0f), 1.5f),
+            new SpecialEffect(Trigger.Use, new Stats() { BossPhysicalDamageDealtReductionMultiplier = 0.10f, }, 30f + (false ? 15f : 0f), 1.5f),
+            new SpecialEffect(Trigger.Use, new Stats() { BossPhysicalDamageDealtReductionMultiplier = 0.10f, }, 30f + (true  ? 15f : 0f), 1.5f),
         };
         #endregion
         #region Recklessness, Shattering Throw, ThunderClap, Sunder Armor, Sweeping Strikes
@@ -366,7 +366,7 @@ namespace Rawr.DPSWarr
         #region Functions that take in something to affect the SpecialEffect needing to be returned
         public static SpecialEffect GetDeathWishWithMastery(float masteryVal, DPSWarrCharacter dpswarrchar) {
             SpecialEffect retVal = new SpecialEffect(Trigger.Use,
-                    new Stats() { BonusDamageMultiplier = 0.20f * (1f + masteryVal), DamageTakenMultiplier = (dpswarrchar.Talents.GlyphOfDeathWish ? 0f : 0.05f), },
+                    new Stats() { BonusDamageMultiplier = 0.20f * (1f + masteryVal), DamageTakenReductionMultiplier = (dpswarrchar.Talents.GlyphOfDeathWish ? 0f : -0.05f), },
                     30f, 3f * 60f * (1f - 0.10f * dpswarrchar.Talents.IntensifyRage));
             return retVal;
         }

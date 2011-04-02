@@ -24,13 +24,13 @@ namespace Rawr.ProtPaladin
             set { _subPoints = value; }
         }
 
-        public float SurvivalPoints
+        public float MitigationPoints
         {
             get { return _subPoints[0]; }
             set { _subPoints[0] = value; }
         }
 
-        public float MitigationPoints
+        public float SurvivabilityPoints
         {
             get { return _subPoints[1]; }
             set { _subPoints[1] = value; }
@@ -211,16 +211,16 @@ namespace Rawr.ProtPaladin
             {
                 case 1:
                     dictValues.Add("Ranking Mode", "Burst Time*The average amount of time between events which have a chance to result in a burst death");
-                    dictValues.Add("Survival Points", string.Format("{0:0}*{1:0.00} seconds between events", SurvivalPoints, SurvivalPoints / 100.0f));
+                    dictValues.Add("Survival Points", string.Format("{0:0}*{1:0.00} seconds between events", SurvivabilityPoints, SurvivabilityPoints / 100.0f));
                     break;
                 case 2:
                     dictValues.Add("Ranking Mode", "Damage Output*The average amount of DPS which can be produced");
-                    dictValues.Add("Survival Points", string.Format("{0:0}*Survival is not weighted in this mode", SurvivalPoints, SurvivalPoints / 100.0f));
+                    dictValues.Add("Survival Points", string.Format("{0:0}*Survival is not weighted in this mode", SurvivabilityPoints, SurvivabilityPoints / 100.0f));
                     break;
                 case 0:
                 default:
                     dictValues.Add("Ranking Mode", "Mitigation Scale*Customizable scale which allows you to weight mitigation vs. effective health.");
-                    dictValues.Add("Survival Points", string.Format("{0:0}*Effective Health", SurvivalPoints));
+                    dictValues.Add("Survival Points", string.Format("{0:0}*Effective Health", SurvivabilityPoints));
                     break;
             }
             dictValues.Add("Overall Points", string.Format("{0:0}", OverallPoints));

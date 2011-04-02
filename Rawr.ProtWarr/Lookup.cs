@@ -48,7 +48,7 @@ namespace Rawr.ProtWarr
 
         public static float TargetWeaponSpeed(Player player)
         {
-            return player.Options.BossAttackSpeed * (1.0f - player.Stats.BossAttackSpeedMultiplier);
+            return player.Options.BossAttackSpeed / (1f - player.Stats.BossAttackSpeedReductionMultiplier);
         }
 
         public static float StanceDamageMultipler(Player player)
@@ -71,7 +71,7 @@ namespace Rawr.ProtWarr
         public static float StanceDamageReduction(Player player, DamageType damageType)
         {
             // In Defensive Stance
-            float damageTaken = 0.9f * (1.0f + player.Stats.DamageTakenMultiplier);
+            float damageTaken = (1f - 0.9f) * (1f - player.Stats.DamageTakenReductionMultiplier);
             
             switch (damageType)
             {

@@ -418,7 +418,7 @@ namespace Rawr.Hunter {
                 BonusPetAttackPowerMultiplier = stats.BonusPetAttackPowerMultiplier,
 
                 BonusManaPotionEffectMultiplier = stats.BonusManaPotionEffectMultiplier,
-                DamageTakenMultiplier = stats.DamageTakenMultiplier,
+                DamageTakenReductionMultiplier = stats.DamageTakenReductionMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BaseArmorMultiplier = stats.BaseArmorMultiplier,
                 BonusArmorMultiplier = stats.BonusArmorMultiplier,
@@ -521,7 +521,7 @@ namespace Rawr.Hunter {
                 stats.BonusPetDamageMultiplier +
                 stats.BonusDamageMultiplier +
                 stats.BonusSpiritMultiplier +
-                stats.DamageTakenMultiplier +
+                stats.DamageTakenReductionMultiplier +
                 stats.BaseArmorMultiplier +
                 stats.BonusArmorMultiplier +
                 stats.BonusBleedDamageMultiplier +
@@ -2544,10 +2544,10 @@ namespace Rawr.Hunter {
             Health2SurvHunter += (stats.HealthRestore) / 1000f;
             float Health2SurvPet = (calc.pet.PetStats.Health) / 100f;
             Health2SurvPet += (calc.pet.PetStats.HealthRestore) / 1000f;
-            float DmgTakenMods2SurvHunter = (1f - stats.DamageTakenMultiplier) * 100f;
-            float DmgTakenMods2SurvPet = (1f - calc.pet.PetStats.DamageTakenMultiplier) * 100f;
+            float DmgTakenMods2SurvHunter = (1f - stats.DamageTakenReductionMultiplier) * 100f;
+            float DmgTakenMods2SurvPet = (1f - calc.pet.PetStats.DamageTakenReductionMultiplier) * 100f;
             float BossAttackPower2Surv = stats.BossAttackPower / 14f * -1f;
-            float BossAttackSpeedMods2Surv = (1f - stats.BossAttackSpeedMultiplier) * 100f;
+            float BossAttackSpeedMods2Surv = (1f - stats.BossAttackSpeedReductionMultiplier) * 100f;
             float AvoidanceHunter = stats.Dodge + stats.Parry;
             float AvoidancePet = calc.pet.PetStats.Dodge + calc.pet.PetStats.Parry;// should be pet stats
             float Armor2SurvHunter = (stats.Armor) / 100f;

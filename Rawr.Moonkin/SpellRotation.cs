@@ -170,8 +170,8 @@ namespace Rawr.Moonkin
             int playerLevel = calcs.PlayerLevel;
             float sunderPercent = calcs.BasicStats.TargetArmorReduction;
             float meleeHit = calcs.SpellHit * (StatConversion.WHITE_MISS_CHANCE_CAP[bossLevel - playerLevel] / StatConversion.GetSpellMiss(playerLevel - bossLevel, false));
-            float physicalDamageMultiplier = (1 + calcs.BasicStats.BonusDamageMultiplier) * (1 + calcs.BasicStats.BonusPhysicalDamageMultiplier) +
-                ((1 + calcs.BasicStats.PhysicalDamageTakenMultiplier) * (1 + calcs.BasicStats.DamageTakenMultiplier) - 1);
+            float physicalDamageMultiplierBonus = (1f + calcs.BasicStats.BonusDamageMultiplier) * (1f + calcs.BasicStats.BonusPhysicalDamageMultiplier);
+            float physicalDamageMultiplierReduc = (1f - calcs.BasicStats.DamageTakenReductionMultiplier) * (1f - calcs.BasicStats.PhysicalDamageTakenReductionMultiplier);
             // 932 = base AP, 57% spell power scaling
             float attackPower = 932.0f + (float)Math.Floor(0.57f * effectiveNatureDamage);
             // 1.65 s base swing speed
@@ -191,7 +191,8 @@ namespace Rawr.Moonkin
             float damageReduction = StatConversion.GetArmorDamageReduction(playerLevel, StatConversion.NPC_ARMOR[bossLevel - playerLevel] * (1f - sunderPercent), 0, 0);
             // Final normal damage per swing
             damagePerHit *= 1.0f - damageReduction;
-            damagePerHit *= 1.0f + physicalDamageMultiplier;
+            damagePerHit *= physicalDamageMultiplierReduc;
+            damagePerHit *= physicalDamageMultiplierBonus;
             // Damage per swing, including crits/glances/misses
             // This is a cheesy approximation of a true combat table, but because crit/miss/dodge rates will all be fairly low, I don't need to do the whole thing
             damagePerHit = (critRate * damagePerHit * 2.0f) + (glancingRate * damagePerHit * 0.75f) + ((1 - critRate - glancingRate - missRate - dodgeRate) * damagePerHit);

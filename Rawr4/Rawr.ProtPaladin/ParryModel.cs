@@ -15,7 +15,7 @@ namespace Rawr.ProtPaladin {
         public float WeaponSpeed { get; private set; }
 
         private void Calculate() {
-            float bossAttackSpeed = BossOpts.DefaultMeleeAttack.AttackSpeed * (1f - Stats.BossAttackSpeedMultiplier);
+            float bossAttackSpeed = BossOpts.DefaultMeleeAttack.AttackSpeed / (1f - Stats.BossAttackSpeedReductionMultiplier);
             WeaponSpeed     = Lookup.WeaponSpeed(Character, Stats) / (1.0f + (DefendTable.Parry * 0.24f * (WeaponSpeed / bossAttackSpeed)));
         }
 

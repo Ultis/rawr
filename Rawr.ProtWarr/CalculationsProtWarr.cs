@@ -951,9 +951,9 @@ threat and limited threat scaled by the threat scale.",
                 Health = stats.Health,
                 BattlemasterHealthProc = stats.BattlemasterHealthProc,
                 BonusHealthMultiplier = stats.BonusHealthMultiplier,
-                DamageTakenMultiplier = stats.DamageTakenMultiplier,
-                BossPhysicalDamageDealtMultiplier = stats.BossPhysicalDamageDealtMultiplier,
-                PhysicalDamageTakenMultiplier = stats.PhysicalDamageTakenMultiplier,
+                DamageTakenReductionMultiplier = stats.DamageTakenReductionMultiplier,
+                BossPhysicalDamageDealtReductionMultiplier = stats.BossPhysicalDamageDealtReductionMultiplier,
+                PhysicalDamageTakenReductionMultiplier = stats.PhysicalDamageTakenReductionMultiplier,
                 Miss = stats.Miss,
                 ArcaneResistance = stats.ArcaneResistance,
                 NatureResistance = stats.NatureResistance,
@@ -984,7 +984,7 @@ threat and limited threat scaled by the threat scale.",
                 BonusWhiteDamageMultiplier = stats.BonusWhiteDamageMultiplier,
                 BonusBlockValueMultiplier = stats.BonusBlockValueMultiplier,
                 BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
-                BossAttackSpeedMultiplier = stats.BossAttackSpeedMultiplier,
+                BossAttackSpeedReductionMultiplier = stats.BossAttackSpeedReductionMultiplier,
 
                 HighestStat = stats.HighestStat,
                 Paragon = stats.Paragon,
@@ -1014,7 +1014,7 @@ threat and limited threat scaled by the threat scale.",
                 (
                     stats.BonusArmor + stats.BonusArmorMultiplier +
                     stats.BonusStaminaMultiplier + stats.Dodge + stats.DodgeRating + stats.ParryRating + stats.BlockRating + stats.MasteryRating + stats.BonusHealthMultiplier + 
-                    stats.DamageTakenMultiplier + stats.PhysicalDamageTakenMultiplier + stats.BossPhysicalDamageDealtMultiplier + stats.Miss +
+                    stats.DamageTakenReductionMultiplier + stats.PhysicalDamageTakenReductionMultiplier + stats.BossPhysicalDamageDealtReductionMultiplier + stats.Miss +
                     stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance +
                     stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff +
                     stats.NatureResistanceBuff + stats.FireResistanceBuff + stats.FrostResistanceBuff + stats.ShadowResistanceBuff +
@@ -1031,7 +1031,7 @@ threat and limited threat scaled by the threat scale.",
                     stats.ExpertiseRating + stats.ArmorPenetration + stats.TargetArmorReduction + stats.WeaponDamage +
                     stats.BonusCritDamageMultiplier +
                     stats.BonusDamageMultiplier + stats.BonusWhiteDamageMultiplier +
-                    stats.BonusBleedDamageMultiplier + stats.BossAttackSpeedMultiplier +
+                    stats.BonusBleedDamageMultiplier + stats.BossAttackSpeedReductionMultiplier +
                     stats.HighestStat + stats.Paragon +
                     stats.MovementSpeed + stats.FearDurReduc + stats.StunDurReduc + stats.SnareRootDurReduc
                 ) != 0;

@@ -1500,7 +1500,7 @@ namespace Rawr {
         public string GenInfoString(Character character) {
             if (character == null || character.CurrentCalculations == null) return GenInfoString();
             Stats stats = character.CurrentCalculations.GetCharacterStats(character);
-            return GenInfoString(stats.DamageTakenMultiplier, 0f,
+            return GenInfoString(0f, stats.DamageTakenReductionMultiplier,
                 0f/*stats.Defense * StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER*/,
                 stats.Dodge, stats.Parry, stats.Block, 0f/*stats.BlockValue*/);
         }

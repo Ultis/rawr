@@ -972,6 +972,7 @@ If that is still not working for you, right-click anywhere within the web versio
             c.CurrentModel = Character.CurrentModel;
             c.Class = Character.Class;
             c.Race = Character.Race;
+            c.RecalculateSetBonuses();
             Character = c;
             _unsavedChanges = false;
         }

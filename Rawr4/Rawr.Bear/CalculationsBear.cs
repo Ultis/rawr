@@ -448,7 +448,7 @@ the Threat Scale defined on the Options tab.",
             int characterLevel = character.Level;
             StatsBear stats = GetCharacterStats(character, additionalItem) as StatsBear;
             int levelDifference = (targetLevel - characterLevel);
-            float targetAttackSpeed = bossAttack.AttackSpeed * (1f - stats.BossAttackSpeedMultiplier);
+            float targetAttackSpeed = bossAttack.AttackSpeed / (1f - stats.BossAttackSpeedReductionMultiplier);
 
             calculatedStats.BasicStats = stats;
             calculatedStats.TargetLevel = targetLevel;
@@ -492,7 +492,7 @@ the Threat Scale defined on the Options tab.",
             calculatedStats.Miss = missTotal;
             calculatedStats.Dodge = Math.Min(1f - calculatedStats.Miss, dodgeTotal);
             calculatedStats.DamageReductionFromArmor = StatConversion.GetDamageReductionFromArmor(targetLevel, stats.Armor);
-            calculatedStats.TotalConstantDamageReduction = 1f - (1f - calculatedStats.DamageReductionFromArmor) * (1f + stats.DamageTakenMultiplier) * (1f + stats.BossPhysicalDamageDealtMultiplier);
+            calculatedStats.TotalConstantDamageReduction = 1f - (1f - calculatedStats.DamageReductionFromArmor) * (1f - stats.DamageTakenReductionMultiplier) * (1f - stats.BossPhysicalDamageDealtReductionMultiplier);
             calculatedStats.AvoidancePreDR = dodgeNonDR + dodgePreDR + missNonDR + missPreDR;
             calculatedStats.AvoidancePostDR = dodgeTotal + missTotal;
             calculatedStats.CritReduction = //(defSkill * StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER / 100f)
@@ -509,7 +509,7 @@ the Threat Scale defined on the Options tab.",
                 critsVeng *= (1f - calculatedStats.TotalConstantDamageReduction) * 2f;
                 //crushes *= (100f - calculatedStats.Mitigation) * .015f;
                 hitsVeng *= (1f - calculatedStats.TotalConstantDamageReduction);
-                float damageTakenPercent = (hitsVeng + critsVeng) * (1f + stats.BossAttackSpeedMultiplier);
+                float damageTakenPercent = (hitsVeng + critsVeng) * (1f - stats.BossAttackSpeedReductionMultiplier);
                 float damageTakenPerHit = bossAttack.DamagePerHit * damageTakenPercent - stats.DamageAbsorbed;
                 float damageTakenPerSecond = damageTakenPerHit / bossAttack.AttackSpeed;
                 float damageTakenPerVengeanceTick = damageTakenPerSecond * 2f;
@@ -574,7 +574,7 @@ the Threat Scale defined on the Options tab.",
             crits *= (1f - calculatedStats.TotalConstantDamageReduction) * 2f;
             //crushes *= (100f - calculatedStats.Mitigation) * .015f;
             hits *= (1f - calculatedStats.TotalConstantDamageReduction);
-            calculatedStats.DamageTaken = (hits + crits) * (1f - blockedPercent) /** parryHasteDamageMuliplier*/ * (1f + stats.BossAttackSpeedMultiplier);
+            calculatedStats.DamageTaken = (hits + crits) * (1f - blockedPercent) * (1f - stats.BossAttackSpeedReductionMultiplier) /** parryHasteDamageMuliplier*/;
             calculatedStats.TotalMitigation = 1f - calculatedStats.DamageTaken;
 
             calculatedStats.SurvivalPointsRaw = (stats.Health / (1f - calculatedStats.TotalConstantDamageReduction));
@@ -723,7 +723,7 @@ the Threat Scale defined on the Options tab.",
                 PhysicalCrit = (hasCritBuff ? 0f : 0.05f * talents.LeaderOfThePack) + (talents.Pulverize > 0 ? 0.09f: 0f),
                 SpellCrit = (hasCritBuff ? 0f : 0.05f * talents.LeaderOfThePack),
                 BonusPulverizeDuration = 4f * talents.EndlessCarnage,
-                DamageTakenMultiplier = -0.06f * talents.NaturalReaction,
+                DamageTakenReductionMultiplier = 0.06f * talents.NaturalReaction,
                 BonusMaulDamageMultiplier = 0.04f * talents.RendAndTear,
                 
                 BonusStaminaMultiplier = (1f + 0.02f * talents.HeartOfTheWild) * (leatherSpecialization ? 1.05f : 1f) - 1f,
@@ -803,7 +803,7 @@ the Threat Scale defined on the Options tab.",
             float dodgeTotal = dodgeNonDR + dodgePostDR;
             float missTotal = missNonDR + missPostDR;
 
-            float TargAttackSpeed = bossAttack.AttackSpeed * (1f - statsTotal.BossAttackSpeedMultiplier);
+            float TargAttackSpeed = bossAttack.AttackSpeed / (1f - statsTotal.BossAttackSpeedReductionMultiplier);
 
             Stats statsProcs = new Stats();
             //float uptime;
@@ -1312,9 +1312,9 @@ the Threat Scale defined on the Options tab.",
                 BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusWhiteDamageMultiplier = stats.BonusWhiteDamageMultiplier,
-                DamageTakenMultiplier = stats.DamageTakenMultiplier,
-                BossPhysicalDamageDealtMultiplier = stats.BossPhysicalDamageDealtMultiplier,
-                BossAttackSpeedMultiplier = stats.BossAttackSpeedMultiplier,
+                DamageTakenReductionMultiplier = stats.DamageTakenReductionMultiplier,
+                BossPhysicalDamageDealtReductionMultiplier = stats.BossPhysicalDamageDealtReductionMultiplier,
+                BossAttackSpeedReductionMultiplier = stats.BossAttackSpeedReductionMultiplier,
                 SpellCrit = stats.SpellCrit,
                 SpellCritOnTarget = stats.SpellCritOnTarget,
                 Intellect = stats.Intellect,
@@ -1369,9 +1369,9 @@ the Threat Scale defined on the Options tab.",
                 stats.ThreatIncreaseMultiplier + 
                 // Stats that are for Target
                 stats.TargetArmorReduction +
-                stats.BossAttackSpeedMultiplier +
-                stats.DamageTakenMultiplier +
-                stats.BossPhysicalDamageDealtMultiplier +
+                stats.BossAttackSpeedReductionMultiplier +
+                stats.DamageTakenReductionMultiplier +
+                stats.BossPhysicalDamageDealtReductionMultiplier +
                 stats.SpellCritOnTarget +
                 // Maybe Stats
                 stats.Resilience +

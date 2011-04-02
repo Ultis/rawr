@@ -541,11 +541,9 @@ namespace Rawr.DPSWarr {
                 if (aoeAtks.Count > 0 || dynAoE.AttackSpeed <= 0 || dynAoE.DamagePerHit <= 0) { return 0f; }
                 float RageMod = 2.5f / 453.3f;
                 float damagePerSec = 0f;
-                float freq =
-                    dynAoE.AttackSpeed;
-                float dmg =
-                    dynAoE.DamagePerHit
-                    * (1f + DPSWarrChar.StatS.DamageTakenMultiplier) + DPSWarrChar.StatS.BossAttackPower / 14f;
+                float freq = dynAoE.AttackSpeed;
+                float dmg = dynAoE.DamagePerHit * (1f - DPSWarrChar.StatS.DamageTakenReductionMultiplier)
+                          + DPSWarrChar.StatS.BossAttackPower / 14f;
                 float acts = FightDuration / freq;
                 // Add Berserker Rage's
                 float zerkerMOD = 1f;
@@ -1712,7 +1710,7 @@ namespace Rawr.DPSWarr {
                         }
                         statsTotal.AddSpecialEffect(_SE_ThunderClap[value]);
                     } catch (Exception) { } // Do nothing, this is a Silverlight retard bug*/
-                    statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BossAttackSpeedMultiplier = -0.10f, }, TH.Duration, TH.CD, TH.MHAtkTable.AnyLand));
+                    statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BossAttackSpeedReductionMultiplier = 0.10f, }, TH.Duration, TH.CD, TH.MHAtkTable.AnyLand));
                 }
                 if (SN.Validated) {
                     /*try {

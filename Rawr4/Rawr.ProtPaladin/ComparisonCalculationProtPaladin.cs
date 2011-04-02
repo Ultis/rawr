@@ -34,13 +34,13 @@ namespace Rawr.ProtPaladin
             set { _subPoints = value; }
         }
 
-        public float SurvivalPoints
+        public float MitigationPoints
         {
             get { return _subPoints[0]; }
             set { _subPoints[0] = value; }
         }
 
-        public float MitigationPoints
+        public float SurvivalPoints
         {
             get { return _subPoints[1]; }
             set { _subPoints[1] = value; }
@@ -75,9 +75,9 @@ namespace Rawr.ProtPaladin
 
         public override bool PartEquipped { get; set; }
 
-        public override string ToString()
+        /*public override string ToString()
         {
             return string.Format("{0}: ({1}O {2}M {3}S {4}T)", Name, Math.Round(OverallPoints), Math.Round(MitigationPoints), Math.Round(SurvivalPoints), Math.Round(ThreatPoints));
-        }
+        }*/
     }
 }

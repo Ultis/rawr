@@ -37,26 +37,25 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Text="Weighting Adjustments:" FontWeight="Bold" Grid.Row="0" VerticalAlignment="Center" Margin="4,2" Grid.ColumnSpan="3"/>
-                    <TextBlock Text="Threat Value: * " VerticalAlignment="Center" Margin="4,2" Grid.Row="1" ToolTipService.ToolTip="Threat Value multiplies the Threat Per Second output by this value.&#x0a;- Increase it when you are having trouble holding mobs.&#x0a;- Decrease it when you find you are having no problems with threat.&#x0a;&#x0a;Adjusting this weight does not involve Stat Weights as described by&#x0a;Pawn, SimCraft or other similar utilities. This is meant to describe your&#x0a;general personal preference of importance in Threat."
-                                />
-                    <ComboBox Margin="2" Grid.Column="1" Grid.Row="1" SelectedItem="{Binding ThreatScale, Converter={StaticResource ThreatValueConverter}, Mode=TwoWay, UpdateSourceTrigger=Default}">
+                    
+                    <TextBlock Text="Threat Scale: * " VerticalAlignment="Center" Margin="4,2" Grid.Row="2"
+                               ToolTipService.ToolTip="Threat Value multiplies the Threat Per Second output by this value.&#x0a;- Increase it when you are having trouble holding mobs.&#x0a;- Decrease it when you find you are having no problems with threat.&#x0a;&#x0a;Adjusting this weight does not involve Stat Weights as described by&#x0a;Pawn, SimCraft or other similar utilities. This is meant to describe your&#x0a;general personal preference of importance in Threat." />
+                    <ComboBox Margin="2" Grid.Column="1" Grid.Row="2" SelectedItem="{Binding ThreatScale, Converter={StaticResource ThreatValueConverter}, Mode=TwoWay, UpdateSourceTrigger=Default}">
                         <System:String>Almost None</System:String>
                         <System:String>MT</System:String>
                         <System:String>OT</System:String>
                         <System:String>Crazy About Threat</System:String>
                         <System:String>Custom...</System:String>
                     </ComboBox>
-                    <inputToolkit:NumericUpDown Margin="2" Grid.Column="2" Grid.Row="1" Value="{Binding ThreatScale, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="1000" DecimalPlaces="2" MinWidth="50" />
+                    <inputToolkit:NumericUpDown Margin="2" Grid.Column="2" Grid.Row="2" Value="{Binding ThreatScale, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="1000" DecimalPlaces="2" MinWidth="50" />
 
-                    <TextBlock Text="Hits to Survive: *" VerticalAlignment="Center" Margin="4,2" Grid.Row="2" 
+                    <TextBlock Text="Hits to Survive: *" VerticalAlignment="Center" Margin="4,2" Grid.Row="1" 
                               ToolTipService.ToolTip="Hits to Survive Value is the new implementation for Survival Soft Caps.&#x0a;Instead of providing a static number to shoot for, this instead provides&#x0a;a number of Boss Attacks you must survive without heals." />
-                    <inputToolkit:NumericUpDown Margin="2" Grid.Column="2" Grid.Row="2" Value="{Binding HitsToSurvive, Mode=TwoWay}" Maximum="10" Increment="0.1" DecimalPlaces="1" MinWidth="50" Name="NUD_HitsToSurvive" />
-                    <Slider Grid.Column="1" Grid.Row="2" Margin="2" Value="{Binding HitsToSurvive, Mode=TwoWay}" Minimum="{Binding Path=Minimum, ElementName=NUD_HitsToSurvive}" Maximum="{Binding Path=Maximum, ElementName=NUD_HitsToSurvive}"/>
+                    <inputToolkit:NumericUpDown Margin="2" Grid.Column="2" Grid.Row="1" Value="{Binding HitsToSurvive, Mode=TwoWay}" Maximum="10" Increment="0.1" DecimalPlaces="1" MinWidth="50" Name="NUD_HitsToSurvive" />
+                    <Slider Grid.Column="1" Grid.Row="1" Margin="2" Value="{Binding HitsToSurvive, Mode=TwoWay}" Minimum="{Binding Path=Minimum, ElementName=NUD_HitsToSurvive}" Maximum="{Binding Path=Maximum, ElementName=NUD_HitsToSurvive}"/>
                     
                     <StackPanel Grid.Row="3" Grid.ColumnSpan="3">
                         <!-- Explanations -->
-                        <!--<TextBlock TextWrapping="Wrap" Margin="4" Text="Threat Value multiplies the Threat Per Second output by this value. Increase it when you are having trouble holding modes. Decrease it when you find you are having no problems with threat."/>
-                        <TextBlock TextWrapping="Wrap" Margin="4" Text="Hits to Survive Value is the new implementation for Survival Soft Caps. Instead of providing a static number to shoot for, this instead provides a number of Boss Attacks you must survive without heals."/>-->
                         <TextBlock TextWrapping="Wrap" Margin="4" Text="Rawr.Bear now uses the Boss Handler for things like Target Level, Incoming Attack Damage, etc. Please see the Boss Handler tab for those options."/>
                         <TextBlock TextWrapping="Wrap" Margin="4" Text="Note that the Boss MUST have an active attack for many of Bear's numbers to be valid."/>
                     </StackPanel>

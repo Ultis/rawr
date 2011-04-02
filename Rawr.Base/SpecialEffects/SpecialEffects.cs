@@ -7,6 +7,7 @@ namespace Rawr {
     public static class SpecialEffects {
         public static void ProcessMetaGem(string line, Stats stats, bool bisArmory)
         {
+            Match match;
             List<string> gemBonuses = new List<string>();
             string[] gemBonusStrings = line.Split(new string[] { " and ", " & ", ", " }, StringSplitOptions.None);
             foreach (string gemBonusString in gemBonusStrings) {
@@ -52,10 +53,11 @@ namespace Rawr {
                 {
                     stats.BonusManaMultiplier = 0.02f;
                 }
-                else if (gemBonus.Contains("Reduce Spell Damage Taken by "))
+                else if ((match = new Regex(@"Reduce Spell Damage Taken by\s+(?<amount>\d+).*").Match(gemBonus)).Success)
                 {
-                    int bonus = int.Parse(gemBonus.Substring(gemBonus.Length - 3, 2));
-                    stats.SpellDamageTakenMultiplier = (float)bonus / -100f;
+                    
+                    //int bonus = int.Parse(gemBonus.Substring(gemBonus.Length - 3, 2));
+                    stats.SpellDamageTakenReductionMultiplier = (float)int.Parse(match.Groups["amount"].Value) / 100f;
                 }
                 else if (gemBonus == "3% Increased Critical Damage")
                 {

@@ -673,7 +673,7 @@ a GCD's length, you will use this while running back into place",
                 DisarmDurReduc = stats.DisarmDurReduc,
                 // Target Debuffs
                 BossAttackPower = stats.BossAttackPower,
-                BossAttackSpeedMultiplier = stats.BossAttackSpeedMultiplier,
+                BossAttackSpeedReductionMultiplier = stats.BossAttackSpeedReductionMultiplier,
                 // Procs
                 DarkmoonCardDeathProc = stats.DarkmoonCardDeathProc,
                 HighestStat = stats.HighestStat,
@@ -702,9 +702,9 @@ a GCD's length, you will use this while running back into place",
                 BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusWhiteDamageMultiplier = stats.BonusWhiteDamageMultiplier,
-                DamageTakenMultiplier = stats.DamageTakenMultiplier,
+                DamageTakenReductionMultiplier = stats.DamageTakenReductionMultiplier,
                 BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
-                BossPhysicalDamageDealtMultiplier = stats.BossPhysicalDamageDealtMultiplier,
+                BossPhysicalDamageDealtReductionMultiplier = stats.BossPhysicalDamageDealtReductionMultiplier,
                 BonusCritDamageMultiplier = stats.BonusCritDamageMultiplier,
                 BonusCritChance = stats.BonusCritChance,
                 BaseArmorMultiplier = stats.BaseArmorMultiplier,
@@ -758,7 +758,7 @@ a GCD's length, you will use this while running back into place",
                 stats.DisarmDurReduc +
                 // Target Debuffs
                 stats.BossAttackPower +
-                stats.BossAttackSpeedMultiplier +
+                stats.BossAttackSpeedReductionMultiplier +
                 // Procs
                 stats.DarkmoonCardDeathProc +
                 stats.HighestStat +
@@ -785,9 +785,9 @@ a GCD's length, you will use this while running back into place",
                 stats.BonusBleedDamageMultiplier +
                 stats.BonusDamageMultiplier +
                 stats.BonusWhiteDamageMultiplier +
-                stats.DamageTakenMultiplier +
+                stats.DamageTakenReductionMultiplier +
                 stats.BonusPhysicalDamageMultiplier +
-                stats.BossPhysicalDamageDealtMultiplier +
+                stats.BossPhysicalDamageDealtReductionMultiplier +
                 stats.BonusCritDamageMultiplier +
                 stats.BonusCritChance +
                 // Set Bonuses
@@ -1016,7 +1016,7 @@ a GCD's length, you will use this while running back into place",
             #endregion
 
             Base.StatsWarrior statsBuffs = new Base.StatsWarrior();
-            AccumulateBuffsStats(statsBuffs, dpswarchar.Char.ActiveBuffs);
+            statsBuffs.Accumulate(GetBuffsStats(dpswarchar));
             AccumulateSetBonusStats(statsBuffs, dpswarchar.Char.SetBonusCount);
 
             if (dpswarchar.Char.ActiveBuffs.Find<Buff>(x => x.SpellId == 22738) != null) {
@@ -1509,9 +1509,9 @@ a GCD's length, you will use this while running back into place",
 
                 float Health2Surv  = (stats.Health) / 100f; 
                       Health2Surv += (stats.HealthRestore) / 1000f;
-                float DmgTakenMods2Surv = (1f - stats.DamageTakenMultiplier) * (1f + stats.BossPhysicalDamageDealtMultiplier) * 100f;
+                float DmgTakenMods2Surv = (1f - (1f - stats.DamageTakenReductionMultiplier) * (1f - stats.BossPhysicalDamageDealtReductionMultiplier)) * 100f;
                 float BossAttackPower2Surv = stats.BossAttackPower / 14f * -1f;
-                float BossAttackSpeedMods2Surv = (1f - stats.BossAttackSpeedMultiplier) * 100f;
+                float BossAttackSpeedMods2Surv = (1f - stats.BossAttackSpeedReductionMultiplier) * 100f;
                 calc.TotalHPS = Rot._HPS_TTL;
                 calc.Survivability = calcOpts.SurvScale * (calc.TotalHPS
                                                                       + Health2Surv
@@ -1598,7 +1598,7 @@ a GCD's length, you will use this while running back into place",
                   Berserker Stance
                         An aggressive combat stance.  Increases damage done by 10%.
                 */
-                DamageTakenMultiplier = (!dpswarchar.CombatFactors.FuryStance ? -0.05f : 0f),
+                DamageTakenReductionMultiplier = (!dpswarchar.CombatFactors.FuryStance ? -0.05f : 0f),
                 BonusDamageMultiplier = (!dpswarchar.CombatFactors.FuryStance ? 0.05f : 0.10f),
 
                 // Battle Shout
@@ -1607,11 +1607,11 @@ a GCD's length, you will use this while running back into place",
                 // Commanding Shout
                 Stamina = (dpswarchar.CalcOpts.M_CommandingShout ? 585f : 0f),
                 // Demo Shout
-                BossPhysicalDamageDealtMultiplier = (dpswarchar.CalcOpts.M_DemoralizingShout ? -0.10f : 0f),
+                BossPhysicalDamageDealtReductionMultiplier = (dpswarchar.CalcOpts.M_DemoralizingShout ? 0.10f : 0f),
                 // Sunder Armor
                 ArmorPenetration = (dpswarchar.CalcOpts.M_SunderArmor ? 0.04f * 3f : 0f),
                 // Thunder Clap
-                BossAttackSpeedMultiplier = (dpswarchar.CalcOpts.M_ThunderClap ? -0.20f : 0f),
+                BossAttackSpeedReductionMultiplier = (dpswarchar.CalcOpts.M_ThunderClap ? 0.20f : 0f),
             };
             if (dpswarchar.CalcOpts.M_ColossusSmash) { statsOptionsPanel.AddSpecialEffect(TalentsAsSpecialEffects.ColossusSmash); }
             #endregion

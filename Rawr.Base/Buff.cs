@@ -358,14 +358,14 @@ namespace Rawr
                 Name = "Ancestral Healing",
                 Source = "Resto Shaman",
                 Group = "Damage Reduction (Major %)",
-                Stats = { DamageTakenMultiplier = -0.1f }
+                Stats = { DamageTakenReductionMultiplier = 0.10f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Inspiration",
                 Source = "Holy Priest",
                 Group = "Damage Reduction (Major %)",
-                Stats = { DamageTakenMultiplier = -0.1f }
+                Stats = { DamageTakenReductionMultiplier = 0.10f }
             });
             #endregion
 
@@ -1040,7 +1040,7 @@ namespace Rawr
                 Name = "Demoralizing Shout",
                 Group = "Target Physical Damage Reduction",
                 Source = "Warrior",
-                Stats = { BossPhysicalDamageDealtMultiplier = -0.1f },
+                Stats = { BossPhysicalDamageDealtReductionMultiplier = 0.10f },
                 IsTargetDebuff = true,
             });
             defaultBuffs.Add(new Buff()
@@ -1048,7 +1048,7 @@ namespace Rawr
                 Name = "Demoralizing Roar",
                 Group = "Target Physical Damage Reduction",
                 Source = "Bear Druid OR Hunter w/ Bear",
-                Stats = { BossPhysicalDamageDealtMultiplier = -0.1f },
+                Stats = { BossPhysicalDamageDealtReductionMultiplier = 0.10f },
                 IsTargetDebuff = true,
             });
             defaultBuffs.Add(new Buff()
@@ -1056,7 +1056,7 @@ namespace Rawr
                 Name = "Vindication",
                 Group = "Target Physical Damage Reduction",
                 Source = "Protection Paladin",
-                Stats = { BossPhysicalDamageDealtMultiplier = -0.1f },
+                Stats = { BossPhysicalDamageDealtReductionMultiplier = 0.10f },
                 IsTargetDebuff = true,
             });
             defaultBuffs.Add(new Buff()
@@ -1064,7 +1064,7 @@ namespace Rawr
                 Name = "Curse of Weakness",
                 Group = "Target Physical Damage Reduction",
                 Source = "Warlock",
-                Stats = { BossPhysicalDamageDealtMultiplier = -0.1f },
+                Stats = { BossPhysicalDamageDealtReductionMultiplier = 0.10f },
                 IsTargetDebuff = true,
             });
             defaultBuffs.Add(new Buff()
@@ -1072,7 +1072,7 @@ namespace Rawr
                 Name = "Scarlet Fever",
                 Group = "Target Physical Damage Reduction",
                 Source = "Blood Death Knight",
-                Stats = { BossPhysicalDamageDealtMultiplier = -0.1f },
+                Stats = { BossPhysicalDamageDealtReductionMultiplier = 0.10f },
                 IsTargetDebuff = true,
             });
             #endregion
@@ -1296,7 +1296,7 @@ namespace Rawr
                 Name = "Judgements of the Just",
                 Group = "Boss Attack Speed",
                 Source = "Prot Paladin",
-                Stats = { BossAttackSpeedMultiplier = -0.2f },
+                Stats = { BossAttackSpeedReductionMultiplier = 0.20f },
                 IsTargetDebuff = true,
             });
             defaultBuffs.Add(new Buff()
@@ -1304,7 +1304,7 @@ namespace Rawr
                 Name = "Infected Wounds",
                 Group = "Boss Attack Speed",
                 Source = "Feral Druid",
-                Stats = { BossAttackSpeedMultiplier = -0.2f },
+                Stats = { BossAttackSpeedReductionMultiplier = 0.20f },
                 IsTargetDebuff = true,
             });
             defaultBuffs.Add(new Buff()
@@ -1312,7 +1312,7 @@ namespace Rawr
                 Name = "Frost Fever",
                 Group = "Boss Attack Speed",
                 Source = "Frost Death Knight",
-                Stats = { BossAttackSpeedMultiplier = -0.2f },
+                Stats = { BossAttackSpeedReductionMultiplier = 0.20f },
                 IsTargetDebuff = true,
             });
             defaultBuffs.Add(new Buff()
@@ -1320,7 +1320,7 @@ namespace Rawr
                 Name = "Thunder Clap",
                 Group = "Boss Attack Speed",
                 Source = "Protection/Arms Warrior",
-                Stats = { BossAttackSpeedMultiplier = -0.2f },
+                Stats = { BossAttackSpeedReductionMultiplier = 0.20f },
                 IsTargetDebuff = true,
             });
             #endregion
@@ -5195,7 +5195,7 @@ namespace Rawr
             {
                 Name = "Improved Lay On Hands",
                 Group = "Temporary Buffs",
-                Stats = { PhysicalDamageTakenMultiplier = -0.2f },
+                Stats = { PhysicalDamageTakenReductionMultiplier = 0.20f },
                 ConflictingBuffs = new List<string>(new string[] { })
             });
             #endregion
