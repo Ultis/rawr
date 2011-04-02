@@ -196,7 +196,6 @@ namespace Rawr
                 character.ClassIndex = int.Parse(xchar.Attribute("class_id").Value);
                 character.RaceIndex = int.Parse(xchar.Attribute("race_id").Value);
                 character.WaistBlacksmithingSocketEnabled = true;
-                if (character.Race == CharacterRace.Draenei) character.ActiveBuffs.Add(Buff.GetBuffByName("Heroic Presence"));
 
                 Dictionary<CharacterSlot, ItemInstance> items = new Dictionary<CharacterSlot, ItemInstance>();
                 foreach (XElement xequipment in xchar.Element("equipInfo").Elements("equipment"))

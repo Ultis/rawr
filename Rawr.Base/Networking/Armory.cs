@@ -1149,8 +1149,6 @@ namespace Rawr
 
         private void ApplyRacialandProfessionBuffs()
         {
-            if (Result.Race == CharacterRace.Draenei) Result.ActiveBuffs.Add(Buff.GetBuffByName("Heroic Presence"));
-
             foreach (XElement profession in CharacterSheet.Element("page").Element("characterInfo")
                 .Element("characterTab").Element("professions").Elements("skill"))
             {   // apply profession buffs if max skill

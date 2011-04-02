@@ -115,15 +115,6 @@ namespace Rawr.UI
                 checkBox.IsEnabled = true;
                 //Buff buff = checkBox.Tag as Buff;
                 Buff buff = (Buff)checkBox.Tag;
-                if (Character != null && buff.Name == "Heroic Presence")
-                {
-                    if (Character.Race == CharacterRace.Draenei ||
-                        Character.Faction == CharacterFaction.Horde)
-                    {
-                        checkBox.IsEnabled = false;
-                        continue;
-                    }
-                }
                 if (!string.IsNullOrEmpty(buff.Group) && buff.Group == "Profession Buffs") {
                     checkBox.IsEnabled = false;
                     continue;
