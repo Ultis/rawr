@@ -60,7 +60,6 @@ namespace Rawr {
                     { // Melee DPS
                         Dictionary<string, bool> custom = DuplicateDefaultSupports();
                         custom["InBack_Ranged"] = false; // You aren't Ranged
-                        _MyModelSupportsThis.Add("Cat", custom);
                         _MyModelSupportsThis.Add("DPSDK", custom);
                         _MyModelSupportsThis.Add("Enhance", custom);
                         _MyModelSupportsThis.Add("Rogue", custom);
@@ -116,6 +115,26 @@ namespace Rawr {
                         custom["InBack_Ranged"] = false; // Not Ranged
 #endif
                         _MyModelSupportsThis.Add("Bear", custom);
+                    }
+                    #endregion
+                    #region Cat
+                    {
+                        Dictionary<string, bool> custom = DuplicateDefaultSupports();
+                        custom["InBack_Melee"] = custom["InBack_Ranged"] = false; // Not Ranged
+                        custom["MobType"] = false;
+                        custom["Attacks"] = false;
+                        custom["TargetGroups"] = false;
+                        custom["BuffStates"] = false;
+                        custom["Defensive"] = false;
+                        custom["Moves"] = false;
+                        custom["Stuns"] = false;
+                        custom["Fears"] = false;
+                        custom["Roots"] = false;
+                        custom["Silences"] = false;
+                        custom["Disarms"] = false;
+                        custom["Invulnerables"] = false;
+                        //custom["TimeSub35"] = false; // No abilities tied to this // we are going to show this now for the 35% target trinkets
+                        _MyModelSupportsThis.Add("Cat", custom);
                     }
                     #endregion
                     #region DPSWarr
