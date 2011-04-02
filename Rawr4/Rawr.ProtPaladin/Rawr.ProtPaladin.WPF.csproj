@@ -127,6 +127,14 @@
       <Project>{542537D3-F86B-4022-A161-B2FC6F0218B7}</Project>
       <Name>Rawr.Base.WPF</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Rawr.DPSDK\Rawr.DPSDK.WPF.csproj">
+      <Project>{F39559FE-191D-47AA-B1CB-FBECD11E0C20}</Project>
+      <Name>Rawr.DPSDK.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rawr.TankDK\Rawr.TankDK.WPF.csproj">
+      <Project>{5C7D2251-55E7-4A90-8A97-B5DCC9D35807}</Project>
+      <Name>Rawr.TankDK.WPF</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Page Include="CalculationOptionsPanelProtPaladin.WPF.xaml">

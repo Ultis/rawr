@@ -2,16 +2,77 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+using System.Windows.Data;
 using System.Xml.Serialization;
 
 namespace Rawr.ProtPaladin
 {
+    public class ThreatValueConverter : IValueConverter
+    {
+        #region IValueConverter Members
+
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            float threatValue = (float)value;
+            if (threatValue == 1f) return "Almost None";
+            if (threatValue == 5f) return "MT";
+            if (threatValue == 25f) return "OT";
+            if (threatValue == 50f) return "Crazy About Threat";
+            else return "Custom...";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            string threatValue = (string)value;
+            switch (threatValue)
+            {
+                case "Almost None": return 1f;
+                case "MT": return 5f;
+                case "OT": return 25f;
+                case "Crazy About Threat": return 50f;
+            }
+            return null;
+        }
+
+        #endregion
+    }
+    public class SurvivalSoftCapConverter : IValueConverter
+    {
+        #region IValueConverter Members
+
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            int survivalSoftCap = (int)value;
+            if (survivalSoftCap == 50000 * 3 * 1.25) return "Normal Dungeons";
+            if (survivalSoftCap == 80000 * 3 * 1.25) return "Heroic Dungeons";
+            if (survivalSoftCap == 150000 * 3 * 1.25) return "Normal T11 Raids";
+            if (survivalSoftCap == 175000 * 3 * 1.25) return "Heroic T11 Raids";
+            else return "Custom...";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            string survivalSoftCap = (string)value;
+            switch (survivalSoftCap)
+            {
+                case "Normal Dungeons": return 50000 * 3 * 1.25;
+                case "Heroic Dungeons": return 80000 * 3 * 1.25;
+                case "Normal T11 Raids": return 150000 * 3 * 1.25;
+                case "Heroic T11 Raids": return 175000 * 3 * 1.25;
+            }
+            return null;
+        }
+
+        #endregion
+    }
+
+
 #if !SILVERLIGHT
     [Serializable]
 #endif
     public class CalculationOptionsProtPaladin : ICalculationOptionBase, INotifyPropertyChanged {
 
-        private float _ThreatScale = 10.0f;
+        private float _ThreatScale = 5.0f;
         public float ThreatScale
         {
             get { return _ThreatScale; }

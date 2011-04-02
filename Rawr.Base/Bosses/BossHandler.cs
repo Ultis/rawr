@@ -338,35 +338,17 @@ namespace Rawr {
         #region Variables
         #region Enums/Convertors
         public readonly static string[] BossTierStrings = new string[] {
-          /*"Tier  7.0",
-            "Tier  7.5",
-            "Tier  8.0",
-            "Tier  8.5",
-            "Tier  9.0",
-            "Tier  9.5",
-            "Tier 10.0",
-            "Tier 10.5",
-            "Tier 10.9",*/
             "Tier 11 10N",
             "Tier 11 25N",
             "Tier 11 10H",
             "Tier 11 25H",
         };
-        public enum TierLevels : int { T11_10 = 0, T11_25, T11_10H, T11_25H, } /*T7_0 = 0, T7_5, T8_0, T8_5, T9_0, T9_5, T10_0, T10_5, T10_9,*/
+        public enum TierLevels : int { T11_10 = 0, T11_25, T11_10H, T11_25H, }
         public static readonly float[] StandardMeleePerHit = new float[] {
-               /*5000f*2f, //T7_0,
-                10000f*2f, //T7_5,
-                20000f*2f, //T8_0,
-                30000f*2f, //T8_5,
-                40000f*2f, //T9_0,
-                50000f*2f, //T9_5,
-                60000f*2f, //T10_0,
-                70000f*2f, //T10_5,
-                80000f*2f, //T10_9,*/
-               100000f*1.25f, //T11_10,
-               120000f*1.25f, //T11_25,
-               135000f*1.25f, //T11_10H,
-               150000f*1.25f, //T11_25H,
+            100000f, // T11_10,
+            125000f, // T11_25,
+            175000f, // T11_10H,
+            225000f, // T11_25H,
         };
         #endregion
         #region ==== Info ====

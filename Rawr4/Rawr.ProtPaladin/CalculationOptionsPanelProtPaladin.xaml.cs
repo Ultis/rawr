@@ -1,15 +1,16 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
-using System.Collections;
 
 namespace Rawr.ProtPaladin
 {
@@ -112,12 +113,6 @@ namespace Rawr.ProtPaladin
                 calcOpts.PropertyChanged += new PropertyChangedEventHandler(CalculationOptionsPanelProtPaladin_PropertyChanged);
                 // Run it once for any special UI config checks
                 CalculationOptionsPanelProtPaladin_PropertyChanged(null, new PropertyChangedEventArgs(""));
-
-                if (tbThreatScale != null)
-                    tbThreatScale.Text = (calcOpts.ThreatScale / 10f).ToString("N2");
-
-                if (tbMitigationScale != null)
-                    tbMitigationScale.Text = (calcOpts.MitigationScale / 0.125f).ToString("N2");
             }
         }
 
@@ -146,14 +141,13 @@ namespace Rawr.ProtPaladin
         #endregion
 
         #region Events
-
         private void cboRankingMode_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             int selectedIndex = cboRankingMode.Items.IndexOf(e.AddedItems[0]);
 
             // Only enable threat scale for RankingModes other than 2
-            if (btnResetThreatScale != null && silThreatScale != null)
-                btnResetThreatScale.IsEnabled = silThreatScale.IsEnabled = (selectedIndex != 2);
+            /*if (btnResetThreatScale != null && silThreatScale != null)
+                btnResetThreatScale.IsEnabled = silThreatScale.IsEnabled = (selectedIndex != 2);*/
 
             // Only enable mitigation scale for RankingModes 0
             if (btnResetMitigationScale != null && silMitigationScale != null)
@@ -167,27 +161,13 @@ namespace Rawr.ProtPaladin
             else
                 calcOpts.ThreatScale = 10f;
         }
-
-        private void silThreatScale_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (tbThreatScale != null)
-                tbThreatScale.Text = (e.NewValue / 10f).ToString("N2");
-        }
-
         private void btnResetThreatScale_Click(object sender, RoutedEventArgs e)
         {
             calcOpts.ThreatScale = 10f;
         }
-
-        private void silMitigationScale_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
-            if (tbMitigationScale != null)
-                tbMitigationScale.Text = (e.NewValue / 0.125f).ToString("N2");
-        }
-
         private void btnResetMitigationScale_Click(object sender, RoutedEventArgs e) {
             calcOpts.MitigationScale = 0.125f;
         }
-
         #endregion
     }
 }

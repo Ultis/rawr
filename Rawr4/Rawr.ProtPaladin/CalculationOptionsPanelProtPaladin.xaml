@@ -1,31 +1,36 @@
 <UserControl
-xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
-xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
-xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
-xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
-xmlns:Rawr="clr-namespace:Rawr;assembly=Rawr.Base"
-mc:Ignorable="d"
-d:DesignWidth="330" d:DesignHeight="600"
-xmlns:local="clr-namespace:Rawr.ProtPaladin"
-x:Class="Rawr.ProtPaladin.CalculationOptionsPanelProtPaladin"
->
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
+    xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
+    xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+    xmlns:System="clr-namespace:System;assembly=mscorlib"
+    xmlns:Rawr="clr-namespace:Rawr;assembly=Rawr.Base"
+    mc:Ignorable="d"
+    d:DesignWidth="330" d:DesignHeight="600"
+    xmlns:local="clr-namespace:Rawr.ProtPaladin"
+    x:Class="Rawr.ProtPaladin.CalculationOptionsPanelProtPaladin"
+    >
 
     <UserControl.Resources>
         <local:CalculationOptionsProtPaladin x:Key="CalculationOptionsProtPaladinDataSource" d:IsDataSource="True"/>
+        <local:ThreatValueConverter x:Key="ThreatValueConverter"/>
+        <local:SurvivalSoftCapConverter x:Key="SurvivalSoftCapConverter"/>
     </UserControl.Resources>
 
     <Grid x:Name="LayoutRoot" DataContext="{Binding Source={StaticResource CalculationOptionsProtPaladinDataSource}}">
         <controls:TabControl>
-            <controls:TabItem Header="Ranking">
+            <controls:TabItem Header="Basics">
                 <StackPanel>
                     <Border Margin="0 2" Background="Transparent" BorderBrush="Black" BorderThickness="1">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -33,29 +38,37 @@ x:Class="Rawr.ProtPaladin.CalculationOptionsPanelProtPaladin"
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
-                            <TextBlock Margin="2 2 2 10" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" FontWeight="Bold" Text="Ranking System" />
-                            <TextBlock Margin="2 2 2 10" Grid.Row="1" Grid.Column="0" Text="Ranking Mode:" />
-                            <ComboBox Margin="2 2 2 10" x:Name="cboRankingMode" Grid.Row="1" Grid.Column="1" SelectedIndex="{Binding Mode=TwoWay, Path=RankingMode}" SelectionChanged="cboRankingMode_SelectionChanged">
+
+                            <TextBlock Margin="4,2" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" FontWeight="Bold" Text="Weighting Adjustments" VerticalAlignment="Center" />
+
+                            <TextBlock Margin="4,2" Grid.Row="1" Grid.Column="0" Text="Ranking Mode:" VerticalAlignment="Center" />
+                            <ComboBox Margin="2" x:Name="cboRankingMode" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" SelectedIndex="{Binding Mode=TwoWay, Path=RankingMode}" SelectionChanged="cboRankingMode_SelectionChanged">
                                 <ComboBoxItem>
                                     <TextBlock Text="Mitigation Scale *" ToolTipService.ToolTip="Customizable scale that allows you to weight mitigation vs. effective health. (Default)" />
                                 </ComboBoxItem>
                                 <ComboBoxItem>
                                     <TextBlock Text="Burst Time *" ToolTipService.ToolTip="Scale based on the average time an event will occur which has a chance to burst down the player." />
                                 </ComboBoxItem>
-                                <ComboBoxItem>
-                                    <TextBlock Text="Damage Output *" ToolTipService.ToolTip="Scale based only on potential DPS output." />
-                                </ComboBoxItem>
                             </ComboBox>
-                            <TextBlock Margin="2" Grid.Row="2" Grid.Column="0" Text="Threat Scale: *" ToolTipService.ToolTip="Threat scaling factor. PageUp/PageDown/Left Arrow/Right Arrow allows more accurate changes" />
-                            <Slider Margin="2" x:Name="silThreatScale" Grid.Row="2" Grid.Column="1" Minimum="0" Maximum="30" LargeChange="5" SmallChange="0.1" Value="{Binding Mode=TwoWay, Path=ThreatScale}" ValueChanged="silThreatScale_ValueChanged" />
-                            <Button Margin="2 2 2 10" x:Name="btnResetThreatScale" Grid.Row="3" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset the threat scale to 1.00." Click="btnResetThreatScale_Click" />
-                            <TextBlock Margin="2 2 2 10" x:Name="tbThreatScale" Grid.Row="3" Grid.Column="1" />
-                            <TextBlock Margin="2" Grid.Row="4" Grid.Column="0" Text="Mitigation Scale: *" ToolTipService.ToolTip="Mitigation scaling factor. PageUp/PageDown/Left Arrow/Right Arrow allows more accurate changes" />
-                            <Slider Margin="2" x:Name="silMitigationScale" Grid.Row="4" Grid.Column="1" Minimum="0" Maximum="0.375" LargeChange="0.0625" SmallChange="0.00125" Value="{Binding Mode=TwoWay, Path=MitigationScale}" ValueChanged="silMitigationScale_ValueChanged" />
-                            <Button Margin="2" x:Name="btnResetMitigationScale" Grid.Row="5" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset the mitigation scale to 1.00." Click="btnResetMitigationScale_Click" />
-                            <TextBlock Margin="2" x:Name="tbMitigationScale" Grid.Row="5" Grid.Column="1" />
+
+                            <TextBlock FontSize="10" Grid.ColumnSpan="4" Margin="4,2" Text="The following settings will adjust the overall scores for each type. This does not involve Stat Weights as described by Pawn, SimCraft or other similar utilities. These are meant to describe your general importance to each point." TextWrapping="Wrap" Grid.Row="2" />
+
+                            <TextBlock Margin="4,2" x:Name="LB_Threat" Grid.Row="3" Grid.Column="0" Text="Threat Scale: *" ToolTipService.ToolTip="Threat scaling factor. PageUp/PageDown/Left Arrow/Right Arrow allows more accurate changes" VerticalAlignment="Center" />
+                            <ComboBox Margin="2" Grid.Row="3" Grid.Column="1" SelectedItem="{Binding ThreatScale, Converter={StaticResource ThreatValueConverter}, Mode=TwoWay}">
+                                <System:String>Almost None</System:String>
+                                <System:String>MT</System:String>
+                                <System:String>OT</System:String>
+                                <System:String>Crazy About Threat</System:String>
+                                <System:String>Custom...</System:String>
+                            </ComboBox>
+                            <inputToolkit:NumericUpDown Margin="2" Name="NUD_Threat" Grid.Row="3" Grid.Column="2" Value="{Binding Path=ThreatScale, Mode=TwoWay}" DecimalPlaces="1" MinWidth="50" Maximum="50" Increment="0.1" />
+                            <Button Margin="2" x:Name="btnResetThreatScale" Grid.Row="3" Grid.Column="3" Content="Reset" ToolTipService.ToolTip="Click to reset the threat scale to 1.00." Click="btnResetThreatScale_Click" />
+
+                            <TextBlock Margin="4,2" x:Name="LB_Mitigation" Grid.Row="4" Grid.Column="0" Text="Mitigation Scale: *" ToolTipService.ToolTip="Mitigation scaling factor. PageUp/PageDown/Left Arrow/Right Arrow allows more accurate changes" VerticalAlignment="Center" />
+                            <Slider Margin="2" x:Name="silMitigationScale" Grid.Row="4" Grid.Column="1" Minimum="0" Maximum="0.375" LargeChange="0.0625" SmallChange="0.00125" Value="{Binding Mode=TwoWay, Path=MitigationScale}" />
+                            <inputToolkit:NumericUpDown Margin="2" Name="NUD_Mitigation" Grid.Row="4" Grid.Column="2" Value="{Binding Path=MitigationScale, Mode=TwoWay}" DecimalPlaces="3" MinWidth="50" Minimum="0" Maximum="0.375" Increment="0.0625" />
+                            <Button Margin="2" x:Name="btnResetMitigationScale" Grid.Row="4" Grid.Column="3" Content="Reset" ToolTipService.ToolTip="Click to reset the mitigation scale to 1.00." Click="btnResetMitigationScale_Click" />
                         </Grid>
                     </Border>
                     <Border Margin="0 2" Background="Transparent" BorderBrush="Black" BorderThickness="1">
@@ -68,26 +81,22 @@ x:Class="Rawr.ProtPaladin.CalculationOptionsPanelProtPaladin"
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
-                            <TextBlock Margin="2 2 2 10" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" FontWeight="Bold" Text="Trinket Handling" />
-                            <TextBlock Margin="2" Grid.Row="1" Grid.Column="0" Text="On Use - Handling: *" ToolTipService.ToolTip="Sets how On Use trinket effects are handled. Health is never averaged." />
+                            <TextBlock Margin="4,2" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" FontWeight="Bold" Text="Trinket Handling" />
+                            <TextBlock Margin="4,2" Grid.Row="1" Grid.Column="0" Text="On Use - Handling: *" ToolTipService.ToolTip="Sets how On Use trinket effects are handled. Health is never averaged." VerticalAlignment="Center" />
                             <ComboBox Margin="2" x:Name="cboTrinketOnUseHandling" Grid.Row="1" Grid.Column="1" SelectedItem="{Binding Mode=TwoWay, Path=TrinketOnUseHandling}" />
                         </Grid>
                     </Border>
-                </StackPanel>
-            </controls:TabItem>
-            <controls:TabItem Header="Abilities">
-                <StackPanel>
                     <Border Margin="0 2" Background="Transparent" BorderBrush="Black" BorderThickness="1">
                         <StackPanel>
-                            <TextBlock Margin="2" FontWeight="Bold" Text="Seal Choice" />
+                            <TextBlock Margin="4,2" FontWeight="Bold" Text="Seal Choice" />
                             <ComboBox Margin="2" x:Name="cboSealChoice" SelectedItem="{Binding Mode=TwoWay, Path=SealChoice}" />
                         </StackPanel>
                     </Border>
                     <Border Margin="0 2" Background="Transparent" BorderBrush="Black" BorderThickness="1">
                         <StackPanel>
-                            <TextBlock Margin="2" FontWeight="Bold" Text="Custom Rotation" />
-                            <TextBlock Margin="2" Text="ProtPaladin uses a standard 9-3-9 rotation.  You may customize this rotation using this form." TextWrapping="Wrap" />
-                            <TextBlock Margin="2" FontWeight="Bold" Text="A - B - A - C - A - D" TextAlignment="Center" />
+                            <TextBlock Margin="4,2" FontWeight="Bold" Text="Custom Rotation" />
+                            <TextBlock Margin="4,2" Text="ProtPaladin uses a standard 9-3-9 rotation.  You may customize this rotation using this form." TextWrapping="Wrap" />
+                            <TextBlock Margin="4,2" FontWeight="Bold" Text="A - B - A - C - A - D" TextAlignment="Center" />
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
@@ -99,10 +108,10 @@ x:Class="Rawr.ProtPaladin.CalculationOptionsPanelProtPaladin"
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
-                                <TextBlock Margin="2" Grid.Row="0" Grid.Column="0" FontWeight="Bold" Text="A" />
-                                <TextBlock Margin="2" Grid.Row="1" Grid.Column="0" FontWeight="Bold" Text="B" />
-                                <TextBlock Margin="2" Grid.Row="2" Grid.Column="0" FontWeight="Bold" Text="C" />
-                                <TextBlock Margin="2" Grid.Row="3" Grid.Column="0" FontWeight="Bold" Text="D" />
+                                <TextBlock Margin="2" Grid.Row="0" Grid.Column="0" FontWeight="Bold" Text="A" VerticalAlignment="Center" />
+                                <TextBlock Margin="2" Grid.Row="1" Grid.Column="0" FontWeight="Bold" Text="B" VerticalAlignment="Center" />
+                                <TextBlock Margin="2" Grid.Row="2" Grid.Column="0" FontWeight="Bold" Text="C" VerticalAlignment="Center" />
+                                <TextBlock Margin="2" Grid.Row="3" Grid.Column="0" FontWeight="Bold" Text="D" VerticalAlignment="Center" />
                                 <ComboBox Margin="2" x:Name="cboMainAttackChoice" Grid.Row="0" Grid.Column="1" SelectedItem="{Binding Mode=TwoWay, Path=MainAttack}" />
                                 <TextBlock Margin="2" Grid.Row="1" Grid.Column="1" Text="Judgement" />
                                 <ComboBox Margin="2" x:Name="cboPriorityChoice" Grid.Row="2" Grid.Column="1" SelectedItem="{Binding Mode=TwoWay, Path=Priority}" />
@@ -112,7 +121,7 @@ x:Class="Rawr.ProtPaladin.CalculationOptionsPanelProtPaladin"
                     </Border>
                     <Border Margin="0 2" x:Name="borPTR" Background="Transparent" BorderBrush="Black" BorderThickness="1">
                         <StackPanel>
-                            <TextBlock Margin="2" FontWeight="Bold" Text="PTR Mode" />
+                            <TextBlock Margin="4,2" FontWeight="Bold" Text="PTR Mode" />
                             <CheckBox Margin="2" Content="Use PTR v4.0.6" IsChecked="{Binding Mode=TwoWay, Path=PTRMode}" />
                         </StackPanel>
                     </Border>

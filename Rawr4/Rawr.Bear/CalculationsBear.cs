@@ -578,16 +578,13 @@ the Threat Scale defined on the Options tab.",
             calculatedStats.TotalMitigation = 1f - calculatedStats.DamageTaken;
 
             calculatedStats.SurvivalPointsRaw = (stats.Health / (1f - calculatedStats.TotalConstantDamageReduction));
-            double survivalCap = (double)calcOpts.SurvivalSoftCap / 1000d;
-            double survivalRaw = calculatedStats.SurvivalPointsRaw / 1000f;
+            double survivalCap = bossAttack.DamagePerHit * calcOpts.HitsToSurvive;
+            double survivalRaw = calculatedStats.SurvivalPointsRaw / 1000d;
 
             //Implement Survival Soft Cap
-            if (survivalRaw <= survivalCap)
-            {
+            if (survivalRaw <= survivalCap) {
                 calculatedStats.SurvivabilityPoints = 1000f * (float)survivalRaw;
-            }
-            else
-            {
+            } else {
                 double x = survivalRaw;
                 double cap = survivalCap;
                 double fourToTheNegativeFourThirds = Math.Pow(4d, -4d / 3d);
@@ -885,7 +882,6 @@ the Threat Scale defined on the Options tab.",
             statsProcs.Armor = (float)Math.Floor(statsProcs.Armor * (1f + statsTotal.BonusArmorMultiplier));
             statsTotal.Accumulate(statsProcs);
         }
-
 
         //NOTE: This is currently unused, because it doesn't account for procs which are both mitigation and survival (ie armor and agility procs)
         private void AccumulateSpecialEffect(Stats statsProcs, Stats statsEffect, float effectUptime, float temporarySurvivalScale)
@@ -1446,7 +1442,6 @@ the Threat Scale defined on the Options tab.",
             }
             return _relevantGlyphs;
         }
-
         #endregion
 
         public Stats GetBuffsStats(Character character, CalculationOptionsBear calcOpts)
