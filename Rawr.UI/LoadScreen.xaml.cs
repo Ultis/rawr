@@ -28,15 +28,15 @@ namespace Rawr.UI
 #if !SILVERLIGHT
             dir = "ClientBin\\";
 #endif
-            Classes[dir + "BuffCache.xml"] = typeof(Buff);
+            //Classes[dir + "BuffCache.xml"] = typeof(Buff);
             Classes[dir + "BuffSets.xml"] = typeof(SavedBuffSet);
-            Classes[dir + "EnchantCache.xml"] = typeof(Enchant);
+            //Classes[dir + "EnchantCache.xml"] = typeof(Enchant);
             Classes[dir + "ItemCache.xml"] = typeof(ItemCache);
             Classes[dir + "ItemFilter.xml"] = typeof(ItemFilter);
             Classes[dir + "PetTalents.xml"] = typeof(Hunter.SavedPetTalentSpec);
             Classes[dir + "Settings.xml"] = typeof(Settings);
             Classes[dir + "Talents.xml"] = typeof(SavedTalentSpec);
-            Classes[dir + "TinkeringCache.xml"] = typeof(Tinkering);
+            //Classes[dir + "TinkeringCache.xml"] = typeof(Tinkering);
         }
 
         public LoadScreen()
@@ -128,6 +128,10 @@ namespace Rawr.UI
 
                 string[] files = new List<string>(Classes.Keys).ToArray();
 
+                Buff.LoadDefaultBuffs(null, 85);
+                Enchant.LoadDefaultEnchants();
+                Tinkering.LoadDefaultTinkerings();
+
                 FileUtils f = new FileUtils(files, progressUpdated);
                 f.DownloadIfNotExists(new EventHandler(filesLoaded));
             } else {
@@ -182,10 +186,9 @@ namespace Rawr.UI
                 dir = "ClientBin\\";
 #endif
                 new FileUtils(new string[] {
-                    dir+"BuffCache.xml", 
+                    //dir+"BuffCache.xml", 
                     dir+"BuffSets.xml", 
-                    dir+"EnchantCache.xml",
-                    dir+"TinkeringCache.xml",
+                    //dir+"EnchantCache.xml",
                     dir+"ItemCache.xml",
                     dir+"ItemFilter.xml",
                     dir+"PetTalents.xml",

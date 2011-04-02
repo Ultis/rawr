@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Xml.Serialization;
+//using System.Xml.Serialization;
 
 namespace Rawr
 {
-    [GenerateSerializer]
+    //[GenerateSerializer]
     public class BuffList : List<Buff>
     {
         public BuffList() : base() { }
@@ -16,10 +16,6 @@ namespace Rawr
     public class Buff
     {
         #region Functions and Variables
-        //early morning
-        //summer soul and solace
-        //the world is watching
-        //vicious circle
         public string Name;
         public string Group;
         public Stats Stats = new Stats();
@@ -81,7 +77,7 @@ namespace Rawr
             set { _conflictingBuffs = value; }
         }
 
-        public static void Save(TextWriter writer)
+        /*public static void Save(TextWriter writer)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(BuffList));
             serializer.Serialize(writer, _allBuffs);
@@ -107,7 +103,7 @@ namespace Rawr
                 //the serializer doens't throw an exception in the designer, just sets the value null, have to move this outside the try cactch
                 LoadDefaultBuffs(loadedBuffs, 85);
             } catch { }
-        }
+        }*/
 
         public static event EventHandler<EventArgs> BuffsLoaded;
 
@@ -5207,4 +5203,3 @@ namespace Rawr
         }
     }
 }
-//1963...

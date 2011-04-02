@@ -163,12 +163,12 @@ namespace Rawr
             return new BitmapImage(uri);
 #else
             BitmapImage ret = new BitmapImage();
-            // EndInit throws an exception about application identiy not being set, find a way to catch this beforehad
-            //if (Application.Current. ApplicationIdentity == null) { }
             ret.BeginInit();
             ret.CreateOptions = BitmapCreateOptions.IgnoreColorProfile;
             ret.UriSource = uri;
-            ret.EndInit();
+            // EndInit throws an exception about application identiy not being set, find a way to catch this beforehad
+            //if (Application.Current. ApplicationIdentity == null) { }
+            try { ret.EndInit(); } catch { }
             return ret;
 #endif
         }

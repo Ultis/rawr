@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Xml.Serialization;
+//using System.Xml.Serialization;
 
 namespace Rawr
 {
-    [GenerateSerializer]
+    //[GenerateSerializer]
     public class EnchantList : List<Enchant> { }
 
     /// <summary>An object representing an Enchantment to be placed on a slot on a character.</summary>
@@ -210,14 +210,14 @@ namespace Rawr
             ));
         }
 
-        public static void Save(TextWriter writer)
+        /*public static void Save(TextWriter writer)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(EnchantList));
             serializer.Serialize(writer, _allEnchants);
             writer.Close();
-        }
+        }*/
 
-        public static void Load(TextReader reader)
+        /*public static void Load(TextReader reader)
         {
             _allEnchants = null;
             try {
@@ -258,6 +258,10 @@ namespace Rawr
                     _allEnchants.Add(defaultEnchants[defaultEnchantIndex]);
                 }
             }
+        }*/
+        public static void LoadDefaultEnchants() {
+            _allEnchants = new EnchantList();
+            _allEnchants.AddRange(GetDefaultEnchants());
         }
 
         private static List<Enchant> GetDefaultEnchants()

@@ -1529,27 +1529,25 @@ If that is still not working for you, right-click anywhere within the web versio
             Character = new Character() { IsLoading = false };
             new FileUtils(new string[] {
 #if !SILVERLIGHT
-                    "ClientBin\\BuffCache.xml", 
+                    //"ClientBin\\BuffCache.xml", 
                     "ClientBin\\BuffSets.xml", 
-                    "ClientBin\\EnchantCache.xml",
+                    //"ClientBin\\EnchantCache.xml",
                     "ClientBin\\ItemCache.xml",
                     "ClientBin\\ItemFilter.xml",
-                    //"ClientBin\\ItemSource.xml",
                     "ClientBin\\PetTalents.xml",
                     "ClientBin\\Settings.xml",
                     "ClientBin\\Talents.xml",
-                    "ClientBin\\TinkeringCache.xml",
+                    //"ClientBin\\TinkeringCache.xml",
 #else
-                    "BuffCache.xml", 
+                    //"BuffCache.xml", 
                     "BuffSets.xml", 
-                    "EnchantCache.xml",
+                    //"EnchantCache.xml",
                     "ItemCache.xml",
                     "ItemFilter.xml",
-                    //"ItemSource.xml",
                     "PetTalents.xml",
                     "Settings.xml",
                     "Talents.xml",
-                    "TinkeringCache.xml",
+                    //"TinkeringCache.xml",
 #endif
             }).Delete();
             LoadScreen ls = new LoadScreen();

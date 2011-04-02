@@ -22,14 +22,14 @@ namespace Tests.Rawr.ShadowPriest
         [TestFixtureSetUp]
         public void SetupFixture()
         {
-            using (var fileStream = File.OpenText("TestData/BuffCache.xml"))
-                Buff.Load(fileStream);
+            /*using (var fileStream = File.OpenText("TestData/BuffCache.xml"))
+                Buff.Load(fileStream);*/
 
-            using (var fileStream = File.OpenText("TestData/EnchantCache.xml"))
-                Enchant.Load(fileStream);
+            /*using (var fileStream = File.OpenText("TestData/EnchantCache.xml"))
+                Enchant.Load(fileStream);*/
 
-            using (var fileStream = File.OpenText("TestData/TinkeringCache.xml"))
-                Tinkering.Load(fileStream);
+            /*using (var fileStream = File.OpenText("TestData/TinkeringCache.xml"))
+                Tinkering.Load(fileStream);*/
         }
 
         [SetUp]

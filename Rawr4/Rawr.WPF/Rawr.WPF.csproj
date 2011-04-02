@@ -134,10 +134,6 @@
     <Compile Include="WindowChild.xaml.cs">
       <DependentUpon>WindowChild.xaml</DependentUpon>
     </Compile>
-    <Content Include="..\Rawr.Silverlight.Web\ClientBin\TinkeringCache.xml">
-      <Link>ClientBin\TinkeringCache.xml</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Resource Include="Resources\RawrIcon.ico" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -186,16 +182,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Rawr.Silverlight.Web\ClientBin\BuffCache.xml">
-      <Link>ClientBin\BuffCache.xml</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="..\Rawr.Silverlight.Web\ClientBin\BuffSets.xml">
       <Link>ClientBin\BuffSets.xml</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Rawr.Silverlight.Web\ClientBin\EnchantCache.xml">
-      <Link>ClientBin\EnchantCache.xml</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Rawr.Silverlight.Web\ClientBin\ItemCache.xml">

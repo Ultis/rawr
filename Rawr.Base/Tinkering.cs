@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Xml.Serialization;
+//using System.Xml.Serialization;
 
 namespace Rawr
 {
-    [GenerateSerializer]
+    //[GenerateSerializer]
     public class TinkeringList : List<Tinkering> { }
 
     /// <summary>An object representing a Tinkering to be placed on a slot on a character.</summary>
@@ -211,7 +211,7 @@ namespace Rawr
             ));
         }
 
-        public static void Save(TextWriter writer)
+        /*public static void Save(TextWriter writer)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(TinkeringList));
             serializer.Serialize(writer, _allTinkerings);
@@ -259,6 +259,10 @@ namespace Rawr
                     _allTinkerings.Add(defaultTinkerings[defaultTinkeringIndex]);
                 }
             }
+        }*/
+        public static void LoadDefaultTinkerings() {
+            _allTinkerings = new TinkeringList();
+            _allTinkerings.AddRange(GetDefaultTinkerings());
         }
 
         private static List<Tinkering> GetDefaultTinkerings()
