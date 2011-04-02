@@ -443,7 +443,7 @@ the Threat Scale defined on the Options tab.",
             }
             // Since the above forced there to be an attack it's safe to do this without a null check
             Attack bossAttack = bossOpts.DefaultMeleeAttack;
-            
+
             int targetLevel = bossOpts.Level;
             int characterLevel = character.Level;
             StatsBear stats = GetCharacterStats(character, additionalItem) as StatsBear;

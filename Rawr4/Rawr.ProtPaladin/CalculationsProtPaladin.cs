@@ -321,8 +321,25 @@ focus on Survival Points.",
             if (character == null) { return calc; }
             CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
             if (calcOpts == null) { return calc; }
-            //
             BossOptions bossOpts = character.BossOptions;
+            // Make sure there is at least one attack in the list.
+            // If there's not, add a Default Melee Attack for processing
+            if (bossOpts.Attacks.Count < 1) {
+                character.IsLoading = true;
+                bossOpts.DamagingTargs = true;
+                bossOpts.Attacks.Add(BossHandler.ADefaultMeleeAttack);
+                character.IsLoading = false;
+            }
+            // Make sure there is a default melee attack
+            // If the above processed, there will be one so this won't have to process
+            // If the above didn't process and there isn't one, add one now
+            if (bossOpts.DefaultMeleeAttack == null) {
+                character.IsLoading = true;
+                bossOpts.DamagingTargs = true;
+                bossOpts.Attacks.Add(BossHandler.ADefaultMeleeAttack);
+                character.IsLoading = false;
+            }
+
             Stats stats = GetCharacterStats(character, additionalItem, calcOpts, bossOpts);
             DefendModel dm = new DefendModel(character, stats, calcOpts, bossOpts);
             AttackModel am = new AttackModel(character, stats, calcOpts, bossOpts);
@@ -354,7 +371,7 @@ focus on Survival Points.",
             calc.ArmorReduction = Lookup.ArmorReduction(stats.Armor, calc.TargetLevel);
             calc.GuaranteedReduction = dm.GuaranteedReduction;
             calc.TotalMitigation = dm.Mitigation;
-            calc.AttackerSpeed = calcOpts.BossAttackSpeed;
+            calc.AttackerSpeed = bossOpts.DefaultMeleeAttack.AttackSpeed;
             calc.DamageTaken = dm.DamageTaken;
             calc.DPSTaken = dm.DamagePerSecond;
             calc.DamageTakenPerHit = dm.DamagePerHit;
@@ -411,7 +428,7 @@ focus on Survival Points.",
                 #region Alternative Ranking Modes
                 case 1:
                     // Burst Time Mode
-                    float threatScale = Convert.ToSingle(Math.Pow(Convert.ToDouble(calcOpts.BossAttackValue) / 25000.0d, 4));
+                    float threatScale = Convert.ToSingle(Math.Pow(Convert.ToDouble(bossOpts.DefaultMeleeAttack.DamagePerHit) / 25000.0d, 4));
                     calc.SurvivalPoints = Math.Min(dm.BurstTime * 100.0f, VALUE_CAP);
                     calc.MitigationPoints = 0.0f;
                     calc.ThreatPoints = 0.0f; // Math.Min((calc.ThreatPoints / threatScale) * 2.0f, VALUE_CAP);
@@ -432,7 +449,7 @@ focus on Survival Points.",
                     //calc.MitigationPoints = Math.Min(calcOpts.MitigationScale / dm.DamageTaken, VALUE_CAP);
                     //calc.ThreatPoints = Math.Min(calc.ThreatPoints, VALUE_CAP);
                     calc.SurvivalPoints = Math.Min((dm.EffectiveHealth) / 10.0f, VALUE_CAP);
-                    calc.MitigationPoints = Math.Min(dm.Mitigation * calcOpts.BossAttackValue * calcOpts.MitigationScale * 10.0f, VALUE_CAP);
+                    calc.MitigationPoints = Math.Min(dm.Mitigation * bossOpts.DefaultMeleeAttack.DamagePerHit * calcOpts.MitigationScale * 10.0f, VALUE_CAP);
                     calc.ThreatPoints = Math.Min(calc.ThreatPoints / 10.0f, VALUE_CAP);
                     calc.OverallPoints = calc.MitigationPoints + calc.SurvivalPoints + calc.ThreatPoints;
                     break;
@@ -516,7 +533,7 @@ focus on Survival Points.",
                                     * (1.0f + statsBuffs.BonusStaminaMultiplier)
                                     * (1.0f + statsItems.BonusStaminaMultiplier)
                                     * (1.0f + statsTalents.BonusStaminaMultiplier)
-                                    * (ValidatePlateSpec(character) ? 1.05f : 1f)); // Plate specialization
+                                    * (Character.ValidateArmorSpecialization(character, ItemType.Plate) ? 1.05f : 1f)); // Plate specialization
 
             statsTotal.Strength = (float)Math.Floor((statsBase.Strength + statsTalents.Strength) * (1.0f + statsTotal.BonusStrengthMultiplier));
             statsTotal.Strength += (float)Math.Floor((statsItems.Strength + statsBuffs.Strength) * (1.0f + statsTotal.BonusStrengthMultiplier));
@@ -1022,22 +1039,6 @@ focus on Survival Points.",
             }
         }
 
-        private static bool ValidatePlateSpec(Character character) { // Blatantly ripped from ProtWarr... thanks! :)
-            // Null Check
-            if (character == null) { return false; }
-            // Item Type Fails
-            if (character.Head == null || character.Head.Type != ItemType.Plate) { return false; }
-            if (character.Shoulders == null || character.Shoulders.Type != ItemType.Plate) { return false; }
-            if (character.Chest == null || character.Chest.Type != ItemType.Plate) { return false; }
-            if (character.Wrist == null || character.Wrist.Type != ItemType.Plate) { return false; }
-            if (character.Hands == null || character.Hands.Type != ItemType.Plate) { return false; }
-            if (character.Waist == null || character.Waist.Type != ItemType.Plate) { return false; }
-            if (character.Legs == null || character.Legs.Type != ItemType.Plate) { return false; }
-            if (character.Feet == null || character.Feet.Type != ItemType.Plate) { return false; }
-            // If it hasn't failed by now, it must be good
-            return true;
-        }
-
         #region Relevancy Methods
         
         private List<ItemType> _relevantItemTypes = null;
@@ -1341,7 +1342,9 @@ focus on Survival Points.",
         public override void SetDefaults(Character character) {
             // Need a Boss Attack
             character.BossOptions.DamagingTargs = true;
-            character.BossOptions.Attacks.Add(BossHandler.ADefaultMeleeAttack);
+            if (character.BossOptions.DefaultMeleeAttack == null) {
+                character.BossOptions.Attacks.Add(BossHandler.ADefaultMeleeAttack);
+            }
         }
         #endregion
     }

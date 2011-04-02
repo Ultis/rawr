@@ -17,34 +17,6 @@ namespace Rawr.ProtPaladin
     {
         #region Initialization
 
-        private static string[] TargetTypes = new string[]
-        {
-            "Unspecified",
-            "Humanoid",
-            "Undead",
-            "Demon",
-            "Elemental",
-            "Giant",
-            "Mechanical",
-            "Beast",
-            "Dragonkin"
-        };
-
-        private static string[] MagicDamageTypes = new string[]
-        {
-            "None",
-            "Physical",
-            "Holy",
-            "Fire",
-            "Nature",
-            "Frost",
-            "Frostfire",
-            "Shadow",
-            "Arcane",
-            "Spellfire",
-            "Naturefire"
-        };
-
         private static string[] TrinketOnUseHandling = new string[]
         {
             "Ignore",
@@ -94,12 +66,6 @@ namespace Rawr.ProtPaladin
         {
             InitializeComponent();
 
-            // Setup TargetType combo box
-            cboTargetType.ItemsSource = TargetTypes;
-
-            // Setup MagicDamageType combo box
-            cboMagicDamageType.ItemsSource = MagicDamageTypes;
-
             // Setup TrinketOnUseHandling combo box
             cboTrinketOnUseHandling.ItemsSource = TrinketOnUseHandling;
 
@@ -147,12 +113,6 @@ namespace Rawr.ProtPaladin
                 // Run it once for any special UI config checks
                 CalculationOptionsPanelProtPaladin_PropertyChanged(null, new PropertyChangedEventArgs(""));
 
-                if (tbBossAttackSpeed != null)
-                    tbBossAttackSpeed.Text = string.Format("{0:N2} seconds", calcOpts.BossAttackSpeed);
-
-                if (tbBossAttackSpeedMagic != null)
-                    tbBossAttackSpeedMagic.Text = string.Format("{0:N2} seconds", calcOpts.BossAttackSpeedMagic);
-
                 if (tbThreatScale != null)
                     tbThreatScale.Text = (calcOpts.ThreatScale / 10f).ToString("N2");
 
@@ -186,38 +146,6 @@ namespace Rawr.ProtPaladin
         #endregion
 
         #region Events
-
-        private void btnResetBossAttackValue_Click(object sender, RoutedEventArgs e)
-        {
-            calcOpts.BossAttackValue = 80000;
-        }
-
-        private void sliBossAttackSpeed_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (tbBossAttackSpeed != null)
-                tbBossAttackSpeed.Text = string.Format("{0:N2} seconds", e.NewValue);
-        }
-
-        private void btnResetBossAttackSpeed_Click(object sender, RoutedEventArgs e)
-        {
-            calcOpts.BossAttackSpeed = 2.0f;
-        }
-
-        private void btnResetBossAttackValueMagic_Click(object sender, RoutedEventArgs e)
-        {
-            calcOpts.BossAttackValueMagic = 20000;
-        }
-
-        private void silBossAttackSpeedMagic_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (tbBossAttackSpeedMagic != null)
-                tbBossAttackSpeedMagic.Text = string.Format("{0:N2} seconds", e.NewValue);
-        }
-
-        private void btnResetBossAttackSpeedMagic_Click(object sender, RoutedEventArgs e)
-        {
-            calcOpts.BossAttackSpeedMagic = 1.0f;
-        }
 
         private void cboRankingMode_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

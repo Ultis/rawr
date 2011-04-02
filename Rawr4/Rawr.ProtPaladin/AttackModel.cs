@@ -491,7 +491,7 @@ namespace Rawr.ProtPaladin
 
             #region White Damage, including Reckoning procs
 
-            float reckoningUptime = 1f - (float)Math.Pow((1f - 0.02f * Character.PaladinTalents.Reckoning * DefendTable.Block), (Math.Min(8f, 4f * ParryModel.WeaponSpeed) / CalcOpts.BossAttackSpeed));
+            float reckoningUptime = 1f - (float)Math.Pow((1f - 0.02f * Character.PaladinTalents.Reckoning * DefendTable.Block), (Math.Min(8f, 4f * ParryModel.WeaponSpeed) / BossOpts.DefaultMeleeAttack.AttackSpeed));
             float weaponSwings = modelLength / ParryModel.WeaponSpeed / (1 - reckoningUptime);
             modelThreat += Abilities[Ability.MeleeSwing].Threat * weaponSwings;
             modelDamage += Abilities[Ability.MeleeSwing].Damage * weaponSwings;
@@ -529,7 +529,7 @@ namespace Rawr.ProtPaladin
 
             #endregion
 
-            float attackerHits = DefendTable.AnyHit * (modelLength / CalcOpts.BossAttackSpeed);
+            float attackerHits = DefendTable.AnyHit * (modelLength / BossOpts.DefaultMeleeAttack.AttackSpeed);
 
             ThreatPerSecond = modelThreat / modelLength;
             DamagePerSecond = modelDamage / modelLength;

@@ -134,7 +134,7 @@ namespace Rawr.ProtPaladin
                     tableSize += Block;
                 }
                 // Critical Hit
-                Critical = Math.Min(1.0f - tableSize, Lookup.BonusCritPercentage(Character, Stats, Ability, targetLevel, CalcOpts.TargetType));
+                Critical = Math.Min(1.0f - tableSize, Lookup.BonusCritPercentage(Character, Stats, Ability, targetLevel));
                 if (Critical > 0)
                 {
                     tableSize += Critical;

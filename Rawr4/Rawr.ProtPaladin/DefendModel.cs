@@ -30,13 +30,13 @@ namespace Rawr.ProtPaladin
 
         public void Calculate()
         {
-            float attackSpeed           = CalcOpts.BossAttackSpeed;
+            float attackSpeed           = BossOpts.DefaultMeleeAttack.AttackSpeed;
             float armorReduction        = (1.0f - Lookup.ArmorReduction(Stats.Armor, BossOpts.Level));
-            float baseDamagePerSecond   = CalcOpts.BossAttackValue / CalcOpts.BossAttackSpeed;
+            float baseDamagePerSecond   = BossOpts.DefaultMeleeAttack.DamagePerHit / BossOpts.DefaultMeleeAttack.AttackSpeed;
             float guaranteedReduction   = (Lookup.DamageReduction(Stats) * armorReduction);
             float absorbed = Stats.DamageAbsorbed;
 
-            DamagePerHit    = (CalcOpts.BossAttackValue * guaranteedReduction) - absorbed;
+            DamagePerHit = (BossOpts.DefaultMeleeAttack.DamagePerHit * guaranteedReduction) - absorbed;
             DamagePerCrit   = (2.0f * DamagePerHit);
             DamagePerBlock  = Math.Max(0.0f, DamagePerHit * (1f - Lookup.ActiveBlockReduction(Stats.BonusBlockValueMultiplier, Character.PaladinTalents.HolyShield)));
 
@@ -59,7 +59,7 @@ namespace Rawr.ProtPaladin
             double a = Convert.ToDouble(DefendTable.AnyMiss);
             double h = Convert.ToDouble(Stats.Health);
             double H = Convert.ToDouble(AverageDamagePerHit);
-            double s = Convert.ToDouble(CalcOpts.BossAttackSpeed / CalcOpts.BossAttackSpeed);
+            double s = Convert.ToDouble(BossOpts.DefaultMeleeAttack.AttackSpeed / BossOpts.DefaultMeleeAttack.AttackSpeed);
             BurstTime = Convert.ToSingle((1.0d / a) * ((1.0d / Math.Pow(1.0d - a, h / H)) - 1.0d) * s);
             /*
             // Attempt to make a different TTL:

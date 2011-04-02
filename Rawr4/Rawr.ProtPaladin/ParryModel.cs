@@ -6,6 +6,7 @@ namespace Rawr.ProtPaladin {
     public class ParryModel {
         private Character Character;
         private CalculationOptionsProtPaladin CalcOpts;
+        private BossOptions BossOpts;
         private Stats Stats;
 
         private AttackTable AttackTable;
@@ -14,7 +15,7 @@ namespace Rawr.ProtPaladin {
         public float WeaponSpeed { get; private set; }
 
         private void Calculate() {
-            float bossAttackSpeed = CalcOpts.BossAttackSpeed * (1f - Stats.BossAttackSpeedMultiplier);
+            float bossAttackSpeed = BossOpts.DefaultMeleeAttack.AttackSpeed * (1f - Stats.BossAttackSpeedMultiplier);
             WeaponSpeed     = Lookup.WeaponSpeed(Character, Stats) / (1.0f + (DefendTable.Parry * 0.24f * (WeaponSpeed / bossAttackSpeed)));
         }
 
@@ -22,6 +23,7 @@ namespace Rawr.ProtPaladin {
             Character   = character;
             Stats       = stats;
             CalcOpts    = calcOpts;
+            BossOpts    = bossOpts;
             AttackTable = new AttackTable(character, stats, calcOpts, bossOpts);
             DefendTable = new DefendTable(character, stats, calcOpts, bossOpts);
             Calculate();

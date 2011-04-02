@@ -11,48 +11,6 @@ namespace Rawr.ProtPaladin
 #endif
     public class CalculationOptionsProtPaladin : ICalculationOptionBase, INotifyPropertyChanged {
 
-        private int _TargetLevel = 88;
-        public int TargetLevel
-        {
-            get { return _TargetLevel; }
-            set { _TargetLevel = value; OnPropertyChanged("TargetLevel"); }
-        }
-
-        private int _TargetArmor = (int)StatConversion.NPC_ARMOR[88 - 85];
-        public int TargetArmor
-        {
-            get { return _TargetArmor; }
-            set { _TargetArmor = value; OnPropertyChanged("TargetArmor"); }
-        }
-
-        private int _BossAttackValue = 80000;
-        public int BossAttackValue
-        {
-            get { return _BossAttackValue; }
-            set { _BossAttackValue = value; OnPropertyChanged("BossAttackValue"); }
-        }
-
-        private float _BossAttackSpeed = 2.0f;
-        public float BossAttackSpeed
-        {
-            get { return _BossAttackSpeed; }
-            set { _BossAttackSpeed = value; OnPropertyChanged("BossAttackSpeed"); }
-        }
-
-        private int _BossAttackValueMagic = 20000;
-        public int BossAttackValueMagic
-        {
-            get { return _BossAttackValueMagic; }
-            set { _BossAttackValueMagic = value; OnPropertyChanged("BossAttackValueMagic"); }
-        }
-
-        private float _BossAttackSpeedMagic = 1.0f;
-        public float BossAttackSpeedMagic
-        {
-            get { return _BossAttackSpeedMagic; }
-            set { _BossAttackSpeedMagic = value; OnPropertyChanged("BossAttackSpeedMagic"); }
-        }
-
         private float _ThreatScale = 10.0f;
         public float ThreatScale
         {
@@ -79,13 +37,6 @@ namespace Rawr.ProtPaladin
         {
             get { return _SealChoice; }
             set { _SealChoice = value; OnPropertyChanged("SealChoice"); }
-        }
-
-        private string _TargetType = "Unspecified";
-        public string TargetType
-        {
-            get { return _TargetType; }
-            set { _TargetType = value; OnPropertyChanged("TargetType"); }
         }
 
         private string _MagicDamageType = "None";

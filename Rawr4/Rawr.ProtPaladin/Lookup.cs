@@ -106,7 +106,7 @@ namespace Rawr.ProtPaladin
             return spellCrit * SpellHitChance(attackerLevel, stats, targetLevel);
         }
         
-        public static float BonusCritPercentage(Character character, Stats stats, Ability ability, int targetLevel, string targetType)
+        public static float BonusCritPercentage(Character character, Stats stats, Ability ability, int targetLevel)
         {
             float abilityCritChance = CritChance(stats, targetLevel, character.Level);
             float spellCritChance = SpellCritChance(character.Level, stats, targetLevel);
