@@ -816,7 +816,7 @@ namespace Rawr.Hunter {
              */
             #endregion
 
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs, character.SetBonusCount);
 
             foreach (Buff b in removedBuffs) { character.ActiveBuffsAdd(b); }
             foreach (Buff b in addedBuffs) { character.ActiveBuffs.Remove(b); }

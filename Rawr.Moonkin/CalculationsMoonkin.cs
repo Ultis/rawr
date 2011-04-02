@@ -1049,7 +1049,7 @@ namespace Rawr.Moonkin
             }*/
             #endregion
 
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs, character.SetBonusCount);
 
             foreach (Buff b in removedBuffs) {
                 character.ActiveBuffsAdd(b);

@@ -146,32 +146,38 @@ namespace Rawr.Mage
             cycle.Name = "FrBDFFFBIL";
 
             // S00: FOF00, BF00
-            // FrB => S11    fof * bf
-            //        S10    fof * (1-bf)
-            //        S01    (1-fof) * bf
-            //        S00    (1-fof)*(1-bf)
+            // FrB => S11    fof * bf * (1-Y)
+            //        S10    fof * (1-bf) * (1-Y)
+            //        S01    (1-fof) * bf * (1-Y)
+            //        S00    (1-fof)*(1-bf) * (1-Y)
+            // -   => S40    Y
 
             // S01: FOF00, BF10
-            // FrB => S12    fof
-            //        S02    (1-fof)
+            // FrB => S12    fof * (1-Y)
+            //        S02    (1-fof) * (1-Y)
+            // -   => S41    Y
 
             // S02: FOF00, BF11
-            // FFB => S20    fof
-            //        S00    1-fof
+            // FFB => S20    fof * (1-Y)
+            //        S00    (1-fof) * (1-Y)
+            // -   => S42    Y
 
             // S10: FOF10, BF00
-            // FrB => S31    fof * bf
-            //        S30    fof * (1-bf)
-            //        S21    (1-fof) * bf
-            //        S20    (1-fof)*(1-bf)
+            // FrB => S31    fof * bf * (1-Y)
+            //        S30    fof * (1-bf) * (1-Y)
+            //        S21    (1-fof) * bf * (1-Y)
+            //        S20    (1-fof)*(1-bf) * (1-Y)
+            // -   => S40    Y
 
             // S11: FOF10, BF10
-            // FrB => S32    fof
-            //        S22    (1-fof)
+            // FrB => S32    fof * (1-Y)
+            //        S22    (1-fof) * (1-Y)
+            // -   => S41    Y
 
             // S12: FOF10, BF11
-            // FFBS => S00    1-fof
-            //         S02    fof
+            // FFBS => S00    (1-fof) * (1-Y)
+            //         S02    fof * (1-Y)
+            // -    => S42    Y
 
             // S20: FOF11, BF00
             // FrB => S31    fof * bf * (1-X)

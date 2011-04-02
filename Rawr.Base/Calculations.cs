@@ -212,6 +212,10 @@ namespace Rawr
         {
             return Instance.GetBuffCalculations(character, currentCalcs, filter);
         }
+        public static List<ComparisonCalculationBase> GetSetBonusCalculations(Character character, CharacterCalculationsBase currentCalcs)
+        {
+            return Instance.GetSetBonusCalculations(character, currentCalcs);
+        }
         public static CharacterCalculationsBase GetCharacterCalculations(Character character)
         {
             return Instance.GetCharacterCalculations(character);
@@ -1258,6 +1262,123 @@ namespace Rawr
             return buffCalcs;
         }
 
+        public virtual List<ComparisonCalculationBase> GetSetBonusCalculations(Character character, CharacterCalculationsBase currentCalcs)
+        {
+            ClearCache();
+            List<ComparisonCalculationBase> buffCalcs = new List<ComparisonCalculationBase>();
+            CharacterCalculationsBase calcsEquipped = null;
+            CharacterCalculationsBase calcsUnequipped = null;
+            Character charAutoActivated = character.Clone();
+            foreach (Buff autoBuff in currentCalcs.AutoActivatedBuffs)
+            {
+                if (!charAutoActivated.ActiveBuffs.Contains(autoBuff))
+                {
+                    charAutoActivated.ActiveBuffsAdd(autoBuff);
+                    RemoveConflictingBuffs(charAutoActivated.ActiveBuffs, autoBuff);
+                }
+            }
+            charAutoActivated.DisableBuffAutoActivation = true;
+
+            string filter = "Set Bonuses";
+            string[] multiFilter = filter.Split('|');
+
+            List<Buff> relevantBuffs = new List<Buff>();
+            Buff.cachedClass = character.Class;
+            Buff.cachedPriProf = character.PrimaryProfession;
+            Buff.cachedSecProf = character.SecondaryProfession;
+            foreach (Buff buff in Buff.RelevantBuffs)
+            {
+                bool isinMultiFilter = false;
+                if (multiFilter.Length > 0)
+                {
+                    foreach (string mFilter in multiFilter)
+                    {
+                        if (buff.Group.Equals(mFilter, StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            isinMultiFilter = true;
+                            break;
+                        }
+                    }
+                }
+                if (filter == null || filter == "All" || filter == "Current"
+                    || buff.Group.Equals(filter, StringComparison.CurrentCultureIgnoreCase)
+                    || isinMultiFilter)
+                {
+                    relevantBuffs.Add(buff);
+                    foreach (Buff imp in buff.Improvements)
+                    {
+                        if (Calculations.Instance.IsBuffRelevant(imp, character))
+                        {
+                            relevantBuffs.Add(imp);
+                        }
+                    }
+                }
+            }
+
+            foreach (Buff buff in relevantBuffs)
+            {
+                if (!"Current".Equals(filter, StringComparison.CurrentCultureIgnoreCase) || charAutoActivated.ActiveBuffs.Contains(buff))
+                {
+                    Character charUnequipped = charAutoActivated.Clone();
+                    Character charEquipped = charAutoActivated.Clone();
+                    charUnequipped.DisableBuffAutoActivation = true;
+                    charEquipped.DisableBuffAutoActivation = true;
+
+                    // find next lower set bonus count
+                    int maxCount = 0;
+                    foreach (Buff lowerSetBonus in relevantBuffs)
+                    {
+                        if (lowerSetBonus.SetName == buff.SetName && lowerSetBonus.SetThreshold < buff.SetThreshold)
+                        {
+                            if (lowerSetBonus.SetThreshold > maxCount)
+                            {
+                                maxCount = lowerSetBonus.SetThreshold;
+                            }
+                        }
+                    }
+
+                    charUnequipped.SetBonusCount[buff.SetName] = maxCount;
+                    charEquipped.SetBonusCount[buff.SetName] = buff.SetThreshold;
+
+                    RemoveConflictingBuffs(charEquipped.ActiveBuffs, buff);
+                    RemoveConflictingBuffs(charUnequipped.ActiveBuffs, buff);
+
+                    calcsUnequipped = GetCharacterCalculations(charUnequipped, null, false, false, false);
+                    calcsEquipped = GetCharacterCalculations(charEquipped, null, false, false, false);
+
+                    ComparisonCalculationBase buffCalc = CreateNewComparisonCalculation();
+                    buffCalc.Name = buff.Name;
+                    buffCalc.Item = new Item() { Name = buff.Name, Stats = buff.Stats, Quality = ItemQuality.Temp };
+                    buffCalc.Equipped = charAutoActivated.ActiveBuffs.Contains(buff);
+                    if (!buffCalc.Equipped && buff.ConflictingBuffs.Count > 0 && buff.ConflictingBuffs[0] != null)
+                    {
+                        bool hasConflictingMatch = false;
+                        foreach (String cb in buff.ConflictingBuffs)
+                        {
+                            foreach (Buff b in character.ActiveBuffs)
+                            {
+                                if (b.Name != buff.Name && b.ConflictingBuffs.Contains(cb))
+                                {
+                                    hasConflictingMatch = true;
+                                    break;
+                                }
+                            }
+                        }
+                        buffCalc.PartEquipped = hasConflictingMatch;
+                    }
+                    buffCalc.OverallPoints = calcsEquipped.OverallPoints - calcsUnequipped.OverallPoints;
+                    float[] subPoints = new float[calcsEquipped.SubPoints.Length];
+                    for (int i = 0; i < calcsEquipped.SubPoints.Length; i++)
+                    {
+                        subPoints[i] = calcsEquipped.SubPoints[i] - calcsUnequipped.SubPoints[i];
+                    }
+                    buffCalc.SubPoints = subPoints;
+                    buffCalcs.Add(buffCalc);
+                }
+            }
+            return buffCalcs;
+        }
+
         public virtual ComparisonCalculationBase GetCharacterComparisonCalculations(CharacterCalculationsBase baseCalculations, 
             Character character, string name, bool equipped)
         {
@@ -1443,6 +1564,37 @@ namespace Rawr
 #endif
         }
 
+#if SILVERLIGHT
+        public virtual void AccumulateSetBonusStats(Stats stats, Dictionary<string, int> setBonusCount)
+#else
+        public unsafe virtual void AccumulateSetBonusStats(Stats stats, Dictionary<string, int> setBonusCount)
+#endif
+        {
+#if !SILVERLIGHT
+            fixed (float* pRawAdditiveData = stats._rawAdditiveData, pRawMultiplicativeData = stats._rawMultiplicativeData, pRawNoStackData = stats._rawNoStackData)
+            {
+                stats.BeginUnsafe(pRawAdditiveData, pRawMultiplicativeData, pRawNoStackData);
+#endif
+                foreach (KeyValuePair<string, int> pair in setBonusCount)
+                {
+                    Buff[] setBonuses = Buff.GetSetBonuses(pair.Key);
+                    if (setBonuses != null)
+                    {
+                        foreach (Buff buff in setBonuses)
+                        {
+                            if (buff != null && pair.Value >= buff.SetThreshold)
+                            {
+                                stats.AccumulateUnsafe(buff.Stats, true);
+                            }
+                        }
+                    }
+                }
+#if !SILVERLIGHT
+                stats.EndUnsafe();
+            }
+#endif
+        }
+
         public virtual Stats GetBuffsStats(List<string> buffs)
         {
             Stats stats = new Stats();
@@ -1454,6 +1606,21 @@ namespace Rawr
         {
             Stats stats = new Stats();
             AccumulateBuffsStats(stats, buffs);
+            return stats;
+        }
+
+        public virtual Stats GetBuffsStats(List<Buff> buffs, Dictionary<string, int> setBonusCount)
+        {
+            Stats stats = new Stats();
+            AccumulateBuffsStats(stats, buffs);
+            AccumulateSetBonusStats(stats, setBonusCount);
+            return stats;
+        }
+
+        public virtual Stats GetSetBonusStats(Dictionary<string, int> setBonusCount)
+        {
+            Stats stats = new Stats();
+            AccumulateSetBonusStats(stats, setBonusCount);
             return stats;
         }
 

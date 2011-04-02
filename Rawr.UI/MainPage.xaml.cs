@@ -70,6 +70,7 @@ namespace Rawr.UI
             Character c = new Character() { IsLoading = false };
             c.CurrentModel = ConfigModel;
             c.Class = Calculations.ModelClasses[c.CurrentModel];
+            c.RecalculateSetBonuses(); // otherwise you'll get null ref exception
             Character = c;
 
             Calculations.ModelChanging += new EventHandler(Calculations_ModelChanging);

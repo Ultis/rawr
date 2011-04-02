@@ -164,6 +164,7 @@ namespace Rawr.Warlock
             
             AccumulateItemStats(stats, character, additionalItem);
             AccumulateBuffsStats(stats, character.ActiveBuffs);
+            AccumulateSetBonusStats(stats, character.SetBonusCount);
             ApplyPetsRaidBuff(stats, options.Pet, talents, character.ActiveBuffs, options);
 
             float[] demonicEmbraceValues = { 0f, .04f, .07f, .1f };

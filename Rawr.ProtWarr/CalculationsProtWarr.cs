@@ -578,7 +578,7 @@ threat and limited threat scaled by the threat scale.",
         public StatsWarrior GetBuffsStats(Player player)
         {
             Base.StatsWarrior statsBuffs = new Base.StatsWarrior();
-            statsBuffs.Accumulate(GetBuffsStats(player.Character.ActiveBuffs));
+            statsBuffs.Accumulate(GetBuffsStats(player.Character.ActiveBuffs, player.Character.SetBonusCount));
 
             if (player.Character.ActiveBuffs.Find<Buff>(x => x.SpellId == 22738) != null)
             {

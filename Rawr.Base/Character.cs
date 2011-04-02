@@ -2687,7 +2687,6 @@ namespace Rawr
                 return;
             }
             RecalculateSetBonuses();
-            RecalculatePassiveBonuses();
 
             if (CalculationsInvalidated != null)
             {
@@ -2725,31 +2724,6 @@ namespace Rawr
                         SetBonusCount[i.SetName] = count + 1;
                     }
                 }
-            }
-
-            // eliminate searching in active buffs: first remove all set bonuses, then add active ones
-            ActiveBuffs.RemoveAll(buff => !string.IsNullOrEmpty(buff.SetName));
-            foreach (KeyValuePair<string, int> pair in SetBonusCount)
-            {
-                Buff[] setBonuses = Buff.GetSetBonuses(pair.Key);
-                if (setBonuses != null)
-                {
-                    foreach (Buff buff in setBonuses)
-                    {
-                        if (pair.Value >= buff.SetThreshold)
-                        {
-                            ActiveBuffs.Add(buff);
-                        }
-                    }
-                }
-            }
-        }
-
-        public void RecalculatePassiveBonuses()
-        {
-            if (Race == CharacterRace.Draenei)
-            {
-                ActiveBuffsAdd("Heroic Presence");
             }
         }
 

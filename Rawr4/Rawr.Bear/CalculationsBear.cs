@@ -1474,7 +1474,7 @@ the Threat Scale defined on the Options tab.",
             }*/
             #endregion
 
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs, character.SetBonusCount);
 
             foreach (Buff b in removedBuffs)
             {

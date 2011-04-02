@@ -1017,6 +1017,7 @@ a GCD's length, you will use this while running back into place",
 
             Base.StatsWarrior statsBuffs = new Base.StatsWarrior();
             AccumulateBuffsStats(statsBuffs, dpswarchar.Char.ActiveBuffs);
+            AccumulateSetBonusStats(statsBuffs, dpswarchar.Char.SetBonusCount);
 
             if (dpswarchar.Char.ActiveBuffs.Find<Buff>(x => x.SpellId == 22738) != null) {
                 statsBuffs.BonusWarrior_PvP_4P_InterceptCDReduc = 5f;

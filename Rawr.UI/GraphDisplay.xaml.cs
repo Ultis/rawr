@@ -723,8 +723,16 @@ namespace Rawr.UI
             CGL_Legend.LegendItems = Calculations.SubPointNameColors;
             ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
             ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
-            ComparisonGraph.DisplayCalcs(_buffCalculations = Calculations.GetBuffCalculations(Character, 
-                Calculations.GetCharacterCalculations(Character), ConvertBuffSelector(subgraph)).ToArray());
+            if (subgraph == "Set Bonuses")
+            {
+                ComparisonGraph.DisplayCalcs(_buffCalculations = Calculations.GetSetBonusCalculations(Character,
+                    Calculations.GetCharacterCalculations(Character)).ToArray());
+            }
+            else
+            {
+                ComparisonGraph.DisplayCalcs(_buffCalculations = Calculations.GetBuffCalculations(Character,
+                    Calculations.GetCharacterCalculations(Character), ConvertBuffSelector(subgraph)).ToArray());
+            }
         }
 
         #region Class to Glyph Icon

@@ -716,7 +716,7 @@ namespace Rawr.Retribution
             buffGroup.Add(Buff.GetBuffByName("Ancient Hysteria"));
             MaintBuffHelper(buffGroup, character, removedBuffs);
             // Pull the stats from the modified active buffs list
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs, character.SetBonusCount);
             // Put things back the way they were for the UI
             foreach (Buff b in removedBuffs) { character.ActiveBuffsAdd(b); }
             foreach (Buff b in addedBuffs) { character.ActiveBuffs.Remove(b); }

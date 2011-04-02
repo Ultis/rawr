@@ -614,6 +614,7 @@ namespace Rawr.Mage
             }
 
             AccumulateBuffsStats(stats, activeBuffs);
+            AccumulateSetBonusStats(stats, character.SetBonusCount);
 
             for (int i = 0; i < stats._rawSpecialEffectDataSize; i++)
             {

@@ -700,7 +700,8 @@ Points individually may be important.",
             statsTotal.BaseAgility = BStats.Agility;
 
             AccumulateItemStats(statsTotal, character, additionalItem);
-            AccumulateBuffsStats(statsTotal, character.ActiveBuffs); // includes set bonuses.
+            AccumulateBuffsStats(statsTotal, character.ActiveBuffs);
+            AccumulateSetBonusStats(statsTotal, character.SetBonusCount);
 
             #region T11
             foreach (Buff b in character.ActiveBuffs)
@@ -888,7 +889,7 @@ Points individually may be important.",
             List<Buff> removedBuffs = new List<Buff>();
             List<Buff> addedBuffs = new List<Buff>();
 
-            StatsDK statsBuffs = GetBuffsStats(character.ActiveBuffs) as StatsDK;
+            StatsDK statsBuffs = GetBuffsStats(character.ActiveBuffs, character.SetBonusCount) as StatsDK;
 
             foreach (Buff b in removedBuffs)
             {

@@ -72,18 +72,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Rawr4\Rawr.Silverlight.Web\ClientBin\BuffCache.xml">
-      <Link>TestData\BuffCache.xml</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Rawr4\Rawr.Silverlight.Web\ClientBin\EnchantCache.xml">
-      <Link>TestData\EnchantCache.xml</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Rawr4\Rawr.Silverlight.Web\ClientBin\TinkeringCache.xml">
-      <Link>TestData\TinkeringCache.xml</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Folder Include="TestData\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

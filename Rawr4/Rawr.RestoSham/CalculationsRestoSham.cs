@@ -1198,7 +1198,7 @@ namespace Rawr.RestoSham
             // Base stats
             Stats totalStats = new Stats();
             Stats raceStats = Rawr.BaseStats.GetBaseStats(character);
-            Stats buffStats = GetBuffsStats(character.ActiveBuffs);
+            Stats buffStats = GetBuffsStats(character.ActiveBuffs, character.SetBonusCount);
             Stats itemStats = GetItemStats(character, additionalItem);
             totalStats.Accumulate(raceStats);
             totalStats.Accumulate(itemStats);
@@ -1250,7 +1250,7 @@ namespace Rawr.RestoSham
         /// </returns>
         private Stats GetBuffsStats(Character character)
         {
-            return GetBuffsStats(character.ActiveBuffs);
+            return GetBuffsStats(character.ActiveBuffs, character.SetBonusCount);
         }
 
         /// <summary>

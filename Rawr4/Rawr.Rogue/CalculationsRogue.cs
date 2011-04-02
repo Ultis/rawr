@@ -1354,7 +1354,7 @@ namespace Rawr.Rogue
             List<Buff> removedBuffs = new List<Buff>();
             List<Buff> addedBuffs = new List<Buff>();
 
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs, character.SetBonusCount);
 
             foreach (Buff b in removedBuffs)
             {

@@ -1327,7 +1327,7 @@ focus on Survival Points.",
             }*/
             #endregion
 
-            Stats statsBuffs = base.GetBuffsStats(character.ActiveBuffs);
+            Stats statsBuffs = base.GetBuffsStats(character.ActiveBuffs, character.SetBonusCount);
 
             foreach (Buff b in removedBuffs) {
                 character.ActiveBuffsAdd(b);

@@ -218,7 +218,7 @@ namespace Rawr.Enhance
             #region Applied Stats
             Stats stats = GetCharacterStats(character, additionalItem);
             calc.BasicStats = stats;
-            calc.BuffStats = GetBuffsStats(character.ActiveBuffs);
+            calc.BuffStats = GetBuffsStats(character.ActiveBuffs, character.SetBonusCount);
             Item noBuffs = RemoveAddedBuffs(calc.BuffStats);
             calc.EnhSimStats = GetCharacterStats(character, noBuffs);
             calc.TargetLevel = bossOpts.Level;
@@ -708,7 +708,7 @@ namespace Rawr.Enhance
 
             Stats statsBase = BaseStats.GetBaseStats(character); 
             Stats statsBaseGear = GetItemStats(character, additionalItem);
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs, character.SetBonusCount);
             Stats statsGearEnchantsBuffs = statsBaseGear + statsBuffs;
 
             float agiBase = (float)Math.Floor((float)(statsBase.Agility));
