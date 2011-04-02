@@ -43,7 +43,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="Normal Pot: *" VerticalAlignment="Center" Margin="2" ToolTipService.ShowDuration="30000"
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Normal Pot: *" VerticalAlignment="Center" Margin="2" 
                            ToolTipService.ToolTip="A Pot consumed during the fight. Only one Pot can be used&#x0a;per fight unless performing the Double Pot Trick."/>
                 <ComboBox x:Name="CB_Pots" Grid.Row="0" Grid.Column="1" Margin="2" SelectedIndex="0">
                     <System:String>None</System:String>
@@ -52,7 +52,7 @@
                     <System:String>Pot 3</System:String>
                     <System:String>Pot 4</System:String>
                 </ComboBox>
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="Double Pot Trick: *" VerticalAlignment="Center" Margin="2" ToolTipService.ShowDuration="30000"
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Double Pot Trick: *" VerticalAlignment="Center" Margin="2" 
                            ToolTipService.ToolTip="The Double Pot Trick is to consume a pot approximately one&#x0a;second before the fight starts. This provides almost the full&#x0a;value of another pot without triggering the fight-based cooldown."/>
                 <ComboBox x:Name="CB_DoublePots" Grid.Row="1" Grid.Column="1" Margin="2" SelectedIndex="0">
                     <System:String>None</System:String>
@@ -61,7 +61,7 @@
                     <System:String>Pot 3</System:String>
                     <System:String>Pot 4</System:String>
                 </ComboBox>
-                <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="Mixology Bonuses will be activated if you have the Profession selected." TextWrapping="Wrap" FontSize="10" TextAlignment="Center"  VerticalAlignment="Center" Margin="2" ToolTipService.ShowDuration="30000"
+                <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="Mixology Bonuses will be activated if you have the Profession selected." TextWrapping="Wrap" FontSize="10" TextAlignment="Center"  VerticalAlignment="Center" Margin="2"
                            ToolTipService.ToolTip="Guardian Elixirs are defensive in nature&#x0a;- Cannot be used with a Flask&#x0a;- Can be used with a Battle Elixir"/>
             </Grid>
         </localUI:GroupBox>
@@ -82,7 +82,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="Flask or Battle Elixir: *" VerticalAlignment="Center" Margin="2" ToolTipService.ShowDuration="30000"
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Flask or Battle Elixir: *" VerticalAlignment="Center" Margin="2" 
                            ToolTipService.ToolTip="Flasks take up both Battle and Guardian Elixir slots.&#x0a;&#x0a;Battle Elixirs are offensive in nature&#x0a;- Cannot be used with a Flask&#x0a;- Can be used with a Guardian Elixir"/>
                 <ComboBox x:Name="CB_Flasks" Grid.Row="0" Grid.Column="1" Margin="2" SelectedIndex="0">
                     <System:String>None</System:String>
@@ -91,7 +91,7 @@
                     <System:String>Battle Elixir 1</System:String>
                     <System:String>Battle Elixir 2</System:String>
                 </ComboBox>
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="Guardian Elixir: *" VerticalAlignment="Center" Margin="2" ToolTipService.ShowDuration="30000"
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Guardian Elixir: *" VerticalAlignment="Center" Margin="2" 
                            ToolTipService.ToolTip="Guardian Elixirs are defensive in nature&#x0a;- Cannot be used with a Flask&#x0a;- Can be used with a Battle Elixir"/>
                 <ComboBox x:Name="CB_Elixirs" Grid.Row="1" Grid.Column="1" Margin="2" SelectedIndex="0">
                     <System:String>None</System:String>
@@ -100,7 +100,7 @@
                     <System:String>Pot 3</System:String>
                     <System:String>Pot 4</System:String>
                 </ComboBox>
-                <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="Mixology Bonuses will be activated if you have the Profession selected." TextWrapping="Wrap" FontSize="10" TextAlignment="Center"  VerticalAlignment="Center" Margin="2" ToolTipService.ShowDuration="30000"
+                <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="Mixology Bonuses will be activated if you have the Profession selected." TextWrapping="Wrap" FontSize="10" TextAlignment="Center"  VerticalAlignment="Center" Margin="2" 
                            ToolTipService.ToolTip="Guardian Elixirs are defensive in nature&#x0a;- Cannot be used with a Flask&#x0a;- Can be used with a Battle Elixir"/>
             </Grid>
         </localUI:GroupBox>
@@ -120,7 +120,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="Food: *" VerticalAlignment="Center" Margin="2" ToolTipService.ShowDuration="30000"
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Food: *" VerticalAlignment="Center" Margin="2" 
                            ToolTipService.ToolTip="Only one food can be consumed during a fight"/>
                 <ComboBox x:Name="CB_Food" Grid.Row="0" Grid.Column="1" Margin="2" SelectedIndex="0">
                     <System:String>None</System:String>
@@ -148,7 +148,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="The following Set Bonuses are Active *" VerticalAlignment="Center" Margin="4,2" ToolTipService.ShowDuration="30000"
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="The following Set Bonuses are Active *" VerticalAlignment="Center" Margin="4,2" 
                            ToolTipService.ToolTip="Active Set Bonuses are determined by a count of&#x0a;gear worn that has the set bonus name in it.&#x0a;" FontSize="10" />
                 <StackPanel x:Name="ActiveSetBonusesStack" Grid.Row="1" Margin="10,2">
                     <TextBlock Text="None" FontSize="10" />
@@ -176,7 +176,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="The following Profession Bonuses are Active *" VerticalAlignment="Center" Margin="4,2" ToolTipService.ShowDuration="30000"
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="The following Profession Bonuses are Active *" VerticalAlignment="Center" Margin="4,2" 
                            ToolTipService.ToolTip="Active Profession Bonuses are determined by what&#x0a;Professions are selected on the Stats Pane." FontSize="10" />
                 <StackPanel x:Name="ActiveProfBonusesStack" Grid.Row="1" Margin="10,2">
                     <TextBlock Text="None" FontSize="10" />

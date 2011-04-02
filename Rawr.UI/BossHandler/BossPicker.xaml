@@ -3,6 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk" 
     xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
     xmlns:local="clr-namespace:Rawr.UI"
     xmlns:dataInput="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data.Input"
@@ -49,8 +50,8 @@
             </Grid>
         </local:GroupBox>
 
-        <TabControl x:Name="TabLayout" Grid.Row="3">
-            <TabItem Header="Basics">
+        <sdk:TabControl x:Name="TabLayout" Grid.Row="3">
+            <sdk:TabItem Header="Basics">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -164,8 +165,8 @@
                     <TextBlock Grid.Row="12" HorizontalAlignment="Stretch" Margin="4,2" Text="{Binding Path=DynamicString_Attacks}" Grid.ColumnSpan="4" Name="LB_Attacks" TextWrapping="Wrap" />
                     <TextBlock Grid.Row="15" HorizontalAlignment="Stretch" Margin="4,2" Text="{Binding Path=DynamicString_BuffStates}" Grid.ColumnSpan="4" Name="LB_BuffStates" TextWrapping="Wrap" />
                 </Grid>
-            </TabItem>
-            <TabItem Name="Tab_Imp" Header="Impedances">
+            </sdk:TabItem>
+            <sdk:TabItem Name="Tab_Imp" Header="Impedances">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -205,8 +206,8 @@
                     <TextBlock Grid.Row="9" HorizontalAlignment="Stretch" Margin="4,2" Text="{Binding Path=DynamicString_Slnc}" Grid.ColumnSpan="2" Name="LB_Slncs" TextWrapping="Wrap" />
                     <TextBlock Grid.Row="11" HorizontalAlignment="Stretch" Margin="4,2" Text="{Binding Path=DynamicString_Dsrm}" Grid.ColumnSpan="2" Name="LB_Dsrms" TextWrapping="Wrap" />
                 </Grid>
-            </TabItem>
-            <TabItem Name="Tab_Def" Header="Defensive">
+            </sdk:TabItem>
+            <sdk:TabItem Name="Tab_Def" Header="Defensive">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -241,8 +242,8 @@
                     <TextBlock x:Name="LB_Resist_Holy" Text="Holy: *" ToolTipService.ToolTip="Raw resistance or -1 for immunity." Grid.Row="7" Margin="2" VerticalAlignment="Center" />
                     <inputToolkit:NumericUpDown x:Name="NUD_Resist_Holy" Value="{Binding Resist_Holy, Mode=TwoWay}" Grid.Column="1" Grid.Row="7" Margin="2" VerticalAlignment="Center" Minimum="-1" Maximum="10000" />
                 </Grid>
-            </TabItem>
-        </TabControl>
+            </sdk:TabItem>
+        </sdk:TabControl>
         <TextBlock Grid.Row="4" Text="Summary" Margin="4,2" VerticalAlignment="Center" FontWeight="Bold" />
         <TextBox x:Name="TB_BossInfo"  Grid.Row="5" TextWrapping="Wrap" IsReadOnly="True" TabIndex="46" d:LayoutOverrides="Width" Margin="2"
                  VerticalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto"
