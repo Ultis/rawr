@@ -101,7 +101,7 @@ namespace Rawr.Bosses
                     DamageType = ItemDamageType.Shadow,
                     DamagePerHit = (2925f + 3075f) / 2f,
                     // Assume it takes 5 seconds to remove all.
-                    NumTicks = 10f,
+                    Duration = 5f, //15f,
                     TickInterval = .5f,
                     DamagePerTick = 165000f / 10f,
                     //Interruptable = true,
@@ -128,7 +128,7 @@ namespace Rawr.Bosses
                     IsDoT = true,
                     DamageType = ItemDamageType.Fire,
                     TickInterval = 1f,
-                    NumTicks = 15f,
+                    Duration = 15f,
                     // Adjusting damage to take into account for the 100% fire damage debuff from Meteor Strike Debuff
                     DamagePerTick = ((8287f + 8712f) / 2f) * 2,
                     MaxNumTargets = Max_Players[i],
@@ -257,7 +257,7 @@ namespace Rawr.Bosses
                     AttackType = ATTACK_TYPES.AT_RANGED,
                     DamageType = ItemDamageType.Fire,
                     DamagePerHit = (12025f + 13975f) / 2f,
-                    NumTicks = 5f,
+                    Duration = 10f,
                     TickInterval = 2f,
                     MaxNumTargets = Max_Players[i],
                     AttackSpeed = 30f,
@@ -339,7 +339,7 @@ namespace Rawr.Bosses
                     DamagePerHit = new float[] { (110464f + 128377f), (132557f + 154052f), (132557f + 154052f), (154649f + 179728f) }[i] / 2f,
                     DamageType = ItemDamageType.Physical,
                     // should not last more than 5 seconds
-                    NumTicks = 1f,
+                    Duration = 5f,
                     TickInterval = 5f,
                     MaxNumTargets = 1f,
                     AttackSpeed = 90f,
@@ -359,7 +359,7 @@ namespace Rawr.Bosses
                     Stats = new Stats() { BonusArmorMultiplier = -.5f }
                 });
 
-                // Well Mangle is used, half the room is hit with Ignition that affects everyone
+                // While Mangle is used, half the room is hit with Ignition that affects everyone
                 // Assume 3 seconds to get out
                 this[i].Attacks.Add(new Attack
                 {
@@ -368,7 +368,7 @@ namespace Rawr.Bosses
                     DamagePerHit = (23125f + 26875f) / 2f,
                     DamageType = ItemDamageType.Physical,
                     // should not last more than 10 seconds
-                    NumTicks = 3f,
+                    Duration = 10f,
                     TickInterval = 1f,
                     MaxNumTargets = Max_Players[i],
                     AttackSpeed = 90f,
@@ -617,7 +617,7 @@ namespace Rawr.Bosses
                     IsDoT = true,
                     DamageType = ItemDamageType.Fire,
                         DamagePerTick = (14625 + 15375) / 2f,
-                    NumTicks = 4f,
+                    Duration = 4f,
                     TickInterval = 1f,
                     MaxNumTargets = Max_Players[i],
                     // TODO: Get attack speed for this ability
@@ -633,7 +633,7 @@ namespace Rawr.Bosses
                     IsDoT = true,
                     DamageType = ItemDamageType.Fire,
                     DamagePerTick = (34125 + 35875) / 2f,
-                    NumTicks = 4f,
+                    Duration = 4f,
                     TickInterval = 1f,
                     // You really only want one person be hit by this.
                     // Assume it does not target a tank
@@ -1716,7 +1716,7 @@ namespace Rawr.Bosses
                     DamageType = ItemDamageType.Shadow,
                     AttackType = ATTACK_TYPES.AT_AOE,
                     TickInterval = 2f,
-                    NumTicks = 15,
+                    Duration = 30,
                     // Starts out as 2k damage a tick, goes up to 60k damage a tick after 30 ticks.
                     // Once dispelled you spread the debuff to 2 other players
                     // Those players get the remaining time left but start from 0 damage

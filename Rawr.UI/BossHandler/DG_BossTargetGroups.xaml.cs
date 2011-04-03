@@ -15,9 +15,7 @@ namespace Rawr.UI
 {
     public partial class DG_BossTargetGroups : ChildWindow
     {
-        static DG_BossTargetGroups()
-        {
-        }
+        static DG_BossTargetGroups() { }
 
         public DG_BossTargetGroups()
         {
@@ -55,16 +53,6 @@ namespace Rawr.UI
             }
         }
 
-        private void OKButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.DialogResult = true;
-        }
-
-        private void CancelButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.DialogResult = false;
-        }
-
         private void BT_Add_Click(object sender, RoutedEventArgs e)
         {
             TargetGroup s = new TargetGroup()
@@ -75,6 +63,16 @@ namespace Rawr.UI
                 NearBoss = (bool)CK_NearBoss.IsChecked,
                 NumTargs = (float)NUD_NumTargs.Value,
             };
+            // Targeting Includes
+            s.AffectsRole[PLAYER_ROLES.MainTank]             = CK_AffectsMTank.IsChecked.GetValueOrDefault(false);
+            s.AffectsRole[PLAYER_ROLES.OffTank]              = CK_AffectsOTank.IsChecked.GetValueOrDefault(false);
+            s.AffectsRole[PLAYER_ROLES.TertiaryTank]         = CK_AffectsTTank.IsChecked.GetValueOrDefault(false);
+            s.AffectsRole[PLAYER_ROLES.MeleeDPS]             = CK_AffectsMeleeDPS.IsChecked.GetValueOrDefault(false);
+            s.AffectsRole[PLAYER_ROLES.RangedDPS]            = CK_AffectsRangedDPS.IsChecked.GetValueOrDefault(false);
+            s.AffectsRole[PLAYER_ROLES.MainTankHealer]       = CK_AffectsMainTankHealer.IsChecked.GetValueOrDefault(false);
+            s.AffectsRole[PLAYER_ROLES.OffAndTertTankHealer] = CK_AffectsOffTankHealer.IsChecked.GetValueOrDefault(false);
+            s.AffectsRole[PLAYER_ROLES.RaidHealer]           = CK_AffectsRaidHealer.IsChecked.GetValueOrDefault(false);
+
             if (isEditing) {
                 // Affect your changes to the currently selected one
                 isEditing = false;
@@ -104,6 +102,15 @@ namespace Rawr.UI
                 NUD_Chance.Value = selected.Chance * 100f;
                 CK_NearBoss.IsChecked = selected.NearBoss;
                 NUD_NumTargs.Value = selected.NumTargs;
+                // Targeting Includes
+                CK_AffectsMTank.IsChecked          = selected.AffectsRole[PLAYER_ROLES.MainTank];
+                CK_AffectsOTank.IsChecked          = selected.AffectsRole[PLAYER_ROLES.OffTank];
+                CK_AffectsTTank.IsChecked          = selected.AffectsRole[PLAYER_ROLES.TertiaryTank];
+                CK_AffectsMeleeDPS.IsChecked       = selected.AffectsRole[PLAYER_ROLES.MeleeDPS];
+                CK_AffectsRangedDPS.IsChecked      = selected.AffectsRole[PLAYER_ROLES.RangedDPS];
+                CK_AffectsMainTankHealer.IsChecked = selected.AffectsRole[PLAYER_ROLES.MainTankHealer];
+                CK_AffectsOffTankHealer.IsChecked  = selected.AffectsRole[PLAYER_ROLES.OffAndTertTankHealer];
+                CK_AffectsRaidHealer.IsChecked     = selected.AffectsRole[PLAYER_ROLES.RaidHealer];
                 //
                 isEditing = true;
             } else {
@@ -113,10 +120,22 @@ namespace Rawr.UI
                 NUD_Chance.Value = 100f;
                 CK_NearBoss.IsChecked = false;
                 NUD_NumTargs.Value = 2;
+                // Targeting Includes
+                CK_AffectsMTank.IsChecked          = false;
+                CK_AffectsOTank.IsChecked          = true;
+                CK_AffectsTTank.IsChecked          = true;
+                CK_AffectsMeleeDPS.IsChecked       = true;
+                CK_AffectsRangedDPS.IsChecked      = true;
+                CK_AffectsMainTankHealer.IsChecked = true;
+                CK_AffectsOffTankHealer.IsChecked  = true;
+                CK_AffectsRaidHealer.IsChecked     = true;
                 //
                 isEditing = false;
             }
         }
+
+        private void OKButton_Click(object sender, RoutedEventArgs e) { this.DialogResult = true; }
+        private void CancelButton_Click(object sender, RoutedEventArgs e) { this.DialogResult = false; }
     }
 }
 

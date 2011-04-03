@@ -144,7 +144,7 @@ namespace Rawr.UI
             itemsPCV.GroupDescriptions.Add(new PropertyGroupDescription("Slot"));
             ItemGrid.ItemsSource = itemsPCV;            
 #else
-            // TODO implement paging in WPF
+            // TODO: implement paging in WPF
             ItemGrid.ItemsSource = items;
 #endif
             //if (MainPage.Instance != null && MainPage.Instance.Character != null) { MainPage.Instance.Character.OnCalculationsInvalidated(); }
@@ -201,16 +201,7 @@ namespace Rawr.UI
         {
             // ignore empty strings
             if (name.Length <= 0) return;
-
-            // try the armory (if requested)
-            //if (useArmory)
-            //{
-                //TODO-ARMORY-ITEM: Armory.GetItemIdByName(name, armoryId => AddItemByName(name, armoryId, useWowhead));
-            //}
-            else
-            {
-                AddItemByName(name, 0, useWowhead, usePTR);
-            }
+            else { AddItemByName(name, 0, useWowhead, usePTR); }
         }
 
         private void AddItemByName(string name, int armoryId, bool useWowhead, bool usePTR)

@@ -19,8 +19,8 @@ namespace Rawr.DPSWarr.Skills
             //DPSWarrChar.CombatFactors = cf;
             //CalcOpts = calcOpts;
             //BossOpts = bossOpts;
-            MHAtkTable = new AttackTable(DPSWarrChar.Char, DPSWarrChar.StatS, DPSWarrChar.CombatFactors, DPSWarrChar.CalcOpts, DPSWarrChar.BossOpts, true, false, false, false);
-            OHAtkTable = new AttackTable(DPSWarrChar.Char, DPSWarrChar.StatS, DPSWarrChar.CombatFactors, DPSWarrChar.CalcOpts, DPSWarrChar.BossOpts, false, false, false, false);
+            MHAtkTable = new AttackTable(DPSWarrChar.Char, DPSWarrChar.StatS, DPSWarrChar.CombatFactors, DPSWarrChar.BossOpts, true, false, false, false);
+            OHAtkTable = new AttackTable(DPSWarrChar.Char, DPSWarrChar.StatS, DPSWarrChar.CombatFactors, DPSWarrChar.BossOpts, false, false, false, false);
             //
             SlamActsOverDurO20 = SlamActsOverDurU20 = 0f;
         }
@@ -673,8 +673,8 @@ Percentage of Total DPS: {15:00.00%}",
             }
             else
             {
-                MHAtkTable = new AttackTable(DPSWarrChar.Char, DPSWarrChar.StatS, DPSWarrChar.CombatFactors, DPSWarrChar.CalcOpts, DPSWarrChar.BossOpts, this, true, UseSpellHit, UseRangedHit, !UseHitTable);
-                OHAtkTable = new AttackTable(DPSWarrChar.Char, DPSWarrChar.StatS, DPSWarrChar.CombatFactors, DPSWarrChar.CalcOpts, DPSWarrChar.BossOpts, this, false, UseSpellHit, UseRangedHit, !UseHitTable);
+                MHAtkTable = new AttackTable(DPSWarrChar.Char, DPSWarrChar.StatS, DPSWarrChar.CombatFactors, DPSWarrChar.BossOpts, this, true, UseSpellHit, UseRangedHit, !UseHitTable);
+                OHAtkTable = new AttackTable(DPSWarrChar.Char, DPSWarrChar.StatS, DPSWarrChar.CombatFactors, DPSWarrChar.BossOpts, this, false, UseSpellHit, UseRangedHit, !UseHitTable);
             }
             setValidation();
         }

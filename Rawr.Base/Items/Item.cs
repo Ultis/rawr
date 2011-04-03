@@ -922,24 +922,12 @@ namespace Rawr
                     case 34220: // Chaotic Skyfire Diamond            (3% Crit Dmg, 12 Crit Rating)
                     case 41285: // Chaotic Skyflare Diamond           (3% Crit Dmg, 21 Crit Rating)
                     case 52291: // Chaotic Shadowspirit Diamond       (3% Crit Dmg, 54 Crit Rating)
-                                // TODO: The new 4.0.6 Metas that have Reds 3+ requirements.
-                                // We don't have Item IDs for them yet as they aren't posted to ptr.wowhead.com
-                                // The xx are probably around 54
                     case 68778: // Agile Shadowspirit Diamond         (3% Crit Dmg, 54 Agility)
                     case 68779: // Reverberating Shadowspirit Diamond (3% Crit Dmg, 54 Strength)
                     case 68780: // Burning Shadowspirit Diamond       (3% Crit Dmg, 54 Intellect)
-                        volatileRequirements = true;
-                        // Patch 4.0.6+ has these at Reds 3+
-                        meetsRequirements = redGems >= 3;
-                        break;
                     case 32409: // Relentless Earthsiege Diamond (3% Crit Dmg, 12 Agility)
-                        volatileRequirements = true;
-                        // Patch 4.0.6+ has these at Reds 3+
-                        meetsRequirements = redGems >= 3;
-                        break;
                     case 41398: // Relentless Earthsiege Diamond (3% Crit Dmg, 21 Agility)
                         volatileRequirements = true;
-                        // Patch 4.0.6+ has these at Reds 3+
                         meetsRequirements = redGems >= 3;
                         break;
                     case 25899:

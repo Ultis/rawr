@@ -235,7 +235,7 @@ namespace Rawr.DPSWarr {
             {
                 if (_AttackTableBasicMH == null)
                 {
-                    _AttackTableBasicMH = new AttackTable(Char, StatS, this, CalcOpts, BossOpts, Skills.Ability.NULL, true, false, false, false);
+                    _AttackTableBasicMH = new AttackTable(Char, StatS, this, BossOpts, Skills.Ability.NULL, true, false, false, false);
                 }
                 return _AttackTableBasicMH;
             }
@@ -246,7 +246,7 @@ namespace Rawr.DPSWarr {
             {
                 if (_AttackTableBasicOH == null)
                 {
-                    _AttackTableBasicOH = new AttackTable(Char, StatS, this, CalcOpts, BossOpts, Skills.Ability.NULL, false, false, false, false);
+                    _AttackTableBasicOH = new AttackTable(Char, StatS, this, BossOpts, Skills.Ability.NULL, false, false, false, false);
                 }
                 return _AttackTableBasicOH;
             }

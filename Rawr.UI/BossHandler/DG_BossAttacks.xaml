@@ -8,6 +8,7 @@
     xmlns:input="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input"
     xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
     xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
+    xmlns:toolkitWrap="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"
     xmlns:System="clr-namespace:System;assembly=mscorlib"
     mc:Ignorable="d"
     xmlns:Rawr="clr-namespace:Rawr;assembly=Rawr.Base"
@@ -18,30 +19,7 @@
 
     <Grid x:Name="LayoutRoot" Background="White">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="29" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="125" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -52,100 +30,196 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
-        <ScrollViewer Grid.RowSpan="2" Grid.ColumnSpan="3" Padding="0" VerticalScrollBarVisibility="Auto">
+        <ScrollViewer Padding="0" VerticalScrollBarVisibility="Auto">
             <ListBox x:Name="LB_TheList" Margin="0" MinHeight="90" SelectionChanged="LB_TheList_SelectionChanged" />
         </ScrollViewer>
-    
+
+        <Button x:Name="BT_Add" Content="Add/Edit" Grid.Row="1" Margin="8,2" Width="75" Click="BT_Add_Click" VerticalAlignment="Center" HorizontalAlignment="Right" />
+        <Button x:Name="BT_Delete" Content="Delete" Grid.Row="1" Margin="8,2" Width="75" Click="BT_Delete_Click" VerticalAlignment="Center" HorizontalAlignment="Left" />
+
         <!-- ===== BASICS ===== -->
-        <TextBlock FontWeight="Bold" Grid.ColumnSpan="3" Margin="4,2" Text="Basics:" VerticalAlignment="Center" Grid.Row="4" HorizontalAlignment="Stretch" />
-        <!-- Name -->
-        <TextBlock x:Name="LB_Name" Text="Name:" TextWrapping="Wrap" Grid.Column="0" Grid.ColumnSpan="1" Margin="4,2" VerticalAlignment="Center" Grid.Row="5" HorizontalAlignment="Stretch" />
-        <TextBox x:Name="TB_Name" TextWrapping="Wrap" Grid.Column="1" Grid.ColumnSpan="2" Margin="4,2" VerticalAlignment="Center" Height="22" Grid.Row="5" HorizontalAlignment="Stretch" />
-        <!-- DamageType -->
-        <TextBlock x:Name="LB_DmgType" Text="Damage Type:" TextWrapping="Wrap" Grid.Column="0" Grid.Row="6" Margin="4,2" VerticalAlignment="Center" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" />
-        <ComboBox x:Name="CB_DmgType" Margin="4,2" Grid.Column="1" Grid.Row="6" SelectedIndex="0" Height="22" VerticalAlignment="Center" HorizontalAlignment="Stretch">
-            <System:String>Physical</System:String>
-            <System:String>Holy</System:String>
-            <System:String>Fire</System:String>
-            <System:String>Nature</System:String>
-            <System:String>Frost</System:String>
-            <System:String>Shadow</System:String>
-            <System:String>Arcane</System:String>
-        </ComboBox>
-        <!-- DamagePerHit -->
-        <TextBlock x:Name="LB_DmgPerHit" Text="Damage Per Hit:" TextWrapping="Wrap" Grid.Row="7" Grid.Column="0" Margin="4,2" VerticalAlignment="Center" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" />
-        <inputToolkit:NumericUpDown x:Name="NUD_DmgPerHit" Grid.Column="1" Grid.Row="7" Margin="4,2" Maximum="1000000" Value="80000" Increment="1000" VerticalAlignment="Center" Height="22" HorizontalAlignment="Stretch" />
-        <!-- DamageIsPerc -->
-        <CheckBox x:Name="CK_DamageIsPerc" Margin="4,2" Content="Is Percentage *" Grid.Row="7" HorizontalAlignment="Stretch" VerticalAlignment="Center" ToolTipService.ToolTip="The value of the above box is a percentage of the player's health" Grid.Column="2" />
-        <!-- MaxNumTargets -->
-        <TextBlock x:Name="LB_MaxNumTargs" Text="Max Number of Targets:" TextWrapping="Wrap" Grid.Column="0" Margin="4,2" VerticalAlignment="Center" Grid.Row="9" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" />
-        <inputToolkit:NumericUpDown x:Name="NUD_MaxNumTargs" Grid.Column="1" Margin="4,2" Maximum="25" Value="1" Increment="1" Grid.Row="9" VerticalAlignment="Center" Height="22" HorizontalAlignment="Stretch" />
-        <!-- AttackSpeed -->
-        <TextBlock x:Name="LB_AtkSpeed" Text="Attack Speed:" TextWrapping="Wrap" Grid.Column="0" Margin="4,2" VerticalAlignment="Center" Grid.Row="10" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" />
-        <inputToolkit:NumericUpDown x:Name="NUD_AtkSpeed" Grid.Column="1" Margin="4,2" Maximum="1200" Minimum="1" Value="2.5" Increment="0.1" DecimalPlaces="2" Grid.Row="10" VerticalAlignment="Center" Height="22" HorizontalAlignment="Stretch" />
-        <TextBlock x:Name="LB_AtkSpeed2" Text="sec" TextWrapping="Wrap" Grid.Column="2" Margin="4,2" VerticalAlignment="Center" Grid.Row="10" HorizontalAlignment="Stretch" />
-        <!-- AttackType -->
-        <TextBlock x:Name="LB_AtkType" Text="Attack Type:" TextWrapping="Wrap" Grid.Column="0" Grid.Row="11" Margin="4,2" VerticalAlignment="Center" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" />
-        <ComboBox x:Name="CB_AtkType" Margin="4,2" Grid.Column="1" Grid.Row="11" SelectedIndex="0" Height="22" VerticalAlignment="Center" HorizontalAlignment="Stretch">
-            <System:String>Melee</System:String>
-            <System:String>Ranged</System:String>
-            <System:String>AoE</System:String>
-        </ComboBox>
+        <local:GroupBox Grid.Column="0" Grid.Row="2" HorizontalAlignment="Stretch" Margin="2">
+            <local:GroupBox.Header>
+                <TextBlock Text="Basics" FontWeight="Bold" />
+            </local:GroupBox.Header>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Name -->
+                <TextBlock x:Name="LB_Name" Text="Name:" TextWrapping="Wrap" Grid.Column="0" Grid.ColumnSpan="1" Margin="4,2" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
+                <TextBox x:Name="TB_Name" TextWrapping="Wrap" Grid.Column="1" Grid.ColumnSpan="3" Margin="4,2" VerticalAlignment="Center" Height="22" HorizontalAlignment="Stretch" />
+                <!-- DamageType -->
+                <TextBlock x:Name="LB_DmgType" Text="Damage Type:" TextWrapping="Wrap" Grid.Column="0" Grid.Row="1" Margin="4,2" VerticalAlignment="Center" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" />
+                <ComboBox x:Name="CB_DmgType" Margin="4,2" Grid.Column="1" Grid.Row="1" SelectedIndex="0" Height="22" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                    <System:String>Physical</System:String>
+                    <System:String>Holy</System:String>
+                    <System:String>Fire</System:String>
+                    <System:String>Nature</System:String>
+                    <System:String>Frost</System:String>
+                    <System:String>Shadow</System:String>
+                    <System:String>Arcane</System:String>
+                </ComboBox>
+                <!-- AttackType -->
+                <TextBlock x:Name="LB_AtkType" Text="Attack Type:" TextWrapping="Wrap" Grid.Column="2" Grid.Row="1" Margin="4,2" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
+                <ComboBox x:Name="CB_AtkType" Margin="4,2" Grid.Column="3" SelectedIndex="0" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Row="1">
+                    <System:String>Melee</System:String>
+                    <System:String>Ranged</System:String>
+                    <System:String>AoE</System:String>
+                </ComboBox>
+                <!-- DamagePerHit -->
+                <TextBlock x:Name="LB_DmgPerHit" Text="Damage Per Hit:" TextWrapping="Wrap" Grid.Row="2" Grid.Column="0" Margin="4,2" VerticalAlignment="Center" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" />
+                <inputToolkit:NumericUpDown x:Name="NUD_DmgPerHit" Grid.Column="1" Grid.Row="2" Margin="4,2" Maximum="1000000" Value="80000" Increment="1000" VerticalAlignment="Center" Height="22" HorizontalAlignment="Stretch" />
+                <!-- DamageIsPerc -->
+                <CheckBox x:Name="CK_DamageIsPerc" Margin="4,2" Content="Is Percentage *" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" ToolTipService.ToolTip="The value of the above box is a percentage of the player's health" Grid.Column="2" Grid.ColumnSpan="2" />
+                <!--IFSL-->
+                <toolkitWrap:WrapPanel Grid.Row="3" Grid.ColumnSpan="4">
+                <!--ENDIFSL-->
+                <!--IFWPF
+                <WrapPanel Grid.Row="3" Grid.ColumnSpan="4">
+                ENDIFWPF-->
+                    <!-- MaxNumTargets -->
+                    <TextBlock x:Name="LB_MaxNumTargs" Text="Max Number of Targets:" TextWrapping="Wrap" Grid.Column="0" Margin="4,2" VerticalAlignment="Center" Grid.Row="3" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" />
+                    <inputToolkit:NumericUpDown x:Name="NUD_MaxNumTargs" Grid.Column="1" Margin="4,2" Maximum="25" Value="1" Increment="1" Grid.Row="3" VerticalAlignment="Center" Height="22" HorizontalAlignment="Stretch" MinWidth="60" />
+                    <!-- AttackSpeed -->
+                    <TextBlock x:Name="LB_AtkSpeed" Text="Attack Speed:" TextWrapping="Wrap" Grid.Column="0" Margin="4,2" VerticalAlignment="Center" Grid.Row="4" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" />
+                    <inputToolkit:NumericUpDown x:Name="NUD_AtkSpeed" Grid.Column="1" Margin="4,2" Maximum="1200" Minimum="1" Value="2.5" Increment="0.1" DecimalPlaces="2" Grid.Row="4" VerticalAlignment="Center" Height="22" HorizontalAlignment="Stretch" MinWidth="60" />
+                    <TextBlock x:Name="LB_AtkSpeed2" Text="sec" TextWrapping="Wrap" Grid.Column="2" Margin="4,2" VerticalAlignment="Center" Grid.Row="4" HorizontalAlignment="Stretch" Grid.ColumnSpan="2" />
+                <!--IFSL-->
+                </toolkitWrap:WrapPanel>
+                <!--ENDIFSL-->
+                <!--IFWPF
+                </WrapPanel>
+                ENDIFWPF-->
+            </Grid>
+        </local:GroupBox>
         <!-- ===== DoT Stats ===== -->
-        <TextBlock FontWeight="Bold" Grid.ColumnSpan="1" Margin="4,2" Text="DoT Stats:" VerticalAlignment="Center" Grid.Row="12" HorizontalAlignment="Stretch" />
-        <CheckBox x:Name="CK_IsDoT" Margin="4,2" Grid.Column="1" Content="Is a DoT" Grid.Row="12" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
-        <!-- DamagePerHit -->
-        <TextBlock x:Name="LB_DmgPerTick" Text="Damage Per Tick:" TextWrapping="Wrap" Grid.Row="13" Grid.Column="0" Margin="4,2" VerticalAlignment="Center" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" />
-        <inputToolkit:NumericUpDown x:Name="NUD_DmgPerTick" Grid.Column="1" Grid.Row="13" Margin="4,2" Maximum="250000" Value="0" Increment="1000" VerticalAlignment="Center" Height="22" HorizontalAlignment="Stretch" />
-        <!-- MaxNumTargets -->
-        <TextBlock x:Name="LB_NumTicks" Text="Number of Ticks:" TextWrapping="Wrap" Grid.Column="0" Margin="4,2" VerticalAlignment="Center" Grid.Row="14" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" />
-        <inputToolkit:NumericUpDown x:Name="NUD_NumTicks" Grid.Column="1" Margin="4,2" Maximum="25" Value="0" Increment="1" Grid.Row="14" VerticalAlignment="Center" Height="22" HorizontalAlignment="Stretch" />
-        <!-- AttackSpeed -->
-        <TextBlock x:Name="LB_TickInterval" Text="Tick Interval:" TextWrapping="Wrap" Grid.Column="0" Margin="4,2" VerticalAlignment="Center" Grid.Row="15" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" />
-        <inputToolkit:NumericUpDown x:Name="NUD_TickInterval" Grid.Column="1" Margin="4,2" Maximum="1200" Minimum="0" Value="0" Increment="0.1" DecimalPlaces="2" Grid.Row="15" VerticalAlignment="Center" Height="22" HorizontalAlignment="Stretch" />
-        <TextBlock x:Name="LB_TickInterval2" Text="sec" TextWrapping="Wrap" Grid.Column="2" Margin="4,2" VerticalAlignment="Center" Grid.Row="15" HorizontalAlignment="Stretch" />
+        <local:GroupBox Grid.Column="0" Grid.Row="3" HorizontalAlignment="Stretch" Margin="2">
+            <local:GroupBox.Header>
+                <TextBlock Text="DoT Stats" FontWeight="Bold" />
+            </local:GroupBox.Header>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <CheckBox x:Name="CK_IsDoT" Grid.Row="0" Margin="0,2" Content="Is a DoT" VerticalAlignment="Center" />
+                <!--IFSL-->
+                <toolkitWrap:WrapPanel Grid.Row="1">
+                <!--ENDIFSL-->
+                <!--IFWPF
+                <WrapPanel Grid.Row="1">
+                ENDIFWPF-->
+                    <!-- DamagePerHit -->
+                    <TextBlock x:Name="LB_DmgPerTick" Text="Damage Per Tick:" TextWrapping="Wrap" Margin="0,2" VerticalAlignment="Center" />
+                    <inputToolkit:NumericUpDown x:Name="NUD_DmgPerTick" Margin="2" Maximum="250000" Increment="1000" VerticalAlignment="Center" Height="22" MinWidth="65" />
+                    <!-- MaxNumTargets -->
+                    <TextBlock x:Name="LB_Duration" Text="Duration:" TextWrapping="Wrap" Margin="4,2,0,2" VerticalAlignment="Center" />
+                    <inputToolkit:NumericUpDown x:Name="NUD_Duration" Margin="2" Maximum="120" Value="0" Increment="1" VerticalAlignment="Center" Height="22" MinWidth="50" />
+                    <!-- AttackSpeed -->
+                    <TextBlock x:Name="LB_TickInterval" Text="Tick Interval:" TextWrapping="Wrap" Margin="4,2,0,2" VerticalAlignment="Center" />
+                    <inputToolkit:NumericUpDown x:Name="NUD_TickInterval" Margin="2" Maximum="1200" Minimum="0" Value="0" Increment="0.1" DecimalPlaces="2" VerticalAlignment="Center" Height="22" MinWidth="60" />
+                    <TextBlock x:Name="LB_TickInterval2" Text="sec" TextWrapping="Wrap" Margin="0,2" VerticalAlignment="Center" />
+                <!--IFSL-->
+                </toolkitWrap:WrapPanel>
+                <!--ENDIFSL-->
+                <!--IFWPF
+                </WrapPanel>
+                ENDIFWPF-->
+            </Grid>
+        </local:GroupBox>
         <!-- ===== ADVANCED ===== -->
-        <TextBlock FontWeight="Bold" Grid.ColumnSpan="3" Margin="4,2" Text="Advanced:" VerticalAlignment="Center" Grid.Row="16" HorizontalAlignment="Stretch" />
-        <CheckBox x:Name="CK_Interruptable" Margin="4,2" Content="Interruptable" Grid.Row="17" Grid.Column="0" VerticalAlignment="Center" Height="22" HorizontalAlignment="Stretch" />
-        <CheckBox x:Name="CK_IsDefaultMelee" Margin="4,2" Content="This is the Default Melee Attack" Grid.Column="1" Grid.Row="17" VerticalAlignment="Center" Height="22" HorizontalAlignment="Stretch" Grid.ColumnSpan="2" />
-        <CheckBox x:Name="CK_IsDualWielding" Margin="4,2" Content="This Attack is Dual Wielding" Grid.Column="0" Grid.Row="18" VerticalAlignment="Center" Height="22" HorizontalAlignment="Stretch" Grid.ColumnSpan="3" />
+        <local:GroupBox Grid.Column="0" Grid.Row="4" HorizontalAlignment="Stretch" Margin="2">
+            <local:GroupBox.Header>
+                <TextBlock Text="Advanced" FontWeight="Bold" />
+            </local:GroupBox.Header>
+            <!--IFSL-->
+            <toolkitWrap:WrapPanel>
+            <!--ENDIFSL-->
+            <!--IFWPF
+            <WrapPanel>
+            ENDIFWPF-->
+                <CheckBox x:Name="CK_Interruptable" Margin="4,2" Content="Interruptable" VerticalAlignment="Center" />
+                <CheckBox x:Name="CK_IsDefaultMelee" Margin="4,2" Content="This is the Default Melee Attack" VerticalAlignment="Center" />
+                <CheckBox x:Name="CK_IsDualWielding" Margin="4,2" Content="This Attack is Dual Wielding" VerticalAlignment="Center" />
+            <!--IFSL-->
+            </toolkitWrap:WrapPanel>
+            <!--ENDIFSL-->
+            <!--IFWPF
+            </WrapPanel>
+            ENDIFWPF-->
+        </local:GroupBox>
         <!-- ===== PLAYER AVOIDANCE ===== -->
-        <TextBlock x:Name="LB_Avoids" Text="Player Avoidances:" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="21" Margin="4,2" VerticalAlignment="Center" FontWeight="Bold" HorizontalAlignment="Stretch" />
-        <!-- Missable -->
-        <CheckBox x:Name="CK_Missable" Margin="4,2" Content="Missable" Grid.Row="22" Grid.Column="0" VerticalAlignment="Center" IsChecked="True" Grid.ColumnSpan="1" Height="22" HorizontalAlignment="Stretch" />
-        <!-- Dodgable -->
-        <CheckBox x:Name="CK_Dodgable" Margin="4,2" Content="Dodgable" Grid.Row="22" Grid.Column="1" VerticalAlignment="Center" IsChecked="True" Height="22" HorizontalAlignment="Stretch" />
-        <!-- Parryable -->
-        <CheckBox x:Name="CK_Parryable" Margin="4,2" Content="Parryable" Grid.Row="23" Grid.Column="0" VerticalAlignment="Center" IsChecked="True" Grid.ColumnSpan="1" Height="22" HorizontalAlignment="Stretch" />
-        <!-- Blockable -->
-        <CheckBox x:Name="CK_Blockable" Margin="4,2" Content="Blockable" Grid.Row="23" Grid.Column="1" VerticalAlignment="Center" IsChecked="True" Height="22" HorizontalAlignment="Stretch" />
+        <local:GroupBox Grid.Column="0" Grid.Row="5" HorizontalAlignment="Stretch" Margin="2">
+            <local:GroupBox.Header>
+                <TextBlock Text="Player Avoidances" FontWeight="Bold" />
+            </local:GroupBox.Header>
+            <!--IFSL-->
+            <toolkitWrap:WrapPanel>
+            <!--ENDIFSL-->
+            <!--IFWPF
+            <WrapPanel>
+            ENDIFWPF-->
+                <!-- Missable -->
+                <CheckBox x:Name="CK_Missable" Margin="4,2" Content="Missable" VerticalAlignment="Center" IsChecked="True" />
+                <!-- Dodgable -->
+                <CheckBox x:Name="CK_Dodgable" Margin="4,2" Content="Dodgable" VerticalAlignment="Center" IsChecked="True" />
+                <!-- Parryable -->
+                <CheckBox x:Name="CK_Parryable" Margin="4,2" Content="Parryable" VerticalAlignment="Center" IsChecked="True" />
+                <!-- Blockable -->
+                <CheckBox x:Name="CK_Blockable" Margin="4,2" Content="Blockable" VerticalAlignment="Center" IsChecked="True" />
+            <!--IFSL-->
+            </toolkitWrap:WrapPanel>
+            <!--ENDIFSL-->
+            <!--IFWPF
+            </WrapPanel>
+            ENDIFWPF-->
+        </local:GroupBox>
         <!-- ===== PLAYER TARGETING ===== -->
-        <TextBlock x:Name="LB_Ignores" Text="Targeting Includes:" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="24" Margin="4,2" VerticalAlignment="Center" FontWeight="Bold" HorizontalAlignment="Stretch" />
-        <!-- AffectsMTank -->
-        <CheckBox x:Name="CK_AffectsMTank" Margin="4,2" Content="Main Tank" Grid.Row="25" Grid.Column="0" VerticalAlignment="Center" Grid.ColumnSpan="1" Height="22" HorizontalAlignment="Stretch" />
-        <!-- AffectsOTank -->
-        <CheckBox x:Name="CK_AffectsOTank" Margin="4,2" Content="Off Tank" Grid.Row="25" Grid.Column="1" VerticalAlignment="Center" Height="22" HorizontalAlignment="Stretch" />
-        <!-- AffectsTTank -->
-        <CheckBox x:Name="CK_AffectsTTank" Margin="4,2" Content="Tertiary Tank" Grid.Row="25" Grid.Column="2" VerticalAlignment="Center" Grid.ColumnSpan="1" Height="22" HorizontalAlignment="Stretch" />
-        <!-- AffectsMeleeDPS -->
-        <CheckBox x:Name="CK_AffectsMeleeDPS" Margin="4,2" Content="Melee DPS" Grid.Row="27" Grid.Column="0" VerticalAlignment="Center" Grid.ColumnSpan="1" Height="22" HorizontalAlignment="Stretch" />
-        <!-- AffectsRangedDPS -->
-        <CheckBox x:Name="CK_AffectsRangedDPS" Margin="4,2" Content="Ranged DPS" Grid.Row="27" Grid.Column="1" VerticalAlignment="Center" Height="22" HorizontalAlignment="Stretch" />
-        <!-- AffectsHealers -->
-        <CheckBox x:Name="CK_AffectsMainTankHealer" Margin="4,2" Content="Main Tank Healer" Grid.Row="28" Grid.Column="0" VerticalAlignment="Center" Height="22" HorizontalAlignment="Stretch" Grid.ColumnSpan="1" />
-        <CheckBox x:Name="CK_AffectsOffTankHealer" Margin="4,2" Content="Off and Tertiary Tank Healer" Grid.Row="28" Grid.Column="1" VerticalAlignment="Center" Height="22" HorizontalAlignment="Stretch" Grid.ColumnSpan="1" />
-        <CheckBox x:Name="CK_AffectsRaidHealer" Margin="4,2" Content="Raid Healer" Grid.Row="28" Grid.Column="2" VerticalAlignment="Center" Height="22" HorizontalAlignment="Stretch" Grid.ColumnSpan="1" />
+        <local:GroupBox Grid.Column="0" Grid.Row="6" HorizontalAlignment="Stretch" Margin="2">
+            <local:GroupBox.Header>
+                <TextBlock Text="Targeting Includes" FontWeight="Bold" />
+            </local:GroupBox.Header>
+            <!--IFSL-->
+            <toolkitWrap:WrapPanel>
+            <!--ENDIFSL-->
+            <!--IFWPF
+            <WrapPanel>
+            ENDIFWPF-->
+                <!-- Affects Tanks -->
+                <CheckBox x:Name="CK_AffectsMTank" Margin="4,2" Content="Main Tank" VerticalAlignment="Center" />
+                <CheckBox x:Name="CK_AffectsOTank" Margin="4,2" Content="Off Tank" VerticalAlignment="Center" />
+                <CheckBox x:Name="CK_AffectsTTank" Margin="4,2" Content="Tertiary Tank" VerticalAlignment="Center" />
+                <!-- Affects DPS -->
+                <CheckBox x:Name="CK_AffectsMeleeDPS" Margin="4,2" Content="Melee DPS" VerticalAlignment="Center" />
+                <CheckBox x:Name="CK_AffectsRangedDPS" Margin="4,2" Content="Ranged DPS" VerticalAlignment="Center" />
+                <!-- AffectsHealers -->
+                <CheckBox x:Name="CK_AffectsMainTankHealer" Margin="4,2" Content="Main Tank Healer" VerticalAlignment="Center" />
+                <CheckBox x:Name="CK_AffectsOffTankHealer" Margin="4,2" Content="Off and Tertiary Tank Healer" VerticalAlignment="Center" />
+                <CheckBox x:Name="CK_AffectsRaidHealer" Margin="4,2" Content="Raid Healer" VerticalAlignment="Center" />
+            <!--IFSL-->
+            </toolkitWrap:WrapPanel>
+            <!--ENDIFSL-->
+            <!--IFWPF
+            </WrapPanel>
+            ENDIFWPF-->
+        </local:GroupBox>
 
-        <Button x:Name="BT_Add" Content="Add/Edit" d:LayoutOverrides="Height" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="4" Margin="8,2" Click="BT_Add_Click" Height="22" VerticalAlignment="Center" HorizontalAlignment="Right" Width="75" />
-
-        <Button x:Name="BT_Delete" Width="75" Content="Delete" d:LayoutOverrides="Height, GridBox" Grid.Row="3" Margin="8,2" Click="BT_Delete_Click" HorizontalAlignment="Left" />
-        <StackPanel Margin="4" Grid.Row="47" Grid.Column="1" Orientation="Horizontal" Grid.ColumnSpan="3" HorizontalAlignment="Right" d:LayoutOverrides="GridBox">
-            <Button x:Name="CancelButton" Content="Cancel" Click="CancelButton_Click" Margin="4" RenderTransformOrigin="1.253,-0.478" Width="75" Height="22" />
-            <Button x:Name="OKButton" Content="OK" Click="OKButton_Click" Margin="4" Height="22" Width="75" />
+        <StackPanel Margin="4" Grid.Row="7" Orientation="Horizontal" Grid.ColumnSpan="3" HorizontalAlignment="Right">
+            <Button x:Name="CancelButton" Content="Cancel" Click="CancelButton_Click" Margin="4,2" RenderTransformOrigin="1.253,-0.478" Width="75" Height="22" />
+            <Button x:Name="OKButton" Content="OK" Click="OKButton_Click" Margin="4,2" Height="22" Width="75" />
         </StackPanel>
     </Grid>
 </basics2:ChildWindow>

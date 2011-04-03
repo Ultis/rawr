@@ -15,9 +15,7 @@ namespace Rawr.UI
 {
     public partial class DG_BossBuffStates : ChildWindow
     {
-        static DG_BossBuffStates()
-        {
-        }
+        static DG_BossBuffStates() { }
 
         public DG_BossBuffStates()
         {
@@ -77,6 +75,16 @@ namespace Rawr.UI
                 Chance = ((float)NUD_Chance.Value) / 100f,
                 Stats = statControl.CurrentStats,
             };
+            // Targeting Includes
+            s.AffectsRole[PLAYER_ROLES.MainTank]             = CK_AffectsMTank.IsChecked.GetValueOrDefault(false);
+            s.AffectsRole[PLAYER_ROLES.OffTank]              = CK_AffectsOTank.IsChecked.GetValueOrDefault(false);
+            s.AffectsRole[PLAYER_ROLES.TertiaryTank]         = CK_AffectsTTank.IsChecked.GetValueOrDefault(false);
+            s.AffectsRole[PLAYER_ROLES.MeleeDPS]             = CK_AffectsMeleeDPS.IsChecked.GetValueOrDefault(false);
+            s.AffectsRole[PLAYER_ROLES.RangedDPS]            = CK_AffectsRangedDPS.IsChecked.GetValueOrDefault(false);
+            s.AffectsRole[PLAYER_ROLES.MainTankHealer]       = CK_AffectsMainTankHealer.IsChecked.GetValueOrDefault(false);
+            s.AffectsRole[PLAYER_ROLES.OffAndTertTankHealer] = CK_AffectsOffTankHealer.IsChecked.GetValueOrDefault(false);
+            s.AffectsRole[PLAYER_ROLES.RaidHealer]           = CK_AffectsRaidHealer.IsChecked.GetValueOrDefault(false);
+
             if (isEditing) {
                 // Affect your changes to the currently selected one
                 isEditing = false;
@@ -103,11 +111,20 @@ namespace Rawr.UI
             if (LB_TheList.SelectedIndex != -1) {
                 BuffState selected = LB_TheList.SelectedItem as BuffState;
                 //
-                TB_Name.Text = selected.Name; 
-                NUD_Freq.Value = selected.Frequency;
-                NUD_Dur.Value = selected.Duration;
-                NUD_Chance.Value = selected.Chance * 100f;
+                TB_Name.Text             = selected.Name; 
+                NUD_Freq.Value           = selected.Frequency;
+                NUD_Dur.Value            = selected.Duration;
+                NUD_Chance.Value         = selected.Chance * 100f;
                 statControl.CurrentStats = selected.Stats;
+                // Targeting Includes
+                CK_AffectsMTank.IsChecked          = selected.AffectsRole[PLAYER_ROLES.MainTank];
+                CK_AffectsOTank.IsChecked          = selected.AffectsRole[PLAYER_ROLES.OffTank];
+                CK_AffectsTTank.IsChecked          = selected.AffectsRole[PLAYER_ROLES.TertiaryTank];
+                CK_AffectsMeleeDPS.IsChecked       = selected.AffectsRole[PLAYER_ROLES.MeleeDPS];
+                CK_AffectsRangedDPS.IsChecked      = selected.AffectsRole[PLAYER_ROLES.RangedDPS];
+                CK_AffectsMainTankHealer.IsChecked = selected.AffectsRole[PLAYER_ROLES.MainTankHealer];
+                CK_AffectsOffTankHealer.IsChecked  = selected.AffectsRole[PLAYER_ROLES.OffAndTertTankHealer];
+                CK_AffectsRaidHealer.IsChecked     = selected.AffectsRole[PLAYER_ROLES.RaidHealer];
                 //
                 isEditing = true;
             } else {
@@ -117,6 +134,15 @@ namespace Rawr.UI
                 NUD_Dur.Value = 10 * 1000;
                 NUD_Chance.Value = 100f;
                 statControl.CurrentStats = new Stats();
+                // Targeting Includes
+                CK_AffectsMTank.IsChecked          = false;
+                CK_AffectsOTank.IsChecked          = true;
+                CK_AffectsTTank.IsChecked          = true;
+                CK_AffectsMeleeDPS.IsChecked       = true;
+                CK_AffectsRangedDPS.IsChecked      = true;
+                CK_AffectsMainTankHealer.IsChecked = true;
+                CK_AffectsOffTankHealer.IsChecked  = true;
+                CK_AffectsRaidHealer.IsChecked     = true;
                 //
                 isEditing = false;
             }

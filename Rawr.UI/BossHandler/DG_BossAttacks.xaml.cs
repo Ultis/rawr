@@ -16,14 +16,7 @@ namespace Rawr.UI
 {
     public partial class DG_BossAttacks : ChildWindow
     {
-        static DG_BossAttacks()
-        {
-        }
-
-        public DG_BossAttacks()
-        {
-            InitializeComponent();
-        }
+        static DG_BossAttacks() { }
 
         public DG_BossAttacks(List<Attack> list)
         {
@@ -38,14 +31,8 @@ namespace Rawr.UI
             SetListBox();
         }
 
-        #region Variables
+        public List<Attack> TheList { get { return _TheList ?? (_TheList = new List<Attack>()); } set { _TheList = value; } }
         protected List<Attack> _TheList = null;
-        public List<Attack> TheList
-        {
-            get { return _TheList ?? (_TheList = new List<Attack>()); }
-            set { _TheList = value; }
-        }
-        #endregion
 
         private void SetListBox()
         {
@@ -55,16 +42,6 @@ namespace Rawr.UI
                 //string str = s.ToString();
                 LB_TheList.Items.Add(s);
             }
-        }
-
-        private void OKButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.DialogResult = true;
-        }
-
-        private void CancelButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.DialogResult = false;
         }
 
         private void BT_Add_Click(object sender, RoutedEventArgs e)
@@ -85,7 +62,7 @@ namespace Rawr.UI
                     IsDoT             = CK_IsDoT.IsChecked.GetValueOrDefault(false),
                     DamagePerTick     = (float)NUD_DmgPerTick.Value,
                     TickInterval      = (float)NUD_TickInterval.Value,
-                    NumTicks          = (float)NUD_NumTicks.Value,
+                    Duration          = (float)NUD_Duration.Value,
                     // Advanced
                     Interruptable     = CK_Interruptable.IsChecked.GetValueOrDefault(false),
                     IsTheDefaultMelee = CK_IsDefaultMelee.IsChecked.GetValueOrDefault(false),
@@ -149,7 +126,7 @@ namespace Rawr.UI
                 CK_IsDoT.IsChecked        = selected.IsDoT;
                 NUD_DmgPerTick.Value      = selected.DamagePerTick;
                 NUD_TickInterval.Value    = selected.TickInterval;
-                NUD_NumTicks.Value        = selected.NumTicks;
+                NUD_Duration.Value        = selected.NumTicks;
                 // Advanced
                 CK_Interruptable.IsChecked  = selected.Interruptable;
                 CK_IsDefaultMelee.IsChecked = selected.IsTheDefaultMelee;
@@ -184,7 +161,7 @@ namespace Rawr.UI
                 CK_IsDoT.IsChecked        = false;
                 NUD_DmgPerTick.Value      = 0;
                 NUD_TickInterval.Value    = 0;
-                NUD_NumTicks.Value        = 0;
+                NUD_Duration.Value        = 0;
                 // Advanced
                 CK_Interruptable.IsChecked  = false;
                 CK_IsDefaultMelee.IsChecked = true;
@@ -207,6 +184,9 @@ namespace Rawr.UI
                 isEditing = false;
             }
         }
+
+        private void OKButton_Click(object sender, RoutedEventArgs e) { this.DialogResult = true; }
+        private void CancelButton_Click(object sender, RoutedEventArgs e) { this.DialogResult = false; }
     }
 }
 

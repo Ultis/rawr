@@ -449,7 +449,7 @@ focus on Survival Points.",
                     //calc.SurvivalPoints = Math.Min(CapSurvival(dm.EffectiveHealth, calcOpts), VALUE_CAP);
                     //calc.MitigationPoints = Math.Min(calcOpts.MitigationScale / dm.DamageTaken, VALUE_CAP);
                     //calc.ThreatPoints = Math.Min(calc.ThreatPoints, VALUE_CAP);
-#if FALSE // JOTHAY NOTE: Switch this over to try the other method
+#if FALSE // JOTHAY TODO NOTE: Switch this over to try the other method
                     calc.SurvivabilityPoints = CapSurvival(dm.EffectiveHealth, calcOpts, bossOpts);
                     calc.MitigationPoints = StatConversion.MitigationScaler / (1f - dm.Mitigation);
 #else

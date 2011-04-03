@@ -9,18 +9,18 @@ using System.Xml.Serialization;
 using Rawr.Bosses;
 
 namespace Rawr {
-    #region Subclasses/Enums/Structs
     /// <summary>The role of the player, will allow certain lists to return filtered to things that affect said role</summary>
     public enum PLAYER_ROLES { MainTank = 0, OffTank, TertiaryTank, MeleeDPS, RangedDPS, MainTankHealer, OffAndTertTankHealer, RaidHealer }
     /// <summary>Enumerator for creating a list of possible values for the Level box</summary>
     public enum POSSIBLE_LEVELS { LVLP0 = 85, LVLP1 = 86, LVLP2 = 87, LVLP3 = 88, }
     /// <summary>Enumerator for creating a list of possible values for the Mob Type box</summary>
     public enum MOB_TYPES { BEAST = 0, DEMON, DRAGONKIN, ELEMENTAL, GIANT, HUMANOID, MECHANICAL, UNDEAD }
-    #region Attacks
+    public enum ImpedanceTypes { Fear, Root, Stun, Move, Silence, Disarm };
     /// <summary>Enumerator for attack types, this mostly is for raid members that aren't being directly attacked to know when AoE damage is coming from the boss</summary>
     public enum ATTACK_TYPES { AT_MELEE = 0, AT_RANGED, AT_AOE, AT_DOT }
+
     /// <summary>A single Attack of various types</summary>
-    public partial class Attack {
+    public class Attack {
         /// <summary>The Name of the Attack</summary>
         public string Name = "Unnamed";
         /// <summary>The type of damage done, use the ItemDamageType enumerator to select</summary>
@@ -35,7 +35,7 @@ namespace Rawr {
         /// When this is a DoT is true DamagePerHit is just the Initial Damage. The Tick contains the remaining Damage<br/>
         /// </summary>
         [DefaultValue(100*1000)]
-        public virtual float DamagePerHit { get; set; }
+        public float DamagePerHit = 100*1000;
         /// <summary>When set to True, DamagePerHit will be seen as a Percentage. DamagePerHit = 0.75f; would be 75% of Player's Health</summary>
         [DefaultValue(false)]
         public bool DamageIsPerc = false;
@@ -62,15 +62,21 @@ namespace Rawr {
         /// Example: 20000f/8f
         /// </summary>
         [DefaultValue(0)]
-        public float DamagePerTick = 0f;//20f*1000f/8f;
-        /// <summary>The total number of Ticks, 0 if not a DoT</summary>
-        [DefaultValue(0)]
-        public float NumTicks = 0;
+        public float DamagePerTick { get { return IsDoT ? _damagePerTick : 0; } set { _damagePerTick = value; } }
+        private float _damagePerTick = 0f;//20f*1000f/8f;
         /// <summary>Interval of the ticks, 1 = 1 sec. 0 if not a DoT</summary>
         [DefaultValue(0)]
-        public float TickInterval = 0;
+        public float TickInterval { get { return IsDoT ? _tickInterval : 0; } set { _tickInterval = value; } }
+        private float _tickInterval = 0;
         /// <summary>The full duration of the DoT, 2 sec Interval * 5 Ticks = 10 sec duration</summary>
-        public float Duration { get { return TickInterval * NumTicks; } }
+        [DefaultValue(0)]
+        public float Duration { get { return IsDoT ? _duration : 0; } set { _duration = value; } }
+        private float _duration = 0f;
+
+        /// <summary>The total number of Ticks, 0 if not a DoT</summary>
+        public float NumTicks { get { return IsDoT ? Duration / TickInterval : 0; } }
+        /// <summary>Total of the Intitial Damage and the Damage over Time</summary>
+        public float TotalDoTDamage { get { return IsDoT ? DamagePerHit + NumTicks * DamagePerTick : 0; } }
         #endregion
 
         #region Player Avoidance
@@ -142,8 +148,7 @@ namespace Rawr {
                 Name != "Dynamic" ? " [" + Name + "]" : "");
         }
     }
-    #endregion
-    #region Impedance
+    /// <summary>A single Impedance of various types</summary>
     public class Impedance {
         #region Constructors
         public Impedance() {
@@ -219,6 +224,29 @@ namespace Rawr {
                 Frequency, Duration, Chance, Breakable ? " : B" : "");
         }
         #endregion
+        #region Player Targeting
+        private SerializableDictionary<PLAYER_ROLES, bool> _affectsRole = null;
+        public SerializableDictionary<PLAYER_ROLES, bool> AffectsRole
+        {
+            get
+            {
+                return _affectsRole ?? (_affectsRole = new SerializableDictionary<PLAYER_ROLES, bool> {
+                    // Tanks
+                    { PLAYER_ROLES.MainTank,             false },
+                    { PLAYER_ROLES.OffTank,              false },
+                    { PLAYER_ROLES.TertiaryTank,         false },
+                    // DPS
+                    { PLAYER_ROLES.MeleeDPS,             false },
+                    { PLAYER_ROLES.RangedDPS,            false },
+                    // Heals
+                    { PLAYER_ROLES.MainTankHealer,       false },
+                    { PLAYER_ROLES.OffAndTertTankHealer, false },
+                    { PLAYER_ROLES.RaidHealer,           false },
+                });
+            }
+            set { _affectsRole = value; }
+        }
+        #endregion
 
         /// <summary>
         /// Generates the time lost to this Impedance type.
@@ -291,14 +319,13 @@ namespace Rawr {
             return TotalBossHandlerMOD;
         }
     }
-    public enum ImpedanceTypes { Fear, Root, Stun, Move, /*Silence,*/ Disarm };
     public struct ImpedanceWithType
     {
         public Impedance imp;
         public ImpedanceTypes type;
     }
-    #endregion
-    public partial class TargetGroup
+    /// <summary>A single Target Group</summary>
+    public class TargetGroup
     {
         #region Constructors
         public TargetGroup() {
@@ -340,6 +367,29 @@ namespace Rawr {
         /// </summary>
         public bool NearBoss = false;
         #endregion
+        #region Player Targeting
+        private SerializableDictionary<PLAYER_ROLES, bool> _affectsRole = null;
+        public SerializableDictionary<PLAYER_ROLES, bool> AffectsRole
+        {
+            get
+            {
+                return _affectsRole ?? (_affectsRole = new SerializableDictionary<PLAYER_ROLES, bool> {
+                    // Tanks
+                    { PLAYER_ROLES.MainTank,             false },
+                    { PLAYER_ROLES.OffTank,              false },
+                    { PLAYER_ROLES.TertiaryTank,         false },
+                    // DPS
+                    { PLAYER_ROLES.MeleeDPS,             false },
+                    { PLAYER_ROLES.RangedDPS,            false },
+                    // Heals
+                    { PLAYER_ROLES.MainTankHealer,       false },
+                    { PLAYER_ROLES.OffAndTertTankHealer, false },
+                    { PLAYER_ROLES.RaidHealer,           false },
+                });
+            }
+            set { _affectsRole = value; }
+        }
+        #endregion
         #region Functions
         public float GetAverageTargetGroupSize(float fightDuration) {
             if (!Validated) { return 0f; }
@@ -354,6 +404,7 @@ namespace Rawr {
         }
         #endregion
     }
+    /// <summary>A single Buff the Boss places on the raid</summary>
     public class BuffState
     {
         #region Constructors
@@ -421,6 +472,29 @@ namespace Rawr {
         /// </summary>
         public Stats Stats;
         #endregion
+        #region Player Targeting
+        private SerializableDictionary<PLAYER_ROLES, bool> _affectsRole = null;
+        public SerializableDictionary<PLAYER_ROLES, bool> AffectsRole
+        {
+            get
+            {
+                return _affectsRole ?? (_affectsRole = new SerializableDictionary<PLAYER_ROLES, bool> {
+                    // Tanks
+                    { PLAYER_ROLES.MainTank,             false },
+                    { PLAYER_ROLES.OffTank,              false },
+                    { PLAYER_ROLES.TertiaryTank,         false },
+                    // DPS
+                    { PLAYER_ROLES.MeleeDPS,             false },
+                    { PLAYER_ROLES.RangedDPS,            false },
+                    // Heals
+                    { PLAYER_ROLES.MainTankHealer,       false },
+                    { PLAYER_ROLES.OffAndTertTankHealer, false },
+                    { PLAYER_ROLES.RaidHealer,           false },
+                });
+            }
+            set { _affectsRole = value; }
+        }
+        #endregion
         #region Functions
         /// <summary>
         /// Returns False if
@@ -443,5 +517,4 @@ namespace Rawr {
         }
         #endregion
     }
-    #endregion
 }

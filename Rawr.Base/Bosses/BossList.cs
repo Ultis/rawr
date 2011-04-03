@@ -516,7 +516,7 @@ namespace Rawr {
             bool isDot = attacks[0].IsDoT;
             float perhit = BossHandler.StandardMeleePerHit[(int)BossHandler.TierLevels.T11_25H], // start at normal attack, some bosses could be less and it will pick that up
                 pertick = BossHandler.StandardMeleePerHit[(int)BossHandler.TierLevels.T11_25H],
-                numticks = 800,
+                duration = 12*60,
                 tickinterval = 0,
                 numtrg = maxPlayers,
                 atkspd = 0f;
@@ -549,7 +549,7 @@ namespace Rawr {
                 perhit = Math.Min(perhit, a.DamagePerHit);
                 if (isDot) {
                     pertick = Math.Min(pertick, a.DamagePerTick);
-                    numticks = Math.Min(numticks, a.NumTicks);
+                    duration = Math.Min(duration, a.Duration);
                     tickinterval = Math.Max(tickinterval, a.TickInterval);
                 }
                 numtrg = Math.Min(numtrg, a.MaxNumTargets);
@@ -578,7 +578,7 @@ namespace Rawr {
                 DamageType = dt,
                 DamagePerHit = perhit,
                 DamagePerTick = isDot ? pertick : 0,
-                NumTicks = isDot ? numticks : 0,
+                Duration = isDot ? duration : 0,
                 TickInterval = isDot ? tickinterval : 0,
                 MaxNumTargets = numtrg,
                 AttackSpeed = atkspd,
@@ -592,7 +592,7 @@ namespace Rawr {
             bool isDot = attacks[0].IsDoT;
             float perhit = 0,
                 pertick = 0,
-                numticks = 0,
+                duration = 0,
                 tickinterval = 0,
                 numtrg = 0,
                 atkspd = 0f;
@@ -625,7 +625,7 @@ namespace Rawr {
                 perhit += a.DamagePerHit;
                 if (isDot) {
                     pertick += a.DamagePerTick;
-                    numticks += a.NumTicks;
+                    duration += a.Duration;
                     tickinterval += a.TickInterval;
                 }
                 numtrg += a.MaxNumTargets;
@@ -640,7 +640,7 @@ namespace Rawr {
             perhit /= (float)attacks.Count;
             if (isDot) {
                 pertick /= (float)attacks.Count;
-                numticks /= (float)attacks.Count;
+                duration /= (float)attacks.Count;
                 tickinterval /= (float)attacks.Count;
             }
             numtrg /= (float)attacks.Count;
@@ -662,7 +662,7 @@ namespace Rawr {
                 DamageType = dt,
                 DamagePerHit = perhit,
                 DamagePerTick = isDot ? pertick : 0,
-                NumTicks = isDot ? numticks : 0,
+                Duration = isDot ? duration : 0,
                 TickInterval = isDot ? tickinterval : 0,
                 MaxNumTargets = numtrg,
                 AttackSpeed = atkspd,
@@ -676,7 +676,7 @@ namespace Rawr {
             bool isDot = attacks[0].IsDoT;
             float perhit = 0,
                 pertick = 0,
-                numticks = 0,
+                duration = 0,
                 tickinterval = 12*60,
                 numtrg = 0,
                 atkspd = 12*60;
@@ -709,7 +709,7 @@ namespace Rawr {
                 perhit = Math.Max(perhit, a.DamagePerHit);
                 if (isDot) {
                     pertick = Math.Max(pertick, a.DamagePerTick);
-                    numticks = Math.Max(numticks, a.NumTicks);
+                    duration = Math.Max(duration, a.Duration);
                     tickinterval = Math.Min(tickinterval, a.TickInterval);
                 }
                 numtrg = Math.Max(numtrg, a.MaxNumTargets);
@@ -738,7 +738,7 @@ namespace Rawr {
                 DamageType = dt,
                 DamagePerHit = perhit,
                 DamagePerTick = isDot ? pertick : 0,
-                NumTicks = isDot ? numticks : 0,
+                Duration = isDot ? duration : 0,
                 TickInterval = isDot ? tickinterval : 0,
                 MaxNumTargets = numtrg,
                 AttackSpeed = atkspd,

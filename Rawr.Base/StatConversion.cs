@@ -114,7 +114,6 @@ namespace Rawr
         public const float INT_PER_SPELLCRIT = 648.91f;
         public const float REGEN_CONSTANT = 0.003345f;
 
-        // Sigh, depends on class.
         /// <summary>
         /// Source: http://elitistjerks.com/f15/t29453-combat_ratings_level_85_cataclysm/
         /// </summary>
@@ -228,19 +227,19 @@ namespace Rawr
             0f,          // Druid 11
         };
 
-        //This is the cap value for MISS PERCENTAGE
+        /// <summary>This is the cap value for MISS PERCENTAGE on NPC attacks against a Player</summary>
         public static readonly float[] CAP_MISSED = { 0.0f, // Starts at 0
-            16f,  // Warrior 1
-            16f,  // Paladin 2
-            0f,   // Hunter 3
-            0f,   // Rogue 4
-            0f,   // Priest 5
-            16f,  // Death Knight 6
-            0f,   // Shaman 7
-            0f,   // Mage 8
-            0f,   // Warlock 9
-            0.0f, // Empty 10
-            0f,   // Druid 11
+            16f, // Warrior 1
+            16f, // Paladin 2
+             0f, // Hunter 3
+             0f, // Rogue 4
+             0f, // Priest 5
+            16f, // Death Knight 6
+             0f, // Shaman 7
+             0f, // Mage 8
+             0f, // Warlock 9
+             0f, // Empty 10
+             0f, // Druid 11
         };
 
         #endregion
@@ -503,14 +502,17 @@ namespace Rawr
 
         #region Functions for More complex things.
 
-        public const float MitigationScaler = 78591f; // Originally from Bear. This should be updated once per expansion
+        /// <summary>Originally from Bear. This should be updated once per expansion</summary>
+        public const float MitigationScaler = 78591f;
 
-        // http://forums.worldofwarcraft.com/thread.html?topicId=16473618356&sid=1&pageNo=4 post 77.
-        // Ghostcrawler vs theorycraft.
-        // http://elitistjerks.com/f15/t29453-combat_ratings_level_85_cataclysm/p24/#post1841717
         /// <summary>
         /// Returns how much physical damage is reduced from Armor. (0.095 = 9.5% reduction)
         /// </summary>
+        /// <remarks>
+        /// * http://forums.worldofwarcraft.com/thread.html?topicId=16473618356&sid=1&pageNo=4 post 77.<br/>
+        /// * Ghostcrawler vs theorycraft.<br/>
+        /// * http://elitistjerks.com/f15/t29453-combat_ratings_level_85_cataclysm/p24/#post1841717<br/>
+        /// </remarks>
         /// <param name="AttackerLevel">Level of Attacker</param>
         /// <param name="TargetArmor">Armor of Target</param>
         /// <param name="ArmorIgnoreDebuffs">Armor reduction on target as result of Debuffs (Sunder/Fearie Fire) These are Multiplied.</param>
@@ -521,13 +523,15 @@ namespace Rawr
             return GetArmorDamageReduction(AttackerLevel, (int)POSSIBLE_LEVELS.LVLP3, TargetArmor, ArmorIgnoreDebuffs, ArmorIgnoreBuffs);
         }
 
-        // http://forums.worldofwarcraft.com/thread.html?topicId=16473618356&sid=1&pageNo=4 post 77.
-        // Ghostcrawler vs theorycraft.
-        // http://elitistjerks.com/f15/t29453-combat_ratings_level_85_cataclysm/p24/#post1841717
         /// <summary>
         /// Returns how much physical damage is reduced from Armor. (0.095 = 9.5% reduction)
         /// <para>This function used to take in ArP Rating but that was removed from the game in Cata</para>
         /// </summary>
+        /// <remarks>
+        /// * http://forums.worldofwarcraft.com/thread.html?topicId=16473618356&sid=1&pageNo=4 post 77.<br/>
+        /// * Ghostcrawler vs theorycraft.<br/>
+        /// * http://elitistjerks.com/f15/t29453-combat_ratings_level_85_cataclysm/p24/#post1841717<br/>
+        /// </remarks>
         /// <param name="AttackerLevel">Level of Attacker</param>
         /// <param name="TargetLevel">Level of Target</param>
         /// <param name="TargetArmor">Armor of Target</param>
@@ -623,23 +627,21 @@ namespace Rawr
         }
 
         /// <summary>
-        /// Returns the chance to miss (0.09 = 9% chance to miss)
+        /// Returns the chance to miss (0.09 = 9% chance to miss)<br/>
+        /// http://www.wow-dark-destiny.com/images/spellhit.png
         /// </summary>
         /// <param name="LevelDelta">Attacker Level - Defender Level</param>
         /// <param name="bPvP">Set to True if Player vs Player combat</param>
         /// <returns>The chance to miss (0.09 = 9% chance to miss)</returns>
         public static float GetSpellMiss(int LevelDelta, bool bPvP)
-        { //http://www.wow-dark-destiny.com/images/spellhit.png
+        {
             if (-LevelDelta <= 2)
                 return (float)Math.Min(0.0f, - (LevelDelta + 4) * 0.01f);
-            
+
             if (-LevelDelta > 2)
-            //{
                 if (bPvP)
                     return (float)Math.Min(0.62f, (-LevelDelta * 7 - 8) * 0.01f);
-                //else
-                    //break;
-            //}
+
             return (float)Math.Min(0.94f, (-LevelDelta * 11 - 16) * 0.01f);
         }
 
@@ -848,91 +850,6 @@ namespace Rawr
             DRValue = 1f / (inv_cap + coefficient / valuePreDR);
             return DRValue;
         }
-
-        /// <summary>NO ONE SHOULD USE THIS, EVER</summary>
-        public class CombatTable
-        {
-            public float Miss;
-            public float Dodge;
-            public float Parry;
-            public float Glancing;
-            public float Block;
-            public float Crit;
-            //public float Crush;
-            public float Hit;
-
-            public bool bPlayerTarget;
-            public bool bBehind;
-
-            public float Evasion()
-            {
-                return Miss + (bBehind ? (bPlayerTarget ? 0f : Dodge) : (Dodge + Parry));
-            }
-
-            public CombatTable()
-            {
-                Miss = Dodge = Parry = Glancing = Block = Crit = Hit = 0f;
-                bPlayerTarget = bBehind = false;
-            }
-        }
-
-        // http://elitistjerks.com/f31/t37032-faq_working_theories_raiding_level_80_a/
-
-        /// <summary>
-        /// Returns a Combat Table for an attack
-        /// </summary>
-        /// <param name="AttackerLevel">Your Level (80)</param>
-        /// <param name="TargetLevel">The Mob's Level (80-83)</param>
-        /// <param name="bDualWield">True = You are Dual Wielding</param>
-        /// <param name="bWhiteorYellow">True = Yellow Attack</param>
-        /// <param name="PercBehind">The percentage of time over Duration of Fight you are standing behind the mob. 0.50 = 50% = 3 min of 6 min fight</param>
-        /// <param name="HitBonus">Your total bonus Hit Percentage</param>
-        /// <param name="ExpertiseBonus">Your total bonus Dodge/Parry Reduction Percentage from Expertise</param>
-        /// <param name="CritChance">Your total Crit chance Percentage</param>
-        /// <returns></returns>
-        /// <remarks>
-        /// Need to add things that would affect the combat table outside Hit/Exp such as Talents and special gear bonuses
-        /// Need to add handling for abilities that cannot be Dodged/Blocked/Parried (Warrior Overpower for example)
-        /// </remarks>
-        public static CombatTable GetCombatTablePlayer_vs_NPC(int AttackerLevel, int TargetLevel,
-            bool bDualWield, bool bWhiteorYellow, float PercBehind, float HitBonus, float ExpertiseBonus, float CritChance)
-        {
-            CombatTable ct = new CombatTable();
-            
-            int DeltaLevel = TargetLevel - AttackerLevel;
-
-            // Set the Baselines Up
-            ct.Miss = bDualWield ?
-                    (bWhiteorYellow ? YELLOW_MISS_CHANCE_CAP[DeltaLevel] : WHITE_MISS_CHANCE_CAP_DW[DeltaLevel])
-                :
-                    (bWhiteorYellow ? YELLOW_MISS_CHANCE_CAP[DeltaLevel] : WHITE_MISS_CHANCE_CAP[DeltaLevel]);
-
-            ct.Glancing = bWhiteorYellow ? YELLOW_GLANCE_CHANCE_CAP[DeltaLevel] : WHITE_GLANCE_CHANCE_CAP[DeltaLevel];
-            ct.Dodge    = bWhiteorYellow ? YELLOW_DODGE_CHANCE_CAP[DeltaLevel] : WHITE_DODGE_CHANCE_CAP[DeltaLevel];
-            ct.Parry    = bWhiteorYellow ? YELLOW_PARRY_CHANCE_CAP[DeltaLevel] : WHITE_PARRY_CHANCE_CAP[DeltaLevel];
-            ct.Block    = bWhiteorYellow ? YELLOW_BLOCK_CHANCE_CAP[DeltaLevel] : WHITE_BLOCK_CHANCE_CAP[DeltaLevel];
-            ct.Crit     = NPC_LEVEL_CRIT_MOD[DeltaLevel];
-
-            // Modify those baselines with your character's attributes
-            ct.Miss     -= HitBonus;
-            ct.Glancing -= 0f; // can't reduce glance with a stat
-            ct.Dodge    -= ExpertiseBonus;
-            ct.Parry    -= ExpertiseBonus;
-            ct.Block    -= 0f; // can't reduce block with a stat
-            ct.Crit     += CritChance;
-
-            // Modify this one more time based upon situtations
-            ct.Miss     -= 0f; // No mods
-            ct.Glancing -= 0f; // No mods
-            ct.Dodge    -= 0f; // No mods
-            ct.Parry    *= PercBehind; // Can be reduced by standing behind the mob
-            ct.Block    *= PercBehind; // Can be reduced by standing behind the mob
-            ct.Crit     -= 0f; // No mods
-
-            return ct;
-        }
-        // */
-
         #endregion
     }
 }

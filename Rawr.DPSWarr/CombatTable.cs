@@ -7,7 +7,6 @@ namespace Rawr.DPSWarr
     public abstract class CombatTable {
         public static CombatTable NULL = new NullCombatTable();
         protected Character Char;
-        protected CalculationOptionsDPSWarr calcOpts;
         protected BossOptions bossOpts;
         protected CombatFactors combatFactors;
         protected Base.StatsWarrior StatS;
@@ -20,7 +19,7 @@ namespace Rawr.DPSWarr
 
         /// <summary>The Level Difference between you and the Target. Ranges from 0 to +3 (Cata: 85-88)</summary>
         public int LevelDif { get { return bossOpts.Level - Char.Level; } }
-        
+
         public float Miss { get; protected set; }
         public float Dodge { get; protected set; }
         public float Parry { get; protected set; }
@@ -50,12 +49,11 @@ namespace Rawr.DPSWarr
             _anyNotLand = 0f;
         }
 
-        protected void Initialize(Character character, Base.StatsWarrior stats, CombatFactors cf, CalculationOptionsDPSWarr co, BossOptions bo,
+        protected void Initialize(Character character, Base.StatsWarrior stats, CombatFactors cf, BossOptions bo,
             Skills.Ability ability, bool ismh, bool usespellhit, bool userangedhit, bool alwaysHit)
         {
             Char = character;
             StatS = stats;
-            calcOpts = co;
             bossOpts = bo;
             combatFactors = cf;
             Abil = ability;
@@ -63,16 +61,8 @@ namespace Rawr.DPSWarr
             isMH = ismh;
             useSpellHit = usespellhit;
             useRangedHit = userangedhit;
-            /*// Defaults
-            Miss 
-            Dodge
-            Parry
-            Block
-            Glance
-            Critical
-            Hit*/
-            // Start a calc            
-            Reset(alwaysHit);            
+            // Start a calc
+            Reset(alwaysHit);
         }
         protected void Reset(bool alwaysHit)
         {
@@ -100,7 +90,7 @@ namespace Rawr.DPSWarr
             // Miss
             if (useSpellHit) {
                 Miss = Math.Min(1f - tableSize, Math.Max(StatConversion.GetSpellMiss(LevelDif,false)
-                                                         - (StatConversion.GetSpellHitFromRating(StatS.HitRating, Char.Class) + StatS.SpellHit), 0f));
+                    - (StatConversion.GetSpellHitFromRating(StatS.HitRating, Char.Class) + StatS.SpellHit), 0f));
             } else {
                 Miss = Math.Min(1f - tableSize, isWhite ? combatFactors.CWmiss : combatFactors.CYmiss);
             }
@@ -154,14 +144,14 @@ namespace Rawr.DPSWarr
 
         public AttackTable() { }
 
-        public AttackTable(Character character, Base.StatsWarrior stats, CombatFactors cf, CalculationOptionsDPSWarr co, BossOptions bo, bool ismh, bool useSpellHit, bool useRangedHit, bool alwaysHit)
+        public AttackTable(Character character, Base.StatsWarrior stats, CombatFactors cf, BossOptions bo, bool ismh, bool useSpellHit, bool useRangedHit, bool alwaysHit)
         {
-            Initialize(character, stats, cf, co, bo, null, ismh, useSpellHit, useRangedHit, alwaysHit);
+            Initialize(character, stats, cf, bo, null, ismh, useSpellHit, useRangedHit, alwaysHit);
         }
 
-        public AttackTable(Character character, Base.StatsWarrior stats, CombatFactors cf, CalculationOptionsDPSWarr co, BossOptions bo, Skills.Ability ability, bool ismh, bool useSpellHit, bool useRangedHit, bool alwaysHit)
+        public AttackTable(Character character, Base.StatsWarrior stats, CombatFactors cf, BossOptions bo, Skills.Ability ability, bool ismh, bool useSpellHit, bool useRangedHit, bool alwaysHit)
         {
-            Initialize(character, stats, cf, co, bo, ability, ismh, useSpellHit, useRangedHit, alwaysHit);
+            Initialize(character, stats, cf, bo, ability, ismh, useSpellHit, useRangedHit, alwaysHit);
         }
     }
 }
