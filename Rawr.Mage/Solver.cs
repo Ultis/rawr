@@ -123,6 +123,13 @@ namespace Rawr.Mage
         private TargetDebuffStats targetDebuffs;
         private bool restrictThreat;
 
+        public bool Mage2T10 { get; set; }
+        public bool Mage4T10 { get; set; }
+        public bool Mage2T11 { get; set; }
+        public bool Mage4T11 { get; set; }
+        public bool Mage2PVP { get; set; }
+        public bool Mage4PVP { get; set; }
+
         public int MaxTalents { get; set; }
         public Specialization Specialization { get; set; }
 
@@ -1691,6 +1698,29 @@ namespace Rawr.Mage
             CalculationsMage calculations = CalculationsMage.Instance;
             targetDebuffs = null;
             calculations.AccumulateRawStats(rawStats, Character, additionalItem, CalculationOptions, out autoActivatedBuffs, armor, out ActiveBuffs);
+
+            // apply set bonuses
+            int setCount;
+            Character.SetBonusCount.TryGetValue("Bloodmage's Regalia", out setCount);
+            Mage2T10 = (setCount >= 2);
+            Mage4T10 = (setCount >= 4);
+            Character.SetBonusCount.TryGetValue("Firelord's Vestments", out setCount);
+            Mage2T11 = (setCount >= 2);
+            Mage4T11 = (setCount >= 4);
+            Character.SetBonusCount.TryGetValue("Gladiator's Regalia", out setCount);
+            Mage2PVP = (setCount >= 2);
+            Mage4PVP = (setCount >= 4);
+
+            if (Mage2PVP)
+            {
+                rawStats.Resilience += 400;
+                rawStats.Intellect += 70;
+            }
+            if (Mage4PVP)
+            {
+                rawStats.Intellect += 90;
+            }
+
             BaseStats = calculations.GetCharacterStats(Character, additionalItem, rawStats, CalculationOptions);
 
             int[] talentData = MageTalents.Data;
@@ -3610,7 +3640,7 @@ namespace Rawr.Mage
             if (evocationAvailable)
             {
                 CastingState evoBaseState = BaseState;
-                if (CalculationOptions.Enable2T10Evocation && baseStats.Mage2T10 > 0)
+                if (CalculationOptions.Enable2T10Evocation && Mage2T10)
                 {
                     evoBaseState = BaseState.Tier10TwoPieceState;
                 }
@@ -4086,7 +4116,7 @@ namespace Rawr.Mage
                     recalcCastTime |= effect.Mask;
                 }
             }
-            if (BaseStats.Mage4T10 == 0)
+            if (Mage4T10)
             {
                 recalcCastTime |= (int)StandardEffect.MirrorImage; // for this it's actually identical, potential for further optimization
             }

@@ -727,7 +727,7 @@ namespace Rawr.Mage
                 if (CalculationOptions.ManaGemEnabled && !ValidateIntegralConsumableOverall(VariableType.ManaGem, 1.0)) return false;
 
                 CastingState evoBaseState = BaseState;
-                if (CalculationOptions.Enable2T10Evocation && BaseStats.Mage2T10 > 0)
+                if (CalculationOptions.Enable2T10Evocation && Mage2T10)
                 {
                     evoBaseState = BaseState.Tier10TwoPieceState;
                 }

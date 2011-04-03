@@ -147,13 +147,6 @@ namespace Rawr
         MageIceArmor,
         MageMageArmor,
         MageMoltenArmor,
-        Mage4T8,
-        Mage2T9,
-        Mage4T9,
-        Mage2T10,
-        Mage4T10,
-        Mage2T11,
-        Mage4T11,
         #endregion
     }
     public enum MultiplicativeStat : int {
@@ -1417,62 +1410,6 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.MageMoltenArmor]; }
             set { _rawAdditiveData[(int)AdditiveStat.MageMoltenArmor] = value; }
-        }
-        [DefaultValueAttribute(0f)]
-        [DisplayName("Kirin Tor Garb (T8) 4 Piece Bonus")]
-        [Category("Mage")]
-        public float Mage4T8
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.Mage4T8]; }
-            set { _rawAdditiveData[(int)AdditiveStat.Mage4T8] = value; }
-        }
-        [DefaultValueAttribute(0f)]
-        [DisplayName("Khadgar's Regalia (T9) 2 Piece Bonus")]
-        [Category("Mage")]
-        public float Mage2T9
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.Mage2T9]; }
-            set { _rawAdditiveData[(int)AdditiveStat.Mage2T9] = value; }
-        }
-        [DefaultValueAttribute(0f)]
-        [DisplayName("Khadgar's Regalia (T9) 4 Piece Bonus")]
-        [Category("Mage")]
-        public float Mage4T9
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.Mage4T9]; }
-            set { _rawAdditiveData[(int)AdditiveStat.Mage4T9] = value; }
-        }
-        [DefaultValueAttribute(0f)]
-        [DisplayName("Mage T10 2 Piece Bonus")]
-        [Category("Mage")]
-        public float Mage2T10
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.Mage2T10]; }
-            set { _rawAdditiveData[(int)AdditiveStat.Mage2T10] = value; }
-        }
-        [DefaultValueAttribute(0f)]
-        [DisplayName("Mage T10 4 Piece Bonus")]
-        [Category("Mage")]
-        public float Mage4T10
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.Mage4T10]; }
-            set { _rawAdditiveData[(int)AdditiveStat.Mage4T10] = value; }
-        }
-        [DefaultValueAttribute(0f)]
-        [DisplayName("Mage T11 2 Piece Bonus")]
-        [Category("Mage")]
-        public float Mage2T11
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.Mage2T11]; }
-            set { _rawAdditiveData[(int)AdditiveStat.Mage2T11] = value; }
-        }
-        [DefaultValueAttribute(0f)]
-        [DisplayName("Mage T11 4 Piece Bonus")]
-        [Category("Mage")]
-        public float Mage4T11
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.Mage4T11]; }
-            set { _rawAdditiveData[(int)AdditiveStat.Mage4T11] = value; }
         }
         #endregion
         #endregion

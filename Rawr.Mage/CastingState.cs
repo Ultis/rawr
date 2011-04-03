@@ -439,7 +439,7 @@ namespace Rawr.Mage
             {
                 StateSpellModifier *= (1 + 0.04f * MageTalents.MoltenFury);
             }
-            if (MirrorImage && BaseStats.Mage4T10 > 0)
+            if (MirrorImage && Solver.Mage4T10)
             {
                 StateSpellModifier *= 1.18f;
             }

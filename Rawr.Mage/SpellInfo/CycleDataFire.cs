@@ -423,7 +423,7 @@ namespace Rawr.Mage
 
             // c*c/(1+c)
 
-            float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
+            float T8 = 0;
 
             K = FFB.CritRate * FFB.CritRate / (1.0f + FFB.CritRate) * castingState.MageTalents.HotStreak / 3.0f / (1 - T8);
 #if RAWR4
@@ -433,7 +433,7 @@ namespace Rawr.Mage
 #endif
 
             float hasteFactor = 1.0f;
-            if (castingState.BaseStats.Mage2T10 > 0)
+            if (castingState.Solver.Mage2T10)
             {
                 // p = K / (1 + K)
                 // N = (5 * 1.12 - Pyro.CastTime) * (1 + K) / (FB.CastTime * X + LB.CastTime * (1-X) + Pyro.CastTime * K)
@@ -567,7 +567,7 @@ namespace Rawr.Mage
 
             // A1 * A1 - 4 * A2 * A0
 
-            float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
+            float T8 = 0;
 
             float gap = (30.0f - (averageScorchesNeeded + extraScorches) * Sc.CastTime) / (30.0f - extraScorches * Sc.CastTime);
             if (castingState.MageTalents.ImprovedScorch == 0)
@@ -599,7 +599,7 @@ namespace Rawr.Mage
             K = H * C * C / (1 + C) / (1 - T8);
 
             float hasteFactor = 1.0f;
-            if (castingState.BaseStats.Mage2T10 > 0)
+            if (castingState.Solver.Mage2T10)
             {
                 // p = K / (1 + K)
                 // N = (5 * 1.12 - Pyro.CastTime) * (1 + K) / (FB.CastTime * X + LB.CastTime * (1-X) + Pyro.CastTime * K)
@@ -665,7 +665,7 @@ namespace Rawr.Mage
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
             int extraScorches = 0;
 
-            float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
+            float T8 = 0;
             float C, H, averageCastTime;
 
                 // 3.1 calculations
@@ -766,7 +766,7 @@ namespace Rawr.Mage
                     K = H * C * C / (1 + C) / (1 - T8);
 
                     // first order correction for lower LB uptime
-                    if (castingState.BaseStats.Mage2T10 > 0)
+                    if (castingState.Solver.Mage2T10)
                     {
                         // p = K / (1 + K)
                         // N = (5 * 1.12 - Pyro.CastTime) * (1 + K) / (FB.CastTime * X + LB.CastTime * (1-X) + Pyro.CastTime * K)
@@ -822,7 +822,7 @@ namespace Rawr.Mage
                     C = (FBcrit * X + SCcrit * Y + LBcrit * (1 - X - Y));
                     K = H * C * C / (1 + C) / (1 - T8);
 
-                    if (castingState.BaseStats.Mage2T10 > 0)
+                    if (castingState.Solver.Mage2T10)
                     {
                         // p = K / (1 + K)
                         // N = (5 * 1.12 - Pyro.CastTime) * (1 + K) / (FB.CastTime * X + LB.CastTime * (1-X) + Pyro.CastTime * K)
@@ -910,7 +910,7 @@ namespace Rawr.Mage
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
             int extraScorches = 0;
 
-            float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
+            float T8 = 0;
 
             float gap = (30.0f - (averageScorchesNeeded + extraScorches) * Sc.CastTime) / (30.0f - extraScorches * Sc.CastTime);
             if (castingState.MageTalents.ImprovedScorch == 0)
@@ -946,7 +946,7 @@ namespace Rawr.Mage
                     C = LBcrit + X * (FFBcrit - LBcrit);
                     K = H * C * C / (1 + C) / (1 - T8);
 
-                    if (castingState.BaseStats.Mage2T10 > 0)
+                    if (castingState.Solver.Mage2T10)
                     {
                         // p = K / (1 + K)
                         // N = (5 * 1.12 - Pyro.CastTime) * (1 + K) / (FB.CastTime * X + LB.CastTime * (1-X) + Pyro.CastTime * K)
@@ -1000,7 +1000,7 @@ namespace Rawr.Mage
                     C = (FFBcrit * X + SCcrit * Y + LBcrit * (1 - X - Y));
                     K = H * C * C / (1 + C) / (1 - T8);
 
-                    if (castingState.BaseStats.Mage2T10 > 0)
+                    if (castingState.Solver.Mage2T10)
                     {
                         // p = K / (1 + K)
                         // N = (5 * 1.12 - Pyro.CastTime) * (1 + K) / (FB.CastTime * X + LB.CastTime * (1-X) + Pyro.CastTime * K)
@@ -1085,7 +1085,7 @@ namespace Rawr.Mage
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
             int extraScorches = 0;
 
-            float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
+            float T8 = 0;
 
             float gap = (30.0f - (averageScorchesNeeded + extraScorches) * Sc.CastTime) / (30.0f - extraScorches * Sc.CastTime);
             if (castingState.MageTalents.ImprovedScorch == 0)
@@ -1117,7 +1117,7 @@ namespace Rawr.Mage
             K = H * C * C / (1 + C) / (1 - T8);
 
             float hasteFactor = 1.0f;
-            if (castingState.BaseStats.Mage2T10 > 0)
+            if (castingState.Solver.Mage2T10)
             {
                 // p = K / (1 + K)
                 // N = (5 * 1.12 - Pyro.CastTime) * (1 + K) / (FB.CastTime * X + LB.CastTime * (1-X) + Pyro.CastTime * K)
@@ -1209,11 +1209,11 @@ namespace Rawr.Mage
             Pyro[1].Label = "2T10:Pyroblast";
 
             HS = castingState.MageTalents.HotStreak / 3.0f;
-            T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
+            T8 = 0;
             //maintainScorch = castingState.CalculationOptions.MaintainScorch;
             livingBombGlyph = castingState.MageTalents.GlyphOfLivingBomb;
             LBDotCritRate = castingState.FireCritRate;
-            T10 = castingState.BaseStats.Mage2T10 > 0;
+            T10 = castingState.Solver.Mage2T10;
 
             GenerateStateDescription();
         }

@@ -299,6 +299,10 @@ namespace Rawr.Mage
             InitializeCastTime(false, false, 1.5f, 0);
             InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0.08f, 0.781000018119812f, 0.170000001788139f, 0, 0.512000024318695f, 0, 1, 1, 0);
             BaseCostAmplifier *= (1 - 0.5f * solver.MageTalents.ImprovedScorch);
+            if (solver.Mage4PVP)
+            {
+                BaseSpellModifier *= 1.05f;
+            }
             Dirty = false;
         }
     }
@@ -413,7 +417,7 @@ namespace Rawr.Mage
         {
             Name = "Frostbolt";
             InitializeCastTime(false, false, 2f, 0);
-            if (solver.BaseStats.Mage4T11 > 0)
+            if (solver.Mage4T11)
             {
                 BaseCastTime *= 0.9f;
             }
@@ -433,8 +437,12 @@ namespace Rawr.Mage
             {
                 BaseAdditiveSpellModifier += 0.15f;
             }
-            BaseCritRate += 0.05f * solver.BaseStats.Mage4T9;
+            //BaseCritRate += 0.05f * solver.BaseStats.Mage4T9;
             NukeProcs = 1;
+            if (solver.Mage4PVP)
+            {
+                BaseSpellModifier *= 1.05f;
+            }
             Dirty = false;
         }
     }
@@ -513,7 +521,7 @@ namespace Rawr.Mage
         {
             Name = "Fireball";
             InitializeCastTime(false, false, 2.5f, 0);
-            if (solver.BaseStats.Mage4T11 > 0)
+            if (solver.Mage4T11)
             {
                 BaseCastTime *= 0.9f;
             }
@@ -523,9 +531,13 @@ namespace Rawr.Mage
                 BaseCritRate += 0.05f;
                 NonHSCritRate += 0.05f;
             }
-            BaseCritRate += 0.05f * solver.BaseStats.Mage4T9;
+            //BaseCritRate += 0.05f * solver.BaseStats.Mage4T9;
             //BaseSpellModifier *= (1 + solver.BaseStats.BonusMageNukeMultiplier);
             NukeProcs = 1;
+            if (solver.Mage4PVP)
+            {
+                BaseSpellModifier *= 1.05f;
+            }
             Dirty = false;
         }
     }
@@ -549,7 +561,7 @@ namespace Rawr.Mage
         {
             Name = "Frostfire Bolt";
             InitializeCastTime(false, false, 2.5f, 0);
-            if (solver.BaseStats.Mage4T11 > 0)
+            if (solver.Mage4T11)
             {
                 BaseCastTime *= 0.9f;
             }
@@ -562,8 +574,12 @@ namespace Rawr.Mage
                 DotDuration = 12;
                 DotTickInterval = 3;
             }
-            BaseCritRate += 0.05f * solver.BaseStats.Mage4T9;
+            //BaseCritRate += 0.05f * solver.BaseStats.Mage4T9;
             NukeProcs = 1;
+            if (solver.Mage4PVP)
+            {
+                BaseSpellModifier *= 1.05f;
+            }
             Dirty = false;
         }
     }
@@ -598,7 +614,7 @@ namespace Rawr.Mage
             {
                 BaseCritRate += 0.05f;
             }
-            if (solver.BaseStats.Mage2T11 > 0)
+            if (solver.Mage2T11)
             {
                 BaseCritRate += 0.05f;
             }
@@ -783,7 +799,7 @@ namespace Rawr.Mage
             {
                 BaseSpellModifier *= 1.05f;
             }
-            if (solver.BaseStats.Mage2T11 > 0)
+            if (solver.Mage2T11)
             {
                 BaseCritRate += 0.05f;
             }
@@ -959,7 +975,7 @@ namespace Rawr.Mage
             {
                 InitializeCastTime(false, false, 2.35f, 0);
             }
-            if (solver.BaseStats.Mage4T11 > 0)
+            if (solver.Mage4T11)
             {
                 BaseCastTime *= 0.9f;
                 castTimeMultiplier = 0.9f;
@@ -972,11 +988,15 @@ namespace Rawr.Mage
             Stats baseStats = solver.BaseStats;
             MageTalents mageTalents = solver.MageTalents;
             //BaseCostModifier += baseStats.ArcaneBlastBonus;
-            BaseCritRate += 0.05f * solver.BaseStats.Mage4T9;
+            //BaseCritRate += 0.05f * solver.BaseStats.Mage4T9;
             tormentTheWeak = 0.02f * solver.MageTalents.TormentTheWeak;
             arcaneBlastDamageMultiplier = mageTalents.GlyphOfArcaneBlast ? 0.13f : 0.1f;
             arcaneBlastManaMultiplier = 1.5f;
             NukeProcs = 1;
+            if (solver.Mage4PVP)
+            {
+                BaseSpellModifier *= 1.05f;
+            }
             Dirty = false;
         }
     }
@@ -1079,14 +1099,14 @@ namespace Rawr.Mage
             {
                 BaseCritRate += 0.05f;
             }
-            if (solver.BaseStats.Mage2T11 > 0)
+            if (solver.Mage2T11)
             {
                 BaseCritRate += 0.05f;
             }
             tormentTheWeak = 0.02f * solver.MageTalents.TormentTheWeak;
             arcaneBlastDamageMultiplier = 0f;
             //BaseSpellModifier *= (1 + solver.BaseStats.BonusMageNukeMultiplier);
-            BaseCritRate += 0.05f * solver.BaseStats.Mage4T9;
+            //BaseCritRate += 0.05f * solver.BaseStats.Mage4T9;
             // Arcane Potency bug/feature
             float arcanePotency;
             switch (solver.MageTalents.ArcanePotency)

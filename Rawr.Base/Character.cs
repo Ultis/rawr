@@ -3191,6 +3191,8 @@ namespace Rawr
 
                     character._activeBuffs = new List<Buff>(character._activeBuffsXml.ConvertAll(buff => Buff.GetBuffByName(buff)));
                     character._activeBuffs.RemoveAll(buff => buff == null);
+                    // remove all set bonuses, they should no longer be in active buffs
+                    character._activeBuffs.RemoveAll(buff => !string.IsNullOrEmpty(buff.SetName));
                     character.itemSetList = new ItemSetList(character._itemSetListXML.ConvertAll(itemset => ItemSet.GenerateItemSetFromSavedString(itemset)));
                     character.itemSetList.RemoveAll(ItemSet => ItemSet == null);
                     character.ArmoryPets = new List<ArmoryPet>(character.ArmoryPetsXml.ConvertAll(armoryPet => ArmoryPet.GetPetByString(armoryPet)));

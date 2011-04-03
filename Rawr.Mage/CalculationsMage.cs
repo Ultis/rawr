@@ -614,7 +614,6 @@ namespace Rawr.Mage
             }
 
             AccumulateBuffsStats(stats, activeBuffs);
-            AccumulateSetBonusStats(stats, character.SetBonusCount);
 
             for (int i = 0; i < stats._rawSpecialEffectDataSize; i++)
             {
@@ -1013,7 +1012,7 @@ namespace Rawr.Mage
             float allResist = 0;
             if (statsTotal.MageIceArmor > 0)
             {
-                statsTotal.Armor += (float)Math.Floor((calculationOptions.PlayerLevel < 79 ? 645 : 940) * (1 + statsTotal.Mage2T9 * 0.2f));
+                statsTotal.Armor += (float)Math.Floor(calculationOptions.PlayerLevel < 79 ? 645f : 940f);
                 statsTotal.FrostResistance += (float)Math.Floor((calculationOptions.PlayerLevel < 79f ? 18f : 40f));
             }
             if (statsTotal.MageMageArmor > 0)
@@ -1988,17 +1987,10 @@ namespace Rawr.Mage
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 //SpellPowerFor15SecOnCast_50_45 = stats.SpellPowerFor15SecOnCast_50_45,
                 SpellsManaCostReduction = stats.SpellsManaCostReduction,
-                Mage4T8 = stats.Mage4T8,
-                Mage2T9 = stats.Mage2T9,
-                Mage4T9 = stats.Mage4T9,
-                Mage2T10 = stats.Mage2T10,
-                Mage4T10 = stats.Mage4T10,
                 BonusHealthMultiplier = stats.BonusHealthMultiplier,
                 MasteryRating = stats.MasteryRating,
                 BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
                 BonusManaMultiplier = stats.BonusManaMultiplier,
-                Mage2T11 = stats.Mage2T11,
-                Mage4T11 = stats.Mage4T11
             };
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
@@ -2018,7 +2010,7 @@ namespace Rawr.Mage
 
         private static bool HasMageStats(Stats stats)
         {
-            float mageStats = stats.Intellect + stats.Mp5 + stats.SpellPower + stats.SpellFireDamageRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritDamageMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneDamageMultiplier + stats.BonusFireDamageMultiplier + stats.BonusFrostDamageMultiplier + /*stats.EvocationExtension + stats.BonusMageNukeMultiplier + stats.LightningCapacitorProc + stats.ManaRestoreFromBaseManaPPM +*/ stats.BonusManaGem + stats.BonusManaPotionEffectMultiplier + stats.ThreatReductionMultiplier + stats.ArcaneResistance + stats.FireResistance + stats.FrostResistance + stats.NatureResistance + stats.ShadowResistance + stats.InterruptProtection + stats.ArcaneResistanceBuff + stats.FrostResistanceBuff + stats.FireResistanceBuff + stats.NatureResistanceBuff + stats.ShadowResistanceBuff + stats.MageIceArmor + stats.MageMageArmor + stats.MageMoltenArmor + stats.ManaRestoreFromMaxManaPerSecond + stats.SpellCrit + stats.SpellCritOnTarget + stats.SpellHit + stats.SpellHaste + /*stats.PendulumOfTelluricCurrentsProc + stats.ThunderCapacitorProc + */stats.CritBonusDamage + stats.BonusDamageMultiplier + stats.SpellsManaCostReduction + stats.Mage4T8 + stats.Mage2T9 + stats.Mage4T9 + stats.Mage2T10 + stats.Mage4T10 + stats.BonusSpellPowerMultiplier + stats.BonusManaMultiplier + stats.Mage2T11 + stats.Mage4T11;
+            float mageStats = stats.Intellect + stats.Mp5 + stats.SpellPower + stats.SpellFireDamageRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritDamageMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneDamageMultiplier + stats.BonusFireDamageMultiplier + stats.BonusFrostDamageMultiplier + /*stats.EvocationExtension + stats.BonusMageNukeMultiplier + stats.LightningCapacitorProc + stats.ManaRestoreFromBaseManaPPM +*/ stats.BonusManaGem + stats.BonusManaPotionEffectMultiplier + stats.ThreatReductionMultiplier + stats.ArcaneResistance + stats.FireResistance + stats.FrostResistance + stats.NatureResistance + stats.ShadowResistance + stats.InterruptProtection + stats.ArcaneResistanceBuff + stats.FrostResistanceBuff + stats.FireResistanceBuff + stats.NatureResistanceBuff + stats.ShadowResistanceBuff + stats.MageIceArmor + stats.MageMageArmor + stats.MageMoltenArmor + stats.ManaRestoreFromMaxManaPerSecond + stats.SpellCrit + stats.SpellCritOnTarget + stats.SpellHit + stats.SpellHaste + /*stats.PendulumOfTelluricCurrentsProc + stats.ThunderCapacitorProc + */stats.CritBonusDamage + stats.BonusDamageMultiplier + stats.SpellsManaCostReduction + stats.BonusSpellPowerMultiplier + stats.BonusManaMultiplier;
             return mageStats > 0;
         }
 
@@ -2036,6 +2028,15 @@ namespace Rawr.Mage
                 ignoreStats += effect.Stats.Agility + effect.Stats.Strength + effect.Stats.AttackPower + effect.Stats.Dodge + effect.Stats.Parry + effect.Stats.DodgeRating + effect.Stats.ParryRating + effect.Stats.ExpertiseRating + effect.Stats.Block + effect.Stats.BlockRating + effect.Stats.SpellShadowDamageRating + effect.Stats.SpellNatureDamageRating + effect.Stats.ArmorPenetration + effect.Stats.TargetArmorReduction;
             }
             return (mageStats || (commonStats > 0 && ignoreStats == 0.0f));
+        }
+
+        public override bool IsBuffRelevant(Buff buff, Character character)
+        {
+            if (!string.IsNullOrEmpty(buff.SetName) && buff.AllowedClasses.Contains(CharacterClass.Mage))
+            {
+                return true;
+            }
+            return base.IsBuffRelevant(buff, character);
         }
 
         public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot)

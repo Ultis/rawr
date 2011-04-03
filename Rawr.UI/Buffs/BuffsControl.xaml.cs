@@ -79,6 +79,17 @@ namespace Rawr.UI
                     }
                 }
                 foreach (CheckBox cb in toCheck) cb.IsChecked = true;
+                // update set bonuses
+                foreach (CheckBox checkBox in CheckBoxes.Values)
+                {
+                    Buff buff = (Buff)checkBox.Tag;
+                    if (!string.IsNullOrEmpty(buff.SetName))
+                    {
+                        int setCount;
+                        Character.SetBonusCount.TryGetValue(buff.SetName, out setCount);
+                        checkBox.IsChecked = setCount >= buff.SetThreshold;
+                    }
+                }
             }
             finally
             {
@@ -92,7 +103,13 @@ namespace Rawr.UI
             List<Buff> activeBuffs = new List<Buff>();
             foreach (CheckBox checkBox in CheckBoxes.Values)
                 if (checkBox.IsChecked.GetValueOrDefault(false) && checkBox.IsEnabled)
-                    activeBuffs.Add((checkBox.Tag as Buff));
+                {
+                    Buff buff = (Buff)checkBox.Tag;
+                    if (string.IsNullOrEmpty(buff.SetName)) // shouldn't be adding set bonuses
+                    {
+                        activeBuffs.Add(buff);
+                    }
+                }
             Character.ActiveBuffs = activeBuffs;
         }
 

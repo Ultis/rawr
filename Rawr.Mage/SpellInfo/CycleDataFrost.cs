@@ -19,7 +19,7 @@ namespace Rawr.Mage
             // FrB      1 - brainFreeze
             // FrB-FB   brainFreeze
 
-            float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
+            float T8 = 0;
 
             K = 0.05f * castingState.MageTalents.BrainFreeze / (1 - T8);
 
@@ -39,7 +39,7 @@ namespace Rawr.Mage
             float KFrB, KFrBS, KFB, KFBS, KILS;
             cycle.Name = "FrBFBIL";
 
-            float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
+            float T8 = 0;
 
             // S00: FOF0, BF0
             // FrB => S21    fof * bf
@@ -458,7 +458,7 @@ namespace Rawr.Mage
             float T0 = KFBS * FBS.CastTime + KILS * ILS.CastTime + KDFS * DFS.CastTime;
             float T1 = KFBS * FBS.CastTime + KFB * FB.CastTime;
 
-            if (castingState.BaseStats.Mage2T10 > 0)
+            if (castingState.Solver.Mage2T10)
             {
                 // we'll make a lot of assumptions here and just assume that 2T10 haste is uniformly distributed over all
                 // spells and doesn't have an impact on state space
@@ -641,7 +641,7 @@ namespace Rawr.Mage
             float T0 = KFrBS * FrBS.CastTime / 2.0f;
             float T1 = KFFBS * FFBS.CastTime + KFFB * FFB.CastTime;
 
-            if (castingState.BaseStats.Mage2T10 > 0)
+            if (castingState.Solver.Mage2T10)
             {
                 // we'll make a lot of assumptions here and just assume that 2T10 haste is uniformly distributed over all
                 // spells and doesn't have an impact on state space
@@ -714,7 +714,7 @@ namespace Rawr.Mage
             float KFrB, KFrBS, KFB, KILS;
             cycle.Name = "FrBILFB";
 
-            float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
+            float T8 = 0;
 
             // S00: FOF0, BF0
             // FrB => S21    fof * bf
@@ -814,7 +814,7 @@ namespace Rawr.Mage
             float KFrB, KFrBS, KILS;
             cycle.Name = "FrBIL";
 
-            float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
+            //float T8 = 0;
 
             // S00: FOF0
             // FrB => S20    fof
@@ -891,7 +891,7 @@ namespace Rawr.Mage
 
             BF = 0.05f * castingState.MageTalents.BrainFreeze;
             FOF = (castingState.MageTalents.FingersOfFrost == 2 ? 0.15f : 0.07f * castingState.MageTalents.FingersOfFrost);
-            T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
+            T8 = 0;
             deepFreeze = useDeepFreeze;
 
             GenerateStateDescription();
@@ -1188,8 +1188,8 @@ z = actual count on Fingers of Frost
 
             BF = 0.05f * castingState.MageTalents.BrainFreeze;
             FOF = (castingState.MageTalents.FingersOfFrost == 2 ? 0.15f : 0.07f * castingState.MageTalents.FingersOfFrost);
-            T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
-            T10 = castingState.BaseStats.Mage2T10 > 0;
+            T8 = 0;
+            T10 = castingState.Solver.Mage2T10;
 
             GenerateStateDescription();
         }
