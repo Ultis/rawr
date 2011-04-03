@@ -52,6 +52,15 @@ namespace Rawr {
         [DefaultValue(false)]
         public bool IsDualWielding = false;
 
+        /// <summary>In Seconds<para>Defaults to 0. Will not return a number higher than PhaseEndTime</para></summary>
+        [DefaultValue(0f)]
+        public float PhaseStartTime { get { return Math.Min(_phaseStartTime, _phaseEndTime); } set { _phaseStartTime = value; } }
+        private float _phaseStartTime = 0f;
+        /// <summary>In Seconds<para>Defaults to 20*60 (=1200). Will not return a number lower than PhaseStartTime</para></summary>
+        [DefaultValue(20 * 60)]
+        public float PhaseEndTime { get { return Math.Max(_phaseStartTime, _phaseEndTime); } set { _phaseEndTime = value; } }
+        public float _phaseEndTime = 20 * 60;
+
         #region DoT Stats
         /// <summary>Whether this attack is a DoT</summary>
         [DefaultValue(false)]
@@ -184,6 +193,14 @@ namespace Rawr {
         /// <para>Duration = 4f * 1000f</para>
         /// </summary>
         public float Duration;
+        /// <summary>In Seconds<para>Defaults to 0. Will not return a number higher than PhaseEndTime</para></summary>
+        [DefaultValue(0f)]
+        public float PhaseStartTime { get { return Math.Min(_phaseStartTime, _phaseEndTime); } set { _phaseStartTime = value; } }
+        private float _phaseStartTime = 0f;
+        /// <summary>In Seconds<para>Defaults to 20*60 (=1200). Will not return a number lower than PhaseStartTime</para></summary>
+        [DefaultValue(20 * 60)]
+        public float PhaseEndTime { get { return Math.Max(_phaseStartTime, _phaseEndTime); } set { _phaseEndTime = value; } }
+        public float _phaseEndTime = 20 * 60;
         /// <summary>
         /// A Percentage, value range from 0% to 100% (0.00f to 1.00f)
         /// <para>Eg- An Impedance effects one random raid target:</para>
@@ -358,7 +375,15 @@ namespace Rawr {
         public float Duration = 20 * 1000;
         /// <summary>Percentage, 0.50f = 50% Chance that this occurs<para>Defaults to and almost every time in usage this should be 1.00f=100%</para></summary>
         public float Chance = 1.00f;
-        /// <summary>The Number of Targets in this Target Group<para>Defaults to 2</para></summary>
+        /// <summary>In Seconds<para>Defaults to 0. Will not return a number higher than PhaseEndTime</para></summary>
+        [DefaultValue(0f)]
+        public float PhaseStartTime { get { return Math.Min(_phaseStartTime, _phaseEndTime); } set { _phaseStartTime = value; } }
+        private float _phaseStartTime = 0f;
+        /// <summary>In Seconds<para>Defaults to 20*60 (=1200). Will not return a number lower than PhaseStartTime</para></summary>
+        [DefaultValue(20 * 60)]
+        public float PhaseEndTime { get { return Math.Max(_phaseStartTime, _phaseEndTime); } set { _phaseEndTime = value; } }
+        public float _phaseEndTime = 20 * 60;
+        /// <summary>The Number of Targets in this Target Group<br/>Defaults to 2</summary>
         public float NumTargs = 2;
         /// <summary>
         /// If the mobs are near boss then your MultiTargets calculations should also count the boss,
@@ -366,6 +391,8 @@ namespace Rawr {
         /// <para>Defaults to false</para>
         /// </summary>
         public bool NearBoss = false;
+        /// <summary>Level of the additional Targets, 85-88</summary>
+        public int LevelOfTargets = (int)POSSIBLE_LEVELS.LVLP2;
         #endregion
         #region Player Targeting
         private SerializableDictionary<PLAYER_ROLES, bool> _affectsRole = null;
@@ -399,8 +426,8 @@ namespace Rawr {
         public override string ToString()
         {
             if (!Validated) { return "None"; }
-            return string.Format("#T: {0:0.00} F: {1:0.0}s D: {2:0.00}s C: {3:0%}{4}",
-                NumTargs, Frequency, Duration / 1000f, Chance, NearBoss ? " : NB" : "");
+            return string.Format("L: {5} #T: {0:0.00} F: {1:0.0}s D: {2:0.00}s C: {3:0%}{4}",
+                NumTargs, Frequency, Duration / 1000f, Chance, NearBoss ? " : NB" : "", LevelOfTargets);
         }
         #endregion
     }
@@ -450,6 +477,16 @@ namespace Rawr {
         /// <para>Duration = 4f * 1000f</para>
         /// </summary>
         public float Duration;
+
+        /// <summary>In Seconds<para>Defaults to 0. Will not return a number higher than PhaseEndTime</para></summary>
+        [DefaultValue(0f)]
+        public float PhaseStartTime { get { return Math.Min(_phaseStartTime, _phaseEndTime); } set { _phaseStartTime = value; } }
+        private float _phaseStartTime = 0f;
+        /// <summary>In Seconds<para>Defaults to 20*60 (=1200). Will not return a number lower than PhaseStartTime</para></summary>
+        [DefaultValue(20*60)]
+        public float PhaseEndTime { get { return Math.Max(_phaseStartTime, _phaseEndTime); } set { _phaseEndTime = value; } }
+        public float _phaseEndTime = 20 * 60;
+
         /// <summary>
         /// A Percentage, value range from 0% to 100% (0.00f to 1.00f)
         /// <para>Eg- A BuffState effects one random raid target:</para>

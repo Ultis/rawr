@@ -25,6 +25,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -46,8 +47,33 @@
         <TextBlock x:Name="LB_Chance2" Text="%" TextWrapping="Wrap" d:LayoutOverrides="Height" Grid.Column="4" Grid.Row="2" Margin="4" VerticalAlignment="Center"/>
         <CheckBox x:Name="CK_Breakable" Margin="4" Content="Breakable" d:LayoutOverrides="Height" Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="True"/>
 
+        <!-- ===== Phase Info ===== -->
+        <localUI:GroupBox Grid.Column="2" Grid.Row="5" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" Margin="2" MaxWidth="250">
+            <localUI:GroupBox.Header>
+                <TextBlock Text="Phase Info" FontWeight="Bold" />
+            </localUI:GroupBox.Header>
+            <!--IFSL-->
+            <toolkitWrap:WrapPanel>
+            <!--ENDIFSL-->
+            <!--IFWPF
+            <WrapPanel>
+                ENDIFWPF-->
+                <TextBlock x:Name="LB_PhaseStartTime" Margin="4,2,0,2" Text="Phase Start Time:" VerticalAlignment="Center" />
+                <inputToolkit:NumericUpDown x:Name="NUD_PhaseStartTime" Margin="2" Value="0" Maximum="{Binding ElementName=NUD_PhaseEndTime, Path=Value, Mode=OneWay}" Minimum="0" VerticalAlignment="Center" MinWidth="60" />
+                <TextBlock x:Name="LB_PhaseStartTime2" Margin="0,2,4,2" Text="sec" VerticalAlignment="Center" />
+                <TextBlock x:Name="LB_PhaseEndTime" Margin="4,2,0,2" Text="Phase End Time:" VerticalAlignment="Center" />
+                <inputToolkit:NumericUpDown x:Name="NUD_PhaseEndTime" Margin="2" Value="1200" Maximum="1200" Minimum="{Binding ElementName=NUD_PhaseStartTime, Path=Value, Mode=OneWay}" VerticalAlignment="Center" MinWidth="60" />
+                <TextBlock x:Name="LB_PhaseEndTime2" Margin="0,2,4,2" Text="sec" VerticalAlignment="Center" />
+                <!--IFSL-->
+            </toolkitWrap:WrapPanel>
+            <!--ENDIFSL-->
+                <!--IFWPF
+            </WrapPanel>
+            ENDIFWPF-->
+        </localUI:GroupBox>
+
         <!-- ===== PLAYER TARGETING ===== -->
-        <localUI:GroupBox Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="5" HorizontalAlignment="Stretch" Margin="2" MaxWidth="250">
+        <localUI:GroupBox Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="6" HorizontalAlignment="Stretch" Margin="2" MaxWidth="250">
             <localUI:GroupBox.Header>
                 <TextBlock Text="Targeting Includes" FontWeight="Bold" />
             </localUI:GroupBox.Header>
@@ -76,10 +102,10 @@
             ENDIFWPF-->
         </localUI:GroupBox>
 
-        <Button x:Name="BT_Add" Content="Add/Edit" d:LayoutOverrides="Height" Grid.Column="2" Grid.Row="6" Grid.ColumnSpan="3" Margin="4" Click="BT_Add_Click"/>
-        <Button x:Name="BT_Delete" Width="75" Content="Delete" d:LayoutOverrides="Height" Grid.Row="9" Margin="4" Click="BT_Delete_Click"/>
+        <Button x:Name="BT_Add" Content="Add/Edit" d:LayoutOverrides="Height" Grid.Column="2" Grid.Row="7" Grid.ColumnSpan="3" Margin="4" Click="BT_Add_Click"/>
+        <Button x:Name="BT_Delete" Width="75" Content="Delete" d:LayoutOverrides="Height" Grid.Row="10" Margin="4" Click="BT_Delete_Click"/>
 
-        <StackPanel Margin="0" Grid.Row="9" Grid.Column="2" Orientation="Horizontal" Grid.ColumnSpan="3" HorizontalAlignment="Right">
+        <StackPanel Margin="0" Grid.Row="10" Grid.Column="2" Orientation="Horizontal" Grid.ColumnSpan="3" HorizontalAlignment="Right">
             <Button x:Name="CancelButton" Content="Cancel" Click="CancelButton_Click" Margin="4" RenderTransformOrigin="1.253,-0.478" Width="75" Height="22" />
             <Button x:Name="OKButton" Content="OK" Click="OKButton_Click" Margin="4" Height="22" Width="75" />
         </StackPanel>

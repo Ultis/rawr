@@ -24,6 +24,7 @@ namespace Rawr.UI
 #if !SILVERLIGHT
             this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
             this.WindowState = System.Windows.WindowState.Normal;
+            this.WindowStyle = System.Windows.WindowStyle.ToolWindow;
 #endif
         }
 
@@ -34,14 +35,8 @@ namespace Rawr.UI
             SetListBox();
         }
 
-        #region Variables
+        public List<TargetGroup> TheList { get { return _TheList ?? (_TheList = new List<TargetGroup>()); } set { _TheList = value; } }
         protected List<TargetGroup> _TheList = null;
-        public List<TargetGroup> TheList
-        {
-            get { return _TheList ?? (_TheList = new List<TargetGroup>()); }
-            set { _TheList = value; }
-        }
-        #endregion
 
         private void SetListBox()
         {
@@ -62,6 +57,10 @@ namespace Rawr.UI
                 Chance = ((float)NUD_Chance.Value) / 100f,
                 NearBoss = (bool)CK_NearBoss.IsChecked,
                 NumTargs = (float)NUD_NumTargs.Value,
+                LevelOfTargets = CB_LevelOfTargets.SelectedIndex,
+                // Phase Info
+                PhaseStartTime = (float)NUD_PhaseStartTime.Value,
+                PhaseEndTime = (float)NUD_PhaseEndTime.Value,
             };
             // Targeting Includes
             s.AffectsRole[PLAYER_ROLES.MainTank]             = CK_AffectsMTank.IsChecked.GetValueOrDefault(false);
@@ -97,11 +96,15 @@ namespace Rawr.UI
             if (LB_TheList.SelectedIndex != -1) {
                 TargetGroup selected = LB_TheList.SelectedItem as TargetGroup;
                 //
-                NUD_Freq.Value = selected.Frequency;
-                NUD_Dur.Value = selected.Duration;
-                NUD_Chance.Value = selected.Chance * 100f;
-                CK_NearBoss.IsChecked = selected.NearBoss;
-                NUD_NumTargs.Value = selected.NumTargs;
+                NUD_Freq.Value                  = selected.Frequency;
+                NUD_Dur.Value                   = selected.Duration;
+                NUD_Chance.Value                = selected.Chance * 100f;
+                CK_NearBoss.IsChecked           = selected.NearBoss;
+                NUD_NumTargs.Value              = selected.NumTargs;
+                CB_LevelOfTargets.SelectedIndex = selected.LevelOfTargets;
+                // Phase Info
+                NUD_PhaseStartTime.Value = selected.PhaseStartTime;
+                NUD_PhaseEndTime.Value = selected.PhaseEndTime;
                 // Targeting Includes
                 CK_AffectsMTank.IsChecked          = selected.AffectsRole[PLAYER_ROLES.MainTank];
                 CK_AffectsOTank.IsChecked          = selected.AffectsRole[PLAYER_ROLES.OffTank];
@@ -115,11 +118,15 @@ namespace Rawr.UI
                 isEditing = true;
             } else {
                 // Reset the UI to a blank target group
-                NUD_Freq.Value = 45;
-                NUD_Dur.Value = 10*1000;
-                NUD_Chance.Value = 100f;
-                CK_NearBoss.IsChecked = false;
-                NUD_NumTargs.Value = 2;
+                NUD_Freq.Value                  = 45;
+                NUD_Dur.Value                   = 10*1000;
+                NUD_Chance.Value                = 100f;
+                CK_NearBoss.IsChecked           = false;
+                NUD_NumTargs.Value              = 2;
+                CB_LevelOfTargets.SelectedIndex = 2;
+                // Phase Info
+                NUD_PhaseStartTime.Value = 0;
+                NUD_PhaseEndTime.Value = 20 * 60;
                 // Targeting Includes
                 CK_AffectsMTank.IsChecked          = false;
                 CK_AffectsOTank.IsChecked          = true;

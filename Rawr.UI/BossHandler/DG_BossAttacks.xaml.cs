@@ -25,6 +25,7 @@ namespace Rawr.UI
 #if !SILVERLIGHT
             this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
             this.WindowState = System.Windows.WindowState.Normal;
+            this.WindowStyle = System.Windows.WindowStyle.ToolWindow;
 #endif
 
             TheList = list;
@@ -58,6 +59,9 @@ namespace Rawr.UI
                     MaxNumTargets     = (float)NUD_MaxNumTargs.Value,
                     AttackSpeed       = (float)NUD_AtkSpeed.Value,
                     AttackType        = (ATTACK_TYPES)CB_AtkType.SelectedIndex,
+                    // Phase Info
+                    PhaseStartTime    = (float)NUD_PhaseStartTime.Value,
+                    PhaseEndTime      = (float)NUD_PhaseEndTime.Value,
                     // DoT Stats
                     IsDoT             = CK_IsDoT.IsChecked.GetValueOrDefault(false),
                     DamagePerTick     = (float)NUD_DmgPerTick.Value,
@@ -122,6 +126,9 @@ namespace Rawr.UI
                 NUD_MaxNumTargs.Value     = selected.MaxNumTargets;
                 NUD_AtkSpeed.Value        = selected.AttackSpeed;
                 CB_AtkType.SelectedIndex  = (int)selected.AttackType;
+                // Phase Info
+                NUD_PhaseStartTime.Value  = selected.PhaseStartTime;
+                NUD_PhaseEndTime.Value    = selected.PhaseEndTime;
                 // DoT Stats
                 CK_IsDoT.IsChecked        = selected.IsDoT;
                 NUD_DmgPerTick.Value      = selected.DamagePerTick;
@@ -157,6 +164,9 @@ namespace Rawr.UI
                 NUD_MaxNumTargs.Value     = 1;
                 NUD_AtkSpeed.Value        = 2.0;
                 CB_AtkType.SelectedIndex  = (int)ATTACK_TYPES.AT_MELEE;
+                // Phase Info
+                NUD_PhaseStartTime.Value  = 0;
+                NUD_PhaseEndTime.Value    = 20*60;
                 // DoT Stats
                 CK_IsDoT.IsChecked        = false;
                 NUD_DmgPerTick.Value      = 0;

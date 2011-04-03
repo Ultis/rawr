@@ -24,6 +24,7 @@ namespace Rawr.UI
 #if !SILVERLIGHT
             this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
             this.WindowState = System.Windows.WindowState.Normal;
+            this.WindowStyle = System.Windows.WindowStyle.ToolWindow;
 #endif
 
             statControl.CurrentStats = new Stats();
@@ -74,6 +75,9 @@ namespace Rawr.UI
                 Duration = (float)NUD_Dur.Value,
                 Chance = ((float)NUD_Chance.Value) / 100f,
                 Stats = statControl.CurrentStats,
+                // Phase Info
+                PhaseStartTime    = (float)NUD_PhaseStartTime.Value,
+                PhaseEndTime      = (float)NUD_PhaseEndTime.Value,
             };
             // Targeting Includes
             s.AffectsRole[PLAYER_ROLES.MainTank]             = CK_AffectsMTank.IsChecked.GetValueOrDefault(false);
@@ -116,6 +120,9 @@ namespace Rawr.UI
                 NUD_Dur.Value            = selected.Duration;
                 NUD_Chance.Value         = selected.Chance * 100f;
                 statControl.CurrentStats = selected.Stats;
+                // Phase Info
+                NUD_PhaseStartTime.Value = selected.PhaseStartTime;
+                NUD_PhaseEndTime.Value = selected.PhaseEndTime;
                 // Targeting Includes
                 CK_AffectsMTank.IsChecked          = selected.AffectsRole[PLAYER_ROLES.MainTank];
                 CK_AffectsOTank.IsChecked          = selected.AffectsRole[PLAYER_ROLES.OffTank];
@@ -134,6 +141,9 @@ namespace Rawr.UI
                 NUD_Dur.Value = 10 * 1000;
                 NUD_Chance.Value = 100f;
                 statControl.CurrentStats = new Stats();
+                // Phase Info
+                NUD_PhaseStartTime.Value = 0;
+                NUD_PhaseEndTime.Value = 20 * 60;
                 // Targeting Includes
                 CK_AffectsMTank.IsChecked          = false;
                 CK_AffectsOTank.IsChecked          = true;
