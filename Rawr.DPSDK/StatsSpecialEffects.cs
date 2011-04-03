@@ -27,19 +27,19 @@ namespace Rawr.DPSDK
         }
 
 
-        public StatsDK getSpecialEffects(SpecialEffect effect, bool bFromTankDK = false)
+        public StatsDK getSpecialEffects(SpecialEffect effect, float fightDuration)
         {
             StatsDK statsAverage = new StatsDK();
             if (effect.Trigger == Trigger.Use)
             {
                 foreach (SpecialEffect e in effect.Stats.SpecialEffects())
                 {
-                    statsAverage.Accumulate(this.getSpecialEffects(e), (effect.Duration / effect.Cooldown));
+                    statsAverage.Accumulate(this.getSpecialEffects(e, fightDuration), (effect.Duration / effect.Cooldown));
                 }
-                if (bFromTankDK)
-                    statsAverage.Accumulate(effect.Stats);
-                else
-                    statsAverage.Accumulate(effect.GetAverageStats());
+                //if (bFromTankDK)
+                    //statsAverage.Accumulate(effect.Stats);
+                //else
+                    statsAverage.Accumulate(effect.GetAverageStats(0, 1, 3, fightDuration));
             }
             else
             {
@@ -170,9 +170,9 @@ namespace Rawr.DPSDK
                         trigger = m_bo.DynamicCompiler_FilteredAttacks(m_bo.GetFilteredAttackList(ItemDamageType.Physical)).AttackSpeed;
                         break;
                 }
-		        foreach (SpecialEffect e in effect.Stats.SpecialEffects())
+                foreach (SpecialEffect e in effect.Stats.SpecialEffects())
                 {
-                    statsAverage.Accumulate(this.getSpecialEffects(e));
+                    statsAverage.Accumulate(this.getSpecialEffects(e, fightDuration));
                 }
 
                 if (effect.MaxStack > 1)

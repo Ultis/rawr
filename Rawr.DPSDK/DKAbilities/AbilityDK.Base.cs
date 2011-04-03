@@ -490,24 +490,10 @@ namespace Rawr.DK
         #endregion
 
         #region Threat
-        /// <summary>
-        /// How much to multiply the damage by to generate threat.
-        /// </summary>
-        private float _ThreatMultiplier;
-        public float ThreatMultiplier
-        {
-            get
-            {
-                // TODO: Update for DRW uptime.
-                if (CState != null && CState.m_Talents.GlyphofDancingRuneWeapon)
-                    _ThreatMultiplier += .5f;
-                return _ThreatMultiplier;
-            }
-            set
-            {
-                _ThreatMultiplier = value;
-            }
-        }
+        /// <summary>How much to multiply the damage by to generate threat.</summary>
+        // TODO: Update for DRW uptime.
+        // JOTHAY NOTE: You are handling the Dancing Rune Threat increase in with the DRW SpecialEffect, see _SE_DRW
+        public float ThreatMultiplier { get { return 0f /*+ (CState.m_Talents.GlyphofDancingRuneWeapon ? 0.50f : 0f)*/; } }
 
         private float _ThreatAdditiveModifier;
         /// <summary>
@@ -515,19 +501,14 @@ namespace Rawr.DK
         /// </summary>
         /// <returns>float that is (GetTotalDamage * ThreatModifiers) * Threat For Frost Presence</returns>
         public float GetTotalThreat() { return TotalThreat; } 
-        public float TotalThreat
-        {
-            get
-            {
+        public float TotalThreat {
+            get {
                 float Threat = StatConversion.ApplyMultiplier(GetTotalDamage(), ThreatMultiplier) + _ThreatAdditiveModifier;
-                if (CState != null)
-                    Threat = StatConversion.ApplyMultiplier(Threat, CState.m_Stats.ThreatIncreaseMultiplier - CState.m_Stats.ThreatReductionMultiplier);
+                Threat = StatConversion.ApplyMultiplier(Threat, CState.m_Stats.ThreatIncreaseMultiplier);
+                Threat = StatConversion.ApplyInverseMultiplier(Threat, CState.m_Stats.ThreatReductionMultiplier);
                 return Threat;
             }
-            set
-            {
-                _ThreatAdditiveModifier = value;
-            }
+            set { _ThreatAdditiveModifier = value; }
         }
         #endregion
 

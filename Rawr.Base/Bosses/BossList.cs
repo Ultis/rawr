@@ -669,7 +669,7 @@ namespace Rawr {
                 IsTheDefaultMelee = defaultmelee,
             };
             foreach (PLAYER_ROLES pr in ARCounts.Keys) {
-                toAdd.AffectsRole[pr] = ARCounts[pr] / attacks.Count > 0.50f;
+                toAdd.AffectsRole[pr] = ((float)ARCounts[pr] / (float)attacks.Count) > 0.25f; // at least 25% of the affected roles matched
             }
         }
         private void CalculateHardAttack(List<Attack> attacks, int maxPlayers, string name, bool defaultmelee, out Attack toAdd) {

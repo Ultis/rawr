@@ -31,21 +31,27 @@ namespace Rawr.DK
             this.wOH = CS.OH;
         }
 
-        private float _DamageMultiplierModifer = 0;
-        /// <summary>
-        /// Setup the modifier formula for a given ability.
-        /// </summary>
-        override public float DamageMultiplierModifer
-        {
-            get
-            {
-                _DamageMultiplierModifer += base.DamageMultiplierModifer + (this.CState.m_Talents.GlyphofHeartStrike ? .3f : 0);
-                float multiplier = (CState.m_uDiseaseCount * .15f) + _DamageMultiplierModifer;
-                // TODO: Need to ensure that this is properly handled by AOE handler stuff.
-                if (CState.m_NumberOfTargets > 1)
-                { multiplier *= 1.75f; }
-                if (CState.m_NumberOfTargets > 2)
-                { multiplier *= 1.75f; }
+        private float _HSDamageMultiplierModifer = -1f;
+        /// <summary>Setup the modifier formula for a given ability</summary>
+        public override float DamageMultiplierModifer {
+            get {
+                if (_HSDamageMultiplierModifer == -1f) {
+                    _HSDamageMultiplierModifer = base.DamageMultiplierModifer * (1f + (this.CState.m_Talents.GlyphofHeartStrike ? 0.30f : 0f));
+                }
+                //
+                float multiplier = _HSDamageMultiplierModifer * (1f + (CState.m_uDiseaseCount * .15f));
+                float targetsToProcess = CState.m_NumberOfTargets;
+                while (targetsToProcess > 0) {
+                    if (targetsToProcess > 1) {
+                        // Handles Full
+                        multiplier *= (1f + (1f - 0.25f));
+                    } else {
+                        // Handles Partial
+                        multiplier *= (1f + (1f - 0.25f) * (1f - targetsToProcess));
+                    }
+                    targetsToProcess--;
+                }
+                //
                 return multiplier;
             }
         }

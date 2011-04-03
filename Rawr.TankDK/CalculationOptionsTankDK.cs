@@ -13,150 +13,41 @@ namespace Rawr.TankDK
     public class CalculationOptionsTankDK : ICalculationOptionBase, INotifyPropertyChanged
     {
         #region Options
-        private Presence _presence = Presence.Blood;
-        public Presence presence
-        {
-            get { return _presence; }
-        }
-        [XmlIgnore]
-        private int _presenceByIndex = (int)Presence.Blood;
-        [XmlIgnore]
-        public int PresenceByIndex
-        {
-            get { return _presenceByIndex; }
-        }
+        /// <summary>
+        /// Defines the role the TankDK currently has in the Raid<br/>
+        /// Possible Values: MT=0, OT=1, TT=2, Any Tank = 3<br/>
+        /// Any Tank means anything that would affect 0, 1 or 2
+        /// </summary>
+        [DefaultValue((int)PLAYER_ROLES.MainTank)]
+        public int PlayerRole { get { return _playerRole; } set { _playerRole = value; OnPropertyChanged("PlayerRole"); } }
+        private int _playerRole = (int)PLAYER_ROLES.MainTank;
 
+        [DefaultValue(3.5f)]
+        public float HitsToSurvive { get { return _HitsToSurvive; } set { _HitsToSurvive = value; OnPropertyChanged("HitsToSurvive"); } }
+        private float _HitsToSurvive = 3.5f;
+        [DefaultValue(3.0f)]
+        public float BurstWeight { get { return _BurstWeight; } set { _BurstWeight = value; OnPropertyChanged("BurstWeight"); } }
+        private float _BurstWeight = 3.0f;
+        [DefaultValue(1.0f)]
+        public float ThreatWeight { get { return _ThreatWeight; } set { _ThreatWeight = value; OnPropertyChanged("ThreatWeight"); } }
+        private float _ThreatWeight = 1.0f;
+        [DefaultValue(1.0f)]
+        public float VengeanceWeight { get { return _VengenceWeight; } set { _VengenceWeight = value; OnPropertyChanged("VengeanceWeight"); } }
         private float _VengenceWeight = 1;
-        public float VengeanceWeight
-        {
-            get { return _VengenceWeight; }
-            set { _VengenceWeight = value; OnPropertyChanged("VengeanceWeight"); }
-        }
-        private float _ThreatWeight = 1;
-        public float ThreatWeight
-        {
-            get 
-            {
-                if ( _ThreatWeight < 0)
-                {
-                    _ThreatWeight = 1f;
-                }
-                return _ThreatWeight; 
-            }
-            set { _ThreatWeight = value; OnPropertyChanged("ThreatWeight"); }
-        }
-        private float _SurvivalWeight = 1;
-        public float SurvivalWeight
-        {
-            get
-            {
-                if (_SurvivalWeight < 0)
-                {
-                    _SurvivalWeight = 1f;
-                }
-                return _SurvivalWeight;
-            }
-            set { _SurvivalWeight = value; OnPropertyChanged("SurvivalWeight"); }
-        }
-        private int _survivalSoftCap = 300000; // Heroic T11 as it's written right now
-        public int SurvivalSoftCap
-        {
-            get { return _survivalSoftCap; }
-            set { if (_survivalSoftCap != value) { _survivalSoftCap = value; OnPropertyChanged("SurvivalSoftCap"); } }
-        }
-        private float _BurstWeight = 6;
-        public float BurstWeight
-        {
-            get
-            {
-                if (_BurstWeight < 0)
-                {
-                    _BurstWeight = 1f;
-                }
-                return _BurstWeight;
-            }
-            set { _BurstWeight = value; OnPropertyChanged("BurstWeight"); }
-        }
-        private float _MitigationWeight = 6;
-        public float MitigationWeight
-        {
-            get 
-            {
-                if (_MitigationWeight < 0)
-                {
-                    _MitigationWeight = 1f;
-                }
-                return _MitigationWeight; 
-            }
-            set { _MitigationWeight = value; OnPropertyChanged("MitigationWeight"); }
-        }
 
-        public bool Bloodlust = false;
+        [DefaultValue(0.25f)]
+        public float pOverHealing { get { return _pOverHealing; } set { _pOverHealing = value; OnPropertyChanged("pOverHealing"); } }
+        private float _pOverHealing = 0.25f;
 
-        private float _pOverHealing = .25f;
-        [Percentage]
-        public float pOverHealing
-        {
-            get 
-            {
-                if (_pOverHealing > 1)
-                {
-                    _pOverHealing = 1;
-                }
-                else if (_pOverHealing < 0)
-                {
-                    _pOverHealing = 0;
-                }
-                return _pOverHealing; 
-            }
-            set { _pOverHealing = value; OnPropertyChanged("pOverHealing"); }
-        }
-        private CalculationType _cType = CalculationType.SMT;
-        public CalculationType cType
-        {
-            get 
-            {
-                if (_cType != CalculationType.Burst 
-                    && _cType != CalculationType.SMT)
-                {
-                    _cType = CalculationType.SMT;
-                }
-                return _cType; 
-            }
-            set { _cType = value; OnPropertyChanged("cType"); }
-        }
-
+        // This one is Unused
+        [DefaultValue(false)]
+        public bool bExperimental { get { return _m_bExperimental; } set { _m_bExperimental = value; OnPropertyChanged("Experimental"); } }
         private bool _m_bExperimental = false;
-        public bool bExperimental
-        {
-            get
-            {
-                return _m_bExperimental;
-            }
-            set { _m_bExperimental = value; OnPropertyChanged("Experimental"); }
-        }
-
-        private bool _m_bUseOnUseAbilities = true;
-        public bool bUseOnUseAbilities
-        {
-            get
-            {
-                return _m_bUseOnUseAbilities;
-            }
-            set { _m_bUseOnUseAbilities = value; OnPropertyChanged("UseOnUseAbilities"); }
-        }
         #endregion
 
         [XmlIgnore]
+        public string szRotReport { get { return _szRotReport; } set { _szRotReport = value.Replace("Dancing Rune Weapon", "Dancing Rune Wp"); OnPropertyChanged("szRotReport"); } }
         private string _szRotReport = "";
-        [XmlIgnore]
-        public string szRotReport
-        {
-            get { return _szRotReport; }
-            set { _szRotReport = value.Replace("Dancing Rune Weapon", "Dancing Rune Wp"); OnPropertyChanged("szRotReport"); }
-        }
-
-        public DeathKnightTalents talents;
 
         #region XML IO
         public string GetXml()

@@ -359,9 +359,9 @@ namespace Rawr {
         private string _name = "Generic";
         // Content
         /// <summary>The Boss's Tier Content Level, T10, T11, etc</summary>
-        [DefaultValue(TierLevels.T11_10)]
+        [DefaultValue(TierLevels.T11_25H)]
         public TierLevels Content { get { return _content; } set { _content = value; OnPropertyChanged("Content"); } }
-        private TierLevels _content = TierLevels.T11_10;
+        private TierLevels _content = TierLevels.T11_25H;
         public string ContentString { get { return GetContentString(_content); } }
         protected string GetContentString(TierLevels c) { return BossTierStrings[(int)c]; }
         // Instance

@@ -229,9 +229,9 @@ namespace Rawr.UI
                            "Boss Attack Speed"
                         // Stat Reduction
                         + "|Melee Hit Chance Reduction|Spell Hit Taken|Critical Strike Chance Taken|Spell Critical Strike Taken"
-                        + "|Armor (Major)|Armor (Minor)"
+                        + "|Armor (Major)|Armor (Minor)|Armor Debuff"
                         // Vulvernability
-                        + "|Physical Vulnerability|Spell Sensitivity"
+                        + "|Physical Vulnerability|Spell Sensitivity|Target Physical Damage Reduction|Target Damage Reduction"
                         + "|Disease Damage Taken|Spell Damage Taken";
                 }
                 case "Current": { return "Current"; }
@@ -943,7 +943,7 @@ namespace Rawr.UI
                     bool orig;
                     if (glyphDatas.Length > 0) {
                         GlyphDataAttribute glyphData = glyphDatas[0];
-                        if (relevant == null || (relevant.Contains(glyphData.Name) && glyphData.Type == GlyphType.Prime)) {
+                        if ((relevant == null || relevant.Contains(glyphData.Name)) && glyphData.Type == GlyphType.Prime) {
                             orig = Character.CurrentTalents.GlyphData[glyphData.Index];
                             if (orig) {
                                 newChar.CurrentTalents.GlyphData[glyphData.Index] = false;
@@ -982,7 +982,7 @@ namespace Rawr.UI
                     bool orig;
                     if (glyphDatas.Length > 0) {
                         GlyphDataAttribute glyphData = glyphDatas[0];
-                        if (relevant == null || (relevant.Contains(glyphData.Name) && glyphData.Type == GlyphType.Major)) {
+                        if ((relevant == null || relevant.Contains(glyphData.Name)) && glyphData.Type == GlyphType.Major) {
                             orig = Character.CurrentTalents.GlyphData[glyphData.Index];
                             if (orig) {
                                 newChar.CurrentTalents.GlyphData[glyphData.Index] = false;
@@ -1021,7 +1021,7 @@ namespace Rawr.UI
                     bool orig;
                     if (glyphDatas.Length > 0) {
                         GlyphDataAttribute glyphData = glyphDatas[0];
-                        if (relevant == null || (relevant.Contains(glyphData.Name) && glyphData.Type == GlyphType.Minor)) {
+                        if ((relevant == null || relevant.Contains(glyphData.Name)) && glyphData.Type == GlyphType.Minor) {
                             orig = Character.CurrentTalents.GlyphData[glyphData.Index];
                             if (orig) {
                                 newChar.CurrentTalents.GlyphData[glyphData.Index] = false;

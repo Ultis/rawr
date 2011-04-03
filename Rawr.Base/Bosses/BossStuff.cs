@@ -341,6 +341,10 @@ namespace Rawr {
         public bool NearBoss = false;
         #endregion
         #region Functions
+        public float GetAverageTargetGroupSize(float fightDuration) {
+            if (!Validated) { return 0f; }
+            return new SpecialEffect(Trigger.Use, null, Duration / 1000f, Frequency, Chance, (int)NumTargs).GetAverageStackSize(0, 1f, 3, fightDuration);
+        }
         public bool Validated { get { return Frequency != -1 && Duration > 0 && Chance > 0 && NumTargs > 1; } }
         public override string ToString()
         {

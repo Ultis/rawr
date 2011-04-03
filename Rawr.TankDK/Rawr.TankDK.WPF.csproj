@@ -113,6 +113,7 @@
     <Compile Include="CalculationsTankDK.cs" />
     <Compile Include="CharacterCalculationsTankDK.cs" />
     <Compile Include="ComparisonCalculationTankDK.cs" />
+    <Compile Include="MiscEnumsDK.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <AppDesigner Include="Properties\" />
   </ItemGroup>

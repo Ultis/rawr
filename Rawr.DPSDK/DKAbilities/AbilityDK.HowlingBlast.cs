@@ -39,21 +39,8 @@ namespace Rawr.DK
         }
 
         private int _DamageAdditiveModifer = 0;
-        /// <summary>
-        /// Setup the modifier formula for a given ability.
-        /// </summary>
-        override public int DamageAdditiveModifer
-        {
-            get
-            {
-                //this.DamageAdditiveModifer = //[AP * 0.055 * 1.15]
-                return (int)(this.CState.m_Stats.AttackPower * .4 );
-            }
-            set
-            {
-                _DamageAdditiveModifer = value;
-            }
-        }
+        /// <summary>Setup the modifier formula for a given ability</summary>
+        public override int DamageAdditiveModifer { get { return (int)(this.CState.m_Stats.AttackPower * 0.48f); } set { _DamageAdditiveModifer = value; } }
 
         public override float DamageMultiplierModifer
         {

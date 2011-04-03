@@ -11,9 +11,8 @@ namespace Rawr.DK
     /// </summary>
     public class CombatState
     {
+        public Character m_Char;
         public StatsDK m_Stats;
-        // Why save a whole character when we only need the talents?
-//        public Character m_Char;
         public DeathKnightTalents m_Talents;
         public Weapon MH, OH;
         public float m_NumberOfTargets;

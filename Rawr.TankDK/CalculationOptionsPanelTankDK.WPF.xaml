@@ -16,10 +16,8 @@
 
     <UserControl.Resources>
         <local:CalculationOptionsTankDK x:Key="CalculationOptionsTankDKDataSource" d:IsDataSource="True"/>
-        <local:GraphTypeConverter x:Key="GraphTypeConverter"/>
         <local:PercentConverter x:Key="PercentConverter"/>
         <local:ThreatValueConverter x:Key="ThreatValueConverter"/>
-        <local:SurvivalSoftCapConverter x:Key="SurvivalSoftCapConverter"/>
     </UserControl.Resources>
 
     <Grid x:Name="LayoutRoot" HorizontalAlignment="Stretch" DataContext="{Binding Source={StaticResource CalculationOptionsTankDKDataSource}}">
@@ -27,7 +25,6 @@
             <sdk:TabItem Header="Basics">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
@@ -50,24 +47,25 @@
                     <TextBlock TextWrapping="Wrap" Grid.Row="1" VerticalAlignment="Center" Margin="2" Grid.ColumnSpan="3" FontSize="10"
                                Text="The following settings will adjust the overall scores for each type. This does not involve Stat Weights as described by Pawn, SimCraft or other similar utilities. These are meant to describe your general importance to each point."/>
 
-                    <TextBlock Text="Mitigation:" Grid.Row="2" VerticalAlignment="Center" Margin="4,2"/>
-                    <inputToolkit:NumericUpDown Name="NUD_Mitigation" Value="{Binding Path=MitigationWeight, Mode=TwoWay}" Margin="4,2" Grid.Column="2" Grid.Row="2" DecimalPlaces="1" MinWidth="50" Maximum="10" Increment="0.1" />
-                    <Slider Grid.Column="1" Grid.Row="2" Margin="4,2" Value="{Binding Path=MitigationWeight, Mode=TwoWay}" Minimum="{Binding ElementName=NUD_Mitigation, Path=Minimum}" Maximum="{Binding ElementName=NUD_Mitigation, Path=Maximum}" LargeChange="{Binding ElementName=NUD_Mitigation, Path=Increment}" />
-
-                    <TextBlock Text="Survival:" Grid.Row="3" Margin="4,2" VerticalAlignment="Center"/>
-                    <inputToolkit:NumericUpDown Name="NUD_Survival" Value="{Binding Path=SurvivalWeight, Mode=TwoWay}" Margin="4,2" Grid.Column="2" Grid.Row="3" DecimalPlaces="1" MinWidth="50" Maximum="10" Increment="0.1" />
-                    <Slider Grid.Column="1" Grid.Row="3" Margin="4,2" Value="{Binding Path=SurvivalWeight, Mode=TwoWay}" Minimum="{Binding ElementName=NUD_Survival, Path=Minimum}" Maximum="{Binding ElementName=NUD_Survival, Path=Maximum}" LargeChange="{Binding ElementName=NUD_Survival, Path=Increment}" />
-
-                    <TextBlock Text="Survival Soft Cap: " VerticalAlignment="Center" Margin="4,2" Grid.Row="4" Visibility="Collapsed" />
-                    <ComboBox Margin="2" Grid.Column="1" Grid.Row="4" SelectedItem="{Binding SurvivalSoftCap, Converter={StaticResource SurvivalSoftCapConverter}, Mode=TwoWay}" Visibility="Collapsed">
-                        <System:String>Normal Dungeons</System:String>
-                        <System:String>Heroic Dungeons</System:String>
-                        <System:String>Normal T11 Raids</System:String>
-                        <System:String>Heroic T11 Raids</System:String>
-                        <System:String>Custom...</System:String>
+                    <!-- Raid Role -->
+                    <TextBlock Text="Raid Role:" Grid.Row="2" VerticalAlignment="Center" Margin="4,2"/>
+                    <ComboBox Margin="2" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" SelectedIndex="{Binding Path=PlayerRole, Mode=TwoWay}">
+                        <System:String>Main Tank</System:String>
+                        <System:String>Off Tank</System:String>
+                        <System:String>Tertiary Tank</System:String>
+                        <System:String>Any Tank</System:String>
                     </ComboBox>
-                    <inputToolkit:NumericUpDown Margin="2" Grid.Column="2" Grid.Row="4" Value="{Binding SurvivalSoftCap, Mode=TwoWay}" Maximum="999999" Increment="1000" Visibility="Collapsed" />
+                    <!-- Hits to Survive -->
+                    <TextBlock Text="Hits to Survive:" Grid.Row="3" Margin="4,2" VerticalAlignment="Center"/>
+                    <inputToolkit:NumericUpDown Name="NUD_Survival" Value="{Binding Path=HitsToSurvive, Mode=TwoWay}" Margin="4,2" Grid.Column="2" Grid.Row="3" DecimalPlaces="1" MinWidth="50" Maximum="10" Increment="0.1" />
+                    <Slider Grid.Column="1" Grid.Row="3" Margin="4,2" Value="{Binding Path=HitsToSurvive, Mode=TwoWay}" Minimum="{Binding ElementName=NUD_Survival, Path=Minimum}" Maximum="{Binding ElementName=NUD_Survival, Path=Maximum}" LargeChange="{Binding ElementName=NUD_Survival, Path=Increment}" />
 
+                    <!-- Burst Weight -->
+                    <TextBlock Text="Burst:" Grid.Row="4" Margin="4,2" VerticalAlignment="Center"/>
+                    <inputToolkit:NumericUpDown Name="NUD_Burst" Value="{Binding Path=BurstWeight, Mode=TwoWay}" Margin="4,2" Grid.Column="2" Grid.Row="4" DecimalPlaces="1" MinWidth="50" Maximum="10" Increment="0.1" />
+                    <Slider Grid.Column="1" Grid.Row="4" Margin="4,2" Value="{Binding Path=BurstWeight, Mode=TwoWay}" Minimum="{Binding ElementName=NUD_Burst, Path=Minimum}" Maximum="{Binding ElementName=NUD_Burst, Path=Maximum}" LargeChange="{Binding ElementName=NUD_Burst, Path=Increment}" />
+
+                    <!-- Threat Weight -->
                     <TextBlock Text="Threat:" Grid.Row="5" VerticalAlignment="Center" Margin="4,2"/>
                     <inputToolkit:NumericUpDown Name="NUD_Threat" Value="{Binding Path=ThreatWeight, Mode=TwoWay}" Margin="4,2" Grid.Column="2" Grid.Row="5" DecimalPlaces="1" MinWidth="50" Maximum="50" Increment="0.1" />
                     <ComboBox Margin="2" Grid.Column="1" Grid.Row="5" SelectedItem="{Binding Path=ThreatWeight, Converter={StaticResource ThreatValueConverter}, Mode=TwoWay}">
@@ -77,23 +75,19 @@
                         <System:String>Crazy About Threat</System:String>
                         <System:String>Custom...</System:String>
                     </ComboBox>
-                    <!--<Slider Grid.Column="1" Grid.Row="5" Margin="4,2" Value="{Binding Path=ThreatWeight, Mode=TwoWay}" Minimum="{Binding ElementName=NUD_Threat, Path=Minimum}" Maximum="{Binding ElementName=NUD_Threat, Path=Maximum}" LargeChange="{Binding ElementName=NUD_Threat, Path=Increment}" />-->
 
-                    <TextBlock Text="Burst:" Grid.Row="6" Margin="4,2" VerticalAlignment="Center"/>
-                    <inputToolkit:NumericUpDown Name="NUD_Burst" Value="{Binding Path=BurstWeight, Mode=TwoWay}" Margin="4,2" Grid.Column="2" Grid.Row="6" DecimalPlaces="1" MinWidth="50" Maximum="10" Increment="0.1" />
-                    <Slider Grid.Column="1" Grid.Row="6" Margin="4,2" Value="{Binding Path=BurstWeight, Mode=TwoWay}" Minimum="{Binding ElementName=NUD_Burst, Path=Minimum}" Maximum="{Binding ElementName=NUD_Burst, Path=Maximum}" LargeChange="{Binding ElementName=NUD_Burst, Path=Increment}" />
+                    <!-- Vengeance Weight -->
+                    <TextBlock Text="Vengeance:" Grid.Row="6" VerticalAlignment="Center" Margin="4,2"/>
+                    <inputToolkit:NumericUpDown Name="NUD_Vengeance" Value="{Binding Path=VengeanceWeight, Mode=TwoWay}" Margin="4,2" Grid.Column="2" Grid.Row="6" DecimalPlaces="1" MinWidth="50" Maximum="10" Increment="0.1" />
+                    <Slider Grid.Column="1" Grid.Row="6" Margin="4,2" Value="{Binding Path=VengeanceWeight, Mode=TwoWay}" Minimum="{Binding ElementName=NUD_Vengeance, Path=Minimum}" Maximum="{Binding ElementName=NUD_Vengeance, Path=Maximum}" LargeChange="{Binding ElementName=NUD_Vengeance, Path=Increment}" />
 
-                    <TextBlock Text="Vengeance:" Grid.Row="7" VerticalAlignment="Center" Margin="4,2"/>
-                    <inputToolkit:NumericUpDown Name="NUD_Vengeance" Value="{Binding Path=VengeanceWeight, Mode=TwoWay}" Margin="4,2" Grid.Column="2" Grid.Row="7" DecimalPlaces="1" MinWidth="50" Maximum="10" Increment="0.1" />
-                    <Slider Grid.Column="1" Grid.Row="7" Margin="4,2" Value="{Binding Path=VengeanceWeight, Mode=TwoWay}" Minimum="{Binding ElementName=NUD_Vengeance, Path=Minimum}" Maximum="{Binding ElementName=NUD_Vengeance, Path=Maximum}" LargeChange="{Binding ElementName=NUD_Vengeance, Path=Increment}" />
+                    <TextBlock Text="Other Stats:" FontWeight="Bold" Grid.Row="7" VerticalAlignment="Center" Margin="4,2" Grid.ColumnSpan="3"/>
 
-                    <TextBlock Text="Other Stats:" FontWeight="Bold" Grid.Row="8" VerticalAlignment="Center" Margin="4,2" Grid.ColumnSpan="3"/>
+                    <TextBlock Text="Overhealing %:" Grid.Row="8" Margin="4,2" VerticalAlignment="Center" />
+                    <inputToolkit:NumericUpDown Name="NUD_OverHealing" Value="{Binding Path=pOverHealing, Mode=TwoWay, Converter={StaticResource PercentConverter}}" Margin="4,2" Grid.Column="2" Grid.Row="8" MinWidth="50" DecimalPlaces="1" />
+                    <Slider Grid.Column="1" Grid.Row="8" Margin="4,2" Value="{Binding Path=pOverHealing, Mode=TwoWay, Converter={StaticResource PercentConverter}}" Minimum="{Binding ElementName=NUD_OverHealing, Path=Minimum}" Maximum="{Binding ElementName=NUD_OverHealing, Path=Maximum}" LargeChange="{Binding ElementName=NUD_OverHealing, Path=Increment}" />
 
-                    <TextBlock Text="Overhealing %:" Grid.Row="9" Margin="4,2" VerticalAlignment="Center" />
-                    <inputToolkit:NumericUpDown Name="NUD_OverHealing" Value="{Binding Path=pOverHealing, Mode=TwoWay, Converter={StaticResource PercentConverter}}" Margin="4,2" Grid.Column="2" Grid.Row="9" MinWidth="50" DecimalPlaces="1" />
-                    <Slider Grid.Column="1" Grid.Row="9" Margin="4,2" Value="{Binding Path=pOverHealing, Mode=TwoWay, Converter={StaticResource PercentConverter}}" Minimum="{Binding ElementName=NUD_OverHealing, Path=Minimum}" Maximum="{Binding ElementName=NUD_OverHealing, Path=Maximum}" LargeChange="{Binding ElementName=NUD_OverHealing, Path=Increment}" />
-
-                    <TextBlock TextWrapping="Wrap" Grid.Row="10" Margin="2" Grid.ColumnSpan="3" FontSize="10"
+                    <TextBlock TextWrapping="Wrap" Grid.Row="9" Margin="2" Grid.ColumnSpan="3" FontSize="10"
                                Text="Note that many of TankDK's stats are based on Boss Content. Please see the Boss Handler (next to Options in the Tabs above) for additional Fight Related settings you can adjust.&#x0a;&#x0a;A Fresh 85 should use An Easy Boss to start and once some gear has been gathered to appropriately defend against that, move on to The Average Boss. More details on this can be found on the Boss Handler Pane and in the Documentation of Rawr's website."/>
                 </Grid>
             </sdk:TabItem>

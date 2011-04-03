@@ -3,49 +3,16 @@ using System.Collections.Generic;
 using Rawr.DK;
 
 namespace Rawr.TankDK {
-    // Reminder: This is the character totals based on all gear and talents.  Apply the weights here.
-    public enum CalculationType
-    {
-        SMT = 0,
-        Burst = 1,
-    }
-
-    public enum SMTSubPoints
-    {
-        Mitigation,
-        Survivability,
-        Burst,
-        Threat
-    }
-
-    public enum BurstSubPoints
-    {
-        Burst,
-        Reaction,
-        Threat
-    }
-
     public  class CharacterCalculationsTankDK : CharacterCalculationsBase 
     {
-        public CalculationType cType;
-        public override float OverallPoints 
-        { 
-            get 
-            {
-                if (cType == CalculationType.Burst)
-                {
-                    return (BurstTime + ReactionTime);
-                }
-                else
-                {
-                    return (Mitigation * MitigationWeight)
-                         + (Survivability * SurvivalWeight)
-                         + (Burst * BurstWeight)
-                         + (Threat * ThreatWeight);
-                }
-            } 
-            set 
-            { }
+        public override float OverallPoints {
+            get {
+                return Mitigation
+                     + Survivability
+                     + Burst * BurstWeight
+                     + Threat * ThreatWeight;
+            }
+            set { }
         }
 
         public StatsDK BasicStats { get; set; }
@@ -59,15 +26,8 @@ namespace Rawr.TankDK {
         public float PhysicalSurvival { get; set; }
         public float BleedSurvival { get; set; }
         public float MagicSurvival { get; set; }
-        public float Survivability { 
-            get
-            {
-                // Moving this to out here.
-                return PhysicalSurvival + BleedSurvival + MagicSurvival;
-            }
-        }
+        public float Survivability { get { return PhysicalSurvival + BleedSurvival + MagicSurvival; } }
         public float Burst { get; set; }
-        public float SurvivalPointsRaw { get; set; }
 
         public float CritMitigation { get; set; }
         public float AvoidanceMitigation { get; set; }
@@ -79,49 +39,34 @@ namespace Rawr.TankDK {
         public float Mitigation { get; set; }
         public float Threat { get; set; }
 
-        public float SurvivalWeight { get; set; }
+        public float HitsToSurvive { get; set; }
         public float BurstWeight { get; set; }
-        public float MitigationWeight { get; set; }
         public float ThreatWeight { get; set; }
 
         public float MagicDamageReduction { get; set; }
+        public float MagicDamageReductedByAmount { get; set; }
         public float ArmorDamageReduction { get; set; }
         public float Armor { get; set; }
 
-        /// <summary>
-        /// Chance to be crit.
-        /// </summary>
+        /// <summary>Chance to be crit</summary>
         public float Crit { get; set; }
-        public float Resilience { get; set; }
 
         public float TargetMiss { get; set; }
         public float TargetDodge { get; set; }
         public float TargetParry { get; set; }
 
-        public float BurstTime { get; set; }
-        public float ReactionTime { get; set; }
-
         public float Expertise { get; set; }
 
         #region Subpoints
         private float[] _subPoints = new float[] { 0f, 0f, 0f, 0f };
-        public override float[] SubPoints 
-        {
-            get 
-            {
-                if (cType == CalculationType.Burst)
-                {
-                    return new float[] { BurstTime, ReactionTime, 0f, 0f};
-                }
-                else
-                {
-                    return new float[] {
-                        Mitigation * MitigationWeight,
-                        Survivability * SurvivalWeight,
-                        Burst * BurstWeight,
-                        Threat * ThreatWeight
-                    };
-                }
+        public override float[] SubPoints {
+            get {
+                return new float[] {
+                    Mitigation,
+                    Survivability,
+                    Burst * BurstWeight,
+                    Threat * ThreatWeight
+                };
             }
             set { _subPoints = value; }
         }
@@ -154,43 +99,21 @@ namespace Rawr.TankDK {
         public float BShield { get; set; }        
         #endregion
 
-        public override float GetOptimizableCalculationValue(string calculation) {
-            switch (calculation) {
-                case "Chance to be Crit": return Crit; // Def cap chance to be critted by boss.  For optimization this needs to be  <= 0
-                case "Avoidance %": return (Miss + Parry + Dodge); // Another duplicate math location?
-                case "% Chance to Hit": return (1f - TargetMiss) * 100.0f; // +Hit related
-                case "Target Parry %": return TargetParry * 100.0f; // Expertise related.
-                case "Target Dodge %": return TargetDodge * 100.0f; // Expertise related.
-                case "Damage Reduction %": return ArmorDamageReduction * 100.0f; // % Damage reduction by Armor
-                case "Armor": return Armor; // Raw Armor
-                case "Health": return BasicStats.Health;
-                case "Hit Rating": return BasicStats.HitRating; // Raw Hit Rating
-                case "Burst Time": return BurstTime;
-                case "Reaction Time": return ReactionTime;
-                case "Resilience": return Resilience;
-                case "Spell Penetration": return BasicStats.SpellPenetration;
-                case "DPS": return DPS;
-
-                default: return 0.0f;
-            }
-        }
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues() {
             Dictionary<string, string> dict = new Dictionary<string, string>();
 
-            dict["Miss"] = Miss.ToString("P2") + "*" + SEStats.Miss.ToString("P2") + " after special effects";
-            dict["Dodge"] = Dodge.ToString("P2") + "*" + BasicStats.DodgeRating.ToString("F0") + " Rating - " + SEStats.Dodge.ToString("P2") + " after special effects";
-            dict["Parry"] = Parry.ToString("P2") + "*" + BasicStats.ParryRating.ToString("F0") + " Rating - " + SEStats.Parry.ToString("P2") + " after special effects";
+            dict["Miss" ] = Miss.ToString("P2")  + "*" + SEStats.Miss.ToString("P2") + " after special effects";
+            dict["Dodge"] = Dodge.ToString("P2") + " : " + BasicStats.DodgeRating.ToString("F0") + "*" + SEStats.DodgeRating.ToString("F0") + " Rating - " + SEStats.Dodge.ToString("P2") + " after special effects";
+            dict["Parry"] = Parry.ToString("P2") + " : " + BasicStats.ParryRating.ToString("F0") + "*" + SEStats.ParryRating.ToString("F0") + " Rating - " + SEStats.Parry.ToString("P2") + " after special effects";
             dict["Armor Damage Reduction"] = ArmorDamageReduction.ToString("P2");
             dict["Magic Damage Reduction"] = MagicDamageReduction.ToString("P2")
-                + string.Format("*Arcane: {0:0}\n", BasicStats.ArcaneResistance)
-                + string.Format("Fire: {0:0}\n", BasicStats.FireResistance)
-                + string.Format("Frost: {0:0}\n", BasicStats.FrostResistance)
-                + string.Format("Nature: {0:0}\n", BasicStats.NatureResistance)
+                + string.Format("*Arcane: {0:0}\r\n", BasicStats.ArcaneResistance)
+                + string.Format("Fire: {0:0}\r\n", BasicStats.FireResistance)
+                + string.Format("Frost: {0:0}\r\n", BasicStats.FrostResistance)
+                + string.Format("Nature: {0:0}\r\n", BasicStats.NatureResistance)
                 + string.Format("Shadow: {0:0}", BasicStats.ShadowResistance);
 
             dict["Total Avoidance"] = (Miss + Parry + Dodge).ToString("P2"); // Another duplicate math location.
-            dict["Burst Time"] = String.Format("{0:0.0} sec", BurstTime);
-            dict["Reaction Time"] = String.Format("{0:0.0} sec", ReactionTime);
 
             dict["Health"] = BasicStats.Health.ToString("F0") + "*" + SEStats.Health.ToString("F0") + " after special effects";
             dict["Armor"] = BasicStats.Armor.ToString("F0") + "*" + SEStats.Armor.ToString("F0") + " after special effects";
@@ -219,21 +142,22 @@ namespace Rawr.TankDK {
             #endregion
 
             dict["Overall Points"] = OverallPoints.ToString("F1");
-            dict["Mitigation Points"] = String.Format("{0:0.0}", (Mitigation * MitigationWeight)) 
-                + string.Format("*CritMitigation:{0:0.0}\n", (CritMitigation * MitigationWeight))
-                + string.Format("Avoidance:{0:0.0}\n", (AvoidanceMitigation * MitigationWeight))
-                + string.Format("Armor:{0:0.0}\n", (ArmorMitigation * MitigationWeight))
-                + string.Format("DamageTaken:{0:0.0}\n", (DamageTakenMitigation * MitigationWeight))
-                + string.Format("Impedence:{0:0.0}\n", (ImpedenceMitigation * MitigationWeight))
-                + string.Format("Heals:{0:0.0}", (HealsMitigation * MitigationWeight)); // Modified Mitigation.
-            dict["Survival Points"] = String.Format("{0:0.0}", (Survivability * SurvivalWeight)) 
-                + string.Format("*Physical:{0:0.0}\n", (PhysicalSurvival * SurvivalWeight)) 
-                + string.Format("Bleed:{0:0.0}\n", (BleedSurvival * SurvivalWeight)) 
-                + string.Format("Magic:{0:0.0}", (MagicSurvival * SurvivalWeight)); // Modified Survival
-            dict["Burst Points"] = String.Format("{0:0.0}", (Burst * BurstWeight)); // Modified Burst
-            dict["Threat Points"] = String.Format("{0:0.0}", (Threat * ThreatWeight)); // Modified Threat
-
-            dict["Resilience"] = Resilience.ToString("F0");
+            dict["Mitigation Points"] = String.Format("{0:0.0}*"
+                    + "{1:000000.0} Crit Mitigation"
+                    + "\r\n{2:000000.0} Avoidance Mitigation"
+                    + "\r\n{3:000000.0} Armor Mitigation"
+                    + "\r\n{4:000000.0} Damage Taken Mitigation"
+                    + "\r\n{5:000000.0} Impedence Mitigation"
+                    + "\r\n{6:000000.0} Health Restoration Mitigation",
+                Mitigation, CritMitigation, AvoidanceMitigation, ArmorMitigation,
+                DamageTakenMitigation, ImpedenceMitigation, HealsMitigation);
+            dict["Survival Points"] = String.Format("{0:0.0}*"
+                + "{1:000000.0} Physical Survival"
+                + "\r\n{2:000000.0} Bleed Survival"
+                + "\r\n{3:000000.0} Magic Survival",
+                Survivability, PhysicalSurvival, BleedSurvival, MagicSurvival);
+            dict["Burst Points"] = String.Format("{0:0.0}", Burst * BurstWeight); // Modified Burst
+            dict["Threat Points"] = String.Format("{0:0.0}", Threat * ThreatWeight); // Modified Threat
 
             dict["Target Miss"] = (TargetMiss).ToString("P1");
             dict["Target Dodge"] = (TargetDodge).ToString("P1");
@@ -247,6 +171,25 @@ namespace Rawr.TankDK {
             dict["Blood Shield"] = TotalBShield.ToString("F0") + "*" + BShield.ToString("F0") + " average shield size";
 
             return dict;
+        }
+
+        public override float GetOptimizableCalculationValue(string calculation)
+        {
+            switch (calculation)
+            {
+                case "Chance to be Crit": return Crit; // Def cap chance to be critted by boss. For optimization this needs to be  <= 0
+                case "Avoidance %": return (Miss + Parry + Dodge); // Another duplicate math location?
+                case "% Chance to Hit": return (1f - TargetMiss) * 100.0f; // +Hit related
+                case "Target Parry %": return TargetParry * 100.0f; // Expertise related.
+                case "Target Dodge %": return TargetDodge * 100.0f; // Expertise related.
+                case "Damage Reduction %": return ArmorDamageReduction * 100.0f; // % Damage reduction by Armor
+                case "Armor": return Armor; // Raw Armor
+                case "Health": return BasicStats.Health;
+                case "Hit Rating": return BasicStats.HitRating; // Raw Hit Rating
+                case "DPS": return DPS;
+
+                default: return 0.0f;
+            }
         }
     }
 }

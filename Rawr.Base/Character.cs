@@ -2702,12 +2702,9 @@ namespace Rawr
 
         public void RecalculateSetBonuses()
         {
-            if (SetBonusCount == null)
-            {
+            if (SetBonusCount == null) {
                 SetBonusCount = new Dictionary<string, int>();
-            }
-            else
-            {
+            } else {
                 SetBonusCount.Clear();
             }
             //Compute Set Bonuses

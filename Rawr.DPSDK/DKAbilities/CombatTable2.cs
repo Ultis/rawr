@@ -95,11 +95,9 @@ namespace Rawr.DK
         public DKCombatTable(Character c, StatsDK stats, CharacterCalculationsBase calcs, ICalculationOptionBase calcOpts, BossOptions bossOpts)
         {
             m_CState = new CombatState();
-            if (c != null)
-            {
-                if (c.DeathKnightTalents == null)
-                    c.DeathKnightTalents = new DeathKnightTalents();
-                m_CState.m_Talents = (DeathKnightTalents)c.DeathKnightTalents.Clone();
+            if (c != null) {
+                m_CState.m_Char = c;
+                m_CState.m_Talents = c.DeathKnightTalents;
                 m_CState.m_Spec = CalculationsDPSDK.GetSpec(c.DeathKnightTalents);
             }
             m_CState.m_Stats = stats;
@@ -107,22 +105,17 @@ namespace Rawr.DK
             m_Calcs = calcs as CharacterCalculationsDPSDK;
             m_Opts = calcOpts as CalculationOptionsDPSDK;
             m_CState.m_Presence = Presence.Frost;
-            if (calcOpts != null && m_Opts == null)
-            {
-//                throw new Exception("Opts not converted properly.");
+            if (calcOpts != null && m_Opts == null) {
+                //throw new Exception("Opts not converted properly.");
                 m_Opts = new CalculationOptionsDPSDK();
                 m_Opts.presence = Presence.Frost;
             }
-            try
-            {
-                m_CState.m_Presence = m_Opts.presence;
-            }
-            catch
-            { // pass  stay w/ default. 
-            }
+            try { m_CState.m_Presence = m_Opts.presence; } catch { } // pass  stay w/ default
             m_BO = bossOpts;
             if (m_BO == null) { m_BO = new BossOptions(); }
-            m_CState.m_NumberOfTargets = m_BO.Targets.Count;
+            // JOTHAY TODO: Kind of an Ugly Hack to do this, but it will give them a value
+            m_CState.m_NumberOfTargets = m_BO.MultiTargs ? m_BO.DynamicCompiler_MultiTargs.GetAverageTargetGroupSize(m_BO.BerserkTimer) : 1f;
+            //
             m_CState.m_bAttackingFromBehind = m_BO.InBack;
 
             SetupExpertise(c);

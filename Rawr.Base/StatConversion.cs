@@ -495,6 +495,10 @@ namespace Rawr
         {
             return (baseValue * (1f + multiplier));
         }
+        public static float ApplyInverseMultiplier(float baseValue, float multiplier)
+        {
+            return (baseValue * (1f - multiplier));
+        }
         #endregion
 
         #region Functions for More complex things.

@@ -714,9 +714,9 @@ namespace Rawr.DPSDK
                 // There are some multi-level special effects that need to be factored in.
                 foreach (SpecialEffect ee in e.Stats.SpecialEffects())
                 {
-                    e.Stats = se.getSpecialEffects(ee);
+                    e.Stats = se.getSpecialEffects(ee, c.BossOptions.BerserkTimer);
                 }
-                statSE.Accumulate(se.getSpecialEffects(e));
+                statSE.Accumulate(se.getSpecialEffects(e, c.BossOptions.BerserkTimer));
             }
 
             foreach (SpecialEffect effect in s.SpecialEffects())
@@ -724,7 +724,7 @@ namespace Rawr.DPSDK
                 if (HasRelevantStats(effect.Stats))
                 {
                     se = new StatsSpecialEffects(t, rot, c.BossOptions);
-                    s.Accumulate(se.getSpecialEffects(effect));
+                    s.Accumulate(se.getSpecialEffects(effect, c.BossOptions.BerserkTimer));
                 }
             }
         }
@@ -1824,7 +1824,7 @@ namespace Rawr.DPSDK
         public static readonly SpecialEffect _SE_PillarOfFrost = new SpecialEffect(Trigger.Use, new Stats() { BonusStrengthMultiplier = .2f }, 20f, 60);
         public static readonly SpecialEffect[] _SE_DRW = {
             new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.5f, Parry = .20f }, 12f, 1.5f * 60f), // Normal
-            new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.5f, Parry = .20f, ThreatIncreaseMultiplier = .5f }, 12f, 1.5f * 60f), // Glyphed
+            new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.5f, Parry = .20f, ThreatIncreaseMultiplier = 0.50f }, 12f, 1.5f * 60f), // Glyphed
         };
         #endregion
     }
