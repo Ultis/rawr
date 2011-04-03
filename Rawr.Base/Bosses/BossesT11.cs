@@ -238,6 +238,12 @@ namespace Rawr.Bosses
                     // takes about 2 seconds to move out of the Pillar
                     Duration = 2000f,
                 });
+                this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS]
+                    = this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer]
+                    = this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer]
+                    = this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer]
+                    = true;
                 #endregion
                 #region Parasites
                 // Spawns 9 Parasites
@@ -253,7 +259,7 @@ namespace Rawr.Bosses
                 // If player touches a Parasite they get a dot that does damage
                 this[i].Attacks.Add(new Attack
                 {
-                    Name = "Parasitc Infection",
+                    Name = "Parasitic Infection",
                     AttackType = ATTACK_TYPES.AT_RANGED,
                     DamageType = ItemDamageType.Fire,
                     DamagePerHit = (12025f + 13975f) / 2f,
@@ -279,16 +285,23 @@ namespace Rawr.Bosses
                     Breakable = true,
                     Frequency = 30f,
                 });
-                // Kiting Tank is moving all the time on heroic
-                /*                this[i].Moves.Add(new Impedance
-                                {
-                                    Chance = new float[] { 0f, 0f, 1f, 1f }[i] / Max_Players[i],
-                                    Duration = new float[] { 0f, 0f, BerserkTimer[i], BerserkTimer[i] }[i] * 1000f,
-                                    Breakable = false,
-                                    Frequency = new float[] { 0f, 0f, BerserkTimer[i] - 1, BerserkTimer[i] - 1 }[i]
-                                });
-                                this[i].Moves[this[i][this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank] = true;
-                 */
+                this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS]
+                    = this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer]
+                    = this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer]
+                    = this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer]
+                    = true;
+                if (i == 2 || i == 3)
+                {
+                    // Kiting Tank is moving all the time on heroic
+                    this[i].Moves.Add(new Impedance
+                    {
+                        Chance = new float[] { 0f, 0f, 1f, 1f }[i] / Max_Players[i],
+                        Duration = new float[] { 0f, 0f, BerserkTimer[i], BerserkTimer[i] }[i] * 1000f,
+                        Breakable = false,
+                        Frequency = new float[] { 0f, 0f, BerserkTimer[i] - 1, BerserkTimer[i] - 1 }[i]
+                    });
+                    this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank] = true;
+                }
                 #endregion
                 #region Magma Spit
                 this[i].Attacks.Add(new Attack
@@ -338,6 +351,7 @@ namespace Rawr.Bosses
                     AttackType = ATTACK_TYPES.AT_MELEE,
                     DamagePerHit = new float[] { (110464f + 128377f), (132557f + 154052f), (132557f + 154052f), (154649f + 179728f) }[i] / 2f,
                     DamageType = ItemDamageType.Physical,
+                    IsDoT = true,
                     // should not last more than 5 seconds
                     Duration = 5f,
                     TickInterval = 5f,
@@ -358,13 +372,17 @@ namespace Rawr.Bosses
                     Frequency = 90f,
                     Stats = new Stats() { BonusArmorMultiplier = -.5f }
                 });
+                this[i].BuffStates[this[i].BuffStates.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].BuffStates[this[i].BuffStates.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                    = true;
 
                 // While Mangle is used, half the room is hit with Ignition that affects everyone
                 // Assume 3 seconds to get out
                 this[i].Attacks.Add(new Attack
                 {
                     Name = "Ignition",
-                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    IsDoT = true,
                     DamagePerHit = (23125f + 26875f) / 2f,
                     DamageType = ItemDamageType.Physical,
                     // should not last more than 10 seconds
@@ -389,6 +407,15 @@ namespace Rawr.Bosses
                     Breakable = true,
                     Frequency = this[i].Attacks[this[i].Attacks.Count - 1].AttackSpeed,
                 });
+                this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS]
+                    = this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer]
+                    = this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer]
+                    = this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer]
+                    = this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                    = this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.MeleeDPS]
+                    = true;
                 #endregion
                 #region Exposed Head
                 // When the exposed head is out, you deal 100% extra damage
@@ -405,14 +432,14 @@ namespace Rawr.Bosses
                 #region Blazing Bone Construct
                 if (i == 2 || i == 3)
                 {
+                    float timer = BerserkTimer[i] / ((BerserkTimer[i] * .7f) / 30f);
                     this[i].Targets.Add(new TargetGroup
                     {
                         NearBoss = true,
                         NumTargs = 1f,
                         Chance = new float[] { 0f, 0f, 1f, 1f }[i],
-                        // TODO:
                         // does not spawn in P3
-                        Frequency = new float[] { 0f, 0f, 30f, 30f }[i],
+                        Frequency = new float[] { 0f, 0f, timer, timer }[i],
                         Duration = new float[] { 0f, 0f, 30f, 30f }[i],
                     });
                     this[i].Attacks.Add(new Attack
@@ -1043,11 +1070,11 @@ namespace Rawr.Bosses
             #region Basics
             // Onyxia = 6,600,000 / 24,000,000 / 9,017,400 / 31,500,000
             // Nefarion = 28,500,000 / 98000000 / 36,316,000 / 126,815,650
-            Health = new float[] { (6600000f + 25940000f), (24736896f + 98775800f), (9240000f + 36316000f), (34786000f + 179300000f) };
+            Health = new float[] { (7043144f + 28516144f), (24736896f + 98775800f), (9240000f + 36316000f), (34786260f + 179342496f) };
             MobType = (int)MOB_TYPES.DRAGONKIN;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
-            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
+            InBackPerc_Melee = new double[] { 0.65f, 0.65f, 0.65f, 0.65f };
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
             Max_Players = new int[] { 10, 25, 10, 25 };
             // 1 tank to tank Oyxia, 1 for kiting (though a hunter or kiting class can do this), and 1 for Nafarion
@@ -1059,10 +1086,280 @@ namespace Rawr.Bosses
             //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
                 for (int i = 0; i < 4; i++)
-            {
-                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+                {
+                    this[i].Attacks.Add(new Attack
+                    {
+                        Name = "Nefarian's Melee",
+                        DamageType = ItemDamageType.Physical,
+                        DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
+                        MaxNumTargets = 1f,
+                        AttackSpeed = 2.0f,
+                        AttackType = ATTACK_TYPES.AT_MELEE,
+                        IsTheDefaultMelee = true,
 
-                // Heroic Only
+                        Dodgable = true,
+                        Missable = true,
+                        Parryable = true,
+                    });
+                    this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                        = true;
+
+                    #region Onyxia
+                    // Onyxia is only up for 2 minutes
+                    this[i].Attacks.Add(new Attack
+                    {
+                        Name = "Onyxia's Melee",
+                        DamageType = ItemDamageType.Physical,
+                        DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
+                        MaxNumTargets = 1f,
+                        AttackSpeed = BerserkTimer[i] / ( ( BerserkTimer[i] * 0.2f ) / 2.0f ),
+                        AttackType = ATTACK_TYPES.AT_MELEE,
+
+                        Dodgable = true,
+                        Missable = true,
+                        Parryable = true,
+                    });
+                    this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                        = true;
+
+                    this[i].Attacks.Add(new Attack
+                    {
+                        Name = "Onxyia's Shadowflame Breath",
+                        DamageType = ItemDamageType.Shadow,
+                        DamagePerHit = 35000f,
+                        IsDoT = true,
+                        Duration = 1.5f,
+                        TickInterval = 0.5f,
+                        // Should only hit the tank
+                        MaxNumTargets = 1f,
+                        AttackType = ATTACK_TYPES.AT_MELEE,
+                        AttackSpeed = BerserkTimer[i] / ((BerserkTimer[i] * 0.2f) / 25.0f)
+                    });
+                    this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                        = true;
+
+                    this[i].Attacks.Add(new Attack
+                    {
+                        Name = "Lightning Discharge",
+                        DamageType = ItemDamageType.Nature,
+                        DamagePerHit = new float[] { (23400f + 24600f), (23400f + 24600f), (31200f + 32800f), (31200f + 32800f) }[i] / 2f,
+                        MaxNumTargets = Max_Players[i],
+                        AttackSpeed = BerserkTimer[i] / ((BerserkTimer[i] * 0.2f) / 30.0f),
+                        AttackType = ATTACK_TYPES.AT_AOE,
+                    });
+                    // Only people who should be getting hit by this is range and healers
+                    this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer]
+                        = true;
+
+                    this[i].Attacks.Add(new Attack
+                    {
+                        Name = "Onyia's Tail Lash",
+                        DamageType = ItemDamageType.Physical,
+                        DamagePerHit = (43750f + 56250f) / 2f,
+                        MaxNumTargets = Max_Players[i],
+                        AttackSpeed = BerserkTimer[i] / ((BerserkTimer[i] * 0.2f) / 30.0f),
+                        AttackType = ATTACK_TYPES.AT_AOE,
+                    });
+                    // happens about the same time as Lightning Discharge
+                    this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MeleeDPS]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer]
+                        = true;
+                    // Stuns users for 2 seconds
+                    this[i].Stuns.Add(new Impedance
+                    {
+                        Chance = 1f,
+                        Duration = 2000f,
+                        Breakable = false,
+                        Frequency = this[i].Attacks[this[i].Attacks.Count - 1].AttackSpeed,
+                    });
+                    this[i].Stuns[this[i].Stuns.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer]
+                        = this[i].Stuns[this[i].Stuns.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS]
+                        = this[i].Stuns[this[i].Stuns.Count - 1].AffectsRole[PLAYER_ROLES.MeleeDPS]
+                        = this[i].Stuns[this[i].Stuns.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer]
+                        = this[i].Stuns[this[i].Stuns.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer]
+                        = true;
+
+                    // Melee needs to move from Onyxia to Nefarian
+                    this[i].Moves.Add(new Impedance
+                    {
+                        Chance = 1f,
+                        Frequency = BerserkTimer[i] - 1f,
+                        Duration = 8f * 1000f,
+                        Breakable = false,
+                    });
+                    this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.MeleeDPS] = true;
+                  #endregion
+                    #region Animated Bone Warrior
+                    // these are up for about half of the fight
+                    this[i].Targets.Add(new TargetGroup
+                    {
+                        NumTargs = 9f,
+                        NearBoss = false,
+                        Frequency = BerserkTimer[i] - 1f,
+                        Chance = 1f,
+                        Duration = BerserkTimer[i] * 0.5f * 1000f,
+                    });
+                    this[i].Attacks.Add(new Attack
+                    {
+                        Name = "Animated Bone Warrior Melee",
+                        DamageType = ItemDamageType.Physical,
+                        // these hit for about 10k damage
+                        DamagePerHit = (BossHandler.StandardMeleePerHit[(int)this[i].Content]) * 0.1f,
+                        MaxNumTargets = 1f,
+                        // Need to finalize the attack speed in relation to 9 adds hitting at the same time
+                        AttackSpeed = 3f, //BerserkTimer[i] / ( ( BerserkTimer[i] * 0.5f ) / 2.0f ),
+                        AttackType = ATTACK_TYPES.AT_MELEE,
+                        IsTheDefaultMelee = true,
+
+                        Dodgable = true,
+                        Missable = true,
+                        Parryable = true,
+                    });
+                    this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                        = true;
+
+                    // Off tank tanks these for half the time
+                    // Tertiary tank tanks for 70% of the time
+                    this[i].Moves.Add(new Impedance
+                    {
+                        Duration = (BerserkTimer[i] * 0.5f) * 1000f,
+                        Chance = 1f,
+                        Frequency = BerserkTimer[i] - 1f,
+                        Breakable = false,
+                    });
+                    this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                        = true;
+                    this[i].Moves.Add(new Impedance
+                    {
+                        Duration = (BerserkTimer[i] * 0.7f) * 1000f,
+                        Chance = 1f,
+                        Frequency = BerserkTimer[i] - 1f,
+                        Breakable = false,
+                    });
+                    this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                        = true;
+
+                    #endregion
+                    #region Chromatic Prototype
+                    // Once Onxyia dies, allow for 8 seconds for everyone to get to their pillers
+                    // and another to get set up P3
+                    this[i].Moves.Add(new Impedance
+                    {
+                        Chance = 1f,
+                        Frequency = (BerserkTimer[i] * 0.5f) - 1f,
+                        Duration = 8f * 1000f,
+                        Breakable = false,
+                    });
+                    this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                        = this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer]
+                        = this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.MeleeDPS]
+                        = this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer]
+                        = this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                        = this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer]
+                        = this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS]
+                        = this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                        = true;
+
+                    // Only appear in P2
+                    // P2 lasts for 2 minutes
+                    this[i].Targets.Add(new TargetGroup
+                    {
+                        Chance = 1f,
+                        Duration = (2f * 60f) * 1000f,
+                        Frequency = BerserkTimer[i] - 1f,
+                        NearBoss = false,
+                        NumTargs = 3f,
+                    });
+                    this[i].Attacks.Add(new Attack
+                    {
+                        Name = "Blast Nova",
+                        DamageType = ItemDamageType.Fire,
+                        DamagePerHit = new float[] { (34800f + 45200f), (34800f + 45200f), (60900f + 79100f), (60900f + 79100f) }[i] / 2f,
+                        AttackSpeed = BerserkTimer[i] / ((BerserkTimer[i] * 0.2f) / 8.0f),
+                        MaxNumTargets = Max_Players[i],
+                        AttackType = ATTACK_TYPES.AT_AOE,
+                        Interruptable = true,
+                    });
+                    this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MeleeDPS]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                        = true;
+                    #endregion
+                    #region Crackle
+                    this[i].Attacks.Add(new Attack
+                    {
+                        Name = "Electrocute",
+                        DamageType = ItemDamageType.Nature,
+                        DamagePerHit = new float[] { (103950f + 106050f), (103950f + 106050f), (128700f + 131300f), (128700f + 131300f) }[i] / 2f,
+                        MaxNumTargets = Max_Players[i],
+                        AttackType = ATTACK_TYPES.AT_AOE,
+                        // Cast every 10% on Nefarian, so it's cast 9 times throughout the fight
+                        AttackSpeed = BerserkTimer[i] / 9f,
+                    });
+                    this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MeleeDPS]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                        = true;
+                    #endregion
+                    #region Nefarian
+                    this[i].Attacks.Add(new Attack
+                    {
+                        Name = "Nefarian's Shadowflame Breath",
+                        DamageType = ItemDamageType.Shadow,
+                        DamagePerHit = 35000f,
+                        IsDoT = true,
+                        TickInterval = 0.5f,
+                        Duration = 1.5f,
+                        // Should only hit the tank
+                        MaxNumTargets = 1f,
+                        AttackType = ATTACK_TYPES.AT_MELEE,
+                        AttackSpeed = BerserkTimer[i] / ((BerserkTimer[i] * 0.8f) / 25.0f)
+                    });
+                    this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                        = true;
+
+                    // Only casts this during Phase 2
+                    this[i].Attacks.Add(new Attack
+                    {
+                        Name = "Shadowflame Barrage",
+                        // Does fire and shadow damage
+                        DamageType = ItemDamageType.Shadow,
+                        DamagePerHit = (22500f + 27500f) / 2f,
+                        AttackType = ATTACK_TYPES.AT_AOE,
+                        MaxNumTargets = new float[] { 4f, 10f, 4f, 10f }[i],
+                        AttackSpeed = BerserkTimer[i] / ((BerserkTimer[i] * 0.2f) / 3.0f)
+                    });
+                    this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MeleeDPS]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS]
+                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                        = true;
+                    #endregion
+
+                    #region Heroic Only
+                    if ( i == 2 || i == 3 )
+                    {
                 // Mind Controlled part of
                 // Free Your Mind - Focus your will to break Nefarian's dominion over your actions.
                 // Stolen Power - Damage and healing of your next spell or ability is increased by 15%.
@@ -1077,6 +1374,43 @@ namespace Rawr.Bosses
                 // Does not target MT or OT
                 // Gain a 15% damage bonus for 15 seconds
                 // Does not affect Rip or Bane of Doom
+                        // DPS should take the full duration
+                        float timer = BerserkTimer[i] / ((BerserkTimer[i] * .7f) / 30f);
+                        this[i].Stuns.Add(new Impedance
+                        {
+                            Breakable = false,
+                            Chance = new float[] { 0f, 0f, 3f, 5f }[i] / (Max_Players[i] - Min_Tanks[i]),
+                            Duration = 10f * 1000f,
+                            Frequency = new float[] { 0f, 0f, timer, timer }[i],
+                        });
+                        this[i].Stuns[this[i].Stuns.Count - 1].AffectsRole[PLAYER_ROLES.MeleeDPS]
+                            = this[i].Stuns[this[i].Stuns.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS]
+                            = true;
+                        this[i].BuffStates.Add(new BuffState
+                        {
+                            Name = "Stolen Power",
+                            Duration = this[i].Stuns[this[i].Stuns.Count - 1].Duration,
+                            Frequency = this[i].Stuns[this[i].Stuns.Count - 1].Frequency,
+                            Breakable = this[i].Stuns[this[i].Stuns.Count - 1].Breakable,
+                            Chance = this[i].Stuns[this[i].Stuns.Count - 1].Chance,
+                            Stats = new Stats() { BonusDamageMultiplier = (0.05f * 46f) },
+                        });
+                        this[i].BuffStates[this[i].BuffStates.Count - 1].AffectsRole[PLAYER_ROLES.MeleeDPS]
+                            = this[i].BuffStates[this[i].BuffStates.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS]
+                            = true;
+
+                        // Healers should break out of it immediately and not generate any stolen Power
+                        this[i].Stuns.Add(new Impedance
+                        {
+                            Breakable = true,
+                            Chance = new float[] { 0f, 0f, 3f, 5f }[i] / (Max_Players[i] - Min_Tanks[i]),
+                            Duration = 1f * 1000f,
+                            Frequency = new float[] { 0f, 0f, timer, timer }[i],
+                        });
+                        this[i].Stuns[this[i].Stuns.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer]
+                            = this[i].Stuns[this[i].Stuns.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer]
+                            = this[i].Stuns[this[i].Stuns.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer]
+                            = true;
 
                 // Heroic Only
                 // Explosive Cinders - Burns several enemies at random, coating them in explosive residue that inflicts periodic fire damage. 
@@ -1086,6 +1420,73 @@ namespace Rawr.Bosses
                 //      spread the explosion to the rest of the piller group
                 // 3 people are targeted each time.
                 // Targeted players will also have to deal with lava damage (4k damage every second) [assume 5 seconds of in the lava]
+                        timer = BerserkTimer[i] / ((BerserkTimer[i] * .3f) / 25f);
+                        this[i].Attacks.Add(new Attack
+                        {
+                            Name = "Explosive Cinders",
+                            DamageType = ItemDamageType.Fire,
+                            DamagePerHit = new float[] { 0f, 0f, (42750f + 47250f), (42750f + 47250f) }[i] / 2f,
+                            IsDoT = true,
+                            DamagePerTick = new float[] { 0f, 0f, 2000f, 2000f }[i],
+                            TickInterval = 2f,
+                            Duration = 8f,
+                            MaxNumTargets = new float[] { 0f, 0f, 1f, 3f }[i],
+                            AttackType = ATTACK_TYPES.AT_AOE,
+                            AttackSpeed = new float[] { 0f, 0f, timer, timer }[i],
+                        });
+                        this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                            = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer]
+                            = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MeleeDPS]
+                            = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer]
+                            = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                            = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer]
+                            = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS]
+                            = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                            = true;
+                       
+                        // People have to jump in the lava and take lava damage if they are targeted by explosive cinders
+                        this[i].Attacks.Add(new Attack
+                        {
+                            Name = "Lava Damage",
+                            DamageType = ItemDamageType.Fire,
+                            DamagePerHit = 0f,
+                            IsDoT = true,
+                            DamagePerTick = new float[] { 0f, 0f, 4000f, 4000f }[i],
+                            TickInterval = 1f,
+                            Duration = 5f,
+                            MaxNumTargets = new float[] { 0f, 0f, 1f, 3f }[i],
+                            AttackType = ATTACK_TYPES.AT_AOE,
+                            AttackSpeed = new float[] { 0f, 0f, timer, timer }[i],
+                        });
+                        this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                            = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer]
+                            = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MeleeDPS]
+                            = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer]
+                            = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                            = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer]
+                            = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS]
+                            = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                            = true;
+
+                        this[i].Moves.Add(new Impedance
+                        {
+                            Breakable = false,
+                            Chance = this[i].Attacks[this[i].Attacks.Count - 1].MaxNumTargets / Max_Players[i],
+                            Frequency = this[i].Attacks[this[i].Attacks.Count - 1].AttackSpeed,
+                            Duration = this[i].Attacks[this[i].Attacks.Count - 1].Duration,
+                        });
+                        this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                            = this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer]
+                            = this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.MeleeDPS]
+                            = this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer]
+                            = this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                            = this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer]
+                            = this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS]
+                            = this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                            = true;
+
+                    }
+                    #endregion
             }
             #endregion
             #endregion
