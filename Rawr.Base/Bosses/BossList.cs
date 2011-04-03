@@ -94,7 +94,7 @@ namespace Rawr {
             Argaloth Argaloth = new Argaloth();
             // Blackwing Descent
             Magmaw Magmaw = new Magmaw();
-            OmnitronDefenseSystem OmnitronDefenseSystem = new OmnitronDefenseSystem();
+            OmnotronDefenseSystem OmnotronDefenseSystem = new OmnotronDefenseSystem();
             Maloriak Maloriak = new Maloriak();
             Atramedes Atramedes = new Atramedes();
             Chimaron Chimaron = new Chimaron();
@@ -192,7 +192,7 @@ namespace Rawr {
                 Argaloth[0], Argaloth[1],
                 // Blackwing Descent
                 Magmaw[0],Magmaw[1],Magmaw[2],Magmaw[3],
-                OmnitronDefenseSystem[0],OmnitronDefenseSystem[1],OmnitronDefenseSystem[2],OmnitronDefenseSystem[3],
+                OmnotronDefenseSystem[0],OmnotronDefenseSystem[1],OmnotronDefenseSystem[2],OmnotronDefenseSystem[3],
                 Maloriak[0], Maloriak[1], Maloriak[2], Maloriak[3],
                 Atramedes[0], Atramedes[1], Atramedes[2], Atramedes[3],
                 Chimaron[0], Chimaron[1], Chimaron[2], Chimaron[3],

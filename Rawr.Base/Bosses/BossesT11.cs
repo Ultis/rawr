@@ -22,6 +22,7 @@ namespace Rawr.Bosses
             #endregion
             #region Basics
             Health = new float[] { 21473000f, 64419000f, 0, 0 };
+            MobType = (int)MOB_TYPES.DEMON;
             // 5 minute Berserk timer
             BerserkTimer = new int[] { 5 * 60, 5 * 60, 0, 0 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 0, 0 };
@@ -189,6 +190,7 @@ namespace Rawr.Bosses
             #endregion
             #region Basics
             Health = new float[] { 33497880f, 104297000f, 46895800f, 120016400f };
+            MobType = (int)MOB_TYPES.BEAST;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 6 * 60, 6 * 60, 6 * 60, 6 * 60 };
             InBackPerc_Melee = new double[] { 0.70f, 0.70f, 0.70f, 0.70f };
@@ -400,7 +402,7 @@ namespace Rawr.Bosses
                     Stats = new Stats() { BonusDamageMultiplier = 1f },
                 });
                 #endregion
-                #region Blazing Skeletons
+                #region Blazing Bone Construct
                 if (i == 2 || i == 3)
                 {
                     this[i].Targets.Add(new TargetGroup
@@ -415,8 +417,8 @@ namespace Rawr.Bosses
                     });
                     this[i].Attacks.Add(new Attack
                     {
-                        Name = "Blazing Skeleton",
-                        DamagePerHit = BossHandler.StandardMeleePerHit[(int)Content[i]],
+                        Name = "Blazing Bone Construct",
+                        DamagePerHit = BossHandler.StandardMeleePerHit[(int)Content[i]] / 2f,
                         MaxNumTargets = new float[] { 1f, 1f, 1f, 1f }[i],
                         AttackSpeed = 2.0f,
                         AttackType = ATTACK_TYPES.AT_MELEE,
@@ -470,6 +472,7 @@ namespace Rawr.Bosses
                         AttackType = ATTACK_TYPES.AT_AOE,
                         DamageType = ItemDamageType.Fire,
                         DamagePerHit = new float[] { 0f, 0f, (118750f + 131250f), (118750f + 131250f) }[i] / 2f,
+                        MaxNumTargets = Max_Players[i],
                         AttackSpeed = 30f,
 
                         Interruptable = true,
@@ -536,19 +539,20 @@ namespace Rawr.Bosses
              */
         }
     }
-            
-    public class OmnitronDefenseSystem : MultiDiffBoss
+
+    public class OmnotronDefenseSystem : MultiDiffBoss
     {
-        public OmnitronDefenseSystem()
+        public OmnotronDefenseSystem()
         {
             // If not listed here use values from defaults
             #region Info
-            Name = "Omnitron Defense System";
+            Name = "Omnotron Defense System";
             Instance = "Blackwing Descent";
             Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 32209000f, 98790000f, 45080000f, 164000000f };
+            Health = new float[] { 32209000f, 98790000f, 45080000f, 126261240f };
+            MobType = (int)MOB_TYPES.MECHANICAL;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
@@ -694,6 +698,7 @@ namespace Rawr.Bosses
             #endregion
             #region Basics
             Health = new float[] { 24700000f, 86650000f, 34631000f, 121310000f };
+            MobType = (int)MOB_TYPES.DRAGONKIN;
             BerserkTimer = new int[] { 7 * 60, 12 * 60, 7 * 60, 12 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
@@ -806,6 +811,7 @@ namespace Rawr.Bosses
             #endregion
             #region Basics
             Health = new float[] { 32632000f, 97916880f, 45684800f, 103070400f };
+            MobType = (int)MOB_TYPES.DRAGONKIN;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
@@ -905,6 +911,7 @@ namespace Rawr.Bosses
             #endregion
             #region Basics
             Health = new float[] { 25939000f, 90616064f, 36246000f, 126776592f };
+            MobType = (int)MOB_TYPES.BEAST;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 450, 450 };
             SpeedKillTimer = new int[] { 6 * 60, 6 * 60, 6 * 60, 6 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
@@ -1037,6 +1044,7 @@ namespace Rawr.Bosses
             // Onyxia = 6,600,000 / 24,000,000 / 9,017,400 / 31,500,000
             // Nefarion = 28,500,000 / 98000000 / 36,316,000 / 126,815,650
             Health = new float[] { (6600000f + 25940000f), (24736896f + 98775800f), (9240000f + 36316000f), (34786000f + 179300000f) };
+            MobType = (int)MOB_TYPES.DRAGONKIN;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
@@ -1125,6 +1133,7 @@ namespace Rawr.Bosses
             // Dragons = 4,150,000 / 12,600,649 / 5,810,000 / 17,640,909
             // Halfus = 32,467,000 / 115,954,200 / 45,453,800 / 162,335,880
             Health = new float[] { 32467000f, 115954200f, 45453800f, 184667808f };
+            MobType = (int)MOB_TYPES.HUMANOID;
             BerserkTimer = new int[] { 6 * 60, 6 * 60, 6 * 60, 6 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
@@ -1220,6 +1229,7 @@ namespace Rawr.Bosses
             #region Basics
             // Health is split between both Valiona and Theralion
             Health = new float[] { 32209500f, 97916880f, 45952000f, 164912640f };
+            MobType = (int)MOB_TYPES.DRAGONKIN;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
             InBackPerc_Melee = new double[] { 0.97f, 0.97f, 0.97f, 0.97f };
@@ -1344,6 +1354,7 @@ namespace Rawr.Bosses
             // His current health going into P3 is whatever is the remainder of what is currently on all mobs put together
             // So for P3, it's best to keep everyone at or close to 25% as possible going into each phase.
             Health = new float[] { ((4724000f * 2f) + (6871000f * 2f)), ((14600000f * 2f) + (21900000f * 2f)), ((6613600f * 2f) + (9619400f * 2f)), ((24600000f * 2f) + (38000000f * 2f)) };
+            MobType = (int)MOB_TYPES.ELEMENTAL;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
@@ -1503,6 +1514,7 @@ namespace Rawr.Bosses
             #endregion
             #region Basics
             Health = new float[] { 33497000f, 101352560f, 47000000f, 146000000f };
+            MobType = (int)MOB_TYPES.HUMANOID;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
@@ -1633,6 +1645,7 @@ namespace Rawr.Bosses
             // you bring her to 30% to start P2
             // At the end of P2, she restors her health to 100%
             Health = new float[] { 46895800f * 1.3f, 128838000f * 1.3f, 0f, 0f };
+            MobType = (int)MOB_TYPES.DRAGONKIN;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 0, 0 };
             SpeedKillTimer = new int[] { 7 * 60, 7 * 60, 0, 0 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0, 0 };
@@ -1826,6 +1839,7 @@ namespace Rawr.Bosses
             // Anshal = 4,120,000 / 14,429,856 / 5,768,000 / 20,201,799
             // Nezir = 7,210,000 / 25,252,248 / 10,094,000 / 35,353,148
             Health = new float[] { (4120000f + 4120000f + 7210000f), (14429856f + 14429856f + 25252248f), (5768000f + 5768000f + 10094000f), (20201799f + 20201799f + 35353148f) };
+            MobType = (int)MOB_TYPES.ELEMENTAL;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
@@ -1943,6 +1957,7 @@ namespace Rawr.Bosses
             #endregion
             #region Basics
             Health = new float[] { 30100000f, 105200000f, 42140000f, 168300000f };
+            MobType = (int)MOB_TYPES.ELEMENTAL;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };

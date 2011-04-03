@@ -105,6 +105,7 @@
                         <System:String>Elemental</System:String>
                         <System:String>Giant</System:String>
                         <System:String>Humanoid</System:String>
+                        <System:String>Mechanical</System:String>
                         <System:String>Undead</System:String>
                     </ComboBox>
                     <TextBlock x:Name="LB_Duration" Margin="2" Text="Berserk Timer: *" TextWrapping="Wrap" Grid.Row="2" VerticalAlignment="Center" Grid.ColumnSpan="2" ToolTipService.ToolTip="Also used as the Fight Duration"/>

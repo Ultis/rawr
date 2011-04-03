@@ -1647,6 +1647,17 @@ namespace Rawr {
                 this[i].Health = value[i];
             }
         }
+        public int MobType
+        {
+            get { return this[0].MobType; }
+            set
+            {
+                this[0].MobType = value;
+                this[1].MobType = value;
+                this[2].MobType = value;
+                this[3].MobType = value;
+            }
+        }
         public int[] BerserkTimer
         {
             get
