@@ -516,7 +516,9 @@ namespace Rawr {
             bool isDot = attacks[0].IsDoT;
             float perhit = BossHandler.StandardMeleePerHit[(int)BossHandler.TierLevels.T11_25H], // start at normal attack, some bosses could be less and it will pick that up
                 pertick = BossHandler.StandardMeleePerHit[(int)BossHandler.TierLevels.T11_25H],
-                duration = 12*60,
+                duration = 20*60,
+                //phasestarttime = 0,
+                //phaseendtime = 20*60,
                 tickinterval = 0,
                 numtrg = maxPlayers,
                 atkspd = 0f;
@@ -552,6 +554,8 @@ namespace Rawr {
                     duration = Math.Min(duration, a.Duration);
                     tickinterval = Math.Max(tickinterval, a.TickInterval);
                 }
+                //phasestarttime = Math.Max(phasestarttime, a.PhaseStartTime); // this isn't actually gonna work
+                //phaseendtime = Math.Min(phaseendtime, a.PhaseEndTime);
                 numtrg = Math.Min(numtrg, a.MaxNumTargets);
                 atkspd = Math.Max(atkspd, a.AttackSpeed);
                 ATCounts[a.AttackType]++;
@@ -583,6 +587,8 @@ namespace Rawr {
                 MaxNumTargets = numtrg,
                 AttackSpeed = atkspd,
                 IsTheDefaultMelee = defaultmelee,
+                //PhaseStartTime = phasestarttime,
+                //PhaseEndTime = phaseendtime,
             };
             foreach (PLAYER_ROLES pr in ARCounts.Keys) {
                 toAdd.AffectsRole[pr] = ARCounts[pr] > 0;

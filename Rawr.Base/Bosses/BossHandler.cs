@@ -1532,7 +1532,7 @@ namespace Rawr {
                         // Basics
                         Name = "Generated Default Melee Attack",
                         DamageType = ItemDamageType.Physical,
-                        DamagePerHit = StandardMeleePerHit[(int)TierLevels.T11_10],
+                        DamagePerHit = StandardMeleePerHit[(int)TierLevels.T11_25],
                         DamageIsPerc = false,
                         MaxNumTargets = 1f,
                         AttackSpeed = 2.0f,
