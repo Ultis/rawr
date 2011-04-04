@@ -666,13 +666,13 @@ namespace Rawr.Cat
                         triggerIntervals[effect.Stats._rawSpecialEffectData[0].Trigger],
                         triggerChances[effect.Stats._rawSpecialEffectData[0].Trigger], 1f, calcOpts.Duration),
                         upTime);
-                }
-                else if (effect.Stats.MoteOfAnger > 0)
-                {
+                } else if (effect.Stats.MoteOfAnger > 0) {
                     // When in effect stats, MoteOfAnger is % of melee hits
                     // When in character stats, MoteOfAnger is average procs per second
                     statsProcs.MoteOfAnger = effect.Stats.MoteOfAnger * effect.GetAverageProcsPerSecond(triggerIntervals[effect.Trigger],
                         triggerChances[effect.Trigger], 1f, calcOpts.Duration) / effect.MaxStack;
+                } else {
+                    statsProcs.Accumulate(effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], 1f, calcOpts.Duration));
                 }
             }
 
