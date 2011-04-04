@@ -1,10 +1,6 @@
 ﻿using System.Collections.Generic;
-#if RAWR3 || RAWR4
 using System.Windows.Media;
 using System;
-#else
-using System.Drawing;
-#endif
 
 namespace Rawr.RestoSham
 {
@@ -13,47 +9,6 @@ namespace Rawr.RestoSham
     /// </summary>
     public static class Relevants
     {
-        public static string[] RelevantStats = { 
-            "Stamina",
-            "Intellect",
-            "SpellPower",
-            "CritRating",
-            "HasteRating",
-            "SpellCrit",
-            "SpellHaste",
-            "MasteryRating",
-            "Mana",
-            "Mp5",
-            "Earthliving",
-            "ManacostReduceWithin15OnHealingCast",
-            "ManaRestoreFromMaxManaPerSecond",
-            "Spirit",
-            "WaterShieldIncrease",
-            "CHHWHealIncrease",
-            "CHCTDecrease",
-            "RTCDDecrease",
-            "ManaRestoreFromMaxManaPerSecond",
-            "ManaRestore",
-            "BonusCritHealMultiplier",
-            "BonusHealingDoneMultiplier",
-            "BonusManaMultiplier",
-            "BonusSpiritMultiplier",
-            "BonusIntellectMultiplier",
-            "RestoSham2T9",
-            "RestoSham4T9",
-            "RestoSham2T10",
-            "RestoSham4T10",
-            "RestoShamRelicT9",
-            "RestoShamRelicT10",
-            "Healed",
-            "Hp5",
-            "MovementSpeed",
-            "SnareRootDurReduc",
-            "FearDurReduc",
-            "StunDurReduc",
-            "MovementSpeed",
-        };
-
         /// <summary>
         /// List of <see cref="ItemType"/> values that are relevant to this model.
         /// </summary>

@@ -90,66 +90,78 @@ namespace Rawr.RestoSham
         /// </returns>
         public override Stats GetRelevantStats(Stats stats)
         {
-            Stats relevantStats = new Stats();
-            if (stats == null)
-                return relevantStats;
-
-            Type statsType = typeof(Stats);
-
-            foreach (string relevantStat in Relevants.RelevantStats)
+            if (stats == null) { return new Stats(); }
+            Stats relevantStats = new Stats()
             {
-                float v = (float)statsType.GetProperty(relevantStat).GetValue(stats, null);
-                if (v > 0)
-                {
-                    statsType.GetProperty(relevantStat).SetValue(relevantStats, v, null);
+                Stamina = stats.Stamina,
+                Intellect = stats.Intellect,
+                SpellPower = stats.SpellPower,
+                CritRating = stats.CritRating,
+                HasteRating = stats.HasteRating,
+                SpellCrit = stats.SpellCrit,
+                SpellHaste = stats.SpellHaste,
+                MasteryRating = stats.MasteryRating,
+                Mana = stats.Mana,
+                Mp5 = stats.Mp5,
+                ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
+                Spirit = stats.Spirit,
+                ManaRestore = stats.ManaRestore,
+                BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
+                BonusHealingDoneMultiplier = stats.BonusHealingDoneMultiplier,
+                BonusManaMultiplier = stats.BonusManaMultiplier,
+                BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
+                BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
+                Healed = stats.Healed,
+                Hp5 = stats.Hp5,
+                MovementSpeed = stats.MovementSpeed,
+                SnareRootDurReduc = stats.SnareRootDurReduc,
+                FearDurReduc = stats.FearDurReduc,
+                StunDurReduc = stats.StunDurReduc,
+            };
+            foreach (SpecialEffect effect in stats.SpecialEffects()) {
+                if (HasRelevantStats(effect.Stats)) {
+                    relevantStats.AddSpecialEffect(effect);
                 }
             }
-
-            foreach (SpecialEffect effect in stats.SpecialEffects())
-            {
-                if (Relevants.RelevantTriggers.Contains(effect.Trigger))
-                {
-                    if (HasRelevantStats(effect.Stats))
-                        relevantStats.AddSpecialEffect(effect);
-                }
-            }
-
             return relevantStats;
         }
 
-        /// <summary>
-        /// Tests whether there are positive relevant stats in the Stats object.
-        /// </summary>
-        /// <param name="stats">The complete Stats object containing all stats.</param>
-        /// <returns>
-        /// True if any of the positive stats in the Stats are relevant.
-        /// </returns>
         public override bool HasRelevantStats(Stats stats)
         {
-            if (stats == null)
-                return false;
-
-            // Accumulate the "base" stats with the special effect stats.
-            Stats comparison = new Stats();
-            comparison.Accumulate(stats);
-            foreach (SpecialEffect effect in stats.SpecialEffects())
-            {
-                comparison.Accumulate(effect.Stats);
+            foreach (SpecialEffect effect in stats.SpecialEffects()) {
+                if (Relevants.RelevantTriggers.Contains(effect.Trigger)
+                    && HasWantedStats(effect.Stats))
+                { return true; }
             }
 
-            float statTotal = 0f;
-
-            // Loop over each relevant stat and get its value
-            Type statsType = typeof(Stats);
-            foreach (string relevantStat in Relevants.RelevantStats)
-            {
-                float v = (float)statsType.GetProperty(relevantStat).GetValue(comparison, null);
-                if (v > 0)
-                    statTotal += v;
-            }
-
-            // if statTotal > 0 then we have relevant stats
-            return statTotal > 0;
+            return HasWantedStats(stats);
+        }
+        public bool HasWantedStats(Stats stats) {
+            if (stats.Stamina != 0) { return true; }
+            if (stats.Intellect != 0) { return true; }
+            if (stats.SpellPower != 0) { return true; }
+            if (stats.CritRating != 0) { return true; }
+            if (stats.HasteRating != 0) { return true; }
+            if (stats.SpellCrit != 0) { return true; }
+            if (stats.SpellHaste != 0) { return true; }
+            if (stats.MasteryRating != 0) { return true; }
+            if (stats.Mana != 0) { return true; }
+            if (stats.Mp5 != 0) { return true; }
+            if (stats.Spirit != 0) { return true; }
+            if (stats.ManaRestoreFromMaxManaPerSecond != 0) { return true; }
+            if (stats.ManaRestore != 0) { return true; }
+            if (stats.BonusCritHealMultiplier != 0) { return true; }
+            if (stats.BonusHealingDoneMultiplier != 0) { return true; }
+            if (stats.BonusManaMultiplier != 0) { return true; }
+            if (stats.BonusSpiritMultiplier != 0) { return true; }
+            if (stats.BonusIntellectMultiplier != 0) { return true; }
+            if (stats.Healed != 0) { return true; }
+            if (stats.Hp5 != 0) { return true; }
+            if (stats.MovementSpeed != 0) { return true; }
+            if (stats.SnareRootDurReduc != 0) { return true; }
+            if (stats.FearDurReduc != 0) { return true; }
+            if (stats.StunDurReduc != 0) { return true; }
+            return false;
         }
 
         #endregion
