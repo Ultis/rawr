@@ -68,10 +68,15 @@ namespace Rawr.ProtWarr
             return StanceDamageReduction(player, DamageType.Physical);
         }
 
+        /// <summary>
+        /// This should be a positive number factoring your Defensive Stance (-10% damage taken)
+        /// and your stats.DamageTakenReductionMultiplier
+        /// </summary>
+        /// <returns>A Percentage (1f - (1f - 0.10f) * (1f - player.Stats.DamageTakenReductionMultiplier))</returns>
         public static float StanceDamageReduction(Player player, DamageType damageType)
         {
             // In Defensive Stance
-            float damageTaken = (1f - 0.9f) * (1f - player.Stats.DamageTakenReductionMultiplier);
+            float damageTaken = 1f - (1f - 0.10f) * (1f - player.Stats.DamageTakenReductionMultiplier);
             
             switch (damageType)
             {
@@ -208,7 +213,7 @@ namespace Rawr.ProtWarr
             float damageReduction = Lookup.StanceDamageReduction(player, school);
             float averageResistance = StatConversion.GetAverageResistance(player.Boss.Level, player.Character.Level, totalResist, 0.0f);
 
-            return Math.Max(0.0f, (1.0f - averageResistance) * damageReduction);
+            return Math.Max(0.0f, (1.0f - averageResistance) * (1f - damageReduction));
         }
 
         public static float AvoidanceChance(Player player, HitResult avoidanceType)

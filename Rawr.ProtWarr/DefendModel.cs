@@ -36,7 +36,7 @@ namespace Rawr.ProtWarr
         {
             float armorReduction        = (1.0f - Lookup.ArmorReduction(Player));
             float baseDamagePerSecond   = Player.Options.BossAttackValue / Player.Options.BossAttackSpeed;
-            float guaranteedReduction   = Lookup.StanceDamageReduction(Player) * armorReduction;
+            float guaranteedReduction   = (1f - Lookup.StanceDamageReduction(Player)) * (armorReduction);
             float baseAttack            = Player.Options.BossAttackValue * guaranteedReduction;
 
             DamagePerHit        = baseAttack   * (1.0f - Player.Stats.PhysicalDamageTakenReductionMultiplier) * (1f - Player.Stats.BossPhysicalDamageDealtReductionMultiplier);
