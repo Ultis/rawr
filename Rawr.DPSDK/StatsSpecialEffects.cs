@@ -27,24 +27,22 @@ namespace Rawr.DPSDK
         }
 
 
-        public StatsDK getSpecialEffects(SpecialEffect effect, float fightDuration)
+        public StatsDK getSpecialEffects(SpecialEffect effect)
         {
             StatsDK statsAverage = new StatsDK();
             if (effect.Trigger == Trigger.Use)
             {
                 foreach (SpecialEffect e in effect.Stats.SpecialEffects())
                 {
-                    statsAverage.Accumulate(this.getSpecialEffects(e, fightDuration), (effect.Duration / effect.Cooldown));
+                    statsAverage.Accumulate(this.getSpecialEffects(e), (effect.Duration / effect.Cooldown));
                 }
-                //if (bFromTankDK)
-                    //statsAverage.Accumulate(effect.Stats);
-                //else
-                    statsAverage.Accumulate(effect.GetAverageStats(0, 1, 3, fightDuration));
+
+                statsAverage.Accumulate(effect.GetAverageStats(0, 1, 3, m_bo.BerserkTimer));
             }
             else
             {
                 double trigger = 0f;
-                float chance = effect.Chance;
+                float chance = 1f;
                 float unhastedAttackSpeed = 2f;
                 switch (effect.Trigger)
                 {
@@ -94,11 +92,13 @@ namespace Rawr.DPSDK
                     case Trigger.SpellHit:
                         trigger = 1f / m_Rot.getSpellSpecialsPerSecond();
                         chance *= 1f - combatTable.spellResist;
+                        unhastedAttackSpeed = m_Rot.getSpellSpecialsPerSecond();
                         break;
                     case Trigger.DamageSpellCrit:
                     case Trigger.SpellCrit:
                         trigger = 1f / m_Rot.getSpellSpecialsPerSecond();
                         chance *= combatTable.spellCrits;
+                        unhastedAttackSpeed = m_Rot.getSpellSpecialsPerSecond();
                         break;
                     case Trigger.BloodStrikeHit:
                         trigger = m_Rot.CurRotationDuration / (m_Rot.CountTrigger(Trigger.BloodStrikeHit) * (combatTable.DW ? 2f : 1f));
@@ -170,9 +170,13 @@ namespace Rawr.DPSDK
                         trigger = m_bo.DynamicCompiler_FilteredAttacks(m_bo.GetFilteredAttackList(ItemDamageType.Physical)).AttackSpeed;
                         break;
                 }
+                if (effect.Chance < 0)
+                {
+                    chance *= effect.GetChance(unhastedAttackSpeed);
+                }
                 foreach (SpecialEffect e in effect.Stats.SpecialEffects())
                 {
-                    statsAverage.Accumulate(this.getSpecialEffects(e, fightDuration));
+                    statsAverage.Accumulate(this.getSpecialEffects(e));
                 }
 
                 if (effect.MaxStack > 1)

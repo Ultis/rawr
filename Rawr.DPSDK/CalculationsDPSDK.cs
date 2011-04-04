@@ -714,9 +714,9 @@ namespace Rawr.DPSDK
                 // There are some multi-level special effects that need to be factored in.
                 foreach (SpecialEffect ee in e.Stats.SpecialEffects())
                 {
-                    e.Stats = se.getSpecialEffects(ee, c.BossOptions.BerserkTimer);
+                    e.Stats = se.getSpecialEffects(ee);
                 }
-                statSE.Accumulate(se.getSpecialEffects(e, c.BossOptions.BerserkTimer));
+                statSE.Accumulate(se.getSpecialEffects(e));
             }
 
             foreach (SpecialEffect effect in s.SpecialEffects())
@@ -724,7 +724,7 @@ namespace Rawr.DPSDK
                 if (HasRelevantStats(effect.Stats))
                 {
                     se = new StatsSpecialEffects(t, rot, c.BossOptions);
-                    s.Accumulate(se.getSpecialEffects(effect, c.BossOptions.BerserkTimer));
+                    s.Accumulate(se.getSpecialEffects(effect));
                 }
             }
         }

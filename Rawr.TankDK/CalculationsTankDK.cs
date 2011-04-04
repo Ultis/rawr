@@ -1462,20 +1462,20 @@ Points individually may be important.",
                         // There are some multi-level special effects that need to be factored in.
                         foreach (SpecialEffect ee in e.Stats.SpecialEffects())
                         {
-                            e.Stats = sse.getSpecialEffects(ee, TDK.bo.BerserkTimer);
+                            e.Stats = sse.getSpecialEffects(ee);
                         }
                         // Only add in the OnUse triggers when we're trying to get our max stats.
                         if (sType == StatType.Maximum)
-                            statSE.Accumulate(sse.getSpecialEffects(e, TDK.bo.BerserkTimer));
+                            statSE.Accumulate(sse.getSpecialEffects(e));
                     }
                     else
                     {
                         // There are some multi-level special effects that need to be factored in.
                         foreach (SpecialEffect ee in e.Stats.SpecialEffects())
                         {
-                            e.Stats = sse.getSpecialEffects(ee, TDK.bo.BerserkTimer);
+                            e.Stats = sse.getSpecialEffects(ee);
                         }
-                        statSE.Accumulate(sse.getSpecialEffects(e, TDK.bo.BerserkTimer));
+                        statSE.Accumulate(sse.getSpecialEffects(e));
                     }
                 }
                 // Darkmoon card greatness procs
