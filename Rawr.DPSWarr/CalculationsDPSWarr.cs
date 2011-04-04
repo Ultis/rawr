@@ -1016,7 +1016,7 @@ a GCD's length, you will use this while running back into place",
             #endregion
 
             Base.StatsWarrior statsBuffs = new Base.StatsWarrior();
-            statsBuffs.Accumulate(GetBuffsStats(dpswarchar));
+            statsBuffs.Accumulate(GetBuffsStats(dpswarchar.Char.ActiveBuffs));
             AccumulateSetBonusStats(statsBuffs, dpswarchar.Char.SetBonusCount);
 
             if (dpswarchar.Char.ActiveBuffs.Find<Buff>(x => x.SpellId == 22738) != null) {
