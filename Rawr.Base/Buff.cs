@@ -5119,7 +5119,7 @@ namespace Rawr
                     AllowedClasses = new List<CharacterClass> { CharacterClass.Druid, CharacterClass.Hunter, CharacterClass.Rogue, CharacterClass.Shaman, CharacterClass.Warrior }
                 });
                 // Your melee and ranged attacks have a chance to grant 1000 haste rating for 10 sec.
-                buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { HasteRating = 1000f }, 10f, 45f, 0.1f));
+                buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalAttack, new Stats() { HasteRating = 1000f }, 10f, 45f, 0.1f));
             }
             #endregion
             #endregion

@@ -599,7 +599,7 @@ namespace Rawr.Retribution
         
         private static void CalculateTriggers(Character character, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances, RotationCalculation rot)
         {
-            triggerChances[Trigger.MeleeCrit] = triggerChances[Trigger.MeleeHit] = triggerChances[Trigger.MeleeAttack] = triggerChances[Trigger.PhysicalCrit] = triggerChances[Trigger.PhysicalHit] =
+            triggerChances[Trigger.MeleeCrit] = triggerChances[Trigger.MeleeHit] = triggerChances[Trigger.MeleeAttack] = triggerChances[Trigger.PhysicalCrit] = triggerChances[Trigger.PhysicalHit] = triggerChances[Trigger.PhysicalAttack] =
                 triggerChances[Trigger.DamageDone] = triggerChances[Trigger.SpellHit] = triggerChances[Trigger.DamageSpellHit] = triggerChances[Trigger.SpellCrit] = triggerChances[Trigger.DamageSpellCrit] =
                 triggerChances[Trigger.DamageOrHealingDone] = triggerChances[Trigger.DoTTick] = triggerChances[Trigger.Use] = 1f;
 
@@ -607,7 +607,7 @@ namespace Rawr.Retribution
             triggerIntervals[Trigger.MeleeCrit] = (float)(1f / rot.GetMeleeCritsPerSec());
             triggerIntervals[Trigger.MeleeHit] = triggerIntervals[Trigger.MeleeAttack] = (float)(1f / rot.GetMeleeAttacksPerSec());
             triggerIntervals[Trigger.PhysicalCrit] = (float)(1f / rot.GetPhysicalCritsPerSec());;
-            triggerIntervals[Trigger.PhysicalHit] = (float)(1f / rot.GetPhysicalAttacksPerSec());
+            triggerIntervals[Trigger.PhysicalHit] = triggerIntervals[Trigger.PhysicalAttack] = (float)(1f / rot.GetPhysicalAttacksPerSec());
             triggerIntervals[Trigger.DamageDone] = triggerIntervals[Trigger.DamageOrHealingDone] = (float)(1f / rot.GetAttacksPerSec());
             triggerIntervals[Trigger.SpellHit] = triggerIntervals[Trigger.DamageSpellHit] = (float)(1f / rot.GetSpellAttacksPerSec());
             triggerIntervals[Trigger.SpellCrit] = triggerIntervals[Trigger.DamageSpellCrit] = (float)(1f / rot.GetSpellCritsPerSec());
@@ -764,19 +764,20 @@ namespace Rawr.Retribution
             get
             {
                 return _RelevantTriggers ?? (_RelevantTriggers = new List<Trigger>() {
-                            Trigger.Use, 
-                            Trigger.SpellCrit,        
-                            Trigger.SpellHit,             
-                            Trigger.DamageSpellCrit,        
-                            Trigger.DamageSpellHit,        
+                            Trigger.Use,
+                            Trigger.SpellCrit,
+                            Trigger.SpellHit,
+                            Trigger.DamageSpellCrit,
+                            Trigger.DamageSpellHit,
                             Trigger.PhysicalCrit,
                             Trigger.PhysicalHit,
+                            Trigger.PhysicalAttack,
                             Trigger.MeleeCrit,
                             Trigger.MeleeHit,
                             Trigger.MeleeAttack,
                             Trigger.WhiteHit,
                             Trigger.DamageDone,
-                            Trigger.DamageOrHealingDone, 
+                            Trigger.DamageOrHealingDone,
                             Trigger.DoTTick,
                             Trigger.JudgementHit,
                             Trigger.CrusaderStrikeHit,

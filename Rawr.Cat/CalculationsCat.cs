@@ -542,27 +542,20 @@ namespace Rawr.Cat
             CalculationOptionsCat calcOpts = character.CalculationOptions as CalculationOptionsCat ?? new CalculationOptionsCat();
             DruidTalents talents = character.DruidTalents;
             BossOptions bossOpts = character.BossOptions;
-            
-            bool leatherSpecialization = character.Head != null && character.Head.Type == ItemType.Leather &&
-                                            character.Shoulders != null && character.Shoulders.Type == ItemType.Leather &&
-                                            character.Chest != null && character.Chest.Type == ItemType.Leather &&
-                                            character.Wrist != null && character.Wrist.Type == ItemType.Leather &&
-                                            character.Hands != null && character.Hands.Type == ItemType.Leather &&
-                                            character.Waist != null && character.Waist.Type == ItemType.Leather &&
-                                            character.Legs != null && character.Legs.Type == ItemType.Leather &&
-                                            character.Feet != null && character.Feet.Type == ItemType.Leather;
 
             bool hasCritBuff = false;
             foreach (Buff buff in character.ActiveBuffs)
+            {
                 if (buff.Group == "Critical Strike Chance")
                 {
                     hasCritBuff = true;
                     break;
                 }
+            }
 
             StatsCat statsTotal = new StatsCat()
             {
-                BonusAgilityMultiplier = leatherSpecialization ? 0.05f : 0f,
+                BonusAgilityMultiplier = Character.ValidateArmorSpecialization(character, ItemType.Leather) ? 0.05f : 0f,
                 BonusAttackPowerMultiplier = (1f + 0.25f) * (1f + talents.HeartOfTheWild * 0.1f / 3f) - 1f,
                 BonusBleedDamageMultiplier = (character.ActiveBuffsContains("Mangle") || character.ActiveBuffsContains("Trauma") ? 0f : 0.3f),
 
@@ -629,6 +622,7 @@ namespace Rawr.Cat
             triggerIntervals[Trigger.MeleeAttack] = meleeHitInterval;
             triggerIntervals[Trigger.MeleeHit] = meleeHitInterval;
             triggerIntervals[Trigger.PhysicalHit] = meleeHitInterval;
+            triggerIntervals[Trigger.PhysicalAttack] = meleeHitInterval;
             triggerIntervals[Trigger.MeleeCrit] = meleeHitInterval;
             triggerIntervals[Trigger.PhysicalCrit] = meleeHitInterval;
             triggerIntervals[Trigger.DoTTick] = 1.5f;
@@ -644,6 +638,7 @@ namespace Rawr.Cat
             triggerChances[Trigger.MeleeAttack] = 1f;
             triggerChances[Trigger.MeleeHit] = Math.Max(0f, chanceHit);
             triggerChances[Trigger.PhysicalHit] = Math.Max(0f, chanceHit);
+            triggerChances[Trigger.PhysicalAttack] = 1f;
             triggerChances[Trigger.MeleeCrit] = Math.Max(0f, chanceCrit);
             triggerChances[Trigger.PhysicalCrit] = Math.Max(0f, chanceCrit);
             triggerChances[Trigger.DoTTick] = 1f;
@@ -655,7 +650,6 @@ namespace Rawr.Cat
             triggerChances[Trigger.MangleCatOrShredHit] = chanceHit;
             triggerChances[Trigger.MangleCatOrShredOrInfectedWoundsHit] = chanceHit;
             triggerChances[Trigger.EnergyOrFocusDropsBelow20PercentOfMax] = 0.80f; // doing 80% chance every 4 seconds per Astry
-
 
             // Handle Trinket procs
             Stats statsProcs = new Stats();
@@ -681,7 +675,6 @@ namespace Rawr.Cat
                         triggerChances[effect.Trigger], 1f, calcOpts.Duration) / effect.MaxStack;
                 }
             }
-
 
             statsProcs.Agility += statsProcs.HighestStat + statsProcs.Paragon;
             statsProcs.Stamina = (float)Math.Floor(statsProcs.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
@@ -716,7 +709,6 @@ namespace Rawr.Cat
             List<float> tempCritEffectIntervals = new List<float>();
             List<float> tempCritEffectChances = new List<float>();
             List<float> tempCritEffectScales = new List<float>();
-
 
             foreach (SpecialEffect effect in statsTotal.SpecialEffects(se => triggerIntervals.ContainsKey(se.Trigger) && (se.Stats.CritRating + se.Stats.Agility + se.Stats.HighestStat + se.Stats.Paragon) > 0))
             {
@@ -859,7 +851,7 @@ namespace Rawr.Cat
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
                 if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit || effect.Trigger == Trigger.MeleeAttack
-                    || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick
+                    || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.PhysicalAttack || effect.Trigger == Trigger.DoTTick
                     || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.MangleCatHit || effect.Trigger == Trigger.RakeTick
                     || effect.Trigger == Trigger.MangleCatOrShredHit || effect.Trigger == Trigger.MangleCatOrShredOrInfectedWoundsHit || effect.Trigger == Trigger.DamageOrHealingDone
                     || effect.Trigger == Trigger.EnergyOrFocusDropsBelow20PercentOfMax)
@@ -893,7 +885,7 @@ namespace Rawr.Cat
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
                 if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit || effect.Trigger == Trigger.MeleeAttack
-                    || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.RakeTick
+                    || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.PhysicalAttack || effect.Trigger == Trigger.RakeTick
                     || effect.Trigger == Trigger.MangleCatHit || effect.Trigger == Trigger.MangleCatOrShredHit 
                     || effect.Trigger == Trigger.MangleCatOrShredOrInfectedWoundsHit || effect.Trigger == Trigger.DamageOrHealingDone
                     || effect.Trigger == Trigger.EnergyOrFocusDropsBelow20PercentOfMax)

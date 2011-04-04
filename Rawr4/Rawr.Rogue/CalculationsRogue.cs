@@ -1014,6 +1014,7 @@ namespace Rawr.Rogue
             triggerIntervals[Trigger.MeleeHit] = meleeHitInterval;
             triggerIntervals[Trigger.PhysicalHit] = meleeHitInterval;
             triggerIntervals[Trigger.MeleeAttack] = meleeHitInterval;
+            triggerIntervals[Trigger.PhysicalAttack] = meleeHitInterval;
             triggerIntervals[Trigger.MeleeCrit] = meleeHitInterval;
             triggerIntervals[Trigger.PhysicalCrit] = meleeHitInterval;
             triggerIntervals[Trigger.DoTTick] = 0f;
@@ -1024,7 +1025,7 @@ namespace Rawr.Rogue
             triggerChances[Trigger.Use] = 1f;
             triggerChances[Trigger.MeleeHit] = Math.Max(0f, chanceHit);
             triggerChances[Trigger.PhysicalHit] = Math.Max(0f, chanceHit);
-            triggerChances[Trigger.MeleeAttack] = Math.Max(0f, chanceHit);
+            triggerChances[Trigger.PhysicalAttack] = triggerChances[Trigger.MeleeAttack] = 1f;
             triggerChances[Trigger.MeleeCrit] = Math.Max(0f, chanceCrit);
             triggerChances[Trigger.PhysicalCrit] = Math.Max(0f, chanceCrit);
             triggerChances[Trigger.DoTTick] = 1f;
@@ -1249,7 +1250,7 @@ namespace Rawr.Rogue
                 if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
                     || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick
                     || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DamageOrHealingDone || effect.Trigger == Trigger.SpellHit
-                    || effect.Trigger == Trigger.MeleeAttack || effect.Trigger == Trigger.EnergyOrFocusDropsBelow20PercentOfMax)
+                    || effect.Trigger == Trigger.MeleeAttack || effect.Trigger == Trigger.PhysicalAttack || effect.Trigger == Trigger.EnergyOrFocusDropsBelow20PercentOfMax)
                 {
                     if (HasRelevantStats(effect.Stats))
                     {
@@ -1329,6 +1330,7 @@ namespace Rawr.Rogue
                     || effect.Trigger == Trigger.MeleeAttack
                     || effect.Trigger == Trigger.PhysicalHit
                     || effect.Trigger == Trigger.PhysicalCrit
+                    || effect.Trigger == Trigger.PhysicalAttack
                     || effect.Trigger == Trigger.DoTTick
                     || effect.Trigger == Trigger.DamageDone
                     || effect.Trigger == Trigger.DamageOrHealingDone

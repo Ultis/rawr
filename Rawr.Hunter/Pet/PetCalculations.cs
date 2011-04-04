@@ -178,6 +178,7 @@ namespace Rawr.Hunter
                         break;
                     case Trigger.MeleeHit:
                     case Trigger.PhysicalHit:
+                    case Trigger.PhysicalAttack:
                         if (attemptedAtkIntervals[0] > 0f) {
                             Stats add = effect.GetAverageStats(attemptedAtkIntervals[0], hitRates[0], atkspeed, fightDuration);
                             statsProcs += add;

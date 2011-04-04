@@ -995,8 +995,8 @@ namespace Rawr.DPSDK
                     float WormHealth = (FullCharacterStats.Health * 0.35f);
                     _SE_Bloodworms = new SpecialEffect[] {
                         null,
-                        new SpecialEffect(Trigger.PhysicalHit, new Stats() { Healed = ((avgstacks * WormHealth * .05f) / fBWDuration), PhysicalDamage = (fDamageDone/fBWAttackSpeed)  }, fBWDuration, 0, .05f * 1),
-                        new SpecialEffect(Trigger.PhysicalHit, new Stats() { Healed = ((avgstacks * WormHealth * .05f) / fBWDuration), PhysicalDamage = (fDamageDone/fBWAttackSpeed) }, fBWDuration, 0, .05f * 2),
+                        new SpecialEffect(Trigger.MeleeAttack, new Stats() { Healed = ((avgstacks * WormHealth * .05f) / fBWDuration), PhysicalDamage = (fDamageDone/fBWAttackSpeed) }, fBWDuration, 0, .05f * 1),
+                        new SpecialEffect(Trigger.MeleeAttack, new Stats() { Healed = ((avgstacks * WormHealth * .05f) / fBWDuration), PhysicalDamage = (fDamageDone/fBWAttackSpeed) }, fBWDuration, 0, .05f * 2),
                     };
                     FullCharacterStats.AddSpecialEffect(_SE_Bloodworms[character.DeathKnightTalents.BloodParasite]);
                 }
@@ -1559,6 +1559,7 @@ namespace Rawr.DPSDK
                         effect.Trigger == Trigger.OffHandHit ||
                         effect.Trigger == Trigger.PhysicalCrit ||
                         effect.Trigger == Trigger.PhysicalHit ||
+                        effect.Trigger == Trigger.PhysicalAttack ||
                         effect.Trigger == Trigger.BloodStrikeHit ||
                         effect.Trigger == Trigger.HeartStrikeHit ||
                         effect.Trigger == Trigger.BloodStrikeOrHeartStrikeHit ||
@@ -1613,6 +1614,7 @@ namespace Rawr.DPSDK
                         effect.Trigger == Trigger.OffHandHit ||
                         effect.Trigger == Trigger.PhysicalCrit ||
                         effect.Trigger == Trigger.PhysicalHit ||
+                        effect.Trigger == Trigger.PhysicalAttack ||
                         effect.Trigger == Trigger.Use)
                     {
                         foreach (SpecialEffect e in effect.Stats.SpecialEffects())

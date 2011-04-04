@@ -53,6 +53,11 @@ namespace Rawr.DPSDK
                         unhastedAttackSpeed = (combatTable.MH != null ? combatTable.MH.baseSpeed : 2.0f);
                         break;
                     case Trigger.MeleeAttack:
+                    case Trigger.PhysicalAttack:
+                        trigger = (1f / ((m_Rot.getMeleeSpecialsPerSecond() * (combatTable.DW ? 2f : 1f)) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f)));
+                        chance *= 1f;
+                        unhastedAttackSpeed = (combatTable.MH != null ? combatTable.MH.baseSpeed : 2.0f);
+                        break;
                     case Trigger.MeleeHit:
                     case Trigger.PhysicalHit:
                         trigger = (1f / ((m_Rot.getMeleeSpecialsPerSecond() * (combatTable.DW ? 2f : 1f)) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f)));

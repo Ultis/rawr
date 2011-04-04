@@ -993,6 +993,7 @@ namespace Rawr.Enhance
                     trigger == Trigger.MeleeCrit ||
                     trigger == Trigger.MeleeAttack ||
                     trigger == Trigger.PhysicalHit ||
+                    trigger == Trigger.PhysicalAttack ||
                     trigger == Trigger.PhysicalCrit ||
                     trigger == Trigger.WhiteHit ||
                     trigger == Trigger.WhiteCrit ||

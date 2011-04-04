@@ -42,6 +42,8 @@ namespace Rawr
         PhysicalHit,
         /// <summary>Any physical damage (melee or ranged) crits on the target</summary>
         PhysicalCrit,
+        /// <summary>Any physical damage (melee or ranged) whether it lands or not</summary>
+        PhysicalAttack,
         #endregion
         #region Melee Physical Attacks
         /// <summary>Any melee lands on the target (hit or crit)</summary>
@@ -56,7 +58,7 @@ namespace Rawr
         WhiteHit,
         /// <summary>Any white melee crits on the target</summary>
         WhiteCrit,
-        /// <summary>Any white melee attack lands</summary>
+        /// <summary>Any white melee attack whether it lands or not</summary>
         WhiteAttack,
         #endregion
         #region Ranged Physical Attacks

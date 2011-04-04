@@ -819,14 +819,12 @@ the Threat Scale defined on the Options tab.",
                         effect.AccumulateAverageStats(statsProcs, meleeHitInterval, chanceHit, 2.5f, fightDuration);
                         break;
                     case Trigger.MeleeAttack:
-                        if (effect.Stats.MoteOfAnger > 0)
-                        {
+                    case Trigger.PhysicalAttack:
+                        if (effect.Stats.MoteOfAnger > 0) {
                             // When in effect stats, MoteOfAnger is % of melee hits
                             // When in character stats, MoteOfAnger is average procs per second
                             statsProcs.MoteOfAnger = effect.Stats.MoteOfAnger * effect.GetAverageProcsPerSecond(meleeHitInterval, 1f, 2.5f, fightDuration) / effect.MaxStack;
-                        }
-                        else
-                        {
+                        } else {
                             effect.AccumulateAverageStats(statsProcs, meleeHitInterval, 1f, 2.5f, fightDuration);
                         }
                         break;
@@ -1331,7 +1329,7 @@ the Threat Scale defined on the Options tab.",
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
                 if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit || effect.Trigger == Trigger.MeleeAttack
-                || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick
+                || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.PhysicalAttack || effect.Trigger == Trigger.DoTTick
                 || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.MangleBearHit || effect.Trigger == Trigger.LacerateTick
                 || effect.Trigger == Trigger.SwipeBearOrLacerateHit || effect.Trigger == Trigger.DamageTaken || effect.Trigger == Trigger.DamageTakenPhysical
                 || effect.Trigger == Trigger.MangleCatOrShredOrInfectedWoundsHit || effect.Trigger == Trigger.DamageOrHealingDone
@@ -1398,7 +1396,7 @@ the Threat Scale defined on the Options tab.",
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
                 if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit || effect.Trigger == Trigger.MeleeAttack
-                    || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit
+                    || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.PhysicalAttack
                     || effect.Trigger == Trigger.MangleBearHit || effect.Trigger == Trigger.SwipeBearOrLacerateHit
                     || effect.Trigger == Trigger.DamageTaken || effect.Trigger == Trigger.DamageTakenPhysical
                     || effect.Trigger == Trigger.MangleCatOrShredOrInfectedWoundsHit || effect.Trigger == Trigger.LacerateTick

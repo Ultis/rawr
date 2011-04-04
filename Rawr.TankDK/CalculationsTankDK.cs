@@ -565,7 +565,7 @@ Points individually may be important.",
                         Trigger.DamageSpellCast, Trigger.DamageSpellCrit, Trigger.DamageSpellHit,
                         Trigger.SpellCast, Trigger.SpellCrit, Trigger.SpellHit,
                         Trigger.DoTTick,
-                        Trigger.MeleeCrit, Trigger.MeleeHit, Trigger.PhysicalCrit, Trigger.PhysicalHit,
+                        Trigger.MeleeCrit, Trigger.MeleeHit, Trigger.PhysicalCrit, Trigger.PhysicalHit, Trigger.MeleeAttack, Trigger.PhysicalAttack,
                         Trigger.MainHandHit, Trigger.OffHandHit, Trigger.CurrentHandHit,
                         Trigger.Use,
                     };

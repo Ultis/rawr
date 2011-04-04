@@ -622,6 +622,7 @@ a GCD's length, you will use this while running back into place",
                     Trigger.WhiteHit,
                     Trigger.PhysicalCrit,
                     Trigger.PhysicalHit,
+                    Trigger.PhysicalAttack,
                     Trigger.DoTTick,
                     Trigger.DamageDone,
                     Trigger.DamageTaken,
@@ -2041,8 +2042,9 @@ a GCD's length, you will use this while running back into place",
                 triggerIntervals[Trigger.WhiteHit] = fightDuration / (mhWhites != 0 ? mhWhites : 1f);
                 triggerChances[Trigger.WhiteHit] = charStruct.Rot.DPSWarrChar.Whiteattacks.MHAtkTable.AnyLand;
 
-                triggerIntervals[Trigger.MeleeHit] = triggerIntervals[Trigger.PhysicalHit] = attemptedAtkInterval;
+                triggerIntervals[Trigger.MeleeHit] = triggerIntervals[Trigger.PhysicalHit] = triggerIntervals[Trigger.PhysicalAttack] = attemptedAtkInterval;
                 triggerChances[Trigger.MeleeHit] = triggerChances[Trigger.PhysicalHit] = hitRate;
+                triggerChances[Trigger.PhysicalAttack] = 1f;
 
                 triggerIntervals[Trigger.PhysicalCrit] = triggerIntervals[Trigger.MeleeCrit] = attemptedAtkInterval;
                 triggerChances[Trigger.PhysicalCrit] = triggerChances[Trigger.MeleeCrit] = critRate;

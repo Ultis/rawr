@@ -625,6 +625,7 @@ threat and limited threat scaled by the threat scale.",
             TriggerIntervals[Trigger.MeleeHit]              = TriggerIntervals[Trigger.MeleeAttack];
             TriggerIntervals[Trigger.MeleeCrit]             = TriggerIntervals[Trigger.MeleeAttack];
             TriggerIntervals[Trigger.PhysicalHit]           = TriggerIntervals[Trigger.MeleeAttack];
+            TriggerIntervals[Trigger.PhysicalAttack]        = TriggerIntervals[Trigger.MeleeAttack];
             TriggerIntervals[Trigger.PhysicalCrit]          = TriggerIntervals[Trigger.MeleeAttack];
             TriggerIntervals[Trigger.ExecuteHit]            = TriggerIntervals[Trigger.MeleeAttack];
             TriggerIntervals[Trigger.DoTTick]               = (player.Talents.DeepWounds > 0) ? 2.0f : 0.0f;
@@ -636,12 +637,13 @@ threat and limited threat scaled by the threat scale.",
             TriggerIntervals[Trigger.DamageTakenPutsMeBelow35PercHealth] = TriggerIntervals[Trigger.DamageTaken];
 
             TriggerChances[Trigger.Use]                     = 1.0f;
-            TriggerChances[Trigger.MeleeAttack]             = am.HitsPerSecond / am.WeaponAttacksPerSecond;
-            TriggerChances[Trigger.MeleeHit]                = TriggerChances[Trigger.MeleeAttack];
+            TriggerChances[Trigger.MeleeAttack]             = 1.0f;
+            TriggerChances[Trigger.MeleeHit]                = am.HitsPerSecond / am.WeaponAttacksPerSecond;
             TriggerChances[Trigger.MeleeCrit]               = am.CritsPerSecond / am.WeaponAttacksPerSecond;
-            TriggerChances[Trigger.PhysicalHit]             = TriggerChances[Trigger.MeleeAttack];
+            TriggerChances[Trigger.PhysicalAttack]          = 1.0f;
+            TriggerChances[Trigger.PhysicalHit]             = TriggerChances[Trigger.MeleeHit];
             TriggerChances[Trigger.PhysicalCrit]            = TriggerChances[Trigger.MeleeCrit];
-            TriggerChances[Trigger.ExecuteHit]              = TriggerChances[Trigger.MeleeAttack];
+            TriggerChances[Trigger.ExecuteHit]              = TriggerChances[Trigger.MeleeHit];
             TriggerChances[Trigger.DoTTick]                 = (player.Talents.DeepWounds > 0) ? 1.0f : 0.0f;
             TriggerChances[Trigger.DamageDone]              = (am.HitsPerSecond + ((player.Talents.DeepWounds > 0) ? 2.0f : 0.0f)) 
                                                                 / (am.WeaponAttacksPerSecond + ((player.Talents.DeepWounds > 0) ? 1.0f : 0.0f));

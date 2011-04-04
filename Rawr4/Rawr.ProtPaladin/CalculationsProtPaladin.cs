@@ -619,7 +619,9 @@ focus on Survival Points.",
 
             float intervalRotation = 9.0f;
 
-            triggerIntervals[Trigger.MeleeHit]                           = 
+            triggerIntervals[Trigger.MeleeAttack] =
+            triggerIntervals[Trigger.PhysicalAttack] =
+            triggerIntervals[Trigger.MeleeHit] = 
             triggerIntervals[Trigger.PhysicalHit]                        = 
             triggerIntervals[Trigger.MeleeCrit]                          = 
             triggerIntervals[Trigger.PhysicalCrit]                       = Lookup.WeaponSpeed(character, stats); // + calcOptsTargetsHotR / intervalHotR;
@@ -647,6 +649,8 @@ focus on Survival Points.",
             float chanceMissParry = Math.Max(0f, StatConversion.WHITE_PARRY_CHANCE_CAP[bossOpts.Level - character.Level] - expertiseBonus);
             float chanceMissPhysicalAny = chanceMissPhysical + chanceMissDodge + chanceMissParry;
 
+            triggerChances[Trigger.MeleeAttack] =
+            triggerChances[Trigger.PhysicalAttack] = 1.0f;
             triggerChances[Trigger.MeleeHit] = 
             triggerChances[Trigger.PhysicalHit] = 1.0f - chanceMissPhysicalAny;
             triggerChances[Trigger.MeleeCrit] = 
@@ -739,6 +743,8 @@ focus on Survival Points.",
                         }
                         break;
                     }
+                    case Trigger.MeleeAttack:
+                    case Trigger.PhysicalAttack:
                     case Trigger.MeleeHit:
                     case Trigger.PhysicalHit:
                     case Trigger.MeleeCrit:
@@ -1135,6 +1141,7 @@ focus on Survival Points.",
             return (
                     trigger == Trigger.Use                   || trigger == Trigger.MeleeCrit            ||
                     trigger == Trigger.MeleeHit              || trigger == Trigger.PhysicalCrit         ||
+                    trigger == Trigger.PhysicalAttack        || trigger == Trigger.MeleeAttack          ||
                     trigger == Trigger.PhysicalHit           || trigger == Trigger.DoTTick              ||
                     trigger == Trigger.DamageDone            || trigger == Trigger.DamageOrHealingDone  ||
                     trigger == Trigger.JudgementHit          || trigger == Trigger.DamageParried        ||

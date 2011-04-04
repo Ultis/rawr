@@ -449,6 +449,7 @@ namespace Rawr.Hunter {
                 if ((effect.Trigger == Trigger.Use ||
                      effect.Trigger == Trigger.PhysicalCrit ||
                      effect.Trigger == Trigger.PhysicalHit ||
+                     effect.Trigger == Trigger.PhysicalAttack ||
                      effect.Trigger == Trigger.DoTTick ||
                      effect.Trigger == Trigger.DamageDone ||
                      effect.Trigger == Trigger.DamageOrHealingDone ||
@@ -541,6 +542,7 @@ namespace Rawr.Hunter {
                     || e.Trigger == Trigger.DoTTick
                     || e.Trigger == Trigger.PhysicalCrit
                     || e.Trigger == Trigger.PhysicalHit
+                    || e.Trigger == Trigger.PhysicalAttack
                     || e.Trigger == Trigger.Use
                     || e.Trigger == Trigger.DamageTaken
                     || e.Trigger == Trigger.EnergyOrFocusDropsBelow20PercentOfMax
@@ -2898,6 +2900,7 @@ namespace Rawr.Hunter {
             triggerIntervals.Add(Trigger.MeleeHit, Math.Max(0f, calculatedStats.pet.PetCompInterval));
             triggerIntervals.Add(Trigger.RangedHit, 1f / totalShotsPerSecond);
             triggerIntervals.Add(Trigger.PhysicalHit, 1f / totalShotsPerSecond);
+            triggerIntervals.Add(Trigger.PhysicalAttack, 1f / totalShotsPerSecond);
             triggerIntervals.Add(Trigger.MeleeCrit, Math.Max(0f, calculatedStats.pet.PetCompInterval));
             triggerIntervals.Add(Trigger.RangedCrit, 1f / totalShotsPerSecond);
             triggerIntervals.Add(Trigger.PhysicalCrit, 1f / totalShotsPerSecond);
@@ -2917,6 +2920,7 @@ namespace Rawr.Hunter {
             triggerChances.Add(Trigger.MeleeHit, calculatedStats.pet.WhAtkTable.AnyLand);
             triggerChances.Add(Trigger.RangedHit, (1f - ChanceToMiss));
             triggerChances.Add(Trigger.PhysicalHit, (1f - ChanceToMiss));
+            triggerChances.Add(Trigger.PhysicalHit, 1f);
             triggerChances.Add(Trigger.MeleeCrit, Math.Min(1f + critMOD, Math.Max(0f, calculatedStats.pet.WhAtkTable.Crit)));
             triggerChances.Add(Trigger.RangedCrit, Math.Min(1f + critMOD, Math.Max(0f, statsTotal.PhysicalCrit)));
             triggerChances.Add(Trigger.PhysicalCrit, Math.Min(1f + critMOD, Math.Max(0f, statsTotal.PhysicalCrit)));
@@ -2980,6 +2984,7 @@ namespace Rawr.Hunter {
                             break;
                         case Trigger.RangedHit:
                         case Trigger.PhysicalHit:
+                        case Trigger.PhysicalAttack:
                             _stats = new Stats();
                             weight = 1.0f;
                             {

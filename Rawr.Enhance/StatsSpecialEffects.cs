@@ -141,9 +141,9 @@ namespace Rawr.Enhance
                     chance = _cs.AverageWhiteHitChance;
                     unhastedAttackSpeed = _cs.UnhastedMHSpeed;
                     break;
+                case Trigger.PhysicalAttack:
                 case Trigger.MeleeAttack:
-                    if (_cs.UnhastedOHSpeed != 0)
-                    {
+                    if (_cs.UnhastedOHSpeed != 0) {
                         trigger = (_cs.HastedMHSpeed + _cs.HastedOHSpeed) / 2;
                         chance = 1f;
                         unhastedAttackSpeed = (_cs.UnhastedMHSpeed + _cs.UnhastedOHSpeed) / 2;
