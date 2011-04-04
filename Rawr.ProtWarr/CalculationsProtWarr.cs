@@ -606,6 +606,9 @@ threat and limited threat scaled by the threat scale.",
             return statsBuffs;
         }
 
+        private Dictionary<Trigger, float> TriggerIntervals = new Dictionary<Trigger, float>();
+        private Dictionary<Trigger, float> TriggerChances   = new Dictionary<Trigger, float>();
+
         private StatsWarrior GetSpecialEffectStats(Player player)
         {
             StatsWarrior statsSpecialEffects = new StatsWarrior();
@@ -616,63 +619,41 @@ threat and limited threat scaled by the threat scale.",
 
             AttackModel am = new AttackModel(player, AttackModelMode.Optimal);
             DefendModel dm = new DefendModel(player);
+            
+            TriggerIntervals[Trigger.Use]                   = 0.0f;
+            TriggerIntervals[Trigger.MeleeAttack]           = (1.0f / am.WeaponAttacksPerSecond);
+            TriggerIntervals[Trigger.MeleeHit]              = TriggerIntervals[Trigger.MeleeAttack];
+            TriggerIntervals[Trigger.MeleeCrit]             = TriggerIntervals[Trigger.MeleeAttack];
+            TriggerIntervals[Trigger.PhysicalHit]           = TriggerIntervals[Trigger.MeleeAttack];
+            TriggerIntervals[Trigger.PhysicalCrit]          = TriggerIntervals[Trigger.MeleeAttack];
+            TriggerIntervals[Trigger.ExecuteHit]            = TriggerIntervals[Trigger.MeleeAttack];
+            TriggerIntervals[Trigger.DoTTick]               = (player.Talents.DeepWounds > 0) ? 2.0f : 0.0f;
+            TriggerIntervals[Trigger.DamageDone]            = TriggerIntervals[Trigger.MeleeAttack] + TriggerIntervals[Trigger.DoTTick];
+            TriggerIntervals[Trigger.DamageOrHealingDone]   = TriggerIntervals[Trigger.DamageDone];
+            TriggerIntervals[Trigger.DamageTaken]           = 1.0f / dm.AttackerSwingsPerSecond;
+            TriggerIntervals[Trigger.DamageAvoided]         = TriggerIntervals[Trigger.DamageTaken];
+            TriggerIntervals[Trigger.DamageParried]         = TriggerIntervals[Trigger.DamageTaken];
+            TriggerIntervals[Trigger.DamageTakenPutsMeBelow35PercHealth] = TriggerIntervals[Trigger.DamageTaken];
 
-            float uptime;
-            foreach (SpecialEffect effect in player.Stats.SpecialEffects())
+            TriggerChances[Trigger.Use]                     = 1.0f;
+            TriggerChances[Trigger.MeleeAttack]             = am.HitsPerSecond / am.WeaponAttacksPerSecond;
+            TriggerChances[Trigger.MeleeHit]                = TriggerChances[Trigger.MeleeAttack];
+            TriggerChances[Trigger.MeleeCrit]               = am.CritsPerSecond / am.WeaponAttacksPerSecond;
+            TriggerChances[Trigger.PhysicalHit]             = TriggerChances[Trigger.MeleeAttack];
+            TriggerChances[Trigger.PhysicalCrit]            = TriggerChances[Trigger.MeleeCrit];
+            TriggerChances[Trigger.ExecuteHit]              = TriggerChances[Trigger.MeleeAttack];
+            TriggerChances[Trigger.DoTTick]                 = (player.Talents.DeepWounds > 0) ? 1.0f : 0.0f;
+            TriggerChances[Trigger.DamageDone]              = (am.HitsPerSecond + ((player.Talents.DeepWounds > 0) ? 2.0f : 0.0f)) 
+                                                                / (am.WeaponAttacksPerSecond + ((player.Talents.DeepWounds > 0) ? 1.0f : 0.0f));
+            TriggerChances[Trigger.DamageOrHealingDone]     = TriggerChances[Trigger.DamageDone];
+            TriggerChances[Trigger.DamageTaken]             = dm.AttackerHitsPerSecond / dm.AttackerSwingsPerSecond;
+            TriggerChances[Trigger.DamageAvoided]           = dm.DefendTable.AnyAvoid;
+            TriggerChances[Trigger.DamageParried]           = dm.DefendTable.Parry;
+            TriggerChances[Trigger.DamageTakenPutsMeBelow35PercHealth] = TriggerChances[Trigger.DamageTaken] * 0.35f;
+
+            foreach (SpecialEffect effect in player.Stats.SpecialEffects()) 
             {
-                uptime = 0.0f;
-                switch (effect.Trigger)
-                {
-                    case Trigger.Use:
-                        effect.AccumulateAverageStats(statsSpecialEffects, 0.0f, 1.0f, weaponSpeed, player.Boss.BerserkTimer);
-                        // Trial of the Crusader Stacking Use Effect Trinkets
-                        foreach (SpecialEffect childEffect in effect.Stats.SpecialEffects())
-                        {
-                            if (childEffect.Trigger == Trigger.DamageTaken)
-                            {
-                                statsSpecialEffects.Accumulate(childEffect.Stats * (effect.GetAverageUptime(0.0f, 1.0f) *
-                                    childEffect.GetAverageStackSize((1.0f / dm.AttackerSwingsPerSecond), (dm.AttackerHitsPerSecond / dm.AttackerSwingsPerSecond), weaponSpeed, player.Boss.BerserkTimer)));
-                            }
-                        }
-                        break;
-                    case Trigger.MeleeHit:
-                    case Trigger.PhysicalHit:
-                        uptime = effect.GetAverageUptime((1.0f / am.WeaponAttacksPerSecond), (am.HitsPerSecond / am.WeaponAttacksPerSecond), weaponSpeed, player.Boss.BerserkTimer);
-                        break;
-                    case Trigger.MeleeCrit:
-                    case Trigger.PhysicalCrit:
-                        uptime = effect.GetAverageUptime((1.0f / am.WeaponAttacksPerSecond), (am.CritsPerSecond / am.WeaponAttacksPerSecond), weaponSpeed, player.Boss.BerserkTimer);
-                        break;
-                    case Trigger.DoTTick:
-                        if (player.Talents.DeepWounds > 0) 
-                            uptime = effect.GetAverageUptime(2.0f, 1.0f, weaponSpeed, player.Boss.BerserkTimer);
-                        break;
-                    case Trigger.DamageDone:
-                    case Trigger.DamageOrHealingDone:
-                        uptime = effect.GetAverageUptime((1.0f / am.WeaponAttacksPerSecond), (am.HitsPerSecond / am.WeaponAttacksPerSecond), weaponSpeed, player.Boss.BerserkTimer);
-                        break;
-                    case Trigger.DamageTakenPutsMeBelow35PercHealth:
-                        uptime = effect.GetAverageUptime((1.0f / dm.AttackerSwingsPerSecond), (dm.AttackerHitsPerSecond / dm.AttackerSwingsPerSecond) * 0.35f, weaponSpeed, player.Boss.BerserkTimer);
-                        break;
-                    case Trigger.DamageTaken:
-                        uptime = effect.GetAverageUptime((1.0f / dm.AttackerSwingsPerSecond), (dm.AttackerHitsPerSecond / dm.AttackerSwingsPerSecond), weaponSpeed, player.Boss.BerserkTimer);
-                        break;
-                    case Trigger.DamageAvoided:
-                        uptime = effect.GetAverageUptime((1.0f / dm.AttackerSwingsPerSecond), dm.DefendTable.AnyAvoid, weaponSpeed, player.Boss.BerserkTimer);
-                        break;
-                    case Trigger.DamageParried:
-                        uptime = effect.GetAverageUptime((1.0f / dm.AttackerSwingsPerSecond), dm.DefendTable.Parry, weaponSpeed, player.Boss.BerserkTimer);
-                        break;
-                }
-
-                if (uptime != 0.0f)
-                {
-                    // Forcefully pass it into the Accumulate as StatsWarrior if it of the StatsWarrior Type
-                    if (effect.Stats.GetType() == StatsWarriorType)
-                        statsSpecialEffects.Accumulate((StatsWarrior)effect.Stats, uptime);
-                    else
-                        statsSpecialEffects.Accumulate(effect.Stats, uptime);
-                }
+                ApplySpecialEffect(player, effect, weaponSpeed, TriggerIntervals, TriggerChances, ref statsSpecialEffects);
             }
 
             // Base Stats
@@ -681,6 +662,50 @@ threat and limited threat scaled by the threat scale.",
             statsSpecialEffects.Agility = (float)Math.Floor(statsSpecialEffects.Agility * (1.0f + player.Stats.BonusAgilityMultiplier));
 
             return statsSpecialEffects;
+        }
+
+        private void ApplySpecialEffect(Player player, SpecialEffect effect, float weaponSpeed, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances, ref Base.StatsWarrior statsSpecialEffects)
+        {
+            float upTime        = 0.0f;
+            float fightDuration = player.Boss.BerserkTimer;
+            Stats effectStats   = effect.Stats;
+
+            if (effect.Trigger == Trigger.Use) 
+            {
+                if (effect.Stats._rawSpecialEffectDataSize == 1) 
+                {
+                    upTime = effect.GetAverageUptime(triggerIntervals[Trigger.Use], triggerChances[Trigger.Use], weaponSpeed, fightDuration);
+                    List<SpecialEffect> nestedEffect = new List<SpecialEffect>();
+                    nestedEffect.Add(effect.Stats._rawSpecialEffectData[0]);
+                    Base.StatsWarrior _stats2 = new Base.StatsWarrior();
+                    ApplySpecialEffect(player, effect.Stats._rawSpecialEffectData[0], weaponSpeed, triggerIntervals, triggerChances, ref _stats2);
+                    effectStats = _stats2;
+                } 
+                else 
+                {
+                    upTime = effect.GetAverageStackSize(triggerIntervals[Trigger.Use], triggerChances[Trigger.Use], weaponSpeed, fightDuration); 
+                }
+            }
+            else if (effect.Duration == 0.0f)
+            {
+                upTime = effect.GetAverageProcsPerSecond(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], weaponSpeed, fightDuration);
+            }
+            else if (effect.Trigger == Trigger.ExecuteHit)
+            {
+                upTime = effect.GetAverageStackSize(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], weaponSpeed, fightDuration * (float)player.Boss.Under20Perc);
+            }
+            else if (triggerIntervals.ContainsKey(effect.Trigger))
+            {
+                upTime = effect.GetAverageStackSize(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], weaponSpeed, fightDuration);
+            }
+
+            if (upTime > 0.0f) 
+            {
+                if (effect.Duration == 0.0f)
+                    statsSpecialEffects.Accumulate(effectStats, upTime * fightDuration);
+                else if (upTime <= effect.MaxStack)
+                    statsSpecialEffects.Accumulate(effectStats, upTime);
+            }
         }
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)

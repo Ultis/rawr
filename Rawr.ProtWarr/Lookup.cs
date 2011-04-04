@@ -76,7 +76,7 @@ namespace Rawr.ProtWarr
         public static float StanceDamageReduction(Player player, DamageType damageType)
         {
             // In Defensive Stance
-            float damageTaken = 1f - (1f - 0.10f) * (1f - player.Stats.DamageTakenReductionMultiplier);
+            float damageTaken = (1.0f - 0.10f) * (1.0f - player.Stats.DamageTakenReductionMultiplier);
             
             switch (damageType)
             {
@@ -86,9 +86,9 @@ namespace Rawr.ProtWarr
                 case DamageType.Nature:
                 case DamageType.Shadow:
                 case DamageType.Holy:
-                    return damageTaken;
+                    return (1.0f - damageTaken);
                 default:
-                    return damageTaken;
+                    return (1.0f - damageTaken);
             }
         }
 

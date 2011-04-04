@@ -35,11 +35,11 @@ namespace Rawr.ProtWarr
         public void Calculate()
         {
             float armorReduction        = (1.0f - Lookup.ArmorReduction(Player));
+            float guaranteedReduction   = (1.0f - Lookup.StanceDamageReduction(Player)) * armorReduction;
             float baseDamagePerSecond   = Player.Options.BossAttackValue / Player.Options.BossAttackSpeed;
-            float guaranteedReduction   = (1f - Lookup.StanceDamageReduction(Player)) * (armorReduction);
             float baseAttack            = Player.Options.BossAttackValue * guaranteedReduction;
 
-            DamagePerHit        = baseAttack   * (1.0f - Player.Stats.PhysicalDamageTakenReductionMultiplier) * (1f - Player.Stats.BossPhysicalDamageDealtReductionMultiplier);
+            DamagePerHit        = baseAttack   * (1.0f - Player.Stats.PhysicalDamageTakenReductionMultiplier) * (1.0f - Player.Stats.BossPhysicalDamageDealtReductionMultiplier);
             DamagePerCrit       = DamagePerHit * 2.0f;
             DamagePerBlock      = DamagePerHit * (1.0f - (0.3f + Player.Stats.BonusBlockValueMultiplier));
             DamagePerCritBlock  = DamagePerHit * (1.0f - ((0.3f + Player.Stats.BonusBlockValueMultiplier) * 2.0f));
