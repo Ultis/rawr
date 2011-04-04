@@ -2697,12 +2697,22 @@ namespace Rawr
             }
         }
 
+        private Dictionary<string, int> _setBonusCount = null;
         [XmlIgnore]
-        public Dictionary<string, int> SetBonusCount { get; private set; }
+        public Dictionary<string, int> SetBonusCount {
+            get {
+                if (_setBonusCount == null)
+                {
+                    RecalculateSetBonuses();
+                }
+                return _setBonusCount;
+            }
+            private set { _setBonusCount = value; }
+        }
 
         public void RecalculateSetBonuses()
         {
-            if (SetBonusCount == null) {
+            if (_setBonusCount == null) {
                 SetBonusCount = new Dictionary<string, int>();
             } else {
                 SetBonusCount.Clear();
