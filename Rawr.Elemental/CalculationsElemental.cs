@@ -487,7 +487,7 @@ namespace Rawr.Elemental {
             statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect);
             statsTotal.Spirit = (float)Math.Floor(statsTotal.Spirit);
 
-            if (ValidateMailSpecialization(character))
+            if (Character.ValidateArmorSpecialization(character, ItemType.Mail))
                 statsTotal.Intellect *= 1.05f;
 
             statsTotal.AttackPower += statsTotal.Strength + statsTotal.Agility;

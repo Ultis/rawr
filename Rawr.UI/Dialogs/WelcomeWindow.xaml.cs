@@ -157,6 +157,47 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes()
         {
+#region Rawr 4.1.03 (Apr 04, 2011) [r59318]
+VNStuff.Add("Rawr 4.1.03 (Apr 04, 2011) [r59318]",
+@"Cataclysm Release
+
+Rawr.Base:
+- Fix for Issue 20403: Crash on Reset All Caches - The new Set Bonuses framework has an issue where it may not have initialized yet at the time it's called for this process. Changed it so that it will recalc at any time of being called when it's still null 
+- Fixed implementation of special effects that are melee or ranged attack but dont require landing
+- Work for Task 20079: New Mana Cost Reduction Variables (Nature and Holy) - Implemented in Elemental, Healadin, Moonkin, Tree, RestoSham. Marked Relevant in Enhance, HealPriest
+
+Rawr.LoadCharacter:
+- Fix for Issue 20407: This was a backwards compatibility issue
+- Fix for Issue 20387: Cannot upload to Rawr4 Repository - The Post command doesn't like periods in the save text. Changed the default pattern use spaces instead and added on the back end to replace periods with spaces if it finds them
+
+Rawr.Cat:
+- Fix for Issue 20408: Fluid Death/Tia's Grace uptime terrible - Effect wasn't being processed properly due to a typo. Fixed
+
+Rawr.DPSDK:
+- Fix for Neg DPS values in some cases
+- Recent chance had importing values that were already in the local instance
+
+Rawr.DPSWarr:
+- Fix for Issue 20404: Crash on file load - The actual error was a Stack Overflow. The GetBuffsStats was set up incorrectly with Kavan's new Set Bonus implementation, it would loop inside itself instead of calling the Base GetBuffsStats like it was supposed to
+
+Rawr.Mage:
+- Disabled Pots from Buffs from showing up in Mage
+
+Rawr.ProtWarr:
+- Fix for Issue 20405: Survivability significantly higher in this release - The Damage Taken multipliers were not being applied properly due to previous bad handling in two places and only one of those places having been fixed in last release
+- Minor clean-ups following issue 20405
+- Fix for issue 20324 (stacking trinket procs are non-functional)
+
+Rawr.RestoSham:
+- Fix for Issue 20399: Crashing on any action - RelevantStats wasn't following proper standards
+
+Rawr.ShadowPriest:
+- Removed a duplicate assembly reference in xaml
+
+Rawr.Warlock:
+- Fix for Issue 20398: Crash when Chaos Bolt is selected - The Talent Values (from the Bane talent) were set up wrong. Fixed
+");
+#endregion
 #region Rawr 4.1.02 (Apr 03, 2011) [r59297]
 VNStuff.Add("Rawr 4.1.02 (Apr 03, 2011) [r59297]",
 @"Cataclysm Release

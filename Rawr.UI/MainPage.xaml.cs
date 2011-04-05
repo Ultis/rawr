@@ -210,13 +210,13 @@ namespace Rawr.UI
                 case "DPSDK"    : { retVal    = string.Format(format, maint[3], funct[1], "Shazear"); break; }
                 case "TankDK"   : { retVal    = string.Format(format, maint[3], funct[3], "Shazear"); break; }
                 // Hunters
-                case "Hunter"   : { retVal    = string.Format(format, maint[1], funct[0], "None"); break; }
+                case "Hunter"   : { retVal    = string.Format(format, maint[1], funct[1], "None"); break; }
                 // Mages
                 case "Mage"     : { retVal    = string.Format(format, maint[3], funct[3], "Kavan"); break; }
                 // Paladins
                 case "Healadin" : { retVal    = string.Format(format, maint[3], funct[1], "Roncli"); break; }
-                case "ProtPaladin":{retVal    = string.Format(format, maint[2], funct[0], "Roncli"); break; }
-                case "Retribution":{retVal    = string.Format(format, maint[2], funct[1], "OReubens,Caromina"); break; }
+                case "ProtPaladin":{retVal    = string.Format(format, maint[2], funct[2], "Roncli"); break; }
+                case "Retribution":{retVal    = string.Format(format, maint[2], funct[2], "OReubens,Caromina"); break; }
                 // Priests
                 case "HealPriest":{retVal     = string.Format(format, maint[3], funct[0], "TNSe"); break; }
                 case "ShadowPriest":{retVal   = string.Format(format, maint[3], funct[1], "Discomurray"); break; }
@@ -227,7 +227,7 @@ namespace Rawr.UI
                 case "Enhance"  : { retVal    = string.Format(format, maint[3], funct[2], "TimeToDance"); break; }
                 case "RestoSham": { retVal    = string.Format(format, maint[3], funct[2], "Antivyris,Alpineman"); break; }
                 // Warriors
-                case "DPSWarr"  : { retVal    = string.Format(format, maint[3]+"/"+maint[1], funct[3]+"/"+funct[1], "Jothay/Droppy"); break; }
+                case "DPSWarr"  : { retVal    = string.Format(format, maint[3]+"/"+maint[1], funct[3]+"/"+funct[2], "Jothay"); break; }
                 case "ProtWarr" : { retVal    = string.Format(format, maint[2], funct[2], "EvanM"); break; }
                 // Warlocks
                 case "Warlock"  : { retVal    = string.Format(format, maint[1], funct[1], "Erstyx"); break; }
