@@ -3174,6 +3174,7 @@ namespace Rawr
                         .Replace("T7_0", "T11_10").Replace("T8_0", "T11_10").Replace("T9_0", "T11_10").Replace("T10_0", "T11_10")
                         .Replace("T7_5", "T11_10").Replace("T8_5", "T11_10").Replace("T9_5", "T11_10").Replace("T10_5", "T11_10")
                         .Replace("T7_9", "T11_10").Replace("T8_9", "T11_10").Replace("T9_9", "T11_10").Replace("T10_9", "T11_10")
+                        .Replace("T11_0", "T11_10").Replace("T11_5", "T11_10").Replace("T11_9", "T11_10")
                         .Replace("<Attack xsi:type=\"DoT\">", "<Attack>");
 
                     if (xml.IndexOf("<CalculationOptions>") != xml.LastIndexOf("<CalculationOptions>"))
