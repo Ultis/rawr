@@ -40,6 +40,8 @@ namespace Rawr.Elemental.Spells
 
             totalCoef *= 1f + additionalTargets;
 
+            manaCost -= args.Stats.NatureSpellsManaCostReduction;
+
             shortName = "FN" + (1 + additionalTargets);
 
             spCoef += .1f * args.Talents.CallOfFlame;

@@ -240,7 +240,7 @@ namespace Rawr
         {
             _lastItemId = itemId;
             UsePTR = usePTR;
-            string url = string.Format(URL_ITEM, false/*UsePTR*/ ? "ptr" : "www", _lastItemId);
+            string url = string.Format(URL_ITEM, UsePTR ? "ptr" : "www", _lastItemId);
             _webClient.DownloadStringAsync(new Uri(url));
             this.Progress = "Downloading Item Data...";
         }
@@ -248,7 +248,7 @@ namespace Rawr
         {
             _lastItemId = itemId;
             UsePTR = usePTR;
-            string url = string.Format(URL_ITEM_NONXML, false/*UsePTR*/ ? "ptr" : "www", _lastItemId);
+            string url = string.Format(URL_ITEM_NONXML, UsePTR ? "ptr" : "www", _lastItemId);
             _webClient_nonxml.DownloadStringAsync(new Uri(url));
             this.Progress = "Downloading Item Source Data...";
         }

@@ -740,11 +740,11 @@ namespace Rawr.Moonkin
 
             // Reduce spell-specific mana costs
             // Shard of Woe (Mana cost -405)
-            Starfire.BaseManaCost -= calcs.BasicStats.SpellsManaCostReduction;
-            Moonfire.BaseManaCost -= calcs.BasicStats.SpellsManaCostReduction;
-            Wrath.BaseManaCost -= calcs.BasicStats.SpellsManaCostReduction;
-            InsectSwarm.BaseManaCost -= calcs.BasicStats.SpellsManaCostReduction;
-            Starsurge.BaseManaCost -= calcs.BasicStats.SpellsManaCostReduction;
+            Starfire.BaseManaCost -= calcs.BasicStats.SpellsManaCostReduction + calcs.BasicStats.NatureSpellsManaCostReduction;
+            Moonfire.BaseManaCost -= calcs.BasicStats.SpellsManaCostReduction + calcs.BasicStats.NatureSpellsManaCostReduction;
+            Wrath.BaseManaCost -= calcs.BasicStats.SpellsManaCostReduction + calcs.BasicStats.NatureSpellsManaCostReduction;
+            InsectSwarm.BaseManaCost -= calcs.BasicStats.SpellsManaCostReduction + calcs.BasicStats.NatureSpellsManaCostReduction;
+            Starsurge.BaseManaCost -= calcs.BasicStats.SpellsManaCostReduction + calcs.BasicStats.NatureSpellsManaCostReduction;
             // All spells: Mana cost -(0.03 * Moonglow)
             Starfire.BaseManaCost *= 1.0f - (0.03f * talents.Moonglow);
             Moonfire.BaseManaCost *= 1.0f - (0.03f * talents.Moonglow);

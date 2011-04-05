@@ -31,6 +31,7 @@ public class FlameShock : Shock
 
             totalCoef += .01f * args.Talents.Concussion;
             manaCost *= 1 - .02f * args.Talents.Convection;
+            manaCost -= args.Stats.NatureSpellsManaCostReduction;
             cooldown -= .2f * args.Talents.Reverberation;
             spellPower += args.Stats.SpellFireDamageRating;
             totalCoef *= 1 + args.Stats.BonusFireDamageMultiplier;

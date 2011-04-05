@@ -74,7 +74,7 @@ namespace Rawr.Healadin
         {
             return (float)Math.Max(0f, (float)Math.Min(1f, Stats.SpellCrit + AbilityCritChance() + ExtraCritChance + Talents.DivineFavor * .2f));
         }
-        public float CostReduction() { return Stats.SpellsManaCostReduction + AbilityCostReduction(); }
+        public float CostReduction() { return Stats.SpellsManaCostReduction + Stats.HolySpellsManaCostReduction + AbilityCostReduction(); }
 
         public float ExtraCritChance { get; set; }
         public bool DivineIllumination { get; set; }
@@ -243,7 +243,7 @@ namespace Rawr.Healadin
 
         public float Cost()
         {
-            return (BaseCost - Stats.SpellsManaCostReduction);
+            return (BaseCost - Stats.SpellsManaCostReduction - Stats.HolySpellsManaCostReduction);
         }
 
         public float Casts()

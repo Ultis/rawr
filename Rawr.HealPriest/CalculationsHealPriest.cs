@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Media;
-using Rawr;
 
 namespace Rawr.HealPriest
 {
     [Rawr.Calculations.RawrModelInfo("HealPriest", "Spell_Holy_Renew", CharacterClass.Priest)]
-    public class CalculationsHealPriest : CalculationsBase 
+    public class CalculationsHealPriest : CalculationsBase
     {
+        #region Variables and Properties
+
+        #region Gemming Templates
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
             get
@@ -226,57 +228,8 @@ namespace Rawr.HealPriest
                 };
             }
         }
+        #endregion
 
-        public override void SetDefaults(Character character)
-        {
-            character.ActiveBuffsAdd("Inner Fire");
-            character.ActiveBuffsAdd("Improved Moonkin Form");
-            character.ActiveBuffsAdd("Tree of Life Aura");
-            character.ActiveBuffsAdd("Arcane Intellect");
-            character.ActiveBuffsAdd("Vampiric Touch");
-            character.ActiveBuffsAdd("Mana Spring Totem");
-            character.ActiveBuffsAdd("Restorative Totems");
-            character.ActiveBuffsAdd("Moonkin Form");
-            character.ActiveBuffsAdd("Wrath of Air Totem");
-            character.ActiveBuffsAdd("Totem of Wrath (Spell Power)");
-            character.ActiveBuffsAdd("Divine Spirit");
-            character.ActiveBuffsAdd("Power Word: Fortitude");
-            character.ActiveBuffsAdd("Mark of the Wild");
-            character.ActiveBuffsAdd("Blessing of Kings");
-            character.ActiveBuffsAdd("Shadow Protection");
-            character.ActiveBuffsAdd("Flask of the Frost Wyrm");
-            character.ActiveBuffsAdd("Spell Power Food");
-        }
-
-        private static List<string> _relevantGlyphs;
-        public override List<string> GetRelevantGlyphs()
-        {
-            if (_relevantGlyphs == null)
-            {
-                _relevantGlyphs = new List<string>();
-                _relevantGlyphs.Add("Glyph of Circle of Healing");
-                _relevantGlyphs.Add("Glyph of Flash Heal");
-                _relevantGlyphs.Add("Glyph of Guardian Spirit");
-                _relevantGlyphs.Add("Glyph of Holy Nova");
-                _relevantGlyphs.Add("Glyph of Hymn of Hope");
-                _relevantGlyphs.Add("Glyph of Inner Fire");
-                _relevantGlyphs.Add("Glyph of Lightwell");
-                _relevantGlyphs.Add("Glyph of Mass Dispel");
-                _relevantGlyphs.Add("Glyph of Penance");
-                _relevantGlyphs.Add("Glyph of Power Word: Shield");
-                _relevantGlyphs.Add("Glyph of Prayer of Healing");
-                _relevantGlyphs.Add("Glyph of Renew");
-                _relevantGlyphs.Add("Glyph of Fading");
-
-            }
-            return _relevantGlyphs;
-        }
-
-        public override CharacterClass TargetClass { get { return CharacterClass.Priest; } }
-
-        private string _currentChartName = null;
-        private float _currentChartTotal = 0;
-        
         private Dictionary<string, Color> _subPointNameColors = null;
         public override Dictionary<string, Color> SubPointNameColors
         {
@@ -378,23 +331,47 @@ namespace Rawr.HealPriest
             }
         }
 
-
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
         public override ICalculationOptionsPanel CalculationOptionsPanel { get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelHealPriest()); } }
 
-        private string[] _customChartNames = null;
-        public override string[] CustomChartNames
-        {
-            get
-            {
-                if (_customChartNames == null)
-                    _customChartNames = new string[] { "MP5 Sources", "Spell HpS", "Spell HpM", "Spell AoE HpS", "Spell AoE HpM"}; //, "Relative Stat Values" };
-                return _customChartNames;
-            }
-        }
-
+        public override CharacterClass TargetClass { get { return CharacterClass.Priest; } }
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationHealPriest(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsHealPriest(); }
+
+        public override ICalculationOptionBase DeserializeDataObject(string xml)
+        {
+            System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsHealPriest));
+            System.IO.StringReader reader = new System.IO.StringReader(xml.Replace("CalculationOptionsPriest", "CalculationOptionsHealPriest").Replace("CalculationOptionsHolyPriest", "CalculationOptionsHealPriest"));
+            CalculationOptionsHealPriest calcOpts = serializer.Deserialize(reader) as CalculationOptionsHealPriest;
+            return calcOpts;
+        }
+
+        #endregion
+
+        #region Relevancy
+        private static List<string> _relevantGlyphs;
+        public override List<string> GetRelevantGlyphs()
+        {
+            if (_relevantGlyphs == null)
+            {
+                _relevantGlyphs = new List<string>();
+                _relevantGlyphs.Add("Glyph of Circle of Healing");
+                _relevantGlyphs.Add("Glyph of Flash Heal");
+                _relevantGlyphs.Add("Glyph of Guardian Spirit");
+                _relevantGlyphs.Add("Glyph of Holy Nova");
+                _relevantGlyphs.Add("Glyph of Hymn of Hope");
+                _relevantGlyphs.Add("Glyph of Inner Fire");
+                _relevantGlyphs.Add("Glyph of Lightwell");
+                _relevantGlyphs.Add("Glyph of Mass Dispel");
+                _relevantGlyphs.Add("Glyph of Penance");
+                _relevantGlyphs.Add("Glyph of Power Word: Shield");
+                _relevantGlyphs.Add("Glyph of Prayer of Healing");
+                _relevantGlyphs.Add("Glyph of Renew");
+                _relevantGlyphs.Add("Glyph of Fading");
+
+            }
+            return _relevantGlyphs;
+        }
 
         private List<ItemType> _relevantItemTypes = null;
         public override List<ItemType> RelevantItemTypes
@@ -426,86 +403,224 @@ namespace Rawr.HealPriest
             return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
         }
 
-        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
+        public override Stats GetRelevantStats(Stats stats)
         {
-            // First things first, we need to ensure that we aren't using bad data
-            CharacterCalculationsHealPriest calc = new CharacterCalculationsHealPriest();
-            if (character == null) { return calc; }
-            CalculationOptionsHealPriest calcOpts = character.CalculationOptions as CalculationOptionsHealPriest;
-            if (calcOpts == null) { return calc; }
-            //
-            Stats stats = GetCharacterStats(character, additionalItem);
-            Stats statsRace = BaseStats.GetBaseStats(character);  // GetRaceStats(character);
-
-            calc.Race = character.Race;
-            calc.BasicStats = stats;
-            calc.Character = character;
-
-            calc.SpiritRegen = (float)Math.Floor(5 * StatConversion.GetSpiritRegenSec(calc.BasicStats.Spirit, calc.BasicStats.Intellect));
-            
-            /*BaseSolver solver;
-            if (calcOpts.Role == eRole.CUSTOM)
-                solver = new AdvancedSolver(stats, character);
-            else
-                solver = new Solver(stats, character);
-            solver.Calculate(calc);*/
-            
-            return calc;
-        }
-
-        public static float GetInnerFireSpellPowerBonus(Character character)
-        {
-            float InnerFireSpellPowerBonus = 0;
-            if (character.Level >= 77)
-                InnerFireSpellPowerBonus = 120;
-            else if (character.Level >= 71)
-                InnerFireSpellPowerBonus = 95;
-            return InnerFireSpellPowerBonus; // *(1f + character.PriestTalents.ImprovedInnerFire * 0.15f);
-        }
-
-        public static float GetInnerFireArmorBonus(Character character)
-        {
-            float ArmorBonus = 2440 * (character.PriestTalents.GlyphofInnerFire ? 1.5f : 1f);
-
-            return ArmorBonus; // *(1f + character.PriestTalents.ImprovedInnerFire * 0.15f);
-        }
-
-        public override Stats GetCharacterStats(Character character, Item additionalItem)
-        {
-            
-            CalculationOptionsHealPriest calcOpts = character.CalculationOptions as CalculationOptionsHealPriest;
-            Stats statsRace = BaseStats.GetBaseStats(character);
-            Stats statsBaseGear = GetItemStats(character, additionalItem);
-            //Stats statsEnchants = GetEnchantsStats(character);
-            Stats statsBuffs = GetBuffsStats(character, calcOpts);
-
-            Stats statsTalents = new Stats()
+            Stats s = new Stats()
             {
-                /*BonusStaminaMultiplier = character.PriestTalents.ImprovedPowerWordFortitude * 0.02f,
-                BonusSpiritMultiplier = (1 + character.PriestTalents.Enlightenment * 0.02f) * (1f + character.PriestTalents.SpiritOfRedemption * 0.05f) - 1f,
-                BonusIntellectMultiplier = character.PriestTalents.MentalStrength * 0.03f,
-                SpellDamageFromSpiritPercentage = character.PriestTalents.SpiritualGuidance * 0.05f + character.PriestTalents.TwistedFaith * 0.02f,
-                SpellHaste = character.PriestTalents.Enlightenment * 0.02f,
-                SpellCombatManaRegeneration = character.PriestTalents.Meditation * 0.5f / 3f,
-                SpellCrit = character.PriestTalents.FocusedWill * 0.01f,*/
+                Stamina = stats.Stamina,
+                Intellect = stats.Intellect,
+                Spirit = stats.Spirit,
+                Health = stats.Health,
+                Mana = stats.Mana,
+                Mp5 = stats.Mp5,
+                SpellPower = stats.SpellPower,
+
+                SpellHaste = stats.SpellHaste,
+                SpellCrit = stats.SpellCrit,
+
+                Resilience = stats.Resilience,
+                CritRating = stats.CritRating,
+                HasteRating = stats.HasteRating,
+                
+                BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
+                BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
+                BonusManaMultiplier = stats.BonusManaMultiplier,
+                BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
+
+                //SpellDamageFromSpiritPercentage = stats.SpellDamageFromSpiritPercentage,
+                HealingReceivedMultiplier = stats.HealingReceivedMultiplier,
+                BonusHealingDoneMultiplier = stats.BonusHealingDoneMultiplier,
+                BonusHealthMultiplier = stats.BonusHealthMultiplier,
+                BonusManaPotionEffectMultiplier = stats.BonusManaPotionEffectMultiplier,
+                ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
+                PriestInnerFire = stats.PriestInnerFire,
+                Healed = stats.Healed,
+
+                ManaRestore = stats.ManaRestore,
+                SpellsManaCostReduction = stats.SpellsManaCostReduction,
+                HolySpellsManaCostReduction = stats.HolySpellsManaCostReduction,
+                HighestStat = stats.HighestStat,
+                ShieldFromHealedProc = stats.ShieldFromHealedProc,
+
+                Armor = stats.Armor,
+                BonusArmor = stats.BonusArmor,
+                Agility = stats.Agility,
+                ArcaneResistance = stats.ArcaneResistance,
+                ArcaneResistanceBuff = stats.ArcaneResistanceBuff,
+                FireResistance = stats.FireResistance,
+                FireResistanceBuff = stats.FireResistanceBuff,
+                FrostResistance = stats.FrostResistance,
+                FrostResistanceBuff = stats.FrostResistanceBuff,
+                NatureResistance = stats.NatureResistance,
+                NatureResistanceBuff = stats.NatureResistanceBuff,
+                ShadowResistance = stats.ShadowResistance,
+                ShadowResistanceBuff = stats.ShadowResistanceBuff,
+
+                SnareRootDurReduc = stats.SnareRootDurReduc,
+                FearDurReduc = stats.FearDurReduc,
+                StunDurReduc = stats.StunDurReduc,
+                MovementSpeed = stats.MovementSpeed,
             };
 
-            Stats statsTotal = statsBaseGear + statsBuffs + statsRace + statsTalents;
+            foreach (SpecialEffect se in stats.SpecialEffects())
+                if (RelevantTrinket(se))
+                    s.AddSpecialEffect(se);
+            return s;
+        }
 
-            statsTotal.Stamina = (float)Math.Floor((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
-            statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
-            statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
-            statsTotal.SpellPower += //statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit + // This line shouldn't be valid anymore
-                (statsTotal.PriestInnerFire > 0 ? GetInnerFireSpellPowerBonus(character) : 0);
-            statsTotal.Mana += StatConversion.GetManaFromIntellect(statsTotal.Intellect);
-            statsTotal.Mana *= (1f + statsTotal.BonusManaMultiplier);
-            statsTotal.Health += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
-            statsTotal.Health = (float)Math.Floor(statsTotal.Health * (1f + statsTotal.BonusHealthMultiplier));
-            statsTotal.SpellCrit += StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect)
-                + StatConversion.GetSpellCritFromRating(statsTotal.CritRating);
-            statsTotal.SpellHaste = (1f + statsTotal.SpellHaste) * (1f + StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating)) - 1f;
-            statsTotal.BonusArmor += (statsTotal.PriestInnerFire > 0 ? GetInnerFireArmorBonus(character) : 0);    
-            return statsTotal;
+        protected bool RelevantTrinket(SpecialEffect se)
+        {
+            if (se.Trigger == Trigger.HealingSpellCast
+                || se.Trigger == Trigger.HealingSpellCrit
+                || se.Trigger == Trigger.HealingSpellHit
+                || se.Trigger == Trigger.SpellCast
+                || se.Trigger == Trigger.SpellCrit
+                || se.Trigger == Trigger.Use)
+            {
+                return _HasRelevantStats(se.Stats) || (se.Stats._rawSpecialEffectDataSize > 0 && _HasRelevantStats(se.Stats._rawSpecialEffectData[0].Stats));
+            }
+            return false;
+        }
+
+        protected bool _HasRelevantStats(Stats stats)
+        {
+            bool Yes = (
+                stats.Intellect + stats.Spirit + stats.Mana + stats.Mp5 + stats.SpellPower
+                + stats.SpellHaste + stats.SpellCrit
+                + stats.HasteRating + stats.CritRating
+                + stats.BonusIntellectMultiplier + stats.BonusSpiritMultiplier + stats.BonusManaMultiplier + stats.BonusCritHealMultiplier
+                + stats.HealingReceivedMultiplier + stats.BonusHealingDoneMultiplier + stats.BonusManaPotionEffectMultiplier
+                + stats.ManaRestoreFromMaxManaPerSecond + stats.PriestInnerFire
+                + stats.Healed
+
+                + stats.ManaRestore + stats.SpellsManaCostReduction + stats.HolySpellsManaCostReduction + stats.HighestStat
+                + stats.ShieldFromHealedProc
+            ) != 0;
+
+            bool Maybe = (
+                stats.Stamina + stats.Health + stats.Resilience
+                + stats.Armor + stats.BonusArmor + stats.Agility +
+                +stats.SpellHit + stats.HitRating
+                + stats.ArcaneResistance + stats.ArcaneResistanceBuff
+                + stats.FireResistance + stats.FireResistanceBuff
+                + stats.FrostResistance + stats.FrostResistanceBuff
+                + stats.NatureResistance + stats.NatureResistanceBuff
+                + stats.ShadowResistance + stats.ShadowResistanceBuff
+                + stats.SnareRootDurReduc + stats.FearDurReduc + stats.StunDurReduc + stats.MovementSpeed
+            ) != 0;
+
+            bool No = (
+                stats.Strength + stats.AttackPower
+                + stats.ArmorPenetration + stats.TargetArmorReduction
+                + stats.ExpertiseRating
+                + stats.Dodge + stats.DodgeRating
+                + stats.Parry + stats.ParryRating
+                + stats.PhysicalHit
+            ) != 0;
+
+            return Yes || (Maybe && !No);
+        }
+
+        public override bool HasRelevantStats(Stats stats)
+        {
+            bool isRelevant = _HasRelevantStats(stats);
+
+            foreach (SpecialEffect se in stats.SpecialEffects())
+                isRelevant |= RelevantTrinket(se);
+            return isRelevant;
+        }
+
+        public Stats GetBuffsStats(Character character, CalculationOptionsHealPriest calcOpts) {
+            List<Buff> removedBuffs = new List<Buff>();
+            List<Buff> addedBuffs = new List<Buff>();
+
+            //float hasRelevantBuff;
+
+            #region Passive Ability Auto-Fixing
+            // Removes the Trueshot Aura Buff and it's equivalents Unleashed Rage and Abomination's Might if you are
+            // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
+            // value to relevant talents
+            /*{
+                hasRelevantBuff = character.HunterTalents.TrueshotAura;
+                Buff a = Buff.GetBuffByName("Trueshot Aura");
+                Buff b = Buff.GetBuffByName("Unleashed Rage");
+                Buff c = Buff.GetBuffByName("Abomination's Might");
+                if (hasRelevantBuff > 0)
+                {
+                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
+                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
+                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); removedBuffs.Add(c); }
+                }
+            }
+            // Removes the Hunter's Mark Buff and it's Children 'Glyphed', 'Improved' and 'Both' if you are
+            // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
+            // value to relevant talents
+            {
+                hasRelevantBuff =  character.HunterTalents.ImprovedHuntersMark
+                                + (character.HunterTalents.GlyphOfHuntersMark ? 1 : 0);
+                Buff a = Buff.GetBuffByName("Hunter's Mark");
+                Buff b = Buff.GetBuffByName("Glyphed Hunter's Mark");
+                Buff c = Buff.GetBuffByName("Improved Hunter's Mark");
+                Buff d = Buff.GetBuffByName("Improved and Glyphed Hunter's Mark");
+                // Since we are doing base Hunter's mark ourselves, we still don't want to double-dip
+                if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); /*removedBuffs.Add(a);*//* }
+                // If we have an enhanced Hunter's Mark, kill the Buff
+                if (hasRelevantBuff > 0) {
+                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); /*removedBuffs.Add(b);*//* }
+                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); /*removedBuffs.Add(c);*//* }
+                    if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); /*removedBuffs.Add(c);*//* }
+                }
+            }*/
+            #endregion
+
+            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs, character.SetBonusCount);
+
+            foreach (Buff b in removedBuffs) {
+                character.ActiveBuffsAdd(b);
+            }
+            foreach (Buff b in addedBuffs) {
+                character.ActiveBuffs.Remove(b);
+            }
+
+            return statsBuffs;
+        }
+
+        public override void SetDefaults(Character character)
+        {
+            character.ActiveBuffsAdd("Inner Fire");
+            character.ActiveBuffsAdd("Improved Moonkin Form");
+            character.ActiveBuffsAdd("Tree of Life Aura");
+            character.ActiveBuffsAdd("Arcane Intellect");
+            character.ActiveBuffsAdd("Vampiric Touch");
+            character.ActiveBuffsAdd("Mana Spring Totem");
+            character.ActiveBuffsAdd("Restorative Totems");
+            character.ActiveBuffsAdd("Moonkin Form");
+            character.ActiveBuffsAdd("Wrath of Air Totem");
+            character.ActiveBuffsAdd("Totem of Wrath (Spell Power)");
+            character.ActiveBuffsAdd("Divine Spirit");
+            character.ActiveBuffsAdd("Power Word: Fortitude");
+            character.ActiveBuffsAdd("Mark of the Wild");
+            character.ActiveBuffsAdd("Blessing of Kings");
+            character.ActiveBuffsAdd("Shadow Protection");
+            character.ActiveBuffsAdd("Flask of the Frost Wyrm");
+            character.ActiveBuffsAdd("Spell Power Food");
+        }
+        #endregion
+
+        #region Custom Charts
+
+        private string _currentChartName = null;
+        private float _currentChartTotal = 0;
+
+        private string[] _customChartNames = null;
+        public override string[] CustomChartNames
+        {
+            get
+            {
+                if (_customChartNames == null)
+                    _customChartNames = new string[] { "MP5 Sources", "Spell HpS", "Spell HpM", "Spell AoE HpS", "Spell AoE HpM"}; //, "Relative Stat Values" };
+                return _customChartNames;
+            }
         }
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
@@ -723,208 +838,91 @@ namespace Rawr.HealPriest
             }*/
         }
 
-        public override Stats GetRelevantStats(Stats stats)
+        #endregion
+
+        #region Model Specific Variables and Functions
+        public static float GetInnerFireSpellPowerBonus(Character character)
         {
-            Stats s = new Stats()
+            float InnerFireSpellPowerBonus = 0;
+            if (character.Level >= 77)
+                InnerFireSpellPowerBonus = 120;
+            else if (character.Level >= 71)
+                InnerFireSpellPowerBonus = 95;
+            return InnerFireSpellPowerBonus; // *(1f + character.PriestTalents.ImprovedInnerFire * 0.15f);
+        }
+
+        public static float GetInnerFireArmorBonus(Character character)
+        {
+            float ArmorBonus = 2440 * (character.PriestTalents.GlyphofInnerFire ? 1.5f : 1f);
+
+            return ArmorBonus; // *(1f + character.PriestTalents.ImprovedInnerFire * 0.15f);
+        }
+        #endregion
+
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
+        {
+            // First things first, we need to ensure that we aren't using bad data
+            CharacterCalculationsHealPriest calc = new CharacterCalculationsHealPriest();
+            if (character == null) { return calc; }
+            CalculationOptionsHealPriest calcOpts = character.CalculationOptions as CalculationOptionsHealPriest;
+            if (calcOpts == null) { return calc; }
+            //
+            Stats stats = GetCharacterStats(character, additionalItem);
+            Stats statsRace = BaseStats.GetBaseStats(character);  // GetRaceStats(character);
+
+            calc.Race = character.Race;
+            calc.BasicStats = stats;
+            calc.Character = character;
+
+            calc.SpiritRegen = (float)Math.Floor(5 * StatConversion.GetSpiritRegenSec(calc.BasicStats.Spirit, calc.BasicStats.Intellect));
+            
+            /*BaseSolver solver;
+            if (calcOpts.Role == eRole.CUSTOM)
+                solver = new AdvancedSolver(stats, character);
+            else
+                solver = new Solver(stats, character);
+            solver.Calculate(calc);*/
+            
+            return calc;
+        }
+
+        public override Stats GetCharacterStats(Character character, Item additionalItem)
+        {
+            
+            CalculationOptionsHealPriest calcOpts = character.CalculationOptions as CalculationOptionsHealPriest;
+            Stats statsRace = BaseStats.GetBaseStats(character);
+            Stats statsBaseGear = GetItemStats(character, additionalItem);
+            //Stats statsEnchants = GetEnchantsStats(character);
+            Stats statsBuffs = GetBuffsStats(character, calcOpts);
+
+            Stats statsTalents = new Stats()
             {
-                Stamina = stats.Stamina,
-                Intellect = stats.Intellect,
-                Spirit = stats.Spirit,
-                Health = stats.Health,
-                Mana = stats.Mana,
-                Mp5 = stats.Mp5,
-                SpellPower = stats.SpellPower,
-
-                SpellHaste = stats.SpellHaste,
-                SpellCrit = stats.SpellCrit,
-
-                Resilience = stats.Resilience,
-                CritRating = stats.CritRating,
-                HasteRating = stats.HasteRating,
-                
-                BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
-                BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
-                BonusManaMultiplier = stats.BonusManaMultiplier,
-                BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
-
-                //SpellDamageFromSpiritPercentage = stats.SpellDamageFromSpiritPercentage,
-                HealingReceivedMultiplier = stats.HealingReceivedMultiplier,
-                BonusHealingDoneMultiplier = stats.BonusHealingDoneMultiplier,
-                BonusHealthMultiplier = stats.BonusHealthMultiplier,
-                BonusManaPotionEffectMultiplier = stats.BonusManaPotionEffectMultiplier,
-                ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
-                PriestInnerFire = stats.PriestInnerFire,
-                Healed = stats.Healed,
-
-                ManaRestore = stats.ManaRestore,
-                SpellsManaCostReduction = stats.SpellsManaCostReduction,
-                HighestStat = stats.HighestStat,
-                ShieldFromHealedProc = stats.ShieldFromHealedProc,
-
-                Armor = stats.Armor,
-                BonusArmor = stats.BonusArmor,
-                Agility = stats.Agility,
-                ArcaneResistance = stats.ArcaneResistance,
-                ArcaneResistanceBuff = stats.ArcaneResistanceBuff,
-                FireResistance = stats.FireResistance,
-                FireResistanceBuff = stats.FireResistanceBuff,
-                FrostResistance = stats.FrostResistance,
-                FrostResistanceBuff = stats.FrostResistanceBuff,
-                NatureResistance = stats.NatureResistance,
-                NatureResistanceBuff = stats.NatureResistanceBuff,
-                ShadowResistance = stats.ShadowResistance,
-                ShadowResistanceBuff = stats.ShadowResistanceBuff,
-
-                SnareRootDurReduc = stats.SnareRootDurReduc,
-                FearDurReduc = stats.FearDurReduc,
-                StunDurReduc = stats.StunDurReduc,
-                MovementSpeed = stats.MovementSpeed,
+                /*BonusStaminaMultiplier = character.PriestTalents.ImprovedPowerWordFortitude * 0.02f,
+                BonusSpiritMultiplier = (1 + character.PriestTalents.Enlightenment * 0.02f) * (1f + character.PriestTalents.SpiritOfRedemption * 0.05f) - 1f,
+                BonusIntellectMultiplier = character.PriestTalents.MentalStrength * 0.03f,
+                SpellDamageFromSpiritPercentage = character.PriestTalents.SpiritualGuidance * 0.05f + character.PriestTalents.TwistedFaith * 0.02f,
+                SpellHaste = character.PriestTalents.Enlightenment * 0.02f,
+                SpellCombatManaRegeneration = character.PriestTalents.Meditation * 0.5f / 3f,
+                SpellCrit = character.PriestTalents.FocusedWill * 0.01f,*/
             };
 
-            foreach (SpecialEffect se in stats.SpecialEffects())
-                if (RelevantTrinket(se))
-                    s.AddSpecialEffect(se);
-            return s;
+            Stats statsTotal = statsBaseGear + statsBuffs + statsRace + statsTalents;
+
+            statsTotal.Stamina = (float)Math.Floor((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
+            statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
+            statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
+            statsTotal.SpellPower += //statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit + // This line shouldn't be valid anymore
+                (statsTotal.PriestInnerFire > 0 ? GetInnerFireSpellPowerBonus(character) : 0);
+            statsTotal.Mana += StatConversion.GetManaFromIntellect(statsTotal.Intellect);
+            statsTotal.Mana *= (1f + statsTotal.BonusManaMultiplier);
+            statsTotal.Health += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
+            statsTotal.Health = (float)Math.Floor(statsTotal.Health * (1f + statsTotal.BonusHealthMultiplier));
+            statsTotal.SpellCrit += StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect)
+                + StatConversion.GetSpellCritFromRating(statsTotal.CritRating);
+            statsTotal.SpellHaste = (1f + statsTotal.SpellHaste) * (1f + StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating)) - 1f;
+            statsTotal.BonusArmor += (statsTotal.PriestInnerFire > 0 ? GetInnerFireArmorBonus(character) : 0);    
+            return statsTotal;
         }
 
-        protected bool RelevantTrinket(SpecialEffect se)
-        {
-            if (se.Trigger == Trigger.HealingSpellCast
-                || se.Trigger == Trigger.HealingSpellCrit
-                || se.Trigger == Trigger.HealingSpellHit
-                || se.Trigger == Trigger.SpellCast
-                || se.Trigger == Trigger.SpellCrit
-                || se.Trigger == Trigger.Use)
-            {
-                return _HasRelevantStats(se.Stats) || (se.Stats._rawSpecialEffectDataSize > 0 && _HasRelevantStats(se.Stats._rawSpecialEffectData[0].Stats));
-            }
-            return false;
-        }
-
-        // Trinket Status:
-        // Correctly implemented:
-        // http://www.wowhead.com/?item=40382 - Soul of the Dead
-        
-        // Wrongly implemented:
-        // http://www.wowhead.com/?item=37835 - Je'Tze's Bell
-
-        // Not implemented:
-        // http://www.wowhead.com/?item=44253 - Darkmoon Card: Greatness (But for 90 spi/90 int versions, not yet known)
-        // http://www.wowhead.com/?item=42988 - Darkmoon Card: Illusion
-        // http://www.wowhead.com/?item=40258 - Forethought Talisman
-        // http://www.wowhead.com/?item=40432 - Illustration of the Dragon Soul
-        // http://www.wowhead.com/?item=40532 - Living Ice Crystals
-        // http://www.wowhead.com/?item=40430 - Majestic Dragon Figurine
-
-        protected bool _HasRelevantStats(Stats stats)
-        {
-            bool Yes = (
-                stats.Intellect + stats.Spirit + stats.Mana + stats.Mp5 + stats.SpellPower
-                + stats.SpellHaste + stats.SpellCrit
-                + stats.HasteRating + stats.CritRating
-                + stats.BonusIntellectMultiplier + stats.BonusSpiritMultiplier + stats.BonusManaMultiplier + stats.BonusCritHealMultiplier
-                + stats.HealingReceivedMultiplier + stats.BonusHealingDoneMultiplier + stats.BonusManaPotionEffectMultiplier
-                + stats.ManaRestoreFromMaxManaPerSecond + stats.PriestInnerFire
-                + stats.Healed
-
-                + stats.ManaRestore + stats.SpellsManaCostReduction + stats.HighestStat
-                + stats.ShieldFromHealedProc
-            ) != 0;
-
-            bool Maybe = (
-                stats.Stamina + stats.Health + stats.Resilience
-                + stats.Armor + stats.BonusArmor + stats.Agility +
-                +stats.SpellHit + stats.HitRating
-                + stats.ArcaneResistance + stats.ArcaneResistanceBuff
-                + stats.FireResistance + stats.FireResistanceBuff
-                + stats.FrostResistance + stats.FrostResistanceBuff
-                + stats.NatureResistance + stats.NatureResistanceBuff
-                + stats.ShadowResistance + stats.ShadowResistanceBuff
-                + stats.SnareRootDurReduc + stats.FearDurReduc + stats.StunDurReduc + stats.MovementSpeed
-            ) != 0;
-
-            bool No = (
-                stats.Strength + stats.AttackPower
-                + stats.ArmorPenetration + stats.TargetArmorReduction
-                + stats.ExpertiseRating
-                + stats.Dodge + stats.DodgeRating
-                + stats.Parry + stats.ParryRating
-                + stats.PhysicalHit
-            ) != 0;
-
-            return Yes || (Maybe && !No);
-        }
-
-        public override bool HasRelevantStats(Stats stats)
-        {
-            bool isRelevant = _HasRelevantStats(stats);
-
-            foreach (SpecialEffect se in stats.SpecialEffects())
-                isRelevant |= RelevantTrinket(se);
-            return isRelevant;
-        }
-
-        public Stats GetBuffsStats(Character character, CalculationOptionsHealPriest calcOpts) {
-            List<Buff> removedBuffs = new List<Buff>();
-            List<Buff> addedBuffs = new List<Buff>();
-
-            //float hasRelevantBuff;
-
-            #region Passive Ability Auto-Fixing
-            // Removes the Trueshot Aura Buff and it's equivalents Unleashed Rage and Abomination's Might if you are
-            // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
-            // value to relevant talents
-            /*{
-                hasRelevantBuff = character.HunterTalents.TrueshotAura;
-                Buff a = Buff.GetBuffByName("Trueshot Aura");
-                Buff b = Buff.GetBuffByName("Unleashed Rage");
-                Buff c = Buff.GetBuffByName("Abomination's Might");
-                if (hasRelevantBuff > 0)
-                {
-                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
-                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
-                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); removedBuffs.Add(c); }
-                }
-            }
-            // Removes the Hunter's Mark Buff and it's Children 'Glyphed', 'Improved' and 'Both' if you are
-            // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
-            // value to relevant talents
-            {
-                hasRelevantBuff =  character.HunterTalents.ImprovedHuntersMark
-                                + (character.HunterTalents.GlyphOfHuntersMark ? 1 : 0);
-                Buff a = Buff.GetBuffByName("Hunter's Mark");
-                Buff b = Buff.GetBuffByName("Glyphed Hunter's Mark");
-                Buff c = Buff.GetBuffByName("Improved Hunter's Mark");
-                Buff d = Buff.GetBuffByName("Improved and Glyphed Hunter's Mark");
-                // Since we are doing base Hunter's mark ourselves, we still don't want to double-dip
-                if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); /*removedBuffs.Add(a);*//* }
-                // If we have an enhanced Hunter's Mark, kill the Buff
-                if (hasRelevantBuff > 0) {
-                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); /*removedBuffs.Add(b);*//* }
-                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); /*removedBuffs.Add(c);*//* }
-                    if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); /*removedBuffs.Add(c);*//* }
-                }
-            }*/
-            #endregion
-
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs, character.SetBonusCount);
-
-            foreach (Buff b in removedBuffs) {
-                character.ActiveBuffsAdd(b);
-            }
-            foreach (Buff b in addedBuffs) {
-                character.ActiveBuffs.Remove(b);
-            }
-
-            return statsBuffs;
-        }
-
-        public override ICalculationOptionBase DeserializeDataObject(string xml)
-        {
-            System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsHealPriest));
-            System.IO.StringReader reader = new System.IO.StringReader(xml.Replace("CalculationOptionsPriest", "CalculationOptionsHealPriest").Replace("CalculationOptionsHolyPriest", "CalculationOptionsHealPriest"));
-            CalculationOptionsHealPriest calcOpts = serializer.Deserialize(reader) as CalculationOptionsHealPriest;
-            return calcOpts;
-        }
     }
 }

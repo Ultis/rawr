@@ -35,6 +35,8 @@ namespace Rawr.Elemental.Spells
             else if (additionalTargets > 9)
                 additionalTargets = 9;
 
+            manaCost -= args.Stats.NatureSpellsManaCostReduction;
+
             totalCoef *= 1 + (.1f * args.Talents.CallOfFlame);
             totalCoef *= (1 + additionalTargets);
             shortName = "MT" + (1 + additionalTargets);

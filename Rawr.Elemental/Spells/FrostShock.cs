@@ -25,6 +25,7 @@ public class FrostShock : Shock
             totalCoef += .01f * args.Talents.ElementalPrecision;
             totalCoef += .02f * args.Talents.Concussion;
             manaCost *= 1 - .05f * args.Talents.Convection;
+            manaCost -= args.Stats.NatureSpellsManaCostReduction;
             cooldown -= .5f * args.Talents.Reverberation;
             crit += .01f * args.Talents.Acuity;
             spellPower += args.Stats.SpellFrostDamageRating;

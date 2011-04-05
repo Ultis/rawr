@@ -35,6 +35,7 @@ namespace Rawr.Elemental.Spells
             spCoef += .2f;
             crit += args.Talents.Acuity;            
             manaCost *= 1f - .05f * args.Talents.Convection;
+            manaCost -= args.Stats.NatureSpellsManaCostReduction;
             totalCoef += .02f * args.Talents.Concussion;
             totalCoef += .01f * args.Talents.ElementalPrecision;
             totalCoef += .05f * args.Talents.CallOfFlame;

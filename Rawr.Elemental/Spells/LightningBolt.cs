@@ -35,6 +35,7 @@ namespace Rawr.Elemental.Spells
 
             manaCost *= 1f - (0.05f * args.Talents.Convection);
             manaCost -= (args.Stats.Mana * (.01f * args.Talents.RollingThunder)) * .6f;
+            manaCost -= args.Stats.NatureSpellsManaCostReduction;
             totalCoef += .02f * args.Talents.Concussion;
             spCoef += .2f;
             loCoef += .2f;

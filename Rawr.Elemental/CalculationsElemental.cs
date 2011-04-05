@@ -4,11 +4,12 @@ using System.Text;
 using System.Windows.Media;
 using Rawr.Elemental.Spells;
 
-namespace Rawr.Elemental
-{
+namespace Rawr.Elemental {
     [Rawr.Calculations.RawrModelInfo("Elemental", "Spell_Nature_Lightning", CharacterClass.Shaman)]
-    public class CalculationsElemental : CalculationsBase
-    {
+    public class CalculationsElemental : CalculationsBase {
+        #region Variables and Properties
+
+        #region Gemming Templates
         private List<GemmingTemplate> _defaultGemmingTemplates = null;
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
@@ -90,15 +91,9 @@ namespace Rawr.Elemental
             list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = brilliant, YellowId = quick, BlueId = sparkling, PrismaticId = fractured, MetaId = meta, Enabled = enabled });
             list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = brilliant, YellowId = fractured, BlueId = sparkling, PrismaticId = fractured, MetaId = meta, Enabled = enabled });
         }
+        #endregion
 
-        private ICalculationOptionsPanel _calculationOptionsPanel = null;
-        public override ICalculationOptionsPanel CalculationOptionsPanel { get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelElemental()); } }
-
-        /*public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
-        {
-            return true;
-        }*/
-
+        // TODO: Override GetCharacterStatsString(Character character)
         private string[] _characterDisplayCalculationLabels = null;
         public override string[] CharacterDisplayCalculationLabels
         {
@@ -149,44 +144,39 @@ namespace Rawr.Elemental
             }
         }
 
-        public override void SetDefaults(Character character)
-        {
-            character.ActiveBuffsAdd("Sanctified Retribution");
-            character.ActiveBuffsAdd("Heroism/Bloodlust");
-            character.ActiveBuffsAdd("Swift Retribution");
-            character.ActiveBuffsAdd("Arcane Intellect");
-            character.ActiveBuffsAdd("Hunting Party");
-            character.ActiveBuffsAdd("Blessing of Wisdom");
-            character.ActiveBuffsAdd("Moonkin Form");
-            character.ActiveBuffsAdd("Wrath of Air Totem");
-            character.ActiveBuffsAdd("Totem of Wrath (Spell Power)");
-            character.ActiveBuffsAdd("Divine Spirit");
-            character.ActiveBuffsAdd("Mark of the Wild");
-            character.ActiveBuffsAdd("Blessing of Kings");
-            character.ActiveBuffsAdd("Totem of Wrath");
-            character.ActiveBuffsAdd("Judgement of Wisdom");
-            character.ActiveBuffsAdd("Improved Shadow Bolt");
-            character.ActiveBuffsAdd("Curse of the Elements");
-            character.ActiveBuffsAdd("Improved Faerie Fire");
-            character.ActiveBuffsAdd("Flask of the Frost Wyrm");
-            character.ActiveBuffsAdd("Fish Feast");
-        }
+        // TODO: private string[] _optimizableCalculationLabels = null
+        // TODO: public string[] OptimizableCalculationLabels { get { ... } }
 
         private Dictionary<string, Color> _subPointNameColors = null;
-        public override Dictionary<string, Color> SubPointNameColors
-        {
-            get
-            {
-                if (_subPointNameColors == null)
-                {
+        public override Dictionary<string, Color> SubPointNameColors {
+            get {
+                if (_subPointNameColors == null) {
                     _subPointNameColors = new Dictionary<string, Color>();
-                    _subPointNameColors.Add("Burst DPS", Color.FromArgb(255, 255, 0, 0));
-                    _subPointNameColors.Add("Sustained DPS", Color.FromArgb(255, 0, 0, 255));
+                    _subPointNameColors.Add("Burst DPS", Colors.Red);
+                    _subPointNameColors.Add("Sustained DPS", Colors.Blue);
                 }
                 return _subPointNameColors;
             }
         }
 
+        public override CharacterClass TargetClass { get { return CharacterClass.Shaman; } }
+        public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationElemental(); }
+        public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsElemental(); }
+        private ICalculationOptionsPanel _calculationOptionsPanel = null;
+        public override ICalculationOptionsPanel CalculationOptionsPanel { get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelElemental()); } }
+
+        public override ICalculationOptionBase DeserializeDataObject(string xml)
+        {
+            System.Xml.Serialization.XmlSerializer serializer =
+                new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsElemental));
+            System.IO.StringReader reader = new System.IO.StringReader(xml);
+            CalculationOptionsElemental calcOpts = serializer.Deserialize(reader) as CalculationOptionsElemental;
+            return calcOpts;
+        }
+
+        #endregion
+
+        #region Relevancy
         private List<ItemType> _relevantItemTypes = null;
         public override List<ItemType> RelevantItemTypes
         {
@@ -216,23 +206,235 @@ namespace Rawr.Elemental
             }
         }
 
-        public override CharacterClass TargetClass { get { return CharacterClass.Shaman; } }
-        public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationElemental(); }
-        public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsElemental(); }
+        public override bool IsItemRelevant(Item item)
+        {
+            if ((item.Slot == ItemSlot.Ranged && (item.Type != ItemType.Totem && item.Type != ItemType.Relic)))
+                return false;
+            return base.IsItemRelevant(item);
+        }
 
+        public override bool IsBuffRelevant(Buff buff, Character character) {
+            string name = buff.Name;
+            if (!buff.AllowedClasses.Contains(CharacterClass.Shaman)) {
+                return false;
+            }
+            return base.IsBuffRelevant(buff, character);
+        }
+
+        public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot)
+        {
+            // Filters out Non-Shield Offhand Enchants and Ranged Enchants
+            if ((slot == ItemSlot.OffHand && enchant.Slot != ItemSlot.OffHand) || slot == ItemSlot.Ranged) return false;
+            return base.EnchantFitsInSlot(enchant, character, slot);
+        }
+
+        internal static List<Trigger> _RelevantTriggers = null;
+        internal static List<Trigger> RelevantTriggers
+        {
+            get
+            {
+                return _RelevantTriggers ?? (_RelevantTriggers = new List<Trigger>() {
+                    // General
+                    Trigger.Use,
+                    Trigger.SpellCast, Trigger.SpellHit, Trigger.SpellCrit, Trigger.SpellMiss,
+                    Trigger.DamageSpellCast, Trigger.DamageSpellHit, Trigger.DamageSpellCrit,
+                    Trigger.DoTTick,
+                    Trigger.DamageDone,
+                    Trigger.DamageOrHealingDone,
+                    // Special
+                    Trigger.DarkIntentCriticalPeriodicDamageOrHealing,
+                    // Elemental Specific
+                    Trigger.ShamanLightningBolt,
+                    Trigger.ShamanFlameShockDoTTick,
+                    Trigger.ShamanShock,
+                });
+            }
+        }
+
+        public override Stats GetRelevantStats(Stats stats)
+        {
+            Stats s = new Stats()
+            {
+                #region Basic stats
+                Intellect = stats.Intellect,
+                Mana = stats.Mana,
+                Spirit= stats.Spirit,
+                SpellCrit = stats.SpellCrit,
+                SpellCritOnTarget = stats.SpellCritOnTarget,
+                SpellHit = stats.SpellHit,
+                SpellHaste = stats.SpellHaste,
+                SpellPower = stats.SpellPower,
+                CritRating = stats.CritRating,
+                HasteRating = stats.HasteRating,
+                HitRating = stats.HitRating,
+                SpellFireDamageRating = stats.SpellFireDamageRating,
+                SpellNatureDamageRating = stats.SpellNatureDamageRating,
+                SpellFrostDamageRating = stats.SpellFrostDamageRating,
+                Mp5 = stats.Mp5,
+                ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
+                ManaRestore = stats.ManaRestore,
+                NatureSpellsManaCostReduction = stats.NatureSpellsManaCostReduction,
+                MovementSpeed = stats.MovementSpeed,
+                SnareRootDurReduc = stats.SnareRootDurReduc,
+                FearDurReduc = stats.FearDurReduc,
+                StunDurReduc = stats.StunDurReduc,
+                #endregion
+                #region Multipliers
+                BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
+                BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
+                BonusSpellCritDamageMultiplier = stats.BonusSpellCritDamageMultiplier,
+                BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
+                BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
+                BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier,
+                BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
+                BonusDamageMultiplier = stats.BonusDamageMultiplier,
+                #endregion
+                #region Sets
+                BonusDamageMultiplierLavaBurst = stats.BonusDamageMultiplierLavaBurst,
+                #endregion
+                #region Misc Damage
+                NatureDamage = stats.NatureDamage,
+                ArcaneDamage = stats.ArcaneDamage,
+                FireDamage = stats.FireDamage,
+                ShadowDamage = stats.ShadowDamage
+                #endregion
+            };
+            #region Trinkets
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (RelevantTriggers.Contains(effect.Trigger))
+                {
+                    if (HasRelevantStats(effect.Stats))
+                    {
+                        s.AddSpecialEffect(effect);
+                    }
+                }
+            }
+            #endregion
+            return s;
+        }
+
+        public override bool HasRelevantStats(Stats stats)
+        {
+            #region Basic stats
+            if (stats.Mana != 0) return true;
+            if (stats.Spirit != 0) return true;
+            if (stats.SpellCrit != 0) return true;
+            if (stats.SpellCritOnTarget != 0) return true;
+            if (stats.SpellHit != 0) return true;
+            if (stats.SpellHaste != 0) return true;
+            if (stats.SpellPower != 0) return true;
+            if (stats.CritRating != 0) return true;
+            if (stats.HasteRating != 0) return true;
+            if (stats.HitRating != 0) return true;
+            if (stats.SpellFireDamageRating != 0) return true;
+            if (stats.SpellNatureDamageRating != 0) return true;
+            if (stats.SpellFrostDamageRating != 0) return true;
+            if (stats.Mp5 != 0) return true;
+            if (stats.ManaRestoreFromMaxManaPerSecond != 0) return true;
+            if (stats.ManaRestore != 0) return true;
+            if (stats.NatureSpellsManaCostReduction != 0) return true;
+            if (stats.MovementSpeed != 0) return true;
+            if (stats.SnareRootDurReduc != 0) return true;
+            if (stats.FearDurReduc != 0) return true;
+            if (stats.StunDurReduc != 0) return true;
+            #endregion
+            #region Multipliers
+            if (stats.BonusIntellectMultiplier != 0) return true;
+            if (stats.BonusSpiritMultiplier != 0) return true;
+            if (stats.BonusSpellCritDamageMultiplier != 0) return true;
+            if (stats.BonusSpellPowerMultiplier != 0) return true;
+            if (stats.BonusFireDamageMultiplier != 0) return true;
+            if (stats.BonusFrostDamageMultiplier != 0) return true;
+            if (stats.BonusFrostDamageMultiplier != 0) return true;
+            if (stats.BonusDamageMultiplier != 0) return true;
+            #endregion
+            #region Sets
+            if (stats.BonusDamageMultiplierLavaBurst != 0) return true;
+            #endregion
+            #region Misc Damage
+            if (stats.NatureDamage != 0) return true;
+            if (stats.ArcaneDamage != 0) return true;
+            if (stats.FireDamage != 0) return true;
+            if (stats.ShadowDamage != 0) return true;
+            #endregion
+            #region Trinkets
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (RelevantTriggers.Contains(effect.Trigger))
+                {
+                    if (HasRelevantStats(effect.Stats)) return true;
+                }
+            }
+            #endregion
+            return false;
+        }
+
+        public Stats GetBuffsStats(Character character, CalculationOptionsElemental calcOpts) {
+            List<Buff> removedBuffs = new List<Buff>();
+            List<Buff> addedBuffs = new List<Buff>();
+
+            //float hasRelevantBuff;
+
+            #region Passive Ability Auto-Fixing
+            // Removes the Trueshot Aura Buff and it's equivalents Unleashed Rage and Abomination's Might if you are
+            // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
+            // value to relevant talents
+            /*{
+                hasRelevantBuff = character.HunterTalents.TrueshotAura;
+                Buff a = Buff.GetBuffByName("Trueshot Aura");
+                Buff b = Buff.GetBuffByName("Unleashed Rage");
+                Buff c = Buff.GetBuffByName("Abomination's Might");
+                if (hasRelevantBuff > 0)
+                {
+                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
+                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
+                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); removedBuffs.Add(c); }
+                }
+            }*/
+            #endregion
+
+            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs, character.SetBonusCount);
+
+            foreach (Buff b in removedBuffs) {
+                character.ActiveBuffsAdd(b);
+            }
+            foreach (Buff b in addedBuffs) {
+                character.ActiveBuffs.Remove(b);
+            }
+
+            return statsBuffs;
+        }
+
+        public override void SetDefaults(Character character)
+        {
+            character.ActiveBuffsAdd("Sanctified Retribution");
+            character.ActiveBuffsAdd("Heroism/Bloodlust");
+            character.ActiveBuffsAdd("Swift Retribution");
+            character.ActiveBuffsAdd("Arcane Intellect");
+            character.ActiveBuffsAdd("Hunting Party");
+            character.ActiveBuffsAdd("Blessing of Wisdom");
+            character.ActiveBuffsAdd("Moonkin Form");
+            character.ActiveBuffsAdd("Wrath of Air Totem");
+            character.ActiveBuffsAdd("Totem of Wrath (Spell Power)");
+            character.ActiveBuffsAdd("Divine Spirit");
+            character.ActiveBuffsAdd("Mark of the Wild");
+            character.ActiveBuffsAdd("Blessing of Kings");
+            character.ActiveBuffsAdd("Totem of Wrath");
+            character.ActiveBuffsAdd("Judgement of Wisdom");
+            character.ActiveBuffsAdd("Improved Shadow Bolt");
+            character.ActiveBuffsAdd("Curse of the Elements");
+            character.ActiveBuffsAdd("Improved Faerie Fire");
+            character.ActiveBuffsAdd("Flask of the Frost Wyrm");
+            character.ActiveBuffsAdd("Fish Feast");
+        }
+        #endregion
+
+        #region Custom Charts
         private string[] _customChartNames = {};
         public override string[] CustomChartNames { get { return _customChartNames; } }
-
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName) { return new ComparisonCalculationBase[0]; }
-
-        public override ICalculationOptionBase DeserializeDataObject(string xml)
-        {
-            System.Xml.Serialization.XmlSerializer serializer =
-                new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsElemental));
-            System.IO.StringReader reader = new System.IO.StringReader(xml);
-            CalculationOptionsElemental calcOpts = serializer.Deserialize(reader) as CalculationOptionsElemental;
-            return calcOpts;
-        }
+        #endregion
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
@@ -253,19 +455,6 @@ namespace Rawr.Elemental
 
             return calc;
             
-        }
-
-        public bool ValidateMailSpecialization(Character character)
-        {
-            if ((character.Head == null) || (character.Head.Type != ItemType.Mail)) return false;
-            if ((character.Shoulders == null) || (character.Shoulders.Type != ItemType.Mail)) return false;
-            if ((character.Chest == null) || (character.Chest.Type != ItemType.Mail)) return false;
-            if ((character.Wrist == null) || (character.Wrist.Type != ItemType.Mail)) return false;
-            if ((character.Hands == null) || (character.Hands.Type != ItemType.Mail)) return false;
-            if ((character.Waist == null) || (character.Waist.Type != ItemType.Mail)) return false;
-            if ((character.Legs == null) || (character.Legs.Type != ItemType.Mail)) return false;
-            if ((character.Feet == null) || (character.Feet.Type != ItemType.Mail)) return false;
-            return true;
         }
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
@@ -324,212 +513,6 @@ namespace Rawr.Elemental
             if (character.ShamanTalents.GlyphofWaterMastery) statsTotal.Mp5 += 30;
 
             return statsTotal;
-        }
-
-        public override bool IsItemRelevant(Item item)
-        {
-            if ((item.Slot == ItemSlot.Ranged && (item.Type != ItemType.Totem && item.Type != ItemType.Relic)))
-                return false;
-            return base.IsItemRelevant(item);
-        }
-
-        public override bool IsBuffRelevant(Buff buff, Character character) {
-            string name = buff.Name;
-            if (!buff.AllowedClasses.Contains(CharacterClass.Shaman)) {
-                return false;
-            }
-            return base.IsBuffRelevant(buff, character);
-        }
-
-        public override Stats GetRelevantStats(Stats stats)
-        {
-            Stats s = new Stats()
-            {
-                #region Basic stats
-                Intellect = stats.Intellect,
-                Mana = stats.Mana,
-                Spirit= stats.Spirit,
-                SpellCrit = stats.SpellCrit,
-                SpellCritOnTarget = stats.SpellCritOnTarget,
-                SpellHit = stats.SpellHit,
-                SpellHaste = stats.SpellHaste,
-                SpellPower = stats.SpellPower,
-                CritRating = stats.CritRating,
-                HasteRating = stats.HasteRating,
-                HitRating = stats.HitRating,
-                SpellFireDamageRating = stats.SpellFireDamageRating,
-                SpellNatureDamageRating = stats.SpellNatureDamageRating,
-                SpellFrostDamageRating = stats.SpellFrostDamageRating,
-                Mp5 = stats.Mp5,
-                ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
-                ManaRestore = stats.ManaRestore,
-                MovementSpeed = stats.MovementSpeed,
-                SnareRootDurReduc = stats.SnareRootDurReduc,
-                FearDurReduc = stats.FearDurReduc,
-                StunDurReduc = stats.StunDurReduc,
-                #endregion
-                #region Multipliers
-                BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
-                BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
-                BonusSpellCritDamageMultiplier = stats.BonusSpellCritDamageMultiplier,
-                BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
-                BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
-                BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier,
-                BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
-                BonusDamageMultiplier = stats.BonusDamageMultiplier,
-                #endregion
-                #region Sets
-                BonusDamageMultiplierLavaBurst = stats.BonusDamageMultiplierLavaBurst,
-                #endregion
-                #region Misc Damage
-                NatureDamage = stats.NatureDamage,
-                ArcaneDamage = stats.ArcaneDamage,
-                FireDamage = stats.FireDamage,
-                ShadowDamage = stats.ShadowDamage
-                #endregion
-            };
-            #region Trinkets
-            foreach (SpecialEffect effect in stats.SpecialEffects())
-            {
-                if (effect.Trigger == Trigger.Use || 
-                    effect.Trigger == Trigger.SpellCast || 
-                    effect.Trigger == Trigger.SpellHit || 
-                    effect.Trigger == Trigger.SpellCrit || 
-                    effect.Trigger == Trigger.SpellMiss || 
-                    effect.Trigger == Trigger.DamageSpellCast || 
-                    effect.Trigger == Trigger.DamageSpellCrit || 
-                    effect.Trigger == Trigger.DamageSpellHit || 
-                    effect.Trigger == Trigger.DoTTick || 
-                    effect.Trigger == Trigger.DamageDone ||
-                    effect.Trigger == Trigger.DamageOrHealingDone || 
-                    effect.Trigger == Trigger.ShamanLightningBolt ||
-                    effect.Trigger == Trigger.ShamanFlameShockDoTTick || 
-                    effect.Trigger == Trigger.ShamanShock)
-                {
-                    if (HasRelevantStats(effect.Stats))
-                    {
-                        s.AddSpecialEffect(effect);
-                    }
-                }
-            }
-            #endregion
-            return s;
-        }
-
-        public override bool HasRelevantStats(Stats stats)
-        {
-            float elementalStats = 0;
-            #region Basic stats
-            elementalStats +=
-                stats.Intellect +
-                stats.Mana +
-                stats.Spirit +
-                stats.SpellCrit +
-                stats.SpellCritOnTarget +
-                stats.SpellHit +
-                stats.SpellHaste +
-                stats.SpellPower +
-                stats.CritRating +
-                stats.HasteRating +
-                stats.HitRating +
-                stats.SpellFireDamageRating +
-                stats.SpellNatureDamageRating +
-                stats.SpellFrostDamageRating +
-                stats.Mp5 +
-                stats.ManaRestoreFromMaxManaPerSecond +
-                stats.ManaRestore +
-                stats.MovementSpeed + stats.SnareRootDurReduc + stats.FearDurReduc + stats.StunDurReduc;
-            #endregion
-            #region Multipliers
-            elementalStats +=
-                stats.BonusIntellectMultiplier +
-                stats.BonusSpiritMultiplier +
-                stats.BonusSpellCritDamageMultiplier +
-                stats.BonusSpellPowerMultiplier +
-                stats.BonusFireDamageMultiplier +
-                stats.BonusNatureDamageMultiplier +
-                stats.BonusFrostDamageMultiplier +
-                stats.BonusDamageMultiplier;
-            #endregion
-            #region Sets
-            elementalStats += 
-                stats.BonusDamageMultiplierLavaBurst;
-            #endregion
-            #region Misc Damage
-            elementalStats +=
-                stats.NatureDamage +
-                stats.ArcaneDamage +
-                stats.FireDamage +
-                stats.ShadowDamage;
-            #endregion
-            bool relevant = (elementalStats > 0);
-            #region Trinkets
-            foreach (SpecialEffect effect in stats.SpecialEffects())
-            {
-                if (effect.Trigger == Trigger.Use || 
-                    effect.Trigger == Trigger.SpellCast || 
-                    effect.Trigger == Trigger.SpellHit || 
-                    effect.Trigger == Trigger.SpellCrit || 
-                    effect.Trigger == Trigger.SpellMiss || 
-                    effect.Trigger == Trigger.DamageSpellCast || 
-                    effect.Trigger == Trigger.DamageSpellCrit || 
-                    effect.Trigger == Trigger.DamageSpellHit || 
-                    effect.Trigger == Trigger.DoTTick || 
-                    effect.Trigger == Trigger.DamageDone ||
-                    effect.Trigger == Trigger.DamageOrHealingDone || 
-                    effect.Trigger == Trigger.ShamanLightningBolt ||
-                    effect.Trigger == Trigger.ShamanFlameShockDoTTick || 
-                    effect.Trigger == Trigger.ShamanShock)
-                {
-                    relevant |= HasRelevantStats(effect.Stats);
-                    if (relevant) break;
-                }
-            }
-            #endregion
-            return relevant;
-        }
-
-        public Stats GetBuffsStats(Character character, CalculationOptionsElemental calcOpts) {
-            List<Buff> removedBuffs = new List<Buff>();
-            List<Buff> addedBuffs = new List<Buff>();
-
-            //float hasRelevantBuff;
-
-            #region Passive Ability Auto-Fixing
-            // Removes the Trueshot Aura Buff and it's equivalents Unleashed Rage and Abomination's Might if you are
-            // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
-            // value to relevant talents
-            /*{
-                hasRelevantBuff = character.HunterTalents.TrueshotAura;
-                Buff a = Buff.GetBuffByName("Trueshot Aura");
-                Buff b = Buff.GetBuffByName("Unleashed Rage");
-                Buff c = Buff.GetBuffByName("Abomination's Might");
-                if (hasRelevantBuff > 0)
-                {
-                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
-                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
-                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); removedBuffs.Add(c); }
-                }
-            }*/
-            #endregion
-
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs, character.SetBonusCount);
-
-            foreach (Buff b in removedBuffs) {
-                character.ActiveBuffsAdd(b);
-            }
-            foreach (Buff b in addedBuffs) {
-                character.ActiveBuffs.Remove(b);
-            }
-
-            return statsBuffs;
-        }
-
-        public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot)
-        {
-            // Filters out Non-Shield Offhand Enchants and Ranged Enchants
-            if ((slot == ItemSlot.OffHand && enchant.Slot != ItemSlot.OffHand) || slot == ItemSlot.Ranged) return false;
-            return base.EnchantFitsInSlot(enchant, character, slot);
         }
     }
 
@@ -696,13 +679,13 @@ namespace Rawr.Elemental
             set { _subPoints = value; }
         }
 
-        public float BurstPoints
+        public float Burst
         {
             get { return _subPoints[0]; }
             set { _subPoints[0] = value; }
         }
 
-        public float SustainedPoints
+        public float Sustained
         {
             get { return _subPoints[1]; }
             set { _subPoints[1] = value; }
@@ -731,10 +714,10 @@ namespace Rawr.Elemental
 
         public override bool PartEquipped { get; set; }
 
-        public override string ToString()
+        /*public override string ToString()
         {
             return string.Format("{0}: ({1}O {2}Burst {3}Sustained)", Name, Math.Round(OverallPoints), Math.Round(BurstPoints), Math.Round(SustainedPoints));
-        }
+        }*/
     }
 
     public static class Constants

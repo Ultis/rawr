@@ -29,6 +29,8 @@ namespace Rawr.Elemental.Spells
         {
             totalCoef *= 1 + (.1f * args.Talents.CallOfFlame);
 
+            manaCost -= args.Stats.NatureSpellsManaCostReduction;
+
             periodicTicks *= 1 + (.2f * args.Talents.TotemicFocus);
 
             base.Initialize(args);

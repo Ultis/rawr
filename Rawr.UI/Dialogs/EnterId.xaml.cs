@@ -20,7 +20,7 @@ namespace Rawr.UI
             get {
                 String input = textItemId.Text;
 
-                Regex wowhead = new Regex(@"(?<idlist>(?:\d{4,5}[,;]?\s?)*)");
+                Regex wowhead = new Regex(@"(?<idlist>(?:\d{4,5}[,;\s]*)+)");
                 Match m = wowhead.Match(input);
 
                 if (m.Success)
@@ -36,6 +36,11 @@ namespace Rawr.UI
                             retVal.Add(int.Parse(idtxt));
                             idtxt = "";
                         }
+                    }
+                    // Parse the last one
+                    if (idtxt != "") {
+                        retVal.Add(int.Parse(idtxt));
+                        idtxt = "";
                     }
 
                     return retVal;

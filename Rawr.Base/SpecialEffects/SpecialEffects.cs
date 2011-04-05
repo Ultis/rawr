@@ -2116,11 +2116,11 @@ namespace Rawr {
             }
             #endregion
             #region Spell Mana Reduction
-            else if ((match = new Regex(@"Your next (?<casts>\d+) spells cast within (?<dur>\d+) sec will reduce the cost of your holy and nature spells by (?<amount>\d+), stacking up to (?<stack>\d+) times").Match(line)).Success)
+            else if ((match = new Regex(@"Your next (?<casts>\d+) spells cast within (?<dur>\d+) sec will reduce the cost of your holy and nature spells by (?<amount>\d+), stacking up to (?<stacks>\d+) times").Match(line)).Success)
             {   // Jaws of Defeat
                 SpecialEffect primary = new SpecialEffect(Trigger.Use, new Stats(), int.Parse(match.Groups["dur"].Value), 120f);
                 SpecialEffect secondary = new SpecialEffect(Trigger.SpellCast,
-                    new Stats() { NatureSpellsManaReduction = int.Parse(match.Groups["amount"].Value), HolySpellsManaReduction = int.Parse(match.Groups["amount"].Value), },
+                    new Stats() { NatureSpellsManaCostReduction = int.Parse(match.Groups["amount"].Value), HolySpellsManaCostReduction = int.Parse(match.Groups["amount"].Value), },
                     int.Parse(match.Groups["dur"].Value), 0f, 1f, int.Parse(match.Groups["stacks"].Value));
                 primary.Stats.AddSpecialEffect(secondary);
                 stats.AddSpecialEffect(primary);

@@ -111,6 +111,7 @@ namespace Rawr.RestoSham
                 BonusManaMultiplier = stats.BonusManaMultiplier,
                 BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
                 BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
+                NatureSpellsManaCostReduction = stats.NatureSpellsManaCostReduction,
                 Healed = stats.Healed,
                 Hp5 = stats.Hp5,
                 MovementSpeed = stats.MovementSpeed,
@@ -149,6 +150,7 @@ namespace Rawr.RestoSham
             if (stats.Mp5 != 0) { return true; }
             if (stats.Spirit != 0) { return true; }
             if (stats.ManaRestoreFromMaxManaPerSecond != 0) { return true; }
+            if (stats.NatureSpellsManaCostReduction != 0) { return true; }
             if (stats.ManaRestore != 0) { return true; }
             if (stats.BonusCritHealMultiplier != 0) { return true; }
             if (stats.BonusHealingDoneMultiplier != 0) { return true; }
@@ -176,17 +178,17 @@ namespace Rawr.RestoSham
         {
             if (character == null)
                 return;
-            character.ActiveBuffsAdd(("Power Word: Fortitude"));
-            character.ActiveBuffsAdd(("Arcane Brilliance (Mana)"));
-            character.ActiveBuffsAdd(("Blessing of Might (Mp5)"));
-            character.ActiveBuffsAdd(("Elemental Oath"));
-            character.ActiveBuffsAdd(("Revitalize"));
-            character.ActiveBuffsAdd(("Mana Tide Totem"));
-            character.ActiveBuffsAdd(("Mind Quickening"));
-            character.ActiveBuffsAdd(("Blessing of Kings"));
-            character.ActiveBuffsAdd(("Flask of the Draconic Mind"));
-            character.ActiveBuffsAdd(("Mythical Mana Potion"));
-            character.ActiveBuffsAdd(("Intellect Food"));
+            character.ActiveBuffsAdd("Power Word: Fortitude");
+            character.ActiveBuffsAdd("Arcane Brilliance (Mana)");
+            character.ActiveBuffsAdd("Blessing of Might (Mp5)");
+            character.ActiveBuffsAdd("Elemental Oath");
+            character.ActiveBuffsAdd("Revitalize");
+            character.ActiveBuffsAdd("Mana Tide Totem");
+            character.ActiveBuffsAdd("Mind Quickening");
+            character.ActiveBuffsAdd("Blessing of Kings");
+            character.ActiveBuffsAdd("Flask of the Draconic Mind");
+            character.ActiveBuffsAdd("Mythical Mana Potion");
+            character.ActiveBuffsAdd("Intellect Food");
         }
 
         #endregion
@@ -597,7 +599,7 @@ namespace Rawr.RestoSham
                 ESHealingScale *= 1.2f;
             float ESChargeHeal = ((1770) + ESBonusHealing) * ESHealingScale * (UseES ? 1 : 0); //  Heal per ES Charge
             float ESHeal = ESChargeHeal * 9;  //  ES if all charges heal
-            float ESCost = (float)Math.Round(.15 * ((_BaseMana))) * CostScale * (UseES ? 1 : 0);
+            float ESCost = (float)(Math.Round(.15 * ((_BaseMana))) - stats.NatureSpellsManaCostReduction) * CostScale * (UseES ? 1 : 0);
             float ESTimer = 9 * Math.Max(ESInterval, 4);
             calc.ESHPS = ((ESHeal * Critical) / ESTimer) * (1 + stats.BonusHealingDoneMultiplier);
             float ESMPS = ESCost / ESTimer;
@@ -754,14 +756,14 @@ namespace Rawr.RestoSham
             #endregion
             #endregion
             #region Base Costs ( RTCost / HSrgCost / CHCost )
-            float RTCost      = ((float)Math.Round(_BaseMana) * .18f) * CostScale;
-            float HRCost      = ((float)Math.Round(_BaseMana) * .46f) * CostScale;
-            float HSrgCost    = ((float)Math.Round(_BaseMana) * .27f) * CostScale;
-            float HWCost      = ((float)Math.Round(_BaseMana) * .09f) * CostScale;
-            float GHWCost     = ((float)Math.Round(_BaseMana) * .33f) * CostScale;
-            float HRNCost     = ((float)Math.Round(_BaseMana) * .46f) * CostScale;
-            float DecurseCost = ((float)Math.Round(_BaseMana) * .14f) * CostScale;
-            float CHCost      = ((float)Math.Round(_BaseMana) * .17f) * CostScale;
+            float RTCost      = (((float)Math.Round(_BaseMana) * .18f) - stats.NatureSpellsManaCostReduction) * CostScale;
+            float HRCost      = (((float)Math.Round(_BaseMana) * .46f) - stats.NatureSpellsManaCostReduction) * CostScale;
+            float HSrgCost    = (((float)Math.Round(_BaseMana) * .27f) - stats.NatureSpellsManaCostReduction) * CostScale;
+            float HWCost      = (((float)Math.Round(_BaseMana) * .09f) - stats.NatureSpellsManaCostReduction) * CostScale;
+            float GHWCost     = (((float)Math.Round(_BaseMana) * .33f) - stats.NatureSpellsManaCostReduction) * CostScale;
+            float HRNCost     = (((float)Math.Round(_BaseMana) * .46f) - stats.NatureSpellsManaCostReduction) * CostScale;
+            float DecurseCost = (((float)Math.Round(_BaseMana) * .14f) - stats.NatureSpellsManaCostReduction) * CostScale;
+            float CHCost      = (((float)Math.Round(_BaseMana) * .17f) - stats.NatureSpellsManaCostReduction) * CostScale;
             #endregion
             #region RT + HSrg Rotation (RTHSrgMPS / RTHSrgHPS / RTHSrgTime)  (Adjusted based on Casting Activity)
             if (character.ShamanTalents.Riptide != 0)

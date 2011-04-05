@@ -651,6 +651,7 @@ namespace Rawr.Healadin
                 BonusManaMultiplier = stats.BonusManaMultiplier,
                 BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
                 SpellsManaCostReduction = stats.SpellsManaCostReduction,
+                HolySpellsManaCostReduction = stats.HolySpellsManaCostReduction,
 
                 // Ony Shiny Shard of the Flame
                 Healed = stats.Healed,
@@ -706,6 +707,7 @@ namespace Rawr.Healadin
                 stats.BonusManaMultiplier +
                 stats.BonusCritHealMultiplier +
                 stats.SpellsManaCostReduction +
+                stats.HolySpellsManaCostReduction +
 
                 stats.Healed
                 ) != 0;

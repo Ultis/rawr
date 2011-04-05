@@ -951,6 +951,7 @@ namespace Rawr.Enhance
                     SpellCritOnTarget = stats.SpellCritOnTarget,
                     Mp5 = stats.Mp5,
                     ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
+                    NatureSpellsManaCostReduction = stats.NatureSpellsManaCostReduction,
                     MoteOfAnger = stats.MoteOfAnger,
                     SnareRootDurReduc = stats.SnareRootDurReduc,
                     FearDurReduc = stats.FearDurReduc,
@@ -1055,7 +1056,7 @@ namespace Rawr.Enhance
                 stats.MoteOfAnger +
                 stats.NatureDamage + stats.FireDamage + stats.FrostDamage + stats.ArcaneDamage + stats.HolyDamage + stats.ShadowDamage +
                 stats.Mp5 + stats.ManaRestoreFromMaxManaPerSecond +
-                stats.SnareRootDurReduc + stats.FearDurReduc + stats.StunDurReduc + stats.MovementSpeed) != 0;
+                stats.SnareRootDurReduc + stats.FearDurReduc + stats.StunDurReduc + stats.MovementSpeed + stats.NatureSpellsManaCostReduction) != 0;
         }
 
         private bool irrelevantStats(Stats stats)

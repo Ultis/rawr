@@ -28,8 +28,8 @@
         <TextBox x:Name="textItemId" Grid.Row="1" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="4" Grid.ColumnSpan="4" />
 
         <StackPanel Orientation="Horizontal" Grid.Row="3">
-            <CheckBox x:Name="CK_WH" Content="Use Wowhead" Margin="4" VerticalAlignment="Center" IsChecked="True" />
-            <CheckBox x:Name="CK_PTR" Content="Use PTR Data" Margin="4" VerticalAlignment="Center" IsEnabled="{Binding ElementName=CK_WH, Path=IsChecked}" Visibility="Collapsed" />
+            <CheckBox x:Name="CK_WH" Content="Use Wowhead" Margin="4" VerticalAlignment="Center" IsChecked="True" IsEnabled="False" />
+            <CheckBox x:Name="CK_PTR" Content="Use PTR Data" Margin="4" VerticalAlignment="Center" IsEnabled="{Binding ElementName=CK_WH, Path=IsChecked}" Visibility="Visible" />
         </StackPanel>
 
         <Button x:Name="CancelButton" Content="Cancel" Click="CancelButton_Click" Width="75" Height="23" HorizontalAlignment="Right" Margin="4" Grid.Row="3" Grid.Column="3" />

@@ -23,6 +23,7 @@ public class EarthShock : Shock
         {
             crit += .01f * args.Talents.Acuity;
             manaCost *= 1f - .05f * args.Talents.Convection;
+            manaCost -= args.Stats.NatureSpellsManaCostReduction;
             totalCoef += .01f * args.Talents.Concussion;
             cooldown -= .05f * args.Talents.Reverberation;
             totalCoef += .01f * args.Talents.ElementalPrecision;

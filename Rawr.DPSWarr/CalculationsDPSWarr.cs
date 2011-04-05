@@ -289,10 +289,6 @@ namespace Rawr.DPSWarr {
         }
         #endregion
 
-        public ICalculationOptionsPanel _calculationOptionsPanel = null;
-        public override ICalculationOptionsPanel CalculationOptionsPanel { get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelDPSWarr()); } }
-
-        private string[] _characterDisplayCalculationLabels = null;
         public override string GetCharacterStatsString(Character character)
         {
             if (character == null) { return ""; }
@@ -313,6 +309,7 @@ namespace Rawr.DPSWarr {
             
             return stats.ToString();
         }
+        private string[] _characterDisplayCalculationLabels = null;
         public override string[] CharacterDisplayCalculationLabels {
             get {
                 if (_characterDisplayCalculationLabels == null) {
@@ -441,15 +438,18 @@ a GCD's length, you will use this while running back into place",
             get {
                 if (_subPointNameColors == null) {
                     _subPointNameColors = new Dictionary<string, Color>();
-                    _subPointNameColors.Add("DPS", Color.FromArgb(255, 255, 0, 0));
-                    _subPointNameColors.Add("Survivability", Color.FromArgb(255, 64, 128, 32));
+                    _subPointNameColors.Add("DPS", Colors.Red);
+                    _subPointNameColors.Add("Survivability", Colors.Green);
                 }
                 return _subPointNameColors;
             }
         }
 
+        public override CharacterClass TargetClass { get { return CharacterClass.Warrior; } }
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationDPSWarr(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsDPSWarr(); }
+        public ICalculationOptionsPanel _calculationOptionsPanel = null;
+        public override ICalculationOptionsPanel CalculationOptionsPanel { get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelDPSWarr()); } }
 
         public override ICalculationOptionBase DeserializeDataObject(string xml) {
             CalculationOptionsDPSWarr calcOpts = null;
@@ -467,8 +467,6 @@ a GCD's length, you will use this while running back into place",
         #endregion
 
         #region Relevancy
-
-        public override CharacterClass TargetClass { get { return CharacterClass.Warrior; } }
 
         private List<ItemType> _relevantItemTypes = null;
         public override List<ItemType> RelevantItemTypes {

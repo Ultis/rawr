@@ -597,7 +597,7 @@ namespace Rawr
         [DefaultValueAttribute(0f)]
         [DisplayName("Nature Spells Mana Cost Reduction")]
         [Category("Equipment Effects")]
-        public float NatureSpellsManaReduction
+        public float NatureSpellsManaCostReduction
         {
             get { return _rawAdditiveData[(int)AdditiveStat.NatureSpellsManaReduction]; }
             set { _rawAdditiveData[(int)AdditiveStat.NatureSpellsManaReduction] = value; }
@@ -605,7 +605,7 @@ namespace Rawr
         [DefaultValueAttribute(0f)]
         [DisplayName("Holy Spells Mana Cost Reduction")]
         [Category("Equipment Effects")]
-        public float HolySpellsManaReduction
+        public float HolySpellsManaCostReduction
         {
             get { return _rawAdditiveData[(int)AdditiveStat.HolySpellsManaReduction]; }
             set { _rawAdditiveData[(int)AdditiveStat.HolySpellsManaReduction] = value; }

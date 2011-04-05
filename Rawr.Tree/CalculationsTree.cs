@@ -2007,6 +2007,7 @@ applied and result is scaled down by 100)",
                 #region Trinkets
                 HighestStat = stats.HighestStat,
                 SpellsManaCostReduction = stats.SpellsManaCostReduction,
+                NatureSpellsManaCostReduction = stats.NatureSpellsManaCostReduction,
                 #endregion
                 #region Gems
                 BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
@@ -2057,7 +2058,7 @@ applied and result is scaled down by 100)",
                 + stats.SnareRootDurReduc + stats.FearDurReduc + stats.StunDurReduc
                 + stats.BonusHealingDoneMultiplier
                 #region Trinkets
-                + stats.HighestStat + stats.SpellsManaCostReduction
+                + stats.HighestStat + stats.SpellsManaCostReduction + stats.NatureSpellsManaCostReduction
                 #endregion
                 != 0)
                 return true;

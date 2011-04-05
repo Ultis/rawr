@@ -159,7 +159,7 @@ namespace Rawr.Tree {
             critRatio = stats.SpellCrit;
             critHoTRatio = stats.SpellCrit;
             manaCost -= stats.SpellsManaCostReduction;
-            manaCost -= stats.NatureSpellsManaReduction;
+            manaCost -= stats.NatureSpellsManaCostReduction;
 
         }
         
