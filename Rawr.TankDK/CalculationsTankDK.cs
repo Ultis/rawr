@@ -1068,7 +1068,7 @@ Points individually may be important.",
             Rotation rot = new Rotation(ct, true);
             rot.PRE_BloodDiseased();
             // Base calculation values.  This will give us Mitigation, and Survival w/ base stats.
-            basecalcs = GetCharacterCalculations(TDK, stats, rot, false);
+            basecalcs = GetCharacterCalculations(TDK, stats, rot, false, needsDisplayCalculations);
             // Setup max values w/ everything turned on.
             stats = GetCharacterStats(TDK.Char, additionalItem, StatType.Maximum, TDK, rot);
             calcs.SEStats = stats.Clone() as StatsDK;
@@ -1076,7 +1076,7 @@ Points individually may be important.",
             rot = new Rotation(ct, true);
             rot.PRE_BloodDiseased();
 
-            calcs = GetCharacterCalculations(TDK, stats, rot, true);
+            calcs = GetCharacterCalculations(TDK, stats, rot, true, needsDisplayCalculations);
 
             // Burst
             calcs.Burst = calcs.Survivability - basecalcs.Survivability;
@@ -1149,7 +1149,7 @@ Points individually may be important.",
             return calcs;
         }
 
-        private CharacterCalculationsTankDK GetCharacterCalculations(TankDKChar TDK, StatsDK stats, Rotation rot, bool isBurstCalc)
+        private CharacterCalculationsTankDK GetCharacterCalculations(TankDKChar TDK, StatsDK stats, Rotation rot, bool isBurstCalc, bool needsDisplayCalcs)
         {
             CharacterCalculationsTankDK calcs = new CharacterCalculationsTankDK();
 
@@ -1269,7 +1269,10 @@ Points individually may be important.",
             calcs.TotalThreat = (int)rot.TotalThreat;
 
             calcs.ThreatWeight = TDK.calcOpts.ThreatWeight;
-            TDK.calcOpts.szRotReport = rot.ReportRotation();
+            if (needsDisplayCalcs)
+            {
+                TDK.calcOpts.szRotReport = rot.ReportRotation();
+            }
             #endregion
 
             #region ***** Mitigation Rating *****

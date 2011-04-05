@@ -60,25 +60,21 @@ namespace Rawr.DK
         }
 
 
-        public override int GetTotalDamage()
+        public override float GetTotalDamage()
         {
             if (CState.m_Talents.HowlingBlast > 0)
             {
                 // Start w/ getting the base damage values.
-                int iDamage = GetTickDamage();
+                float iDamage = GetTickDamage();
                 // Assuming full duration, or standard impact.
                 // But I want this in whole numbers.
                 // Also need to decide if I want this to be whole ticks, or if partial ticks will be allowed.
                 float fDamageCount = (float)(uDuration / Math.Max(1, uTickRate));
 
-                iDamage = (int)((float)iDamage * fDamageCount * (1 + CritChance) * Math.Min(1, HitChance));
-                if (bAOE == true)
-                {
+                iDamage *= fDamageCount * (1f + CritChance) * Math.Min(1f, HitChance);
+                if (bAOE == true) {
                     // Need to ensure this value is reasonable for all abilities.
-                    iDamage = (int)(
-                        (float)iDamage // Damage to main target
-                        + (iDamage * .4f) * (Math.Max(1, this.CState.m_NumberOfTargets)-1 ) // damage to secondary targets @ 40%
-                        );
+                    iDamage += (iDamage * 0.40f) * (Math.Max(1f, this.CState.m_NumberOfTargets) - 1); // damage to secondary targets @ 40%
                 }
                 return iDamage;
             }

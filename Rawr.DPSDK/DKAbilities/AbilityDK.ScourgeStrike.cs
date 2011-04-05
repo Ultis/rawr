@@ -46,7 +46,7 @@ namespace Rawr.DK
             }
         }
 
-        public override int GetTotalDamage()
+        public override float GetTotalDamage()
         {
             if (CState.m_Spec == Rotation.Type.Unholy)
                 return base.GetTotalDamage();

@@ -40,21 +40,21 @@ namespace Rawr.DK
             }
         }
 
-        override public int GetTotalDamage()
+        override public float GetTotalDamage()
         {
             if (null == this.wMH && null == this.wOH)
             {
                 return 0;
             }
             // Start w/ getting the base damage values.
-            int iDamage = this.GetTickDamage();
+            float iDamage = this.GetTickDamage();
 
             // Factor in max value for Crit, Hit, Glancing
             float glancechance = .24f;
             float misschance = 1 - HitChance;
-            iDamage = (int)((float)iDamage * (1 + Math.Min(CritChance, 1 - (glancechance + misschance))) * Math.Min(1, HitChance) * (.94)/* Glancing */ );
+            iDamage = (float)iDamage * (1f + (float)Math.Min(CritChance, 1f - (glancechance + misschance))) * (float)Math.Min(1f, HitChance) * (0.94f)/* Glancing */;
             if (wMH.twohander)
-                iDamage = (int)(iDamage * (1 + .04f * CState.m_Talents.MightOfTheFrozenWastes));
+                iDamage *= (1f + .04f * CState.m_Talents.MightOfTheFrozenWastes);
             return iDamage;
         }
 

@@ -361,30 +361,34 @@ namespace Rawr.DK
         /// <summary>
         /// Get the single instance damage of this ability.
         /// </summary>
-        /// <returns>Int that represents a fully buffed single instance of this ability.</returns>
-        public int GetTickDamage()
+        /// <returns>Float that represents a fully buffed single instance of this ability.</returns>
+        public float GetTickDamage()
         {
-            // Start w/ getting the base damage values.
-            int iDamage = (int)this.uBaseDamage;
-            // Apply modifiers.
-            iDamage += this.DamageAdditiveModifer;
-            iDamage = (int)Math.Floor((float)iDamage * (1 + DamageMultiplierModifer));
-            return iDamage;
+            if (_tickDamage == -1f)
+            {
+                // Start w/ getting the base damage values.
+                _tickDamage = (int)this.uBaseDamage;
+                // Apply modifiers.
+                _tickDamage += this.DamageAdditiveModifer;
+                _tickDamage *= (1f + DamageMultiplierModifer);
+            }
+            return _tickDamage;
         }
+        private float _tickDamage = -1f;
 
-        virtual public int TotalDamage { get { return GetTotalDamage(); } }
+        virtual public float TotalDamage { get { return GetTotalDamage(); } }
         /// <summary>
         /// Get the full effect over the lifetime of the ability.
         /// </summary>
         /// <returns>int that is TickDamage * duration</returns>
-        virtual public int GetTotalDamage()
+        virtual public float GetTotalDamage()
         {
             if (this.bWeaponRequired == true && (null == this.wMH && null == this.wOH))
             {
                 return 0;
             }
             // Start w/ getting the base damage values.
-            int iDamage = this.GetTickDamage();
+            float iDamage = this.GetTickDamage();
             // Assuming full duration, or standard impact.
             // But I want this in whole numbers.
             // Also need to decide if I want this to be whole ticks, or if partial ticks will be allowed.
