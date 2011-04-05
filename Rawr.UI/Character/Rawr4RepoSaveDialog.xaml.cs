@@ -17,7 +17,7 @@ namespace Rawr.UI
 	public partial class Rawr4RepoSaveDialog : ChildWindow
 	{
 		public Character Character { get; private set; }
-		private Rawr.Rawr4RepoService _armoryService = new Rawr4RepoService();
+		private Rawr4RepoService _repoService = new Rawr4RepoService();
 
 		public void ShowReload()
 		{
@@ -36,8 +36,8 @@ namespace Rawr.UI
 			this.ResizeMode = System.Windows.ResizeMode.NoResize;
 #endif
 
-			_armoryService.ProgressChanged += new EventHandler<EventArgs<string>>(_armoryService_ProgressChanged);
-			_armoryService.SetCharacterCompleted += new EventHandler<EventArgs<string>>(_armoryService_SetCharacterCompleted);
+			_repoService.ProgressChanged += new EventHandler<EventArgs<string>>(_armoryService_ProgressChanged);
+			_repoService.SetCharacterCompleted += new EventHandler<EventArgs<string>>(_armoryService_SetCharacterCompleted);
 
 			bool doBadPrepop = false;
 			if (Rawr.Properties.RecentSettings.Default.RecentRepoChars != null) {
@@ -56,12 +56,13 @@ namespace Rawr.UI
 				doBadPrepop = true;
 			}
 			if (doBadPrepop) {
-				NameText.Text = string.Format("{0}.{1}.{2}.{3}",
+				NameText.Text = string.Format("{0} {1} {2} {3}",
 					(MainPage.Instance.RegionCombo.SelectedItem as ComboBoxItem).Content as string,
 					!String.IsNullOrEmpty(MainPage.Instance.RealmText.Text) ? MainPage.Instance.RealmText.Text : "[Realm]",
 					!String.IsNullOrEmpty(MainPage.Instance.NameText.Text) ? MainPage.Instance.NameText.Text : "[CharacterName]",
 					MainPage.Instance.Character.CurrentModel);
 			}
+            NameText.Text = NameText.Text.Replace(".", " ");
 			BT_CancelProcessing.IsEnabled = false;
 		}
 
@@ -88,7 +89,7 @@ namespace Rawr.UI
 			stream.Position = 0;
 			StreamReader reader = new StreamReader(stream);
 
-			_armoryService.SetCharacterAsync(NameText.Text, PWText.Text, reader.ReadToEnd());
+			_repoService.SetCharacterAsync(NameText.Text, PWText.Text, reader.ReadToEnd());
 
 			ProgressBarStatus.IsIndeterminate = true;
 			BT_OK.IsEnabled = NameText.IsEnabled = false;
@@ -106,7 +107,7 @@ namespace Rawr.UI
 
 		private void BT_CancelProcessing_Click(object sender, RoutedEventArgs e)
 		{
-			_armoryService.CancelAsync();
+			_repoService.CancelAsync();
 			BT_OK.IsEnabled = NameText.IsEnabled = true;
 			BT_CancelProcessing.IsEnabled = false;
 			ProgressBarStatus.IsIndeterminate = false;

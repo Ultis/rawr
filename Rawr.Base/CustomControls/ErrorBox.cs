@@ -147,7 +147,7 @@ namespace Rawr.Base
         }
         #endregion
         #region Functions
-        private string buildFullMessage()
+        public string buildFullMessage()
         {
             string retVal = "";
             retVal += Function     != "" ? string.Format("Function: {0}\r\n\r\n",                Function    ) : "";

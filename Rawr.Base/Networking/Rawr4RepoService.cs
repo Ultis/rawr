@@ -71,14 +71,11 @@ namespace Rawr
                 if (e.Cancelled) { return; }
                 if (e.Error != null)
                 {
-                    if (e.Error.Message.Contains("NotFound"))
-                    {
+                    if (e.Error.Message.Contains("NotFound")) {
                         new Base.ErrorBox("Problem Getting Character from Rawr4 Repository",
                             "Your character file was not found on the server.",
-                            "");
-                    }
-                    else
-                    {
+                            "Try checking the name entered to look for").Show();
+                    } else {
                         new Base.ErrorBox()
                         {
                             Title = "Problem Getting Character from Rawr4 Repository",
@@ -146,12 +143,21 @@ namespace Rawr
             if (e.Cancelled) { return; }
             if (e.Error != null)
             {
-                new Base.ErrorBox()
+                if (e.Error.Message.Contains("Not Found"))
                 {
-                    Title = "Problem Saving Character to Rawr4 Repository",
-                    Function = "_webClient_UploadStringCompleted(string input)",
-                    TheException = e.Error,
-                }.Show();
+                    new Base.ErrorBox("Problem Saving Character to Rawr4 Repository",
+                        "The name of the save appears to be causing a conflict.",
+                        "Try replacing any periods with spaces or +").Show();
+                }
+                else
+                {
+                    new Base.ErrorBox()
+                    {
+                        Title = "Problem Saving Character to Rawr4 Repository",
+                        Function = "_webClient_UploadStringCompleted(string input)",
+                        TheException = e.Error,
+                    }.Show();
+                }
                 return;
             }
             Progress = "Complete!";
@@ -194,7 +200,7 @@ namespace Rawr
             _lastIdentifier = identifier;
             //_canceled = false;
             //_lastRequestWasItem = false;
-            string url = string.Format(URL_CHAR_REQ, identifier, "");
+            string url = string.Format(URL_CHAR_REQ, identifier, "").Replace("+", "%20").Replace(" ", "%20").Replace(".", "%20");
             _webClient.DownloadStringAsync(new Uri(url));
             this.Progress = "Downloading Character Data...";
         }
@@ -203,9 +209,9 @@ namespace Rawr
             _lastIdentifier = identifier;
             //_canceled = false;
             //_lastRequestWasItem = false;
-            string url = string.Format(URL_CHAR_REQ, identifier, pw != "" ? "~" + pw : "~");
+            string url = string.Format(URL_CHAR_REQ, identifier, pw != "" ? "~" + pw : "~").Replace("+", "%20").Replace(" ", "%20").Replace(".", "%20");
             _webClient.Encoding = Encoding.UTF8;
-            _webClient.UploadStringAsync(new Uri(url), charXmlData);
+            _webClient.UploadStringAsync(new Uri(url), "POST", charXmlData);
             this.Progress = "Uploading Character Data...";
         }
 
