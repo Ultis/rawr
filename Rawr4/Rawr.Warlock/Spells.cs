@@ -601,7 +601,7 @@ namespace Rawr.Warlock
     // spell 50796, spellEffect 43048
     public class ChaosBolt : Spell
     {
-        static float[] talentValues = { .1f, .3f, .5f };
+        static float[] talentValues = { 0f, 0.1f, 0.3f, 0.5f };
         private const float SCALE = 1.5470000505f;
         private const float COEFF = 0.6280000210f;
 
