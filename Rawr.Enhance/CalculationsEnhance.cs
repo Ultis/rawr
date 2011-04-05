@@ -214,7 +214,7 @@ namespace Rawr.Enhance
             if (calcOpts == null) { return calc; }
             BossOptions bossOpts = character.BossOptions;
             if (bossOpts == null) { bossOpts = new BossOptions(); }
-            //
+            
             #region Applied Stats
             Stats stats = GetCharacterStats(character, additionalItem);
             calc.BasicStats = stats;
@@ -308,9 +308,8 @@ namespace Rawr.Enhance
             float bonusFireDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusFireDamageMultiplier);
             float bonusNatureDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier);
             int baseResistance = Math.Max((bossOpts.Level - character.Level) * 5, 0);
-            float bossFireResistance = 1f - ((baseResistance + calcOpts.TargetFireResistance) / (character.Level * 5f)) * .75f;
-            float bossNatureResistance = 1f - ((baseResistance + calcOpts.TargetNatureResistance) / (character.Level * 5f)) * .75f;
-
+            float bossFireResistance = 1f - ((baseResistance + (float) bossOpts.Resist_Fire /*calcOpts.TargetFireResistance*/) / (character.Level * 5f)) * .75f;
+            float bossNatureResistance = 1f - ((baseResistance + (float) bossOpts.Resist_Nature /*calcOpts.TargetNatureResistance*/) / (character.Level * 5f)) * .75f;
             #endregion
 
             #region Individual DPS
@@ -593,7 +592,7 @@ namespace Rawr.Enhance
                 float soeBuff = (character.ActiveBuffsContains("Strength of Earth Totem") || character.ActiveBuffsContains("Horn of Winter") || character.ActiveBuffsContains("Roar of Courage") ||
                     character.ActiveBuffsContains("Battle Shout")) ? 594f : 0f;
                 float dogsStr = 331f + soeBuff;
-                float dogsAgi = 113f + soeBuff; 
+                float dogsAgi = 113f + soeBuff;
                 float dogsAP = ((dogsStr * 2f - 20f) + .31f * attackPower + FSglyphAP) * (1f + unleashedRage);
                 float dogsCrit = (StatConversion.GetCritFromAgility(dogsAgi, CharacterClass.Shaman) + critbuffs) * (1 + stats.BonusCritDamageMultiplier);
                 float dogsBaseSpeed = 1.5f;
@@ -609,8 +608,8 @@ namespace Rawr.Enhance
                 dpsDogs = 2 * (30f / 120f) * dogsTotalDamage * dogsHitsPerS * petMeleeMultipliers;
                 calc.SpiritWolf = new DPSAnalysis(dpsDogs, petMeleeMissRate, cs.AverageDodge, cs.GlancingRate, dogsCrit, 60f / cs.AbilityCooldown(EnhanceAbility.FeralSpirits));
             }
-            else 
-            { 
+            else
+            {
                 calc.SpiritWolf = new DPSAnalysis(0, 0, 0, 0, 0, 0);
             }
             #endregion
@@ -666,10 +665,10 @@ namespace Rawr.Enhance
             calc.FireTotemUptime = (cs.FireTotemUptime + cs.SearingTotemUptime) * 100f;
             calc.BaseRegen = cs.BaseRegen;
             calc.ManaRegen = cs.ManaRegen;
-            
+
             calc.TotalExpertiseMH = (float) Math.Floor(cs.ExpertiseBonusMH * 400f);
             calc.TotalExpertiseOH = (float) Math.Floor(cs.ExpertiseBonusOH * 400f);
-            
+
             calc.SwingDamage = new DPSAnalysis(dpsMelee, 1 - cs.AverageWhiteHitChance, cs.AverageDodge, cs.GlancingRate, cs.AverageWhiteCritChance, cs.MeleePPM);
             calc.Stormstrike = new DPSAnalysis(dpsSS, 1 - cs.AverageYellowHitChance, cs.AverageDodge, -1, cs.AverageYellowCritChance, 60f / cs.AbilityCooldown(EnhanceAbility.StormStrike));
             calc.LavaLash = new DPSAnalysis(dpsLL, 1 - cs.ChanceYellowHitOH, cs.ChanceDodgeOH, -1, cs.ChanceYellowCritOH, 60f / cs.AbilityCooldown(EnhanceAbility.LavaLash));
@@ -717,11 +716,11 @@ namespace Rawr.Enhance
             float strBonus = (float)Math.Floor((float)(statsGearEnchantsBuffs.Strength));
             float intBase = (float)Math.Floor((float)(statsBase.Intellect));
             float intBonus = (float)Math.Floor((float)(statsGearEnchantsBuffs.Intellect));
-            float staBase = (float)Math.Floor((float)(statsBase.Stamina));  
+            float staBase = (float)Math.Floor((float)(statsBase.Stamina));
             float staBonus = (float)Math.Floor((float)(statsGearEnchantsBuffs.Stamina));
-            float spiBase = (float)Math.Floor((float)(statsBase.Spirit));  
+            float spiBase = (float)Math.Floor((float)(statsBase.Spirit));
             float spiBonus = (float)Math.Floor((float)(statsGearEnchantsBuffs.Spirit));
-                        
+
             Stats statsTotal = GetRelevantStats(statsBase + statsGearEnchantsBuffs);
             statsTotal.BonusIntellectMultiplier = ((1 + statsBase.BonusIntellectMultiplier) * (1 + statsGearEnchantsBuffs.BonusIntellectMultiplier)) - 1;
             statsTotal.BonusSpiritMultiplier = ((1 + statsBase.BonusSpiritMultiplier) * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier)) - 1;
@@ -740,16 +739,16 @@ namespace Rawr.Enhance
             statsTotal.PhysicalHaste = ((1 + statsBase.PhysicalHaste) * (1 + statsGearEnchantsBuffs.PhysicalHaste)) - 1;
             statsTotal.SpellHaste = ((1 + statsBase.SpellHaste) * (1 + statsGearEnchantsBuffs.SpellHaste)) - 1;
             statsTotal.MasteryRating = ((1 + statsBase.MasteryRating) * (1 + statsGearEnchantsBuffs.MasteryRating)) - 1;
-            
-            statsTotal.Agility =   (float)Math.Floor((float)((agiBase + agiBonus) * (1 + statsTotal.BonusAgilityMultiplier)));
-            statsTotal.Strength =  (float)Math.Floor((float)((strBase + strBonus) * (1 + statsTotal.BonusStrengthMultiplier)));
-            statsTotal.Stamina =   (float)Math.Floor((float)((staBase + staBonus) * (1 + statsTotal.BonusStaminaMultiplier)));
+
+            statsTotal.Agility = (float)Math.Floor((float)((agiBase + agiBonus) * (1 + statsTotal.BonusAgilityMultiplier)));
+            statsTotal.Strength = (float)Math.Floor((float)((strBase + strBonus) * (1 + statsTotal.BonusStrengthMultiplier)));
+            statsTotal.Stamina = (float)Math.Floor((float)((staBase + staBonus) * (1 + statsTotal.BonusStaminaMultiplier)));
             statsTotal.Intellect = (float)Math.Floor((float)((intBase + intBonus) * (1 + statsTotal.BonusIntellectMultiplier)));
-            statsTotal.Spirit =    (float)Math.Floor((float)((spiBase + spiBonus) * (1 + statsTotal.BonusSpiritMultiplier)));
+            statsTotal.Spirit = (float)Math.Floor((float)((spiBase + spiBonus) * (1 + statsTotal.BonusSpiritMultiplier)));
             statsTotal.Health = statsBase.Health + statsGearEnchantsBuffs.Health + StatConversion.GetHealthFromStamina(statsTotal.Stamina);
-            statsTotal.Mana =   statsBase.Mana   + statsGearEnchantsBuffs.Mana   + StatConversion.GetManaFromIntellect(statsTotal.Intellect);
+            statsTotal.Mana = statsBase.Mana + statsGearEnchantsBuffs.Mana + StatConversion.GetManaFromIntellect(statsTotal.Intellect);
             statsTotal.Health = (float)Math.Floor((float)(statsTotal.Health * (1 + statsTotal.BonusHealthMultiplier)));
-            statsTotal.Mana   = (float)Math.Floor((float)(statsTotal.Mana   * (1 + statsTotal.BonusManaMultiplier)));
+            statsTotal.Mana = (float)Math.Floor((float)(statsTotal.Mana * (1 + statsTotal.BonusManaMultiplier)));
             statsTotal.Expertise += 4 * character.ShamanTalents.UnleashedRage;
 
             statsTotal.AttackPower += statsTotal.Strength + 2f * statsTotal.Agility;  //(Check)
@@ -834,7 +833,7 @@ namespace Rawr.Enhance
             result.Stats.BonusManaMultiplier = 1 / (1 - result.Stats.BonusManaMultiplier) - 1;
             result.Stats.PhysicalHaste = 1 / (1 - result.Stats.PhysicalHaste) - 1;
             result.Stats.SpellHaste = 1 / (1 - result.Stats.SpellHaste) - 1;
-            return result; 
+            return result;
         }
         #endregion
 
@@ -890,7 +889,7 @@ namespace Rawr.Enhance
 
         public override bool IsItemRelevant(Item item)
         {
-            if ((item.Slot == ItemSlot.Ranged && (item.Type != ItemType.Totem && item.Type != ItemType.Relic))) 
+            if ((item.Slot == ItemSlot.Ranged && (item.Type != ItemType.Totem && item.Type != ItemType.Relic)))
                 return false;
             if (item.Slot == ItemSlot.OffHand && item.Type == ItemType.None)
                 return false;
@@ -970,7 +969,7 @@ namespace Rawr.Enhance
                 {
                     if (relevantStats(effect.Stats))
                         s.AddSpecialEffect(effect);
-                    else 
+                    else
                     {
                         foreach (SpecialEffect subEffect in effect.Stats.SpecialEffects())
                             if (HasRelevantTrigger(subEffect.Trigger) && relevantStats(subEffect.Stats))
@@ -1024,7 +1023,7 @@ namespace Rawr.Enhance
         {
             if (relevantStats(stats))
                 return true;
-            if (irrelevantStats(stats)) 
+            if (irrelevantStats(stats))
                 return false;
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
@@ -1230,53 +1229,3 @@ namespace Rawr.Enhance
     }
 }
 
-//TEMP WORKING
-/*     
-        #region Get Character Stats
-        public override Stats GetCharacterStats(Character character, Item additionalItem)
-        {
-            CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance ?? new CalculationOptionsEnhance();
-            ShamanTalents talents = character.ShamanTalents;
-            
-            bool mailSpecialization = character.Head != null && character.Head.Type == ItemType.Mail &&
-                                character.Shoulders != null && character.Shoulders.Type == ItemType.Mail &&
-                                character.Chest != null && character.Chest.Type == ItemType.Mail &&
-                                character.Wrist != null && character.Wrist.Type == ItemType.Mail &&
-                                character.Hands != null && character.Hands.Type == ItemType.Mail &&
-                                character.Waist != null && character.Waist.Type == ItemType.Mail &&
-                                character.Legs != null && character.Legs.Type == ItemType.Mail &&
-                                character.Feet != null && character.Feet.Type == ItemType.Mail;
-
-            bool hasAPBuff = false;
-            foreach (Buff buff in character.ActiveBuffs)
-                if (buff.Group == "Attack Power (%)")
-                {
-                    hasAPBuff = true;
-                    break;
-                }
-
-            StatsEnhance statsTotal = new StatsEnhance()
-            {
-                BonusAgilityMultiplier = mailSpecialization ? 0.05f : 0f,
-
-                MovementSpeed = 0.15f * talents.AncestralSwiftness,
-                AttackPower = (hasAPBuff ? 0f : 0.05f * talents.UnleashedRage)
-
-            };
-            statsTotal.Accumulate(BaseStats.GetBaseStats(character.Level, character.Class, character.Race, BaseStats.DruidForm.Cat));
-            statsTotal.Accumulate(GetItemStats(character, additionalItem));
-            statsTotal.Accumulate(GetBuffsStats(character, calcOpts));
-
-
-            statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
-            statsTotal.Strength = (float)Math.Floor((statsTotal.Strength) * (1f + statsTotal.BonusStrengthMultiplier));
-            statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1f + statsTotal.BonusAgilityMultiplier));
-            statsTotal.AttackPower += statsTotal.Strength * 1f + statsTotal.Agility * 2f - 10f; //-20 to account for the first 20 agi only giving 1ap
-            statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
-            statsTotal.Health += (float)Math.Floor((statsTotal.Stamina - 20f) * 10f + 20f);
-            statsTotal.Health = (float)Math.Floor(statsTotal.Health * (1f + statsTotal.BonusHealthMultiplier));
-            statsTotal.Armor = (float)Math.Floor(statsTotal.Armor * (1f + statsTotal.BonusArmorMultiplier));
-        }
-        #endregion
-    }
-}*/

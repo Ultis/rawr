@@ -146,7 +146,7 @@ namespace Rawr.Enhance
         public float BaseFireNovaSpeed { get { return 10f - 2f * _talents.ImprovedFireNova; } }
         public float StaticShockProcsPerS { get { return staticShocksPerSecond; } }
         public float StaticShockAvDuration { get { return /*StaticShockProcsPerS == 0 ? 600f : (3f / StaticShockProcsPerS)*/600f; } }  //FIXME Static Chock no longer consumes charges
-        public float MultiTargetMultiplier { get { return _calcOpts.MultipleTargets ? _calcOpts.AdditionalTargets * _calcOpts.AdditionalTargetPercent : 1f; } }
+        public float MultiTargetMultiplier { get { return 1f /*_calcOpts.MultipleTargets ? _calcOpts.AdditionalTargets * _calcOpts.AdditionalTargetPercent : 1f*/; } }
             
         public float HitsPerSOH { get { return hitsPerSOH; } }
         public float HitsPerSMH { get { return hitsPerSMH; } }

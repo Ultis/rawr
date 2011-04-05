@@ -103,6 +103,7 @@
     <Compile Include="EnhSimExportDialog.xaml.cs">
       <DependentUpon>EnhSimExportDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="StatsEnhance.cs" />
     <Compile Include="StatsSpecialEffects.cs" />
   </ItemGroup>
   <ItemGroup>
