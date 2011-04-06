@@ -2896,42 +2896,52 @@ namespace Rawr.Hunter {
                 out autoShotsPerSecond, out specialShotsPerSecond, out totalShotsPerSecond, out shotsPerSecondWithoutHawk,
                 out rotationTest);
 
-            triggerIntervals.Add(Trigger.Use, 0f);
-            triggerIntervals.Add(Trigger.MeleeHit, Math.Max(0f, calculatedStats.pet.PetCompInterval));
-            triggerIntervals.Add(Trigger.RangedHit, 1f / totalShotsPerSecond);
-            triggerIntervals.Add(Trigger.PhysicalHit, 1f / totalShotsPerSecond);
-            triggerIntervals.Add(Trigger.PhysicalAttack, 1f / totalShotsPerSecond);
-            triggerIntervals.Add(Trigger.MeleeCrit, Math.Max(0f, calculatedStats.pet.PetCompInterval));
-            triggerIntervals.Add(Trigger.RangedCrit, 1f / totalShotsPerSecond);
-            triggerIntervals.Add(Trigger.PhysicalCrit, 1f / totalShotsPerSecond);
-            triggerIntervals.Add(Trigger.DoTTick, talents.PiercingShots > 0 ? 1f : 0f);
-            triggerIntervals.Add(Trigger.DamageDone, Math.Max(0f, 1f / (totalShotsPerSecond + ((talents.PiercingShots > 0 ? 1f : 0f) > 0 ? 1f / (talents.PiercingShots > 0 ? 1f : 0f) : 0f))));
-            triggerIntervals.Add(Trigger.DamageOrHealingDone, Math.Max(0f, 1f / (totalShotsPerSecond + ((talents.PiercingShots > 0 ? 1f : 0f) > 0 ? 1f / (talents.PiercingShots > 0 ? 1f : 0f) : 0f)))); // Need to add Self-Heals
-            triggerIntervals.Add(Trigger.HunterAutoShotHit, 1f / autoShotsPerSecond);
-            triggerIntervals.Add(Trigger.SteadyShotHit, calculatedStats.steadyShot.Cd);
-            triggerIntervals.Add(Trigger.PetClawBiteSmackCrit, Math.Max(0f, calculatedStats.pet.PetClawBiteSmackInterval));
-            triggerIntervals.Add(Trigger.SerpentWyvernStingsDoDamage, (calculatedStats.serpentSting.Freq > 0 || calculatedStats.serpentSting.is_refreshed ? 3f : 0f));
-            triggerIntervals.Add(Trigger.EnergyOrFocusDropsBelow20PercentOfMax, 4f); // Approximating as 80% chance every 4 seconds. TODO: Put in some actual method of calculating this
+            // Generic
+            triggerIntervals[Trigger.Use]                                   = 0f;
+            //
+            triggerIntervals[Trigger.PhysicalAttack]                        = 
+            triggerIntervals[Trigger.RangedHit]                             = 
+            triggerIntervals[Trigger.PhysicalHit]                           = 
+            triggerIntervals[Trigger.RangedCrit]                            = 
+            triggerIntervals[Trigger.PhysicalCrit]                          = 1f / totalShotsPerSecond;
+            //
+            triggerIntervals[Trigger.DoTTick]                               = talents.PiercingShots > 0 ? 1f : 0f;
+            triggerIntervals[Trigger.DamageDone]                            = Math.Max(0f, 1f / (totalShotsPerSecond + ((talents.PiercingShots > 0 ? 1f : 0f) > 0 ? 1f / (talents.PiercingShots > 0 ? 1f : 0f) : 0f))));
+            triggerIntervals[Trigger.DamageOrHealingDone]                   = Math.Max(0f, 1f / (totalShotsPerSecond + ((talents.PiercingShots > 0 ? 1f : 0f) > 0 ? 1f / (talents.PiercingShots > 0 ? 1f : 0f) : 0f)))); // Need to add Self-Heals
+            // Pets only
+            triggerIntervals[Trigger.MeleeHit]                              = 
+            triggerIntervals[Trigger.MeleeCrit]                             = Math.Max(0f, calculatedStats.pet.PetCompInterval);
+            // Hunter Specific
+            triggerIntervals[Trigger.HunterAutoShotHit]                     = 1f / autoShotsPerSecond;
+            triggerIntervals[Trigger.SteadyShotHit]                         = calculatedStats.steadyShot.Cd;
+            triggerIntervals[Trigger.PetClawBiteSmackCrit]                  = Math.Max(0f, calculatedStats.pet.PetClawBiteSmackInterval));
+            triggerIntervals[Trigger.SerpentWyvernStingsDoDamage]           = (calculatedStats.serpentSting.Freq > 0 || calculatedStats.serpentSting.is_refreshed ? 3f : 0f));
+            triggerIntervals[Trigger.EnergyOrFocusDropsBelow20PercentOfMax] = 4f; // Approximating as 80% chance every 4 seconds. TODO: Put in some actual method of calculating this
 
             float ChanceToMiss = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[levelDif] - statsTotal.PhysicalHit);
             float ChanceToSpellMiss = Math.Max(0f, StatConversion.GetSpellMiss(levelDif, false) - statsTotal.SpellHit);
 
-            triggerChances.Add(Trigger.Use, 1f);
-            triggerChances.Add(Trigger.MeleeHit, calculatedStats.pet.WhAtkTable.AnyLand);
-            triggerChances.Add(Trigger.RangedHit, (1f - ChanceToMiss));
-            triggerChances.Add(Trigger.PhysicalHit, (1f - ChanceToMiss));
-            triggerChances.Add(Trigger.PhysicalHit, 1f);
-            triggerChances.Add(Trigger.MeleeCrit, Math.Min(1f + critMOD, Math.Max(0f, calculatedStats.pet.WhAtkTable.Crit)));
-            triggerChances.Add(Trigger.RangedCrit, Math.Min(1f + critMOD, Math.Max(0f, statsTotal.PhysicalCrit)));
-            triggerChances.Add(Trigger.PhysicalCrit, Math.Min(1f + critMOD, Math.Max(0f, statsTotal.PhysicalCrit)));
-            triggerChances.Add(Trigger.DoTTick, 1f);
-            triggerChances.Add(Trigger.DamageDone, 1f);
-            triggerChances.Add(Trigger.DamageOrHealingDone, 1f);
-            triggerChances.Add(Trigger.HunterAutoShotHit, (1f - ChanceToMiss));
-            triggerChances.Add(Trigger.SteadyShotHit, (1f - ChanceToMiss));
-            triggerChances.Add(Trigger.PetClawBiteSmackCrit, Math.Min(1f + critMOD, Math.Max(0f, calculatedStats.pet.WhAtkTable.Crit)));
-            triggerChances.Add(Trigger.SerpentWyvernStingsDoDamage, 1f);
-            triggerChances.Add(Trigger.EnergyOrFocusDropsBelow20PercentOfMax, 0.80f); // Approximating as 80% chance every 4 seconds. TODO: Put in some actual method of calculating this
+            // Generic
+            triggerChances[Trigger.Use]                                   = 1f;
+            //
+            triggerChances[Trigger.PhysicalAttack]                        = 1f;
+            triggerChances[Trigger.RangedHit]                             = 
+            triggerChances[Trigger.PhysicalHit]                           = (1f - ChanceToMiss);
+            triggerChances[Trigger.RangedCrit]                            = 
+            triggerChances[Trigger.PhysicalCrit]                          = Math.Min(1f + critMOD, Math.Max(0f, statsTotal.PhysicalCrit));
+            //
+            triggerChances[Trigger.DoTTick]                               = 1f;
+            triggerChances[Trigger.DamageDone]                            = 1f;
+            triggerChances[Trigger.DamageOrHealingDone]                   = 1f;
+            // Pets only
+            triggerChances[Trigger.MeleeHit]                              = calculatedStats.pet.WhAtkTable.AnyLand;
+            triggerChances[Trigger.MeleeCrit]                             = Math.Min(1f + critMOD, Math.Max(0f, calculatedStats.pet.WhAtkTable.Crit));
+            // Hunter Specific
+            triggerChances[Trigger.HunterAutoShotHit]                     = (1f - ChanceToMiss);
+            triggerChances[Trigger.SteadyShotHit]                         = (1f - ChanceToMiss);
+            triggerChances[Trigger.PetClawBiteSmackCrit]                  = Math.Min(1f + critMOD, Math.Max(0f, calculatedStats.pet.WhAtkTable.Crit)));
+            triggerChances[Trigger.SerpentWyvernStingsDoDamage]           = 1f;
+            triggerChances[Trigger.EnergyOrFocusDropsBelow20PercentOfMax] = 0.80f; // Approximating as 80% chance every 4 seconds. TODO: Put in some actual method of calculating this
         }
 
         private Stats GetSpecialEffectsStats(Character Char,
