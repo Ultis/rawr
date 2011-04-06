@@ -18033,7 +18033,7 @@
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>PhysicalHit</Trigger>
+          <Trigger>PhysicalAttack</Trigger>
           <Stats>
             <AttackPower>17</AttackPower>
           </Stats>
@@ -64892,7 +64892,7 @@
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>PhysicalHit</Trigger>
+          <Trigger>PhysicalAttack</Trigger>
           <Stats>
             <CritRating>924</CritRating>
           </Stats>
@@ -64917,8 +64917,8 @@
         <Area>Blackrock Caverns</Area>
         <Heroic>false</Heroic>
         <Boss>Corla, Herald of Twilight</Boss>
-        <Count>6319</Count>
-        <OutOf>25829</OutOf>
+        <Count>11169</Count>
+        <OutOf>45594</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Grace of the Herald</Name>
@@ -65879,7 +65879,7 @@
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>PhysicalHit</Trigger>
+          <Trigger>PhysicalAttack</Trigger>
           <Stats>
             <Agility>1290</Agility>
           </Stats>
@@ -65906,8 +65906,8 @@
         <Area>The Stonecore</Area>
         <Heroic>false</Heroic>
         <Boss>Corborus</Boss>
-        <Count>9021</Count>
-        <OutOf>31420</OutOf>
+        <Count>16744</Count>
+        <OutOf>57943</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Key to the Endless Chamber</Name>
@@ -67954,7 +67954,7 @@
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>PhysicalHit</Trigger>
+          <Trigger>PhysicalAttack</Trigger>
           <Stats>
             <Agility>30</Agility>
           </Stats>
@@ -67981,8 +67981,8 @@
         <Area>Lost City of the Tol'vir</Area>
         <Heroic>false</Heroic>
         <Boss>Siamat</Boss>
-        <Count>4658</Count>
-        <OutOf>19203</OutOf>
+        <Count>10466</Count>
+        <OutOf>42477</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Tia's Grace</Name>
@@ -69083,8 +69083,8 @@
         <Area>Halls of Origination</Area>
         <Heroic>false</Heroic>
         <Boss>Rajh</Boss>
-        <Count>5800</Count>
-        <OutOf>23454</OutOf>
+        <Count>12345</Count>
+        <OutOf>50269</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Left Eye of Rajh</Name>
@@ -71034,7 +71034,7 @@
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>PhysicalHit</Trigger>
+          <Trigger>PhysicalAttack</Trigger>
           <Stats>
             <CritRating>1710</CritRating>
           </Stats>
@@ -71059,8 +71059,8 @@
         <Area>Blackrock Caverns</Area>
         <Heroic>true</Heroic>
         <Boss>Corla, Herald of Twilight</Boss>
-        <Count>2110</Count>
-        <OutOf>10567</OutOf>
+        <Count>8562</Count>
+        <OutOf>42492</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Grace of the Herald</Name>
@@ -71994,7 +71994,7 @@
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>PhysicalHit</Trigger>
+          <Trigger>PhysicalAttack</Trigger>
           <Stats>
             <Agility>1710</Agility>
           </Stats>
@@ -72021,8 +72021,8 @@
         <Area>The Stonecore</Area>
         <Heroic>true</Heroic>
         <Boss>Corborus</Boss>
-        <Count>1385</Count>
-        <OutOf>6890</OutOf>
+        <Count>5768</Count>
+        <OutOf>28691</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Key to the Endless Chamber</Name>
@@ -73993,8 +73993,8 @@
         <Area>Lost City of the Tol'vir</Area>
         <Heroic>true</Heroic>
         <Boss>Augh</Boss>
-        <Count>7728</Count>
-        <OutOf>38704</OutOf>
+        <Count>9566</Count>
+        <OutOf>47697</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Heart of Solace</Name>
@@ -74009,7 +74009,7 @@
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>PhysicalHit</Trigger>
+          <Trigger>PhysicalAttack</Trigger>
           <Stats>
             <Agility>34</Agility>
           </Stats>
@@ -74036,8 +74036,8 @@
         <Area>Lost City of the Tol'vir</Area>
         <Heroic>true</Heroic>
         <Boss>Siamat</Boss>
-        <Count>1964</Count>
-        <OutOf>10013</OutOf>
+        <Count>8345</Count>
+        <OutOf>44162</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Tia's Grace</Name>
@@ -75177,8 +75177,8 @@
         <Area>Halls of Origination</Area>
         <Heroic>true</Heroic>
         <Boss>Rajh</Boss>
-        <Count>6696</Count>
-        <OutOf>34751</OutOf>
+        <Count>8215</Count>
+        <OutOf>42534</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Right Eye of Rajh</Name>
@@ -75375,8 +75375,8 @@
         <Area>Grim Batol</Area>
         <Heroic>true</Heroic>
         <Boss>General Umbriss</Boss>
-        <Count>1854</Count>
-        <OutOf>9329</OutOf>
+        <Count>7219</Count>
+        <OutOf>37048</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Skardyn's Grace</Name>
@@ -81903,21 +81903,6 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Valor Points</string>
-            </key>
-            <value>
-              <int>1650</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Jamus'Vaz</VendorName>
-        <VendorArea>Orgrimmar</VendorArea>
-      </ItemLocation>
     </LocationInfo>
     <Cost>1650</Cost>
     <Name>License to Slay</Name>
@@ -81926,13 +81911,13 @@
   </Item>
   <Item>
     <ItemLevel>359</ItemLevel>
-    <DisplayId>83679</DisplayId>
+    <DisplayId>96043</DisplayId>
     <DisplaySlot>12</DisplaySlot>
-    <IconPath>ability_vehicle_liquidpyrite-_blue</IconPath>
+    <IconPath>ability_vehicle_liquidpyrite_blue</IconPath>
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>PhysicalHit</Trigger>
+          <Trigger>PhysicalAttack</Trigger>
           <Stats>
             <Agility>38</Agility>
           </Stats>
@@ -83563,8 +83548,8 @@
         <Area>Blackwing Descent</Area>
         <Heroic>false</Heroic>
         <Boss>Chimaeron</Boss>
-        <Count>68</Count>
-        <OutOf>210</OutOf>
+        <Count>2095</Count>
+        <OutOf>7948</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Heart of Rage</Name>
@@ -85234,7 +85219,7 @@
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>PhysicalHit</Trigger>
+          <Trigger>PhysicalAttack</Trigger>
           <Stats>
             <HasteRating>1926</HasteRating>
           </Stats>
@@ -85261,8 +85246,8 @@
         <Area>Blackwing Descent</Area>
         <Heroic>false</Heroic>
         <Boss>Nefarian</Boss>
-        <Count>9</Count>
-        <OutOf>19</OutOf>
+        <Count>612</Count>
+        <OutOf>1846</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Prestor's Talisman of Machination</Name>
@@ -86157,7 +86142,7 @@
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>PhysicalHit</Trigger>
+          <Trigger>PhysicalAttack</Trigger>
           <Stats>
             <CritRating>1926</CritRating>
           </Stats>
@@ -86184,8 +86169,8 @@
         <Area>The Bastion of Twilight</Area>
         <Heroic>false</Heroic>
         <Boss>Halfus Wyrmbreaker</Boss>
-        <Count>482</Count>
-        <OutOf>1813</OutOf>
+        <Count>6752</Count>
+        <OutOf>28694</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Essence of the Cyclone</Name>
@@ -86987,8 +86972,8 @@
         <Area>The Bastion of Twilight</Area>
         <Heroic>false</Heroic>
         <Boss>Elementium Monstrosity</Boss>
-        <Count>72</Count>
-        <OutOf>264</OutOf>
+        <Count>3706</Count>
+        <OutOf>12410</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Crushing Weight</Name>
@@ -104022,26 +104007,11 @@
     <Bind>BoP</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="FactionItem">
-        <FactionName>Hellscream's Reach</FactionName>
-        <Level>Exalted</Level>
-        <Cost>0</Cost>
-        <TokenMap />
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Tol Borad Commendation</string>
-            </key>
-            <value>
-              <int>125</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Pogg</VendorName>
-        <VendorArea>Tol Barad Peninsula</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Unknown PvP</PointType>
+        <Points>0</Points>
+        <TokenType>Tol Barad Commendation</TokenType>
+        <TokenCount>125</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Unsolvable Riddle</Name>
@@ -104301,26 +104271,11 @@
     <Bind>BoP</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="FactionItem">
-        <FactionName>Baradin's Wardens</FactionName>
-        <Level>Exalted</Level>
-        <Cost>0</Cost>
-        <TokenMap />
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Tol Borad Commendation</string>
-            </key>
-            <value>
-              <int>125</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Quartermaster Brazie</VendorName>
-        <VendorArea>Tol Barad Peninsula</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Unknown PvP</PointType>
+        <Points>0</Points>
+        <TokenType>Tol Barad Commendation</TokenType>
+        <TokenCount>125</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Unsolvable Riddle</Name>
@@ -104351,31 +104306,16 @@
     </Stats>
     <Quality>Epic</Quality>
     <Type>None</Type>
-    <Faction>Alliance</Faction>
+    <Faction>Neutral</Faction>
     <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="FactionItem">
-        <FactionName>Baradin's Wardens</FactionName>
-        <Level>Exalted</Level>
-        <Cost>0</Cost>
-        <TokenMap />
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Tol Borad Commendation</string>
-            </key>
-            <value>
-              <int>125</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Quartermaster Brazie</VendorName>
-        <VendorArea>Tol Barad Peninsula</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Unknown PvP</PointType>
+        <Points>0</Points>
+        <TokenType>Tol Barad Commendation</TokenType>
+        <TokenCount>125</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Impatience of Youth</Name>
@@ -114350,7 +114290,7 @@
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>PhysicalHit</Trigger>
+          <Trigger>PhysicalAttack</Trigger>
           <Stats>
             <HasteRating>2178</HasteRating>
           </Stats>
@@ -114374,11 +114314,11 @@
     <UniqueId>65026</UniqueId>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
-        <Area>Blackwing Descent</Area>
+        <Area>Blackwing Descent (25)</Area>
         <Heroic>true</Heroic>
         <Boss>Nefarian</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Count>18</Count>
+        <OutOf>47</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Prestor's Talisman of Machination</Name>
@@ -115942,10 +115882,10 @@
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Blackwing Descent</Area>
-        <Heroic>true</Heroic>
+        <Heroic>false</Heroic>
         <Boss>Chimaeron</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Count>376</Count>
+        <OutOf>7948</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Heart of Rage</Name>
@@ -117297,11 +117237,11 @@
     <UniqueId>65118</UniqueId>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
-        <Area>The Bastion of Twilight</Area>
+        <Area>The Bastion of Twilight (25)</Area>
         <Heroic>true</Heroic>
         <Boss>Elementium Monstrosity</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Count>24</Count>
+        <OutOf>47</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Crushing Weight</Name>
@@ -118012,7 +117952,7 @@
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>PhysicalHit</Trigger>
+          <Trigger>PhysicalAttack</Trigger>
           <Stats>
             <CritRating>2178</CritRating>
           </Stats>
@@ -118037,10 +117977,10 @@
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>The Bastion of Twilight</Area>
-        <Heroic>true</Heroic>
+        <Heroic>false</Heroic>
         <Boss>Halfus Wyrmbreaker</Boss>
-        <Count>17</Count>
-        <OutOf>27</OutOf>
+        <Count>1435</Count>
+        <OutOf>28694</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Essence of the Cyclone</Name>
@@ -127260,6 +127200,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
@@ -127286,6 +127227,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
@@ -127313,6 +127255,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
@@ -127339,6 +127282,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
@@ -127365,6 +127309,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
@@ -127391,6 +127336,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
@@ -127417,6 +127363,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
@@ -127437,12 +127384,12 @@
     <IconPath>inv_misc_metagem_b</IconPath>
     <Stats>
       <Stamina>81</Stamina>
-      <BonusBlockValueMultiplier>0.01</BonusBlockValueMultiplier>
     </Stats>
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
@@ -127469,6 +127416,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
@@ -127495,6 +127443,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
@@ -127521,6 +127470,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
@@ -127547,6 +127497,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
@@ -127573,6 +127524,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
@@ -130033,6 +129985,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
@@ -130060,6 +130013,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
@@ -130087,6 +130041,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
@@ -131069,41 +131024,6 @@
     <Name>Wind Stalker Belt</Name>
     <Id>63493</Id>
     <Slot>Waist</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>391</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
-    <IconPath>inv_misc_gift_03</IconPath>
-    <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>DamageTakenPutsMeBelow35PercHealth</Trigger>
-          <Stats>
-            <DamageAbsorbed>8350</DamageAbsorbed>
-          </Stats>
-          <Duration>30</Duration>
-          <Cooldown>120</Cooldown>
-          <Chance>1</Chance>
-          <MaxStack>1</MaxStack>
-          <LimitedToExecutePhase>false</LimitedToExecutePhase>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>1</SpecialEffectCount>
-      <MasteryRating>433</MasteryRating>
-    </Stats>
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <Unique>true</Unique>
-    <Bind>BoP</Bind>
-    <SocketBonus />
-    <LocationInfo>
-      <ItemLocation xsi:type="NoSource" />
-    </LocationInfo>
-    <Name>Gift of the Greatfather</Name>
-    <Id>69138</Id>
-    <Slot>Trinket</Slot>
   </Item>
   <Item>
     <ItemLevel>359</ItemLevel>
@@ -132517,7 +132437,6 @@
     <Faction>Neutral</Faction>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
       <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
     <Name>[Downloading from Wowhead]</Name>
