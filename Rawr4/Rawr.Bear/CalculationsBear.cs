@@ -419,6 +419,7 @@ the Threat Scale defined on the Options tab.",
         /// <returns>The CharacterCalculationsBear containing the results of the calculations</returns>
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
+            #region Setup uniform variables from all models
             CharacterCalculationsBear calculatedStats = new CharacterCalculationsBear();
             if (character == null) { return calculatedStats; }
             CalculationOptionsBear calcOpts = character.CalculationOptions as CalculationOptionsBear;
@@ -443,64 +444,65 @@ the Threat Scale defined on the Options tab.",
             }
             // Since the above forced there to be an attack it's safe to do this without a null check
             Attack bossAttack = bossOpts.DefaultMeleeAttack;
-
-            int targetLevel = bossOpts.Level;
-            int characterLevel = character.Level;
             StatsBear stats = GetCharacterStats(character, additionalItem) as StatsBear;
-            int levelDifference = (targetLevel - characterLevel);
-            float targetAttackSpeed = bossAttack.AttackSpeed / (1f - stats.BossAttackSpeedReductionMultiplier);
-
             calculatedStats.BasicStats = stats;
-            calculatedStats.TargetLevel = targetLevel;
-            calculatedStats.CharacterLevel = characterLevel;
+            calculatedStats.TargetLevel = bossOpts.Level;
+            calculatedStats.CharacterLevel = character.Level;
+            #endregion
 
-            float hasteBonus = StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.Druid);
-            float attackSpeed = ((2.5f) / (1f + hasteBonus)) / (1f + stats.PhysicalHaste);
+            int levelDifference = (bossOpts.Level - character.Level);
 
-            float hitBonus = StatConversion.GetPhysicalHitFromRating(stats.HitRating, CharacterClass.Druid) + stats.PhysicalHit;
-            float expertiseBonus = StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Druid) + stats.Expertise, CharacterClass.Druid);
-            float chanceDodge = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[levelDifference] - expertiseBonus);
-            float chanceParry = Math.Max(0f, StatConversion.WHITE_PARRY_CHANCE_CAP[levelDifference] - expertiseBonus);
-            float chanceMiss = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[levelDifference] - hitBonus);
+            #region Player Stats
 
-            float chanceAvoided = chanceMiss + chanceDodge + chanceParry;
+            #region Offensive
+            float playerHasteBonus = StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.Druid);
+            float playerAttackSpeed = ((2.5f) / (1f + playerHasteBonus)) / (1f + stats.PhysicalHaste);
 
-            float rawChanceCrit = StatConversion.GetPhysicalCritFromRating(stats.CritRating, CharacterClass.Druid)
+            float playerHitBonus = StatConversion.GetPhysicalHitFromRating(stats.HitRating, CharacterClass.Druid) + stats.PhysicalHit;
+            float playerExpertiseBonus = StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Druid) + stats.Expertise, CharacterClass.Druid);
+            float playerChanceToBeDodged = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[levelDifference] - playerExpertiseBonus);
+            float playerChancetoBeParried = Math.Max(0f, StatConversion.WHITE_PARRY_CHANCE_CAP[levelDifference] - playerExpertiseBonus);
+            float playerChanceToMiss = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[levelDifference] - playerHitBonus);
+
+            float playerChanceToBeAvoided = playerChanceToMiss + playerChanceToBeDodged + playerChancetoBeParried;
+
+            float playerRawChanceToCrit = StatConversion.GetPhysicalCritFromRating(stats.CritRating, CharacterClass.Druid)
                                 + StatConversion.GetPhysicalCritFromAgility(stats.Agility, CharacterClass.Druid)
                                 + stats.PhysicalCrit
                                 + StatConversion.NPC_LEVEL_CRIT_MOD[levelDifference];
-            float chanceCrit = rawChanceCrit * (1f - chanceAvoided);
-            float chanceCritBleed = rawChanceCrit;
+            float playerChanceToCrit = playerRawChanceToCrit * (1f - playerChanceToBeAvoided);
+            float playerChanceToCritBleed = playerRawChanceToCrit;
+            #endregion
 
             Stats baseStats = BaseStats.GetBaseStats(character.Level, character.Class, character.Race, BaseStats.DruidForm.Bear);
-            
+
+            #region Defensive Part A
             //Calculate avoidance, considering diminishing returns
             float levelDifferenceAvoidance = levelDifference * 0.002f;
             //float defSkill = (float)Math.Floor(StatConversion.GetDefenseFromRating(stats.DefenseRating, CharacterClass.Druid));
-            float dodgeNonDR = stats.Dodge - levelDifferenceAvoidance + StatConversion.GetDodgeFromAgility(baseStats.Agility, CharacterClass.Druid);
-            float missNonDR = stats.Miss - levelDifferenceAvoidance;
-            float dodgePreDR = StatConversion.GetDodgeFromAgility(stats.Agility - baseStats.Agility, CharacterClass.Druid)
-                               + StatConversion.GetDodgeFromRating(stats.DodgeRating, CharacterClass.Druid)
-                               /*+ defSkill * StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER / 100f*/;
-            float missPreDR = 0f;//(defSkill * StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER / 100f);
-            float dodgePostDR = 0.01f / (1f / 116.890707f + 0.00972f / dodgePreDR);
-            float missPostDR = 0.01f / (1f / 16f + 0.00972f / missPreDR);
-            float dodgeTotal = dodgeNonDR + dodgePostDR;
-            float missTotal = missNonDR + missPostDR;
-
+            float dodgeThatsNotAffectedByDR = stats.Dodge - levelDifferenceAvoidance + StatConversion.GetDodgeFromAgility(baseStats.Agility, CharacterClass.Druid);
+            float missThatsNotAffectedByDR = stats.Miss - levelDifferenceAvoidance;
+            float dodgeBeforeDRApplied = StatConversion.GetDodgeFromAgility(stats.Agility - baseStats.Agility, CharacterClass.Druid)
+                                       + StatConversion.GetDodgeFromRating(stats.DodgeRating, CharacterClass.Druid);
+            float missBeforeDRApplied = 0f;
+            float dodgeAfterDRApplied = 0.01f / (1f / 116.890707f + 0.00972f / dodgeBeforeDRApplied);
+            float missAfterDRApplied = 0.01f / (1f / 16f + 0.00972f / missBeforeDRApplied);
+            float dodgeTotal = dodgeThatsNotAffectedByDR + dodgeAfterDRApplied;
+            float missTotal = missThatsNotAffectedByDR + missAfterDRApplied;
 
             calculatedStats.Miss = missTotal;
             calculatedStats.Dodge = Math.Min(1f - calculatedStats.Miss, dodgeTotal);
-            calculatedStats.DamageReductionFromArmor = StatConversion.GetDamageReductionFromArmor(targetLevel, stats.Armor);
+            calculatedStats.DamageReductionFromArmor = StatConversion.GetDamageReductionFromArmor(bossOpts.Level, stats.Armor);
             calculatedStats.TotalConstantDamageReduction = 1f - (1f - calculatedStats.DamageReductionFromArmor) * (1f - stats.DamageTakenReductionMultiplier) * (1f - stats.BossPhysicalDamageDealtReductionMultiplier);
-            calculatedStats.AvoidancePreDR = dodgeNonDR + dodgePreDR + missNonDR + missPreDR;
+            calculatedStats.AvoidancePreDR = dodgeThatsNotAffectedByDR + dodgeBeforeDRApplied + missThatsNotAffectedByDR + missBeforeDRApplied;
             calculatedStats.AvoidancePostDR = dodgeTotal + missTotal;
-            calculatedStats.CritReduction = //(defSkill * StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER / 100f)
-                                          //+ StatConversion.GetCritReductionFromResilience(stats.Resilience, CharacterClass.Druid)
-                                          /*+*/ stats.CritChanceReduction;
+            calculatedStats.CritReduction = stats.CritChanceReduction;
             calculatedStats.CappedCritReduction = Math.Min(0.05f + levelDifferenceAvoidance, calculatedStats.CritReduction);
+            #endregion
 
-            { //Evaluate damage taken once ahead of time for vengeance
+            #region Vengeance
+            {
+                // == Evaluate damage taken once ahead of time for vengeance ==
                 //Out of 100 attacks, you'll take...
                 float critsVeng = Math.Min(Math.Max(0f, 1f - calculatedStats.AvoidancePostDR), (0.05f + levelDifferenceAvoidance) - calculatedStats.CappedCritReduction);
                 //float crushes = targetLevel == 73 ? Math.Max(0f, Math.Min(15f, 100f - (crits + calculatedStats.AvoidancePreDR)) - stats.CritChanceReduction) : 0f;
@@ -515,7 +517,7 @@ the Threat Scale defined on the Options tab.",
                 float damageTakenPerVengeanceTick = damageTakenPerSecond * 2f;
                 float vengeanceCap = stats.Stamina + baseStats.Health * 0.1f;
                 float vengeanceAPPreAvoidance = Math.Min(vengeanceCap, damageTakenPerVengeanceTick) ;
-                
+
                 double chanceHit = 1f - calculatedStats.AvoidancePostDR;
                 double vengeanceMultiplierFromAvoidance = //Best-fit of results from simulation of avoidance effects on vengeance
                     -46.288470839554d * Math.Pow(chanceHit, 6) 
@@ -533,50 +535,42 @@ the Threat Scale defined on the Options tab.",
                 stats.AttackPower += vengeanceAP * (1f + stats.BonusAttackPowerMultiplier);
                 calculatedStats.AverageVengeanceAP = vengeanceAP;
             }
+            #endregion
 
+            #region Defensive Part B
+            float targetAttackSpeedDebuffed = bossAttack.AttackSpeed / (1f - stats.BossAttackSpeedReductionMultiplier);
             float targetHitChance = 1f - calculatedStats.AvoidancePostDR;
-            float autoSpecialAttacksPerSecond = 1f / 1.5f + 1f / attackSpeed + 1f / 3f;
-            float lacerateTicksPerSecond = 0f;// 1f / 3f;
+            float autoSpecialAttacksPerSecond = 1f / 1.5f + 1f / playerAttackSpeed + 1f / 3f;
 
             float masteryMultiplier = 1f + (8f + StatConversion.GetMasteryFromRating(stats.MasteryRating)) * 0.04f;
-            float totalAttacksPerSecond = autoSpecialAttacksPerSecond + lacerateTicksPerSecond;
-            float averageSDAttackCritChance = 0.5f * (chanceCrit * (autoSpecialAttacksPerSecond / totalAttacksPerSecond) + 
-                chanceCritBleed * (lacerateTicksPerSecond / totalAttacksPerSecond)); //Include the 50% chance to proc per crit here.
-            float playerAttackSpeed = 1f / totalAttacksPerSecond;
-            float blockChance = 1f - targetHitChance * ((float)Math.Pow(1f - averageSDAttackCritChance, targetAttackSpeed / playerAttackSpeed)) *
-                1f / (1f - (1f - targetHitChance) * (float)Math.Pow(1f - averageSDAttackCritChance, targetAttackSpeed / playerAttackSpeed));
+            float totalAttacksPerSecond = autoSpecialAttacksPerSecond;
+            float averageSDAttackCritChance = 0.5f * (playerChanceToCrit * (autoSpecialAttacksPerSecond / totalAttacksPerSecond)); //Include the 50% chance to proc per crit here.
+            float playerAttacksInterval = 1f / totalAttacksPerSecond;
+            float blockChance = 1f - targetHitChance * ((float)Math.Pow(1f - averageSDAttackCritChance, targetAttackSpeedDebuffed / playerAttacksInterval)) *
+                1f / (1f - (1f - targetHitChance) * (float)Math.Pow(1f - averageSDAttackCritChance, targetAttackSpeedDebuffed / playerAttacksInterval));
             float blockValue = stats.AttackPower * 0.35f * masteryMultiplier;
             float blockedPercent = Math.Min(1f, (blockValue * blockChance) / ((1f - calculatedStats.TotalConstantDamageReduction) * (bossAttack.DamagePerHit - stats.DamageAbsorbed)));
             calculatedStats.SavageDefenseChance = (float)Math.Round(blockChance, 5);
             calculatedStats.SavageDefenseValue = (float)Math.Floor(blockValue);
             calculatedStats.SavageDefensePercent = (float)Math.Round(blockedPercent, 5);
+            #endregion
 
-            /* Parry Haste doesn't exist in Cata right now
-            float parryHasteDamageMuliplier = 1.0f;
-            if (bossAttack.UseParryHaste)
-            {
-                float parryableAttacksPerSecond = 7f / 13.5f + 1f / attackSpeed; //In every 13.5sec period (9 GCDs), 2 should be FFF, so only 7 parryable instants per 13.5sec
-                //Target parries within the first 40% of their swing timer advances their swing timer by 40%
-                //...Within the next 40%, it advances their swing timer to 20% remaining.
-                //So, we average that as a 60% window (since the last 40% only provides half as much haste on average), with a 40% swing advance
-                float parryWindow = targetAttackSpeed * 0.6f;
-                float parryableAttacksPerParryWindow = parryableAttacksPerSecond * parryWindow;
-                float chanceParryPerWindow = 1f - (float)Math.Pow(1f - chanceParry, parryableAttacksPerParryWindow);
-                float parryBonusDPSMultiplier = 1f / 0.6f - 1f; //When a parry happens, boss DPS gets muliplied by 1/0.6 for that swing
-                parryHasteDamageMuliplier = 1f + (parryBonusDPSMultiplier * chanceParryPerWindow);
-            }*/
+            #endregion
 
-            //Out of 100 attacks, you'll take...
+            #region Mitigation Points
+            // Out of 100 attacks, you'll take...
             float crits = Math.Min(Math.Max(0f, 1f - calculatedStats.AvoidancePostDR), (0.05f + levelDifferenceAvoidance) - calculatedStats.CappedCritReduction);
-            //float crushes = targetLevel == 73 ? Math.Max(0f, Math.Min(15f, 100f - (crits + calculatedStats.AvoidancePreDR)) - stats.CritChanceReduction) : 0f;
             float hits = Math.Max(0f, 1f - (crits + calculatedStats.AvoidancePostDR));
-            //Apply armor and multipliers for each attack type...
+            // Apply armor and multipliers for each attack type...
             crits *= (1f - calculatedStats.TotalConstantDamageReduction) * 2f;
-            //crushes *= (100f - calculatedStats.Mitigation) * .015f;
-            hits *= (1f - calculatedStats.TotalConstantDamageReduction);
-            calculatedStats.DamageTaken = (hits + crits) * (1f - blockedPercent) * (1f - stats.BossAttackSpeedReductionMultiplier) /** parryHasteDamageMuliplier*/;
+            hits  *= (1f - calculatedStats.TotalConstantDamageReduction);
+            calculatedStats.DamageTaken = (hits + crits) * (1f - blockedPercent) * (1f - stats.BossAttackSpeedReductionMultiplier);
             calculatedStats.TotalMitigation = 1f - calculatedStats.DamageTaken;
+            // Final Mitigation Score
+            calculatedStats.MitigationPoints = (StatConversion.MitigationScaler / calculatedStats.DamageTaken);
+            #endregion
 
+            #region Survivability Points
             calculatedStats.SurvivalPointsRaw = (stats.Health / (1f - calculatedStats.TotalConstantDamageReduction));
             double survivalCap = bossAttack.DamagePerHit * calcOpts.HitsToSurvive / 1000d;
             double survivalRaw = calculatedStats.SurvivalPointsRaw / 1000d;
@@ -595,21 +589,24 @@ the Threat Scale defined on the Options tab.",
                 double y = (cap * fraction + cap);
                 calculatedStats.SurvivabilityPoints = 1000f * (float)y;
             }
+            #endregion
 
-            calculatedStats.MitigationPoints = (StatConversion.MitigationScaler / calculatedStats.DamageTaken);
-
+            #region Survivability for each Resistance Type (magical attacks)
             // Call new resistance formula and apply talent damage reduction
             // As for other survival, only use guaranteed reduction (MinimumResist), no luck
-            calculatedStats.NatureSurvivalPoints = (float)(stats.Health / ((1f - StatConversion.GetMinimumResistance(targetLevel, character.Level, stats.NatureResistance, 0)) * (1f - 0.06f * character.DruidTalents.NaturalReaction)));
-            calculatedStats.FrostSurvivalPoints = (float)(stats.Health / ((1f - StatConversion.GetMinimumResistance(targetLevel, character.Level, stats.FrostResistance, 0)) * (1f - 0.06f * character.DruidTalents.NaturalReaction)));
-            calculatedStats.FireSurvivalPoints = (float)(stats.Health / ((1f - StatConversion.GetMinimumResistance(targetLevel, character.Level, stats.FireResistance, 0)) * (1f - 0.06f * character.DruidTalents.NaturalReaction)));
-            calculatedStats.ShadowSurvivalPoints = (float)(stats.Health / ((1f - StatConversion.GetMinimumResistance(targetLevel, character.Level, stats.ShadowResistance, 0)) * (1f - 0.06f * character.DruidTalents.NaturalReaction)));
-            calculatedStats.ArcaneSurvivalPoints = (float)(stats.Health / ((1f - StatConversion.GetMinimumResistance(targetLevel, character.Level, stats.ArcaneResistance, 0)) * (1f - 0.06f * character.DruidTalents.NaturalReaction)));
-            
+            float naturalReactionMOD = (1f - 0.06f * character.DruidTalents.NaturalReaction);
+            calculatedStats.NatureSurvivalPoints = (float)(stats.Health / ((1f - StatConversion.GetMinimumResistance(bossOpts.Level, character.Level, stats.NatureResistance, 0)) * naturalReactionMOD));
+            calculatedStats.FrostSurvivalPoints  = (float)(stats.Health / ((1f - StatConversion.GetMinimumResistance(bossOpts.Level, character.Level, stats.FrostResistance,  0)) * naturalReactionMOD));
+            calculatedStats.FireSurvivalPoints   = (float)(stats.Health / ((1f - StatConversion.GetMinimumResistance(bossOpts.Level, character.Level, stats.FireResistance,   0)) * naturalReactionMOD));
+            calculatedStats.ShadowSurvivalPoints = (float)(stats.Health / ((1f - StatConversion.GetMinimumResistance(bossOpts.Level, character.Level, stats.ShadowResistance, 0)) * naturalReactionMOD));
+            calculatedStats.ArcaneSurvivalPoints = (float)(stats.Health / ((1f - StatConversion.GetMinimumResistance(bossOpts.Level, character.Level, stats.ArcaneResistance, 0)) * naturalReactionMOD));
+            #endregion
+
             //Perform Threat calculations
-            CalculateThreat(stats, targetLevel, calculatedStats, character);
-            calculatedStats.OverallPoints = calculatedStats.MitigationPoints +
-                calculatedStats.SurvivabilityPoints + calculatedStats.ThreatPoints;
+            CalculateThreat(stats, bossOpts.Level, calculatedStats, character);
+
+            calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivabilityPoints + calculatedStats.ThreatPoints;
+
             return calculatedStats;
         }
 
@@ -692,22 +689,13 @@ the Threat Scale defined on the Options tab.",
 
             DruidTalents talents = character.DruidTalents;
 
-            bool leatherSpecialization =	character.Head != null && character.Head.Type == ItemType.Leather &&
-                                            character.Shoulders != null && character.Shoulders.Type == ItemType.Leather &&
-                                            character.Chest != null && character.Chest.Type == ItemType.Leather &&
-                                            character.Wrist != null && character.Wrist.Type == ItemType.Leather &&
-                                            character.Hands != null && character.Hands.Type == ItemType.Leather &&
-                                            character.Waist != null && character.Waist.Type == ItemType.Leather &&
-                                            character.Legs != null && character.Legs.Type == ItemType.Leather &&
-                                            character.Feet != null && character.Feet.Type == ItemType.Leather;
-
             bool hasCritBuff = false;
-            foreach (Buff buff in character.ActiveBuffs)
-                if (buff.Group == "Critical Strike Chance")
-                {
+            foreach (Buff buff in character.ActiveBuffs) {
+                if (buff.Group == "Critical Strike Chance") {
                     hasCritBuff = true;
                     break;
                 }
+            }
 
             StatsBear statsTotal = new StatsBear()
             {
@@ -726,7 +714,7 @@ the Threat Scale defined on the Options tab.",
                 DamageTakenReductionMultiplier = 0.06f * talents.NaturalReaction,
                 BonusMaulDamageMultiplier = 0.04f * talents.RendAndTear,
                 
-                BonusStaminaMultiplier = (1f + 0.02f * talents.HeartOfTheWild) * (leatherSpecialization ? 1.05f : 1f) - 1f,
+                BonusStaminaMultiplier = (1f + 0.02f * talents.HeartOfTheWild) * (Character.ValidateArmorSpecialization(character, ItemType.Leather) ? 1.05f : 1f) - 1f,
                 BonusPhysicalDamageMultiplier = 0.04f * talents.MasterShapeshifter,
                 BonusMangleDamageMultiplier = talents.GlyphOfMangle ? 0.1f : 0f,
                 BonusLacerateCritChance = talents.GlyphOfLacerate ? 0.05f : 0f,
@@ -735,7 +723,6 @@ the Threat Scale defined on the Options tab.",
             statsTotal.Accumulate(BaseStats.GetBaseStats(character.Level, character.Class, character.Race, BaseStats.DruidForm.Bear));
             statsTotal.Accumulate(GetItemStats(character, additionalItem));
             statsTotal.Accumulate(GetBuffsStats(character, calcOpts));
-
 
             statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
             statsTotal.Strength = (float)Math.Floor(statsTotal.Strength * (1f + statsTotal.BonusStrengthMultiplier));
@@ -770,8 +757,8 @@ the Threat Scale defined on the Options tab.",
             float fightDuration = bossOpts.BerserkTimer;
 
             float hasteBonus = StatConversion.GetHasteFromRating(statsTotal.HasteRating, CharacterClass.Druid);
-            float attackSpeed = (2.5f / (1f + hasteBonus)) / (1f + statsTotal.PhysicalHaste);
-            float meleeHitInterval = 1f / (1f / attackSpeed + 1f / 1.5f);
+            float playerHastedAttackSpeed = (2.5f / (1f + hasteBonus)) / (1f + statsTotal.PhysicalHaste);
+            float meleeHitInterval = 1f / (1f / playerHastedAttackSpeed + 1f / 1.5f);
 
             int levelDifference = (bossOpts.Level - character.Level);
             float hitBonus = StatConversion.GetPhysicalHitFromRating(statsTotal.HitRating) + statsTotal.PhysicalHit;
