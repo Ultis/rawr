@@ -2147,7 +2147,7 @@ namespace Rawr
         #endregion
         #region Added by Warlocks
         [DefaultValueAttribute(0f)]
-        [DisplayName("% reduction of the cast time of your Chaos Bolt, Hand of Gul'dan, and Haunt spells.")]
+        [DisplayName("Reduces the cast time of your Chaos Bolt, Hand of Gul'dan, and Haunt spells by 10%.")]
         [Percentage]
         [Category("Warlock")]
         public float Warlock_T11_2P
@@ -2156,7 +2156,7 @@ namespace Rawr
             set { _rawNoStackData[(int)NonStackingStat.Warlock_T11_2P] = value; }
         }
         [DefaultValueAttribute(0f)]
-        [DisplayName("% chance for your periodic damage from your Immolate and Unstable Affliction spells to cause your next Fel Flame spell to have a 100% increased critical strike chance.")]
+        [DisplayName("Periodic damage from your Immolate and Unstable Affliction spells has a 2% chance to cause your 2 next Fel Flame spells to deal 300% increased damage.")]
         [Percentage]
         [Category("Warlock")]
         public float Warlock_T11_4P

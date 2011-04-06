@@ -106,11 +106,11 @@ namespace Rawr.Warlock
         {
             if (playerLevel == 85)
             {
-                return StatConversion.GetMasteryFromRating(stats.MasteryRating);
+                return StatConversion.GetMasteryFromRating(stats.MasteryRating) + 8f;
             }
             else
             {
-                return GetMasteryFromRating(stats.MasteryRating, playerLevel);
+                return GetMasteryFromRating(stats.MasteryRating, playerLevel) + 8f;
             }
         }
         public static float GetSpellCritFromIntellect(float intellect, int playerLevel)
@@ -175,7 +175,7 @@ namespace Rawr.Warlock
         }
         public static float CalcSpellPower(Stats stats)
         {
-            return (stats.SpellPower) * (1f + stats.BonusSpellPowerMultiplier) + CalcIntellect(stats);
+            return (stats.SpellPower) * (1f + stats.BonusSpellPowerMultiplier) + CalcIntellect(stats) - 10f;
         }
         public static float CalcStrength(Stats stats)
         {

@@ -487,9 +487,6 @@ namespace Rawr.Warlock
             if (stats.BonusShadowDamageMultiplier != 0) { return true; }
             if (stats.SpellFireDamageRating       != 0) { return true; }
             if (stats.BonusFireDamageMultiplier   != 0) { return true; }
-            // Set Bonuses
-            if (stats.Warlock_T11_2P              != 0) { return true; }
-            if (stats.Warlock_T11_4P              != 0) { return true; }
             return false;
         }
         protected bool HasCommonStats(Stats stats)
@@ -503,8 +500,8 @@ namespace Rawr.Warlock
                   + stats.MasteryRating
                   + stats.Mana + stats.Mp5
                   + stats.HighestStat                     //darkmoon card: greatness
-                  + stats.SpellsManaCostReduction             //spark of hope -> http://www.wowhead.com/?item=45703
-                  + stats.BonusManaPotionEffectMultiplier                 //triggered when a mana pot is consumed
+                  + stats.SpellsManaCostReduction         //spark of hope -> http://www.wowhead.com/?item=45703
+                  + stats.BonusManaPotionEffectMultiplier //triggered when a mana pot is consumed
                   + stats.ManaRestoreFromMaxManaPerSecond //replenishment sources
                   + stats.ManaRestore                     //quite a few items that restore mana on spell cast or crit. Also used to model replenishment.
                   + stats.ThreatReductionMultiplier       //bracing earthsiege diamond (metagem) effect

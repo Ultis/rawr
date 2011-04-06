@@ -217,10 +217,10 @@ namespace Rawr
                     #endregion
                     #region Warlock
                     case CharacterClass.Warlock:
-                        Stats warlock = new Stats() { Strength = 43, Agility = 51, Stamina = 76, Intellect = 161, Spirit = 166,
-                            Health = 39068f, Mana = 22988f,
+                        Stats warlock = new Stats() { Strength = 43, Agility = 51, Stamina = 76, Intellect = 153, Spirit = 161,
+                            Health = 38184f, Mana = 20553f,
                             Dodge = 0.0238110f, Parry = 0.05f, Block = 0.05f,
-                            PhysicalCrit = 0.028f, SpellCrit = 0.0198f,
+                            PhysicalCrit = 0.026219999417663f, SpellCrit = 0.017000000923872f,
                         };
                         S.Accumulate(race);
                         S.Accumulate(warlock);

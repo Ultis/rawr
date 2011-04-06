@@ -290,8 +290,8 @@ namespace Rawr.Warlock
             DamagePerAttackPower = .12f;
 
             //spellid 54049, effectid 46748-9
-            SpecialBaseDamage = WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * 0.0630000010f;
-            SpecialDamagePerSpellPower = .5f * .614f;
+            SpecialBaseDamage = WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * (mommy.Options.PTRMode ? 0.126f : 0.0630000010f);
+            SpecialDamagePerSpellPower = .5f * (mommy.Options.PTRMode ? 1.228f : .614f);
             SpecialCooldown = 6f;
         }
 
@@ -301,6 +301,7 @@ namespace Rawr.Warlock
 
             // multipliers go into SpecialModifiers
             SpecialModifiers.AddMultiplicativeMultiplier(Stats.BonusShadowDamageMultiplier);
+            // TODO: Bane of Doom, Drain Life, Drain Soul, Haunted, Shadow Embrace also count
             if (Mommy.CastSpells.ContainsKey("Corruption"))
             {
                 SpecialModifiers.AddAdditiveMultiplier(.15f);

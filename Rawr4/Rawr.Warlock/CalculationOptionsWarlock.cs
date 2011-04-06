@@ -170,6 +170,7 @@ namespace Rawr.Warlock
         private float _PerSpi = 0;
         private float _PerHealth = 0;
         private bool _NoProcs = false;
+        private bool _PTRMode = false;
 
         public string Pet { get { return _Pet; } set { _Pet = value; OnPropertyChanged("Pet"); } }
         public int PlayerLevel { get { return _PlayerLevel; } set { _PlayerLevel = value; OnPropertyChanged("PlayerLevel"); } }
@@ -189,6 +190,7 @@ namespace Rawr.Warlock
         public float PerSpi { get { return _PerSpi; } set { _PerSpi = value; OnPropertyChanged("PerSpi"); } }
         public float PerHealth { get { return _PerHealth; } set { _PerHealth = value; OnPropertyChanged("PerHealth"); } }
         public bool NoProcs { get { return _NoProcs; } set { _NoProcs = value; OnPropertyChanged("NoProcs"); } }
+        public bool PTRMode { get { return _PTRMode; } set { _PTRMode = value; OnPropertyChanged("PTRMode"); } }
 
         #region Stat Graph
         private bool[] _statsList = new bool[] { true, true, true, true, true, true, true, true, true, true, true };

@@ -245,7 +245,7 @@ namespace Rawr.Warlock
             WarlockTalents talents = mommy.Talents;
             SpellModifiers = new SpellModifiers();
             SpellModifiers.AddMultiplicativeDirectMultiplier(addedDirectMultiplier);
-            SpellModifiers.AddMultiplicativeDirectMultiplier(addedTickMultiplier);
+            SpellModifiers.AddMultiplicativeTickMultiplier(addedTickMultiplier);
             SpellModifiers.AddCritChance(bonusCritChance);
             SpellModifiers.AddCritBonusMultiplier(bonusCritMultiplier);
         }
@@ -612,7 +612,7 @@ namespace Rawr.Warlock
                 MagicSchool.Fire,
                 SpellTree.Destruction,
                 .07f, // percentBaseMana,
-                (2.5f - talentValues[mommy.Talents.Bane]) * (1f - mommy.Stats.Warlock_T11_2P), // baseCastTime,
+                (2.5f - talentValues[mommy.Talents.Bane]) * (mommy.Warlock_T11_2P ? 0.9f : 1f), // baseCastTime,
                 mommy.Talents.GlyphChaosBolt ? 10f : 12f, // cooldown,
                 0f, // recastPeriod,
                 WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // avgDirectDamage
@@ -945,10 +945,10 @@ namespace Rawr.Warlock
                 15f, //base cast time
                 0f, //cooldown
                 0f, //recast period
-                WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE * 4f, //baseTickDamage during execute
-                (int)((3f / mommy.AvgHaste) + 0.5f), // hasted num ticks
+                WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, //baseTickDamage
+                (int)((5f / mommy.AvgHaste) + 0.5f), // hasted num ticks
                 COEFF, //tickCoefficient
-                0f, //addedTickMultiplier
+                1f, //addedTickMultiplier (assuming this is only used during execute)
                 true, //canTickCrit
                 0f, //bonusCritChance
                 1f) //bonusCritMultiplier
@@ -989,15 +989,15 @@ namespace Rawr.Warlock
     {
         public FelFlameWithFelSpark(CharacterCalculationsWarlock mommy) : base(mommy)
         {
-            SpellModifiers.AddCritChance(1f);
+            SpellModifiers.AddMultiplicativeDirectMultiplier(3f);
         }
         public override bool IsCastable()
         {
-            return base.IsCastable() && Mommy.Stats.Warlock_T11_4P > 0f;
+            return base.IsCastable() && Mommy.Warlock_T11_4P;
         }
         public override float GetNumCasts()
         {
-            // TODO: number of Immolate ticks + number of UnstableAffliction ticks * 0.2f
+            // TODO: number of Immolate ticks + number of UnstableAffliction ticks * 0.02f * 2
             return 0f;
         }
     }
@@ -1014,7 +1014,7 @@ namespace Rawr.Warlock
                 MagicSchool.Shadow,
                 SpellTree.Demonology,
                 .07f, // percentBaseMana,
-                2f * (1f - mommy.Stats.Warlock_T11_2P), // baseCastTime,
+                2f * (mommy.Warlock_T11_2P ? 0.9f : 1f), // baseCastTime,
                 12f, // cooldown,
                 0f, // recastPeriod,
                 WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // avgDirectDamage
@@ -1042,7 +1042,7 @@ namespace Rawr.Warlock
                 MagicSchool.Shadow,
                 SpellTree.Affliction,
                 .12f, // percent base mana
-                1.5f * (1f - mommy.Stats.Warlock_T11_2P), // cast time
+                1.5f * (mommy.Warlock_T11_2P ? 0.9f : 1f), // cast time
                 8f, // cooldown
                 0f, // recast period
                 WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // avg direct damage
@@ -1050,7 +1050,12 @@ namespace Rawr.Warlock
                 0f, // bonus direct multiplier
                 0f, // bonus crit chance
                 1f) // bonus crit multiplier
-        { } 
+        {
+            if (mommy.Options.PTRMode)
+            {
+                BaseDamage = WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * 0.9581f;
+            }
+        } 
 
         public override bool IsCastable()
         {

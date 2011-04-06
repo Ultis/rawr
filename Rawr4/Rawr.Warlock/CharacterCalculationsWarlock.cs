@@ -41,6 +41,8 @@ namespace Rawr.Warlock
         public bool Affliction { get { if (_affliction == null) { DetermineSpec(); } return (bool)_affliction; } }
         public bool Demonology { get { if (_demonology == null) { DetermineSpec(); } return (bool)_demonology; } }
         public bool Destruction { get { if (_destruction == null) { DetermineSpec(); } return (bool)_destruction; } }
+        public bool Warlock_T11_2P { get; private set; }
+        public bool Warlock_T11_4P { get; private set; }
 
         private void DetermineSpec()
         {
@@ -83,6 +85,13 @@ namespace Rawr.Warlock
             Spells = new Dictionary<string, Spell>();
             CastSpells = new Dictionary<string, Spell>();
             HitChance = Math.Min(1f, Options.GetBaseHitRate() / 100f + CalcSpellHit());
+
+            int temp;
+            if (character.SetBonusCount.TryGetValue("Shadowflame Regalia", out temp))
+            {
+                Warlock_T11_2P = (temp >= 2);
+                Warlock_T11_4P = (temp >= 4);
+            }
 
             if (!Options.Pet.Equals("None") && (Demonology || !Options.Pet.Equals("Felguard")))
             {
@@ -325,6 +334,9 @@ namespace Rawr.Warlock
                 Pet.CalcStats2();
             }
 
+            // TODO: Mana Feed talent: You gain 4% total mana whenever your demon critically hits with its Basic Attack.
+            // (PTR: 16% if your pet is a Felguard or Felhunter)
+
             // finilize each spell's modifiers.
             // Start with Conflagrate, since pyroclasm depends on its results.
             if (CastSpells.ContainsKey("Conflagrate"))
@@ -370,7 +382,7 @@ namespace Rawr.Warlock
             if (this.Demonology)
             {
                 // Master Demonologist is a flat bonus to pet DPS
-                damage *= 1 + (.16f + .02f * CalcMastery());
+                damage *= 1 + (.16f + .02f * (CalcMastery() - 8f));
             }
             return damage;
         }
@@ -879,7 +891,7 @@ namespace Rawr.Warlock
             if (this.Demonology)
             {
                 //mastery bonus for Demonology
-                bonus += .16f + .02f * CalcMastery();
+                bonus += .16f + .02f * (CalcMastery() - 8f);
             }
 
             return bonus * duration / cooldown;
@@ -887,11 +899,11 @@ namespace Rawr.Warlock
         public void AddShadowModifiers(SpellModifiers modifiers)
         {
             modifiers.AddMultiplicativeMultiplier(Stats.BonusShadowDamageMultiplier);
-            modifiers.AddMultiplicativeMultiplier(Affliction ? .25f : 0f);
+            modifiers.AddMultiplicativeMultiplier(Affliction ? (Options.PTRMode ? .3f : .25f) : 0f); // Shadow Mastery
             modifiers.AddMultiplicativeMultiplier(Demonology ? .15f : 0f);
             if (Affliction)
             {
-                modifiers.AddMultiplicativeTickMultiplier(.1304f + CalcMastery() * .0163f);
+                modifiers.AddMultiplicativeTickMultiplier(.1304f + (CalcMastery() - 8f) * .0163f);
             }
             if (Options.GetActiveRotation().Contains("Shadow Bolt") || (Options.GetActiveRotation().Contains("Haunt") && Talents.Haunt > 0))
             {
@@ -911,7 +923,7 @@ namespace Rawr.Warlock
             if (Destruction)
             {
                 // Fiery Apocalypse
-                modifiers.AddMultiplicativeMultiplier(.108f + .0135f * CalcMastery());
+                modifiers.AddMultiplicativeMultiplier(.108f + .0135f * (CalcMastery() - 8f));
             }
         }
         public Spell GetSpell(string spellName)
