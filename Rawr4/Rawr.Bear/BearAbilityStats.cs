@@ -34,6 +34,7 @@ namespace Rawr.Bear
 		public float DamageMultiplier { get { return 1f + Stats.BonusDamageMultiplier; } }
         public float WhiteDamageMultiplier { get { return 1f + Stats.BonusWhiteDamageMultiplier; } }
 		public float PhysicalDamageMultiplier { get { return 1f + Stats.BonusPhysicalDamageMultiplier; } }
+        public float DamageMultiplierLacerate { get { return 1f + Stats.BonusDamageMultiplierLacerate; } }
 		public float NatureDamageMultiplier { get { return 1f + Stats.BonusNatureDamageMultiplier; } }
 		public float MaulDamageMultiplier { get { return 1f + Stats.BonusMaulDamageMultiplier; } }
 		public float MangleDamageMultiplier { get { return 1f + Stats.BonusMangleDamageMultiplier; } }
@@ -285,11 +286,11 @@ namespace Rawr.Bear
 					_lacerateStats.RageCostRaw = 15f;
 					_lacerateStats.DamageRaw = (197f + AttackPower * 0.0766f) * DamageMultiplier * BleedDamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier;
 					_lacerateStats.ThreatRaw = (2269f + _lacerateStats.DamageRaw) * ThreatMultiplier;
-					_lacerateStats.DamageTick1Raw = 1f * (15f + AttackPower * 0.00512f) * DamageMultiplier * BleedDamageMultiplier * PhysicalDamageMultiplier;
+					_lacerateStats.DamageTick1Raw = 1f * (15f + AttackPower * 0.00512f) * DamageMultiplier * BleedDamageMultiplier * PhysicalDamageMultiplier * DamageMultiplierLacerate;
 					_lacerateStats.ThreatTick1Raw = _lacerateStats.DamageTick1Raw * ThreatMultiplier;
-					_lacerateStats.DamageTick2Raw = 2f * (15f + AttackPower * 0.00512f) * DamageMultiplier * BleedDamageMultiplier * PhysicalDamageMultiplier;
+                    _lacerateStats.DamageTick2Raw = 2f * (15f + AttackPower * 0.00512f) * DamageMultiplier * BleedDamageMultiplier * PhysicalDamageMultiplier * DamageMultiplierLacerate;
 					_lacerateStats.ThreatTick2Raw = _lacerateStats.DamageTick2Raw * ThreatMultiplier;
-					_lacerateStats.DamageTick3Raw = 3f * (15f + AttackPower * 0.00512f) * DamageMultiplier * BleedDamageMultiplier * PhysicalDamageMultiplier;
+                    _lacerateStats.DamageTick3Raw = 3f * (15f + AttackPower * 0.00512f) * DamageMultiplier * BleedDamageMultiplier * PhysicalDamageMultiplier * DamageMultiplierLacerate;
 					_lacerateStats.ThreatTick3Raw = _lacerateStats.DamageTick3Raw * ThreatMultiplier;
 					_lacerateStats.DamageAverage = ChanceNonAvoided * (
 																((ChanceCrit) * (_lacerateStats.DamageRaw * CritMultiplier)) +

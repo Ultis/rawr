@@ -2,11 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-//using System.Xml.Serialization;
 
 namespace Rawr
 {
-    //[GenerateSerializer]
     public class BuffList : List<Buff>
     {
         public BuffList() : base() { }
@@ -2724,7 +2722,7 @@ namespace Rawr
                 Name = "Stormrider's Battlegarb (T11) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = new Stats() { BonusDamageMultiplierRakeTick = 0.1f, BonusDamageMultiplierLacerate = 0.1f},
+                Stats = new Stats() { /*BonusDamageMultiplierRakeTick = 0.1f, BonusDamageMultiplierLacerate = 0.1f*/ },
                 SetName = "Stormrider's Battlegarb",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
@@ -2734,11 +2732,12 @@ namespace Rawr
                 Name = "Stormrider's Battlegarb (T11) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = new Stats() { BonusAttackPowerMultiplier = 0.03f }, // TODO: This set bonus has been updated to not just a flat 3%
+                Stats = new Stats() { /*BonusAttackPowerMultiplier = 0.03f*/ }, // TODO: This set bonus has been updated to not just a flat 3%
                 SetName = "Stormrider's Battlegarb",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
             });
+            //buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.MangleCatHit, new Stats() { BonusAttackPowerMultiplier = 0.01f, }, 30, 0, 1f, 3));
             #endregion
             #region Vestments (Restoration)
             defaultBuffs.Add(new Buff()

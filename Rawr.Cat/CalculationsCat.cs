@@ -578,10 +578,25 @@ namespace Rawr.Cat
                 FeralChargeCatCooldownReduction = talents.GlyphOfFeralCharge ? 2f : 0f,
                 FerociousBiteMaxExtraEnergyReduction = talents.GlyphOfFerociousBite ? 35f : 0f,
             };
+
+            #region Set Bonuses
+            int T11Count;
+            character.SetBonusCount.TryGetValue("Stormrider's Battlegarb", out T11Count);
+            if (T11Count >= 2) {
+                statsTotal.BonusDamageMultiplierRakeTick = (1f + statsTotal.BonusDamageMultiplierRakeTick) * (1f * 0.10f) - 1f;
+                statsTotal.BonusDamageMultiplierLacerate = (1f + statsTotal.BonusDamageMultiplierLacerate) * (1f * 0.10f) - 1f;
+            }
+            if (T11Count >= 4) {
+                statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.MangleCatHit,
+                    new Stats() { BonusAttackPowerMultiplier = 0.01f, },
+                    30, 0, 1f, 3));
+                //statsTotal.BonusSurvivalInstinctsDurationMultiplier = (1f + statsTotal.BonusSurvivalInstinctsDurationMultiplier) * (1f * 0.50f) - 1f;
+            }
+            #endregion
+
             statsTotal.Accumulate(BaseStats.GetBaseStats(character.Level, character.Class, character.Race, BaseStats.DruidForm.Cat));
             statsTotal.Accumulate(GetItemStats(character, additionalItem));
             statsTotal.Accumulate(GetBuffsStats(character, calcOpts));
-
 
             statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
             statsTotal.Strength = (float)Math.Floor(statsTotal.Strength * (1f + statsTotal.BonusStrengthMultiplier));
@@ -793,6 +808,14 @@ namespace Rawr.Cat
             foreach (var effect in item.Stats.SpecialEffects(s => s.Stats.SpellPower > 0))
                 return false;
             return base.IsItemRelevant(item);
+        }
+
+        public override bool IsBuffRelevant(Buff buff, Character character) {
+            if (buff != null
+                && !string.IsNullOrEmpty(buff.SetName)
+                && buff.SetName == "Stormrider's Battlegarb")
+            { return true; }
+            return base.IsBuffRelevant(buff, character);
         }
 
         public override Stats GetRelevantStats(Stats stats)

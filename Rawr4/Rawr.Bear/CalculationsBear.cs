@@ -720,6 +720,22 @@ the Threat Scale defined on the Options tab.",
                 BonusLacerateCritChance = talents.GlyphOfLacerate ? 0.05f : 0f,
                 BonusFaerieFireStacks = talents.FeralAggression
             };
+
+            #region Set Bonuses
+            int T11Count;
+            character.SetBonusCount.TryGetValue("Stormrider's Battlegarb", out T11Count);
+            if (T11Count >= 2) {
+                //statsTotal.BonusDamageMultiplierRakeTick = (1f + statsTotal.BonusDamageMultiplierRakeTick) * (1f + 0.10f) - 1f;
+                statsTotal.BonusDamageMultiplierLacerate = (1f + statsTotal.BonusDamageMultiplierLacerate) * (1f + 0.10f) - 1f;
+            }
+            if (T11Count >= 4) {
+                /*statsBuffs.AddSpecialEffect(new SpecialEffect(Trigger.MangleCatHit,
+                    new Stats() { BonusAttackPowerMultiplier = 0.01f, },
+                    30, 0, 1f, 3));*/
+                statsTotal.BonusSurvivalInstinctsDurationMultiplier = (1f + statsTotal.BonusSurvivalInstinctsDurationMultiplier) * (1f + 0.50f) - 1f;
+            }
+            #endregion
+
             statsTotal.Accumulate(BaseStats.GetBaseStats(character.Level, character.Class, character.Race, BaseStats.DruidForm.Bear));
             statsTotal.Accumulate(GetItemStats(character, additionalItem));
             statsTotal.Accumulate(GetBuffsStats(character, calcOpts));
@@ -1244,6 +1260,14 @@ the Threat Scale defined on the Options tab.",
             return base.IsItemRelevant(item);
         }
 
+        public override bool IsBuffRelevant(Buff buff, Character character) {
+            if (buff != null
+                && !string.IsNullOrEmpty(buff.SetName)
+                && buff.SetName == "Stormrider's Battlegarb")
+            { return true; }
+            return base.IsBuffRelevant(buff, character);
+        }
+
         public override Stats GetRelevantStats(Stats stats)
         {
             Stats s = new Stats()
@@ -1431,8 +1455,8 @@ the Threat Scale defined on the Options tab.",
 
         public Stats GetBuffsStats(Character character, CalculationOptionsBear calcOpts)
         {
-            List<Buff> removedBuffs = new List<Buff>();
-            List<Buff> addedBuffs = new List<Buff>();
+            //List<Buff> removedBuffs = new List<Buff>();
+            //List<Buff> addedBuffs = new List<Buff>();
 
             //float hasRelevantBuff;
 
@@ -1456,14 +1480,12 @@ the Threat Scale defined on the Options tab.",
 
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs, character.SetBonusCount);
 
-            foreach (Buff b in removedBuffs)
-            {
+            /*foreach (Buff b in removedBuffs) {
                 character.ActiveBuffsAdd(b);
             }
-            foreach (Buff b in addedBuffs)
-            {
+            foreach (Buff b in addedBuffs) {
                 character.ActiveBuffs.Remove(b);
-            }
+            }*/
 
             return statsBuffs;
         }
