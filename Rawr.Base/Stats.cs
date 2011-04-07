@@ -578,7 +578,7 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.Mp5] = value; }
         }
         [DefaultValueAttribute(0f)]
-        [DisplayName("Spells Mana Cost Reduction")]
+        [DisplayName("Spell Combat Mana Regeneration")]
         [Category("Equipment Effects")]
         public float SpellCombatManaRegeneration
         {
