@@ -62,6 +62,18 @@ namespace Rawr.Silverlight
             {
                 new WelcomeWindow().Show();
             }
+            if (!Rawr.Properties.GeneralSettings.Default.HasSeenHelpWindow)
+            {
+                MessageBox.Show(
+@"Rawr has added a new feature, the Rawr Web Help Window. The Web Help Window is designed to provide fast access to common help topics.
+
+In the Downloadable Version of Rawr (WPF), you will be provided with a mini-webbrowser which displays relevant topics as seen on our Documentation pages. In Silverlight, the online version of Rawr, you will be prompted with quick links to open the content in your browser. We are working to provide web content directly in here as well.
+
+You will now be taken to this window to become familiar with it.",
+                    "New Information!", MessageBoxButton.OK);
+                Rawr.Properties.GeneralSettings.Default.HasSeenHelpWindow = true;
+                new WebHelp("WhereToStart", "").Show();
+            }
             this.CheckAndDownloadUpdateAsync();
         }
 

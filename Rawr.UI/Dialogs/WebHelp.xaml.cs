@@ -54,21 +54,21 @@ namespace Rawr.UI
                 // Let the user know we can't download it due to cross domain access
                 // TODO: Make it call through Rawr4.com instead to see if that gets around it
                 overrideText = "Silverlight does not function with this feature yet due to security issues."
-                    + " We are working on a way around this. "
-                    + "In the meantime, please use the link button below to open it in your browser.";
+                    + " We are working on a way around this."
+                    + " In the meantime, please use the link below to open it in your browser."
+                    + " You can also select a different content on the left before opening in your browser.";
                 TB_View.Text = overrideText;
                 //Web_View.NavigateToString(overrideText);
                 //_webHelpService.GetWebHelpAsync(uri, true);
-                this.Height = 200; // shorten the window
             } else {
                 //Web_View.MaxHeight = 0;
                 //Web_View.Visibility = Visibility.Collapsed;
                 //this.LayoutRoot.Children.Remove(Web_View);
                 //TB_View.Visibility = Visibility.Visible;
                 TB_View.Text = "Silverlight does not function with this feature yet due to security issues."
-                    + " We are working on a way around this. "
-                    + "In the meantime, please use the link button below to open it in your browser.";
-                this.Height = 200; // shorten the window
+                    + " We are working on a way around this."
+                    + " In the meantime, please use the link below to open it in your browser."
+                    + " You can also select a different content on the left before opening in your browser.";
             }
 #endif
         }
@@ -88,8 +88,8 @@ namespace Rawr.UI
         void _webHelpService_GetWebHelpCompleted(object sender, EventArgs<String> e)
         {
 #if SILVERLIGHT
-            //TB_View.Text = e.Value;
-            Web_View.NavigateToString(e.Value);
+            TB_View.Text = e.Value;
+            //Web_View.NavigateToString(e.Value);
 #else
             Web_View.Visibility = Visibility.Visible;
             Web_View.NavigateToString(e.Value);
@@ -123,7 +123,11 @@ namespace Rawr.UI
                 if (uie is Button) {
                     if (((uie as Button).Tag as string) == uri) {
                         (uie as Button).Background = new SolidColorBrush(Colors.Blue);
+#if SILVERLIGHT
+                        (uie as Button).Foreground = new SolidColorBrush(Colors.Black);
+#else
                         (uie as Button).Foreground = new SolidColorBrush(Colors.White);
+#endif
                     } else {
                         (uie as Button).Background = new SolidColorBrush(Colors.White);
                         (uie as Button).Foreground = new SolidColorBrush(Colors.Black);

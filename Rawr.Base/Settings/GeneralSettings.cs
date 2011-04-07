@@ -46,7 +46,9 @@ namespace Rawr.Properties
             _default.UseLargeViewItemBrowser = false;
             _default.UseRegexInItemBrowser = false;
 
-            _default.FilterSideBarWidth = 200;// new GridLength(200, GridUnitType.Pixel);
+            _default.HasSeenHelpWindow = false;
+
+            _default.FilterSideBarWidth = 200;
 
             _default.LastVersionRun = getCurrentVersion;
         }
@@ -54,6 +56,7 @@ namespace Rawr.Properties
         private static GeneralSettings _default;
         public static GeneralSettings Default { get { return _default; } set { _default = value; } }
 
+        #region Version Checking
         [XmlIgnore]
         public bool IsNewVersionRunning { get; set; }
 
@@ -76,9 +79,6 @@ namespace Rawr.Properties
         /// <summary>True if we are running a new version</summary>
         public bool compareVersions {
             get {
-#if !SILVERLIGHT
-                return false; // WPF should never do this as the caches aren't stored in the silverlight cache
-#else
                 string lastversion = LastVersionRun;
                 if (!string.IsNullOrEmpty(lastversion))
                 {
@@ -122,12 +122,14 @@ namespace Rawr.Properties
                     return IsNewVersionRunning = NewRelAvail;
                 }
                 return IsNewVersionRunning = true;
-#endif
             }
         }
 
         private string _LastVersionRun = "4.0.0";
         public string LastVersionRun { get { return _LastVersionRun; } set { _LastVersionRun = value; bool runIt = compareVersions; } }
+        #endregion
+
+        public bool HasSeenHelpWindow { get; set; }
 
         public int CountGemmingsShown { get; set; }
         public bool UseMultithreading { get; set; }
@@ -136,7 +138,6 @@ namespace Rawr.Properties
         public bool DisplayGemNames { get; set; }
         public int ProcEffectMode { get; set; }
         public bool DisplayUnusedStats { get; set; }
-        //public bool DisplayExtraItemInfo { get; set; }
         public bool HideProfEnchants { get; set; }
         public bool EnforceGemRequirements { get; set; }
         public bool EnforceGemRequirements_Meta { get; set; }

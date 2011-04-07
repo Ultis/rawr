@@ -17,15 +17,12 @@ namespace Rawr.WPF
 
         public App()
         {
-            //this.Exit += this.Application_Exit;
-            
             InitializeComponent();
 
             App.Current.DispatcherUnhandledException += new System.Windows.Threading.DispatcherUnhandledExceptionEventHandler(Current_DispatcherUnhandledException);
             Rawr4ArmoryService versionChecker = new Rawr4ArmoryService(true);
             versionChecker.GetVersionCompleted += new EventHandler<EventArgs<string> >(_timerCheckForUpdates_Callback);
             versionChecker.GetVersionAsync();
-            //this.MainWindow = new WindowMain();
         }
 
         void _timerCheckForUpdates_Callback(object sender, EventArgs<string> version)

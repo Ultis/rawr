@@ -52,7 +52,7 @@
         </ScrollViewer>
 
         <!--IFSL-->
-        <TextBox x:Name="TB_View" Grid.ColumnSpan="3" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+        <TextBox x:Name="TB_View" Grid.Column="1" Grid.ColumnSpan="3" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
         <!--ENDIFSL-->
         <!--IFWPF
         <WebBrowser x:Name="Web_View" Grid.ColumnSpan="3" Grid.Column="1" />

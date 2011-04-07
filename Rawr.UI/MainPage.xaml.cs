@@ -76,12 +76,11 @@ namespace Rawr.UI
             Calculations.ModelChanging += new EventHandler(Calculations_ModelChanging);
             ItemCache.Instance.ItemsChanged += new EventHandler(ItemCacheInstance_ItemsChanged);
 
-            
-
             SetCompactModeUp();
 
 #if !SILVERLIGHT
             WaitAndShowWelcomeScreen();
+            WaitAndShowFirstTimeWebHelpWindow();
 #else
             if (TMI_SaveAs != null) { TMI_SaveAs.Visibility = Visibility.Collapsed; }
 #endif
@@ -1531,28 +1530,17 @@ If that is still not working for you, right-click anywhere within the web versio
         public void ResetAllCaches_Action()
         {
             Character = new Character() { IsLoading = false };
-            new FileUtils(new string[] {
+            string dir = "";
 #if !SILVERLIGHT
-                    //"ClientBin\\BuffCache.xml", 
-                    "ClientBin\\BuffSets.xml", 
-                    //"ClientBin\\EnchantCache.xml",
-                    "ClientBin\\ItemCache.xml",
-                    "ClientBin\\ItemFilter.xml",
-                    "ClientBin\\PetTalents.xml",
-                    "ClientBin\\Settings.xml",
-                    "ClientBin\\Talents.xml",
-                    //"ClientBin\\TinkeringCache.xml",
-#else
-                    //"BuffCache.xml", 
-                    "BuffSets.xml", 
-                    //"EnchantCache.xml",
-                    "ItemCache.xml",
-                    "ItemFilter.xml",
-                    "PetTalents.xml",
-                    "Settings.xml",
-                    "Talents.xml",
-                    //"TinkeringCache.xml",
+            dir = "ClientBin\\";
 #endif
+            new FileUtils(new string[] {
+                dir+"BuffSets.xml", 
+                dir+"ItemCache.xml",
+                dir+"ItemFilter.xml",
+                dir+"PetTalents.xml",
+                dir+"Settings.xml",
+                dir+"Talents.xml",
             }).Delete();
             LoadScreen ls = new LoadScreen();
             (App.Current.RootVisual as Grid).Children.Add(ls);
@@ -1563,10 +1551,12 @@ If that is still not working for you, right-click anywhere within the web versio
 
         private void ResetItemCacheBecauseOfNewVersion()
         {
+#if SILVERLIGHT
             if (!Rawr.Properties.GeneralSettings.Default.IsNewVersionRunning) { return; }
             ConfirmationWindow.ShowDialog("We detected that you are running a New Version for the first time. Would you like to Reset the Item Cache?"
                 + "\r\n\r\nThis is generally a good idea for new releases as we provide many updates to Item Sources, Stat Numbers and other fixes.",
                 new EventHandler(ResetItemCaches_Confirmation));
+#endif
         }
 
         private void ResetItemCache(object sender, RoutedEventArgs e)
@@ -1663,7 +1653,6 @@ If that is still not working for you, right-click anywhere within the web versio
 #if !SILVERLIGHT
         private void WaitAndShowWelcomeScreen() {
             WaitCallback w = new WaitCallback(WaitAndShowWelcomeScreen_completed);
-            //w.
         }
         private void WaitAndShowWelcomeScreen_completed(object sender) {
             ShowWelcomeScreen(null, null);
@@ -1684,9 +1673,34 @@ If that is still not working for you, right-click anywhere within the web versio
                 "Performance Test", MessageBoxButton.OK);
         }
 
+#if !SILVERLIGHT
+        private void WaitAndShowFirstTimeWebHelpWindow()
+        {
+            WaitCallback w = new WaitCallback(WaitAndShowFirstTimeWebHelpWindow_completed);
+        }
+        private void WaitAndShowFirstTimeWebHelpWindow_completed(object sender)
+        {
+            if (!Rawr.Properties.GeneralSettings.Default.HasSeenHelpWindow)
+            {
+                MessageBox.Show(
+@"Rawr has added a new feature, the Rawr Web Help Window.
+
+The Web Help Window is designed to provide fast access to common help topics.
+
+In the Downloadable Version of Rawr (WPF), you will be provided with a mini-webbrowser which displays relevant topics as seen on our Documentation pages.
+
+In Silverlight, the online version of Rawr, you will be prompted with quick links to open the content in your browser. We are working to provide web content directly in here as well.
+",
+                    "New Information!", MessageBoxButton.OK);
+                Rawr.Properties.GeneralSettings.Default.HasSeenHelpWindow = true;
+                Button_Click(null, null);
+            }
+        }
+#endif
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            WebHelp webHelp = new WebHelp("GearOptimization");
+            WebHelp webHelp = new WebHelp("WhereToStart");
             webHelp.Show();
         }
 
