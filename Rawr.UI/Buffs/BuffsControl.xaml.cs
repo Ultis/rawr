@@ -265,7 +265,6 @@ namespace Rawr.UI
 #endif
         }
 
-#if RAWR4
         void Buff_BuffsLoaded(object sender, EventArgs e)
         {
             _loadingBuffsFromCharacter = true;
@@ -283,7 +282,6 @@ namespace Rawr.UI
             UpdateSavedSets();
             _loadingBuffsFromCharacter = false;
         }
-#endif
 
         void GeneralSettings_DisplayBuffChanged(object sender, EventArgs e)
         {
@@ -409,6 +407,12 @@ namespace Rawr.UI
                     Character.ValidateActiveBuffs();
                 }
             }
+        }
+
+        private void BT_GetHelp_Click(object sender, RoutedEventArgs e)
+        {
+            WebHelp webHelp = new WebHelp("Buffs");
+            webHelp.Show();
         }
     }
 }

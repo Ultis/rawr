@@ -76,6 +76,8 @@ namespace Rawr.UI
             Calculations.ModelChanging += new EventHandler(Calculations_ModelChanging);
             ItemCache.Instance.ItemsChanged += new EventHandler(ItemCacheInstance_ItemsChanged);
 
+            
+
             SetCompactModeUp();
 
 #if !SILVERLIGHT
@@ -1680,6 +1682,22 @@ If that is still not working for you, right-click anywhere within the web versio
             Clipboard.SetText(ts.ToString());
             MessageBox.Show(string.Format("This model took {0} seconds to run calculations {1} times.", ts, count),
                 "Performance Test", MessageBoxButton.OK);
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            WebHelp webHelp = new WebHelp("GearOptimization");
+            webHelp.Show();
+        }
+
+        private void SubmitIssue_Click(object sender, RoutedEventArgs e)
+        {
+#if SILVERLIGHT
+            WebHelp webHelp = new WebHelp("PostingGuidelines", "Before submitting an issue, please read and follow the Posting Guidelines. They can be found using the View Content in Browser link below.");
+#else
+            WebHelp webHelp = new WebHelp("PostingGuidelines");
+#endif
+            webHelp.Show();
         }
     }
 }

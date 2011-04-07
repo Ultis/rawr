@@ -131,6 +131,7 @@
     <Compile Include="CustomControls\StatGraphWindow.xaml.cs">
       <DependentUpon>StatGraphWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Networking\WebHelpService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings\CacheSettings.cs" />
     <Compile Include="Settings\GeneralSettings.cs" />

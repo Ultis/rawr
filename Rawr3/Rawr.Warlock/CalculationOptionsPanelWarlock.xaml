@@ -156,9 +156,12 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <Button Content="Time Computations" Grid.Row="1" Margin="4,2" Name="TimerButton" Width="150" HorizontalAlignment="Left" Click="TimerButton_Click" />
-                    <CheckBox Content="Disable Special Effects" Margin="4,2" Name="procCheckbox" IsChecked="{Binding Path=NoProcs, Mode=TwoWay}" />
+                    <CheckBox Content="Disable Special Effects" Margin="6,4,2,0" Name="procCheckbox" IsChecked="{Binding Path=NoProcs, Mode=TwoWay}" />
+                    <CheckBox Content="PTR Mode (4.1.0)" Grid.Row="2" Margin="6,4,2,0" Name="ptrCheckbox" IsChecked="{Binding Path=PTRMode, Mode=TwoWay}" />
+                    <Button Content="Time Computations" Grid.Row="3" Margin="6,6,0,495" Name="TimerButton" Width="150" HorizontalAlignment="Left" Click="TimerButton_Click" Height="27" />
                 </Grid>
             </controls:TabItem>
             <controls:TabItem Header="Info" x:Name="Tab_04_Info">

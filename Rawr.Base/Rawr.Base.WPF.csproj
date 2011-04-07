@@ -111,6 +111,7 @@
     <Compile Include="Items\ItemCache.cs" />
     <Compile Include="Items\ItemLocation.cs" />
     <Compile Include="Items\ItemUpdater.cs" />
+    <Compile Include="Networking\WebHelpService.cs" />
     <Compile Include="Optimizer\AvailableItemGenerator.cs" />
     <Compile Include="Optimizer\BatchCharacter.cs" />
     <Compile Include="Optimizer\BatchOptimizer.cs" />

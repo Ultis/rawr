@@ -15,6 +15,7 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition />
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -187,8 +188,16 @@
         <TextBlock Grid.Column="0" Text="Buff Sets:" VerticalAlignment="Center" Grid.Row="4" Margin="4,2" FontWeight="Bold" />
         <ComboBox Grid.Column="1" x:Name="SavedCombo" Height="22" VerticalAlignment="Top" SelectionChanged="SavedCombo_SelectionChanged" Margin="0,2" Grid.Row="4" />
         <Button x:Name="SaveDeleteButton" Grid.Column="2" Margin="2,2,0,2" Content="Delete" HorizontalAlignment="Right" Width="63" Height="22" VerticalAlignment="Top" Click="SaveDelete_Click" Grid.Row="4" />
-        <Button x:Name="BT_BuffsByRaidMembers" Content="Apply Buffs By Raid Members" Grid.ColumnSpan="3" Grid.Row="5" Margin="0,2" Click="BT_BuffsByRaidMembers_Click" />
-        <ScrollViewer x:Name="TheScroll" BorderThickness="0,0,0,0" Padding="2" Grid.ColumnSpan="3" Grid.Row="6">
+        <Button x:Name="BT_GetHelp" Grid.Column="3" Margin="2,2,0,2" Content="?" HorizontalAlignment="Right" Width="23" Height="22" VerticalAlignment="Top" Click="BT_GetHelp_Click" Grid.Row="4" FontWeight="Bold" Foreground="White">
+            <Button.Background>
+                <RadialGradientBrush>
+                    <GradientStop Color="Blue" Offset="0.568" />
+                    <GradientStop Color="White" Offset="1" />
+                </RadialGradientBrush>
+            </Button.Background>
+        </Button>
+        <Button x:Name="BT_BuffsByRaidMembers" Content="Apply Buffs By Raid Members" Grid.ColumnSpan="4" Grid.Row="5" Margin="0,2" Click="BT_BuffsByRaidMembers_Click" />
+        <ScrollViewer x:Name="TheScroll" BorderThickness="0,0,0,0" Padding="2" Grid.ColumnSpan="4" Grid.Row="6">
             <StackPanel x:Name="BuffStack" HorizontalAlignment="Stretch" Margin="0,0,0,0" Width="Auto"/>
         </ScrollViewer>
     </Grid>

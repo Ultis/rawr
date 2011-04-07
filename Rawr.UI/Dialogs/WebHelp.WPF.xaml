@@ -1,0 +1,100 @@
+<basics2:ChildWindow
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:basics="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:basics2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    x:Class="Rawr.UI.WebHelp"
+    Title="Rawr Web Help"
+    Width="525" Height="475">
+    
+    <Grid x:Name="LayoutRoot" Margin="2">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <ScrollViewer Grid.Row="0" Grid.Column="0">
+            <StackPanel x:Name="TopicsStack">
+                <TextBlock Text="Documentation Topics" FontWeight="Bold" Margin="4,2"/>
+                <Button Content="Where to Start" Margin="4,0" Tag="WhereToStart" Click="Nav_Click"/>
+                <Button Content="Tour of Rawr" Margin="4,0" Tag="Tour" Click="Nav_Click"/>
+                <Button Content="Gemmings" Margin="4,0" Tag="Gemmings" Click="Nav_Click"/>
+                <Button Content="Gear Optimization" Margin="4,0" Tag="GearOptimization" Click="Nav_Click" />
+                <Button Content="Batch Tools" Margin="4,0" Tag="BatchTools" Click="Nav_Click" />
+                <Button Content="Item Filtering" Margin="4,0" Tag="ItemFiltering" Click="Nav_Click"/>
+                <Button Content="Professions" Margin="4,0" Tag="Professions" Click="Nav_Click"/>
+                <Button Content="Buffs" Margin="4,0" Tag="Buffs" Click="Nav_Click"/>
+                <Button Content="Boss Handler" Margin="4,0" Tag="BossHandler" Click="Nav_Click"/>
+                <Button Content="Comparing Item Sets" Margin="4,0" Tag="ItemSetComparing" Click="Nav_Click"/>
+                <Button Content="Options" Margin="4,0" Tag="Options" Click="Nav_Click"/>
+                <Button Content="Models Status" Margin="4,0" Tag="Models" Click="Nav_Click"/>
+                <Button Content="Tanking Formulas" Margin="4,0" Tag="TankingFormulas" Click="Nav_Click"/>
+                <TextBlock Text="Issue Resolution Topics" FontWeight="Bold" Margin="4,2"/>
+                <Button Content="I Don't Understand Why" Margin="4,0" Tag="IDontUnderStandWhy" Click="Nav_Click"/>
+                <Button Content="Troubleshooting" Margin="4,0" Tag="Troubleshooting" Click="Nav_Click"/>
+                <Button Content="Frequently Asked Questions" Margin="4,0" Tag="FAQ" Click="Nav_Click"/>
+                <TextBlock Text="Other Topics" FontWeight="Bold" Margin="4,2" />
+                <Button Content="Rawr Addon" Margin="4,0" Tag="Rawr%20Addon" Click="Nav_Click"/>
+                <Button Content="Road Map" Margin="4,0" Tag="Road%20Map" Click="Nav_Click"/>
+                <Button Content="Developing Rawr4" Margin="4,0" Tag="DevelopingRawr3" Click="Nav_Click"/>
+                <Button Content="Version Notes" Margin="4,0" Tag="VersioNotes" Click="Nav_Click"/>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!--IFSL
+        <TextBox x:Name="TB_View" Grid.ColumnSpan="3" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+        ENDIFSL-->
+        <!--IFWPF-->
+        <WebBrowser x:Name="Web_View" Grid.ColumnSpan="3" Grid.Column="1" />
+        <!--ENDIFWPF-->
+
+        <!-- Documentation, Discussions and Issue Tracker links -->
+        <Grid Grid.Row="1" Grid.ColumnSpan="4" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="29" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <!--IFSL
+            <HyperlinkButton Margin="2" Grid.Column="0" VerticalAlignment="Center" Content="Read Documentation" NavigateUri="http://rawr.codeplex.com/documentation" TargetName="_blank" FontWeight="Bold" />
+            <HyperlinkButton Margin="2" Grid.Column="1" VerticalAlignment="Center" Content="Post a Discussion" NavigateUri="http://rawr.codeplex.com/discussions" TargetName="_blank" FontWeight="Bold" />
+            <HyperlinkButton Margin="2" Grid.Column="2" VerticalAlignment="Center" Content="Post an Issue" NavigateUri="http://rawr.codeplex.com/workitem/list/advanced" TargetName="_blank" FontWeight="Bold" />
+            ENDIFSL-->
+            <!--IFWPF-->
+            <TextBlock Margin="2" Grid.Column="0" VerticalAlignment="Center">
+                <Hyperlink NavigateUri="http://rawr.codeplex.com/documentation" RequestNavigate="Hyperlink_RequestNavigate">Read Documentation</Hyperlink>
+            </TextBlock>
+            <TextBlock Margin="2" Grid.Column="1" VerticalAlignment="Center">
+                <Hyperlink NavigateUri="http://rawr.codeplex.com/discussions" RequestNavigate="Hyperlink_RequestNavigate">Post a Discussion</Hyperlink>
+            </TextBlock>
+            <TextBlock Margin="2" Grid.Column="2" VerticalAlignment="Center">
+                <Hyperlink NavigateUri="http://rawr.codeplex.com/workitem/list/advanced" RequestNavigate="Hyperlink_RequestNavigate">Post an Issue</Hyperlink>
+            </TextBlock>
+            <!--ENDIFWPF-->
+        </Grid>
+
+        <!--IFSL
+        <HyperlinkButton x:Name="BT_Open" Margin="2" Grid.Row="2" VerticalAlignment="Center" Content="View this content in your Browser" NavigateUri="http://rawr.codeplex.com/wikipage?title=" TargetName="_blank" FontWeight="Bold" />
+        ENDIFSL-->
+        <!--IFWPF-->
+        <TextBlock Margin="2" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Center">
+        <Hyperlink x:Name="BT_Open" NavigateUri="http://rawr.codeplex.com/wikipage?title=" RequestNavigate="Hyperlink_RequestNavigate">View this content in your Browser</Hyperlink>
+        </TextBlock>
+        <!--ENDIFWPF-->
+
+        <Button x:Name="BT_OK" Content="OK" Click="OKButton_Click" Width="75" Margin="4" Grid.Row="4" Grid.Column="3" />
+    </Grid>
+</basics2:ChildWindow>
