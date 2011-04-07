@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-16"?>
-<ArrayOfSavedTalentSpec xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<ArrayOfSavedTalentSpec xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SavedTalentSpec>
     <Name>Untalented</Name>
     <Class>DeathKnight</Class>
@@ -11,7 +11,7 @@
   <SavedTalentSpec>
     <Name>Untalented</Name>
     <Class>Druid</Class>
-    <Spec>0000000000000000000000000000000000000000000000000000000000000000.0000000000000000000000000000000000000000</Spec>
+    <Spec>000000000000000000000000000000000000000000000000000000000000000.0000000000000000000000000000000000000000</Spec>
     <Tree1>0</Tree1>
     <Tree2>0</Tree2>
     <Tree3>0</Tree3>
@@ -193,14 +193,6 @@
     <Tree3>32</Tree3>
   </SavedTalentSpec>
   <SavedTalentSpec>
-    <Name>BloodTank</Name>
-    <Class>DeathKnight</Class>
-    <Spec>03322200132222311301320010000000000000000020000000000000000.10001000010001000000001010000</Spec>
-    <Tree1>33</Tree1>
-    <Tree2>6</Tree2>
-    <Tree3>2</Tree3>
-  </SavedTalentSpec>
-  <SavedTalentSpec>
     <Name>FrostDW</Name>
     <Class>DeathKnight</Class>
     <Spec>20320000000000000000023302022331120123010030000000000000000.00000000000000000000000000000</Spec>
@@ -223,5 +215,37 @@
     <Tree1>10</Tree1>
     <Tree2>31</Tree2>
     <Tree3>0</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Protection Paladin</Name>
+    <Class>Paladin</Class>
+    <Spec>000000000000000000003202302312212112023103203000000000000000.10000001100000100001000000000000000</Spec>
+    <Tree1>0</Tree1>
+    <Tree2>33</Tree2>
+    <Tree3>8</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Blood Tank (25m)</Name>
+    <Class>DeathKnight</Class>
+    <Spec>03323200130222311301320010000000000000000030000000000000000.010010000100010100000011010010</Spec>
+    <Tree1>32</Tree1>
+    <Tree2>6</Tree2>
+    <Tree3>3</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Blood Tank (10m)</Name>
+    <Class>DeathKnight</Class>
+    <Spec>03322200130222311301320010200000000000000020000000000000000.010010000100010100000011010010</Spec>
+    <Tree1>31</Tree1>
+    <Tree2>8</Tree2>
+    <Tree3>2</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Cat</Name>
+    <Class>Druid</Class>
+    <Spec>000000000000000000002310322312012221202301020301000000000000000.0000000010100010000100000000000000000000</Spec>
+    <Tree1>0</Tree1>
+    <Tree2>35</Tree2>
+    <Tree3>6</Tree3>
   </SavedTalentSpec>
 </ArrayOfSavedTalentSpec>

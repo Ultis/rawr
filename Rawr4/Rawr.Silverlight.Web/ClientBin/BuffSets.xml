@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-16"?>
-<ArrayOfSavedBuffSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<ArrayOfSavedBuffSet xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SavedBuffSet>
     <Name>UnBuffed</Name>
     <SetAsString />
@@ -106,12 +106,14 @@
       <string>Power Word: Fortitude</string>
       <string>Leader of the Pack</string>
       <string>Windfury Totem</string>
-      <string>Blessing of Kings</string>
+      <string>Resistance Aura</string>
+      <string>Aspect of the Wild</string>
+      <string>Expose Armor</string>
       <string>Demoralizing Shout</string>
       <string>Blood Frenzy</string>
       <string>Master Poisoner</string>
       <string>Flask of Steelskin</string>
-      <string>Indestructible Potion</string>
+      <string>Earthen Potion</string>
       <string>Dodge Food</string>
     </SetAsString>
   </SavedBuffSet>
@@ -135,6 +137,52 @@
       <string>Critical Mass</string>
       <string>Earth and Moon</string>
       <string>Flask of the Winds</string>
+      <string>Agility Food</string>
+    </SetAsString>
+  </SavedBuffSet>
+  <SavedBuffSet>
+    <Name>Fully Buffed ProtPaladin</Name>
+    <SetAsString>
+      <string>Strength of Earth Totem</string>
+      <string>Stoneskin Totem</string>
+      <string>Inspiration</string>
+      <string>Abomination's Might</string>
+      <string>Arcane Tactics</string>
+      <string>Qiraji Fortitude</string>
+      <string>Honor Among Thieves</string>
+      <string>Windfury Totem</string>
+      <string>Wrath of Air Totem</string>
+      <string>Mark of the Wild</string>
+      <string>Shadow Protection</string>
+      <string>Aspect of the Wild</string>
+      <string>Vindication</string>
+      <string>Savage Combat</string>
+      <string>Improved Shadow Bolt</string>
+      <string>Curse of the Elements</string>
+      <string>Frost Fever</string>
+      <string>Elixir of Deep Earth</string>
+      <string>Elixir of the Master</string>
+      <string>Earthen Potion</string>
+      <string>Mastery Food</string>
+    </SetAsString>
+  </SavedBuffSet>
+  <SavedBuffSet>
+    <Name>Fully Buffed Cat</Name>
+    <SetAsString>
+      <string>Strength of Earth Totem</string>
+      <string>Trueshot Aura</string>
+      <string>Ferocious Inspiration</string>
+      <string>Power Word: Fortitude</string>
+      <string>Leader of the Pack</string>
+      <string>Windfury Totem</string>
+      <string>Blessing of Kings</string>
+      <string>Resistance Aura</string>
+      <string>Aspect of the Wild</string>
+      <string>Faerie Fire</string>
+      <string>Mangle</string>
+      <string>Blood Frenzy</string>
+      <string>Flask of the Winds</string>
+      <string>Potion of the Tol'vir</string>
       <string>Agility Food</string>
     </SetAsString>
   </SavedBuffSet>

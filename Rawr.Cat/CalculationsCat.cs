@@ -583,14 +583,14 @@ namespace Rawr.Cat
             int T11Count;
             character.SetBonusCount.TryGetValue("Stormrider's Battlegarb", out T11Count);
             if (T11Count >= 2) {
-                statsTotal.BonusDamageMultiplierRakeTick = (1f + statsTotal.BonusDamageMultiplierRakeTick) * (1f * 0.10f) - 1f;
-                statsTotal.BonusDamageMultiplierLacerate = (1f + statsTotal.BonusDamageMultiplierLacerate) * (1f * 0.10f) - 1f;
+                statsTotal.BonusDamageMultiplierRakeTick = (1f + statsTotal.BonusDamageMultiplierRakeTick) * (1f + 0.10f) - 1f;
+                statsTotal.BonusDamageMultiplierLacerate = (1f + statsTotal.BonusDamageMultiplierLacerate) * (1f + 0.10f) - 1f;
             }
             if (T11Count >= 4) {
-                statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.MangleCatHit,
+                statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.MangleCatAttack,
                     new Stats() { BonusAttackPowerMultiplier = 0.01f, },
                     30, 0, 1f, 3));
-                //statsTotal.BonusSurvivalInstinctsDurationMultiplier = (1f + statsTotal.BonusSurvivalInstinctsDurationMultiplier) * (1f * 0.50f) - 1f;
+                //statsTotal.BonusSurvivalInstinctsDurationMultiplier = (1f + statsTotal.BonusSurvivalInstinctsDurationMultiplier) * (1f + 0.50f) - 1f;
             }
             #endregion
 
@@ -644,8 +644,10 @@ namespace Rawr.Cat
             triggerIntervals[Trigger.DamageDone] = meleeHitInterval / 2f;
             triggerIntervals[Trigger.DamageOrHealingDone] = meleeHitInterval / 2f; // Need to Add Self-Heals
             triggerIntervals[Trigger.RakeTick] = 3f;
-            if (usesMangle)
+            if (usesMangle) {
                 triggerIntervals[Trigger.MangleCatHit] = 60f;
+                triggerIntervals[Trigger.MangleCatAttack] = 60f;
+            }
             triggerIntervals[Trigger.MangleCatOrShredHit] = usesMangle ? 3.76f : 3.87f;
             triggerIntervals[Trigger.MangleCatOrShredOrInfectedWoundsHit] = triggerIntervals[Trigger.MangleCatOrShredHit] / ((talents.InfectedWounds > 0) ? 2f : 1f);
             triggerIntervals[Trigger.EnergyOrFocusDropsBelow20PercentOfMax] = 4f; // doing 80% chance every 4 seconds per Astry
@@ -660,8 +662,10 @@ namespace Rawr.Cat
             triggerChances[Trigger.DamageDone] = 1f - chanceAvoided / 2f;
             triggerChances[Trigger.DamageOrHealingDone] = 1f - chanceAvoided / 2f; // Need to Add Self-Heals
             triggerChances[Trigger.RakeTick] = 1f;
-            if (usesMangle)
+            if (usesMangle) {
+                triggerChances[Trigger.MangleCatAttack] = 1f;
                 triggerChances[Trigger.MangleCatHit] = chanceHit;
+            }
             triggerChances[Trigger.MangleCatOrShredHit] = chanceHit;
             triggerChances[Trigger.MangleCatOrShredOrInfectedWoundsHit] = chanceHit;
             triggerChances[Trigger.EnergyOrFocusDropsBelow20PercentOfMax] = 0.80f; // doing 80% chance every 4 seconds per Astry
@@ -875,7 +879,7 @@ namespace Rawr.Cat
             {
                 if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit || effect.Trigger == Trigger.MeleeAttack
                     || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.PhysicalAttack || effect.Trigger == Trigger.DoTTick
-                    || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.MangleCatHit || effect.Trigger == Trigger.RakeTick
+                    || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.MangleCatHit || effect.Trigger == Trigger.MangleCatAttack || effect.Trigger == Trigger.RakeTick
                     || effect.Trigger == Trigger.MangleCatOrShredHit || effect.Trigger == Trigger.MangleCatOrShredOrInfectedWoundsHit || effect.Trigger == Trigger.DamageOrHealingDone
                     || effect.Trigger == Trigger.EnergyOrFocusDropsBelow20PercentOfMax)
                 {
@@ -909,7 +913,7 @@ namespace Rawr.Cat
             {
                 if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit || effect.Trigger == Trigger.MeleeAttack
                     || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.PhysicalAttack || effect.Trigger == Trigger.RakeTick
-                    || effect.Trigger == Trigger.MangleCatHit || effect.Trigger == Trigger.MangleCatOrShredHit 
+                    || effect.Trigger == Trigger.MangleCatHit || effect.Trigger == Trigger.MangleCatAttack || effect.Trigger == Trigger.MangleCatOrShredHit 
                     || effect.Trigger == Trigger.MangleCatOrShredOrInfectedWoundsHit || effect.Trigger == Trigger.DamageOrHealingDone
                     || effect.Trigger == Trigger.EnergyOrFocusDropsBelow20PercentOfMax)
                 {

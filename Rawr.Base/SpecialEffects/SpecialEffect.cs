@@ -125,6 +125,7 @@ namespace Rawr
         InsectSwarmOrMoonfireCast, InsectSwarmOrMoonfireTick,
         EclipseProc,
         RejuvenationTick,
+        MangleCatAttack,
         MangleCatHit,
         MangleBearHit,
         SwipeBearOrLacerateHit,
