@@ -309,7 +309,7 @@ namespace Rawr
                     if (iter.Name == cur.Name) { continue; } // its the same buff, we dont need to compare against it
                     foreach (string conf in iter.ConflictingBuffs)
                     {
-                        if (cur.ConflictingBuffs.Contains(conf))
+                        if (!string.IsNullOrEmpty(conf) && cur.ConflictingBuffs.Contains(conf))
                         {
                             count++;
                         }
