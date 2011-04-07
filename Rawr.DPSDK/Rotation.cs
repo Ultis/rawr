@@ -800,7 +800,7 @@ namespace Rawr.DK
             // Same is true for DC & FS
             AbilityDK_DeathCoil DC = new AbilityDK_DeathCoil(m_CT.m_CState);
             // AbilityDK_FrostStrike FS = new AbilityDK_FrostStrike(m_CT.m_CState);
-            DarkTranformation Dark = new DarkTranformation();
+            DarkTranformation Dark = new DarkTranformation(m_CT.m_CState);
 
             // Simple ITx1, PSx1, BSx1, SSx4 & Festx4.
             // Initial rotation build.

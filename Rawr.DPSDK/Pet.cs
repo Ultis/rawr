@@ -195,8 +195,9 @@ namespace Rawr.DK
     // Putting this here since it has to do specifically with Pets.
     public class DarkTranformation : AbilityDK_Base
     {
-        public DarkTranformation()
+        public DarkTranformation(CombatState cstate)
         {
+            this.CState = cstate;
             this.szName = "Dark Transformation";
             this.bWeaponRequired = false;
             this.fWeaponDamageModifier = 1;
