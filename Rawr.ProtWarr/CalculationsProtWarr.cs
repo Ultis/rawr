@@ -307,8 +307,10 @@ threat and limited threat scaled by the threat scale.",
             character.ActiveBuffsAdd(("Fish Feast"));
 
             // Need a Boss Attack
-            character.BossOptions.DamagingTargs = true;
-            character.BossOptions.Attacks.Add(BossHandler.ADefaultMeleeAttack);
+            if (character.BossOptions.DefaultMeleeAttack == null) {
+                character.BossOptions.DamagingTargs = true;
+                character.BossOptions.Attacks.Add(BossHandler.ADefaultMeleeAttack);
+            }
         }
 
         private static List<string> _relevantGlyphs;
@@ -376,23 +378,6 @@ threat and limited threat scaled by the threat scale.",
             new SpecialEffect(Trigger.DamageAvoided, new StatsWarrior() { BonusPhysicalDamageMultiplier = 0.1f }, 12, 0, 0.2f),
         };
         #endregion
-
-        private static bool ValidatePlateSpec(Player player)
-        {
-            // Null Check
-            if (player.Character == null) { return false; }
-            // Item Type Fails
-            if (player.Character.Head == null || player.Character.Head.Type != ItemType.Plate) { return false; }
-            if (player.Character.Shoulders == null || player.Character.Shoulders.Type != ItemType.Plate) { return false; }
-            if (player.Character.Chest == null || player.Character.Chest.Type != ItemType.Plate) { return false; }
-            if (player.Character.Wrist == null || player.Character.Wrist.Type != ItemType.Plate) { return false; }
-            if (player.Character.Hands == null || player.Character.Hands.Type != ItemType.Plate) { return false; }
-            if (player.Character.Waist == null || player.Character.Waist.Type != ItemType.Plate) { return false; }
-            if (player.Character.Legs == null || player.Character.Legs.Type != ItemType.Plate) { return false; }
-            if (player.Character.Feet == null || player.Character.Feet.Type != ItemType.Plate) { return false; }
-            // If it hasn't failed by now, it must be good
-            return true;
-        }
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
@@ -526,10 +511,9 @@ threat and limited threat scaled by the threat scale.",
             player.Stats.Accumulate(statsRace);
 
             // Talents
-            StatsWarrior statsTalents = new StatsWarrior()
-            {
+            StatsWarrior statsTalents = new StatsWarrior() {
                 Block = 0.15f, // Sentinel
-                BonusStaminaMultiplier = (1.0f + 0.15f) * (1.0f + (ValidatePlateSpec(player) ? 0.05f : 0.0f)) - 1.0f, // Sentinel & Plate Specialization
+                BonusStaminaMultiplier = (1.0f + 0.15f) * (1.0f + (Character.ValidateArmorSpecialization(player.Character, ItemType.Plate) ? 0.05f : 0.0f)) - 1.0f, // Sentinel & Plate Specialization
                 BaseArmorMultiplier = player.Talents.Toughness * 0.03f,
             };
             if (player.Talents.HoldTheLine > 0)

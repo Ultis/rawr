@@ -345,10 +345,10 @@ namespace Rawr {
         };
         public enum TierLevels : int { T11_10 = 0, T11_25, T11_10H, T11_25H, }
         public static readonly float[] StandardMeleePerHit = new float[] {
-            100000f, // T11_10,
-            125000f, // T11_25,
-            175000f, // T11_10H,
-            225000f, // T11_25H,
+            140000f, // T11_10,  //     Tested and verified, Used a Magmaw Kill from April, 2011
+            175000f, // T11_25,  //     Tested and verified, Used a Magmaw Kill from April, 2011
+            200000f, // T11_10H, // Not tested and verified, assumed based on other values
+            225000f, // T11_25H, //     Tested and verified, Used a Magmaw Kill from April, 2011
         };
         #endregion
         #region ==== Info ====
