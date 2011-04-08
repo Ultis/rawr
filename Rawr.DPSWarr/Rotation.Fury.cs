@@ -92,8 +92,10 @@ namespace Rawr.DPSWarr {
                 availRageO20 = origAvailRageO20;
                 availRageO20 += (float)((DPSWarrChar.Whiteattacks.MHActivatesO20*DPSWarrChar.Whiteattacks.MHAtkTable.AnyLand)*
                                 6.5*DPSWarrChar.CombatFactors.MH.Speed);
-                availRageO20 += (float)((DPSWarrChar.Whiteattacks.OHActivatesO20 * DPSWarrChar.Whiteattacks.OHAtkTable.AnyLand) *
-                                6.5 * DPSWarrChar.CombatFactors.OH.Speed) / 2f;
+                if (DPSWarrChar.CombatFactors.useOH) {
+                    availRageO20 += (float)((DPSWarrChar.Whiteattacks.OHActivatesO20 * DPSWarrChar.Whiteattacks.OHAtkTable.AnyLand) *
+                                    6.5 * DPSWarrChar.CombatFactors.OH.Speed) / 2f;
+                }
 
                 float acts;
 
@@ -310,7 +312,7 @@ namespace Rawr.DPSWarr {
                      || Math.Abs(BT.NumActivatesU20 - oldBTGCDs) > 0.1f
                      ))
             {
-//                oldBTGCDs = BT.NumActivatesU20;
+                //oldBTGCDs = BT.NumActivatesU20;
                 oldRBGCDs = RB.NumActivatesU20;
                 oldCSGCDs = CS.NumActivatesU20;
                 oldEXGCDs = EX.NumActivatesU20;
@@ -321,9 +323,11 @@ namespace Rawr.DPSWarr {
                 // TODO: I'd like to cache whiteRageGenOverDur but it changes with slams. Research a better solution
                 availRageU20 += (float)((DPSWarrChar.Whiteattacks.MHActivatesU20 * DPSWarrChar.Whiteattacks.MHAtkTable.AnyLand) *
                                 6.5 * DPSWarrChar.CombatFactors.MH.Speed);
-                availRageU20 += (float)((DPSWarrChar.Whiteattacks.OHActivatesU20 * DPSWarrChar.Whiteattacks.OHAtkTable.AnyLand) *
-                                6.5 * DPSWarrChar.CombatFactors.OH.Speed) / 2f;
-//                availRageU20 += DPSWarrChar.Whiteattacks.WhiteRageGenOverDurU20 * percTimeInDPS;
+                if (DPSWarrChar.CombatFactors.useOH) {
+                    availRageU20 += (float)((DPSWarrChar.Whiteattacks.OHActivatesU20 * DPSWarrChar.Whiteattacks.OHAtkTable.AnyLand) *
+                                    6.5 * DPSWarrChar.CombatFactors.OH.Speed) / 2f;
+                }
+                //availRageU20 += DPSWarrChar.Whiteattacks.WhiteRageGenOverDurU20 * percTimeInDPS;
 
                 float acts;
                 // GCDsAvailableU20 is an expensive operation, trying to
