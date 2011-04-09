@@ -8,6 +8,7 @@ namespace Rawr.HealPriest
     public class CalculationsHealPriest : CalculationsBase
     {
         #region Variables and Properties
+        #endregion
 
         #region Gemming Templates
         public override List<GemmingTemplate> DefaultGemmingTemplates
@@ -228,7 +229,29 @@ namespace Rawr.HealPriest
                 };
             }
         }
-        #endregion
+
+        public override void SetDefaults(Character character)
+        {
+            /*
+            character.ActiveBuffsAdd("Inner Fire");
+            character.ActiveBuffsAdd("Improved Moonkin Form");
+            character.ActiveBuffsAdd("Tree of Life Aura");
+            character.ActiveBuffsAdd("Arcane Intellect");
+            character.ActiveBuffsAdd("Vampiric Touch");
+            character.ActiveBuffsAdd("Mana Spring Totem");
+            character.ActiveBuffsAdd("Restorative Totems");
+            character.ActiveBuffsAdd("Moonkin Form");
+            character.ActiveBuffsAdd("Wrath of Air Totem");
+            character.ActiveBuffsAdd("Totem of Wrath (Spell Power)");
+            character.ActiveBuffsAdd("Divine Spirit");
+            character.ActiveBuffsAdd("Power Word: Fortitude");
+            character.ActiveBuffsAdd("Mark of the Wild");
+            character.ActiveBuffsAdd("Blessing of Kings");
+            character.ActiveBuffsAdd("Shadow Protection");
+            character.ActiveBuffsAdd("Flask of the Frost Wyrm");
+            character.ActiveBuffsAdd("Spell Power Food");
+             */
+        }
 
         private Dictionary<string, Color> _subPointNameColors = null;
         public override Dictionary<string, Color> SubPointNameColors
@@ -265,36 +288,48 @@ namespace Rawr.HealPriest
             {
                 if (_characterDisplayCalculationLabels == null)
                     _characterDisplayCalculationLabels = new string[] {
-                    "Basic Stats:Health",
-                    "Basic Stats:Mana",
-                    "Basic Stats:Stamina",
-                    "Basic Stats:Resilience",
-                    "Basic Stats:Intellect",
-                    "Basic Stats:Spirit",
-                    "Basic Stats:Spell Power",
-                    "Basic Stats:In FSR MP5",
-                    "Basic Stats:Spell Crit",
-                    "Basic Stats:Healing Crit",
-                    "Basic Stats:Spell Haste",
-                    "Basic Stats:Armor",
-                    "Basic Stats:Resistance",
-                    "Simulation:Role",
-                    "Simulation:Burst*This is the HPS you are expected to have if you are not limited by Mana.\r\nIn Custom Role, this displays your HPS when you dump all spells in 1 stream.",
-                    "Simulation:Sustained*This is the HPS are expected to have when restricted by Mana.\r\nIf this value is lower than your Burst HPS, you are running out of mana in the simulation.\r\nIn Custom Role, this displays your HPS over the length of the fight, adjusted by the amount of mana available.",
-                    "Spells:Greater Heal",
-                    "Spells:Flash Heal",
-                    "Spells:Binding Heal",
-                    "Spells:Renew",
-                    "Spells:Prayer of Mending",
-                    "Spells:Power Word Shield",
-                    "Spells:PoH",
-                    "Spells:Holy Nova",
-                    "Spells:Lightwell",
-                    "Spells:CoH",
-                    "Spells:Penance",
-                    "Spells:Gift of the Naaru",
-                    "Spells:Divine Hymn",
-                    "Spells:Resurrection",
+                    "General:Health",
+                    "General:Mana",
+                    "General:Item Level",
+                    "Attributes:Strenght",
+                    "Attributes:Agility",
+                    "Attributes:Stamina",
+                    "Attributes:Intellect",
+                    "Attributes:Spirit",
+                    "Spell:Spell Power",
+                    "Spell:Haste",
+                    "Spell:Hit",
+                    "Spell:Penetration",
+                    "Spell:Mana Regen",
+                    "Spell:Combat Regen",
+                    "Spell:Crit Chance",
+                    "Spell:Mastery",
+                    "Defense:Armor",
+                    "Defense:Dodge",
+                    "Defense:Resilience",
+                    "Resistance:Arcane",
+                    "Resistance:Fire",
+                    "Resistance:Nature",
+                    "Resistance:Frost",
+                    "Resistance:Shadow",
+                    "Model:Role",
+                    "Model:Burst*This is the HPS you are expected to have if you are not limited by Mana.\r\nIn Custom Role, this displays your HPS when you dump all spells in 1 stream.",
+                    "Model:Sustained*This is the HPS are expected to have when restricted by Mana.\r\nIf this value is lower than your Burst HPS, you are running out of mana in the simulation.\r\nIn Custom Role, this displays your HPS over the length of the fight, adjusted by the amount of mana available.",
+                    "Holy Spells:Binding Heal",
+                    "Holy Spells:Greater Heal",
+                    "Holy Spells:Flash Heal",
+                    "Holy Spells:Renew",
+                    "Holy Spells:Prayer of Mending",
+                    "Holy Spells:Power Word Shield",
+                    "Holy Spells:PoH",
+                    "Holy Spells:Holy Nova",
+                    "Holy Spells:Lightwell",
+                    "Holy Spells:CoH",
+                    "Holy Spells:Penance",
+                    "Holy Spells:Gift of the Naaru",
+                    "Holy Spells:Divine Hymn",
+                    "Holy Spells:Resurrection",
+                    "Shadow Spells:",
                 };
                 return _characterDisplayCalculationLabels;
             }
@@ -310,12 +345,12 @@ namespace Rawr.HealPriest
                     "Health",
                     "Resilience",
                     "Mana",
-                    "InFSR Regen",
-                    "OutFSR Regen",
+                    "Mana Regen",
+                    "Combat Regen",
                     "Haste Rating",
                     "Haste %",
                     "Crit Rating",
-                    "Healing Crit %",
+                    "Spell Crit %",
                     "PW:Shield",
                     "GHeal Avg",
                     "FHeal Avg",
@@ -584,7 +619,7 @@ namespace Rawr.HealPriest
 
             return statsBuffs;
         }
-
+        /*
         public override void SetDefaults(Character character)
         {
             character.ActiveBuffsAdd("Inner Fire");
@@ -604,7 +639,7 @@ namespace Rawr.HealPriest
             character.ActiveBuffsAdd("Shadow Protection");
             character.ActiveBuffsAdd("Flask of the Frost Wyrm");
             character.ActiveBuffsAdd("Spell Power Food");
-        }
+        }*/
         #endregion
 
         #region Custom Charts
