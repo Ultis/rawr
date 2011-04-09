@@ -182,11 +182,12 @@ namespace Rawr
                         }
                         Stats pri = new Stats() {
                             Strength = 26, Agility = 34, Stamina = 51, Intellect = 169, Spirit = 178,
-                            Mp5 = 1030,
                             Health = 43285f, Mana = 20590f,
-                            Dodge = 0.0337780f, Parry = 0.05f,
+                            Dodge = 0.0337780f,
+                            Parry = 0.05f,
                             PhysicalCrit = 0.027f, SpellCrit = 0.012375f,
                         };
+                        pri.Mp5 = pri.Mana * 0.05f;     // Always 5% of base mana in regen.
                         S.Accumulate(race);
                         S.Accumulate(pri);
                         break;

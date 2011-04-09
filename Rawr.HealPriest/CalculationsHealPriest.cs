@@ -165,25 +165,19 @@ namespace Rawr.HealPriest
 
         public override void SetDefaults(Character character)
         {
-            character.ActiveBuffsAdd("Inner Fire");
-            /*
-            character.ActiveBuffsAdd("Improved Moonkin Form");
-            character.ActiveBuffsAdd("Tree of Life Aura");
-            character.ActiveBuffsAdd("Arcane Intellect");
-            character.ActiveBuffsAdd("Vampiric Touch");
-            character.ActiveBuffsAdd("Mana Spring Totem");
-            character.ActiveBuffsAdd("Restorative Totems");
-            character.ActiveBuffsAdd("Moonkin Form");
-            character.ActiveBuffsAdd("Wrath of Air Totem");
-            character.ActiveBuffsAdd("Totem of Wrath (Spell Power)");
-            character.ActiveBuffsAdd("Divine Spirit");
-            character.ActiveBuffsAdd("Power Word: Fortitude");
-            character.ActiveBuffsAdd("Mark of the Wild");
+            character.ActiveBuffsAdd("Arcane Brilliance (Mana)");
             character.ActiveBuffsAdd("Blessing of Kings");
-            character.ActiveBuffsAdd("Shadow Protection");
-            character.ActiveBuffsAdd("Flask of the Frost Wyrm");
-            character.ActiveBuffsAdd("Spell Power Food");
-             */
+            character.ActiveBuffsAdd("Blessing of Might (Mp5)");
+            character.ActiveBuffsAdd("Devotion Aura");
+            character.ActiveBuffsAdd("Flask of the Draconic Mind");
+            character.ActiveBuffsAdd("Inner Fire");
+            character.ActiveBuffsAdd("Intellect Food");
+            character.ActiveBuffsAdd("Power Word: Fortitude");
+            character.ActiveBuffsAdd("Rampage");
+            character.ActiveBuffsAdd("Resistance Aura");
+            character.ActiveBuffsAdd("Totem of Wrath (Spell Power)");
+            character.ActiveBuffsAdd("Vampiric Touch");
+            character.ActiveBuffsAdd("Wrath of Air Totem");
         }
 
         private Dictionary<string, Color> _subPointNameColors = null;
