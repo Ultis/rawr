@@ -66,9 +66,103 @@ namespace Rawr.HealPriest
         {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
             Stats baseStats = BaseStats.GetBaseStats(character);
-            /*
-            dictValues.Add("Health", BasicStats.Health.ToString());
+            #region General
+            dictValues.Add("Health", BasicStats.Health.ToString("0"));
+            dictValues.Add("Mana", BasicStats.Mana.ToString("0"));
+
+            int iLvl = 0, iCnt = 0, iLvlMax = 0, iLvlMin = int.MaxValue;
+            foreach (ItemInstance i in character.GetItems())
+            {
+                if (i != null &&
+                    i.Item._itemLevel > 0 &&
+                    !i.Item.FitsInSlot(CharacterSlot.Shirt) &&
+                    !i.Item.FitsInSlot(CharacterSlot.Tabard) &&
+                    !i.Item.FitsInSlot(CharacterSlot.OffHand))
+                {
+                    iLvl += i.Item._itemLevel;
+                    if (i.Item._itemLevel > iLvlMax)
+                        iLvlMax = i.Item._itemLevel;
+                    if (i.Item._itemLevel < iLvlMin)
+                        iLvlMin = i.Item._itemLevel;
+                    iCnt++;
+                }
+            }
+            if (iCnt == 0)
+            {   // SIGH HAX FOR EMPTY CHARS LOL.
+                iCnt = 1;
+                iLvl = 0;
+                iLvlMin = 0;
+                iLvlMax = 0;
+            }
+            dictValues.Add("Item Level", String.Format("{0}*Lowest: {1}\r\nHighest: {2}", ((iCnt == 0) ? 0 : iLvl / iCnt).ToString("0"), iLvlMin, iLvlMax));
+            dictValues.Add("Speed", String.Format("{0}%*{0}% Run speed",
+                ((1f + BasicStats.MovementSpeed) * 100f).ToString("0")));
+            #endregion
+            #region Attributes
+            dictValues.Add("Strength", BasicStats.Strength.ToString());
+            dictValues.Add("Agility", BasicStats.Agility.ToString());
             dictValues.Add("Stamina", BasicStats.Stamina.ToString());
+            dictValues.Add("Intellect", BasicStats.Intellect.ToString());
+            dictValues.Add("Spirit", BasicStats.Spirit.ToString());
+            #endregion
+            #region Spell
+            dictValues.Add("Spell Power", BasicStats.SpellPower.ToString("0"));
+            dictValues.Add("Haste", String.Format("{0}%*{1}% from {2} Haste Rating\r\n{3}% from Darkness",
+                (BasicStats.SpellHaste * 100f).ToString("0.00"),
+                (StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating) * 100f).ToString("0.00"), BasicStats.HasteRating.ToString("0"),
+                character.PriestTalents.Darkness.ToString("0")));
+            dictValues.Add("Hit", (BasicStats.SpellHit * 100f).ToString("0.00"));
+            dictValues.Add("Penetration", BasicStats.SpellPenetration.ToString("0"));
+            float manaRegen = StatConversion.GetSpiritRegenSec(BasicStats.Spirit, BasicStats.Intellect) * 5f;
+            dictValues.Add("Mana Regen", (manaRegen + BasicStats.Mp5).ToString("0"));
+            dictValues.Add("Combat Regen", (manaRegen * BasicStats.SpellCombatManaRegeneration + BasicStats.Mp5).ToString("0"));
+            dictValues.Add("Crit Chance", String.Format("{0}%*{1}% from {2} Crit Rating\r\n{3}% from {4} Intellect\r\n{5}% from Priest base",
+                (BasicStats.SpellCrit * 100f).ToString("0.00"),
+                (StatConversion.GetSpellCritFromRating(BasicStats.CritRating) * 100f).ToString("0.00"), BasicStats.CritRating.ToString("0"),
+                (StatConversion.GetSpellCritFromIntellect(BasicStats.Intellect) * 100f).ToString("0.00"), BasicStats.Intellect.ToString("0"),
+                (baseStats.SpellCrit * 100f).ToString("0.00")));
+            dictValues.Add("Mastery", BasicStats.MasteryRating.ToString("0"));
+            #endregion
+            #region Defense
+            dictValues.Add("Armor", String.Format("{0}*{1}% physical damage reduction from same level target",
+                BasicStats.Armor.ToString("0"),
+                (StatConversion.GetDamageReductionFromArmor(character.Level, BasicStats.Armor) * 100f).ToString("0.00")));
+            dictValues.Add("Dodge", String.Format("{0}%", (BasicStats.Dodge * 100f).ToString("0.00")));
+            dictValues.Add("Resilience", String.Format("{0}*{1}% damage reduction on attacks from other players\r\n{2}% damage reduction from spells",
+                BasicStats.Resilience.ToString("0"),
+                (StatConversion.GetDamageReductionFromResilience(BasicStats.Resilience) * 100f).ToString("0.00"),
+                (character.PriestTalents.InnerSanctum * 2f).ToString("0")));
+            #endregion
+            #region Resistance
+            float thisResist;
+            thisResist = BasicStats.ArcaneResistance + BasicStats.ArcaneResistanceBuff;
+            dictValues.Add("Arcane", String.Format("{0}*{1}% average reduction from Arcane damage",
+                thisResist.ToString("0"),
+                (StatConversion.GetAverageResistance(character.Level, character.Level, thisResist, 0f) * 100f).ToString("0.00")));
+            thisResist = BasicStats.FireResistance + BasicStats.FireResistanceBuff;
+            dictValues.Add("Fire", String.Format("{0}*{1}% average reduction from Fire damage",
+                thisResist.ToString("0"),
+                (StatConversion.GetAverageResistance(character.Level, character.Level, thisResist, 0f) * 100f).ToString("0.00")));
+            thisResist = BasicStats.NatureResistance + BasicStats.NatureResistanceBuff;
+            dictValues.Add("Nature", String.Format("{0}*{1}% average reduction from Nature damage",
+                thisResist.ToString("0"),
+                (StatConversion.GetAverageResistance(character.Level, character.Level, thisResist, 0f) * 100f).ToString("0.00")));
+            thisResist = BasicStats.FrostResistance + BasicStats.FrostResistanceBuff;
+            dictValues.Add("Frost", String.Format("{0}*{1}% average reduction from Frost damage",
+                thisResist.ToString("0"),
+                (StatConversion.GetAverageResistance(character.Level, character.Level, thisResist, 0f) * 100f).ToString("0.00")));
+            thisResist = BasicStats.ShadowResistance + BasicStats.ShadowResistanceBuff;
+            dictValues.Add("Shadow", String.Format("{0}*{1}% average reduction from Shadow damage",
+                thisResist.ToString("0"),
+                (StatConversion.GetAverageResistance(character.Level, character.Level, thisResist, 0f) * 100f).ToString("0.00")));
+            #endregion
+            #region Model
+            #endregion
+            #region Holy Spells
+            #endregion
+            #region Shadow Spells
+            #endregion
+            /*
             float ResilienceCap = 0.15f, ResilienceFromRating = StatConversion.GetCritReductionFromResilience(1);
             float Resilience = StatConversion.GetCritReductionFromResilience(BasicStats.Resilience);
             dictValues.Add("Resilience", string.Format("{0}*-{1}% Damage from DoT and Mana Drains\n\r-{1}% Chance to be crit\r\n-{2}% Damage from Crits.\r\n{3}", 

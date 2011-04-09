@@ -8,6 +8,7 @@ namespace Rawr.HealPriest
     public class CalculationsHealPriest : CalculationsBase
     {
         #region Variables and Properties
+        protected enum PriestSpec { Spec_Unknown, Spec_Disc, Spec_Holy, Spec_Shadow, Spec_ERROR };
         #endregion
 
         #region Gemming Templates
@@ -291,7 +292,8 @@ namespace Rawr.HealPriest
                     "General:Health",
                     "General:Mana",
                     "General:Item Level",
-                    "Attributes:Strenght",
+                    "General:Speed",
+                    "Attributes:Strength",
                     "Attributes:Agility",
                     "Attributes:Stamina",
                     "Attributes:Intellect",
@@ -329,7 +331,7 @@ namespace Rawr.HealPriest
                     "Holy Spells:Gift of the Naaru",
                     "Holy Spells:Divine Hymn",
                     "Holy Spells:Resurrection",
-                    "Shadow Spells:",
+                    "Shadow Spells:Halleluja",
                 };
                 return _characterDisplayCalculationLabels;
             }
@@ -428,7 +430,7 @@ namespace Rawr.HealPriest
 
         public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot)
         {
-            if (slot == ItemSlot.OffHand || slot == ItemSlot.Ranged) return false;
+            if (slot == ItemSlot.Ranged) return false;
             return base.EnchantFitsInSlot(enchant, character, slot);
         }
 
@@ -480,6 +482,7 @@ namespace Rawr.HealPriest
                 Armor = stats.Armor,
                 BonusArmor = stats.BonusArmor,
                 Agility = stats.Agility,
+                Strength = stats.Strength,
                 ArcaneResistance = stats.ArcaneResistance,
                 ArcaneResistanceBuff = stats.ArcaneResistanceBuff,
                 FireResistance = stats.FireResistance,
@@ -535,7 +538,7 @@ namespace Rawr.HealPriest
             bool Maybe = (
                 stats.Stamina + stats.Health + stats.Resilience
                 + stats.Armor + stats.BonusArmor + stats.Agility +
-                +stats.SpellHit + stats.HitRating
+                + stats.SpellHit + stats.HitRating
                 + stats.ArcaneResistance + stats.ArcaneResistanceBuff
                 + stats.FireResistance + stats.FireResistanceBuff
                 + stats.FrostResistance + stats.FrostResistanceBuff
@@ -878,19 +881,15 @@ namespace Rawr.HealPriest
         #region Model Specific Variables and Functions
         public static float GetInnerFireSpellPowerBonus(Character character)
         {
-            float InnerFireSpellPowerBonus = 0;
-            if (character.Level >= 77)
-                InnerFireSpellPowerBonus = 120;
-            else if (character.Level >= 71)
-                InnerFireSpellPowerBonus = 95;
+            float InnerFireSpellPowerBonus = 532;
             return InnerFireSpellPowerBonus; // *(1f + character.PriestTalents.ImprovedInnerFire * 0.15f);
         }
 
         public static float GetInnerFireArmorBonus(Character character)
         {
-            float ArmorBonus = 2440 * (character.PriestTalents.GlyphofInnerFire ? 1.5f : 1f);
+            float InnerFireArmorBonus = 0.3f * (character.PriestTalents.GlyphofInnerFire ? 1.5f : 1f);
 
-            return ArmorBonus; // *(1f + character.PriestTalents.ImprovedInnerFire * 0.15f);
+            return InnerFireArmorBonus;
         }
         #endregion
 
@@ -917,8 +916,39 @@ namespace Rawr.HealPriest
             else
                 solver = new Solver(stats, character);
             solver.Calculate(calc);*/
-            
+            calc.HPSBurstPoints = stats.SpellPower;
+            calc.HPSSustainPoints = stats.SpellPower;
+            calc.OverallPoints = calc.HPSBurstPoints + calc.HPSSustainPoints;
+
             return calc;
+        }
+
+        protected PriestSpec GetSpec(PriestTalents pt)
+        {
+            int[] specs = new int[3];
+            int spec = 0;
+            int ctr = 0;
+            foreach (int i in pt.Data)
+            {
+                if (i > 0) specs[spec] += i;
+                ctr++;
+                if (ctr == 21)  // Improved Renew
+                    spec = 1;
+                else if (ctr == 42) // Darkness
+                    spec = 2;
+            }
+
+            // Check that most points are spent in holy
+            if (specs[0] > specs[1] && specs[0] > specs[2] && specs[1] <= 10 && specs[2] <= 10)
+                return PriestSpec.Spec_Disc;
+            // Check that most points are spent in disc
+            else if (specs[1] > specs[0] && specs[1] > specs[2] && specs[0] <= 10 && specs[2] <= 10)
+                return PriestSpec.Spec_Holy;
+            // Check that most points are spent in shadow
+            else if (specs[2] > specs[0] && specs[2] > specs[1] && specs[0] <= 10 && specs[1] <= 10)
+                return PriestSpec.Spec_Shadow;
+            //throw new Exception("There seems to be a problem with the talent spec!");
+            return PriestSpec.Spec_Unknown;
         }
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
@@ -926,28 +956,29 @@ namespace Rawr.HealPriest
             
             CalculationOptionsHealPriest calcOpts = character.CalculationOptions as CalculationOptionsHealPriest;
             Stats statsRace = BaseStats.GetBaseStats(character);
+            statsRace.BonusIntellectMultiplier = 0.05f;     // Cloth bonus
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             //Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character, calcOpts);
 
+            PriestSpec ps = GetSpec(character.PriestTalents);
+            if (ps == PriestSpec.Spec_ERROR)
+                throw new Exception("Unpossible Talent Spec!");
+
             Stats statsTalents = new Stats()
             {
-                /*BonusStaminaMultiplier = character.PriestTalents.ImprovedPowerWordFortitude * 0.02f,
-                BonusSpiritMultiplier = (1 + character.PriestTalents.Enlightenment * 0.02f) * (1f + character.PriestTalents.SpiritOfRedemption * 0.05f) - 1f,
-                BonusIntellectMultiplier = character.PriestTalents.MentalStrength * 0.03f,
-                SpellDamageFromSpiritPercentage = character.PriestTalents.SpiritualGuidance * 0.05f + character.PriestTalents.TwistedFaith * 0.02f,
-                SpellHaste = character.PriestTalents.Enlightenment * 0.02f,
-                SpellCombatManaRegeneration = character.PriestTalents.Meditation * 0.5f / 3f,
-                SpellCrit = character.PriestTalents.FocusedWill * 0.01f,*/
+                BonusIntellectMultiplier = (ps == PriestSpec.Spec_Disc) ? 0.15f : 0f,
+                BonusHealingDoneMultiplier = (ps == PriestSpec.Spec_Holy) ? 0.15f : 0f,
+                SpellHaste = character.PriestTalents.Darkness * 0.01f,
+                SpellCombatManaRegeneration = 0.5f + character.PriestTalents.HolyConcentration * 0.15f,
             };
 
             Stats statsTotal = statsBaseGear + statsBuffs + statsRace + statsTalents;
 
             statsTotal.Stamina = (float)Math.Floor((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
-            statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
+            statsTotal.Intellect = (float)Math.Floor((statsTotal.Intellect) * (1 + statsTotal.BonusIntellectMultiplier));
             statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
-            statsTotal.SpellPower += //statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit + // This line shouldn't be valid anymore
-                (statsTotal.PriestInnerFire > 0 ? GetInnerFireSpellPowerBonus(character) : 0);
+            statsTotal.SpellPower += (statsTotal.PriestInnerFire > 0 ? GetInnerFireSpellPowerBonus(character) : 0) + (statsTotal.Intellect - 10);
             statsTotal.Mana += StatConversion.GetManaFromIntellect(statsTotal.Intellect);
             statsTotal.Mana *= (1f + statsTotal.BonusManaMultiplier);
             statsTotal.Health += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
@@ -955,7 +986,7 @@ namespace Rawr.HealPriest
             statsTotal.SpellCrit += StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect)
                 + StatConversion.GetSpellCritFromRating(statsTotal.CritRating);
             statsTotal.SpellHaste = (1f + statsTotal.SpellHaste) * (1f + StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating)) - 1f;
-            statsTotal.BonusArmor += (statsTotal.PriestInnerFire > 0 ? GetInnerFireArmorBonus(character) : 0);    
+            statsTotal.Armor *= (1 + (statsTotal.PriestInnerFire > 0 ? GetInnerFireArmorBonus(character) : 0));
             return statsTotal;
         }
 

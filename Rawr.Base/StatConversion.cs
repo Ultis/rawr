@@ -59,7 +59,7 @@ namespace Rawr
         public const float BLOCKVALUE_PER_STR       =  2.00f;
         // These have not been provided Cata values yet, some could be removed as no longer valid
         //public const float LEVEL_85_COMBATRATING_MODIFIER      = 3.2789987789987789987789987789988f;
-        public const float RATING_PER_RESILIENCE               = 27612.29900f;
+        public const float RATING_PER_RESILIENCE = 21.5625f * 100f;
         public const float RATING_PER_DODGEPARRYREDUC          = 0.0025f; //4 Exp per 1% Dodge/Parry Reduction;
         public const float LEVEL_AVOIDANCE_MULTIPLIER          = 0.20f;
 
@@ -489,6 +489,17 @@ namespace Rawr
         {
             return 0.001f + Spirit * REGEN_CONSTANT * (float)Math.Sqrt(Intellect);
         }
+
+        /// <summary>
+        /// Returns the % Damage reduction based on amount of Resilience
+        /// </summary>
+        /// <param name="resilience">Amount of Resilience</param>
+        /// <returns>% Damage reduction on attacks from other players</returns>
+        public static float GetDamageReductionFromResilience(float resilience)
+        {
+            return resilience / RATING_PER_RESILIENCE;
+        }
+
 
         public static float ApplyMultiplier(float baseValue, float multiplier)
         {
