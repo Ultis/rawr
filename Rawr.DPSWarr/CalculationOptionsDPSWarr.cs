@@ -18,6 +18,7 @@ namespace Rawr.DPSWarr {
         [DefaultValue(false)]
         public bool UseMarkov { get { return _UseMarkov; } set { _UseMarkov = value; OnPropertyChanged("UseMarkov"); } }
         private bool _UseMarkov = false;
+        /// <summary>Presently for Implementing WoW Patch 4.1.0 changes</summary>
         [DefaultValue(false)]
         public bool PtrMode { get { return _PtrMode; } set { _PtrMode = value; OnPropertyChanged("PTRMode"); } }
         private bool _PtrMode = false;

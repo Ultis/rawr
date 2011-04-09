@@ -491,7 +491,7 @@ Percentage of Total DPS: {15:00.00%}",
                         float value = 0;
                         foreach (TargetGroup tg in DPSWarrChar.BossOpts.Targets)
                         {
-                            if (tg.Frequency <= 0 || tg.Chance <= 0) continue; // bad one, skip it
+                            if (!tg.Validated) continue; // bad one, skip it
                             //float upTime = (tg.Frequency / BossOpts.BerserkTimer * (tg.Duration / 1000f) * tg.Chance)/* / BossOpts.BerserkTimer*/;
                             float upTime = (tg.Duration / 1000f) / tg.Frequency;//(tg.Frequency / BossOpts.BerserkTimer *  * tg.Chance)/* / BossOpts.BerserkTimer*/;
                             value += (Math.Min(10 - (tg.NearBoss ? 1 : 0), Math.Min(Targets - (tg.NearBoss ? 1 : 0), tg.NumTargs - (tg.NearBoss ? 1 : 0))) + DPSWarrChar.StatS.BonusTargets) * upTime;

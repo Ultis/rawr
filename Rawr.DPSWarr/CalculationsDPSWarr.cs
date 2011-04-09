@@ -885,11 +885,12 @@ a GCD's length, you will use this while running back into place",
 
         public override bool IsBuffRelevant(Buff buff, Character character) {
             if (buff == null) { return false; }
-            string name = buff.Name;
             // Force some buffs to active
-            if (name.Contains("Potion of Wild Magic")
-                || name.Contains("Insane Strength Potion")
-                || buff.SpellId == 22738)
+            if (buff.SpellId == 53909 // Wild Magic Potion
+                || buff.SpellId == 28494 // Insane Strength Potion
+                || buff.SpellId == 22738 // Disarm Duration Reduction (Old PvP Set Bonuses)
+                || buff.SpellId == 90293  // T11 2P
+                || buff.SpellId == 90295) // T11 4P
             { return true; }
             // Force some buffs to go away
             else if (!buff.AllowedClasses.Contains(CharacterClass.Warrior))
@@ -1027,13 +1028,16 @@ a GCD's length, you will use this while running back into place",
             if (dpswarchar.Char.ActiveBuffs.Find<Buff>(x => x.SpellId == 70847) != null) {
                 statsBuffs.BonusWarrior_PvP_4P_InterceptCDReduc = 5f;
             }*/
-            if (dpswarchar.Char.ActiveBuffs.Find<Buff>(x => x.SpellId == 90293) != null) {
+            int T11count;
+            dpswarchar.Char.SetBonusCount.TryGetValue("Earthen Warplate", out T11count);
+            if (T11count >= 2) {//dpswarchar.Char.ActiveBuffs.Find<Buff>(x => x.SpellId == 90293) != null) {
                 statsBuffs.BonusMortalStrikeDamageMultiplier = 0.05f;
                 statsBuffs.BonusBloodthirstDamageMultiplier = 0.05f;
             }
-            if (dpswarchar.Char.ActiveBuffs.Find<Buff>(x => x.SpellId == 90295) != null) {
-                // The SpecialEffect is handled in Base
-                //statsBuffs.BonusWarrior_PvP_4P_InterceptCDReduc = 5f;
+            if (T11count >= 4) {//dpswarchar.Char.ActiveBuffs.Find<Buff>(x => x.SpellId == 90295) != null) {
+                statsBuffs.AddSpecialEffect(new SpecialEffect(Trigger.OPorRBAttack,
+                    new Stats() { BonusAttackPowerMultiplier = 0.01f, },
+                    30, 0, 1f, 3));
             }
             
             foreach (Buff b in removedBuffs) { dpswarchar.Char.ActiveBuffsAdd(b); }
@@ -1047,6 +1051,7 @@ a GCD's length, you will use this while running back into place",
                 if (character.ActiveBuffs.Remove(b)) { removedBuffs.Add(b); }
             }
         }
+
         public override void SetDefaults(Character character) {
             // Need to be behind boss
             character.BossOptions.InBack = true;
@@ -1645,7 +1650,7 @@ a GCD's length, you will use this while running back into place",
                                                   - 1f,
                 BonusRagingBlowDamageMultiplier = dpswarchar.Talents.WarAcademy * 0.05f,
                 BonusOverpowerDamageMultiplier = (dpswarchar.Talents.GlyphOfOverpower ? 0.10f : 0f),
-                BonusSlamDamageMultiplier = (1f + dpswarchar.Talents.ImprovedSlam * 0.10f)
+                BonusSlamDamageMultiplier = (1f + dpswarchar.Talents.ImprovedSlam * (dpswarchar.CalcOpts.PtrMode ? 0.20f : 0.10f))
                                           * (1f + dpswarchar.Talents.WarAcademy * 0.05f)
                                           - 1f,
                 BonusVictoryRushDamageMultiplier = dpswarchar.Talents.WarAcademy * 0.05f,
@@ -1673,12 +1678,10 @@ a GCD's length, you will use this while running back into place",
             statsTotal = UpdateStatsAndAdd(statsTotal, null, dpswarchar.Char);
             float multiplier = 0.0560f;
             float masteryBonusVal = ((dpswarchar.CalcOpts.PtrMode ? 2f : 8f)*0.056f + multiplier * StatConversion.GetMasteryFromRating(statsTotal.MasteryRating, CharacterClass.Warrior));
-            if (talents.DeathWish > 0 && dpswarchar.CalcOpts.M_DeathWish && dpswarchar.CombatFactors.FuryStance)
-            {
+            if (talents.DeathWish > 0 && dpswarchar.CalcOpts.M_DeathWish && dpswarchar.CombatFactors.FuryStance) {
                 statsTotal.AddSpecialEffect(TalentsAsSpecialEffects.GetDeathWishWithMastery(masteryBonusVal, dpswarchar));
             }
-            if (talents.Enrage > 0 && dpswarchar.CombatFactors.FuryStance)
-            {
+            if (talents.Enrage > 0 && dpswarchar.CombatFactors.FuryStance) {
                 statsTotal.AddSpecialEffect(TalentsAsSpecialEffects.GetEnragedRegenerationWithMastery(masteryBonusVal, dpswarchar));
             }
             //Stats statsProcs = new Stats();

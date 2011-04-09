@@ -890,6 +890,7 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeRange = true;
             Duration = 15f; // In Seconds
             CD = 1.5f - (DPSWarrChar.CalcOpts.PtrMode ? DPSWarrChar.Talents.ImprovedHamstring * 0.5f : 0f);
+            GCDTime = 1.5f - (DPSWarrChar.CalcOpts.PtrMode ? DPSWarrChar.Talents.ImprovedHamstring * 0.5f : 0f);
             RageCost = 10f;// -(DPSWarrChar.Talents.FocusedRage * 1f);
             //Targets += DPSWarrChar.StatS.BonusTargets;
             StanceOkFury = StanceOkArms = true;
@@ -1190,6 +1191,39 @@ namespace Rawr.DPSWarr.Skills
     }
     #endregion
     #region Other Abilities
+    public sealed class Pummel : Ability
+    {
+        public static new string SName { get { return "Pummel"; } }
+        public static new string SDesc { get { return "This is not a built class in Rawr4"; } }
+        public static new string SIcon { get { return "inv_gauntlets_04"; } }
+        public override string Name { get { return SName; } }
+        public override string Desc { get { return SDesc; } }
+        public override string Icon { get { return SIcon; } }
+        /// <summary>
+        /// Instant, 10 sec Cd, 10 Rage, Melee Range, (Battle, Berserker)
+        /// Pummel the target, interrupting spell-casting and preventing any spell in that school
+        /// from being cast for 4 sec
+        /// <para>Talents: none</para>
+        /// <para>Glyphs: none</para>
+        /// <para>Sets: none</para>
+        /// <para>TODO: Damage Increase proc from Rude Interruption Talent</para>
+        /// </summary>
+        public Pummel(DPSWarrCharacter dpswarrchar)
+        {
+            DPSWarrChar = dpswarrchar;
+            //
+            //AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Pummel_;
+            UseHitTable = DPSWarrChar.CalcOpts.PtrMode ? false : true; // 4.1.0 make it always hit
+            ReqMeleeWeap = ReqMeleeRange = true;
+            StanceOkArms = StanceOkFury = StanceOkDef = true;
+            CD = 10f; // In Seconds
+            Duration = 4f;
+            RageCost = TalentsAsSpecialEffects.DrumsOfWarRageCosts[DPSWarrChar.Talents.DrumsOfWar];
+            DamageBase = 0;
+            //
+            Initialize();
+        }
+    }
     public sealed class Retaliation : Ability
     {
         public static new string SName { get { return "Retaliation"; } }

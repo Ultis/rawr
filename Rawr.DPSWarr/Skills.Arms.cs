@@ -30,7 +30,7 @@ namespace Rawr.DPSWarr.Skills
             //
             AbilIterater = (int)Maintenance.MortalStrike;
             ReqMeleeWeap = ReqMeleeRange = StanceOkArms = true;
-            DamageBase = DPSWarrChar.CombatFactors.NormalizedMHWeaponDmg * DamageMultiplier + DamageBaseBonus;
+            DamageBase = DPSWarrChar.CombatFactors.NormalizedMHWeaponDmg * (DPSWarrChar.CalcOpts.PtrMode ? DamageMultiplierPTR : DamageMultiplier) + DamageBaseBonus;
             DamageBonus = (1f + DPSWarrChar.StatS.BonusMortalStrikeDamageMultiplier);
             CD = 4.5f; // In Seconds
             RageCost = 20f;
@@ -38,7 +38,8 @@ namespace Rawr.DPSWarr.Skills
             //
             Initialize();
         }
-        public const float DamageMultiplier = 1.65f;
+        public const float DamageMultiplier = 1.50f;
+        public const float DamageMultiplierPTR = 1.75f;
         public const float DamageBaseBonus = 513f;
         private float _JuggernautBonusCritChance = 0f;
         private float _BonusCritChance = 0f;
@@ -127,7 +128,7 @@ namespace Rawr.DPSWarr.Skills
             RageCost = 5f;
             //Targets += DPSWarrChar.StatS.BonusTargets;
             StanceOkArms = true;
-            DamageBase = DPSWarrChar.CombatFactors.NormalizedMHWeaponDmg * DamageMultiplier;
+            DamageBase = DPSWarrChar.CombatFactors.NormalizedMHWeaponDmg * (dpswarrchar.CalcOpts.PtrMode ? DamageMultiplierPTR : DamageMultiplier);
             DamageBonus = (1f + DPSWarrChar.StatS.BonusOverpowerDamageMultiplier);
             BonusCritChance = 0.20f * DPSWarrChar.Talents.TasteForBlood;
             BonusCritDamage = 1f + DPSWarrChar.Talents.Impale * 0.1f;
@@ -136,7 +137,8 @@ namespace Rawr.DPSWarr.Skills
             Initialize();
         }
 
-        public const float DamageMultiplier = 1.37f;
+        public const float DamageMultiplier = 1.25f;
+        public const float DamageMultiplierPTR = 1.40f;
 
         public float GetActivates(float attacksThatDodgeOverDur, float sooActs)
         {
@@ -198,7 +200,7 @@ namespace Rawr.DPSWarr.Skills
             CD = 6f;// 5f; // In Seconds
             RageCost = 5f;
             StanceOkArms = true;
-            DamageBase = DPSWarrChar.CombatFactors.NormalizedMHWeaponDmg * DamageMultiplier;
+            DamageBase = DPSWarrChar.CombatFactors.NormalizedMHWeaponDmg * (DPSWarrChar.CalcOpts.PtrMode ? DamageMultiplierPTR : DamageMultiplier);
             DamageBonus = (1f + DPSWarrChar.StatS.BonusOverpowerDamageMultiplier);
             BonusCritChance = 0.20f * DPSWarrChar.Talents.TasteForBlood;
             BonusCritDamage = 1f + DPSWarrChar.Talents.Impale * 0.1f;
@@ -207,7 +209,8 @@ namespace Rawr.DPSWarr.Skills
             Initialize();
         }
 
-        public const float DamageMultiplier = 1.37f;
+        public const float DamageMultiplier = 1.25f;
+        public const float DamageMultiplierPTR = 1.40f;
 
         protected override float ActivatesOverride
         {

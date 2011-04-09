@@ -1724,6 +1724,7 @@ namespace Rawr
                 Name = "Potion of Wild Magic",
                 Group = "Potion",
                 Stats = new Stats(),
+                SpellId = 53909,
                 Improvements = { new Buff { Name = "Potion of Wild Magic (Double Pot Trick)", Stats = new Stats(), ConflictingBuffs = { "Double Pot Tricks" }, } }
             });
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { CritRating = 200f, SpellPower = 200f }, 15f, float.PositiveInfinity));
@@ -1742,6 +1743,7 @@ namespace Rawr
                 Name = "Insane Strength Potion",
                 Group = "Potion",
                 Stats = new Stats(),
+                SpellId = 28494,
                 Improvements = { new Buff { Name = "Insane Strength Potion (Double Pot Trick)", Stats = new Stats(), ConflictingBuffs = { "Double Pot Tricks" }, } }
             });
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 120f, DodgeRating = -75f }, 15f, float.PositiveInfinity));
@@ -5044,13 +5046,13 @@ namespace Rawr
                 Name = "Earthen Warplate (T11) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = new Stats(), // This uses a proc
+                //Stats = new Stats(), // This uses a proc
                 SpellId = 90295,
                 SetName = "Earthen Warplate",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
             });
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.OPorRBAttack, new Stats() { BonusAttackPowerMultiplier = 0.01f, }, 30, 0, 1f, 3));
+            //buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.OPorRBAttack, new Stats() { BonusAttackPowerMultiplier = 0.01f, }, 30, 0, 1f, 3));
             #endregion
             #region Battleplate (Protection)
             defaultBuffs.Add(new Buff()

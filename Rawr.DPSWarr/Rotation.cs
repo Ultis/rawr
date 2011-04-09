@@ -83,7 +83,7 @@ namespace Rawr.DPSWarr {
         public float TimesFeared = 0f;
         public float TimesRooted = 0f;
         public float TimesMoved = 0f;
-        //public float TimesSilenced = 0f;
+        public float TimesSilenced = 0f;
         public float TimesDisarmed = 0f;
         
         public Skills.DeepWounds DW;
@@ -777,10 +777,9 @@ namespace Rawr.DPSWarr {
             #endregion
 
             #region Variable Declaration
-            float[] percTimeIn_ = { 0f, 0f, 0f, 0f, /*0f,*/ 0f, };
-            float[] timelostwhile_ = { 0f, 0f, 0f, 0f, /*0f,*/ 0f, };
-            //float timelostwhilefeared = 0f, timelostwhilerooted = 0f, timelostwhilestunned = 0f, timelostwhilemoving = 0f, /*timelostwhilesilenced = 0f,*/ timelostwhiledisarmed = 0f;
-            TimesFeared = TimesRooted = TimesStunned = TimesMoved /*= TimesSilenced*/ = TimesDisarmed = 0f;
+            float[] percTimeIn_ = { 0f, 0f, 0f, 0f, 0f, 0f, };
+            float[] timelostwhile_ = { 0f, 0f, 0f, 0f, 0f, 0f, };
+            TimesFeared = TimesRooted = TimesStunned = TimesMoved = TimesSilenced = TimesDisarmed = 0f;
             float baseDur = 0f, acts = 0f, maxTimeRegain = 0f, chanceYouAreAffected = 1f, timelostwhileaffected = 0f;
             float MovementSpeed = 7f * (1f + DPSWarrChar.StatS.MovementSpeed); // 7 yards per sec * 1.08 (if have bonus) = 7.56
             #endregion
@@ -1200,7 +1199,7 @@ namespace Rawr.DPSWarr {
             percTimeIn_[(int)ImpedanceTypes.Root] = timelostwhile_[(int)ImpedanceTypes.Root] / FightDuration;
             percTimeIn_[(int)ImpedanceTypes.Stun] = timelostwhile_[(int)ImpedanceTypes.Stun] / FightDuration;
             percTimeIn_[(int)ImpedanceTypes.Move] = timelostwhile_[(int)ImpedanceTypes.Move] / FightDuration;
-            //percTimeIn_[(int)ImpedanceTypes.Silence] = timelostwhile_[(int)ImpedanceTypes.Silence] / FightDuration;
+            percTimeIn_[(int)ImpedanceTypes.Silence] = timelostwhile_[(int)ImpedanceTypes.Silence] / FightDuration;
             percTimeIn_[(int)ImpedanceTypes.Disarm] = timelostwhile_[(int)ImpedanceTypes.Disarm] / FightDuration;
             
             (GetWrapper<SecondWind>().Ability as SecondWind).NumStunsOverDur = TimesRooted + TimesStunned;
