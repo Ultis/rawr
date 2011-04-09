@@ -12,229 +12,161 @@ namespace Rawr.HealPriest
         #endregion
 
         #region Gemming Templates
+        protected string[] gemmingGroups = { "Common", "Rare", "Epic", "Jeweller" };
+        protected string gemmingEngineer = "Engineering";
+        protected string gemmingClass = "HealPriest";
+
+        protected int GetRightGem(int[] gemList, int index)
+        {
+            if (gemList[index] == -1)
+            {
+                switch (index)
+                {       // Do some twistarounds incase a special type of gem is missing.
+                    case 0: return gemList[1];      // Common
+                    case 1: return gemList[0];      // Rare
+                    case 2: break;                  // Epic NYI
+                    case 3: return gemList[1];      // JC
+                    default: return -1;
+                }
+            }
+            return gemList[index];
+        }
+        protected List<GemmingTemplate> MakeGemmingTemplatesFor(int[] red, int[] yellow, int[] blue, int[] prismatic, int[] meta, int enabler)
+        {
+            List<GemmingTemplate> gtRes = new List<GemmingTemplate>();
+
+            for (int x = 0; x < gemmingGroups.Length; x++)
+            {
+                GemmingTemplate gt = new GemmingTemplate();
+                gt.Model = gemmingClass;
+                gt.Group = gemmingGroups[x];
+                
+                gt.RedId = GetRightGem(red, x);
+                gt.YellowId = GetRightGem(yellow, x);
+                gt.BlueId = GetRightGem(blue, x);
+                gt.PrismaticId = prismatic[x];          // Always use the suggested gem in prismatic, as you would use JC gems in proper sockets
+                gt.MetaId = meta[0];              
+                gt.Enabled = (enabler == x);
+
+                if (gt.RedId > 0 && gt.YellowId > 0 && gt.BlueId > 0 && gt.PrismaticId > 0 && gt.MetaId > 0)
+                    gtRes.Add(gt);
+            }
+
+            return gtRes;
+        }
+
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
             get
             {
                 // Interesting Gem Choices for a Holy & Discipline Priest
+                // Common, Rare, Epic, Jeweller, Engineer
+                #region gems
                 // Red
-                int[] runed = { 39911, 39998, 40113, 42144 }; // +spp
-
-                // Orange
-                int[] durable = { 39958, 40050, 40154 }; // +spp/+resilience
-                int[] luminous = { 39946, 40047, 40151 }; // +spp/+int
-                int[] potent = { 39956, 40048, 40152 }; // +spp/+crit
-                int[] reckless = { 39959, 40051, 40155 }; // +spp/+haste
-                //int[] veiled = { 39957, 40049, 40153 }; // +spp/+hit
+                int[] brilliant = { 52084, 52207, -1, 52257, -1 }; // +int
 
                 // Yellow
-                int[] brilliant = { 39912, 40012, 40123, 42148 }; // +int
-                int[] mystic = { 39917, 40016, 40127, 42158 }; // +resilience
-                int[] quick = { 39918, 40017, 40128, 42150 }; // +haste
-                // int[] rigid = { 39915, 40014, 40125, 42156 }; // +hit
-                int[] smooth = { 39914, 40013, 40124, 42149 }; // +crit
+                int[] fractured = { 52094, 52219, -1, 52269, 59480 }; // +mastery
+                int[] mystic = { 52092, 52226, -1, 52267, 68660 }; // +resilience
+                int[] quick = { 52093, 52232, -1, 52268, 59479 }; // +haste
+                int[] smooth = { 52091, 52241, -1, 52266, 59478 }; // +crit
+
+                // Orange
+                int[] artful = { 52117, 52205, -1, -1, -1 }; // +int/+mastery
+                int[] potent = { 52110, 52239, -1, -1, -1 }; // +int/+crit
+                int[] reckless = { 52113, 52208, -1, -1, -1 }; // +int/+haste
+                //int[] veiled = { 52104, 52217, -1, -1, -1 }; // +int/+hit
+                int[] willfull = { -1, 68356, -1, -1, -1 }; // +int/+resilience
+
 
                 // Green
-                int[] dazzling = { 39984, 40094, 40175 }; // +int/+mp5
-                int[] energized = { 39989, 40105, 40179 }; // +haste/+mp5
-                int[] forceful = { 39978, 40091, 40169 }; // +haste/+sta
-                int[] intricate = { 39983, 40104, 40174 }; // +haste/+spi
-                int[] jagged = { 39974, 40086, 40165 }; // +crit/+stamina
-                // int[] lambent = { 39986, 40100, 40177 }; // +hit/+mp5
-                int[] misty = { 39980, 40095, 40171 }; // +crit/+spi
-                int[] opaque = { 39988, 40103, 40178 }; // +resilience/+mp5
-                int[] seers = { 39979, 40092, 40170 }; // +int/+spi 
-                // int[] shining = { 39981, 40099, 40172 }; // +hit/+spi
-                int[] steady = { 39977, 40090, 40168 }; // +resilience/+stamina
-                int[] sundered = { 39985, 40096, 40176 }; // +crit/+mp5
-                int[] timeless = { 39968, 40085, 40164 }; // +int/+stamina
-                int[] turbid = { 39982, 40102, 40173 }; // +resilience/+spi
-                // int[] vivid = { 39975, 40088, 40166 }; // +hit/+stamina
+                int[] forceful = { 52124, 52218, -1, -1, -1 }; // +haste/+sta
+                int[] jagged = { -1, 52223, -1, -1, -1 }; // +crit/+stamina
+                int[] lightning = { -1, 52225, -1, -1, -1 }; // +haste/+hit
+                //int[] piercing = { 52122, 52228, -1, -1, -1 }; // +crit/+hit
+                int[] puissant = { 52126, 52231, -1, -1, -1 }; // +mastery/+stamina
+                //int[] senseis = { 52128, 52237, -1, -1, -1 }; // +mastery/+hit
+                int[] steady = { 52123, 52245, -1, -1, -1 }; // +resilience/+stamina
+                int[] vidid = { -1, 68741, -1, -1, -1 }; // +resilience/+spell pen
+                int[] zen = { 52127, 52250, -1, -1, -1 }; // +mastery/+spirit
 
                 // Blue
-                int[] lustrous = { 39927, 40010, 40121, 42146 }; // +mp5
-                int[] solid = { 39919, 40008, 40119, 36767 }; // +stamina
-                int[] sparkling = { 39920, 40009, 40120, 42145 }; // +spirit
+                // int[] rigid = { 52089, 52235, -1, 52264, 59493 }; // +hit
+                int[] solid = { 52086, 52242, -1, 52261, -1 }; // +stamina
+                int[] sparkling = { 52087, 52244, -1, 52262, 59496 }; // +spirit
+                int[] stormy = { 52088, 52246, -1, 52263, -1 }; // +spell pen
 
                 // Purple
-                int[] glowing = { 39936, 40025, 40132 }; // +spp/+stamina
-                int[] purified = { 39941, 40026, 40133 }; // +spp/+spirit
-                int[] royal = { 39943, 40027, 40134 }; // +spp/+mp5
+                int[] purified = { 52100, 52236, -1, -1, -1 }; // +int/+spirit
+                int[] timeless = { 52098, 52236, -1, -1, -1 }; // +int/+stamina
+                //int[] veiled = { 52104, 52217, -1, -1, -1 }; // +int/hit
 
                 // Meta
-                int[] beaming = { 41389 }; // +crit rating/+2% mana
-                int[] ember = { 41333 }; // +spp/+2% int
-                int[] insightful = { 41401 }; // +int/manarestore
-                int[] revitalizing = { 41376 }; // +mp5/+3% heal effect
-                int[] powerful = { 41397 }; // +stamina/-10% stun duration
- 
-                return new List<GemmingTemplate>() {
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Uncommon", // Max Mana
-                        RedId = luminous[0], YellowId = brilliant[0], BlueId = seers[0], PrismaticId = brilliant[0], MetaId = insightful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Uncommon", // Max Mana Regen
-                        RedId = purified[0], YellowId = seers[0], BlueId = sparkling[0], PrismaticId = sparkling[0], MetaId = insightful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Uncommon", // Max SPP 
-                        RedId = runed[0], YellowId = luminous[0], BlueId = purified[0], PrismaticId = runed[0], MetaId = insightful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Uncommon", // Max SPP w/ember
-                        RedId = runed[0], YellowId = luminous[0], BlueId = purified[0], PrismaticId = runed[0], MetaId = ember[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Uncommon", // Max SPP w/revitalizing
-                        RedId = runed[0], YellowId = luminous[0], BlueId = purified[0], PrismaticId = runed[0], MetaId = revitalizing[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Uncommon", // Max Haste
-                        RedId = runed[0], YellowId = reckless[0], BlueId = intricate[0], PrismaticId = runed[0], MetaId = ember[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Uncommon", // Max Crit
-                        RedId = runed[0], YellowId = potent[0], BlueId = misty[0], PrismaticId = runed[0], MetaId = beaming[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Uncommon", // Max Blast
-                        RedId = runed[0], YellowId = runed[0], BlueId = runed[0], PrismaticId = runed[0], MetaId = insightful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Uncommon", // Max Blast w/ember
-                        RedId = runed[0], YellowId = runed[0], BlueId = runed[0], PrismaticId = runed[0], MetaId = ember[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Uncommon", // PvP - Stamina
-                        RedId = glowing[0], YellowId = steady[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = powerful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Uncommon", // PvP - Resilience
-                        RedId = durable[0], YellowId = mystic[0], BlueId = steady[0], PrismaticId = mystic[0], MetaId = powerful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Uncommon", // Max Mana w/MP5
-                        RedId = luminous[0], YellowId = brilliant[0], BlueId = dazzling[0], PrismaticId = brilliant[0], MetaId = insightful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Uncommon", // Max Mana Regen
-                        RedId = royal[0], YellowId = dazzling[0], BlueId = lustrous[0], PrismaticId = lustrous[0], MetaId = insightful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Uncommon", // Max SPP
-                        RedId = runed[0], YellowId = luminous[0], BlueId = royal[0], PrismaticId = runed[0], MetaId = ember[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Uncommon", // Max SPP w/revitalizing
-                        RedId = runed[0], YellowId = luminous[0], BlueId = royal[0], PrismaticId = runed[0], MetaId = revitalizing[0] },
+                int[] ember = { 52296 }; // +int/+2% int
+                int[] fleet = { 52289 }; // +mastery/run speed
+                int[] revitalizing = { 52297 }; // +mp5/+3% heal effect
+                #endregion
+                // Red, Yellow, Blue, Prismatic, Meta
+                List<GemmingTemplate> gtList = new List<GemmingTemplate>();
 
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Rare", // Max Mana
-                        RedId = luminous[1], YellowId = brilliant[1], BlueId = seers[1], PrismaticId = brilliant[1], MetaId = insightful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Rare", // Max Mana Regen
-                        RedId = purified[1], YellowId = seers[1], BlueId = sparkling[1], PrismaticId = sparkling[1], MetaId = insightful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Rare", // Max SPP
-                        RedId = runed[1], YellowId = luminous[1], BlueId = purified[1], PrismaticId = runed[1], MetaId = insightful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Rare", // Max SPP w/ember
-                        RedId = runed[1], YellowId = luminous[1], BlueId = purified[1], PrismaticId = runed[1], MetaId = ember[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Rare", // Max SPP w/revitalizing
-                        RedId = runed[1], YellowId = luminous[1], BlueId = purified[1], PrismaticId = runed[1], MetaId = revitalizing[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Rare", // Max Haste
-                        RedId = runed[1], YellowId = reckless[1], BlueId = intricate[1], PrismaticId = runed[1], MetaId = ember[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Rare", // Max Crit
-                        RedId = runed[1], YellowId = potent[1], BlueId = misty[1], PrismaticId = runed[1], MetaId = beaming[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Rare", // Max Blast
-                        RedId = runed[1], YellowId = runed[1], BlueId = runed[1], PrismaticId = runed[1], MetaId = insightful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Rare", // Max Blast w/ember
-                        RedId = runed[1], YellowId = runed[1], BlueId = runed[1], PrismaticId = runed[1], MetaId = ember[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Rare", // PvP - Stamina
-                        RedId = glowing[1], YellowId = steady[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = powerful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Rare", // PvP - Resilience
-                        RedId = durable[1], YellowId = mystic[1], BlueId = steady[1], PrismaticId = mystic[1], MetaId = powerful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Rare", // Max Mana w/MP5
-                        RedId = luminous[1], YellowId = brilliant[1], BlueId = dazzling[1], PrismaticId = brilliant[1], MetaId = insightful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Rare", // Max Mana Regen
-                        RedId = royal[1], YellowId = dazzling[1], BlueId = lustrous[1], PrismaticId = lustrous[1], MetaId = insightful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Rare", // Max SPP
-                        RedId = runed[1], YellowId = luminous[1], BlueId = royal[1], PrismaticId = runed[1], MetaId = ember[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Rare", // Max SPP w/revitalizing
-                        RedId = runed[1], YellowId = luminous[1], BlueId = royal[1], PrismaticId = runed[1], MetaId = revitalizing[0] },
+                // Pure Intellect
+                gtList.AddRange(MakeGemmingTemplatesFor(brilliant, brilliant, brilliant, brilliant, ember, 1));
+                // Intellect > Haste and Spirit
+                gtList.AddRange(MakeGemmingTemplatesFor(brilliant, reckless, purified, brilliant, ember, 1));
+                // Intellect > Mastery and Spirit
+                gtList.AddRange(MakeGemmingTemplatesFor(brilliant, artful, zen, brilliant, ember, 1));
+                // Haste > Intellect and Spirit
+                gtList.AddRange(MakeGemmingTemplatesFor(reckless, quick, purified, quick, ember, -1));
+                // Mastery > Intellect and Spirit
+                gtList.AddRange(MakeGemmingTemplatesFor(artful, fractured, zen, fractured, ember, -1));
 
 
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Epic", Enabled = true, // Max Mana
-                        RedId = luminous[2], YellowId = brilliant[2], BlueId = seers[2], PrismaticId = brilliant[2], MetaId = insightful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Epic", // Max Mana Regen
-                        RedId = purified[2], YellowId = seers[2], BlueId = sparkling[2], PrismaticId = sparkling[2], MetaId = insightful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Epic", Enabled = true, // Max SPP
-                        RedId = runed[2], YellowId = luminous[2], BlueId = purified[2], PrismaticId = runed[2], MetaId = insightful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Epic", Enabled = true, // Max SPP w/ember
-                        RedId = runed[2], YellowId = luminous[2], BlueId = purified[2], PrismaticId = runed[2], MetaId = ember[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Epic", Enabled = true, // Max SPP w/revitalizing
-                        RedId = runed[2], YellowId = luminous[2], BlueId = purified[2], PrismaticId = runed[2], MetaId = revitalizing[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Epic", // Max Haste
-                        RedId = runed[2], YellowId = reckless[2], BlueId = intricate[2], PrismaticId = runed[2], MetaId = ember[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Epic", // Max Crit
-                        RedId = runed[2], YellowId = potent[2], BlueId = misty[2], PrismaticId = runed[2], MetaId = beaming[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Epic", Enabled = true, // Max Blast
-                        RedId = runed[2], YellowId = runed[2], BlueId = runed[2], PrismaticId = runed[2], MetaId = insightful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Epic", // Max Blast w/ember
-                        RedId = runed[2], YellowId = runed[2], BlueId = runed[2], PrismaticId = runed[2], MetaId = ember[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Epic", // PvP - Stamina
-                        RedId = glowing[2], YellowId = steady[2], BlueId = solid[2], PrismaticId = solid[2], MetaId = powerful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Epic", // PvP - Resilience
-                        RedId = durable[2], YellowId = mystic[2], BlueId = steady[2], PrismaticId = mystic[2], MetaId = powerful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Epic", // Max Mana w/MP5
-                        RedId = luminous[2], YellowId = brilliant[2], BlueId = dazzling[2], PrismaticId = brilliant[2], MetaId = insightful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Epic", // Max Mana Regen
-                        RedId = royal[2], YellowId = dazzling[2], BlueId = lustrous[2], PrismaticId = lustrous[2], MetaId = insightful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Epic", // Max SPP
-                        RedId = runed[2], YellowId = luminous[2], BlueId = royal[2], PrismaticId = runed[2], MetaId = ember[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Epic", // Max SPP w/revitalizing
-                        RedId = runed[2], YellowId = luminous[2], BlueId = royal[2], PrismaticId = runed[2], MetaId = revitalizing[0] },
+                gtList.Add(new GemmingTemplate()
+                {
+                    Model = gemmingClass,
+                    Group = gemmingEngineer,
+                    RedId = -1,
+                    YellowId = -1,
+                    BlueId = -1,
+                    CogwheelId = fractured[4],
+                    Cogwheel2Id = sparkling[4],
+                    MetaId = ember[0],
+                    Enabled = false,
+                });
+                gtList.Add(new GemmingTemplate()
+                {
+                    Model = gemmingClass,
+                    Group = gemmingEngineer,
+                    RedId = -1,
+                    YellowId = -1,
+                    BlueId = -1,
+                    CogwheelId = fractured[4],
+                    Cogwheel2Id = quick[4],
+                    MetaId = ember[0],
+                    Enabled = false,
+                });
+                gtList.Add(new GemmingTemplate()
+                {
+                    Model = gemmingClass,
+                    Group = gemmingEngineer,
+                    RedId = -1,
+                    YellowId = -1,
+                    BlueId = -1,
+                    CogwheelId = sparkling[4],
+                    Cogwheel2Id = quick[4],
+                    MetaId = ember[0],
+                    Enabled = false,
+                });
 
 
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Jeweler Rare", // Max Mana
-                        RedId = luminous[1], YellowId = brilliant[3], BlueId = seers[1], PrismaticId = brilliant[1], MetaId = insightful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Jeweler Rare", // Max Mana Regen
-                        RedId = purified[1], YellowId = seers[1], BlueId = sparkling[3], PrismaticId = sparkling[1], MetaId = insightful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Jeweler Rare", // Max SPP
-                        RedId = runed[3], YellowId = luminous[1], BlueId = purified[1], PrismaticId = runed[1], MetaId = insightful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Jeweler Rare", // Max SPP w/ember
-                        RedId = runed[3], YellowId = luminous[1], BlueId = purified[1], PrismaticId = runed[1], MetaId = ember[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Jeweler Rare", // Max SPP w/revitalizing
-                        RedId = runed[3], YellowId = luminous[1], BlueId = purified[1], PrismaticId = runed[1], MetaId = revitalizing[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Jeweler Rare", // Max Haste
-                        RedId = runed[3], YellowId = reckless[1], BlueId = intricate[1], PrismaticId = runed[1], MetaId = ember[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Jeweler Rare", // Max Crit
-                        RedId = runed[3], YellowId = potent[1], BlueId = misty[1], PrismaticId = runed[1], MetaId = beaming[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Jeweler Rare", // Max Blast
-                        RedId = runed[3], YellowId = runed[3], BlueId = runed[3], PrismaticId = runed[3], MetaId = insightful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Jeweler Rare", // Max Blast w/ember
-                        RedId = runed[3], YellowId = runed[3], BlueId = runed[3], PrismaticId = runed[3], MetaId = ember[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Jeweler Rare", // PvP - Stamina
-                        RedId = glowing[1], YellowId = steady[1], BlueId = solid[3], PrismaticId = solid[1], MetaId = powerful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Jeweler Rare", // PvP - Resilience
-                        RedId = durable[1], YellowId = mystic[3], BlueId = steady[1], PrismaticId = mystic[1], MetaId = powerful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Jeweler Rare", // Max Mana w/MP5
-                        RedId = luminous[1], YellowId = brilliant[3], BlueId = dazzling[1], PrismaticId = brilliant[1], MetaId = insightful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Jeweler Rare", // Max Mana Regen
-                        RedId = royal[1], YellowId = dazzling[1], BlueId = lustrous[3], PrismaticId = lustrous[1], MetaId = insightful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Jeweler Rare", // Max SPP
-                        RedId = runed[3], YellowId = luminous[1], BlueId = royal[1], PrismaticId = runed[1], MetaId = ember[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Jeweler Rare", // Max SPP w/revitalizing
-                        RedId = runed[3], YellowId = luminous[1], BlueId = royal[1], PrismaticId = runed[1], MetaId = revitalizing[0] },
-
-
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Jeweler Epic", // Max Mana
-                        RedId = luminous[2], YellowId = brilliant[3], BlueId = seers[2], PrismaticId = brilliant[2], MetaId = insightful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Jeweler Epic", // Max Mana Regen
-                        RedId = purified[2], YellowId = seers[2], BlueId = sparkling[3], PrismaticId = sparkling[2], MetaId = insightful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Jeweler Epic", // Max SPP
-                        RedId = runed[3], YellowId = luminous[2], BlueId = purified[2], PrismaticId = runed[2], MetaId = insightful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Jeweler Epic", // Max SPP w/ember
-                        RedId = runed[3], YellowId = luminous[2], BlueId = purified[2], PrismaticId = runed[2], MetaId = ember[0] }, 
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Jeweler Epic", // Max SPP w/revitalizing
-                        RedId = runed[3], YellowId = luminous[2], BlueId = purified[2], PrismaticId = runed[2], MetaId = revitalizing[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Jeweler Epic", // Max Haste
-                        RedId = runed[3], YellowId = reckless[2], BlueId = intricate[2], PrismaticId = runed[2], MetaId = ember[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Jeweler Epic", // Max Crit
-                        RedId = runed[3], YellowId = potent[2], BlueId = misty[2], PrismaticId = runed[2], MetaId = beaming[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Jeweler Epic", // Max Blast
-                        RedId = runed[3], YellowId = runed[3], BlueId = runed[3], PrismaticId = runed[3], MetaId = insightful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Jeweler Epic", // Max Blast w/ember
-                        RedId = runed[3], YellowId = runed[3], BlueId = runed[3], PrismaticId = runed[3], MetaId = ember[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Jeweler Epic", // PvP - Stamina
-                        RedId = glowing[2], YellowId = steady[2], BlueId = solid[3], PrismaticId = solid[2], MetaId = powerful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Jeweler Epic", // PvP - Resilience
-                        RedId = durable[2], YellowId = mystic[3], BlueId = steady[2], PrismaticId = mystic[2], MetaId = powerful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Jeweler Epic", // Max Mana w/MP5
-                        RedId = luminous[2], YellowId = brilliant[3], BlueId = dazzling[2], PrismaticId = brilliant[2], MetaId = insightful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Jeweler Epic", // Max Mana Regen
-                        RedId = royal[2], YellowId = dazzling[2], BlueId = lustrous[3], PrismaticId = lustrous[2], MetaId = insightful[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Jeweler Epic", // Max SPP
-                        RedId = runed[3], YellowId = luminous[2], BlueId = royal[2], PrismaticId = runed[2], MetaId = ember[0] },
-                    new GemmingTemplate() { Model = "HealPriest", Group = "Jeweler Epic", // Max SPP w/revitalizing
-                        RedId = runed[3], YellowId = luminous[2], BlueId = royal[2], PrismaticId = runed[2], MetaId = revitalizing[0] },
-               
-                };
+                return gtList;
             }
         }
 
         public override void SetDefaults(Character character)
         {
-            /*
             character.ActiveBuffsAdd("Inner Fire");
+            /*
             character.ActiveBuffsAdd("Improved Moonkin Form");
             character.ActiveBuffsAdd("Tree of Life Aura");
             character.ActiveBuffsAdd("Arcane Intellect");
@@ -350,13 +282,14 @@ namespace Rawr.HealPriest
                     "Mana Regen",
                     "Combat Regen",
                     "Haste Rating",
+                    "Mastery Rating",
                     "Haste %",
                     "Crit Rating",
-                    "Spell Crit %",
-                    "PW:Shield",
-                    "GHeal Avg",
-                    "FHeal Avg",
-                    "CoH Avg",
+                    //"Spell Crit %",
+                    //"PW:Shield",
+                    //"GHeal Avg",
+                    //"FHeal Avg",
+                    //"CoH Avg",
                     "Armor",
                     "Arcane Resistance",
                     "Fire Resistance",
@@ -458,7 +391,8 @@ namespace Rawr.HealPriest
                 Resilience = stats.Resilience,
                 CritRating = stats.CritRating,
                 HasteRating = stats.HasteRating,
-                
+                MasteryRating = stats.MasteryRating,
+
                 BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
                 BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
                 BonusManaMultiplier = stats.BonusManaMultiplier,
@@ -525,7 +459,7 @@ namespace Rawr.HealPriest
             bool Yes = (
                 stats.Intellect + stats.Spirit + stats.Mana + stats.Mp5 + stats.SpellPower
                 + stats.SpellHaste + stats.SpellCrit
-                + stats.HasteRating + stats.CritRating
+                + stats.HasteRating + stats.CritRating + stats.MasteryRating
                 + stats.BonusIntellectMultiplier + stats.BonusSpiritMultiplier + stats.BonusManaMultiplier + stats.BonusCritHealMultiplier
                 + stats.HealingReceivedMultiplier + stats.BonusHealingDoneMultiplier + stats.BonusManaPotionEffectMultiplier
                 + stats.ManaRestoreFromMaxManaPerSecond + stats.PriestInnerFire
@@ -882,7 +816,7 @@ namespace Rawr.HealPriest
         public static float GetInnerFireSpellPowerBonus(Character character)
         {
             float InnerFireSpellPowerBonus = 532;
-            return InnerFireSpellPowerBonus; // *(1f + character.PriestTalents.ImprovedInnerFire * 0.15f);
+            return InnerFireSpellPowerBonus;
         }
 
         public static float GetInnerFireArmorBonus(Character character)
@@ -916,8 +850,8 @@ namespace Rawr.HealPriest
             else
                 solver = new Solver(stats, character);
             solver.Calculate(calc);*/
-            calc.HPSBurstPoints = stats.SpellPower;
-            calc.HPSSustainPoints = stats.SpellPower;
+            calc.HPSBurstPoints = stats.SpellPower + stats.Intellect + stats.MasteryRating * 0.6f + stats.HasteRating * 0.5f + stats.CritRating * 0.3f;
+            calc.HPSSustainPoints = stats.SpellPower + stats.Intellect + stats.Spirit * 0.6f;
             calc.OverallPoints = calc.HPSBurstPoints + calc.HPSSustainPoints;
 
             return calc;
@@ -930,7 +864,7 @@ namespace Rawr.HealPriest
             int ctr = 0;
             foreach (int i in pt.Data)
             {
-                if (i > 0) specs[spec] += i;
+                specs[spec] += i;
                 ctr++;
                 if (ctr == 21)  // Improved Renew
                     spec = 1;
@@ -958,7 +892,6 @@ namespace Rawr.HealPriest
             Stats statsRace = BaseStats.GetBaseStats(character);
             statsRace.BonusIntellectMultiplier = 0.05f;     // Cloth bonus
             Stats statsBaseGear = GetItemStats(character, additionalItem);
-            //Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character, calcOpts);
 
             PriestSpec ps = GetSpec(character.PriestTalents);
