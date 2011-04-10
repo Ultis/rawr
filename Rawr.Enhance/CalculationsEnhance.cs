@@ -696,15 +696,6 @@ namespace Rawr.Enhance
             CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance ?? new CalculationOptionsEnhance();
             ShamanTalents talents = character.ShamanTalents;
 
-            bool MailSpecialization = character.Head != null && character.Head.Type == ItemType.Mail &&
-                                character.Shoulders != null && character.Shoulders.Type == ItemType.Mail &&
-                                character.Chest != null && character.Chest.Type == ItemType.Mail &&
-                                character.Wrist != null && character.Wrist.Type == ItemType.Mail &&
-                                character.Hands != null && character.Hands.Type == ItemType.Mail &&
-                                character.Waist != null && character.Waist.Type == ItemType.Mail &&
-                                character.Legs != null && character.Legs.Type == ItemType.Mail &&
-                                character.Feet != null && character.Feet.Type == ItemType.Mail;
-
             Stats statsBase = BaseStats.GetBaseStats(character); 
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs, character.SetBonusCount);
@@ -724,7 +715,7 @@ namespace Rawr.Enhance
             Stats statsTotal = GetRelevantStats(statsBase + statsGearEnchantsBuffs);
             statsTotal.BonusIntellectMultiplier = ((1 + statsBase.BonusIntellectMultiplier) * (1 + statsGearEnchantsBuffs.BonusIntellectMultiplier)) - 1;
             statsTotal.BonusSpiritMultiplier = ((1 + statsBase.BonusSpiritMultiplier) * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier)) - 1;
-            statsTotal.BonusAgilityMultiplier = ((1 + statsBase.BonusAgilityMultiplier) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier) + (MailSpecialization ? .05f : 0)) - 1;
+            statsTotal.BonusAgilityMultiplier = ((1 + statsBase.BonusAgilityMultiplier) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier) + (Character.ValidateArmorSpecialization(character, ItemType.Mail) ? 0.05f : 0f)) - 1;
             statsTotal.BonusStrengthMultiplier = ((1 + statsBase.BonusStrengthMultiplier) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier)) - 1;
             statsTotal.BonusStaminaMultiplier = ((1 + statsBase.BonusStaminaMultiplier) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier)) - 1;
             statsTotal.BonusAttackPowerMultiplier = ((1 + statsBase.BonusAttackPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier)) - 1;
