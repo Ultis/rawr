@@ -76295,64 +76295,6 @@
   </Item>
   <Item>
     <ItemLevel>333</ItemLevel>
-    <DisplayId>16701</DisplayId>
-    <DisplaySlot>7</DisplaySlot>
-    <IconPath>inv_pants_06</IconPath>
-    <Stats>
-      <Agility>268</Agility>
-      <Stamina>401</Stamina>
-      <MasteryRating>189</MasteryRating>
-      <CritRating>161</CritRating>
-      <Armor>1946</Armor>
-    </Stats>
-    <Quality>Uncommon</Quality>
-    <Type>Mail</Type>
-    <Faction>Neutral</Faction>
-    <Bind>BoE</Bind>
-    <SocketBonus />
-    <LocationInfo>
-      <ItemLocation xsi:type="CraftedItem">
-        <Skill>Leatherworking</Skill>
-        <Level>425</Level>
-        <Bind>BoE</Bind>
-        <SpellName>Razorshell Leggings</SpellName>
-      </ItemLocation>
-    </LocationInfo>
-    <Name>Razorshell Leggings</Name>
-    <Id>56511</Id>
-    <Slot>Legs</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>333</ItemLevel>
-    <DisplayId>16700</DisplayId>
-    <DisplaySlot>5</DisplaySlot>
-    <IconPath>inv_shirt_04</IconPath>
-    <Stats>
-      <Agility>268</Agility>
-      <Stamina>401</Stamina>
-      <HitRating>203</HitRating>
-      <HasteRating>136</HasteRating>
-      <Armor>2224</Armor>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>Mail</Type>
-    <Faction>Neutral</Faction>
-    <Bind>BoE</Bind>
-    <SocketBonus />
-    <LocationInfo>
-      <ItemLocation xsi:type="CraftedItem">
-        <Skill>Leatherworking</Skill>
-        <Level>425</Level>
-        <Bind>BoE</Bind>
-        <SpellName />
-      </ItemLocation>
-    </LocationInfo>
-    <Name>Razorshell Chest</Name>
-    <Id>56515</Id>
-    <Slot>Chest</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>333</ItemLevel>
     <DisplayId>83971</DisplayId>
     <DisplaySlot>16</DisplaySlot>
     <IconPath>inv_misc_cape_cataclysm_melee_c_01</IconPath>
