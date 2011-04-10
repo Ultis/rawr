@@ -59,7 +59,7 @@ namespace Rawr
         public const float BLOCKVALUE_PER_STR       =  2.00f;
         // These have not been provided Cata values yet, some could be removed as no longer valid
         //public const float LEVEL_85_COMBATRATING_MODIFIER      = 3.2789987789987789987789987789988f;
-        public const float RATING_PER_RESILIENCE = 21.5625f * 100f;
+        public const float RATING_PER_RESILIENCE =      9520.6611570247933884297520661157f;
         public const float RATING_PER_DODGEPARRYREDUC          = 0.0025f; //4 Exp per 1% Dodge/Parry Reduction;
         public const float LEVEL_AVOIDANCE_MULTIPLIER          = 0.20f;
 

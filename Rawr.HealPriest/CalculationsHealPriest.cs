@@ -8,7 +8,6 @@ namespace Rawr.HealPriest
     public class CalculationsHealPriest : CalculationsBase
     {
         #region Variables and Properties
-        protected enum PriestSpec { Spec_Unknown, Spec_Disc, Spec_Holy, Spec_Shadow, Spec_ERROR };
         #endregion
 
         #region Gemming Templates
@@ -332,6 +331,10 @@ namespace Rawr.HealPriest
                 _relevantGlyphs.Add("Glyph of Prayer of Healing");
                 _relevantGlyphs.Add("Glyph of Renew");
                 _relevantGlyphs.Add("Glyph of Fading");
+                _relevantGlyphs.Add("Glyph of Power Word: Barrier");
+                _relevantGlyphs.Add("Glyph of Prayer of Mending");
+                _relevantGlyphs.Add("Glyph of Divine Accuracy");
+                _relevantGlyphs.Add("Glyph of Smite");
 
             }
             return _relevantGlyphs;
@@ -358,6 +361,7 @@ namespace Rawr.HealPriest
         public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot)
         {
             if (slot == ItemSlot.Ranged) return false;
+            if (slot == ItemSlot.OffHand && enchant.Id != 4091) return false;
             return base.EnchantFitsInSlot(enchant, character, slot);
         }
 
@@ -550,27 +554,7 @@ namespace Rawr.HealPriest
 
             return statsBuffs;
         }
-        /*
-        public override void SetDefaults(Character character)
-        {
-            character.ActiveBuffsAdd("Inner Fire");
-            character.ActiveBuffsAdd("Improved Moonkin Form");
-            character.ActiveBuffsAdd("Tree of Life Aura");
-            character.ActiveBuffsAdd("Arcane Intellect");
-            character.ActiveBuffsAdd("Vampiric Touch");
-            character.ActiveBuffsAdd("Mana Spring Totem");
-            character.ActiveBuffsAdd("Restorative Totems");
-            character.ActiveBuffsAdd("Moonkin Form");
-            character.ActiveBuffsAdd("Wrath of Air Totem");
-            character.ActiveBuffsAdd("Totem of Wrath (Spell Power)");
-            character.ActiveBuffsAdd("Divine Spirit");
-            character.ActiveBuffsAdd("Power Word: Fortitude");
-            character.ActiveBuffsAdd("Mark of the Wild");
-            character.ActiveBuffsAdd("Blessing of Kings");
-            character.ActiveBuffsAdd("Shadow Protection");
-            character.ActiveBuffsAdd("Flask of the Frost Wyrm");
-            character.ActiveBuffsAdd("Spell Power Food");
-        }*/
+
         #endregion
 
         #region Custom Charts
@@ -851,34 +835,6 @@ namespace Rawr.HealPriest
             return calc;
         }
 
-        protected PriestSpec GetSpec(PriestTalents pt)
-        {
-            int[] specs = new int[3];
-            int spec = 0;
-            int ctr = 0;
-            foreach (int i in pt.Data)
-            {
-                specs[spec] += i;
-                ctr++;
-                if (ctr == 21)  // Improved Renew
-                    spec = 1;
-                else if (ctr == 42) // Darkness
-                    spec = 2;
-            }
-
-            // Check that most points are spent in holy
-            if (specs[0] > specs[1] && specs[0] > specs[2] && specs[1] <= 10 && specs[2] <= 10)
-                return PriestSpec.Spec_Disc;
-            // Check that most points are spent in disc
-            else if (specs[1] > specs[0] && specs[1] > specs[2] && specs[0] <= 10 && specs[2] <= 10)
-                return PriestSpec.Spec_Holy;
-            // Check that most points are spent in shadow
-            else if (specs[2] > specs[0] && specs[2] > specs[1] && specs[0] <= 10 && specs[1] <= 10)
-                return PriestSpec.Spec_Shadow;
-            //throw new Exception("There seems to be a problem with the talent spec!");
-            return PriestSpec.Spec_Unknown;
-        }
-
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
             
@@ -888,14 +844,14 @@ namespace Rawr.HealPriest
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character, calcOpts);
 
-            PriestSpec ps = GetSpec(character.PriestTalents);
-            if (ps == PriestSpec.Spec_ERROR)
+            ePriestSpec ps = PriestSpec.GetPriestSpec(character.PriestTalents);
+            if (ps == ePriestSpec.Spec_ERROR)
                 throw new Exception("Unpossible Talent Spec!");
 
             Stats statsTalents = new Stats()
             {
-                BonusIntellectMultiplier = (ps == PriestSpec.Spec_Disc) ? 0.15f : 0f,
-                BonusHealingDoneMultiplier = (ps == PriestSpec.Spec_Holy) ? 0.15f : 0f,
+                BonusIntellectMultiplier = (ps == ePriestSpec.Spec_Disc) ? 0.15f : 0f,
+                BonusHealingDoneMultiplier = (ps == ePriestSpec.Spec_Holy) ? 0.15f : 0f,
                 SpellHaste = character.PriestTalents.Darkness * 0.01f,
                 SpellCombatManaRegeneration = 0.5f + character.PriestTalents.HolyConcentration * 0.15f,
             };

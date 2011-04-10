@@ -11,6 +11,38 @@ using System.Windows.Shapes;
 
 namespace Rawr.HealPriest
 {
+    public enum ePriestSpec { Spec_Unknown, Spec_Disc, Spec_Holy, Spec_Shadow, Spec_ERROR };
+    public static class PriestSpec
+    {
+        public static ePriestSpec GetPriestSpec(PriestTalents pt)
+        {
+            int[] specs = new int[3];
+            int spec = 0;
+            int ctr = 0;
+            foreach (int i in pt.Data)
+            {
+                specs[spec] += i;
+                ctr++;
+                if (ctr == 21)  // Improved Renew
+                    spec = 1;
+                else if (ctr == 42) // Darkness
+                    spec = 2;
+            }
+
+            // Check that most points are spent in holy
+            if (specs[0] > specs[1] && specs[0] > specs[2] && specs[1] <= 10 && specs[2] <= 10)
+                return ePriestSpec.Spec_Disc;
+            // Check that most points are spent in disc
+            else if (specs[1] > specs[0] && specs[1] > specs[2] && specs[0] <= 10 && specs[2] <= 10)
+                return ePriestSpec.Spec_Holy;
+            // Check that most points are spent in shadow
+            else if (specs[2] > specs[0] && specs[2] > specs[1] && specs[0] <= 10 && specs[1] <= 10)
+                return ePriestSpec.Spec_Shadow;
+            //throw new Exception("There seems to be a problem with the talent spec!");
+            return ePriestSpec.Spec_Unknown;
+        }
+    }
+
     public class PriestInformation
     {
         #region Constants

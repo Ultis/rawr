@@ -61,11 +61,32 @@ namespace Rawr.HealPriest
             set { subPoints[2] = value; }
         }
 
+        protected Buff GetActiveBuffsByGroup(string group)
+        {
+            for (int x = 0; x < character.ActiveBuffs.Count; x++)
+                if (character.ActiveBuffs[x].Group == group)
+                    return character.ActiveBuffs[x];
+            return null;
+        }
+
+        private string makeActiveBuffTextPercent(Buff activeBuff, float stat)
+        {
+            return String.Format("\r\n{0}% from {1} given by {2}", (stat * 100f).ToString("0"), activeBuff.Name, activeBuff.Source);
+        }
+
+        private string makeActiveBuffText(Buff activeBuff, float stat)
+        {
+            return String.Format("\r\n{0} from {1} given by {2}", stat.ToString("0"), activeBuff.Name, activeBuff.Source);
+        }
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
             Stats baseStats = BaseStats.GetBaseStats(character);
+            Buff activeBuff;
+            string s;
+            ePriestSpec ps = PriestSpec.GetPriestSpec(character.PriestTalents);
+
             #region General
             dictValues.Add("Health", BasicStats.Health.ToString("0"));
             dictValues.Add("Mana", BasicStats.Mana.ToString("0"));
@@ -107,21 +128,78 @@ namespace Rawr.HealPriest
             #endregion
             #region Spell
             dictValues.Add("Spell Power", BasicStats.SpellPower.ToString("0"));
-            dictValues.Add("Haste", String.Format("{0}%*{1}% from {2} Haste Rating\r\n{3}% from Darkness",
+            #region Haste
+            s = String.Empty;
+            if (character.PriestTalents.Darkness > 0)
+                s += String.Format("\r\n{0}% from {1} points in Darkness", character.PriestTalents.Darkness, character.PriestTalents.Darkness);
+            activeBuff = GetActiveBuffsByGroup("Spell Haste");
+            if (activeBuff != null)
+                s += makeActiveBuffTextPercent(activeBuff, activeBuff.Stats.SpellHaste);
+            activeBuff = GetActiveBuffsByGroup("Dark Intent");
+            if (activeBuff != null)
+                s += makeActiveBuffTextPercent(activeBuff, activeBuff.Stats.SpellHaste);
+            dictValues.Add("Haste", String.Format("{0}%*{1}% from {2} Haste Rating{3}",
                 (BasicStats.SpellHaste * 100f).ToString("0.00"),
                 (StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating) * 100f).ToString("0.00"), BasicStats.HasteRating.ToString("0"),
-                character.PriestTalents.Darkness.ToString("0")));
+                s
+                ));
+            #endregion
             dictValues.Add("Hit", (BasicStats.SpellHit * 100f).ToString("0.00"));
             dictValues.Add("Penetration", BasicStats.SpellPenetration.ToString("0"));
+            #region Mana Regen
             float manaRegen = StatConversion.GetSpiritRegenSec(BasicStats.Spirit, BasicStats.Intellect) * 5f;
-            dictValues.Add("Mana Regen", (manaRegen + BasicStats.Mp5).ToString("0"));
-            dictValues.Add("Combat Regen", (manaRegen * BasicStats.SpellCombatManaRegeneration + BasicStats.Mp5).ToString("0"));
-            dictValues.Add("Crit Chance", String.Format("{0}%*{1}% from {2} Crit Rating\r\n{3}% from {4} Intellect\r\n{5}% from Priest base",
+            s = String.Format("\r\n{0} Mana per 5 sec from Base Mana Regeneration", (baseStats.Mana * 0.05f).ToString("0"));
+            activeBuff = GetActiveBuffsByGroup("Mana Regeneration");
+            if (activeBuff != null)
+                s += makeActiveBuffText(activeBuff, activeBuff.Stats.Mp5);
+            dictValues.Add("Mana Regen", String.Format("{0}*{1} from Spirit based regen{2}",
+                (manaRegen + BasicStats.Mp5).ToString("0"),
+                manaRegen.ToString("0"),
+                s
+                ));
+            dictValues.Add("Combat Regen", String.Format("{0}*{1} from Spirit based regen{2}",
+                (manaRegen * BasicStats.SpellCombatManaRegeneration + BasicStats.Mp5).ToString("0"),
+                (manaRegen * BasicStats.SpellCombatManaRegeneration).ToString("0"),
+                s
+                ));
+            #endregion
+            #region Crit
+            s = String.Empty;
+            activeBuff = GetActiveBuffsByGroup("Critical Strike Chance");
+            if (activeBuff != null)
+                s += makeActiveBuffTextPercent(activeBuff, activeBuff.Stats.SpellCrit);
+            activeBuff = GetActiveBuffsByGroup("Focus Magic, Spell Critical Strike Chance");
+            if (activeBuff != null)
+                s += makeActiveBuffTextPercent(activeBuff, activeBuff.Stats.SpellCrit);
+            dictValues.Add("Crit Chance", String.Format("{0}%*{1}% from {2} Crit Rating\r\n{3}% from {4} Intellect\r\n{5}% from Priest base{6}",
                 (BasicStats.SpellCrit * 100f).ToString("0.00"),
                 (StatConversion.GetSpellCritFromRating(BasicStats.CritRating) * 100f).ToString("0.00"), BasicStats.CritRating.ToString("0"),
                 (StatConversion.GetSpellCritFromIntellect(BasicStats.Intellect) * 100f).ToString("0.00"), BasicStats.Intellect.ToString("0"),
-                (baseStats.SpellCrit * 100f).ToString("0.00")));
-            dictValues.Add("Mastery", BasicStats.MasteryRating.ToString("0"));
+                (baseStats.SpellCrit * 100f).ToString("0.00"),
+                s
+                ));
+            #endregion
+            #region Mastery
+            float masteryBonus = 0f;
+            float masteryBase = 8f;
+            s = string.Empty;
+            if (ps == ePriestSpec.Spec_Disc)
+            {
+                masteryBonus = 2.5f;
+                s += String.Format("\r\n\nEach point of mastery increases the potency of Absorbs by an additional {0}%.", masteryBonus.ToString("0.00"));
+            }
+            else if (ps == ePriestSpec.Spec_Holy)
+            {
+                masteryBonus = 1.25f;
+                s += String.Format("\r\n\nEach point of mastery provides an additional {0}% healing over 6 sec.", masteryBonus.ToString("0.00"));
+            }
+            dictValues.Add("Mastery", String.Format("{0}%*{1}% from {2} Mastery Rating\r\n{3}% from {4} Base Mastery{5}",
+                ((StatConversion.GetMasteryFromRating(BasicStats.MasteryRating) + masteryBase) * masteryBonus).ToString("0.00"),
+                (StatConversion.GetMasteryFromRating(BasicStats.MasteryRating) * masteryBonus).ToString("0.00"), BasicStats.MasteryRating.ToString("0"),
+                (masteryBase * masteryBonus).ToString("0.00"), masteryBase.ToString("0"),
+                s
+                ));
+            #endregion
             #endregion
             #region Defense
             dictValues.Add("Armor", String.Format("{0}*{1}% physical damage reduction from same level target",
@@ -134,27 +212,22 @@ namespace Rawr.HealPriest
                 (character.PriestTalents.InnerSanctum * 2f).ToString("0")));
             #endregion
             #region Resistance
-            float thisResist;
-            thisResist = BasicStats.ArcaneResistance + BasicStats.ArcaneResistanceBuff;
-            dictValues.Add("Arcane", String.Format("{0}*{1}% average reduction from Arcane damage",
-                thisResist.ToString("0"),
-                (StatConversion.GetAverageResistance(character.Level, character.Level, thisResist, 0f) * 100f).ToString("0.00")));
-            thisResist = BasicStats.FireResistance + BasicStats.FireResistanceBuff;
-            dictValues.Add("Fire", String.Format("{0}*{1}% average reduction from Fire damage",
-                thisResist.ToString("0"),
-                (StatConversion.GetAverageResistance(character.Level, character.Level, thisResist, 0f) * 100f).ToString("0.00")));
-            thisResist = BasicStats.NatureResistance + BasicStats.NatureResistanceBuff;
-            dictValues.Add("Nature", String.Format("{0}*{1}% average reduction from Nature damage",
-                thisResist.ToString("0"),
-                (StatConversion.GetAverageResistance(character.Level, character.Level, thisResist, 0f) * 100f).ToString("0.00")));
-            thisResist = BasicStats.FrostResistance + BasicStats.FrostResistanceBuff;
-            dictValues.Add("Frost", String.Format("{0}*{1}% average reduction from Frost damage",
-                thisResist.ToString("0"),
-                (StatConversion.GetAverageResistance(character.Level, character.Level, thisResist, 0f) * 100f).ToString("0.00")));
-            thisResist = BasicStats.ShadowResistance + BasicStats.ShadowResistanceBuff;
-            dictValues.Add("Shadow", String.Format("{0}*{1}% average reduction from Shadow damage",
-                thisResist.ToString("0"),
-                (StatConversion.GetAverageResistance(character.Level, character.Level, thisResist, 0f) * 100f).ToString("0.00")));
+            string resistTxt = "{0}*PvP\r\n{1}\r\n\nBoss\r\n{2}";
+            string[] resistList = { "Arcane", "Fire", "Frost", "Nature", "Shadow" };
+            float[] resistances = { BasicStats.ArcaneResistance + BasicStats.ArcaneResistanceBuff,
+                                    BasicStats.FireResistance + BasicStats.FireResistanceBuff,
+                                    BasicStats.FrostResistance + BasicStats.FrostResistanceBuff,
+                                    BasicStats.NatureResistance + BasicStats.NatureResistanceBuff,
+                                    BasicStats.ShadowResistance + BasicStats.ShadowResistanceBuff };
+
+            for (int x = 0; x < resistList.Length; x++)
+            {
+                dictValues.Add(resistList[x], String.Format(resistTxt,
+                    resistances[x].ToString("0"),
+                    StatConversion.GetResistanceTableString(character.Level, character.Level, resistances[x], 0f),
+                    StatConversion.GetResistanceTableString(character.Level + 3, character.Level, resistances[x], 0f)
+                    ));
+            }           
             #endregion
             #region Model
             #endregion
