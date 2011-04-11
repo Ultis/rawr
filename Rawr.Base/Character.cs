@@ -1878,6 +1878,42 @@ namespace Rawr
         #endregion
 
         #region Items in Slots
+        public int GetMaxWornItemLevel {
+            get {
+                int retVal = 0;
+                foreach (CharacterSlot slot in EquippableCharacterSlots) {
+                    if (this[slot] != null && this[slot].Item.ItemLevel > retVal) {
+                        retVal = this[slot].Item.ItemLevel;
+                    }
+                }
+                return retVal;
+            }
+        }
+        public int GetMinWornItemLevel {
+            get {
+                int retVal = 10000;
+                foreach (CharacterSlot slot in EquippableCharacterSlots) {
+                    if (this[slot] != null && this[slot].Item.ItemLevel < retVal) {
+                        retVal = this[slot].Item.ItemLevel;
+                    }
+                }
+                return retVal;
+            }
+        }
+        public int GetAvgWornItemLevel {
+            get {
+                int retVal = 0;
+                int count = 0;
+                foreach (CharacterSlot slot in EquippableCharacterSlots) {
+                    if (this[slot] != null) {
+                        retVal += this[slot].Item.ItemLevel;
+                        count++;
+                    }
+                }
+                return count != 0 ? (int)Math.Round(((double)retVal / (double)count), MidpointRounding.AwayFromZero) : 0;
+            }
+        }
+
         [XmlIgnore]
         public ItemInstance Head { get { return this[CharacterSlot.Head]; } set { this[CharacterSlot.Head] = value; } }
         [XmlIgnore]
