@@ -1882,6 +1882,8 @@ namespace Rawr
             get {
                 int retVal = 0;
                 foreach (CharacterSlot slot in EquippableCharacterSlots) {
+                    if (slot == CharacterSlot.Tabard || slot == CharacterSlot.Shirt
+                        || slot == CharacterSlot.ProjectileBag || slot == CharacterSlot.Projectile) { continue; }
                     if (this[slot] != null && this[slot].Item.ItemLevel > retVal) {
                         retVal = this[slot].Item.ItemLevel;
                     }
@@ -1893,7 +1895,10 @@ namespace Rawr
             get {
                 int retVal = 10000;
                 foreach (CharacterSlot slot in EquippableCharacterSlots) {
-                    if (this[slot] != null && this[slot].Item.ItemLevel < retVal) {
+                    if (slot == CharacterSlot.Tabard || slot == CharacterSlot.Shirt
+                        || slot == CharacterSlot.ProjectileBag || slot == CharacterSlot.Projectile) { continue; }
+                    if (this[slot] != null && this[slot].Item.ItemLevel < retVal)
+                    {
                         retVal = this[slot].Item.ItemLevel;
                     }
                 }
@@ -1905,7 +1910,10 @@ namespace Rawr
                 int retVal = 0;
                 int count = 0;
                 foreach (CharacterSlot slot in EquippableCharacterSlots) {
-                    if (this[slot] != null) {
+                    if (slot == CharacterSlot.Tabard || slot == CharacterSlot.Shirt
+                        || slot == CharacterSlot.ProjectileBag || slot == CharacterSlot.Projectile) { continue; }
+                    if (this[slot] != null)
+                    {
                         retVal += this[slot].Item.ItemLevel;
                         count++;
                     }
