@@ -115,7 +115,7 @@ namespace Rawr.HealPriest
                 iLvlMin = 0;
                 iLvlMax = 0;
             }
-            dictValues.Add("Item Level", String.Format("{0}*Lowest: {1}\r\nHighest: {2}", ((iCnt == 0) ? 0 : iLvl / iCnt).ToString("0"), iLvlMin, iLvlMax));
+            dictValues.Add("Item Level", String.Format("{0}*Lowest: {1}\nHighest: {2}", ((iCnt == 0) ? 0 : iLvl / iCnt).ToString("0"), iLvlMin, iLvlMax));
             dictValues.Add("Speed", String.Format("{0}%*{0}% Run speed",
                 ((1f + BasicStats.MovementSpeed) * 100f).ToString("0")));
             #endregion
@@ -131,7 +131,7 @@ namespace Rawr.HealPriest
             #region Haste
             s = String.Empty;
             if (character.PriestTalents.Darkness > 0)
-                s += String.Format("\r\n{0}% from {1} points in Darkness", character.PriestTalents.Darkness, character.PriestTalents.Darkness);
+                s += String.Format("\n{0}% from {1} points in Darkness", character.PriestTalents.Darkness, character.PriestTalents.Darkness);
             activeBuff = GetActiveBuffsByGroup("Spell Haste");
             if (activeBuff != null)
                 s += makeActiveBuffTextPercent(activeBuff, activeBuff.Stats.SpellHaste);
@@ -148,7 +148,7 @@ namespace Rawr.HealPriest
             dictValues.Add("Penetration", BasicStats.SpellPenetration.ToString("0"));
             #region Mana Regen
             float manaRegen = StatConversion.GetSpiritRegenSec(BasicStats.Spirit, BasicStats.Intellect) * 5f;
-            s = String.Format("\r\n{0} Mana per 5 sec from Base Mana Regeneration", (baseStats.Mana * 0.05f).ToString("0"));
+            s = String.Format("\n{0} Mana per 5 sec from Base Mana Regeneration", (baseStats.Mana * 0.05f).ToString("0"));
             activeBuff = GetActiveBuffsByGroup("Mana Regeneration");
             if (activeBuff != null)
                 s += makeActiveBuffText(activeBuff, activeBuff.Stats.Mp5);
@@ -171,7 +171,7 @@ namespace Rawr.HealPriest
             activeBuff = GetActiveBuffsByGroup("Focus Magic, Spell Critical Strike Chance");
             if (activeBuff != null)
                 s += makeActiveBuffTextPercent(activeBuff, activeBuff.Stats.SpellCrit);
-            dictValues.Add("Crit Chance", String.Format("{0}%*{1}% from {2} Crit Rating\r\n{3}% from {4} Intellect\r\n{5}% from Priest base{6}",
+            dictValues.Add("Crit Chance", String.Format("{0}%*{1}% from {2} Crit Rating\n{3}% from {4} Intellect\n{5}% from Priest base{6}",
                 (BasicStats.SpellCrit * 100f).ToString("0.00"),
                 (StatConversion.GetSpellCritFromRating(BasicStats.CritRating) * 100f).ToString("0.00"), BasicStats.CritRating.ToString("0"),
                 (StatConversion.GetSpellCritFromIntellect(BasicStats.Intellect) * 100f).ToString("0.00"), BasicStats.Intellect.ToString("0"),
@@ -186,14 +186,14 @@ namespace Rawr.HealPriest
             if (ps == ePriestSpec.Spec_Disc)
             {
                 masteryBonus = 2.5f;
-                s += String.Format("\r\n\nEach point of mastery increases the potency of Absorbs by an additional {0}%.", masteryBonus.ToString("0.00"));
+                s += String.Format("\n\nEach point of mastery increases the potency of Absorbs by an additional {0}%.", masteryBonus.ToString("0.00"));
             }
             else if (ps == ePriestSpec.Spec_Holy)
             {
                 masteryBonus = 1.25f;
-                s += String.Format("\r\n\nEach point of mastery provides an additional {0}% healing over 6 sec.", masteryBonus.ToString("0.00"));
+                s += String.Format("\n\nEach point of mastery provides an additional {0}% healing over 6 sec.", masteryBonus.ToString("0.00"));
             }
-            dictValues.Add("Mastery", String.Format("{0}%*{1}% from {2} Mastery Rating\r\n{3}% from {4} Base Mastery{5}",
+            dictValues.Add("Mastery", String.Format("{0}%*{1}% from {2} Mastery Rating\n{3}% from {4} Base Mastery{5}",
                 ((StatConversion.GetMasteryFromRating(BasicStats.MasteryRating) + masteryBase) * masteryBonus).ToString("0.00"),
                 (StatConversion.GetMasteryFromRating(BasicStats.MasteryRating) * masteryBonus).ToString("0.00"), BasicStats.MasteryRating.ToString("0"),
                 (masteryBase * masteryBonus).ToString("0.00"), masteryBase.ToString("0"),
@@ -206,13 +206,13 @@ namespace Rawr.HealPriest
                 BasicStats.Armor.ToString("0"),
                 (StatConversion.GetDamageReductionFromArmor(character.Level, BasicStats.Armor) * 100f).ToString("0.00")));
             dictValues.Add("Dodge", String.Format("{0}%", (BasicStats.Dodge * 100f).ToString("0.00")));
-            dictValues.Add("Resilience", String.Format("{0}*{1}% damage reduction on attacks from other players\r\n{2}% damage reduction from spells",
+            dictValues.Add("Resilience", String.Format("{0}*{1}% damage reduction on attacks from other players\n{2}% damage reduction from spells",
                 BasicStats.Resilience.ToString("0"),
                 (StatConversion.GetDamageReductionFromResilience(BasicStats.Resilience) * 100f).ToString("0.00"),
                 (character.PriestTalents.InnerSanctum * 2f).ToString("0")));
             #endregion
             #region Resistance
-            string resistTxt = "{0}*PvP\r\n{1}\r\n\nBoss\r\n{2}";
+            string resistTxt = "{0}*PvP\n{1}\n\nBoss\n{2}";
             string[] resistList = { "Arcane", "Fire", "Frost", "Nature", "Shadow" };
             float[] resistances = { BasicStats.ArcaneResistance + BasicStats.ArcaneResistanceBuff,
                                     BasicStats.FireResistance + BasicStats.FireResistanceBuff,
@@ -232,7 +232,19 @@ namespace Rawr.HealPriest
             #region Model
             #endregion
             #region Holy Spells
-            #endregion
+            SpellHeal spellHeal = new SpellHeal(character, BasicStats);
+            dictValues.Add("Heal", String.Format("{0}*{1}", spellHeal.HPS().ToString("0"), spellHeal.ToString()));
+            SpellGreaterHeal spellGreaterHeal = new SpellGreaterHeal(character, BasicStats);
+            dictValues.Add("Greater Heal", String.Format("{0}*{1}", spellGreaterHeal.HPS().ToString("0"), spellGreaterHeal.ToString()));
+            SpellFlashHeal spellFlashHeal = new SpellFlashHeal(character, BasicStats);
+            dictValues.Add("Flash Heal", String.Format("{0}*{1}", spellFlashHeal.HPS().ToString("0"), spellFlashHeal.ToString()));
+            SpellBindingHeal spellBindingHeal = new SpellBindingHeal(character, BasicStats);
+            dictValues.Add("Binding Heal", String.Format("{0}*{1}", spellBindingHeal.HPS().ToString("0"), spellBindingHeal.ToString()));
+            SpellPrayerOfHealing spellProH = new SpellPrayerOfHealing(character, BasicStats);
+            dictValues.Add("ProH", String.Format("{0}*{1}", spellProH.HPS().ToString("0"), spellProH.ToString()));
+            SpellResurrection spellResurrection = new SpellResurrection(character, BasicStats);
+            dictValues.Add("Resurrection", String.Format("{0}*{1}", spellResurrection.CastTime.ToString("0.00"), spellResurrection.ToString()));
+            #endregion 
             #region Shadow Spells
             #endregion
             #region OldStuffwhichisancient

@@ -242,16 +242,17 @@ namespace Rawr.HealPriest
                     "Model:Role",
                     "Model:Burst*This is the HPS you are expected to have if you are not limited by Mana.\r\nIn Custom Role, this displays your HPS when you dump all spells in 1 stream.",
                     "Model:Sustained*This is the HPS are expected to have when restricted by Mana.\r\nIf this value is lower than your Burst HPS, you are running out of mana in the simulation.\r\nIn Custom Role, this displays your HPS over the length of the fight, adjusted by the amount of mana available.",
+                    "Holy Spells:Heal",
                     "Holy Spells:Binding Heal",
                     "Holy Spells:Greater Heal",
                     "Holy Spells:Flash Heal",
                     "Holy Spells:Renew",
-                    "Holy Spells:Prayer of Mending",
+                    "Holy Spells:ProM*Prayer of Mending",
                     "Holy Spells:Power Word Shield",
-                    "Holy Spells:PoH",
+                    "Holy Spells:ProH*Prayer of Healing",
                     "Holy Spells:Holy Nova",
                     "Holy Spells:Lightwell",
-                    "Holy Spells:CoH",
+                    "Holy Spells:CoH*Circle of Healing",
                     "Holy Spells:Penance",
                     "Holy Spells:Gift of the Naaru",
                     "Holy Spells:Divine Hymn",
@@ -828,8 +829,18 @@ namespace Rawr.HealPriest
             else
                 solver = new Solver(stats, character);
             solver.Calculate(calc);*/
-            calc.HPSBurstPoints = stats.SpellPower + stats.Intellect + stats.MasteryRating * 0.6f + stats.HasteRating * 0.5f + stats.CritRating * 0.3f;
-            calc.HPSSustainPoints = stats.SpellPower + stats.Intellect + stats.Spirit * 0.6f;
+            SpellPrayerOfHealing proh = new SpellPrayerOfHealing(character, stats);
+            calc.HPSBurstPoints = proh.HPCT();
+
+            float manaRegen = StatConversion.GetSpiritRegenSec(stats.Spirit, stats.Intellect) * stats.SpellCombatManaRegeneration + stats.Mp5;
+            float time = 60f * 8;
+            float useMana = proh.ManaCost / proh.CastTime;
+            float missingMana = useMana - manaRegen;
+            float manaDrain = stats.Mana / missingMana;
+            if (manaDrain > time)
+                calc.HPSSustainPoints = calc.HPSBurstPoints;
+            else
+                calc.HPSSustainPoints = calc.HPSBurstPoints * manaDrain / time +  (time - manaDrain) / time * manaRegen / useMana * calc.HPSBurstPoints;
             calc.OverallPoints = calc.HPSBurstPoints + calc.HPSSustainPoints;
 
             return calc;

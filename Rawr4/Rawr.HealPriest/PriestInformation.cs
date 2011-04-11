@@ -42,7 +42,48 @@ namespace Rawr.HealPriest
             return ePriestSpec.Spec_Unknown;
         }
     }
+    public static class PriestInformation
+    {
+        public static float GetTwinDisciplines(int points)
+        {
+            return points * 0.02f;
+        }
 
+        public static float GetMentalAgility(int points)
+        {
+            if (points == 1)
+                return 0.97f;
+            if (points == 2)
+                return 0.94f;
+            if (points == 3)
+                return 0.90f;
+            return 1f;
+        }
+
+        public static float GetDivineAegis(int points)
+        {
+            return points * 0.1f;
+        }
+
+        public static float GetEmpoweredHealing(int points)
+        {
+            return points * 0.05f;
+        }
+
+        public static float GetDivineFury(int points)
+        {
+            if (points == 1)
+                return 0.15f;
+            if (points == 2)
+                return 0.35f;
+            if (points == 3)
+                return 0.5f;
+            return 0f;
+        }
+
+    }
+
+    /*
     public class PriestInformation
     {
         #region Constants
@@ -499,6 +540,7 @@ namespace Rawr.HealPriest
             GuardianSpirit_Cooldown -= Talents.GlyphofGuardianSpirit ? GLYPH_GUARDIANSPIRIT_COOLDOWN : 0f;
             #endregion
         }
+    
+    }*/
 
-    }
 }
