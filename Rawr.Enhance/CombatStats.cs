@@ -143,7 +143,7 @@ namespace Rawr.Enhance
         public float AverageFSDotTime { get { return averageFSDotTime; } }
         public float AverageFSTickTime { get { return averageFSTickTime; } } 
         public float BaseShockSpeed { get { return 6f - .5f * _talents.Reverberation; } }
-        public float BaseFireNovaSpeed { get { return 10f - 2f * _talents.ImprovedFireNova; } }
+        public float BaseFireNovaSpeed { get { return 10f /*- 2f * _talents.ImprovedFireNova*/; } } // Talent removed in 4.1.0
         public float StaticShockProcsPerS { get { return staticShocksPerSecond; } }
         public float StaticShockAvDuration { get { return /*StaticShockProcsPerS == 0 ? 600f : (3f / StaticShockProcsPerS)*/600f; } }  //FIXME Static Chock no longer consumes charges
         public float MultiTargetMultiplier { get { return 1f /*_calcOpts.MultipleTargets ? _calcOpts.AdditionalTargets * _calcOpts.AdditionalTargetPercent : 1f*/; } }

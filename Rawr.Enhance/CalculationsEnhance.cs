@@ -232,7 +232,7 @@ namespace Rawr.Enhance
             float concussionMultiplier = 1f + .02f * character.ShamanTalents.Concussion;
             float shieldBonus = 1f + .05f * character.ShamanTalents.ImprovedShields;
             float callofFlameBonus = 1f + .1f * character.ShamanTalents.CallOfFlame;
-            float fireNovaBonus = 1f + .1f * character.ShamanTalents.ImprovedFireNova;
+            float fireNovaBonus = 1f; //+ .1f * character.ShamanTalents.ImprovedFireNova; // Removed in 4.1.0
             float mentalQuickness = .5f;  //AP -> SP conversion
             float windfuryWeaponBonus = 4430f;  //WFAP (Check)
             float windfuryDamageBonus = 1f;

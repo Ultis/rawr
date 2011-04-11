@@ -48,7 +48,55 @@ namespace Rawr
     {
         public abstract int[] Data { get; }
         public virtual bool[] GlyphData { get { return null; } }
-
+        //
+        public virtual int TreeStartingIndexes_0 { get { return 0; } }
+        public virtual int TreeStartingIndexes_1 { get { return 0; } }
+        public virtual int TreeStartingIndexes_2 { get { return 0; } }
+        public int[] TreeStartingIndexes { get { return new int[] { TreeStartingIndexes_0, TreeStartingIndexes_1, TreeStartingIndexes_2 }; } }
+        public int[] treeCounts = { -1, -1, -1 };
+        //
+        public int[] TreeCounts
+        {
+            get
+            {
+                if (TreeCounts[0] == -1)
+                {
+                    for (int i = TreeStartingIndexes[0]; i < TreeStartingIndexes[1]; i++)
+                    {
+                        TreeCounts[0] += Data[i];
+                    }
+                }
+                if (TreeCounts[1] == -1)
+                {
+                    for (int i = TreeStartingIndexes[1]; i < TreeStartingIndexes[2]; i++)
+                    {
+                        TreeCounts[1] += Data[i];
+                    }
+                }
+                if (TreeCounts[2] == -1)
+                {
+                    for (int i = TreeStartingIndexes[2]; i < Data.Length; i++)
+                    {
+                        TreeCounts[2] += Data[i];
+                    }
+                }
+                return TreeCounts;
+            }
+            protected set { treeCounts = value; }
+        }
+        //
+        public int HighestTree
+        {
+            get
+            {
+                int retVal = 1;
+                if (TreeCounts[0] >= TreeCounts[1] && TreeCounts[0] >= TreeCounts[2]) { return 0; }
+                if (TreeCounts[1] >= TreeCounts[0] && TreeCounts[1] >= TreeCounts[2]) { return 1; }
+                if (TreeCounts[2] >= TreeCounts[0] && TreeCounts[2] >= TreeCounts[1]) { return 2; }
+                return retVal;
+            }
+        }
+        //
         protected void LoadString(string code)
         {
             if (string.IsNullOrEmpty(code)) return;
@@ -116,6 +164,7 @@ namespace Rawr
             WarriorTalents clone = (WarriorTalents)MemberwiseClone();
             clone._data = (int[])_data.Clone();
             clone._glyphData = (bool[])_glyphData.Clone();
+            clone.TreeCounts = new int[] { -1, -1, -1 };
             return clone;
         }
 
@@ -127,18 +176,20 @@ namespace Rawr
             LoadString(talents);
         }
         public static string[] TreeNames = new[] {
-@"Arms",
-@"Fury",
-@"Protection",};
+			@"Arms",
+			@"Fury",
+			@"Protection",};
 
+        #region Arms
+        public override int TreeStartingIndexes_0 { get { return 0; } }
         /// <summary>
-        /// Increases the damage of Mortal Strike, Raging Blow, Victory Rush and Slam by [5 * Pts]%.
+        /// Increases the damage of Mortal Strike, Raging Blow, Devastate, Victory Rush and Slam by [5 * Pts]%.
         /// </summary>
         [TalentData(index: 0, name: "War Academy", maxPoints: 3, icon: "ability_warrior_unrelentingassault",
          tree: 0, column: 1, row: 1, prerequisite: -1, description: new[] {
-@"Increases the damage of Mortal Strike, Raging Blow, Victory Rush and Slam by 5%.",
-@"Increases the damage of Mortal Strike, Raging Blow, Victory Rush and Slam by 10%.",
-@"Increases the damage of Mortal Strike, Raging Blow, Victory Rush and Slam by 15%.",})]
+@"Increases the damage of Mortal Strike, Raging Blow, Devastate, Victory Rush and Slam by 5%.",
+@"Increases the damage of Mortal Strike, Raging Blow, Devastate, Victory Rush and Slam by 10%.",
+@"Increases the damage of Mortal Strike, Raging Blow, Devastate, Victory Rush and Slam by 15%.",})]
         public int WarAcademy { get { return _data[0]; } set { _data[0] = value; } }
         /// <summary>
         /// Increases all healing received by [3 * Pts]%, and the effectiveness of your self-healing abilities by an additional [10 * Pts]%.
@@ -182,12 +233,12 @@ namespace Rawr
 @"Your critical strikes cause the opponent to bleed, dealing 48% of your melee weapon's average damage over 6 sec.",})]
         public int DeepWounds { get { return _data[5]; } set { _data[5] = value; } }
         /// <summary>
-        /// Reduces the rage cost of your Shield Bash, Pummel, and any shouts which cost rage by [50 * Pts]%.
+        /// Reduces the rage cost of your Pummel, Demoralizing Shout, Intimidating Shout and Challenging Shout by [50 * Pts]%.
         /// </summary>
         [TalentData(index: 6, name: "Drums of War", maxPoints: 2, icon: "achievement_bg_winwsg_3-0",
          tree: 0, column: 4, row: 2, prerequisite: -1, description: new[] {
-@"Reduces the rage cost of your Shield Bash, Pummel, and any shouts which cost rage by 50%.",
-@"Reduces the rage cost of your Shield Bash, Pummel, and any shouts which cost rage by 100%.",})]
+@"Reduces the rage cost of your Pummel, Demoralizing Shout, Intimidating Shout and Challenging Shout by 50%.",
+@"Reduces the rage cost of your Pummel, Demoralizing Shout, Intimidating Shout and Challenging Shout by 100%.",})]
         public int DrumsOfWar { get { return _data[6]; } set { _data[6] = value; } }
         /// <summary>
         /// Increases your Overpower critical strike chance by [20 * Pts]%. In addition, whenever your Rend ability causes damage, you have a [100 / 3 * Pts]% chance of allowing the use of Overpower for 9 sec.  This effect will not occur more than once every 5 sec.
@@ -218,20 +269,20 @@ Your melee attacks strike an additional nearby opponent.  Lasts 10 sec.",})]
 @"Increases the critical strike damage bonus of Mortal Strike, Slam and Overpower by 20%.",})]
         public int Impale { get { return _data[9]; } set { _data[9] = value; } }
         /// <summary>
-        /// When reapplying Hamstring, you immobilize the target for 5 sec. This effect cannot occur more than once every [30 / 2 * Pts] sec.
+        /// When reapplying Hamstring, you immobilize the target for 5 sec. This effect cannot occur more than once every [30 / 2 * Pts] sec.  In addition, reduces the global cooldown of your Hamstring by [0.5 * Pts] sec.
         /// </summary>
         [TalentData(index: 10, name: "Improved Hamstring", maxPoints: 2, icon: "ability_shockwave",
          tree: 0, column: 4, row: 3, prerequisite: -1, description: new[] {
-@"When reapplying Hamstring, you immobilize the target for 5 sec. This effect cannot occur more than once every 60 sec.",
-@"When reapplying Hamstring, you immobilize the target for 5 sec. This effect cannot occur more than once every 30 sec.",})]
+@"When reapplying Hamstring, you immobilize the target for 5 sec. This effect cannot occur more than once every 60 sec.  In addition, reduces the global cooldown of your Hamstring by 0.5 sec.",
+@"When reapplying Hamstring, you immobilize the target for 5 sec. This effect cannot occur more than once every 30 sec.  In addition, reduces the global cooldown of your Hamstring by 1 sec.",})]
         public int ImprovedHamstring { get { return _data[10]; } set { _data[10] = value; } }
         /// <summary>
-        /// Decreases the swing time of Slam by [0.5 * Pts] sec and increases its damage by [10 * Pts]%.
+        /// Decreases the swing time of Slam by [0.5 * Pts] sec and increases its damage by [20 * Pts]%.
         /// </summary>
         [TalentData(index: 11, name: "Improved Slam", maxPoints: 2, icon: "ability_warrior_decisivestrike",
          tree: 0, column: 1, row: 4, prerequisite: -1, description: new[] {
-@"Decreases the swing time of Slam by 0.5 sec and increases its damage by 10%.",
-@"Decreases the swing time of Slam by 1 sec and increases its damage by 20%.",})]
+@"Decreases the swing time of Slam by 0.5 sec and increases its damage by 20%.",
+@"Decreases the swing time of Slam by 1 sec and increases its damage by 40%.",})]
         public int ImprovedSlam { get { return _data[11]; } set { _data[11] = value; } }
         /// <summary>
         /// Deadly Calm - 2 min cooldown - Instant
@@ -251,20 +302,20 @@ For the next 10 sec, none of your abilities cost rage, but you continue to gener
 @"Your bleeds cause targets to take an extra 4% physical damage and 30% bleed damage. In addition, your autoattacks have a 10% chance to generate 20 additional rage.",})]
         public int BloodFrenzy { get { return _data[13]; } set { _data[13] = value; } }
         /// <summary>
-        /// After dealing a Mortal Strike, your next Execute, Overpower or Mortal Strike will cause [10 * Pts]% more damage.
+        /// Your Mortal Strike causes the Slaughter effect, which refreshes the duration of Rend on the target and increases the damage of your Execute, Overpower, Slam and Mortal Strike by 10%.  Lasts 15 sec.  Stacks up to 3 times.
         /// </summary>
         [TalentData(index: 14, name: "Lambs to the Slaughter", maxPoints: 3, icon: "warrior_talent_icon_lambstotheslaughter",
          tree: 0, column: 1, row: 5, prerequisite: -1, description: new[] {
-@"After dealing a Mortal Strike, your next Execute, Overpower or Mortal Strike will cause 10% more damage.",
-@"After dealing a Mortal Strike, your next Execute, Overpower or Mortal Strike will cause 20% more damage.",
-@"After dealing a Mortal Strike, your next Execute, Overpower or Mortal Strike will cause 30% more damage.",})]
+@"Your Mortal Strike causes the Slaughter effect, which refreshes the duration of Rend on the target and increases the damage of your Execute, Overpower, Slam and Mortal Strike by 10%.  Lasts 15 sec.",
+@"Your Mortal Strike causes the Slaughter effect, which refreshes the duration of Rend on the target and increases the damage of your Execute, Overpower, Slam and Mortal Strike by 10%.  Lasts 15 sec.  Stacks up to 2 times.",
+@"Your Mortal Strike causes the Slaughter effect, which refreshes the duration of Rend on the target and increases the damage of your Execute, Overpower, Slam and Mortal Strike by 10%.  Lasts 15 sec.  Stacks up to 3 times.",})]
         public int LambsToTheSlaughter { get { return _data[14]; } set { _data[14] = value; } }
         /// <summary>
-        /// Your Charge ability is now usable while in combat, but the cooldown on Charge is increased by 5 sec. Following a Charge, your next Slam or Mortal Strike has an additional 25% chance to critically hit if used within 10 sec.
+        /// Your Charge ability is now usable while in combat and in all stances, and the cooldown of your Charge is reduced by 2 sec.  Following a Charge, your next Slam or Mortal Strike has an additional 25% chance to critically hit if used within 10 sec.  However, Charge and Intercept now share a cooldown.
         /// </summary>
         [TalentData(index: 15, name: "Juggernaut", maxPoints: 1, icon: "ability_warrior_bullrush",
          tree: 0, column: 2, row: 5, prerequisite: -1, description: new[] {
-@"Your Charge ability is now usable while in combat, but the cooldown on Charge is increased by 5 sec. Following a Charge, your next Slam or Mortal Strike has an additional 25% chance to critically hit if used within 10 sec.",})]
+@"Your Charge ability is now usable while in combat and in all stances, and the cooldown of your Charge is reduced by 2 sec.  Following a Charge, your next Slam or Mortal Strike has an additional 25% chance to critically hit if used within 10 sec.  However, Charge and Intercept now share a cooldown.",})]
         public int Juggernaut { get { return _data[15]; } set { _data[15] = value; } }
         /// <summary>
         /// Your melee hits have a [3 * Pts]% chance of resetting the cooldown on your Colossus Smash, and you keep [5 * Pts] rage after using Execute.
@@ -304,6 +355,9 @@ Requires Melee Weapon - Knocks the target to the ground and stuns it for 5 sec."
 1 min cooldown - Instant cast
 Requires Melee Weapon - You become a whirling storm of destructive force, instantly striking all nearby targets for 150% weapon damage and continuing to perform a whirlwind attack every 1 sec for 6 sec.  While under the effects of Bladestorm, you do not feel pity or remorse or fear and you cannot be stopped unless killed or disarmed, but you cannot perform any other abilities.",})]
         public int Bladestorm { get { return _data[19]; } set { _data[19] = value; } }
+        #endregion
+        #region Fury
+        public override int TreeStartingIndexes_1 { get { return 20; } }
         /// <summary>
         /// After taking any damage, you have a 10% chance to regenerate [1 * Pts]% of your total Health over 5 sec.
         /// </summary>
@@ -347,12 +401,12 @@ Requires Melee Weapon - You become a whirling storm of destructive force, instan
 @"Reduces the cooldown of your Battle Shout and Commanding Shout by 30 sec and causes those abilities to generate 10 additional Rage.",})]
         public int BoomingVoice { get { return _data[24]; } set { _data[24] = value; } }
         /// <summary>
-        /// Successfully interrupting a spell with Shield Bash or Pummel increases your damage by 5% for [15 * Pts] sec.
+        /// Successfully interrupting a spell with Pummel increases your damage by 5% for [15 * Pts] sec.
         /// </summary>
         [TalentData(index: 25, name: "Rude Interruption", maxPoints: 2, icon: "ability_warrior_commandingshout",
          tree: 1, column: 3, row: 2, prerequisite: -1, description: new[] {
-@"Successfully interrupting a spell with Shield Bash or Pummel increases your damage by 5% for 15 sec.",
-@"Successfully interrupting a spell with Shield Bash or Pummel increases your damage by 5% for 30 sec.",})]
+@"Successfully interrupting a spell with Pummel increases your damage by 5% for 15 sec.",
+@"Successfully interrupting a spell with Pummel increases your damage by 5% for 30 sec.",})]
         public int RudeInterruption { get { return _data[25]; } set { _data[25] = value; } }
         /// <summary>
         /// Piercing Howl - 10 Rage
@@ -405,13 +459,13 @@ When activated you become Enraged, increasing your physical damage by 20% but in
         /// <summary>
         /// Berserker Stance - Raging Blow - Melee Range - 20 Rage
         /// 6 sec cooldown - Instant cast
-        /// Requires Melee Weapon - A mighty blow that deals 110.011999726% weapon damage from both melee weapons.  Can only be used while Enraged.
+        /// Requires Melee Weapon - A mighty blow that deals 120% weapon damage from both melee weapons.  Can only be used while Enraged.
         /// </summary>
         [TalentData(index: 31, name: "Raging Blow", maxPoints: 1, icon: "ability_hunter_swiftstrike",
          tree: 1, column: 2, row: 4, prerequisite: 28, description: new[] {
 @"Berserker Stance - Raging Blow - Melee Range - 20 Rage
 6 sec cooldown - Instant cast
-Requires Melee Weapon - A mighty blow that deals 110.011999726% weapon damage from both melee weapons.  Can only be used while Enraged.",})]
+Requires Melee Weapon - A mighty blow that deals 120% weapon damage from both melee weapons.  Can only be used while Enraged.",})]
         public int RagingBlow { get { return _data[31]; } set { _data[31] = value; } }
         /// <summary>
         /// Increases the critical strike chance of all party and raid members within 12 yds by 5%.  In addition, improves your critical strike chance by an additional 2%.
@@ -437,12 +491,12 @@ Removes any Immobilization effects and refreshes the cooldown of your Intercept 
 @"Your autoattacks have a chance to reduce all healing done to the target by 10% for 10 sec.",})]
         public int FuriousAttacks { get { return _data[34]; } set { _data[34] = value; } }
         /// <summary>
-        /// Dealing damage with Cleave or Whirlwind increases the damage of Cleave and Whirlwind by [5 * Pts]% for 10 sec.  This effect stacks up to 0 times.
+        /// Dealing damage with Cleave or Whirlwind increases the damage of Cleave and Whirlwind by [5 * Pts]% for 10 sec.  This effect stacks up to 0 times and lasts for 10 sec.
         /// </summary>
         [TalentData(index: 35, name: "Meat Cleaver", maxPoints: 2, icon: "warrior_talent_icon_mastercleaver",
          tree: 1, column: 3, row: 5, prerequisite: -1, description: new[] {
-@"Dealing damage with Cleave or Whirlwind increases the damage of Cleave and Whirlwind by 5% for 10 sec.  This effect stacks up to 0 times.",
-@"Dealing damage with Cleave or Whirlwind increases the damage of Cleave and Whirlwind by 10% for 10 sec.  This effect stacks up to 0 times.",})]
+@"Dealing damage with Cleave or Whirlwind increases the damage of Cleave and Whirlwind by 5% for 10 sec.  This effect stacks up to 0 times and lasts for 10 sec.",
+@"Dealing damage with Cleave or Whirlwind increases the damage of Cleave and Whirlwind by 10% for 10 sec.  This effect stacks up to 0 times and lasts for 10 sec.",})]
         public int MeatCleaver { get { return _data[35]; } set { _data[35] = value; } }
         /// <summary>
         /// Reduces the cooldown of your Berserker Rage, Recklessness and Death Wish abilities by [10 * Pts]%.
@@ -453,13 +507,13 @@ Removes any Immobilization effects and refreshes the cooldown of your Intercept 
 @"Reduces the cooldown of your Berserker Rage, Recklessness and Death Wish abilities by 20%.",})]
         public int IntensifyRage { get { return _data[36]; } set { _data[36] = value; } }
         /// <summary>
-        /// Your Bloodthirst hits have a [10 * Pts]% chance of making your next Slam instant and free for 10 sec.
+        /// Your Bloodthirst hits have a [10 * Pts]% chance of making your next Slam instant, free, and deal 20% more damage for 10 sec.
         /// </summary>
         [TalentData(index: 37, name: "Bloodsurge", maxPoints: 3, icon: "ability_warrior_bloodsurge",
          tree: 1, column: 2, row: 6, prerequisite: 31, description: new[] {
-@"Your Bloodthirst hits have a 10% chance of making your next Slam instant and free for 10 sec.",
-@"Your Bloodthirst hits have a 20% chance of making your next Slam instant and free for 10 sec.",
-@"Your Bloodthirst hits have a 30% chance of making your next Slam instant and free for 10 sec.",})]
+@"Your Bloodthirst hits have a 10% chance of making your next Slam instant, free, and deal 20% more damage for 10 sec.",
+@"Your Bloodthirst hits have a 20% chance of making your next Slam instant, free, and deal 20% more damage for 10 sec.",
+@"Your Bloodthirst hits have a 30% chance of making your next Slam instant, free, and deal 20% more damage for 10 sec.",})]
         public int Bloodsurge { get { return _data[37]; } set { _data[37] = value; } }
         /// <summary>
         /// Reduces the cooldown of your Intercept by [5 * Pts] sec and your Heroic Leap by [10 * Pts] sec.
@@ -477,12 +531,15 @@ Removes any Immobilization effects and refreshes the cooldown of your Intercept 
 @"Allows you to equip two-handed axes, maces and swords in one hand.",})]
         public int TitansGrip { get { return _data[39]; } set { _data[39] = value; } }
         /// <summary>
-        /// When you dual-wield one-handed weapons, you deal 15% additional damage and Slam hits with both weapons.
+        /// When you dual-wield one-handed weapons, you deal 20% additional damage and Slam hits with both weapons.
         /// </summary>
         [TalentData(index: 40, name: "Single-Minded Fury", maxPoints: 1, icon: "warrior_talent_icon_singlemindedfury",
          tree: 1, column: 3, row: 7, prerequisite: -1, description: new[] {
-@"When you dual-wield one-handed weapons, you deal 15% additional damage and Slam hits with both weapons.",})]
+@"When you dual-wield one-handed weapons, you deal 20% additional damage and Slam hits with both weapons.",})]
         public int SingleMindedFury { get { return _data[40]; } set { _data[40] = value; } }
+        #endregion
+        #region Protection
+        public override int TreeStartingIndexes_2 { get { return 41; } }
         /// <summary>
         /// Increases the critical strike chance of your Heroic Strike by [5 * Pts]%, and gives your Heroic Strike criticals a [100 / 3 * Pts]% chance to cause the next Heroic Strike to also be a critical strike.  These guaranteed criticals cannot re-trigger the Incite effect.
         /// </summary>
@@ -519,13 +576,13 @@ Removes any Immobilization effects and refreshes the cooldown of your Intercept 
 @"You generate 15 extra rage when you block an attack.   You generate 60 extra rage when you Spell Reflect a magic attack.",})]
         public int ShieldSpecialization { get { return _data[44]; } set { _data[44] = value; } }
         /// <summary>
-        /// Reduces the cooldown of your Shield Block by [10 * Pts] sec, your Shield Wall by [60 * Pts] sec and your Spell Reflect by [1 * Pts] sec.
+        /// Reduces the cooldown of your Shield Block by [10 * Pts] sec, your Shield Wall by [60 * Pts] sec and causes your Shield Block to also reduce magic damage taken by [20 / 3 * Pts]% for 6 sec.
         /// </summary>
         [TalentData(index: 45, name: "Shield Mastery", maxPoints: 3, icon: "ability_warrior_shieldguard",
          tree: 2, column: 2, row: 2, prerequisite: -1, description: new[] {
-@"Reduces the cooldown of your Shield Block by 10 sec, your Shield Wall by 60 sec and your Spell Reflect by 1 sec.",
-@"Reduces the cooldown of your Shield Block by 20 sec, your Shield Wall by 120 sec and your Spell Reflect by 2 sec.",
-@"Reduces the cooldown of your Shield Block by 30 sec, your Shield Wall by 180 sec and your Spell Reflect by 3 sec.",})]
+@"Reduces the cooldown of your Shield Block by 10 sec, your Shield Wall by 60 sec and causes your Shield Block to also reduce magic damage taken by 7% for 6 sec.",
+@"Reduces the cooldown of your Shield Block by 20 sec, your Shield Wall by 120 sec and causes your Shield Block to also reduce magic damage taken by 14% for 6 sec.",
+@"Reduces the cooldown of your Shield Block by 30 sec, your Shield Wall by 180 sec and causes your Shield Block to also reduce magic damage taken by 20% for 6 sec.",})]
         public int ShieldMastery { get { return _data[45]; } set { _data[45] = value; } }
         /// <summary>
         /// Improves your critical strike and critical block chance by [5 * Pts]% for 10 sec following a successful parry.
@@ -536,12 +593,12 @@ Removes any Immobilization effects and refreshes the cooldown of your Intercept 
 @"Improves your critical strike and critical block chance by 10% for 10 sec following a successful parry.",})]
         public int HoldTheLine { get { return _data[46]; } set { _data[46] = value; } }
         /// <summary>
-        /// Gives your Shield Bash and Heroic Throw a [50 * Pts]% chance to silence the target for 3 sec.    Also lowers the cooldown on Heroic Throw by [15 * Pts] sec.
+        /// Lowers the cooldown of Heroic Throw by [15 * Pts] sec and gives it a chance to silence the target for 3 sec.
         /// </summary>
-        [TalentData(index: 47, name: "Gag Order", maxPoints: 2, icon: "ability_warrior_shieldbash",
+        [TalentData(index: 47, name: "Gag Order", maxPoints: 2, icon: "inv_axe_66",
          tree: 2, column: 4, row: 2, prerequisite: -1, description: new[] {
-@"Gives your Shield Bash and Heroic Throw a 50% chance to silence the target for 3 sec.  Also lowers the cooldown on Heroic Throw by 15 sec.",
-@"Gives your Shield Bash and Heroic Throw a 100% chance to silence the target for 3 sec.    Also lowers the cooldown on Heroic Throw by 30 sec.",})]
+@"Lowers the cooldown of Heroic Throw by 15 sec and gives it a chance to silence the target for 3 sec.",
+@"Lowers the cooldown of Heroic Throw by 30 sec and gives it a chance to silence the target for 3 sec.",})]
         public int GagOrder { get { return _data[47]; } set { _data[47] = value; } }
         /// <summary>
         /// Last Stand - 3 min cooldown - Instant
@@ -555,13 +612,13 @@ Temporarily grants you 30% of your maximum health for 20 sec.  After the effect 
         /// <summary>
         /// Concussion Blow - Melee Range - 15 Rage
         /// 30 sec cooldown - Instant cast
-        /// Requires Melee Weapon - Stuns the opponent for 5 sec and deals [75/100*AP] damage (based on attack power).
+        /// Requires Melee Weapon - Stuns the opponent for 5 sec and deals [75% of AP] damage (based on attack power).
         /// </summary>
         [TalentData(index: 49, name: "Concussion Blow", maxPoints: 1, icon: "ability_thunderbolt",
          tree: 2, column: 2, row: 3, prerequisite: -1, description: new[] {
 @"Concussion Blow - Melee Range - 15 Rage
 30 sec cooldown - Instant cast
-Requires Melee Weapon - Stuns the opponent for 5 sec and deals [75/100*AP] damage (based on attack power).",})]
+Requires Melee Weapon - Stuns the opponent for 5 sec and deals [75% of AP] damage (based on attack power).",})]
         public int ConcussionBlow { get { return _data[49]; } set { _data[49] = value; } }
         /// <summary>
         /// Reduces the chance you'll be critically hit by melee attacks by [3 * Pts]% while in Defensive Stance.  In addition, when you block, dodge or parry an attack you have a [10 * Pts]% chance to become Enraged, increasing physical damage done by [5 * Pts]% for 12 sec.
@@ -589,13 +646,13 @@ Requires Melee Weapon - Stuns the opponent for 5 sec and deals [75/100*AP] damag
         /// <summary>
         /// Devastate - Melee Range - 15 Rage
         /// Instant cast
-        /// Requires Shields - Sunder the target's armor causing the Sunder Armor effect.  In addition, causes 150.0% of weapon damage plus 307 for each application of Sunder Armor on the target.  The Sunder Armor effect can stack up to 3 times.
+        /// Requires Shields - Sunder the target\'s armor causing the Sunder Armor effect.  In addition, causes 150% of weapon damage plus 336 for each application of Sunder Armor on the target.  The Sunder Armor effect can stack up to 3 times.
         /// </summary>
         [TalentData(index: 53, name: "Devastate", maxPoints: 1, icon: "inv_sword_11",
          tree: 2, column: 3, row: 4, prerequisite: -1, description: new[] {
 @"Devastate - Melee Range - 15 Rage
 Instant cast
-Requires Shields - Sunder the target's armor causing the Sunder Armor effect.  In addition, causes 150.0% of weapon damage plus 307 for each application of Sunder Armor on the target.  The Sunder Armor effect can stack up to 3 times.",})]
+Requires Shields - Sunder the target\'s armor causing the Sunder Armor effect.  In addition, causes 150% of weapon damage plus 336 for each application of Sunder Armor on the target.  The Sunder Armor effect can stack up to 3 times.",})]
         public int Devastate { get { return _data[53]; } set { _data[53] = value; } }
         /// <summary>
         /// Using Devastate on a target with 20% or less health has a [25 * Pts]% chance to allow the use of Victory Rush but that Victory Rush only heals for 5% of your health.
@@ -616,13 +673,13 @@ Requires Shields - Sunder the target's armor causing the Sunder Armor effect.  I
         /// <summary>
         /// Vigilance - 30 yd range
         /// Instant cast
-        /// Focus your protective gaze on a group or raid target.  Each time they are hit by an attack your Taunt cooldown is refreshed and you gain Vengeance as if 20% of the damage was done to you.  Lasts 30 min.  This effect can only be on one target at a time.
+        /// Focus your protective gaze on a party or raid member.  Each time they are hit by an attack, your Taunt cooldown is refreshed and you gain Vengeance as if 20% of the damage was done to you.  Lasts 30 min.  This effect can only be on one target at a time.
         /// </summary>
         [TalentData(index: 56, name: "Vigilance", maxPoints: 1, icon: "ability_warrior_vigilance",
          tree: 2, column: 2, row: 5, prerequisite: 49, description: new[] {
 @"Vigilance - 30 yd range
 Instant cast
-Focus your protective gaze on a group or raid target.  Each time they are hit by an attack your Taunt cooldown is refreshed and you gain Vengeance as if 20% of the damage was done to you.  Lasts 30 min.  This effect can only be on one target at a time.",})]
+Focus your protective gaze on a party or raid member.  Each time they are hit by an attack, your Taunt cooldown is refreshed and you gain Vengeance as if 20% of the damage was done to you.  Lasts 30 min.  This effect can only be on one target at a time.",})]
         public int Vigilance { get { return _data[56]; } set { _data[56] = value; } }
         /// <summary>
         /// While your Shield Block is active, your Shield Slam hits for an additional [50 * Pts]% damage.
@@ -652,30 +709,25 @@ Focus your protective gaze on a group or raid target.  Each time they are hit by
         /// <summary>
         /// Shockwave - 15 Rage
         /// 20 sec cooldown - Instant cast
-        /// Sends a wave of force in front of you, causing [75/100*AP] damage (based on attack power) and stunning all enemy targets within 10 yards in a frontal cone for 4 sec.
+        /// Sends a wave of force in front of you, causing [75% of AP] damage (based on attack power) and stunning all enemy targets within 10 yards in a frontal cone for 4 sec.
         /// </summary>
         [TalentData(index: 60, name: "Shockwave", maxPoints: 1, icon: "ability_warrior_shockwave",
          tree: 2, column: 2, row: 7, prerequisite: -1, description: new[] {
 @"Shockwave - 15 Rage
 20 sec cooldown - Instant cast
-Sends a wave of force in front of you, causing [75/100*AP] damage (based on attack power) and stunning all enemy targets within 10 yards in a frontal cone for 4 sec.",})]
+Sends a wave of force in front of you, causing [75% of AP] damage (based on attack power) and stunning all enemy targets within 10 yards in a frontal cone for 4 sec.",})]
         public int Shockwave { get { return _data[60]; } set { _data[60] = value; } }
+        #endregion
     }
 
     public partial class PaladinTalents : TalentsBase
-#if RAWR3 || RAWR4
     {
         public override TalentsBase Clone()
-#else
-, ICloneable
-    {
-        public PaladinTalents Clone() { return (PaladinTalents)((ICloneable)this).Clone(); }
-        object ICloneable.Clone()
-#endif
         {
             PaladinTalents clone = (PaladinTalents)MemberwiseClone();
             clone._data = (int[])_data.Clone();
             clone._glyphData = (bool[])_glyphData.Clone();
+            clone.TreeCounts = new int[] { -1, -1, -1 };
             return clone;
         }
 
@@ -687,10 +739,12 @@ Sends a wave of force in front of you, causing [75/100*AP] damage (based on atta
             LoadString(talents);
         }
         public static string[] TreeNames = new[] {
-@"Holy",
-@"Protection",
-@"Retribution",};
+			@"Holy",
+			@"Protection",
+			@"Retribution",};
 
+        #region Holy
+        public override int TreeStartingIndexes_0 { get { return 0; } }
         /// <summary>
         /// Increases the critical effect chance of your Judgement and Templar's Verdict by [6 * Pts]%.
         /// </summary>
@@ -700,13 +754,13 @@ Sends a wave of force in front of you, causing [75/100*AP] damage (based on atta
 @"Increases the critical effect chance of your Judgement and Templar's Verdict by 12%.",})]
         public int ArbiterOfTheLight { get { return _data[0]; } set { _data[0] = value; } }
         /// <summary>
-        /// Casting a targeted heal on any target, except yourself, also heals you for [1458 * Pts]
+        /// Casting a targeted heal on any target, except yourself, also heals you for [2605 / 3 * Pts] to [999 * Pts]
         /// </summary>
         [TalentData(index: 1, name: "Protector of the Innocent", maxPoints: 3, icon: "ability_paladin_protectoroftheinnocent",
          tree: 0, column: 2, row: 1, prerequisite: -1, description: new[] {
-@"Casting a targeted heal on any target, except yourself, also heals you for 1458.",
-@"Casting a targeted heal on any target, except yourself, also heals you for 2916.",
-@"Casting a targeted heal on any target, except yourself, also heals you for 4374.",})]
+@"Casting a targeted heal on any target, except yourself, also heals you for 868 to 999.",
+@"Casting a targeted heal on any target, except yourself, also heals you for 1736 to 1998.",
+@"Casting a targeted heal on any target, except yourself, also heals you for 2605 to 2997.",})]
         public int ProtectorOfTheInnocent { get { return _data[1]; } set { _data[1] = value; } }
         /// <summary>
         /// Your Judgement increases your casting and melee haste by [3 * Pts]% for 1 min.
@@ -776,12 +830,12 @@ Increases your spell casting haste by 20% and spell critical chance by 20% for 2
 @"Your Flash of Light, Holy Light and Divine Light have a 20% chance to make your next Holy Shock not trigger a cooldown if used within 12 sec.",})]
         public int Daybreak { get { return _data[9]; } set { _data[9] = value; } }
         /// <summary>
-        /// Grants hit rating equal to [50 * Pts]% of any Spirit gained from items or effects, and increases the range of your Judgement by [5 * Pts] yards.  In addition, your Judgement instantly heals you for [2915 / 2 * Pts]
+        /// Grants hit rating equal to [50 * Pts]% of any Spirit gained from items or effects, and increases the range of your Judgement by [5 * Pts] yards.  In addition, your Judgement instantly heals you for [1240 * Pts] to [1427 * Pts]
         /// </summary>
         [TalentData(index: 10, name: "Enlightened Judgements", maxPoints: 2, icon: "ability_paladin_enlightenedjudgements",
          tree: 0, column: 1, row: 4, prerequisite: -1, description: new[] {
-@"Grants hit rating equal to 50% of any Spirit gained from items or effects, and increases the range of your Judgement by 5 yards.  In addition, your Judgement instantly heals you for 1458.",
-@"Grants hit rating equal to 100% of any Spirit gained from items or effects, and increases the range of your Judgement by 10 yards.  In addition, your Judgement instantly heals you for 2915.",})]
+@"Grants hit rating equal to 50% of any Spirit gained from items or effects, and increases the range of your Judgement by 5 yards.  In addition, your Judgement instantly heals you for 1240 to 1427.",
+@"Grants hit rating equal to 100% of any Spirit gained from items or effects, and increases the range of your Judgement by 10 yards.  In addition, your Judgement instantly heals you for 2480 to 2854.",})]
         public int EnlightenedJudgements { get { return _data[10]; } set { _data[10] = value; } }
         /// <summary>
         /// Beacon of Light - 60 yd range - 6% of base mana
@@ -811,22 +865,22 @@ The target becomes a Beacon of Light to all members of your party or raid within
 @"Your Cleanse spell now also dispels 1 Magic effect.",})]
         public int SacredCleansing { get { return _data[13]; } set { _data[13] = value; } }
         /// <summary>
-        /// Gives you a [1 * Pts]% bonus to damage and healing for 15 sec after causing a critical effect from a weapon swing, spell, or ability.  This effect stacks up to 0 times.
+        /// Gives you a [1 * Pts]% bonus to damage and healing for 15 sec after causing a critical effect from a weapon swing, non-periodic spell, or ability. This effect stacks up to 0 times.
         /// </summary>
         [TalentData(index: 14, name: "Conviction", maxPoints: 3, icon: "ability_paladin_conviction",
          tree: 0, column: 1, row: 5, prerequisite: -1, description: new[] {
-@"Gives you a 1% bonus to damage and healing for 15 sec after causing a critical effect from a weapon swing, spell, or ability.  This effect stacks up to 0 times.",
-@"Gives you a 2% bonus to damage and healing for 15 sec after causing a critical effect from a weapon swing, spell, or ability.  This effect stacks up to 0 times.",
-@"Gives you a 3% bonus to damage and healing for 15 sec after causing a critical effect from a weapon swing, spell, or ability.  This effect stacks up to 0 times.",})]
+@"Gives you a 1% bonus to damage and healing for 15 sec after causing a critical effect from a weapon swing, non-periodic spell, or ability. This effect stacks up to 0 times.",
+@"Gives you a 2% bonus to damage and healing for 15 sec after causing a critical effect from a weapon swing, non-periodic spell, or ability. This effect stacks up to 0 times.",
+@"Gives you a 3% bonus to damage and healing for 15 sec after causing a critical effect from a weapon swing, non-periodic spell, or ability. This effect stacks up to 0 times.",})]
         public int Conviction { get { return _data[14]; } set { _data[14] = value; } }
         /// <summary>
         /// Aura Mastery - 2 min cooldown - Instant
-        /// Causes your Concentration Aura to make all affected targets immune to Silence and Interrupt effects and improve the effect of all other auras by 100%.  Lasts 6 sec.
+        /// Causes your Concentration Aura to make all affected targets immune to Silence and Interrupt effects and improve the effect of Devotion Aura, Resistance Aura, and Retribution Aura by 100%.  Lasts 6 sec.
         /// </summary>
         [TalentData(index: 15, name: "Aura Mastery", maxPoints: 1, icon: "spell_holy_auramastery",
          tree: 0, column: 3, row: 5, prerequisite: -1, description: new[] {
 @"Aura Mastery - 2 min cooldown - Instant
-Causes your Concentration Aura to make all affected targets immune to Silence and Interrupt effects and improve the effect of all other auras by 100%.  Lasts 6 sec.",})]
+Causes your Concentration Aura to make all affected targets immune to Silence and Interrupt effects and improve the effect of Devotion Aura, Resistance Aura, and Retribution Aura by 100%.  Lasts 6 sec.",})]
         public int AuraMastery { get { return _data[15]; } set { _data[15] = value; } }
         /// <summary>
         /// Reduces the cooldown of Divine Protection by [10 * Pts] sec, Hand of Sacrifice by [15 * Pts] sec and Avenging Wrath by [30 * Pts] sec.
@@ -837,13 +891,13 @@ Causes your Concentration Aura to make all affected targets immune to Silence an
 @"Reduces the cooldown of Divine Protection by 20 sec, Hand of Sacrifice by 30 sec and Avenging Wrath by 60 sec.",})]
         public int ParagonOfVirtue { get { return _data[16]; } set { _data[16] = value; } }
         /// <summary>
-        /// Healing the target of your Beacon of Light with Flash of Light, Holy Light or Divine Light has a [100 / 3 * Pts]% chance to generate a charge of Holy Power.
+        /// Healing the target of your Beacon of Light with Flash of Light or Divine Light has a [100 / 3 * Pts]% chance to generate a charge of Holy Power.
         /// </summary>
         [TalentData(index: 17, name: "Tower of Radiance", maxPoints: 3, icon: "achievement_bg_winsoa",
          tree: 0, column: 2, row: 6, prerequisite: 11, description: new[] {
-@"Healing the target of your Beacon of Light with Flash of Light, Holy Light or Divine Light has a 33% chance to generate a charge of Holy Power.",
-@"Healing the target of your Beacon of Light with Flash of Light, Holy Light or Divine Light has a 66% chance to generate a charge of Holy Power.",
-@"Healing the target of your Beacon of Light with Flash of Light, Holy Light or Divine Light has a 100% chance to generate a charge of Holy Power.",})]
+@"Healing the target of your Beacon of Light with Flash of Light or Divine Light has a 33% chance to generate a charge of Holy Power.",
+@"Healing the target of your Beacon of Light with Flash of Light or Divine Light has a 66% chance to generate a charge of Holy Power.",
+@"Healing the target of your Beacon of Light with Flash of Light or Divine Light has a 100% chance to generate a charge of Holy Power.",})]
         public int TowerOfRadiance { get { return _data[17]; } set { _data[17] = value; } }
         /// <summary>
         /// You have a [50 * Pts]% chance to gain a charge of Holy Power whenever you take direct damage.  This effect cannot occur more than once every 8 seconds.
@@ -856,14 +910,17 @@ Causes your Concentration Aura to make all affected targets immune to Silence an
         /// <summary>
         /// Light of Dawn - 1 Holy Power
         /// Instant cast
-        /// Consumes all Holy Power to send a wave of healing energy before you, healing up to 5 of the most injured targets in your party or raid within a 30 yard frontal cone for 1165 per charge of Holy Power.
+        /// Consumes all Holy Power to send a wave of healing energy before you, healing up to 5 of the most injured targets in your party or raid within a 30 yard frontal cone for 605 to 674 per charge of Holy Power.
         /// </summary>
         [TalentData(index: 19, name: "Light of Dawn", maxPoints: 1, icon: "spell_paladin_lightofdawn",
          tree: 0, column: 2, row: 7, prerequisite: -1, description: new[] {
 @"Light of Dawn - 1 Holy Power
 Instant cast
-Consumes all Holy Power to send a wave of healing energy before you, healing up to 5 of the most injured targets in your party or raid within a 30 yard frontal cone for 1165 per charge of Holy Power.",})]
+Consumes all Holy Power to send a wave of healing energy before you, healing up to 5 of the most injured targets in your party or raid within a 30 yard frontal cone for 605 to 674 per charge of Holy Power.",})]
         public int LightOfDawn { get { return _data[19]; } set { _data[19] = value; } }
+        #endregion
+        #region Protection
+        public override int TreeStartingIndexes_1 { get { return 20; } }
         /// <summary>
         /// Increases all healing done by you and all healing effects on you by [2 * Pts]%.
         /// </summary>
@@ -934,21 +991,21 @@ Consumes all Holy Power to send a wave of healing energy before you, healing up 
         /// <summary>
         /// Hammer of the Righteous - Melee Range - 12% of base mana
         /// 4.5 sec cooldown - Instant cast
-        /// Requires One-Handed Melee Weapon - Hammer the current target for 30% weapon damage, causing a wave of light that hits all targets within 8 yards for 796 Holy damage. Grants a charge of Holy Power.
+        /// Requires One-Handed Melee Weapon - Hammer the current target for 30% weapon damage, causing a wave of light that hits all targets within 8 yards for 583 to 874 Holy damage. Grants a charge of Holy Power.
         /// </summary>
         [TalentData(index: 28, name: "Hammer of the Righteous", maxPoints: 1, icon: "ability_paladin_hammeroftherighteous",
          tree: 1, column: 3, row: 3, prerequisite: -1, description: new[] {
 @"Hammer of the Righteous - Melee Range - 12% of base mana
 4.5 sec cooldown - Instant cast
-Requires One-Handed Melee Weapon - Hammer the current target for 30% weapon damage, causing a wave of light that hits all targets within 8 yards for 796 Holy damage. Grants a charge of Holy Power.",})]
+Requires One-Handed Melee Weapon - Hammer the current target for 30% weapon damage, causing a wave of light that hits all targets within 8 yards for 583 to 874 Holy damage. Grants a charge of Holy Power.",})]
         public int HammerOfTheRighteous { get { return _data[28]; } set { _data[28] = value; } }
         /// <summary>
-        /// Increases the damage by [50 * Pts]% of your Crusader Strike and Judgement and increases the critical strike chance by [15 * Pts]% of your Holy Wrath and Hammer of Wrath.
+        /// Increases the damage of your Crusader Strike and Judgement abilities by [50 * Pts]%, and increases the critical strike chance of your Holy Wrath and Hammer of Wrath spells by [15 * Pts]%.
         /// </summary>
         [TalentData(index: 29, name: "Wrath of the Lightbringer", maxPoints: 2, icon: "inv_mace_82",
          tree: 1, column: 4, row: 3, prerequisite: -1, description: new[] {
-@"Increases the damage by 50% of your Crusader Strike and Judgement and increases the critical strike chance by 15% of your Holy Wrath and Hammer of Wrath.",
-@"Increases the damage by 100% of your Crusader Strike and Judgement and increases the critical strike chance by 30% of your Holy Wrath and Hammer of Wrath.",})]
+@"Increases the damage of your Crusader Strike and Judgement abilities by 50%, and increases the critical strike chance of your Holy Wrath and Hammer of Wrath spells by 15%.",
+@"Increases the damage of your Crusader Strike and Judgement abilities by 100%, and increases the critical strike chance of your Holy Wrath and Hammer of Wrath spells by 30%.",})]
         public int WrathOfTheLightbringer { get { return _data[29]; } set { _data[29] = value; } }
         /// <summary>
         /// You have a [10 * Pts]% chance after blocking an attack for your next 4 weapon swings within 8 sec to generate an additional attack.
@@ -963,9 +1020,9 @@ Requires One-Handed Melee Weapon - Hammer the current target for 30% weapon dama
         /// Instant cast
         /// Requires Shields - Slam the target with your shield, causing Holy damage.  Consumes all charges of Holy Power to determine damage dealt:
         /// 
-        /// 1 Holy Power: 666 damage
-        /// 2 Holy Power: 1998 damage
-        /// 3 Holy Power: 3996 damage
+        /// 1 Holy Power: 609 damage
+        /// 2 Holy Power: 1827 damage
+        /// 3 Holy Power: 3654 damage
         /// </summary>
         [TalentData(index: 31, name: "Shield of the Righteous", maxPoints: 1, icon: "ability_paladin_shieldofvengeance",
          tree: 1, column: 2, row: 4, prerequisite: 27, description: new[] {
@@ -973,24 +1030,24 @@ Requires One-Handed Melee Weapon - Hammer the current target for 30% weapon dama
 Instant cast
 Requires Shields - Slam the target with your shield, causing Holy damage.  Consumes all charges of Holy Power to determine damage dealt:
 
-1 Holy Power: 666 damage
-2 Holy Power: 1998 damage
-3 Holy Power: 3996 damage",})]
+1 Holy Power: 609 damage
+2 Holy Power: 1827 damage
+3 Holy Power: 3654 damage",})]
         public int ShieldOfTheRighteous { get { return _data[31]; } set { _data[31] = value; } }
         /// <summary>
-        /// When your Crusader Strike or Hammer of the Righteous deal damage to your primary target, they have a [10 * Pts]% chance of refreshing the cooldown on your next Avenger's Shield.
+        /// When your Crusader Strike or Hammer of the Righteous deal damage to your primary target, they have a [10 * Pts]% chance of refreshing the cooldown on your next Avenger's Shield and causing it to generate a charge of Holy Power if used within 6 sec.
         /// </summary>
         [TalentData(index: 32, name: "Grand Crusader", maxPoints: 2, icon: "inv_helmet_74",
          tree: 1, column: 3, row: 4, prerequisite: 28, description: new[] {
-@"When your Crusader Strike or Hammer of the Righteous deal damage to your primary target, they have a 10% chance of refreshing the cooldown on your next Avenger's Shield.",
-@"When your Crusader Strike or Hammer of the Righteous deal damage to your primary target, they have a 20% chance of refreshing the cooldown on your next Avenger's Shield.",})]
+@"When your Crusader Strike or Hammer of the Righteous deal damage to your primary target, they have a 10% chance of refreshing the cooldown on your next Avenger's Shield and causing it to generate a charge of Holy Power if used within 6 sec.",
+@"When your Crusader Strike or Hammer of the Righteous deal damage to your primary target, they have a 20% chance of refreshing the cooldown on your next Avenger's Shield and causing it to generate a charge of Holy Power if used within 6 sec.",})]
         public int GrandCrusader { get { return _data[32]; } set { _data[32] = value; } }
         /// <summary>
-        /// Your Crusader Strike and Hammer of the Righteous reduce physical damage done by their primary targets by 10% for 30 sec.   In addition, your Hammer of Justice will interrupt creatures that are immune to stuns.
+        /// Your Crusader Strike and Hammer of the Righteous reduce physical damage done by their primary targets by 10% for 30 sec.
         /// </summary>
         [TalentData(index: 33, name: "Vindication", maxPoints: 1, icon: "spell_holy_vindication",
          tree: 1, column: 1, row: 5, prerequisite: -1, description: new[] {
-@"Your Crusader Strike and Hammer of the Righteous reduce physical damage done by their primary targets by 10% for 30 sec.   In addition, your Hammer of Justice will interrupt creatures that are immune to stuns.",})]
+@"Your Crusader Strike and Hammer of the Righteous reduce physical damage done by their primary targets by 10% for 30 sec.",})]
         public int Vindication { get { return _data[33]; } set { _data[33] = value; } }
         /// <summary>
         /// Using Shield of the Righteous or Inquisition increases the amount your shield blocks by an additional 10% for 20 sec.
@@ -1009,14 +1066,14 @@ Requires Shields - Slam the target with your shield, causing Holy damage.  Consu
         public int GuardedByTheLight { get { return _data[35]; } set { _data[35] = value; } }
         /// <summary>
         /// Divine Guardian - 100 yd range
-        /// 2 min cooldown - Instant
-        /// All party or raid members, excluding the Paladin, take 20% reduced damage for 6 sec.
+        /// 3 min cooldown - Instant
+        /// All party or raid members within 30 yards, excluding the Paladin, take 20% reduced damage for 6 sec.
         /// </summary>
         [TalentData(index: 36, name: "Divine Guardian", maxPoints: 1, icon: "spell_holy_powerwordbarrier",
          tree: 1, column: 4, row: 5, prerequisite: -1, description: new[] {
 @"Divine Guardian - 100 yd range
-2 min cooldown - Instant
-All party or raid members, excluding the Paladin, take 20% reduced damage for 6 sec.",})]
+3 min cooldown - Instant
+All party or raid members within 30 yards, excluding the Paladin, take 20% reduced damage for 6 sec.",})]
         public int DivineGuardian { get { return _data[36]; } set { _data[36] = value; } }
         /// <summary>
         /// Your Judgements have a [25 * Pts]% chance of making your next Shield of the Righteous a critical strike.  Lasts 15 sec.
@@ -1027,11 +1084,11 @@ All party or raid members, excluding the Paladin, take 20% reduced damage for 6 
 @"Your Judgements have a 50% chance of making your next Shield of the Righteous a critical strike.  Lasts 15 sec.",})]
         public int SacredDuty { get { return _data[37]; } set { _data[37] = value; } }
         /// <summary>
-        /// Reduces the cooldown of Avenging Wrath by [20 * Pts] sec and Guardian of Ancient Kings by [120 / 3 * Pts] sec.  In addition, your Divine Plea will generate [1 * Pts] Holy Power.
+        /// Reduces the cooldown of Avenging Wrath by [20 * Pts] sec and Guardian of Ancient Kings by [40 * Pts] sec.  In addition, your Divine Plea will generate [1 * Pts] Holy Power.
         /// </summary>
         [TalentData(index: 38, name: "Shield of the Templar", maxPoints: 3, icon: "ability_paladin_shieldofthetemplar",
          tree: 1, column: 3, row: 6, prerequisite: -1, description: new[] {
-@"Reduces the cooldown of Avenging Wrath by 20 sec and Guardian of Ancient Kings by 45 sec.  In addition, your Divine Plea will generate 1 Holy Power.",
+@"Reduces the cooldown of Avenging Wrath by 20 sec and Guardian of Ancient Kings by 40 sec.  In addition, your Divine Plea will generate 1 Holy Power.",
 @"Reduces the cooldown of Avenging Wrath by 40 sec and Guardian of Ancient Kings by 80 sec.  In addition, your Divine Plea will generate 2 Holy Power.",
 @"Reduces the cooldown of Avenging Wrath by 60 sec and Guardian of Ancient Kings by 120 sec.  In addition, your Divine Plea will generate 3 Holy Power.",})]
         public int ShieldOfTheTemplar { get { return _data[38]; } set { _data[38] = value; } }
@@ -1044,6 +1101,9 @@ All party or raid members, excluding the Paladin, take 20% reduced damage for 6 
 @"Ardent Defender - 3 min cooldown - Instant
 Reduce damage taken by 20% for 10 sec. While Ardent Defender is active, the next attack that would otherwise kill you will instead cause you to be healed for 15% of your maximum health.",})]
         public int ArdentDefender { get { return _data[39]; } set { _data[39] = value; } }
+        #endregion
+        #region Retribution
+        public override int TreeStartingIndexes_2 { get { return 40; } }
         /// <summary>
         /// All magic attacks against you have a [20 * Pts]% chance to cause 30% of the damage taken back to the attacker as well.
         /// </summary>
@@ -1095,13 +1155,13 @@ Reduce damage taken by 20% for 10 sec. While Ardent Defender is active, the next
 @"You have a 100% chance to gain a charge of Holy Power when struck by a Stun, Fear or Immobilize effect.  In addition, increases your movement and mounted movement speed by 15%.  This effect does not stack with other movement speed increasing effects.",})]
         public int PursuitOfJustice { get { return _data[45]; } set { _data[45] = value; } }
         /// <summary>
-        /// Your auras increase your party and raid's damage dealt by 3% and your damage by an additional 2%.  In addition, your Judgement causes Replenishment.
+        /// Your auras increase your party and raid's damage dealt by 3%, and your own damage is increased by an additional 2% at all times.  In addition, your Judgement causes Replenishment.
         /// 
         /// Replenishment - Grants up to 10 party or raid members mana regeneration equal to 1% of their maximum mana per 10 sec. Lasts for 15 sec.
         /// </summary>
         [TalentData(index: 46, name: "Communion", maxPoints: 1, icon: "ability_paladin_judgementofthewise",
          tree: 2, column: 1, row: 3, prerequisite: -1, description: new[] {
-@"Your auras increase your party and raid's damage dealt by 3% and your damage by an additional 2%.  In addition, your Judgement causes Replenishment.
+@"Your auras increase your party and raid's damage dealt by 3%, and your own damage is increased by an additional 2% at all times.  In addition, your Judgement causes Replenishment.
 
 Replenishment - Grants up to 10 party or raid members mana regeneration equal to 1% of their maximum mana per 10 sec. Lasts for 15 sec.",})]
         public int Communion { get { return _data[46]; } set { _data[46] = value; } }
@@ -1125,23 +1185,21 @@ Replenishment - Grants up to 10 party or raid members mana regeneration equal to
         /// <summary>
         /// Divine Storm - 5% of base mana
         /// 4.5 sec cooldown - Instant cast
-        /// Requires Melee Weapon - An instant attack that causes 60% weapon damage to all enemies within 8 yards.  The Divine Storm heals up to 3 party or raid members totaling 25% of the damage caused.
+        /// Requires Melee Weapon - An instant attack that causes 100% weapon damage to all enemies within 8 yards.  The Divine Storm heals up to 3 party or raid members totaling 25% of the damage caused, and will grant a charge of Holy Power if it hits 4 or more targets.
         /// </summary>
         [TalentData(index: 49, name: "Divine Storm", maxPoints: 1, icon: "ability_paladin_divinestorm",
          tree: 2, column: 4, row: 3, prerequisite: -1, description: new[] {
 @"Divine Storm - 5% of base mana
 4.5 sec cooldown - Instant cast
-Requires Melee Weapon - An instant attack that causes 60% weapon damage to all enemies within 8 yards.  The Divine Storm heals up to 3 party or raid members totaling 25% of the damage caused.",})]
+Requires Melee Weapon - An instant attack that causes 100% weapon damage to all enemies within 8 yards.  The Divine Storm heals up to 3 party or raid members totaling 25% of the damage caused, and will grant a charge of Holy Power if it hits 4 or more targets.",})]
         public int DivineStorm { get { return _data[49]; } set { _data[49] = value; } }
         /// <summary>
-        /// Sacred Shield
-        /// When reduced below 30% health, you gain the Sacred Shield effect. The Sacred Shield absorbs ((1) + (AP * 2.8)) damage and increases healing received by 20%.  Lasts 15 sec.  This effect cannot occur more than once every 30 sec.
+        /// When reduced below 30% health, you gain the Sacred Shield effect. The Sacred Shield absorbs [1 + 2.8 * AP] damage and increases healing received by 20%.  Lasts 15 sec.  This effect cannot occur more than once every 60 sec.
         /// </summary>
         [TalentData(index: 50, name: "Sacred Shield", maxPoints: 1, icon: "ability_paladin_blessedmending",
          tree: 2, column: 1, row: 4, prerequisite: -1, description: new[] {
-@"Sacred Shield
-When reduced below 30% health, you gain the Sacred Shield effect. The Sacred Shield absorbs ((1) + (AP * 2.8)) damage and increases healing received by 20%.  Lasts 15 sec.  This effect cannot occur more than once every 30 sec.",})]
-        public int Rebuke { get { return _data[50]; } set { _data[50] = value; } }
+@"When reduced below 30% health, you gain the Sacred Shield effect. The Sacred Shield absorbs [1 + 2.8 * AP] damage and increases healing received by 20%.  Lasts 15 sec.  This effect cannot occur more than once every 60 sec.",})]
+        public int SacredShield { get { return _data[50]; } set { _data[50] = value; } }
         /// <summary>
         /// Haste effects lower the cooldown of your Crusader Strike and Divine Storm abilities.
         /// </summary>
@@ -1176,16 +1234,16 @@ When reduced below 30% health, you gain the Sacred Shield effect. The Sacred Shi
         /// <summary>
         /// Repentance - 20 yd range - 9% of base mana
         /// 1 min cooldown - Instant cast
-        /// Puts the enemy target in a state of meditation, incapacitating them for up to 1 min.  Any damage caused will awaken the target.  Usable against Demons, Dragonkin, Giants, Humanoids and Undead.
+        /// Puts the enemy target in a state of meditation, incapacitating them for up to 1 min.  Any damage from sources other than Censure will awaken the target.  Usable against Demons, Dragonkin, Giants, Humanoids and Undead.
         /// </summary>
         [TalentData(index: 55, name: "Repentance", maxPoints: 1, icon: "spell_holy_prayerofhealing",
          tree: 2, column: 2, row: 5, prerequisite: -1, description: new[] {
 @"Repentance - 20 yd range - 9% of base mana
 1 min cooldown - Instant cast
-Puts the enemy target in a state of meditation, incapacitating them for up to 1 min.  Any damage caused will awaken the target.  Usable against Demons, Dragonkin, Giants, Humanoids and Undead.",})]
+Puts the enemy target in a state of meditation, incapacitating them for up to 1 min.  Any damage from sources other than Censure will awaken the target.  Usable against Demons, Dragonkin, Giants, Humanoids and Undead.",})]
         public int Repentance { get { return _data[55]; } set { _data[55] = value; } }
         /// <summary>
-        /// The following attacks have a [20 * Pts]% chance to generate Holy Power:
+        /// The following attacks have a [15 / 2 * Pts]% chance to cause your next Holy Power ability to consume no Holy Power and to cast as if 3 Holy Power were consumed:
         /// 
         /// - Judgement
         /// - Exorcism
@@ -1197,7 +1255,7 @@ Puts the enemy target in a state of meditation, incapacitating them for up to 1 
         /// </summary>
         [TalentData(index: 56, name: "Divine Purpose", maxPoints: 2, icon: "spell_holy_divinepurpose",
          tree: 2, column: 3, row: 5, prerequisite: -1, description: new[] {
-@"The following attacks have a 20% chance to generate Holy Power:
+@"The following attacks have a 7% chance to cause your next Holy Power ability to consume no Holy Power and to cast as if 3 Holy Power were consumed:
 
 - Judgement
 - Exorcism
@@ -1206,7 +1264,7 @@ Puts the enemy target in a state of meditation, incapacitating them for up to 1 
 - Inquisition
 - Holy Wrath
 - Hammer of Wrath",
-@"The following attacks have a 40% chance to generate Holy Power:
+@"The following attacks have a 15% chance to cause your next Holy Power ability to consume no Holy Power and to cast as if 3 Holy Power were consumed:
 
 - Judgement
 - Exorcism
@@ -1217,13 +1275,13 @@ Puts the enemy target in a state of meditation, incapacitating them for up to 1 
 - Hammer of Wrath",})]
         public int DivinePurpose { get { return _data[56]; } set { _data[56] = value; } }
         /// <summary>
-        /// Increases the periodic damage done by your Seal of Truth by [10 * Pts]%, and the duration of your Inqusition by [50 * Pts]%.
+        /// Increases the periodic damage done by your Seal of Truth by [10 * Pts]%, and the duration of your Inquisition by [50 * Pts]%.
         /// </summary>
         [TalentData(index: 57, name: "Inquiry of Faith", maxPoints: 3, icon: "ability_paladin_righteousvengeance",
          tree: 2, column: 2, row: 6, prerequisite: -1, description: new[] {
-@"Increases the periodic damage done by your Seal of Truth by 10.0%, and the duration of your Inqusition by 50%.",
-@"Increases the periodic damage done by your Seal of Truth by 20.0%, and the duration of your Inqusition by 100%.",
-@"Increases the periodic damage done by your Seal of Truth by 30.0%, and the duration of your Inqusition by 150%.",})]
+@"Increases the periodic damage done by your Seal of Truth by 10%, and the duration of your Inquisition by 50%.",
+@"Increases the periodic damage done by your Seal of Truth by 20%, and the duration of your Inquisition by 100%.",
+@"Increases the periodic damage done by your Seal of Truth by 30%, and the duration of your Inquisition by 150%.",})]
         public int InquiryOfFaith { get { return _data[57]; } set { _data[57] = value; } }
         /// <summary>
         /// Reduces the cooldown by [10 * Pts]% and mana cost by [10 * Pts]% of your Hand of Freedom, Hand of Salvation and Hand of Sacrifice.  In addition, your Cleanse will remove one movement impairing effect if cast on yourself.
@@ -1244,6 +1302,7 @@ Puts the enemy target in a state of meditation, incapacitating them for up to 1 
 2 min cooldown - Instant
 Your Crusader Strike generates 3 charges of Holy Power per strike for the next 20 sec.  Requires 3 Holy Power to use, but does not consume Holy Power.",})]
         public int Zealotry { get { return _data[59]; } set { _data[59] = value; } }
+        #endregion
     }
 
     public partial class HunterTalents : TalentsBase
@@ -1253,6 +1312,7 @@ Your Crusader Strike generates 3 charges of Holy Power per strike for the next 2
             HunterTalents clone = (HunterTalents)MemberwiseClone();
             clone._data = (int[])_data.Clone();
             clone._glyphData = (bool[])_glyphData.Clone();
+            clone.TreeCounts = new int[] { -1, -1, -1 };
             return clone;
         }
 
@@ -1264,10 +1324,12 @@ Your Crusader Strike generates 3 charges of Holy Power per strike for the next 2
             LoadString(talents);
         }
         public static string[] TreeNames = new[] {
-@"Beast Mastery",
-@"Marksmanship",
-@"Survival",};
+			@"Beast Mastery",
+			@"Marksmanship",
+			@"Survival",};
+
         #region Beast Mastery
+        public override int TreeStartingIndexes_0 { get { return 0; } }
         /// <summary>
         /// Increases the critical strike chance of your Kill Command by [5 * Pts]%.
         /// </summary>
@@ -1303,7 +1365,7 @@ Your Crusader Strike generates 3 charges of Holy Power per strike for the next 2
 @"Increases the speed bonus of your Aspect of the Cheetah and Aspect of the Pack by 8%, and increases your speed while mounted by 10%. The mounted movement speed increase does not stack with other effects.",})]
         public int Pathfinding { get { return _data[3]; } set { _data[3] = value; } }
         /// <summary>
-        /// While your pet is active, you and your pet will regenerate [1 * Pts]% of total health every 10 sec., and increases healing done to you and your pet by [5 * Pts]%.
+        /// While your pet is active, you and your pet will regenerate [1 * Pts]% of total health every [5 * Pts] sec., and increases healing done to you and your pet by 10%.
         /// </summary>
         [TalentData(index: 4, name: "Spirit Bond", maxPoints: 2, icon: "ability_druid_demoralizingroar",
          tree: 0, column: 2, row: 2, prerequisite: -1, description: new[] {
@@ -1311,13 +1373,13 @@ Your Crusader Strike generates 3 charges of Holy Power per strike for the next 2
 @"While your pet is active, you and your pet will regenerate 2% of total health every 10 sec., and increases healing done to you and your pet by 10%.",})]
         public int SpiritBond { get { return _data[4]; } set { _data[4] = value; } }
         /// <summary>
-        /// Your pet gains [2 * Pts]% attack speed after attacking with a Basic Attack, lasting for 10 sec and stacking up to 5 times.
+        /// Your pet gains [2 * Pts]% attack speed after attacking with a Basic Attack, lasting for 10 sec and stacking up to 0 times.
         /// </summary>
         [TalentData(index: 5, name: "Frenzy", maxPoints: 3, icon: "inv_misc_monsterclaw_03",
          tree: 0, column: 3, row: 2, prerequisite: -1, description: new[] {
-@"Your pet gains 2% attack speed after attacking with a Basic Attack, lasting for 10 sec and stacking up to 5 times.",
-@"Your pet gains 4% attack speed after attacking with a Basic Attack, lasting for 10 sec and stacking up to 5 times.",
-@"Your pet gains 6% attack speed after attacking with a Basic Attack, lasting for 10 sec and stacking up to 5 times.",})]
+@"Your pet gains 2% attack speed after attacking with a Basic Attack, lasting for 10 sec and stacking up to 0 times.",
+@"Your pet gains 4% attack speed after attacking with a Basic Attack, lasting for 10 sec and stacking up to 0 times.",
+@"Your pet gains 6% attack speed after attacking with a Basic Attack, lasting for 10 sec and stacking up to 0 times.",})]
         public int Frenzy { get { return _data[5]; } set { _data[5] = value; } }
         /// <summary>
         /// Gives the Mend Pet ability a [25 * Pts]% chance of cleansing 1 Curse, Disease, Magic or Poison effect from the pet each tick.
@@ -1337,26 +1399,22 @@ Your Crusader Strike generates 3 charges of Holy Power per strike for the next 2
 @"You have a 15% chance when you hit with Arcane Shot to cause your pet's next 2 Basic Attacks to critically hit.",})]
         public int CobraStrikes { get { return _data[7]; } set { _data[7] = value; } }
         /// <summary>
-        /// Fervor - 2 min cooldown
-        /// Instant cast
+        /// Fervor - 2 min cooldown - Instant cast
         /// Instantly restores 50 Focus to you and your pet.
         /// </summary>
         [TalentData(index: 8, name: "Fervor", maxPoints: 1, icon: "ability_hunter_aspectoftheviper",
          tree: 0, column: 2, row: 3, prerequisite: -1, description: new[] {
-@"Fervor - 2 min cooldown
-Instant cast
+@"Fervor - 2 min cooldown - Instant cast
 Instantly restores 50 Focus to you and your pet.",})]
         public int Fervor { get { return _data[8]; } set { _data[8] = value; } }
         /// <summary>
-        /// Focus Fire - 15 sec cooldown
-        /// Instant
-        /// Consumes your Pets Frenzy effect, restoring 4 Focus to your pet and increasing your ranged haste by 3% for each Frenzy stack consumed. Lasts for 15 sec.
+        /// Focus Fire - 15 sec cooldown - Instant
+        /// Consumes your pet\'s Frenzy Effect stack, restoring 4 Focus to your pet and increasing your ranged haste by 3% for each Frenzy Effect stack consumed. Lasts for 15 sec.
         /// </summary>
         [TalentData(index: 9, name: "Focus Fire", maxPoints: 1, icon: "ability_hunter_focusfire",
          tree: 0, column: 3, row: 3, prerequisite: 5, description: new[] {
-@"Focus Fire - 15 sec cooldown
-Instant
-Consumes your Pets Frenzy effect, restoring 4 Focus to your pet and increasing your ranged haste by 3% for each Frenzy stack consumed. Lasts for 15 sec.",})]
+@"Focus Fire - 15 sec cooldown - Instant
+Consumes your pet\'s Frenzy Effect stack, restoring 4 Focus to your pet and increasing your ranged haste by 3% for each Frenzy Effect stack consumed. Lasts for 15 sec.",})]
         public int FocusFire { get { return _data[9]; } set { _data[9] = value; } }
         /// <summary>
         /// Reduces the cooldown of your Bestial Wrath, Intimidation and Pet Special Abilities by [10 * Pts]%.
@@ -1396,14 +1454,14 @@ Whenever you are hit by a ranged attack or spell, the cooldown of your Deterrenc
 These effects have a 2 sec cooldown.",})]
         public int CrouchingTigerHiddenChimera { get { return _data[12]; } set { _data[12] = value; } }
         /// <summary>
-        /// Bestial Wrath - 2 min cooldown
-        /// Instant
+        /// Bestial Wrath - 100 yd range
+        /// 2 min cooldown - Instant
         /// Send your pet into a rage causing 20% additional damage for 10 sec.  The beast does not feel pity or remorse or fear and it cannot be stopped unless killed.
         /// </summary>
         [TalentData(index: 13, name: "Bestial Wrath", maxPoints: 1, icon: "ability_druid_ferociousbite",
          tree: 0, column: 2, row: 5, prerequisite: 8, description: new[] {
-@"Bestial Wrath - 2 min cooldown
-Instant
+@"Bestial Wrath - 100 yd range
+2 min cooldown - Instant
 Send your pet into a rage causing 20% additional damage for 10 sec.  The beast does not feel pity or remorse or fear and it cannot be stopped unless killed.",})]
         public int BestialWrath { get { return _data[13]; } set { _data[13] = value; } }
         /// <summary>
@@ -1445,6 +1503,7 @@ Send your pet into a rage causing 20% additional damage for 10 sec.  The beast d
         public int BeastMastery { get { return _data[18]; } set { _data[18] = value; } }
         #endregion
         #region Marksmanship
+        public override int TreeStartingIndexes_1 { get { return 19; } }
         /// <summary>
         /// Your ranged auto-shot critical hits cause your pet to generate [5 * Pts] Focus.
         /// </summary>
@@ -1496,15 +1555,15 @@ Send your pet into a rage causing 20% additional damage for 10 sec.  The beast d
 @"Increases the critical strike chance of your Steady Shot, Cobra Shot and Aimed Shot by 60% on targets who are above 80% health.",})]
         public int CarefulAim { get { return _data[24]; } set { _data[24] = value; } }
         /// <summary>
-        /// Silencing Shot - 20 sec cooldown
-        /// Instant cast
-        /// A shot that silences the target and interrupts spellcasting for 3 sec.
+        /// Silencing Shot - 5-35 yd range
+        /// 20 sec cooldown - Instant cast
+        /// Requires Ranged Weapon - A shot that silences the target and interrupts spellcasting for 3 sec.
         /// </summary>
         [TalentData(index: 25, name: "Silencing Shot", maxPoints: 1, icon: "ability_theblackarrow",
          tree: 1, column: 1, row: 3, prerequisite: -1, description: new[] {
-@"Silencing Shot - 20 sec cooldown
-Instant cast
-A shot that silences the target and interrupts spellcasting for 3 sec.",})]
+@"Silencing Shot - 5-35 yd range
+20 sec cooldown - Instant cast
+Requires Ranged Weapon - A shot that silences the target and interrupts spellcasting for 3 sec.",})]
         public int SilencingShot { get { return _data[25]; } set { _data[25] = value; } }
         /// <summary>
         /// Your successful Chimera Shot and Multi-Shot attacks have a [50 * Pts]% chance to daze the target for 4 sec.
@@ -1563,23 +1622,21 @@ A shot that silences the target and interrupts spellcasting for 3 sec.",})]
 @"You gain 12 focus every 3 sec while under the effect of Rapid Fire, and you gain 50 focus instantly when you gain Rapid Killing.",})]
         public int RapidRecuperation { get { return _data[32]; } set { _data[32] = value; } }
         /// <summary>
-        /// You have a [20 * Pts]% chance when you Steady Shot to gain the Master Marksman effect, lasting 30 sec. After reaching 5 stacks, your next Aimed Shot's cast time and focus cost are reduced by 100% for 10 sec.
+        /// You have a [20 * Pts]% chance when you Steady Shot to gain the Master Marksman effect, lasting 30 sec. After reaching 0 stacks, your next Aimed Shot's cast time and focus cost are reduced by 100% for 10 sec.
         /// </summary>
         [TalentData(index: 33, name: "Master Marksman", maxPoints: 3, icon: "ability_hunter_mastermarksman",
          tree: 1, column: 2, row: 5, prerequisite: -1, description: new[] {
-@"You have a 20% chance when you Steady Shot to gain the Master Marksman effect, lasting 30 sec. After reaching 5 stacks, your next Aimed Shot's cast time and focus cost are reduced by 100% for 10 sec.",
-@"You have a 40% chance when you Steady Shot to gain the Master Marksman effect, lasting 30 sec. After reaching 5 stacks, your next Aimed Shot's cast time and focus cost are reduced by 100% for 10 sec.",
-@"You have a 60% chance when you Steady Shot to gain the Master Marksman effect, lasting 30 sec. After reaching 5 stacks, your next Aimed Shot's cast time and focus cost are reduced by 100% for 10 sec.",})]
+@"You have a 20% chance when you Steady Shot to gain the Master Marksman effect, lasting 30 sec. After reaching 0 stacks, your next Aimed Shot's cast time and focus cost are reduced by 100% for 10 sec.",
+@"You have a 40% chance when you Steady Shot to gain the Master Marksman effect, lasting 30 sec. After reaching 0 stacks, your next Aimed Shot's cast time and focus cost are reduced by 100% for 10 sec.",
+@"You have a 60% chance when you Steady Shot to gain the Master Marksman effect, lasting 30 sec. After reaching 0 stacks, your next Aimed Shot's cast time and focus cost are reduced by 100% for 10 sec.",})]
         public int MasterMarksman { get { return _data[33]; } set { _data[33] = value; } }
         /// <summary>
-        /// Readiness - 3 min cooldown
-        /// Instant cast
+        /// Readiness - 3 min cooldown - Instant cast
         /// When activated, this ability immediately finishes the cooldown on all Hunter abilities.
         /// </summary>
         [TalentData(index: 34, name: "Readiness", maxPoints: 1, icon: "ability_hunter_readiness",
          tree: 1, column: 4, row: 5, prerequisite: -1, description: new[] {
-@"Readiness - 3 min cooldown
-Instant cast
+@"Readiness - 3 min cooldown - Instant cast
 When activated, this ability immediately finishes the cooldown on all Hunter abilities.",})]
         public int Readiness { get { return _data[34]; } set { _data[34] = value; } }
         /// <summary>
@@ -1605,18 +1662,19 @@ Marked for Death is the same as Hunter's Mark, but undispellable, does not restr
 Marked for Death is the same as Hunter's Mark, but undispellable, does not restrict stealth or invisibility and lasts 15 sec.",})]
         public int MarkedForDeath { get { return _data[36]; } set { _data[36] = value; } }
         /// <summary>
-        /// Chimera Shot - 10 sec cooldown
-        /// 50 Focus - Instant cast
-        /// An instant shot that causes ranged weapon damage plus [RAP*0.732+1620], refreshing the duration of  your Serpent Sting and healing you for 5% of your total health.
+        /// Chimera Shot - 5-40 yd range - 50 Focus
+        /// 6 sec cooldown - Instant cast
+        /// Requires Ranged Weapon - An instant shot that causes ranged weapon damage plus [1620 + 73.2% of RAP], refreshing the duration of  your Serpent Sting and healing you for 5% of your total health.
         /// </summary>
         [TalentData(index: 37, name: "Chimera Shot", maxPoints: 1, icon: "ability_hunter_chimerashot2",
          tree: 1, column: 2, row: 7, prerequisite: 33, description: new[] {
-@"Chimera Shot - 10 sec cooldown
-50 Focus - Instant cast
-Requires Ranged Weapon - An instant shot that causes ranged weapon damage plus [RAP*0.732+1620], refreshing the duration of  your Serpent Sting and healing you for 5% of your total health.",})]
+@"Chimera Shot - 5-40 yd range - 50 Focus
+6 sec cooldown - Instant cast
+Requires Ranged Weapon - An instant shot that causes ranged weapon damage plus [1620 + 73.2% of RAP], refreshing the duration of  your Serpent Sting and healing you for 5% of your total health.",})]
         public int ChimeraShot { get { return _data[37]; } set { _data[37] = value; } }
         #endregion
         #region Survival
+        public override int TreeStartingIndexes_2 { get { return 38; } }
         /// <summary>
         /// Increases your total Stamina by [5 * Pts]%.
         /// </summary>
@@ -1708,15 +1766,15 @@ Snake Trap - Increases the number of snakes summoned by 6.",})]
 @"You have a 15% chance when you use Arcane Shot, Explosive Shot or Black Arrow to instantly regain 40% of the base focus cost of the shot.",})]
         public int ThrillOfTheHunt { get { return _data[45]; } set { _data[45] = value; } }
         /// <summary>
-        /// Counterattack - 5 sec cooldown
-        /// Instant cast
-        /// A strike that becomes active after parrying an opponent's attack.  This attack deals [AP*0.2+320] damage and immobilizes the target for 5 sec.  Counterattack cannot be blocked, dodged, or parried.
+        /// Counterattack - Melee Range
+        /// 5 sec cooldown - Instant cast
+        /// A strike that becomes active after parrying an opponent\'s attack.  This attack deals [320 + 20% of AP] damage and immobilizes the target for 5 sec.  Counterattack cannot be blocked, dodged, or parried.
         /// </summary>
         [TalentData(index: 46, name: "Counterattack", maxPoints: 1, icon: "ability_warrior_challange",
          tree: 2, column: 2, row: 3, prerequisite: -1, description: new[] {
-@"Counterattack - 5 sec cooldown
-Instant cast
-A strike that becomes active after parrying an opponent's attack.  This attack deals [AP*0.2+320] damage and immobilizes the target for 5 sec.  Counterattack cannot be blocked, dodged, or parried.",})]
+@"Counterattack - Melee Range
+5 sec cooldown - Instant cast
+A strike that becomes active after parrying an opponent\'s attack.  This attack deals [320 + 20% of AP] damage and immobilizes the target for 5 sec.  Counterattack cannot be blocked, dodged, or parried.",})]
         public int Counterattack { get { return _data[46]; } set { _data[46] = value; } }
         /// <summary>
         /// You have a [50 * Pts]% chance when you trap a target with Freezing Trap or Ice Trap to cause your next 2 Arcane Shot or Explosive Shot abilities to cost no focus and trigger no cooldown.
@@ -1760,15 +1818,15 @@ A strike that becomes active after parrying an opponent's attack.  This attack d
 @"Increases the periodic critical damage of your Serpent Sting and Black Arrow by 100%.",})]
         public int Toxicology { get { return _data[51]; } set { _data[51] = value; } }
         /// <summary>
-        /// Wyvern Sting - 1 min cooldown
-        /// 10 Focus - Instant cast
+        /// Wyvern Sting - 5-35 yd range - 10 Focus
+        /// 1 min cooldown - Instant cast
         /// Requires Ranged Weapon - A stinging shot that puts the target to sleep for 30 sec.  Any damage will cancel the effect.  When the target wakes up, the Sting causes 2736 Nature damage over 6 sec.  Only one Sting per Hunter can be active on the target at a time.
         /// </summary>
         [TalentData(index: 52, name: "Wyvern Sting", maxPoints: 1, icon: "inv_spear_02",
          tree: 2, column: 2, row: 5, prerequisite: -1, description: new[] {
-@"Wyvern Sting - 1 min cooldown
-10 Focus - Instant cast
-A stinging shot that puts the target to sleep for 30 sec.  Any damage will cancel the effect.  When the target wakes up, the Sting causes 2736 Nature damage over 6 sec.  Only one Sting per Hunter can be active on the target at a time.",})]
+@"Wyvern Sting - 5-35 yd range - 10 Focus
+1 min cooldown - Instant cast
+Requires Ranged Weapon - A stinging shot that puts the target to sleep for 30 sec.  Any damage will cancel the effect.  When the target wakes up, the Sting causes 2736 Nature damage over 6 sec.  Only one Sting per Hunter can be active on the target at a time.",})]
         public int WyvernSting { get { return _data[52]; } set { _data[52] = value; } }
         /// <summary>
         /// Increases your damage done on targets afflicted by your Serpent Sting by [5 * Pts]%.
@@ -1792,7 +1850,7 @@ If Wyvern Sting is dispelled, the dispeller is also afflicted by Wyvern Sting la
 @"Increases your total Agility by an additional 2%, and increases the Ranged and Melee Attack Speed of all party and raid members by 10%.",})]
         public int HuntingParty { get { return _data[54]; } set { _data[54] = value; } }
         /// <summary>
-        /// Increases the critical strike chance of your Kill Shot ability by [5 * Pts]%, and after remaining stationary for 6 sec, your Steady Shot and Cobra Shot deal [2 * Pts]% more damage for 15 sec.
+        /// Increases the critical strike chance of your Kill Shot ability by [5 * Pts]%, and after remaining stationary for [2 * Pts] sec, your Steady Shot and Cobra Shot deal 6% more damage for 15 sec.
         /// </summary>
         [TalentData(index: 55, name: "Sniper Training", maxPoints: 3, icon: "ability_hunter_longshots",
          tree: 2, column: 1, row: 6, prerequisite: -1, description: new[] {
@@ -1801,7 +1859,7 @@ If Wyvern Sting is dispelled, the dispeller is also afflicted by Wyvern Sting la
 @"Increases the critical strike chance of your Kill Shot ability by 15%, and after remaining stationary for 6 sec, your Steady Shot and Cobra Shot deal 6% more damage for 15 sec.",})]
         public int SniperTraining { get { return _data[55]; } set { _data[55] = value; } }
         /// <summary>
-        /// Targets hit by your Multi-Shot are also afflicted by your Serpent Sting equal to [3 + (3 * Pts)] sec of its total duration.
+        /// Targets hit by your Multi-Shot are also afflicted by your Serpent Sting equal to [9 / 2 * Pts] sec of its total duration.
         /// </summary>
         [TalentData(index: 56, name: "Serpent Spread", maxPoints: 2, icon: "ability_hunter_serpentswiftness",
          tree: 2, column: 3, row: 6, prerequisite: -1, description: new[] {
@@ -1809,33 +1867,27 @@ If Wyvern Sting is dispelled, the dispeller is also afflicted by Wyvern Sting la
 @"Targets hit by your Multi-Shot are also afflicted by your Serpent Sting equal to 9 sec of its total duration.",})]
         public int SerpentSpread { get { return _data[56]; } set { _data[56] = value; } }
         /// <summary>
-        /// Black Arrow - 30 sec cooldown
-        /// 35 Focus - Instant cast
+        /// Black Arrow - 5-40 yd range - 35 Focus
+        /// 30 sec cooldown - Instant cast
         /// Requires Ranged Weapon - Fires a Black Arrow at the target, dealing 2035 Shadow damage over 15 sec. Black Arrow shares a cooldown with other Fire Trap spells.
         /// </summary>
         [TalentData(index: 57, name: "Black Arrow", maxPoints: 1, icon: "spell_shadow_painspike",
          tree: 2, column: 2, row: 7, prerequisite: 52, description: new[] {
-@"Black Arrow - 30 sec cooldown
-35 Focus - Instant cast
-Fires a Black Arrow at the target, dealing 2035 Shadow damage over 15 sec. Black Arrow shares a cooldown with other Fire Trap spells.",})]
+@"Black Arrow - 5-40 yd range - 35 Focus
+30 sec cooldown - Instant cast
+Requires Ranged Weapon - Fires a Black Arrow at the target, dealing 2035 Shadow damage over 15 sec. Black Arrow shares a cooldown with other Fire Trap spells.",})]
         public int BlackArrow { get { return _data[57]; } set { _data[57] = value; } }
         #endregion
     }
 
     public partial class RogueTalents : TalentsBase
-#if RAWR3 || RAWR4
     {
         public override TalentsBase Clone()
-#else
-, ICloneable
-    {
-        public RogueTalents Clone() { return (RogueTalents)((ICloneable)this).Clone(); }
-        object ICloneable.Clone()
-#endif
         {
             RogueTalents clone = (RogueTalents)MemberwiseClone();
             clone._data = (int[])_data.Clone();
             clone._glyphData = (bool[])_glyphData.Clone();
+            clone.TreeCounts = new int[] { -1, -1, -1 };
             return clone;
         }
 
@@ -1847,17 +1899,19 @@ Fires a Black Arrow at the target, dealing 2035 Shadow damage over 15 sec. Black
             LoadString(talents);
         }
         public static string[] TreeNames = new[] {
-@"Assassination",
-@"Combat",
-@"Subtlety",};
+			@"Assassination",
+			@"Combat",
+			@"Subtlety",};
 
+        #region Assassination
+        public override int TreeStartingIndexes_0 { get { return 0; } }
         /// <summary>
-        /// After killing an opponent that yields experience or honor, the critical strike [50 * Pts] of [10 * Pts] next attack within 10 sec is increased by 40% and your Slice and [40 * Pts] and Recuperate abilities are refreshed to their original duration.
+        /// After killing an opponent that yields experience or honor, the critical strike [50 * Pts] of [15 * Pts] next attack within 15 sec is increased by 40% and your Slice and [40 * Pts] and Recuperate abilities are refreshed to their original duration.
         /// </summary>
         [TalentData(index: 0, name: "Deadly Momentum", maxPoints: 2, icon: "ability_rogue_deadlymomentum",
          tree: 0, column: 1, row: 1, prerequisite: -1, description: new[] {
-@"After killing an opponent that yields experience or honor, you have a 50% chance to increase the critical strike chance of your next attack within 10 sec by 40%, and to refresh your Slice and Dice and Recuperate abilities to their original duration.",
-@"After killing an opponent that yields experience or honor, the critical strike chance of your next attack within 10 sec is increased by 40% and your Slice and Dice and Recuperate abilities are refreshed to their original duration.",})]
+@"After killing an opponent that yields experience or honor, you have a 50% chance to increase the critical strike chance of your next attack within 15 sec by 40%, and to refresh your Slice and Dice and Recuperate abilities to their original duration.",
+@"After killing an opponent that yields experience or honor, the critical strike chance of your next attack within 15 sec is increased by 40% and your Slice and Dice and Recuperate abilities are refreshed to their original duration.",})]
         public int DeadlyMomentum { get { return _data[0]; } set { _data[0] = value; } }
         /// <summary>
         /// Increases the damage done by your Eviscerate and Envenom abilities by [20 / 3 * Pts]%.
@@ -1887,12 +1941,12 @@ Fires a Black Arrow at the target, dealing 2035 Shadow damage over 15 sec. Black
 @"Gives your melee finishing moves a 60% chance to add a combo point to your target.",})]
         public int Ruthlessness { get { return _data[3]; } set { _data[3] = value; } }
         /// <summary>
-        /// All healing effects on you are increased by [10 * Pts]% and your movement speed is increased by [15 / 2 * Pts]%.  This does not stack with other movement speed increasing effects.
+        /// All healing effects on you are increased by [10 * Pts]% and your movement speed is increased by [15 / 2 * Pts]%.  This does not stack with most other movement speed increasing effects.
         /// </summary>
         [TalentData(index: 4, name: "Quickening", maxPoints: 2, icon: "ability_rogue_quickrecovery",
          tree: 0, column: 2, row: 2, prerequisite: -1, description: new[] {
-@"All healing effects on you are increased by 10% and your movement speed is increased by 8%.  This does not stack with other movement speed increasing effects.",
-@"All healing effects on you are increased by 20% and your movement speed is increased by 15%.  This does not stack with other movement speed increasing effects.",})]
+@"All healing effects on you are increased by 10% and your movement speed is increased by 8%.  This does not stack with most other movement speed increasing effects.",
+@"All healing effects on you are increased by 20% and your movement speed is increased by 15%.  This does not stack with most other movement speed increasing effects.",})]
         public int Quickening { get { return _data[4]; } set { _data[4] = value; } }
         /// <summary>
         /// Increases the critical strike chance of your Backstab ability by [10 * Pts]%, and the critical strike chance of your Mutilate ability by [5 * Pts]%.
@@ -1994,12 +2048,12 @@ When activated, generates 25 Energy and increases the critical strike chance of 
 @"Your Eviscerate and Envenom abilities have a 100% chance to refresh your Slice and Dice duration to its 5 combo point maximum.",})]
         public int CutToTheChase { get { return _data[16]; } set { _data[16] = value; } }
         /// <summary>
-        /// Each time your Rupture or Garrote deals damage to an enemy that you have poisoned, you have a [30 * Pts]% chance to deal 567 additional Nature damage and to regain 10 Energy.  If an enemy dies while afflicted by your Rupture, you regain energy proportional to the remaining Rupture duration.
+        /// Each time your Rupture or Garrote deals damage to an enemy that you have poisoned, you have a [30 * Pts]% chance to deal 675 additional Nature damage and to regain 10 Energy.  If an enemy dies while afflicted by your Rupture, you regain energy proportional to the remaining Rupture duration.
         /// </summary>
         [TalentData(index: 17, name: "Venomous Wounds", maxPoints: 2, icon: "ability_rogue_venomouswounds",
          tree: 0, column: 3, row: 6, prerequisite: -1, description: new[] {
-@"Each time your Rupture or Garrote deals damage to an enemy that you have poisoned, you have a 30% chance to deal 567 additional Nature damage and to regain 10 Energy.  If an enemy dies while afflicted by your Rupture, you regain energy proportional to the remaining Rupture duration.",
-@"Each time your Rupture or Garrote deals damage to an enemy that you have poisoned, you have a 60% chance to deal 567 additional Nature damage and to regain 10 Energy.  If an enemy dies while afflicted by your Rupture, you regain energy proportional to the remaining Rupture duration.",})]
+@"Each time your Rupture or Garrote deals damage to an enemy that you have poisoned, you have a 30% chance to deal 675 additional Nature damage and to regain 10 Energy.  If an enemy dies while afflicted by your Rupture, you regain energy proportional to the remaining Rupture duration.",
+@"Each time your Rupture or Garrote deals damage to an enemy that you have poisoned, you have a 60% chance to deal 675 additional Nature damage and to regain 10 Energy.  If an enemy dies while afflicted by your Rupture, you regain energy proportional to the remaining Rupture duration.",})]
         public int VenomousWounds { get { return _data[17]; } set { _data[17] = value; } }
         /// <summary>
         /// Vendetta - 30 yd range
@@ -2012,13 +2066,16 @@ When activated, generates 25 Energy and increases the critical strike chance of 
 2 min cooldown - Instant cast
 Marks an enemy for death, increasing all damage you deal to the target by 20% and granting you unerring vision of your target, regardless of concealments such as stealth and invisibility.  Lasts 30 sec.",})]
         public int Vendetta { get { return _data[18]; } set { _data[18] = value; } }
+        #endregion
+        #region Combat
+        public override int TreeStartingIndexes_1 { get { return 19; } }
         /// <summary>
-        /// Causes your Recuperate ability to restore an additional [1 * Pts]% of your maximum health and reduces all damage taken by [3 * Pts]% while your Recuperate ability is active.
+        /// Causes your Recuperate ability to restore an additional [0.5 * Pts]% of your maximum health and reduces all damage taken by [3 * Pts]% while your Recuperate ability is active.
         /// </summary>
         [TalentData(index: 19, name: "Improved Recuperate", maxPoints: 2, icon: "ability_rogue_improvedrecuperate",
          tree: 1, column: 1, row: 1, prerequisite: -1, description: new[] {
-@"Causes your Recuperate ability to restore an additional 1% of your maximum health and reduces all damage taken by 3% while your Recuperate ability is active.",
-@"Causes your Recuperate ability to restore an additional 2% of your maximum health and reduces all damage taken by 6% while your Recuperate ability is active.",})]
+@"Causes your Recuperate ability to restore an additional 0.5% of your maximum health and reduces all damage taken by 3% while your Recuperate ability is active.",
+@"Causes your Recuperate ability to restore an additional 1% of your maximum health and reduces all damage taken by 6% while your Recuperate ability is active.",})]
         public int ImprovedRecuperate { get { return _data[19]; } set { _data[19] = value; } }
         /// <summary>
         /// Increases the damage dealt by your Sinister Strike ability by [10 * Pts]% and reduces its Energy cost by [2 * Pts]
@@ -2083,13 +2140,13 @@ Marks an enemy for death, increasing all damage you deal to the target by 20% an
         /// <summary>
         /// Revealing Strike - Melee Range - 40 Energy
         /// Instant cast
-        /// Requires Melee Weapon - An instant strike that causes 125.01299876% of your normal weapon damage and increases the effectiveness of your next offensive finishing move on that target by 20% for 15 sec.  Awards 1 combo point.
+        /// Requires Melee Weapon - An instant strike that causes 125% of your normal weapon damage and increases the effectiveness of your next offensive finishing move on that target by 35% for 15 sec.  Awards 1 combo point.
         /// </summary>
         [TalentData(index: 27, name: "Revealing Strike", maxPoints: 1, icon: "inv_sword_97",
          tree: 1, column: 2, row: 3, prerequisite: -1, description: new[] {
 @"Revealing Strike - Melee Range - 40 Energy
 Instant cast
-Requires Melee Weapon - An instant strike that causes 125.01299876% of your normal weapon damage and increases the effectiveness of your next offensive finishing move on that target by 20% for 15 sec.  Awards 1 combo point.",})]
+Requires Melee Weapon - An instant strike that causes 125% of your normal weapon damage and increases the effectiveness of your next offensive finishing move on that target by 35% for 15 sec.  Awards 1 combo point.",})]
         public int RevealingStrike { get { return _data[27]; } set { _data[27] = value; } }
         /// <summary>
         /// Increases your armor contribution from cloth and leather items by [25 * Pts]%.
@@ -2108,13 +2165,13 @@ Requires Melee Weapon - An instant strike that causes 125.01299876% of your norm
 @"Increases the effect duration of your Gouge ability by 2 sec and reduces its energy cost by 30.",})]
         public int ImprovedGouge { get { return _data[29]; } set { _data[29] = value; } }
         /// <summary>
-        /// Gives your successful off-hand melee attacks a 20% chance to generate [5 * Pts] Energy.
+        /// Gives your successful off-hand melee attacks and Main Gauche attacks a 20% chance to generate [5 * Pts] Energy.
         /// </summary>
         [TalentData(index: 30, name: "Combat Potency", maxPoints: 3, icon: "inv_weapon_shortblade_38",
          tree: 1, column: 2, row: 4, prerequisite: -1, description: new[] {
-@"Gives your successful off-hand melee attacks a 20% chance to generate 5 Energy.",
-@"Gives your successful off-hand melee attacks a 20% chance to generate 10 Energy.",
-@"Gives your successful off-hand melee attacks a 20% chance to generate 15 Energy.",})]
+@"Gives your successful off-hand melee attacks and Main Gauche attacks a 20% chance to generate 5 Energy.",
+@"Gives your successful off-hand melee attacks  and Main Gauche attacks a 20% chance to generate 10 Energy.",
+@"Gives your successful off-hand melee attacks and Main Gauche attacks a 20% chance to generate 15 Energy.",})]
         public int CombatPotency { get { return _data[30]; } set { _data[30] = value; } }
         /// <summary>
         /// Gives your damaging melee attacks a [20 * Pts]% chance to daze the target, reducing movement speed by 70% for [4 * Pts] sec.
@@ -2159,31 +2216,34 @@ Increases your Energy regeneration rate by 100% and your melee attack speed by 2
 @"Your Sinister Strike and Revealing Strike abilities have a 100% chance to grant you an evolving insight into an opponent's defenses, increasing damage to that target by up to 30%.  Opponents can adapt over time, negating this benefit, and Striking a different opponent will begin the cycle anew.",})]
         public int BanditsGuile { get { return _data[35]; } set { _data[35] = value; } }
         /// <summary>
-        /// Your damaging finishing moves reduce the cooldown of your Adrenaline Rush, Killing Spree, and Sprint abilities by [1 * Pts] sec per combo point.
+        /// Your damaging finishing moves reduce the cooldown of your Adrenaline Rush, Killing Spree, Redirect, and Sprint abilities by [1 * Pts] sec per combo point.
         /// </summary>
         [TalentData(index: 36, name: "Restless Blades", maxPoints: 2, icon: "ability_rogue_restlessblades",
          tree: 1, column: 3, row: 6, prerequisite: -1, description: new[] {
-@"Your damaging finishing moves reduce the cooldown of your Adrenaline Rush, Killing Spree, and Sprint abilities by 1 sec per combo point.",
-@"Your damaging finishing moves reduce the cooldown of your Adrenaline Rush, Killing Spree, and Sprint abilities by 2 sec per combo point.",})]
+@"Your damaging finishing moves reduce the cooldown of your Adrenaline Rush, Killing Spree, Redirect, and Sprint abilities by 1 sec per combo point.",
+@"Your damaging finishing moves reduce the cooldown of your Adrenaline Rush, Killing Spree, Redirect, and Sprint abilities by 2 sec per combo point.",})]
         public int RestlessBlades { get { return _data[36]; } set { _data[36] = value; } }
         /// <summary>
         /// Killing Spree - 10 yd range
         /// 2 min cooldown - Instant cast
-        /// Requires Melee Weapon - Step through the shadows from enemy to enemy within 10 yards, attacking an enemy every .5 secs with both weapons until 5 assaults are made, and increasing all damage done by 20% for the duration.  Can hit the same target multiple times.  Cannot hit invisible or stealthed targets.
+        /// Requires Melee Weapon - Step through the shadows from enemy to enemy within 10 yards, attacking an enemy every 0.5 sec with both weapons until 5 assaults are made, and increasing all damage done by 20% for the duration.  Can hit the same target multiple times.  Cannot hit invisible or stealthed targets.
         /// </summary>
         [TalentData(index: 37, name: "Killing Spree", maxPoints: 1, icon: "ability_rogue_murderspree",
          tree: 1, column: 2, row: 7, prerequisite: 33, description: new[] {
 @"Killing Spree - 10 yd range
 2 min cooldown - Instant cast
-Requires Melee Weapon - Step through the shadows from enemy to enemy within 10 yards, attacking an enemy every .5 secs with both weapons until 5 assaults are made, and increasing all damage done by 20% for the duration.  Can hit the same target multiple times.  Cannot hit invisible or stealthed targets.",})]
+Requires Melee Weapon - Step through the shadows from enemy to enemy within 10 yards, attacking an enemy every 0.5 sec with both weapons until 5 assaults are made, and increasing all damage done by 20% for the duration.  Can hit the same target multiple times.  Cannot hit invisible or stealthed targets.",})]
         public int KillingSpree { get { return _data[37]; } set { _data[37] = value; } }
+        #endregion
+        #region Subtlety
+        public override int TreeStartingIndexes_2 { get { return 38; } }
         /// <summary>
-        /// Increases your speed while stealthed by [15 / 2 * Pts]% and reduces the cooldown of your Stealth ability by [3 * Pts] sec.
+        /// Increases your speed while stealthed by [5 * Pts]% and reduces the cooldown of your Stealth ability by [2 * Pts] sec.
         /// </summary>
         [TalentData(index: 38, name: "Nightstalker", maxPoints: 2, icon: "ability_stealth",
          tree: 2, column: 1, row: 1, prerequisite: -1, description: new[] {
-@"Increases your speed while stealthed by 7% and reduces the cooldown of your Stealth ability by 3 sec.",
-@"Increases your speed while stealthed by 15% and reduces the cooldown of your Stealth ability by 6 sec.",})]
+@"Increases your speed while stealthed by 5% and reduces the cooldown of your Stealth ability by 2 sec.",
+@"Increases your speed while stealthed by 10% and reduces the cooldown of your Stealth ability by 4 sec.",})]
         public int Nightstalker { get { return _data[38]; } set { _data[38] = value; } }
         /// <summary>
         /// Increases the critical strike chance of your Ambush ability by [20 * Pts]% and its damage by [5 * Pts]%.
@@ -2204,12 +2264,12 @@ Requires Melee Weapon - Step through the shadows from enemy to enemy within 10 y
 @"Your finishing moves have a 20% chance per combo point to restore 25 energy.",})]
         public int RelentlessStrikes { get { return _data[40]; } set { _data[40] = value; } }
         /// <summary>
-        /// Reduces the cooldown of your Vanish and Blind abilities by [30 * Pts] sec and your Cloak of Shadows ability by [15 * Pts] sec.
+        /// Reduces the cooldown of your Vanish and Blind abilities by [30 * Pts] sec and your Cloak of Shadows ability by [10 * Pts] sec.
         /// </summary>
         [TalentData(index: 41, name: "Elusiveness", maxPoints: 2, icon: "spell_magic_lesserinvisibilty",
          tree: 2, column: 1, row: 2, prerequisite: -1, description: new[] {
-@"Reduces the cooldown of your Vanish and Blind abilities by 30 sec and your Cloak of Shadows ability by 15 sec.",
-@"Reduces the cooldown of your Vanish and Blind abilities by 60 sec and your Cloak of Shadows ability by 30 sec.",})]
+@"Reduces the cooldown of your Vanish and Blind abilities by 30 sec and your Cloak of Shadows ability by 10 sec.",
+@"Reduces the cooldown of your Vanish and Blind abilities by 60 sec and your Cloak of Shadows ability by 20 sec.",})]
         public int Elusiveness { get { return _data[41]; } set { _data[41] = value; } }
         /// <summary>
         /// Your Ambush and Backstab hits have a [50 * Pts]% chance to unbalance a target, increasing the time between their melee and ranged attacks by 20%, and reducing movement speed by 50% for 8 sec.
@@ -2246,23 +2306,23 @@ Requires Melee Weapon - Step through the shadows from enemy to enemy within 10 y
 @"Empowers your Recuperate ability, causing its periodic effect to also restore 12 Energy.",})]
         public int EnergeticRecovery { get { return _data[45]; } set { _data[45] = value; } }
         /// <summary>
-        /// Your Ambush, Garrote, and Cheap Shot abilities reveal a flaw in your target's defenses, causing all your attacks to bypass [25 * Pts]% of that enemy's armor for 10 sec.
+        /// Your Ambush, Garrote, and Cheap Shot abilities reveal a flaw in your target's defenses, causing all your attacks to bypass [35 * Pts]% of that enemy's armor for 10 sec.
         /// </summary>
         [TalentData(index: 46, name: "Find Weakness", maxPoints: 2, icon: "ability_rogue_findweakness",
          tree: 2, column: 2, row: 3, prerequisite: -1, description: new[] {
-@"Your Ambush, Garrote, and Cheap Shot abilities reveal a flaw in your target's defenses, causing all your attacks to bypass 25% of that enemy's armor for 10 sec.",
-@"Your Ambush, Garrote, and Cheap Shot abilities reveal a flaw in your target's defenses, causing all your attacks to bypass 50% of that enemy's armor for 10 sec.",})]
+@"Your Ambush, Garrote, and Cheap Shot abilities reveal a flaw in your target's defenses, causing all your attacks to bypass 35% of that enemy's armor for 10 sec.",
+@"Your Ambush, Garrote, and Cheap Shot abilities reveal a flaw in your target's defenses, causing all your attacks to bypass 70% of that enemy's armor for 10 sec.",})]
         public int FindWeakness { get { return _data[46]; } set { _data[46] = value; } }
         /// <summary>
         /// Hemorrhage - Melee Range - 35 Energy
         /// Instant cast
-        /// Requires Melee Weapon - An instant strike that deals 110.004001021% weapon damage (159.506% if a dagger is equipped) and causes the target to take 30% additional damage from bleed effects for 1 min.  Awards 1 combo point.
+        /// Requires Melee Weapon - An instant strike that deals 110% weapon damage (160% if a dagger is equipped) and causes the target to take 30% additional damage from Bleed effects for 1 min.  Awards 1 combo point.
         /// </summary>
         [TalentData(index: 47, name: "Hemorrhage", maxPoints: 1, icon: "spell_shadow_lifedrain",
          tree: 2, column: 3, row: 3, prerequisite: -1, description: new[] {
 @"Hemorrhage - Melee Range - 35 Energy
 Instant cast
-Requires Melee Weapon - An instant strike that deals 110.004001021% weapon damage (159.506% if a dagger is equipped) and causes the target to take 30% additional damage from bleed effects for 1 min.  Awards 1 combo point.",})]
+Requires Melee Weapon - An instant strike that deals 110% weapon damage (160% if a dagger is equipped) and causes the target to take 30% additional damage from Bleed effects for 1 min.  Awards 1 combo point.",})]
         public int Hemorrhage { get { return _data[47]; } set { _data[47] = value; } }
         /// <summary>
         /// Increases the critical strike chance of all party and raid members by 5%. When any player in your party or raid critically hits with a spell or ability, you have a [100 / 3 * Pts]% chance to gain a combo point on your current target.  This effect cannot occur more than once every [2 / 3 * Pts] seconds.
@@ -2304,20 +2364,20 @@ When used, adds 2 combo points to your target.  You must add to or use those com
         public int CheatDeath { get { return _data[51]; } set { _data[51] = value; } }
         /// <summary>
         /// Preparation - 5 min cooldown - Instant cast
-        /// When activated, this ability immediately finishes the cooldown on your Evasion, Sprint, Vanish, and Shadowstep abilities.
+        /// When activated, this ability immediately finishes the cooldown on your Sprint, Vanish, and Shadowstep abilities.
         /// </summary>
         [TalentData(index: 52, name: "Preparation", maxPoints: 1, icon: "ability_rogue_preparation",
          tree: 2, column: 2, row: 5, prerequisite: -1, description: new[] {
 @"Preparation - 5 min cooldown - Instant cast
-When activated, this ability immediately finishes the cooldown on your Evasion, Sprint, Vanish, and Shadowstep abilities.",})]
+When activated, this ability immediately finishes the cooldown on your Sprint, Vanish, and Shadowstep abilities.",})]
         public int Preparation { get { return _data[52]; } set { _data[52] = value; } }
         /// <summary>
-        /// Increases your damage dealt to targets who are afflicted with a Bleed effect [5 * Pts] [0 * Pts]%.
+        /// Increases your damage dealt to targets with a Bleed effect on them by [5 * Pts]% and gives your Bleed effects a [50 * Pts]% chance to not break your Gouge.
         /// </summary>
         [TalentData(index: 53, name: "Sanguinary Vein", maxPoints: 2, icon: "ability_rogue_sanguinaryvein",
          tree: 2, column: 3, row: 5, prerequisite: 47, description: new[] {
-@"Increases your damage dealt to targets with a Bleed effect on them by 5%.",
-@"Increases your damage dealt to targets who are afflicted with a Bleed effect by 10%.",})]
+@"Increases your damage dealt to targets with a Bleed effect on them by 5% and gives your Bleed effects a 50% chance to not break your Gouge.",
+@"Increases your damage dealt to targets with a Bleed effect on them by 10% and gives your Bleed effects a 100% chance to not break your Gouge.",})]
         public int SanguinaryVein { get { return _data[53]; } set { _data[53] = value; } }
         /// <summary>
         /// Reduces the energy cost of your Backstab and Ambush abilities by [20 / 3 * Pts] and the energy cost of your Hemorrhage and Fan of Knives abilities by [2 * Pts]
@@ -2345,22 +2405,17 @@ When activated, this ability immediately finishes the cooldown on your Evasion, 
 @"Shadow Dance - 1 min cooldown - Instant
 Enter the Shadow Dance for 6 sec, allowing the use of Sap, Garrote, Ambush, Cheap Shot, Premeditation, Pickpocket and Disarm Trap regardless of being stealthed.",})]
         public int ShadowDance { get { return _data[56]; } set { _data[56] = value; } }
+        #endregion
     }
 
     public partial class PriestTalents : TalentsBase
-#if RAWR3 || RAWR4
     {
         public override TalentsBase Clone()
-#else
-, ICloneable
-    {
-        public PriestTalents Clone() { return (PriestTalents)((ICloneable)this).Clone(); }
-        object ICloneable.Clone()
-#endif
         {
             PriestTalents clone = (PriestTalents)MemberwiseClone();
             clone._data = (int[])_data.Clone();
             clone._glyphData = (bool[])_glyphData.Clone();
+            clone.TreeCounts = new int[] { -1, -1, -1 };
             return clone;
         }
 
@@ -2372,17 +2427,19 @@ Enter the Shadow Dance for 6 sec, allowing the use of Sap, Garrote, Ambush, Chea
             LoadString(talents);
         }
         public static string[] TreeNames = new[] {
-@"Discipline",
-@"Holy",
-@"Shadow",};
+			@"Discipline",
+			@"Holy",
+			@"Shadow",};
 
+        #region Discipline
+        public override int TreeStartingIndexes_0 { get { return 0; } }
         /// <summary>
-        /// Increases the damage absorbed by your Power Word: Shield by [5 * Pts]%.
+        /// Increases the damage absorbed by your Power Word: Shield by [10 * Pts]%.
         /// </summary>
         [TalentData(index: 0, name: "Improved Power Word: Shield", maxPoints: 2, icon: "spell_holy_powerwordshield",
          tree: 0, column: 1, row: 1, prerequisite: -1, description: new[] {
-@"Increases the damage absorbed by your Power Word: Shield by 5%.",
-@"Increases the damage absorbed by your Power Word: Shield by 10%.",})]
+@"Increases the damage absorbed by your Power Word: Shield by 10%.",
+@"Increases the damage absorbed by your Power Word: Shield by 20%.",})]
         public int ImprovedPowerWordShield { get { return _data[0]; } set { _data[0] = value; } }
         /// <summary>
         /// Increases your Shadow and Holy spell damage and healing by [2 * Pts]%.
@@ -2403,29 +2460,29 @@ Enter the Shadow Dance for 6 sec, allowing the use of Sap, Garrote, Ambush, Chea
 @"Reduces the mana cost of your instant cast spells by 10%.",})]
         public int MentalAgility { get { return _data[2]; } set { _data[2] = value; } }
         /// <summary>
-        /// You have a 100% chance when you Smite and a 100% chance when you Mind Flay to gain Evangelism. Stacks up to 0 times. Lasts for 20 sec.
+        /// You have a 100% chance when you Smite or Holy Fire and a 100% chance when you Mind Flay to gain Evangelism. Stacks up to 0 times. Lasts for 20 sec.
         /// 
-        /// |CFFFFFFFFEvangelism (Smite)|R
-        /// Increasing the damage done by your Smite, Holy Fire, and Penance spells by [2 * Pts]% and reduces the mana cost of those spells by [3 * Pts]%.
+        /// Evangelism (Smite, Holy Fire)
+        /// Increases the damage done by your Smite, Holy Fire, and Penance spells by [2 * Pts]% and reduces the mana cost of those spells by [3 * Pts]%.
         /// 
-        /// |CFFFFFFFFDark Evangelism (Mind Flay)|R
+        /// Dark Evangelism (Mind Flay)
         /// Increases the damage done by your Periodic Shadow spells by [1 * Pts]%.
         /// </summary>
         [TalentData(index: 3, name: "Evangelism", maxPoints: 2, icon: "spell_holy_divineillumination",
          tree: 0, column: 1, row: 2, prerequisite: -1, description: new[] {
-@"You have a 100% chance when you Smite and a 100% chance when you Mind Flay to gain Evangelism. Stacks up to 0 times. Lasts for 20 sec.
+@"You have a 100% chance when you Smite or Holy Fire and a 100% chance when you Mind Flay to gain Evangelism. Stacks up to 0 times. Lasts for 20 sec.
 
-|CFFFFFFFFEvangelism (Smite)|R
+Evangelism (Smite, Holy Fire)
 Increasing the damage done by your Smite, Holy Fire, and Penance spells by 2% and reduces the mana cost of those spells by 3%.
 
-|CFFFFFFFFDark Evangelism (Mind Flay)|R
+Dark Evangelism (Mind Flay)
 Increases the damage done by your Periodic Shadow spells by 1%.",
-@"You have a 100% chance when you Smite and a 100% chance when you Mind Flay to gain Evangelism. Stacks up to 0 times. Lasts for 20 sec.
+@"You have a 100% chance when you Smite or Holy Fire and a 100% chance when you Mind Flay to gain Evangelism. Stacks up to 0 times. Lasts for 20 sec.
 
-|CFFFFFFFFEvangelism (Smite)|R
-Increasing the damage done by your Smite, Holy Fire, and Penance spells by 4% and reduces the mana cost of those spells by 6%.
+Evangelism (Smite, Holy Fire)
+Increases the damage done by your Smite, Holy Fire, and Penance spells by 4% and reduces the mana cost of those spells by 6%.
 
-|CFFFFFFFFDark Evangelism (Mind Flay)|R
+Dark Evangelism (Mind Flay)
 Increases the damage done by your Periodic Shadow spells by 2%.",})]
         public int Evangelism { get { return _data[3]; } set { _data[3] = value; } }
         /// <summary>
@@ -2435,8 +2492,8 @@ Increases the damage done by your Periodic Shadow spells by 2%.",})]
         /// Archangel (Evangelism)
         /// Instantly restores 1% of your total mana and increases your healing done by 3% for each stack. Lasts for 18 sec. 30 sec cooldown.
         /// 
-        /// |CFFFFFFFFDark Archangel (Dark Evangelism)|R
-        /// Instantly restores 5% of your total mana and increases the damage done by your Mind Flay, Mind Spike, Mind Blast and Shadow Word: Death 4% for each stack. Lasts for 18 sec. 90 sec cooldown.
+        /// Dark Archangel (Dark Evangelism)
+        /// Instantly restores 5% of your total mana and increases the damage done by your Mind Flay, Mind Spike, Mind Blast and Shadow Word: Death by 4% for each stack. Lasts for 18 sec. 90 sec cooldown.
         /// </summary>
         [TalentData(index: 4, name: "Archangel", maxPoints: 1, icon: "ability_priest_archangel",
          tree: 0, column: 2, row: 2, prerequisite: 3, description: new[] {
@@ -2446,8 +2503,8 @@ Consumes your Evangelism effects, causing an effect depending what type of Evang
 Archangel (Evangelism)
 Instantly restores 1% of your total mana and increases your healing done by 3% for each stack. Lasts for 18 sec. 30 sec cooldown.
 
-|CFFFFFFFFDark Archangel (Dark Evangelism)|R
-Instantly restores 5% of your total mana and increases the damage done by your Mind Flay, Mind Spike, Mind Blast and Shadow Word: Death 4% for each stack. Lasts for 18 sec. 90 sec cooldown.",})]
+Dark Archangel (Dark Evangelism)
+Instantly restores 5% of your total mana and increases the damage done by your Mind Flay, Mind Spike, Mind Blast and Shadow Word: Death by 4% for each stack. Lasts for 18 sec. 90 sec cooldown.",})]
         public int Archangel { get { return _data[4]; } set { _data[4] = value; } }
         /// <summary>
         /// Spell damage taken is reduced by 6% while within Inner [2 * Pts] and the movement speed bonus of your Inner Will is increased by 6%.
@@ -2475,27 +2532,27 @@ Instantly restores 5% of your total mana and increases the damage done by your M
 @"Increases the critical effect chance of your Flash Heal, Greater Heal, Heal and Penance (Heal) spells by 10% on targets afflicted by the Weakened Soul effect, or blessed with your Grace effect.",})]
         public int RenewedHope { get { return _data[7]; } set { _data[7] = value; } }
         /// <summary>
-        /// Power Infusion - 30 yd range - 16% of base mana
+        /// Power Infusion - 40 yd range - 16% of base mana
         /// 2 min cooldown - Instant
         /// Infuses the target with power, increasing spell casting speed by 20% and reducing the mana cost of all spells by 20%.  Lasts 15 sec.
         /// </summary>
         [TalentData(index: 8, name: "Power Infusion", maxPoints: 1, icon: "spell_holy_powerinfusion",
          tree: 0, column: 2, row: 3, prerequisite: -1, description: new[] {
-@"Power Infusion - 30 yd range - 16% of base mana
+@"Power Infusion - 40 yd range - 16% of base mana
 2 min cooldown - Instant
 Infuses the target with power, increasing spell casting speed by 20% and reducing the mana cost of all spells by 20%.  Lasts 15 sec.",})]
         public int PowerInfusion { get { return _data[8]; } set { _data[8] = value; } }
         /// <summary>
-        /// When you deal damage with Smite, you instantly heal a nearby low health friendly party or raid target within 14 yards from the enemy target equal to [50 * Pts]% of the damage dealt.
+        /// When you deal damage with Smite or Holy Fire, you instantly heal a nearby low health friendly party or raid target within 18 yards from the enemy target equal to [50 * Pts]% of the damage dealt.
         /// 
         /// If the Priest is healed through Atonement, the effect is reduced in half.
         /// </summary>
         [TalentData(index: 9, name: "Atonement", maxPoints: 2, icon: "ability_priest_atonement",
          tree: 0, column: 3, row: 3, prerequisite: -1, description: new[] {
-@"When you deal damage with Smite, you instantly heal a nearby low health friendly party or raid target within 14 yards from the enemy target equal to 50% of the damage dealt.
+@"When you deal damage with Smite or Holy Fire, you instantly heal a nearby low health friendly party or raid target within 18 yards from the enemy target equal to 50% of the damage dealt.
 
 If the Priest is healed through Atonement, the effect is reduced in half.",
-@"When you deal damage with Smite, you instantly heal a nearby low health friendly party or raid target within 14 yards from the enemy target equal to 100% of the damage dealt.
+@"When you deal damage with Smite or Holy Fire, you instantly heal a nearby low health friendly party or raid target within 18 yards from the enemy target equal to 100% of the damage dealt.
 
 If the Priest is healed through Atonement, the effect is reduced in half.",})]
         public int Atonement { get { return _data[9]; } set { _data[9] = value; } }
@@ -2509,13 +2566,13 @@ If the Priest is healed through Atonement, the effect is reduced in half.",})]
 Reduces the mana cost of your next Flash Heal, Binding Heal, Greater Heal or Prayer of Healing by 100% and increases its critical effect chance by 25%.",})]
         public int InnerFocus { get { return _data[10]; } set { _data[10] = value; } }
         /// <summary>
-        /// When your Power Word: Shield is completely absorbed or dispelled you are instantly energized with [1.5 * Pts]% of your total mana. This effect can only occur once every 12 sec.
+        /// When your Power Word: Shield is completely absorbed or dispelled you are instantly energized with [2 * Pts]% of your total mana. This effect can only occur once every 12 sec.
         /// </summary>
         [TalentData(index: 11, name: "Rapture", maxPoints: 3, icon: "spell_holy_rapture",
          tree: 0, column: 2, row: 4, prerequisite: -1, description: new[] {
-@"When your Power Word: Shield is completely absorbed or dispelled you are instantly energized with 1.5% of your total mana. This effect can only occur once every 12 sec.",
 @"When your Power Word: Shield is completely absorbed or dispelled you are instantly energized with 2% of your total mana. This effect can only occur once every 12 sec.",
-@"When your Power Word: Shield is completely absorbed or dispelled you are instantly energized with 2.5% of your total mana. This effect can only occur once every 12 sec.",})]
+@"When your Power Word: Shield is completely absorbed or dispelled you are instantly energized with 4% of your total mana. This effect can only occur once every 12 sec.",
+@"When your Power Word: Shield is completely absorbed or dispelled you are instantly energized with 6% of your total mana. This effect can only occur once every 12 sec.",})]
         public int Rapture { get { return _data[11]; } set { _data[11] = value; } }
         /// <summary>
         /// Grants [7 * Pts]% spell haste for your next spell after casting Power Word: Shield.
@@ -2534,32 +2591,38 @@ Reduces the mana cost of your next Flash Heal, Binding Heal, Greater Heal or Pra
 @"Causes 45% of the damage you absorb with Power Word: Shield to reflect back at the attacker.  This damage causes no threat.",})]
         public int ReflectiveShield { get { return _data[13]; } set { _data[13] = value; } }
         /// <summary>
-        /// When you heal a target with your Heal spell, the duration of the weakened soul debuff on the target is reduced by [2 * Pts] sec.
+        /// When you heal a target with your Heal, Greater Heal or Flash Heal spell, the duration of the weakened soul debuff on the target is reduced by [2 * Pts] sec.
+        /// 
+        /// In addition, when you cast Inner Focus you become immune to Silence, Interrupt and Dispel effects for [5 / 2 * Pts] sec.
         /// </summary>
         [TalentData(index: 14, name: "Strength of Soul", maxPoints: 2, icon: "spell_holy_ashestoashes",
          tree: 0, column: 1, row: 5, prerequisite: 7, description: new[] {
-@"When you heal a target with your Heal spell, the duration of the weakened soul debuff on the target is reduced by 2 sec.",
-@"When you heal a target with your Heal spell, the duration of the weakened soul debuff on the target is reduced by 4 sec.",})]
+@"When you heal a target with your Heal, Greater Heal or Flash Heal spell, the duration of the weakened soul debuff on the target is reduced by 2 sec.
+
+In addition, when you cast Inner Focus you become immune to Silence, Interrupt and Dispel effects for 3 sec.",
+@"When you heal a target with your Heal, Greater Heal or Flash Heal spell, the duration of the weakened soul debuff on the target is reduced by 4 sec.
+
+In addition, when you cast Inner Focus you become immune to Silence, Interrupt and Dispel effects for 5 sec.",})]
         public int StrengthOfSoul { get { return _data[14]; } set { _data[14] = value; } }
         /// <summary>
-        /// Critical heals and all heals from Prayer of Healing create a protective shield on the target, absorbing [10 * Pts]% of the amount healed. Lasts 12 sec.
+        /// Critical heals and all heals from Prayer of Healing create a protective shield on the target, absorbing [10 * Pts]% of the amount healed. Lasts 15 sec.
         /// </summary>
         [TalentData(index: 15, name: "Divine Aegis", maxPoints: 3, icon: "spell_holy_devineaegis",
          tree: 0, column: 2, row: 5, prerequisite: -1, description: new[] {
-@"Critical heals and all heals from Prayer of Healing create a protective shield on the target, absorbing 10% of the amount healed. Lasts 12 sec.",
-@"Critical heals and all heals from Prayer of Healing create a protective shield on the target, absorbing 20% of the amount healed. Lasts 12 sec.",
-@"Critical heals and all heals from Prayer of Healing create a protective shield on the target, absorbing 30% of the amount healed. Lasts 12 sec.",})]
+@"Critical heals and all heals from Prayer of Healing create a protective shield on the target, absorbing 10% of the amount healed. Lasts 15 sec.",
+@"Critical heals and all heals from Prayer of Healing create a protective shield on the target, absorbing 20% of the amount healed. Lasts 15 sec.",
+@"Critical heals and all heals from Prayer of Healing create a protective shield on the target, absorbing 30% of the amount healed. Lasts 15 sec.",})]
         public int DivineAegis { get { return _data[15]; } set { _data[15] = value; } }
         /// <summary>
         /// Pain Suppression - 40 yd range - 8% of base mana
         /// 3 min cooldown - Instant cast
-        /// Instantly reduces a friendly target's threat by 5%, reduces all damage taken by 40% and increases resistance to Dispel mechanics by 65% for 8 sec.
+        /// Instantly reduces a friendly target\'s threat by 5%, reduces all damage taken by 40% for 8 sec.
         /// </summary>
         [TalentData(index: 16, name: "Pain Suppression", maxPoints: 1, icon: "spell_holy_painsupression",
          tree: 0, column: 3, row: 5, prerequisite: -1, description: new[] {
 @"Pain Suppression - 40 yd range - 8% of base mana
 3 min cooldown - Instant cast
-Instantly reduces a friendly target's threat by 5%, reduces all damage taken by 40% and increases resistance to Dispel mechanics by 65% for 8 sec.",})]
+Instantly reduces a friendly target\'s threat by 5%, reduces all damage taken by 40% for 8 sec.",})]
         public int PainSuppression { get { return _data[16]; } set { _data[16] = value; } }
         /// <summary>
         /// You have a [50 * Pts]% chance when you heal with Greater Heal to reduce the cooldown of your Inner Focus by 5 sec.
@@ -2576,32 +2639,35 @@ You have a 50% chance when you Smite to reduce the cooldown of your Penance by 0
 You have a 100% chance when you Smite to reduce the cooldown of your Penance by 0.5 sec.",})]
         public int TrainOfThought { get { return _data[17]; } set { _data[17] = value; } }
         /// <summary>
-        /// Whenever you are victim of an attack equal to damage greater than 10% of your total health, you gain Focused Will reducing all damage taken by [6 / 2 * Pts]% lasting for 8 sec. Stacks up to 0 times.
+        /// Whenever you are victim of an attack equal to damage greater than [5 * Pts]% of your total health or critically hit by any attack, you gain Focused Will reducing all damage taken by 10% lasting for 8 sec. Stacks up to 0 times.
         /// </summary>
         [TalentData(index: 18, name: "Focused Will", maxPoints: 2, icon: "ability_priest_focusedwill",
          tree: 0, column: 1, row: 6, prerequisite: -1, description: new[] {
-@"Whenever you are victim of an attack equal to damage greater than 10% of your total health, you gain Focused Will reducing all damage taken by 4% lasting for 8 sec. Stacks up to 0 times.",
-@"Whenever you are victim of an attack equal to damage greater than 10% of your total health, you gain Focused Will reducing all damage taken by 6% lasting for 8 sec. Stacks up to 0 times.",})]
+@"Whenever you are victim of an attack equal to damage greater than 10% of your total health or critically hit by any attack, you gain Focused Will reducing all damage taken by 5% lasting for 8 sec. Stacks up to 0 times.",
+@"Whenever you are victim of an attack equal to damage greater than 10% of your total health or critically hit by any attack, you gain Focused Will reducing all damage taken by 10% lasting for 8 sec. Stacks up to 0 times.",})]
         public int FocusedWill { get { return _data[18]; } set { _data[18] = value; } }
         /// <summary>
-        /// Your Flash Heal, Greater Heal, Heal and Penance spells bless the target with Grace, increasing all healing received from the Priest by [4 * Pts]%. This effect will stack up to 0 times. Effect lasts 15 sec. Grace can only be active on one target at a time.
+        /// Your Flash Heal, Greater Heal, Heal and Penance spells bless the target with Grace, increasing all healing received from the Priest by [4 * Pts]%. This effect will stack up to 0 times. Effect lasts 15 sec.
         /// </summary>
         [TalentData(index: 19, name: "Grace", maxPoints: 2, icon: "spell_holy_hopeandgrace",
          tree: 0, column: 3, row: 6, prerequisite: -1, description: new[] {
-@"Your Flash Heal, Greater Heal, Heal and Penance spells bless the target with Grace, increasing all healing received from the Priest by 4%. This effect will stack up to 0 times. Effect lasts 15 sec. Grace can only be active on one target at a time.",
-@"Your Flash Heal, Greater Heal, Heal and Penance spells bless the target with Grace, increasing all healing received from the Priest by 8%. This effect will stack up to 0 times. Effect lasts 15 sec. Grace can only be active on one target at a time.",})]
+@"Your Flash Heal, Greater Heal, Heal and Penance spells bless the target with Grace, increasing all healing received from the Priest by 4%. This effect will stack up to 0 times. Effect lasts 15 sec.",
+@"Your Flash Heal, Greater Heal, Heal and Penance spells bless the target with Grace, increasing all healing received from the Priest by 8%. This effect will stack up to 0 times. Effect lasts 15 sec.",})]
         public int Grace { get { return _data[19]; } set { _data[19] = value; } }
         /// <summary>
         /// Power Word: Barrier - 40 yd range - 1 Unholy
-        /// 2 min cooldown - Instant
-        /// Summons a holy barrier on the target location that reduces all damage done to friendly targets by 30%. While within the barrier, spellcasting will not be interrupted by damage. The barrier lasts for 10 sec.
+        /// 3 min cooldown - Instant
+        /// Summons a holy barrier on the target location that reduces all damage done to friendly targets by 25%. While within the barrier, spellcasting will not be interrupted by damage. The barrier lasts for 10 sec.
         /// </summary>
         [TalentData(index: 20, name: "Power Word: Barrier", maxPoints: 1, icon: "spell_holy_powerwordbarrier",
          tree: 0, column: 2, row: 7, prerequisite: 15, description: new[] {
 @"Power Word: Barrier - 40 yd range - 1 Unholy
-2 min cooldown - Instant
-Summons a holy barrier on the target location that reduces all damage done to friendly targets by 30%. While within the barrier, spellcasting will not be interrupted by damage. The barrier lasts for 10 sec.",})]
+3 min cooldown - Instant
+Summons a holy barrier on the target location that reduces all damage done to friendly targets by 25%. While within the barrier, spellcasting will not be interrupted by damage. The barrier lasts for 10 sec.",})]
         public int PowerWordBarrier { get { return _data[20]; } set { _data[20] = value; } }
+        #endregion
+        #region Holy
+        public override int TreeStartingIndexes_1 { get { return 21; } }
         /// <summary>
         /// Increases the amount healed by your Renew spell by [5 * Pts]%.
         /// </summary>
@@ -2630,20 +2696,20 @@ Summons a holy barrier on the target location that reduces all damage done to fr
         public int DivineFury { get { return _data[23]; } set { _data[23] = value; } }
         /// <summary>
         /// Desperate Prayer - 2 min cooldown - Instant cast
-        /// Requires Shadowform - Instantly heals the caster for 6353.
+        /// Instantly heals the caster for 30% of their total health.
         /// </summary>
         [TalentData(index: 24, name: "Desperate Prayer", maxPoints: 1, icon: "spell_holy_restoration",
          tree: 1, column: 2, row: 2, prerequisite: -1, description: new[] {
 @"Desperate Prayer - 2 min cooldown - Instant cast
-Requires Shadowform - Instantly heals the caster for 6353.",})]
+Instantly heals the caster for 30% of their total health.",})]
         public int DesperatePrayer { get { return _data[24]; } set { _data[24] = value; } }
         /// <summary>
-        /// You have a [3 * Pts]% chance when you Smite or Heal to cause your next Flash Heal to be instant cast and cost no mana but incapable of a critical hit.
+        /// You have a [3 * Pts]% chance when you Smite, Heal, Flash Heal or Greater Heal to cause your next Flash Heal to be instant cast and cost no mana.
         /// </summary>
         [TalentData(index: 25, name: "Surge of Light", maxPoints: 2, icon: "spell_holy_surgeoflight",
          tree: 1, column: 3, row: 2, prerequisite: -1, description: new[] {
-@"You have a 3% chance when you Smite or Heal to cause your next Flash Heal to be instant cast and cost no mana but incapable of a critical hit.",
-@"You have a 6% chance when you Smite or Heal to cause your next Flash Heal to be instant cast and cost no mana but incapable of a critical hit.",})]
+@"You have a 3% chance when you Smite, Heal, Flash Heal or Greater Heal to cause your next Flash Heal to be instant cast and cost no mana.",
+@"You have a 6% chance when you Smite, Heal, Flash Heal or Greater Heal to cause your next Flash Heal to be instant cast and cost no mana.",})]
         public int SurgeOfLight { get { return _data[25]; } set { _data[25] = value; } }
         /// <summary>
         /// Reduces your target's physical damage taken by [5 * Pts]% for 15 sec after getting a critical effect from your Flash Heal, Heal, Greater Heal, Binding Heal, Penance, Prayer of Mending, Prayer of Healing, or Circle of Healing spell.
@@ -2662,23 +2728,23 @@ Requires Shadowform - Instantly heals the caster for 6353.",})]
 @"Your Renew will instantly heal the target for 10% of the total periodic effect.",})]
         public int DivineTouch { get { return _data[27]; } set { _data[27] = value; } }
         /// <summary>
-        /// Increases the amount of mana regeneration from Spirit while in combat by an additional [10 * Pts]%.
+        /// Increases the amount of mana regeneration from Spirit while in combat by an additional [15 * Pts]%.
         /// </summary>
         [TalentData(index: 28, name: "Holy Concentration", maxPoints: 2, icon: "spell_holy_fanaticism",
          tree: 1, column: 2, row: 3, prerequisite: -1, description: new[] {
-@"Increases the amount of mana regeneration from Spirit while in combat by an additional 10%.",
-@"Increases the amount of mana regeneration from Spirit while in combat by an additional 20%.",})]
+@"Increases the amount of mana regeneration from Spirit while in combat by an additional 15%.",
+@"Increases the amount of mana regeneration from Spirit while in combat by an additional 30%.",})]
         public int HolyConcentration { get { return _data[28]; } set { _data[28] = value; } }
         /// <summary>
         /// Lightwell - 40 yd range - 30% of base mana
         /// 3 min cooldown - 0.5 sec cast
-        /// Creates a Holy Lightwell.  Friendly players can click the Lightwell to restore [((3426+(SP*.308))*3)*1.25] health over 6 sec.  Attacks done to you equal to 30% of your total health will cancel the effect. Lightwell lasts for 3 min or 10 charges.
+        /// Creates a Holy Lightwell.  Friendly players can click the Lightwell to restore [9929 + 1.06 * SP] health over 6 sec.  Attacks done to you equal to 30% of your total health will cancel the effect. Lightwell lasts for 3 min or 10 charges.
         /// </summary>
         [TalentData(index: 29, name: "Lightwell", maxPoints: 1, icon: "spell_holy_summonlightwell",
          tree: 1, column: 3, row: 3, prerequisite: -1, description: new[] {
 @"Lightwell - 40 yd range - 30% of base mana
 3 min cooldown - 0.5 sec cast
-Creates a Holy Lightwell.  Friendly players can click the Lightwell to restore [((3426+(SP*.308))*3)*1.25] health over 6 sec.  Attacks done to you equal to 30% of your total health will cancel the effect. Lightwell lasts for 3 min or 10 charges.",})]
+Creates a Holy Lightwell.  Friendly players can click the Lightwell to restore [9929 + 1.06 * SP] health over 6 sec.  Attacks done to you equal to 30% of your total health will cancel the effect. Lightwell lasts for 3 min or 10 charges.",})]
         public int Lightwell { get { return _data[29]; } set { _data[29] = value; } }
         /// <summary>
         /// Reduces the cooldown of your Holy Word spells by [15 * Pts]%
@@ -2711,66 +2777,66 @@ Creates a Holy Lightwell.  Friendly players can click the Lightwell to restore [
 @"When you heal with Binding Heal or Flash Heal, the cast time of your next Greater Heal or Prayer of Healing spell is reduced by 20% and mana cost reduced by 10%. Stacks up to 0 times. Lasts 20 sec.",})]
         public int Serendipity { get { return _data[33]; } set { _data[33] = value; } }
         /// <summary>
-        /// When you cast Power Word: Shield or Leap of Faith, you increase the target's movement speed by [30 * Pts]% for 4 sec, and you have a [50 * Pts]% chance when you cast Cure Disease on yourself to also cleanse 1 poison effect in addition to diseases.
+        /// When you cast Power Word: Shield or Leap of Faith, you increase the target's movement speed by [30 / 2 * Pts]% for 4 sec, and you have a [50 * Pts]% chance when you cast Cure Disease on yourself to also cleanse 1 poison effect in addition to diseases.
         /// </summary>
         [TalentData(index: 34, name: "Body and Soul", maxPoints: 2, icon: "spell_holy_symbolofhope",
          tree: 1, column: 1, row: 5, prerequisite: -1, description: new[] {
-@"When you cast Power Word: Shield or Leap of Faith, you increase the target's movement speed by 30% for 4 sec, and you have a 50% chance when you cast Cure Disease on yourself to also cleanse 1 poison effect in addition to diseases.",
-@"When you cast Power Word: Shield or Leap of Faith, you increase the target's movement speed by 60% for 4 sec, and you have a 100% chance when you cast Cure Disease on yourself to also cleanse 1 poison effect in addition to diseases.",})]
+@"When you cast Power Word: Shield or Leap of Faith, you increase the target's movement speed by 12% for 4 sec, and you have a 50% chance when you cast Cure Disease on yourself to also cleanse 1 poison effect in addition to diseases.",
+@"When you cast Power Word: Shield or Leap of Faith, you increase the target's movement speed by 30% for 4 sec, and you have a 100% chance when you cast Cure Disease on yourself to also cleanse 1 poison effect in addition to diseases.",})]
         public int BodyAndSoul { get { return _data[34]; } set { _data[34] = value; } }
         /// <summary>
         /// Chakra - 30 sec cooldown - Instant
-        /// When activated, your next Heal, Prayer of Healing, Prayer of Mending, or Smite will put you into a Chakra state for 30 sec.
+        /// When activated, your next Heal, Flash Heal, Greater Heal, Binding Heal, Prayer of Healing, Prayer of Mending, Mind Spike or Smite will put you into a Chakra state.
         /// 
-        /// Serenity (Heal)
+        /// Serenity (Heal, Flash Heal, Greater Heal, Binding Heal)
         /// Increases the critical effect chance of your direct healing spells by 10%, and causes your direct heals to refresh the duration of your Renew on the target.
         /// 
-        /// |CFFFFFFFFSanctuary (Prayer of Healing, Prayer of Mending)|R
+        /// Sanctuary (Prayer of Healing, Prayer of Mending)
         /// Increases the healing done by your area of effect spells and Renew by 15% and reduces the cooldown of your Circle of Healing by -2 sec.
         /// 
-        /// |CFFFFFFFFChastise (Smite)|R
+        /// Chastise (Smite, Mind Spike)
         /// Increases your total damage done by Shadow and Holy spells by 15%.
         /// </summary>
         [TalentData(index: 35, name: "Chakra", maxPoints: 1, icon: "priest_icon_chakra",
          tree: 1, column: 2, row: 5, prerequisite: 28, description: new[] {
 @"Chakra - 30 sec cooldown - Instant
-When activated, your next Heal, Prayer of Healing, Prayer of Mending, or Smite will put you into a Chakra state for 30 sec.
+When activated, your next Heal, Flash Heal, Greater Heal, Binding Heal, Prayer of Healing, Prayer of Mending, Mind Spike or Smite will put you into a Chakra state.
 
-Serenity (Heal)
+Serenity (Heal, Flash Heal, Greater Heal, Binding Heal)
 Increases the critical effect chance of your direct healing spells by 10%, and causes your direct heals to refresh the duration of your Renew on the target.
 
-|CFFFFFFFFSanctuary (Prayer of Healing, Prayer of Mending)|R
+Sanctuary (Prayer of Healing, Prayer of Mending)
 Increases the healing done by your area of effect spells and Renew by 15% and reduces the cooldown of your Circle of Healing by -2 sec.
 
-|CFFFFFFFFChastise (Smite)|R
+Chastise (Smite, Mind Spike)
 Increases your total damage done by Shadow and Holy spells by 15%.",})]
         public int Chakra { get { return _data[35]; } set { _data[35] = value; } }
         /// <summary>
         /// While within Chakra: Serenity or Chakra: Sanctuary, your Holy Word: Chastise ability will transform into a different ability depending on which state you are in.
         /// 
-        /// |CFFFFFFFFHoly Word: Serenity|R
-        /// Instantly heals the target for 6725, and increases the critical effect chance of your healing spells on the target by 25% for 6 sec. 15 sec cooldown.
+        /// Holy Word: Serenity
+        /// Instantly heals the target for 5197 to 6101, and increases the critical effect chance of your healing spells on the target by 25% for 6 sec. 15 sec cooldown.
         /// 
-        /// |CFFFFFFFFHoly Word: Sanctuary|R
-        /// Blesses the ground with Divine light, healing all within it for 389 every 2 sec for 18 sec. Only one Sanctuary can be active at any one time. 40 sec cooldown.
+        /// Holy Word: Sanctuary
+        /// Blesses the ground with Divine light, healing all within it for 298 to 355 every 2 sec for 18 sec. Only one Sanctuary can be active at any one time. 40 sec cooldown.
         /// </summary>
         [TalentData(index: 36, name: "Revelations", maxPoints: 1, icon: "ability_priest_bindingprayers",
          tree: 1, column: 3, row: 5, prerequisite: 35, description: new[] {
 @"While within Chakra: Serenity or Chakra: Sanctuary, your Holy Word: Chastise ability will transform into a different ability depending on which state you are in.
 
-|CFFFFFFFFHoly Word: Serenity|R
-Instantly heals the target for 6725, and increases the critical effect chance of your healing spells on the target by 25% for 6 sec. 15 sec cooldown.
+Holy Word: Serenity
+Instantly heals the target for 5197 to 6101, and increases the critical effect chance of your healing spells on the target by 25% for 6 sec. 15 sec cooldown.
 
-|CFFFFFFFFHoly Word: Sanctuary|R
-Blesses the ground with Divine light, healing all within it for 389 every 2 sec for 18 sec. Only one Sanctuary can be active at any one time. 40 sec cooldown.",})]
+Holy Word: Sanctuary
+Blesses the ground with Divine light, healing all within it for 298 to 355 every 2 sec for 18 sec. Only one Sanctuary can be active at any one time. 40 sec cooldown.",})]
         public int Revelations { get { return _data[36]; } set { _data[36] = value; } }
         /// <summary>
-        /// Whenever you are victim of an attack equal to damage greater than [5 * Pts]% of your total health, you gain Blessed Resilience increasing all healing received by 10% lasting for 10 sec.
+        /// Whenever you are victim of an attack equal to damage greater than 10% of your total health or critically hit by any attack, you gain Blessed Resilience increasing all healing received by [15 * Pts]% lasting for 10 sec.
         /// </summary>
         [TalentData(index: 37, name: "Blessed Resilience", maxPoints: 2, icon: "spell_holy_blessedresillience",
          tree: 1, column: 4, row: 5, prerequisite: -1, description: new[] {
-@"Whenever you are victim of an attack equal to damage greater than 10% of your total health, you gain Blessed Resilience increasing all healing received by 5% lasting for 10 sec.",
-@"Whenever you are victim of an attack equal to damage greater than 10% of your total health, you gain Blessed Resilience increasing all healing received by 10% lasting for 10 sec.",})]
+@"Whenever you are victim of an attack equal to damage greater than 10% of your total health or critically hit by any attack, you gain Blessed Resilience increasing all healing received by 15% lasting for 10 sec.",
+@"Whenever you are victim of an attack equal to damage greater than 10% of your total health or critically hit by any attack, you gain Blessed Resilience increasing all healing received by 30% lasting for 10 sec.",})]
         public int BlessedResilience { get { return _data[37]; } set { _data[37] = value; } }
         /// <summary>
         /// Increases healing by [4 * Pts]% on friendly targets at or below 50% health.
@@ -2782,23 +2848,23 @@ Blesses the ground with Divine light, healing all within it for 389 every 2 sec 
 @"Increases healing by 12% on friendly targets at or below 50% health.",})]
         public int TestOfFaith { get { return _data[38]; } set { _data[38] = value; } }
         /// <summary>
-        /// Your successful Heal, Prayer of Healing, Prayer of Mending or Smite spell casts increase the duration of your corresponding Chakra state by [2 * Pts] sec.
+        /// Reduces the cooldown of your Chakra spell by [3 * Pts] sec.
         /// </summary>
         [TalentData(index: 39, name: "State of Mind", maxPoints: 2, icon: "spell_arcane_mindmastery",
          tree: 1, column: 2, row: 6, prerequisite: 35, description: new[] {
-@"Your successful Heal, Prayer of Healing, Prayer of Mending or Smite spell casts increase the duration of your corresponding Chakra state by 2 sec.",
-@"Your successful Heal, Prayer of Healing, Prayer of Mending or Smite spell casts increase the duration of your corresponding Chakra state by 4 sec.",})]
+@"Reduces the cooldown of your Chakra spell by 3 sec.",
+@"Reduces the cooldown of your Chakra spell by 6 sec.",})]
         public int StateOfMind { get { return _data[39]; } set { _data[39] = value; } }
         /// <summary>
         /// Circle of Healing - 40 yd range - 21% of base mana
         /// 10 sec cooldown - Instant cast
-        /// Heals up to 5 friendly party or raid members within 15 yards of the target for 2225.  Prioritizes healing most injured party members.
+        /// Heals up to 5 friendly party or raid members within 30 yards of the target for 2308 to 2551.  Prioritizes healing the most injured party members.
         /// </summary>
         [TalentData(index: 40, name: "Circle of Healing", maxPoints: 1, icon: "spell_holy_circleofrenewal",
          tree: 1, column: 3, row: 6, prerequisite: -1, description: new[] {
 @"Circle of Healing - 40 yd range - 21% of base mana
 10 sec cooldown - Instant cast
-Heals up to 5 friendly party or raid members within 15 yards of the target for 2225.  Prioritizes healing most injured party members.",})]
+Heals up to 5 friendly party or raid members within 30 yards of the target for 2308 to 2551.  Prioritizes healing the most injured party members.",})]
         public int CircleOfHealing { get { return _data[40]; } set { _data[40] = value; } }
         /// <summary>
         /// Guardian Spirit - 40 yd range - 6% of base mana
@@ -2811,6 +2877,9 @@ Heals up to 5 friendly party or raid members within 15 yards of the target for 2
 3 min cooldown - Instant
 Calls upon a guardian spirit to watch over the friendly target. The spirit increases the healing received by the target by 40%, and also prevents the target from dying by sacrificing itself.  This sacrifice terminates the effect but heals the target of 50% of their maximum health. Lasts 10 sec.",})]
         public int GuardianSpirit { get { return _data[41]; } set { _data[41] = value; } }
+        #endregion
+        #region Shadow
+        public override int TreeStartingIndexes_2 { get { return 42; } }
         /// <summary>
         /// Spell haste increased by [1 * Pts]%.
         /// </summary>
@@ -2909,12 +2978,12 @@ Silences the target, preventing them from casting spells for 5 sec.  Non-player 
         public int Silence { get { return _data[52]; } set { _data[52] = value; } }
         /// <summary>
         /// Vampiric Embrace - Instant cast
-        /// Fills you with the embrace of Shadow energy, causing you to be healed for 6% and other party members to be healed for 3% of any single-target Shadow spell damage you deal for 30 min.
+        /// Fills you with the embrace of Shadow energy, causing you to be healed for 6% and other party members to be healed for 3% of any single-target Shadow spell damage you deal.
         /// </summary>
         [TalentData(index: 53, name: "Vampiric Embrace", maxPoints: 1, icon: "spell_shadow_unsummonbuilding",
          tree: 2, column: 2, row: 4, prerequisite: -1, description: new[] {
 @"Vampiric Embrace - Instant cast
-Fills you with the embrace of Shadow energy, causing you to be healed for 6% and other party members to be healed for 3% of any single-target Shadow spell damage you deal for 30 min.",})]
+Fills you with the embrace of Shadow energy, causing you to be healed for 6% and other party members to be healed for 3% of any single-target Shadow spell damage you deal.",})]
         public int VampiricEmbrace { get { return _data[53]; } set { _data[53] = value; } }
         /// <summary>
         /// When you take a damaging attack equal to or greater than [5 * Pts]% of your total health or damage yourself with your Shadow Word: Death, you instantly gain 10% of your total mana.
@@ -2943,13 +3012,13 @@ Fills you with the embrace of Shadow energy, causing you to be healed for 6% and
         /// <summary>
         /// Vampiric Touch - 40 yd range - 16% of base mana
         /// 1.5 sec cast
-        /// Causes 645 Shadow damage over 15 sec to your target and causes up to 10 party or raid members to gain 1% of their maximum mana per 10 sec when you deal damage from Mind Blast.
+        /// Causes 540 Shadow damage over 15 sec to your target and causes up to 10 party or raid members to gain 1% of their maximum mana per 10 sec when you deal damage from Mind Blast.
         /// </summary>
         [TalentData(index: 57, name: "Vampiric Touch", maxPoints: 1, icon: "spell_holy_stoicism",
          tree: 2, column: 2, row: 5, prerequisite: 53, description: new[] {
 @"Vampiric Touch - 40 yd range - 16% of base mana
 1.5 sec cast
-Causes 645 Shadow damage over 15 sec to your target and causes up to 10 party or raid members to gain 1% of their maximum mana per 10 sec when you deal damage from Mind Blast.",})]
+Causes 540 Shadow damage over 15 sec to your target and causes up to 10 party or raid members to gain 1% of their maximum mana per 10 sec when you deal damage from Mind Blast.",})]
         public int VampiricTouch { get { return _data[57]; } set { _data[57] = value; } }
         /// <summary>
         /// When you critically hit with your Mind Blast, you cause the target to be unable to move for [2 * Pts] sec.
@@ -2985,18 +3054,18 @@ When your Mind Flay critically hits, the cooldown of your Shadowfiend is reduced
 When your Mind Flay critically hits, the cooldown of your Shadowfiend is reduced by 10 sec.",})]
         public int SinAndPunishment { get { return _data[60]; } set { _data[60] = value; } }
         /// <summary>
-        /// When you deal periodic damage with your Shadow Word: Pain, you have a [4 * Pts]% chance to summon a shadow version of yourself which will slowly move towards a target which is afflicted by your Shadow Word: Pain. Once reaching the target, it will instantly deal 578 shadow damage.
+        /// When you deal periodic damage with your Shadow Word: Pain, you have a [4 * Pts]% chance to summon a shadow version of yourself which will slowly move towards a target which is afflicted by your Shadow Word: Pain. Once reaching the target, it will instantly deal 485 shadow damage.
         ///     [0 * Pts] moving, the chance to summon the shadowy apparation is increased to 60%[20 * Pts] [0 * Pts] can have up to 4 [4 * Pts] Apparitions active at a time.
         /// </summary>
         [TalentData(index: 61, name: "Shadowy Apparition", maxPoints: 3, icon: "ability_priest_shadowyapparition",
          tree: 2, column: 3, row: 6, prerequisite: -1, description: new[] {
-@"When you deal periodic damage with your Shadow Word: Pain, you have a 4% chance to summon a shadow version of yourself which will slowly move towards a target which is afflicted by your Shadow Word: Pain. Once reaching the target, it will instantly deal 578 shadow damage. 
+@"When you deal periodic damage with your Shadow Word: Pain, you have a 4% chance to summon a shadow version of yourself which will slowly move towards a target which is afflicted by your Shadow Word: Pain. Once reaching the target, it will instantly deal 485 shadow damage. 
     
 While moving, the chance to summon the shadowy apparation is increased to 20%. You can have up to 4 Shadowy Apparitions active at a time.",
-@"When you deal periodic damage with your Shadow Word: Pain, you have an 8% chance to summon a shadow version of yourself which will slowly move towards a target which is afflicted by your Shadow Word: Pain. Once reaching the target, it will instantly deal 578 shadow damage. 
+@"When you deal periodic damage with your Shadow Word: Pain, you have an 8% chance to summon a shadow version of yourself which will slowly move towards a target which is afflicted by your Shadow Word: Pain. Once reaching the target, it will instantly deal 485 shadow damage. 
     
 While moving, the chance to summon the shadowy apparation is increased to 40%. You can have up to 4 Shadowy Apparitions active at a time.",
-@"When you deal periodic damage with your Shadow Word: Pain, you have a 12% chance to summon a shadow version of yourself which will slowly move towards a target which is afflicted by your Shadow Word: Pain. Once reaching the target, it will instantly deal 578 shadow damage.
+@"When you deal periodic damage with your Shadow Word: Pain, you have a 12% chance to summon a shadow version of yourself which will slowly move towards a target which is afflicted by your Shadow Word: Pain. Once reaching the target, it will instantly deal 485 shadow damage.
     
 While moving, the chance to summon the shadowy apparation is increased to 60%. You can have up to 4 Shadowy Apparitions active at a time.",})]
         public int ShadowyApparition { get { return _data[61]; } set { _data[61] = value; } }
@@ -3013,26 +3082,21 @@ You disperse into pure Shadow energy, reducing all damage taken by 90%.  You are
 
 Dispersion can be cast while stunned, feared or silenced and clears all snare and movement impairing effects when cast, and makes you immune to them while dispersed.",})]
         public int Dispersion { get { return _data[62]; } set { _data[62] = value; } }
+        #endregion
     }
 
     public partial class DeathKnightTalents : TalentsBase
-#if RAWR3 || RAWR4
     {
         public override TalentsBase Clone()
-#else
-, ICloneable
-    {
-        public DeathKnightTalents Clone() { return (DeathKnightTalents)((ICloneable)this).Clone(); }
-        object ICloneable.Clone()
-#endif
         {
             DeathKnightTalents clone = (DeathKnightTalents)MemberwiseClone();
             clone._data = (int[])_data.Clone();
             clone._glyphData = (bool[])_glyphData.Clone();
+            clone.TreeCounts = new int[] { -1, -1, -1 };
             return clone;
         }
 
-        private int[] _data = new int[59];
+        private int[] _data = new int[60];
         public override int[] Data { get { return _data; } }
         public DeathKnightTalents() { }
         public DeathKnightTalents(string talents)
@@ -3040,10 +3104,12 @@ Dispersion can be cast while stunned, feared or silenced and clears all snare an
             LoadString(talents);
         }
         public static string[] TreeNames = new[] {
-@"Blood",
-@"Frost",
-@"Unholy",};
+			@"Blood",
+			@"Frost",
+			@"Unholy",};
 
+        #region Blood
+        public override int TreeStartingIndexes_0 { get { return 0; } }
         /// <summary>
         /// Whenever you kill an enemy that grants experience or honor, you generate up to [10 * Pts] runic power.  In addition, you generate [1 * Pts] runic power per 5 sec while in combat.
         /// </summary>
@@ -3088,12 +3154,12 @@ Dispersion can be cast while stunned, feared or silenced and clears all snare an
 @"You have a 15% chance after dodging, parrying or taking  direct damage to gain the Scent of Blood effect, causing your next 3 melee hits to generate 10 runic power.",})]
         public int ScentOfBlood { get { return _data[4]; } set { _data[4] = value; } }
         /// <summary>
-        /// Gives your Blood Boil a [50 * Pts]% chance to afflict enemies with Scarlet Fever, reducing their physical damage dealt by 10% for 30 sec.
+        /// Causes your Blood Plague to afflict enemies with Scarlet Fever, reducing their physical damage dealt by [5 * Pts]% for 21 sec.
         /// </summary>
         [TalentData(index: 5, name: "Scarlet Fever", maxPoints: 2, icon: "ability_rogue_vendetta",
          tree: 0, column: 3, row: 2, prerequisite: -1, description: new[] {
-@"Gives your Blood Boil a 50% chance to afflict enemies with Scarlet Fever, reducing their physical damage dealt by 10% for 30 sec.",
-@"Gives your Blood Boil a 100% chance to afflict enemies with Scarlet Fever, reducing their physical damage dealt by 10% for 30 sec.",})]
+@"Causes your Blood Plague to afflict enemies with Scarlet Fever, reducing their physical damage dealt by 5% for 21 sec.",
+@"Causes your Blood Plague to afflict enemies with Scarlet Fever, reducing their physical damage dealt by 10% for 21 sec.",})]
         public int ScarletFever { get { return _data[5]; } set { _data[5] = value; } }
         /// <summary>
         /// Reduces the cooldown of your Strangulate ability by [30 * Pts] sec.
@@ -3115,13 +3181,13 @@ Dispersion can be cast while stunned, feared or silenced and clears all snare an
         /// <summary>
         /// Bone Shield - 1 Unholy
         /// 1 min cooldown - Instant cast
-        /// Surrounds you with a barrier of whirling bones.  The shield begins with 3 charges, and each damaging attack consumes a charge.  While at least 1 charge remains, you take 20% less damage from all sources and deal 2% more damage with all attacks, spells and abilities.  Lasts 5 min.
+        /// Surrounds you with a barrier of whirling bones.  The shield begins with 4 charges, and each damaging attack consumes a charge.  While at least 1 charge remains, you take 20% less damage from all sources and deal 2% more damage with all attacks, spells and abilities.  Lasts 5 min.
         /// </summary>
         [TalentData(index: 8, name: "Bone Shield", maxPoints: 1, icon: "ability_deathknight_boneshield",
          tree: 0, column: 2, row: 3, prerequisite: -1, description: new[] {
 @"Bone Shield - 1 Unholy
 1 min cooldown - Instant cast
-Surrounds you with a barrier of whirling bones.  The shield begins with 3 charges, and each damaging attack consumes a charge.  While at least 1 charge remains, you take 20% less damage from all sources and deal 2% more damage with all attacks, spells and abilities.  Lasts 5 min.",})]
+Surrounds you with a barrier of whirling bones.  The shield begins with 4 charges, and each damaging attack consumes a charge.  While at least 1 charge remains, you take 20% less damage from all sources and deal 2% more damage with all attacks, spells and abilities.  Lasts 5 min.",})]
         public int BoneShield { get { return _data[8]; } set { _data[8] = value; } }
         /// <summary>
         /// Increases your armor value from items by [10 / 3 * Pts]%.
@@ -3165,50 +3231,50 @@ Surrounds you with a barrier of whirling bones.  The shield begins with 3 charge
 @"Increases your rune regeneration by 20% and reduces the chance that you will be critically hit by melee attacks while in Blood Presence by 6%.  In addition, while in Frost Presence or Unholy Presence, you retain 4% damage reduction from Blood Presence.",})]
         public int ImprovedBloodPresence { get { return _data[13]; } set { _data[13] = value; } }
         /// <summary>
-        /// When a damaging attack brings you below 30% of your maximum health, you generate a Blood Rune and the cooldown on your Rune Tap ability is refreshed, and all damage taken is reduced by [25 / 3 * Pts]% for 8 sec.  This effect cannot occur more than once every 45 seconds.
+        /// When a damaging attack brings you below 30% of your maximum health, the cooldown on your Rune Tap ability is refreshed and your next Rune Tap has no cost, and all damage taken is reduced by [25 / 3 * Pts]% for 8 sec.  This effect cannot occur more than once every 45 seconds.
         /// </summary>
         [TalentData(index: 14, name: "Will of the Necropolis", maxPoints: 3, icon: "ability_creature_cursed_02",
          tree: 0, column: 1, row: 5, prerequisite: 15, description: new[] {
-@"When a damaging attack brings you below 30% of your maximum health, you generate a Blood Rune and the cooldown on your Rune Tap ability is refreshed, and all damage taken is reduced by 8% for 8 sec.  This effect cannot occur more than once every 45 seconds.",
-@"When a damaging attack brings you below 30% of your maximum health, you generate a Blood Rune and the cooldown on your Rune Tap ability is refreshed, and all damage taken is reduced by 16% for 8 sec.  This effect cannot occur more than once every 45 seconds.",
-@"When a damaging attack brings you below 30% of your maximum health, you generate a Blood Rune and the cooldown on your Rune Tap ability is refreshed, and all damage taken is reduced by 25% for 8 sec.  This effect cannot occur more than once every 45 seconds.",})]
+@"When a damaging attack brings you below 30% of your maximum health, the cooldown on your Rune Tap ability is refreshed and your next Rune Tap has no cost, and all damage taken is reduced by 8% for 8 sec.  This effect cannot occur more than once every 45 seconds.",
+@"When a damaging attack brings you below 30% of your maximum health, the cooldown on your Rune Tap ability is refreshed and your next Rune Tap has no cost, and all damage taken is reduced by 16% for 8 sec.  This effect cannot occur more than once every 45 seconds.",
+@"When a damaging attack brings you below 30% of your maximum health, the cooldown on your Rune Tap ability is refreshed and your next Rune Tap has no cost, and all damage taken is reduced by 25% for 8 sec.  This effect cannot occur more than once every 45 seconds.",})]
         public int WillOfTheNecropolis { get { return _data[14]; } set { _data[14] = value; } }
         /// <summary>
         /// Rune Tap - 1 Blood
         /// 30 sec cooldown - Instant
-        /// Converts 1 Blood Rune into 15% of your maximum health.
+        /// Converts 1 Blood Rune into 10% of your maximum health.
         /// </summary>
         [TalentData(index: 15, name: "Rune Tap", maxPoints: 1, icon: "spell_deathknight_runetap",
          tree: 0, column: 2, row: 5, prerequisite: -1, description: new[] {
 @"Rune Tap - 1 Blood
 30 sec cooldown - Instant
-Converts 1 Blood Rune into 15% of your maximum health.",})]
+Converts 1 Blood Rune into 10% of your maximum health.",})]
         public int RuneTap { get { return _data[15]; } set { _data[15] = value; } }
         /// <summary>
         /// Vampiric Blood - 1 min cooldown - Instant
-        /// Temporarily grants the Death Knight 15% of maximum health and increases the amount of health generated through spells and effects by 25% for 10 sec.  After the effect expires, the health is lost.
+        /// Temporarily grants the Death Knight 15% of maximum health and increases the amount of health received from healing spells and effects by 25% for 10 sec.  After the effect expires, the health is lost.
         /// </summary>
         [TalentData(index: 16, name: "Vampiric Blood", maxPoints: 1, icon: "spell_shadow_lifedrain",
          tree: 0, column: 3, row: 5, prerequisite: -1, description: new[] {
 @"Vampiric Blood - 1 min cooldown - Instant
-Temporarily grants the Death Knight 15% of maximum health and increases the amount of health generated through spells and effects by 25% for 10 sec.  After the effect expires, the health is lost.",})]
+Temporarily grants the Death Knight 15% of maximum health and increases the amount of health received from healing spells and effects by 25% for 10 sec.  After the effect expires, the health is lost.",})]
         public int VampiricBlood { get { return _data[16]; } set { _data[16] = value; } }
         /// <summary>
-        /// Increases the damage and healing done by your Death Strike by [15 * Pts]%, increases its critical strike chance by [3 * Pts]%.
+        /// Increases the damage done by your Death Strike by [30 * Pts]%, its critical strike chance by [3 * Pts]%, and its amount healed by [15 * Pts]%.
         /// </summary>
         [TalentData(index: 17, name: "Improved Death Strike", maxPoints: 3, icon: "spell_deathknight_butcher2",
          tree: 0, column: 2, row: 6, prerequisite: -1, description: new[] {
-@"Increases the damage and healing done by your Death Strike by 15%, increases its critical strike chance by 3%.",
-@"Increases the damage and healing done by your Death Strike by 30%, increases its critical strike chance by 6%.",
-@"Increases the damage and healing done by your Death Strike by 45%, increases its critical strike chance by 9%.",})]
+@"Increases the damage done by your Death Strike by 30%, its critical strike chance by 3%, and its amount healed by 15%.",
+@"Increases the damage done by your Death Strike by 60%, its critical strike chance by 6%, and its amount healed by 30%.",
+@"Increases the damage done by your Death Strike by 90%, its critical strike chance by 9%, and its amount healed by 45%.",})]
         public int ImprovedDeathStrike { get { return _data[17]; } set { _data[17] = value; } }
         /// <summary>
-        /// Increases the damage dealt by your Blood Boil by [20 * Pts]%, and when you Plague Strike a target that is already infected with your Blood Plague, there is a [50 * Pts]% chance that your next Blood Boil will consume no runes.
+        /// Increases the damage dealt by your Blood Boil by [20 * Pts]%, and when you land a melee attack on a target that is infected with your Blood Plague, there is a [5 * Pts]% chance that your next Blood Boil will consume no runes.
         /// </summary>
         [TalentData(index: 18, name: "Crimson Scourge", maxPoints: 2, icon: "spell_deathknight_bloodboil",
          tree: 0, column: 3, row: 6, prerequisite: -1, description: new[] {
-@"Increases the damage dealt by your Blood Boil by 20%, and when you Plague Strike a target that is already infected with your Blood Plague, there is a 50% chance that your next Blood Boil will consume no runes.",
-@"Increases the damage dealt by your Blood Boil by 40%, and when you Plague Strike a target that is already infected with your Blood Plague, there is a 100% chance that your next Blood Boil will consume no runes.",})]
+@"Increases the damage dealt by your Blood Boil by 20%, and when you land a melee attack on a target that is infected with your Blood Plague, there is a 5% chance that your next Blood Boil will consume no runes.",
+@"Increases the damage dealt by your Blood Boil by 40%, and when you land a melee attack on a target that is infected with your Blood Plague, there is a 10% chance that your next Blood Boil will consume no runes.",})]
         public int CrimsonScourge { get { return _data[18]; } set { _data[18] = value; } }
         /// <summary>
         /// Dancing Rune Weapon - 30 yd range - 60 Runic Power
@@ -3221,6 +3287,9 @@ Temporarily grants the Death Knight 15% of maximum health and increases the amou
 1 min cooldown - Instant cast
 Requires Melee Weapon - Summons a second rune weapon that fights on its own for 12 sec, doing the same attacks as the Death Knight but for 50% reduced damage.  The rune weapon also assists in defense of its master, granting an additional 20% parry chance while active.",})]
         public int DancingRuneWeapon { get { return _data[19]; } set { _data[19] = value; } }
+        #endregion
+        #region Frost
+        public override int TreeStartingIndexes_1 { get { return 20; } }
         /// <summary>
         /// Increases your maximum Runic Power by [10 * Pts]
         /// </summary>
@@ -3298,13 +3367,13 @@ Draw upon unholy energy to become undead for 10 sec.  While undead, you are immu
 @"Your Chains of Ice, Howling Blast, Icy Touch and Obliterate generate 10 additional runic power.",})]
         public int ChillOfTheGrave { get { return _data[28]; } set { _data[28] = value; } }
         /// <summary>
-        /// Your melee attacks have a chance to make your next Icy Touch, Obliterate, or Frost Strike a guaranteed critical strike.  Effect occurs more often than Killing Machine (Rank 2).
+        /// Your melee attacks have a chance to make your next Obliterate or Frost Strike a guaranteed critical strike.  Effect occurs more often than Killing Machine (Rank 2).
         /// </summary>
         [TalentData(index: 29, name: "Killing Machine", maxPoints: 3, icon: "inv_sword_122",
          tree: 1, column: 3, row: 3, prerequisite: -1, description: new[] {
-@"Your melee attacks have a chance to make your next Icy Touch, Obliterate, or Frost Strike a guaranteed critical strike.",
-@"Your melee attacks have a chance to make your next Icy Touch, Obliterate, or Frost Strike a guaranteed critical strike.  Effect occurs more often than Killing Machine (Rank 1).",
-@"Your melee attacks have a chance to make your next Icy Touch, Obliterate, or Frost Strike a guaranteed critical strike.  Effect occurs more often than Killing Machine (Rank 2).",})]
+@"Your melee attacks have a chance to make your next Obliterate or Frost Strike a guaranteed critical strike.",
+@"Your melee attacks have a chance to make your next Obliterate or Frost Strike a guaranteed critical strike.  Effect occurs more often than Killing Machine (Rank 1).",
+@"Your melee attacks have a chance to make your next Obliterate or Frost Strike a guaranteed critical strike.  Effect occurs more often than Killing Machine (Rank 2).",})]
         public int KillingMachine { get { return _data[29]; } set { _data[29] = value; } }
         /// <summary>
         /// Your Obliterate has a [15 * Pts]% chance to cause your next Howling Blast or Icy Touch to consume no runes.
@@ -3318,13 +3387,13 @@ Draw upon unholy energy to become undead for 10 sec.  While undead, you are immu
         /// <summary>
         /// Pillar of Frost - 1 Frost
         /// 1 min cooldown - Instant
-        /// Calls upon the power of Frost to increase the Death Knight's Strength by 20%.  Icy crystals hang heavy upon the Death Knight's body, providing immunity against external movement such as knockbacks.  Lasts 20 sec.
+        /// Calls upon the power of Frost to increase the Death Knight\'s Strength by 20%.  Icy crystals hang heavy upon the Death Knight\'s body, providing immunity against external movement such as knockbacks.  Lasts 20 sec.
         /// </summary>
         [TalentData(index: 31, name: "Pillar of Frost", maxPoints: 1, icon: "ability_deathknight_pillaroffrost",
          tree: 1, column: 2, row: 4, prerequisite: -1, description: new[] {
 @"Pillar of Frost - 1 Frost
 1 min cooldown - Instant
-Calls upon the power of Frost to increase the Death Knight's Strength by 20%.  Icy crystals hang heavy upon the Death Knight's body, providing immunity against external movement such as knockbacks.  Lasts 20 sec.",})]
+Calls upon the power of Frost to increase the Death Knight\'s Strength by 20%.  Icy crystals hang heavy upon the Death Knight\'s body, providing immunity against external movement such as knockbacks.  Lasts 20 sec.",})]
         public int PillarOfFrost { get { return _data[31]; } set { _data[31] = value; } }
         /// <summary>
         /// Increases the melee and ranged attack speed of all party and raid members within 12 yards by 10%, and your own attack speed by an additional 5%.
@@ -3342,12 +3411,12 @@ Calls upon the power of Frost to increase the Death Knight's Strength by 20%.  I
 @"Your Strength is increased by 4% and your Frost Fever chills the bones of its victims, increasing their physical damage taken by 4%.",})]
         public int BrittleBones { get { return _data[33]; } set { _data[33] = value; } }
         /// <summary>
-        /// Victims of your Frost Fever disease are Chilled, reducing movement speed by [25 * Pts]% for 10 sec.
+        /// Victims of your Frost Fever disease are Chilled, reducing movement speed by [25 * Pts]% for 10 sec, and your Chains of Ice immobilizes targets for [1 * Pts] sec.
         /// </summary>
         [TalentData(index: 34, name: "Chilblains", maxPoints: 2, icon: "spell_frost_wisp",
          tree: 1, column: 1, row: 5, prerequisite: -1, description: new[] {
-@"Victims of your Frost Fever disease are Chilled, reducing movement speed by 25% for 10 sec.",
-@"Victims of your Frost Fever disease are Chilled, reducing movement speed by 50% for 10 sec.",})]
+@"Victims of your Frost Fever disease are Chilled, reducing movement speed by 25% for 10 sec, and your Chains of Ice immobilizes targets for 1 sec.",
+@"Victims of your Frost Fever disease are Chilled, reducing movement speed by 50% for 10 sec, and your Chains of Ice immobilizes targets for 3 sec.",})]
         public int Chilblains { get { return _data[34]; } set { _data[34] = value; } }
         /// <summary>
         /// Hungering Cold - 40 Runic Power
@@ -3378,25 +3447,28 @@ Purges the earth around the Death Knight of all heat.  Enemies within 10 yards a
 @"When dual-wielding, your Death Strikes, Obliterates, Plague Strikes, Rune Strikes, Blood Strikes and Frost Strikes have a 100% chance to also deal damage with your offhand weapon.",})]
         public int ThreatOfThassarian { get { return _data[37]; } set { _data[37] = value; } }
         /// <summary>
-        /// When wielding a two-handed weapon, your autoattacks have a [15 * Pts]% chance to generate 10 Runic Power.
+        /// When wielding a two-handed weapon, your melee attacks deal an additional [4 * Pts]% damage and your autoattacks have a [15 * Pts]% chance to generate 10 Runic Power.
         /// </summary>
         [TalentData(index: 38, name: "Might of the Frozen Wastes", maxPoints: 3, icon: "inv_sword_120",
          tree: 1, column: 3, row: 6, prerequisite: -1, description: new[] {
-@"When wielding a two-handed weapon, your autoattacks have a 15% chance to generate 10 Runic Power.",
-@"When wielding a two-handed weapon, your autoattacks have a 30% chance to generate 10 Runic Power.",
-@"When wielding a two-handed weapon, your autoattacks have a 45% chance to generate 10 Runic Power.",})]
+@"When wielding a two-handed weapon, your melee attacks deal an additional 4% damage and your autoattacks have a 15% chance to generate 10 Runic Power.",
+@"When wielding a two-handed weapon, your melee attacks deal an additional 8% damage and your autoattacks have a 30% chance to generate 10 Runic Power.",
+@"When wielding a two-handed weapon, your melee attacks deal an additional 12% damage and your autoattacks have a 45% chance to generate 10 Runic Power.",})]
         public int MightOfTheFrozenWastes { get { return _data[38]; } set { _data[38] = value; } }
         /// <summary>
         /// Howling Blast - 20 yd range - 1 Frost
         /// Instant cast
-        /// Blast the target with a frigid wind dealing [((1028+1117)/2)+(AP*0.4)] Frost damage to all enemies within 10 yards.
+        /// Blast the target with a frigid wind, dealing [1441 + 48% of AP] Frost damage to that foe, and [721 + 24% of AP] Frost damage to all other enemies within 10 yards.
         /// </summary>
         [TalentData(index: 39, name: "Howling Blast", maxPoints: 1, icon: "spell_frost_arcticwinds",
          tree: 1, column: 2, row: 7, prerequisite: 35, description: new[] {
 @"Howling Blast - 20 yd range - 1 Frost
 Instant cast
-Blast the target with a frigid wind dealing [((1028+1117)/2)+(AP*0.4)] Frost damage to all enemies within 10 yards.",})]
+Blast the target with a frigid wind, dealing [1441 + 48% of AP] Frost damage to that foe, and [721 + 24% of AP] Frost damage to all other enemies within 10 yards.",})]
         public int HowlingBlast { get { return _data[39]; } set { _data[39] = value; } }
+        #endregion
+        #region Unholy
+        public override int TreeStartingIndexes_2 { get { return 40; } }
         /// <summary>
         /// Reduces the cooldown of your Death Grip ability by [5 * Pts] sec, and gives you a [50 * Pts]% chance to refresh its cooldown when dealing a killing blow to a target that grants experience or honor.
         /// </summary>
@@ -3424,12 +3496,12 @@ Blast the target with a frigid wind dealing [((1028+1117)/2)+(AP*0.4)] Frost dam
 @"Increases the duration of Blood Plague and Frost Fever by 12 sec.",})]
         public int Epidemic { get { return _data[42]; } set { _data[42] = value; } }
         /// <summary>
-        /// Your Plague Strikes and Scourge Strikes defile the ground within 37 yards of your target.  Enemies in the area are slowed by [25 * Pts]% while standing on the unholy ground.  Lasts 20 sec.
+        /// Your Plague, Scourge, and Necrotic Strikes defile the ground within 37 yards of your target.  Enemies in the area are slowed by [25 * Pts]% while standing on the unholy ground.  Lasts 20 sec.
         /// </summary>
         [TalentData(index: 43, name: "Desecration", maxPoints: 2, icon: "spell_shadow_shadowfiend",
          tree: 2, column: 1, row: 2, prerequisite: -1, description: new[] {
-@"Your Plague Strikes and Scourge Strikes defile the ground within 37 yards of your target.  Enemies in the area are slowed by 25% while standing on the unholy ground.  Lasts 20 sec.",
-@"Your Plague Strikes and Scourge Strikes defile the ground within 37 yards of your target.  Enemies in the area are slowed by 50% while standing on the unholy ground.  Lasts 20 sec.",})]
+@"Your Plague, Scourge, and Necrotic Strikes defile the ground within 37 yards of your target.  Enemies in the area are slowed by 25% while standing on the unholy ground.  Lasts 20 sec.",
+@"Your Plague, Scourge, and Necrotic Strikes defile the ground within 37 yards of your target.  Enemies in the area are slowed by 50% while standing on the unholy ground.  Lasts 20 sec.",})]
         public int Desecration { get { return _data[43]; } set { _data[43] = value; } }
         /// <summary>
         /// When your diseases are dispelled by an enemy, you have a [50 * Pts]% chance to activate a Frost rune if Frost Fever was removed, or an Unholy rune if Blood Plague was removed.
@@ -3476,117 +3548,120 @@ Induces a friendly unit into a killing frenzy for 30 sec.  The target is Enraged
 @"Increases the damage of your diseases spread via Pestilence by 100%.",})]
         public int Contagion { get { return _data[48]; } set { _data[48] = value; } }
         /// <summary>
-        /// When you cast Death Coil, you have a [100 / 3 * Pts]% chance to empower your active Ghoul, increasing its damage dealt by 10% for 30 sec.  Stacks up to 5 times.
+        /// Grants your successful Death Coils a [100 / 3 * Pts]% chance to empower your active Ghoul, increasing its damage dealt by 6% for 30 sec.  Stacks up to 5 times.
         /// </summary>
         [TalentData(index: 49, name: "Shadow Infusion", maxPoints: 3, icon: "spell_shadow_requiem",
          tree: 2, column: 4, row: 3, prerequisite: -1, description: new[] {
-@"When you cast Death Coil, you have a 33% chance to empower your active Ghoul, increasing its damage dealt by 10% for 30 sec.  Stacks up to 5 times.",
-@"When you cast Death Coil, you have a 66% chance to empower your active Ghoul, increasing its damage dealt by 10% for 30 sec.  Stacks up to 5 times.",
-@"When you cast Death Coil, you have a 100% chance to empower your active Ghoul, increasing its damage dealt by 10% for 30 sec.  Stacks up to 5 times.",})]
+@"Grants your successful Death Coils a 33% chance to empower your active Ghoul, increasing its damage dealt by 6% for 30 sec.  Stacks up to 5 times.",
+@"Grants your successful Death Coils a 66% chance to empower your active Ghoul, increasing its damage dealt by 6% for 30 sec.  Stacks up to 5 times.",
+@"Grants your successful Death Coils a 100% chance to empower your active Ghoul, increasing its damage dealt by 6% for 30 sec.  Stacks up to 5 times.",})]
         public int ShadowInfusion { get { return _data[49]; } set { _data[49] = value; } }
+        /// <summary>
+        /// While your Unholy Runes are both depleted, movement-impairing effects may not reduce you below [75 / 2 * Pts]% of normal movement speed.
+        /// </summary>
+        [TalentData(index: 50, name: "Death's Advance", maxPoints: 2, icon: "spell_shadow_demonicempathy",
+         tree: 2, column: 1, row: 4, prerequisite: -1, description: new[] {
+@"While your Unholy Runes are both depleted, movement-impairing effects may not reduce you below 60% of normal movement speed.",
+@"While your Unholy Runes are both depleted, movement-impairing effects may not reduce you below 75% of normal movement speed.",})]
+        public int DeathsAdvance { get { return _data[50]; } set { _data[50] = value; } }
         /// <summary>
         /// Increases the spell damage absorption of your Anti-Magic Shell by an additional [25 / 3 * Pts]%, and increases the runic power generated when damage is absorbed by Anti-Magic Shell.
         /// </summary>
-        [TalentData(index: 50, name: "Magic Suppression", maxPoints: 3, icon: "spell_shadow_antimagicshell",
+        [TalentData(index: 51, name: "Magic Suppression", maxPoints: 3, icon: "spell_shadow_antimagicshell",
          tree: 2, column: 2, row: 4, prerequisite: -1, description: new[] {
 @"Increases the spell damage absorption of your Anti-Magic Shell by an additional 8%, and causes damage absorbed by Anti-Magic Shell to energize the Death Knight with runic power.",
 @"Increases the spell damage absorption of your Anti-Magic Shell by an additional 16%, and increases the runic power generated when damage is absorbed by Anti-Magic Shell.",
 @"Increases the spell damage absorption of your Anti-Magic Shell by an additional 25%, and increases the runic power generated when damage is absorbed by Anti-Magic Shell.",})]
-        public int MagicSuppression { get { return _data[50]; } set { _data[50] = value; } }
+        public int MagicSuppression { get { return _data[51]; } set { _data[51] = value; } }
         /// <summary>
-        /// Increases the damage of your Plague Strike, Scourge Strike, and Festering Strike abilities by [15 * Pts]%.
+        /// Increases the damage of your Plague Strike, Scourge Strike, and Festering Strike abilities by [12 * Pts]%.
         /// </summary>
-        [TalentData(index: 51, name: "Rage of Rivendare", maxPoints: 3, icon: "inv_weapon_halberd14",
+        [TalentData(index: 52, name: "Rage of Rivendare", maxPoints: 3, icon: "inv_weapon_halberd14",
          tree: 2, column: 3, row: 4, prerequisite: -1, description: new[] {
-@"Increases the damage of your Plague Strike, Scourge Strike, and Festering Strike abilities by 15%.",
-@"Increases the damage of your Plague Strike, Scourge Strike, and Festering Strike abilities by 30%.",
-@"Increases the damage of your Plague Strike, Scourge Strike, and Festering Strike abilities by 45%.",})]
-        public int RageOfRivendare { get { return _data[51]; } set { _data[51] = value; } }
+@"Increases the damage of your Plague Strike, Scourge Strike, and Festering Strike abilities by 12%.",
+@"Increases the damage of your Plague Strike, Scourge Strike, and Festering Strike abilities by 24%.",
+@"Increases the damage of your Plague Strike, Scourge Strike, and Festering Strike abilities by 36%.",})]
+        public int RageOfRivendare { get { return _data[52]; } set { _data[52] = value; } }
         /// <summary>
         /// Causes the victims of your Death Coil to be surrounded by a vile swarm of unholy insects, taking 10% of the damage done by the Death Coil over 10 sec, and preventing any diseases on the victim from being dispelled.
         /// </summary>
-        [TalentData(index: 52, name: "Unholy Blight", maxPoints: 1, icon: "spell_shadow_contagion",
+        [TalentData(index: 53, name: "Unholy Blight", maxPoints: 1, icon: "spell_shadow_contagion",
          tree: 2, column: 1, row: 5, prerequisite: -1, description: new[] {
 @"Causes the victims of your Death Coil to be surrounded by a vile swarm of unholy insects, taking 10% of the damage done by the Death Coil over 10 sec, and preventing any diseases on the victim from being dispelled.",})]
-        public int UnholyBlight { get { return _data[52]; } set { _data[52] = value; } }
+        public int UnholyBlight { get { return _data[53]; } set { _data[53] = value; } }
         /// <summary>
         /// Anti-Magic Zone - 1 Unholy
         /// 45 sec cooldown - Instant
-        /// Places a large, stationary Anti-Magic Zone that reduces spell damage done to party or raid members inside it by 75%.  The Anti-Magic Zone lasts for 10 sec or until it absorbs [10000+2*AP] spell damage.
+        /// Places a large, stationary Anti-Magic Zone that reduces spell damage done to party or raid members inside it by 75%.  The Anti-Magic Zone lasts for 10 sec or until it absorbs [10000 + 2 * AP] spell damage.
         /// </summary>
-        [TalentData(index: 53, name: "Anti-Magic Zone", maxPoints: 1, icon: "spell_deathknight_antimagiczone",
-         tree: 2, column: 2, row: 5, prerequisite: 50, description: new[] {
+        [TalentData(index: 54, name: "Anti-Magic Zone", maxPoints: 1, icon: "spell_deathknight_antimagiczone",
+         tree: 2, column: 2, row: 5, prerequisite: 51, description: new[] {
 @"Anti-Magic Zone - 1 Unholy
 45 sec cooldown - Instant
-Places a large, stationary Anti-Magic Zone that reduces spell damage done to party or raid members inside it by 75%.  The Anti-Magic Zone lasts for 10 sec or until it absorbs [10000+2*AP] spell damage.",})]
-        public int AntiMagicZone { get { return _data[53]; } set { _data[53] = value; } }
+Places a large, stationary Anti-Magic Zone that reduces spell damage done to party or raid members inside it by 75%.  The Anti-Magic Zone lasts for 10 sec or until it absorbs [10000 + 2 * AP] spell damage.",})]
+        public int AntiMagicZone { get { return _data[54]; } set { _data[54] = value; } }
         /// <summary>
         /// Grants you an additional [5 / 2 * Pts]% haste while in Unholy Presence.  In addition, while in Blood Presence or Frost Presence, you retain [15 / 2 * Pts]% increased movement speed from Unholy Presence.
         /// </summary>
-        [TalentData(index: 54, name: "Improved Unholy Presence", maxPoints: 2, icon: "spell_deathknight_unholypresence",
+        [TalentData(index: 55, name: "Improved Unholy Presence", maxPoints: 2, icon: "spell_deathknight_unholypresence",
          tree: 2, column: 3, row: 5, prerequisite: -1, description: new[] {
 @"Grants you an additional 2% haste while in Unholy Presence.  In addition, while in Blood Presence or Frost Presence, you retain 8% increased movement speed from Unholy Presence.",
 @"Grants you an additional 5% haste while in Unholy Presence.  In addition, while in Blood Presence or Frost Presence, you retain 15% increased movement speed from Unholy Presence.",})]
-        public int ImprovedUnholyPresence { get { return _data[54]; } set { _data[54] = value; } }
+        public int ImprovedUnholyPresence { get { return _data[55]; } set { _data[55] = value; } }
         /// <summary>
-        /// Dark Transformation - 60 yd range - 1 Unholy
+        /// Dark Transformation - 100 yd range - 1 Unholy
         /// Instant cast
-        /// Consume 5 charges of Shadow Infusion on your Ghoul to transform it into a powerful undead monstrosity for 30 sec.  The Ghoul's abilities are empowered and take on new functions while the transformation is active.
+        /// Consume 5 charges of Shadow Infusion on your Ghoul to transform it into a powerful undead monstrosity for 30 sec.  The Ghoul\'s abilities are empowered and take on new functions while the transformation is active.
         /// </summary>
-        [TalentData(index: 55, name: "Dark Transformation", maxPoints: 1, icon: "achievement_boss_festergutrotface",
+        [TalentData(index: 56, name: "Dark Transformation", maxPoints: 1, icon: "achievement_boss_festergutrotface",
          tree: 2, column: 4, row: 5, prerequisite: 49, description: new[] {
-@"Dark Transformation - 60 yd range - 1 Unholy
+@"Dark Transformation - 100 yd range - 1 Unholy
 Instant cast
-Consume 5 charges of Shadow Infusion on your Ghoul to transform it into a powerful undead monstrosity for 30 sec.  The Ghoul's abilities are empowered and take on new functions while the transformation is active.",})]
-        public int DarkTransformation { get { return _data[55]; } set { _data[55] = value; } }
+Consume 5 charges of Shadow Infusion on your Ghoul to transform it into a powerful undead monstrosity for 30 sec.  The Ghoul\'s abilities are empowered and take on new functions while the transformation is active.",})]
+        public int DarkTransformation { get { return _data[56]; } set { _data[56] = value; } }
         /// <summary>
         /// Your Plague Strike, Icy Touch, Chains of Ice, and Outbreak abilities also infect their target with Ebon Plague, which increases damage taken from your diseases by [15 * Pts]% and all magic damage taken by an additional 8%.
         /// </summary>
-        [TalentData(index: 56, name: "Ebon Plaguebringer", maxPoints: 2, icon: "ability_creature_cursed_03",
+        [TalentData(index: 57, name: "Ebon Plaguebringer", maxPoints: 2, icon: "ability_creature_cursed_03",
          tree: 2, column: 2, row: 6, prerequisite: -1, description: new[] {
 @"Your Plague Strike, Icy Touch, Chains of Ice, and Outbreak abilities also infect their target with Ebon Plague, which increases damage taken from your diseases by 15% and all magic damage taken by an additional 8%.",
 @"Your Plague Strike, Icy Touch, Chains of Ice, and Outbreak abilities also infect their target with Ebon Plague, which increases damage taken from your diseases by 30% and all magic damage taken by an additional 8%.",})]
-        public int EbonPlaguebringer { get { return _data[56]; } set { _data[56] = value; } }
+        public int EbonPlaguebringer { get { return _data[57]; } set { _data[57] = value; } }
         /// <summary>
-        /// Your auto attacks have a [5 * Pts]% chance to make your next Death Coil cost no runic power.
+        /// Your main-hand auto attacks have a chance (higher than rank 2) to make your next Death Coil cost no runic power.
         /// </summary>
-        [TalentData(index: 57, name: "Sudden Doom", maxPoints: 3, icon: "spell_shadow_painspike",
+        [TalentData(index: 58, name: "Sudden Doom", maxPoints: 3, icon: "spell_shadow_painspike",
          tree: 2, column: 3, row: 6, prerequisite: -1, description: new[] {
-@"Your auto attacks have a 5% chance to make your next Death Coil cost no runic power.",
-@"Your auto attacks have a 10% chance to make your next Death Coil cost no runic power.",
-@"Your auto attacks have a 15% chance to make your next Death Coil cost no runic power.",})]
-        public int SuddenDoom { get { return _data[57]; } set { _data[57] = value; } }
+@"Your main-hand auto attacks have a chance to make your next Death Coil cost no runic power.",
+@"Your main-hand auto attacks have a chance (higher than rank 1) to make your next Death Coil cost no runic power.",
+@"Your main-hand auto attacks have a chance (higher than rank 2) to make your next Death Coil cost no runic power.",})]
+        public int SuddenDoom { get { return _data[58]; } set { _data[58] = value; } }
         /// <summary>
         /// Summon Gargoyle - 30 yd range - 1 Frost 1 Unholy
         /// 3 min cooldown - Instant cast
-        /// A Gargoyle flies into the area and bombards the target with Nature damage modified by the Death Knight's attack power.  Persists for 30 sec.
+        /// A Gargoyle flies into the area and bombards the target with Nature damage modified by the Death Knight\'s attack power.  Persists for 30 sec.
         /// </summary>
-        [TalentData(index: 58, name: "Summon Gargoyle", maxPoints: 1, icon: "ability_deathknight_summongargoyle",
+        [TalentData(index: 59, name: "Summon Gargoyle", maxPoints: 1, icon: "ability_deathknight_summongargoyle",
          tree: 2, column: 2, row: 7, prerequisite: -1, description: new[] {
 @"Summon Gargoyle - 30 yd range - 1 Frost 1 Unholy
 3 min cooldown - Instant cast
-A Gargoyle flies into the area and bombards the target with Nature damage modified by the Death Knight's attack power.  Persists for 30 sec.",})]
-        public int SummonGargoyle { get { return _data[58]; } set { _data[58] = value; } }
+A Gargoyle flies into the area and bombards the target with Nature damage modified by the Death Knight\'s attack power.  Persists for 30 sec.",})]
+        public int SummonGargoyle { get { return _data[59]; } set { _data[59] = value; } }
+        #endregion
     }
 
     public partial class ShamanTalents : TalentsBase
-#if RAWR3 || RAWR4
     {
         public override TalentsBase Clone()
-#else
-, ICloneable
-    {
-        public ShamanTalents Clone() { return (ShamanTalents)((ICloneable)this).Clone(); }
-        object ICloneable.Clone()
-#endif
         {
             ShamanTalents clone = (ShamanTalents)MemberwiseClone();
             clone._data = (int[])_data.Clone();
             clone._glyphData = (bool[])_glyphData.Clone();
+            clone.TreeCounts = new int[] { -1, -1, -1 };
             return clone;
         }
 
-        private int[] _data = new int[57];
+        private int[] _data = new int[58];
         public override int[] Data { get { return _data; } }
         public ShamanTalents() { }
         public ShamanTalents(string talents)
@@ -3594,10 +3669,12 @@ A Gargoyle flies into the area and bombards the target with Nature damage modifi
             LoadString(talents);
         }
         public static string[] TreeNames = new[] {
-@"Elemental",
-@"Enhancement",
-@"Restoration",};
+			@"Elemental",
+			@"Enhancement",
+			@"Restoration",};
 
+        #region Elemental
+        public override int TreeStartingIndexes_0 { get { return 0; } }
         /// <summary>
         /// Increases your critical strike chance with all spells and attacks by [1 * Pts]%.
         /// </summary>
@@ -3748,15 +3825,18 @@ When activated, your next Lightning Bolt, Chain Lightning or Lava Burst spell be
         public int LavaSurge { get { return _data[17]; } set { _data[17] = value; } }
         /// <summary>
         /// Earthquake - 35 yd range - 60% of base mana
-        /// Channeled
-        /// You cause the earth at the target location to tremble and break, dealing 460 Physical damage every 1 sec to enemies in 8 yard radius, with a 10% chance of knocking down affected targets. Lasts 8 sec.
+        /// 10 sec cooldown - 2.5 sec cast
+        /// You cause the earth at the target location to tremble and break, dealing 325 Physical damage every 1 sec to enemies in 8 yard radius, with a 10% chance of knocking down affected targets. Lasts 10 sec.
         /// </summary>
         [TalentData(index: 18, name: "Earthquake", maxPoints: 1, icon: "spell_shaman_earthquake",
          tree: 0, column: 2, row: 7, prerequisite: -1, description: new[] {
 @"Earthquake - 35 yd range - 60% of base mana
-Channeled
-You cause the earth at the target location to tremble and break, dealing 460 Physical damage every 1 sec to enemies in 8 yard radius, with a 10% chance of knocking down affected targets. Lasts 8 sec.",})]
+10 sec cooldown - 2.5 sec cast
+You cause the earth at the target location to tremble and break, dealing 325 Physical damage every 1 sec to enemies in 8 yard radius, with a 10% chance of knocking down affected targets. Lasts 10 sec.",})]
         public int Earthquake { get { return _data[18]; } set { _data[18] = value; } }
+        #endregion
+        #region Enhancement
+        public override int TreeStartingIndexes_1 { get { return 19; } }
         /// <summary>
         /// Increases the passive bonuses granted by your Flametongue Weapon and Earthliving Weapon abilities by [20 * Pts]%, the damage of your extra attacks from Windfury Weapon by [20 * Pts]%, and the effectiveness of the ongoing benefits of your Unleash Elements ability by [25 * Pts]%.
         /// </summary>
@@ -3784,13 +3864,13 @@ You cause the earth at the target location to tremble and break, dealing 460 Phy
 @"Increases the damage done by your Lightning Shield orbs by 15%, increases the amount of mana gained from your Water Shield orbs by 15%, and increases the amount of healing done by your Earth Shield orbs by 15%.",})]
         public int ImprovedShields { get { return _data[21]; } set { _data[21] = value; } }
         /// <summary>
-        /// When you deal critical damage with a non-periodic spell, increases your chance to get a critical strike with melee attacks by [3 * Pts]% for 10 sec.
+        /// When you deal critical damage with a non-periodic spell, your chance to get a critical strike with melee attacks increases by [3 * Pts]% for 10 sec.
         /// </summary>
         [TalentData(index: 22, name: "Elemental Devastation", maxPoints: 3, icon: "spell_fire_elementaldevastation",
          tree: 1, column: 1, row: 2, prerequisite: -1, description: new[] {
-@"When you deal critical damage with a non-periodic spell, increases your chance to get a critical strike with melee attacks by 3% for 10 sec.",
-@"When you deal critical damage with a non-periodic spell, increases your chance to get a critical strike with melee attacks by 6% for 10 sec.",
-@"When you deal critical damage with a non-periodic spell, increases your chance to get a critical strike with melee attacks by 9% for 10 sec.",})]
+@"When you deal critical damage with a non-periodic spell, your chance to get a critical strike with melee attacks increases by 3% for 10 sec.",
+@"When you deal critical damage with a non-periodic spell, your chance to get a critical strike with melee attacks increases by 6% for 10 sec.",
+@"When you deal critical damage with a non-periodic spell, your chance to get a critical strike with melee attacks increases by 9% for 10 sec.",})]
         public int ElementalDevastation { get { return _data[22]; } set { _data[22] = value; } }
         /// <summary>
         /// Increases your attack speed by [10 * Pts]% for your next 3 swings after dealing a critical strike.
@@ -3855,13 +3935,13 @@ Requires Melee Weapon - Instantly strike an enemy with both weapons, dealing 125
 @"Increases the damage done by your Lightning Bolt, Chain Lightning, Lava Lash, and Shock spells by 10% on targets afflicted by your Frostbrand Attack effect, and your Frost Shock has a 100% chance to root the target in ice for 5 sec. when used on targets at or further than 15 yards from you.",})]
         public int FrozenPower { get { return _data[29]; } set { _data[29] = value; } }
         /// <summary>
-        /// Increases the damage done by your Fire Nova by [10 * Pts]% and reduces the cooldown by [2 * Pts] sec.
+        /// When you successfully prevent an enemy spellcast with Wind Shear or Grounding Totem, you gain [if (PL<=70) then PL else if (PL<=80) then PL+(PL-70)*5 else PL+(PL-70)*5+(PL-80)*7] resistance to that spell's magical school for 10 sec.
         /// </summary>
-        [TalentData(index: 30, name: "Improved Fire Nova", maxPoints: 2, icon: "spell_shaman_improvedfirenova",
+        [TalentData(index: 30, name: "Seasoned Winds", maxPoints: 2, icon: "spell_nature_elementalabsorption",
          tree: 1, column: 2, row: 4, prerequisite: -1, description: new[] {
-@"Increases the damage done by your Fire Nova by 10% and reduces the cooldown by 2 sec.",
-@"Increases the damage done by your Fire Nova by 20% and reduces the cooldown by 4 sec.",})]
-        public int ImprovedFireNova { get { return _data[30]; } set { _data[30] = value; } }
+@"When you successfully prevent an enemy spellcast with Wind Shear or Grounding Totem, you gain [(floor(if (PL<=70) then PL else if (PL<=80) then PL+(PL-70)*5 else PL+(PL-70)*5+(PL-80)*7/2))] resistance to that spell's magical school for 10 sec.",
+@"When you successfully prevent an enemy spellcast with Wind Shear or Grounding Totem, you gain [if (PL<=70) then PL else if (PL<=80) then PL+(PL-70)*5 else PL+(PL-70)*5+(PL-80)*7] resistance to that spell's magical school for 10 sec.",})]
+        public int SeasonedWinds { get { return _data[30]; } set { _data[30] = value; } }
         /// <summary>
         /// Causes the Searing Bolts from your Searing Totem to have a [100 / 3 * Pts]% chance to set their targets aflame, dealing damage equal to the Searing Bolt's impact damage over 15 sec. Stacks up to 5 times.
         /// </summary>
@@ -3924,6 +4004,9 @@ Reduces all damage taken by 30% and causes your skills, totems, and offensive sp
 2 min cooldown - Instant cast
 Summons two Spirit Wolves under the command of the Shaman, lasting 30 sec.",})]
         public int FeralSpirit { get { return _data[37]; } set { _data[37] = value; } }
+        #endregion
+        #region Restoration
+        public override int TreeStartingIndexes_2 { get { return 38; } }
         /// <summary>
         /// Reduces damage taken while casting spells by [5 * Pts]%.
         /// </summary>
@@ -4026,12 +4109,12 @@ When activated, your next Nature spell with a base casting time less than 10 sec
 @"Empowers your Cleanse Spirit spell to also remove a magic effect from a friendly target.",})]
         public int ImprovedCleanseSpirit { get { return _data[49]; } set { _data[49] = value; } }
         /// <summary>
-        /// Reduces the cost of Cleanse Spirit by [20 * Pts]%, and when your Cleanse Spirit successfully removes a harmful effect, you also heal the target for [2615 / 2 * Pts]
+        /// Reduces the cost of Cleanse Spirit by [20 * Pts]%, and when your Cleanse Spirit successfully removes a harmful effect, you also heal the target for [1317 * Pts] to [1485 * Pts]
         /// </summary>
         [TalentData(index: 50, name: "Cleansing Waters", maxPoints: 2, icon: "spell_nature_regeneration_02",
          tree: 2, column: 4, row: 4, prerequisite: 49, description: new[] {
-@"Reduces the cost of Cleanse Spirit by 20%, and when your Cleanse Spirit successfully removes a harmful effect, you also heal the target for 1307.",
-@"Reduces the cost of Cleanse Spirit by 40%, and when your Cleanse Spirit successfully removes a harmful effect, you also heal the target for 2615.",})]
+@"Reduces the cost of Cleanse Spirit by 20%, and when your Cleanse Spirit successfully removes a harmful effect, you also heal the target for 1317 to 1485.",
+@"Reduces the cost of Cleanse Spirit by 40%, and when your Cleanse Spirit successfully removes a harmful effect, you also heal the target for 2634 to 2970.",})]
         public int CleansingWaters { get { return _data[50]; } set { _data[50] = value; } }
         /// <summary>
         /// When you critically heal with a single-target direct heal, you summon an Ancestral spirit to aid you, instantly healing the lowest percentage health friendly party or raid target within 40 yards for [10 * Pts]% of the amount healed.
@@ -4044,12 +4127,12 @@ When activated, your next Nature spell with a base casting time less than 10 sec
         public int AncestralAwakening { get { return _data[51]; } set { _data[51] = value; } }
         /// <summary>
         /// Mana Tide Totem - 3 min cooldown - Instant cast
-        /// Tools: Water Totem - Summons a Mana Tide Totem with 10% of the caster's health at the feet of the caster for 12 sec.  Party members within 40 yards of the totem have their Spirit increased by 350%.
+        /// Tools: Water Totem - Summons a Mana Tide Totem with 10% of the caster\'s health at the feet of the caster for 12 sec.  Party and raid members within 40 yards of the totem gain 400% of the caster\'s Spirit (excluding short-duration Spirit bonuses).
         /// </summary>
         [TalentData(index: 52, name: "Mana Tide Totem", maxPoints: 1, icon: "spell_frost_summonwaterelemental",
          tree: 2, column: 2, row: 5, prerequisite: -1, description: new[] {
 @"Mana Tide Totem - 3 min cooldown - Instant cast
-Tools: Water Totem - Summons a Mana Tide Totem with 10% of the caster's health at the feet of the caster for 12 sec.  Party members within 40 yards of the totem have their Spirit increased by 350%.",})]
+Tools: Water Totem - Summons a Mana Tide Totem with 10% of the caster\'s health at the feet of the caster for 12 sec.  Party and raid members within 40 yards of the totem gain 400% of the caster\'s Spirit (excluding short-duration Spirit bonuses).",})]
         public int ManaTideTotem { get { return _data[52]; } set { _data[52] = value; } }
         /// <summary>
         /// Your attunement to natural energies causes your Lightning Bolt spell to restore mana equal to [20 * Pts]% of damage dealt.
@@ -4060,49 +4143,55 @@ Tools: Water Totem - Summons a Mana Tide Totem with 10% of the caster's health a
 @"Your attunement to natural energies causes your Lightning Bolt spell to restore mana equal to 40% of damage dealt.",})]
         public int TelluricCurrents { get { return _data[53]; } set { _data[53] = value; } }
         /// <summary>
+        /// Spirit Link Totem - 11% of base mana
+        /// 3 min cooldown - Instant cast
+        /// Summons a Spirit Link Totem with 5 health at the feet of the caster. The totem reduces damage taken by all party and raid members within 10 yards by 10%. Every 1 sec, the health of all affected players is redistributed, such that each player ends up with the same percentage of their maximum health. Lasts 6 sec.
+        /// </summary>
+        [TalentData(index: 54, name: "Spirit Link Totem", maxPoints: 1, icon: "spell_shaman_spiritlink",
+         tree: 2, column: 4, row: 5, prerequisite: -1, description: new[] {
+@"Spirit Link Totem - 11% of base mana
+3 min cooldown - Instant cast
+Summons a Spirit Link Totem with 5 health at the feet of the caster. The totem reduces damage taken by all party and raid members within 10 yards by 10%. Every 1 sec, the health of all affected players is redistributed, such that each player ends up with the same percentage of their maximum health. Lasts 6 sec.",})]
+        public int SpiritLinkTotem { get { return _data[54]; } set { _data[54] = value; } }
+        /// <summary>
         /// When you cast Chain Heal or Riptide, you gain the Tidal Waves effect, which reduces the cast time of your Healing Wave and Greater Healing Wave spells by [10 * Pts]% and increases the critical effect chance of your Healing Surge spell by [10 * Pts]%. 2 charges.
         /// </summary>
-        [TalentData(index: 54, name: "Tidal Waves", maxPoints: 3, icon: "spell_shaman_tidalwaves",
+        [TalentData(index: 55, name: "Tidal Waves", maxPoints: 3, icon: "spell_shaman_tidalwaves",
          tree: 2, column: 2, row: 6, prerequisite: -1, description: new[] {
 @"When you cast Chain Heal or Riptide, you gain the Tidal Waves effect, which reduces the cast time of your Healing Wave and Greater Healing Wave spells by 10% and increases the critical effect chance of your Healing Surge spell by 10%. 2 charges.",
 @"When you cast Chain Heal or Riptide, you gain the Tidal Waves effect, which reduces the cast time of your Healing Wave and Greater Healing Wave spells by 20% and increases the critical effect chance of your Healing Surge spell by 20%. 2 charges.",
 @"When you cast Chain Heal or Riptide, you gain the Tidal Waves effect, which reduces the cast time of your Healing Wave and Greater Healing Wave spells by 30% and increases the critical effect chance of your Healing Surge spell by 30%. 2 charges.",})]
-        public int TidalWaves { get { return _data[54]; } set { _data[54] = value; } }
+        public int TidalWaves { get { return _data[55]; } set { _data[55] = value; } }
         /// <summary>
         /// Grants an additional [40 * Pts]% chance to trigger your Earthliving heal over time effect when you heal an ally who is below 35% of total health.
         /// </summary>
-        [TalentData(index: 55, name: "Blessing of the Eternals", maxPoints: 2, icon: "spell_shaman_blessingofeternals",
+        [TalentData(index: 56, name: "Blessing of the Eternals", maxPoints: 2, icon: "spell_shaman_blessingofeternals",
          tree: 2, column: 3, row: 6, prerequisite: -1, description: new[] {
 @"Grants an additional 40% chance to trigger your Earthliving heal over time effect when you heal an ally who is below 35% of total health.",
 @"Grants an additional 80% chance to trigger your Earthliving heal over time effect when you heal an ally who is below 35% of total health.",})]
-        public int BlessingOfTheEternals { get { return _data[55]; } set { _data[55] = value; } }
+        public int BlessingOfTheEternals { get { return _data[56]; } set { _data[56] = value; } }
         /// <summary>
         /// Riptide - 40 yd range - 10% of base mana
         /// 6 sec cooldown - Instant cast
-        /// Heals a friendly target for 2205 and another 3475 over 15 sec.  Your next Chain Heal cast on that primary target within 15 sec will consume the healing over time effect and increase the amount of the Chain Heal by 25%.
+        /// Heals a friendly target for 2363 and another 3725 over 15 sec.  Your next Chain Heal cast on that primary target within 15 sec will consume the healing over time effect and increase the amount of the Chain Heal by 25%.
         /// </summary>
-        [TalentData(index: 56, name: "Riptide", maxPoints: 1, icon: "spell_nature_riptide",
+        [TalentData(index: 57, name: "Riptide", maxPoints: 1, icon: "spell_nature_riptide",
          tree: 2, column: 2, row: 7, prerequisite: -1, description: new[] {
 @"Riptide - 40 yd range - 10% of base mana
 6 sec cooldown - Instant cast
-Heals a friendly target for 2205 and another 3475 over 15 sec.  Your next Chain Heal cast on that primary target within 15 sec will consume the healing over time effect and increase the amount of the Chain Heal by 25%.",})]
-        public int Riptide { get { return _data[56]; } set { _data[56] = value; } }
+Heals a friendly target for 2363 and another 3725 over 15 sec.  Your next Chain Heal cast on that primary target within 15 sec will consume the healing over time effect and increase the amount of the Chain Heal by 25%.",})]
+        public int Riptide { get { return _data[57]; } set { _data[57] = value; } }
+        #endregion
     }
 
     public partial class MageTalents : TalentsBase
-#if RAWR3 || RAWR4
     {
         public override TalentsBase Clone()
-#else
-, ICloneable
-    {
-        public MageTalents Clone() { return (MageTalents)((ICloneable)this).Clone(); }
-        object ICloneable.Clone()
-#endif
         {
             MageTalents clone = (MageTalents)MemberwiseClone();
             clone._data = (int[])_data.Clone();
             clone._glyphData = (bool[])_glyphData.Clone();
+            clone.TreeCounts = new int[] { -1, -1, -1 };
             return clone;
         }
 
@@ -4114,10 +4203,12 @@ Heals a friendly target for 2205 and another 3475 over 15 sec.  Your next Chain 
             LoadString(talents);
         }
         public static string[] TreeNames = new[] {
-@"Arcane",
-@"Fire",
-@"Frost",};
+			@"Arcane",
+			@"Fire",
+			@"Frost",};
 
+        #region Arcane
+        public override int TreeStartingIndexes_0 { get { return 0; } }
         /// <summary>
         /// Gives you a [10 / 3 * Pts]% chance of entering a Clearcasting state after any damage spell hits a target.  The Clearcasting state reduces the mana cost of your next damage spell by 100%.
         /// </summary>
@@ -4253,13 +4344,13 @@ When activated, your next Mage spell with a casting time less than 10 sec become
         /// <summary>
         /// Slow - 35 yd range - 12% of base mana
         /// Instant cast
-        /// Reduces target's movement speed by 60%, increases the time between ranged attacks by 60% and increases casting time by 30%.  Lasts 15 sec.  Slow can only affect one target at a time.
+        /// Reduces target\'s movement speed by 60%, increases the time between ranged attacks by 60% and increases casting time by 30%.  Lasts 15 sec.  Slow can only affect one target at a time.
         /// </summary>
         [TalentData(index: 16, name: "Slow", maxPoints: 1, icon: "spell_nature_slow",
          tree: 0, column: 2, row: 5, prerequisite: -1, description: new[] {
 @"Slow - 35 yd range - 12% of base mana
 Instant cast
-Reduces target's movement speed by 60%, increases the time between ranged attacks by 60% and increases casting time by 30%.  Lasts 15 sec.  Slow can only affect one target at a time.",})]
+Reduces target\'s movement speed by 60%, increases the time between ranged attacks by 60% and increases casting time by 30%.  Lasts 15 sec.  Slow can only affect one target at a time.",})]
         public int Slow { get { return _data[16]; } set { _data[16] = value; } }
         /// <summary>
         /// Gives your Arcane Blast spell a [50 * Pts]% chance to apply the Slow spell to any target it damages if no target is currently affected by Slow.
@@ -4272,13 +4363,13 @@ Reduces target's movement speed by 60%, increases the time between ranged attack
         /// <summary>
         /// Focus Magic - 30 yd range - 6% of base mana
         /// Instant cast
-        /// Increases the target's chance to critically hit with spells by 3% for 30 min.  When the target critically hits your chance to critically hit with spells is increased by 3% for 10 sec.  Cannot be cast on self.  Limit 1 target.
+        /// Increases the target\'s chance to critically hit with spells by 3% for 30 min.  When the target critically hits your chance to critically hit with spells is increased by 3% for 10 sec.  Cannot be cast on self.  Limit 1 target.
         /// </summary>
         [TalentData(index: 18, name: "Focus Magic", maxPoints: 1, icon: "spell_arcane_studentofmagic",
          tree: 0, column: 1, row: 6, prerequisite: -1, description: new[] {
 @"Focus Magic - 30 yd range - 6% of base mana
 Instant cast
-Increases the target's chance to critically hit with spells by 3% for 30 min.  When the target critically hits your chance to critically hit with spells is increased by 3% for 10 sec.  Cannot be cast on self.  Limit 1 target.",})]
+Increases the target\'s chance to critically hit with spells by 3% for 30 min.  When the target critically hits your chance to critically hit with spells is increased by 3% for 10 sec.  Cannot be cast on self.  Limit 1 target.",})]
         public int FocusMagic { get { return _data[18]; } set { _data[18] = value; } }
         /// <summary>
         /// Mana gained from your Mana Gem also increases your spell power by [1 * Pts]% of your maximum mana for 10 seconds.
@@ -4290,13 +4381,16 @@ Increases the target's chance to critically hit with spells by 3% for 30 min.  W
         public int ImprovedManaGem { get { return _data[19]; } set { _data[19] = value; } }
         /// <summary>
         /// Arcane Power - 15 sec cooldown - Instant
-        /// When activated, you deal 20% more spell damage but spells cost 10% more mana to cast.  This effect lasts None.
+        /// When activated, you deal 20% more spell damage but spells cost 10% more mana to cast. This effect lasts ???.
         /// </summary>
         [TalentData(index: 20, name: "Arcane Power", maxPoints: 1, icon: "spell_nature_lightning",
          tree: 0, column: 2, row: 7, prerequisite: 16, description: new[] {
 @"Arcane Power - 15 sec cooldown - Instant
-When activated, you deal 20% more spell damage but spells cost 10% more mana to cast.  This effect lasts None.",})]
+When activated, you deal 20% more spell damage but spells cost 10% more mana to cast. This effect lasts ???.",})]
         public int ArcanePower { get { return _data[20]; } set { _data[20] = value; } }
+        #endregion
+        #region Fire
+        public override int TreeStartingIndexes_1 { get { return 21; } }
         /// <summary>
         /// Your spell criticals will refund [15 * Pts]% of their base mana cost.
         /// </summary>
@@ -4323,22 +4417,22 @@ When activated, you deal 20% more spell damage but spells cost 10% more mana to 
 @"Increases the critical strike chance of your Fire Blast spell by 8% and increases its range by 10 yards.",})]
         public int ImprovedFireBlast { get { return _data[23]; } set { _data[23] = value; } }
         /// <summary>
-        /// Your critical strikes from Fire damage spells cause the target to burn for an additional [40 / 3 * Pts]% of your spell's damage over 4 sec.
+        /// Your critical strikes from non-periodic Fire damage spells cause the target to burn for an additional [40 / 3 * Pts]% of your spell's damage over 4 sec.
         /// </summary>
         [TalentData(index: 24, name: "Ignite", maxPoints: 3, icon: "spell_fire_incinerate",
          tree: 1, column: 1, row: 2, prerequisite: -1, description: new[] {
-@"Your critical strikes from Fire damage spells cause the target to burn for an additional 13.0% of your spell's damage over 4 sec.",
-@"Your critical strikes from Fire damage spells cause the target to burn for an additional 26.0% of your spell's damage over 4 sec.",
-@"Your critical strikes from Fire damage spells cause the target to burn for an additional 40.0% of your spell's damage over 4 sec.",})]
+@"Your critical strikes from non-periodic Fire damage spells cause the target to burn for an additional 13% of your spell's damage over 4 sec.",
+@"Your critical strikes from non-periodic Fire damage spells cause the target to burn for an additional 26% of your spell's damage over 4 sec.",
+@"Your critical strikes from non-periodic Fire damage spells cause the target to burn for an additional 40% of your spell's damage over 4 sec.",})]
         public int Ignite { get { return _data[24]; } set { _data[24] = value; } }
         /// <summary>
-        /// Increases the damage of your Fire spells by [1 * Pts]% and gives your Flame Orb a [100 / 3 * Pts]% chance to explode for 1268 damage at the end of its duration.
+        /// Increases the damage of your Fire spells by [1 * Pts]% and gives your Flame Orb a [100 / 3 * Pts]% chance to explode for 1134 to 1336 damage at the end of its duration.
         /// </summary>
         [TalentData(index: 25, name: "Fire Power", maxPoints: 3, icon: "spell_fire_immolation",
          tree: 1, column: 2, row: 2, prerequisite: -1, description: new[] {
-@"Increases the damage of your Fire spells by 1% and gives your Flame Orb a 33% chance to explode for 1268 damage at the end of its duration.",
-@"Increases the damage of your Fire spells by 2% and gives your Flame Orb a 66% chance to explode for 1268 damage at the end of its duration.",
-@"Increases the damage of your Fire spells by 3% and gives your Flame Orb a 100% chance to explode for 1268 damage at the end of its duration.",})]
+@"Increases the damage of your Fire spells by 1% and gives your Flame Orb a 33% chance to explode for 1134 to 1336 damage at the end of its duration.",
+@"Increases the damage of your Fire spells by 2% and gives your Flame Orb a 66% chance to explode for 1134 to 1336 damage at the end of its duration.",
+@"Increases the damage of your Fire spells by 3% and gives your Flame Orb a 100% chance to explode for 1134 to 1336 damage at the end of its duration.",})]
         public int FirePower { get { return _data[25]; } set { _data[25] = value; } }
         /// <summary>
         /// Gives you a [5 * Pts]% chance when hit by a melee or ranged attack to increase your movement speed by 50% and dispel all effects that prevent movement.  This effect lasts 8 sec.
@@ -4357,23 +4451,23 @@ When activated, you deal 20% more spell damage but spells cost 10% more mana to 
 @"Gives your damaging spells a 10% chance to reset the cooldown on Fire Blast and to cause the next Fire Blast you cast to stun the target for 2 sec and spread any Fire damage over time effects to nearby enemy targets within 32 yards.",})]
         public int Impact { get { return _data[27]; } set { _data[27] = value; } }
         /// <summary>
-        /// You have a [50 * Pts]% chance that an attack which would otherwise kill you will instead bring you to 40% of your maximum health.  However, you will burn for 12% of your maximum health every 1.50 sec for the next 6 sec.  This effect cannot occur more than once per minute.
+        /// You have a [50 * Pts]% chance that an attack which would otherwise kill you will instead bring you to 40% of your maximum health.  However, you will burn for 12% of your maximum health every 1.5 sec for the next 6 sec.  This effect cannot occur more than once per minute.
         /// </summary>
         [TalentData(index: 28, name: "Cauterize", maxPoints: 2, icon: "spell_fire_rune",
          tree: 1, column: 1, row: 3, prerequisite: -1, description: new[] {
-@"You have a 50% chance that an attack which would otherwise kill you will instead bring you to 40% of your maximum health.  However, you will burn for 12% of your maximum health every 1.50 sec for the next 6 sec.  This effect cannot occur more than once per minute.",
-@"You have a 100% chance that an attack which would otherwise kill you will instead bring you to 40% of your maximum health.  However, you will burn for 12% of your maximum health every 1.50 sec for the next 6 sec.  This effect cannot occur more than once per minute.",})]
+@"You have a 50% chance that an attack which would otherwise kill you will instead bring you to 40% of your maximum health.  However, you will burn for 12% of your maximum health every 1.5 sec for the next 6 sec.  This effect cannot occur more than once per minute.",
+@"You have a 100% chance that an attack which would otherwise kill you will instead bring you to 40% of your maximum health.  However, you will burn for 12% of your maximum health every 1.5 sec for the next 6 sec.  This effect cannot occur more than once per minute.",})]
         public int Cauterize { get { return _data[28]; } set { _data[28] = value; } }
         /// <summary>
         /// Blast Wave - 40 yd range - 7% of base mana
         /// 15 sec cooldown - Instant cast
-        /// A wave of flame radiates outward from the target location, damaging all enemies caught within the blast for 951 Fire damage and are slowed by 70% for 3 sec.
+        /// A wave of flame radiates outward from the target location, damaging all enemies caught within the blast for 851 to 1003 Fire damage and are slowed by 70% for 3 sec.
         /// </summary>
         [TalentData(index: 29, name: "Blast Wave", maxPoints: 1, icon: "spell_holy_excorcism_02",
          tree: 1, column: 2, row: 3, prerequisite: -1, description: new[] {
 @"Blast Wave - 40 yd range - 7% of base mana
 15 sec cooldown - Instant cast
-A wave of flame radiates outward from the target location, damaging all enemies caught within the blast for 951 Fire damage and are slowed by 70% for 3 sec.",})]
+A wave of flame radiates outward from the target location, damaging all enemies caught within the blast for 851 to 1003 Fire damage and are slowed by 70% for 3 sec.",})]
         public int BlastWave { get { return _data[29]; } set { _data[29] = value; } }
         /// <summary>
         /// Your spells no longer trigger Arcane Missiles.  Instead, your critical strikes with Fireball, Frostfire Bolt, Scorch, Pyroblast, or Fire Blast have a chance to cause your next Pyroblast spell cast within 15 sec to be instant cast and cost no mana.
@@ -4391,37 +4485,37 @@ A wave of flame radiates outward from the target location, damaging all enemies 
 @"Reduces the mana cost of your Scorch spell by 100%.",})]
         public int ImprovedScorch { get { return _data[31]; } set { _data[31] = value; } }
         /// <summary>
-        /// Reduces the global cooldown of your Mage Ward spell by 1 sec and your Blazing Speed also removes any movement slowing effects when triggered and is also trigged any time Mage Ward dissipates from absorbing damage.
+        /// Reduces the global cooldown of your Mage Ward spell by 1 sec and your Blazing Speed also removes any movement slowing effects when triggered and is also triggered any time Mage Ward dissipates from absorbing damage.
         /// </summary>
         [TalentData(index: 32, name: "Molten Shields", maxPoints: 1, icon: "spell_fire_firearmor",
          tree: 1, column: 1, row: 4, prerequisite: -1, description: new[] {
-@"Reduces the global cooldown of your Mage Ward spell by 1 sec and your Blazing Speed also removes any movement slowing effects when triggered and is also trigged any time Mage Ward dissipates from absorbing damage.",})]
+@"Reduces the global cooldown of your Mage Ward spell by 1 sec and your Blazing Speed also removes any movement slowing effects when triggered and is also triggered any time Mage Ward dissipates from absorbing damage.",})]
         public int MoltenShields { get { return _data[32]; } set { _data[32] = value; } }
         /// <summary>
         /// Combustion - 40 yd range
         /// 2 min cooldown - Instant cast
-        /// Combines your damaging periodic Fire effects on an enemy target but does not consume them, instantly dealing 1071 Fire damage and creating a new periodic effect that lasts 10 sec and deals damage per time equal to the sum of the combined effects.
+        /// Combines your damaging periodic Fire effects on an enemy target but does not consume them, instantly dealing 954 to 1131 Fire damage and creating a new periodic effect that lasts 10 sec and deals damage per time equal to the sum of the combined effects.
         /// </summary>
         [TalentData(index: 33, name: "Combustion", maxPoints: 1, icon: "spell_fire_sealoffire",
          tree: 1, column: 2, row: 4, prerequisite: -1, description: new[] {
 @"Combustion - 40 yd range
 2 min cooldown - Instant cast
-Combines your damaging periodic Fire effects on an enemy target but does not consume them, instantly dealing 1071 Fire damage and creating a new periodic effect that lasts 10 sec and deals damage per time equal to the sum of the combined effects.",})]
+Combines your damaging periodic Fire effects on an enemy target but does not consume them, instantly dealing 954 to 1131 Fire damage and creating a new periodic effect that lasts 10 sec and deals damage per time equal to the sum of the combined effects.",})]
         public int Combustion { get { return _data[33]; } set { _data[33] = value; } }
         /// <summary>
         /// Any time you score 2 non-periodic critical strikes in a row with your Fireball, Frostfire Bolt, Scorch, Pyroblast, or Fire Blast spells, you have a [50 * Pts]% chance to trigger your Hot Streak effect.
         /// </summary>
         [TalentData(index: 34, name: "Improved Hot Streak", maxPoints: 2, icon: "ability_mage_hotstreak",
          tree: 1, column: 3, row: 4, prerequisite: 30, description: new[] {
-@"Any time you score 2 non-periodic critical strikes in a row with your Fireball, Frostfire Bolt, Scorch, Pyroblast, or Fire Blast spells, you have a 50.0% chance to trigger your Hot Streak effect.",
-@"Any time you score 2 non-periodic critical strikes in a row with your Fireball, Frostfire Bolt, Scorch, Pyroblast, or Fire Blast spells, you have a 100.0% chance to trigger your Hot Streak effect.",})]
+@"Any time you score 2 non-periodic critical strikes in a row with your Fireball, Frostfire Bolt, Scorch, Pyroblast, or Fire Blast spells, you have a 50% chance to trigger your Hot Streak effect.",
+@"Any time you score 2 non-periodic critical strikes in a row with your Fireball, Frostfire Bolt, Scorch, Pyroblast, or Fire Blast spells, you have a 100% chance to trigger your Hot Streak effect.",})]
         public int ImprovedHotStreak { get { return _data[34]; } set { _data[34] = value; } }
         /// <summary>
-        /// Your Molten Armor allows you to cast the Scorch spell while moving instead of reducing the chance you are critically hit.
+        /// Allows you to cast the Scorch spell while moving.
         /// </summary>
         [TalentData(index: 35, name: "Firestarter", maxPoints: 1, icon: "ability_mage_firestarter",
          tree: 1, column: 4, row: 4, prerequisite: -1, description: new[] {
-@"Your Molten Armor allows you to cast the Scorch spell while moving instead of reducing the chance you are critically hit.",})]
+@"Allows you to cast the Scorch spell while moving.",})]
         public int Firestarter { get { return _data[35]; } set { _data[35] = value; } }
         /// <summary>
         /// Reduces the casting time of your Flamestrike spell by [50 * Pts]% and gives you a [50 * Pts]% chance that your Blast Wave spell will also automatically Flamestrike the same location if two or more targets are affected by the Blast Wave.
@@ -4434,13 +4528,13 @@ Combines your damaging periodic Fire effects on an enemy target but does not con
         /// <summary>
         /// Dragon's Breath - 7% of base mana
         /// 20 sec cooldown - Instant cast
-        /// Targets in a cone in front of the caster take 1326 Fire damage and are Disoriented for 5 sec.  Any direct damaging attack will revive targets.
+        /// Targets in a cone in front of the caster take 1194 to 1388 Fire damage and are disoriented for 5 sec.  Any direct damaging attack will revive targets.
         /// </summary>
         [TalentData(index: 37, name: "Dragon's Breath", maxPoints: 1, icon: "inv_misc_head_dragon_01",
          tree: 1, column: 2, row: 5, prerequisite: -1, description: new[] {
 @"Dragon's Breath - 7% of base mana
 20 sec cooldown - Instant cast
-Targets in a cone in front of the caster take 1326 Fire damage and are Disoriented for 5 sec.  Any direct damaging attack will revive targets.",})]
+Targets in a cone in front of the caster take 1194 to 1388 Fire damage and are disoriented for 5 sec.  Any direct damaging attack will revive targets.",})]
         public int DragonsBreath { get { return _data[37]; } set { _data[37] = value; } }
         /// <summary>
         /// Increases damage of all spells against targets with less than 35% health by [4 * Pts]%.
@@ -4469,16 +4563,19 @@ Targets in a cone in front of the caster take 1326 Fire damage and are Disorient
 @"Your Living Bomb and Flame Orb spells deal 15% more damage, and your Pyroblast and Scorch spells have a 100% chance to cause your target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 5% and lasts 30 sec.",})]
         public int CriticalMass { get { return _data[40]; } set { _data[40] = value; } }
         /// <summary>
-        /// Living Bomb - 40 yd range - 22% of base mana
+        /// Living Bomb - 40 yd range - 17% of base mana
         /// Instant cast
-        /// The target becomes a Living Bomb, taking 1652 Fire damage over 12 sec.  After 12 sec, the target explodes dealing 413 Fire damage to up to 3 enemies within 10 yards.  Limit 3 targets.
+        /// The target becomes a Living Bomb, taking 1600 Fire damage over 12 sec.  After 12 sec, the target explodes dealing 400 Fire damage to up to 3 enemies within 10 yards.  Limit 3 targets.
         /// </summary>
         [TalentData(index: 41, name: "Living Bomb", maxPoints: 1, icon: "ability_mage_livingbomb",
          tree: 1, column: 2, row: 7, prerequisite: 37, description: new[] {
-@"Living Bomb - 40 yd range - 22% of base mana
+@"Living Bomb - 40 yd range - 17% of base mana
 Instant cast
-The target becomes a Living Bomb, taking 1652 Fire damage over 12 sec.  After 12 sec, the target explodes dealing 413 Fire damage to up to 3 enemies within 10 yards.  Limit 3 targets.",})]
+The target becomes a Living Bomb, taking 1600 Fire damage over 12 sec.  After 12 sec, the target explodes dealing 400 Fire damage to up to 3 enemies within 10 yards.  Limit 3 targets.",})]
         public int LivingBomb { get { return _data[41]; } set { _data[41] = value; } }
+        #endregion
+        #region Frost
+        public override int TreeStartingIndexes_2 { get { return 42; } }
         /// <summary>
         /// Reduces the cast time of your Frostbolt spell by [0.3 * Pts] secs.  This effect becomes inactive for 15 sec after use.
         /// </summary>
@@ -4539,12 +4636,12 @@ The target becomes a Living Bomb, taking 1652 Fire damage over 12 sec.  After 12
 @"Your Chill effects reduce the target's speed by an additional 10%, and the target's healing received by 10%.  In addition, whenever you deal spell damage, your Water Elemental is healed for 15% of the amount dealt.",})]
         public int Permafrost { get { return _data[48]; } set { _data[48] = value; } }
         /// <summary>
-        /// Adds a chill effect to your Blizzard spell.  This effect lowers the target's movement speed by [40 / 2 * Pts]%.  Lasts [1 / 2 * Pts] sec.  In addition, increases the range of your Ice Lance spell by [5 / 2 * Pts] yards.
+        /// Adds a chill effect to your Blizzard spell.  This effect lowers the target's movement speed by [40 / 2 * Pts]%.  Lasts 2 sec.  In addition, increases the range of your Ice Lance spell by [5 / 2 * Pts] yards.
         /// </summary>
         [TalentData(index: 49, name: "Ice Shards", maxPoints: 2, icon: "spell_frost_ice shards",
          tree: 2, column: 1, row: 3, prerequisite: -1, description: new[] {
 @"Adds a chill effect to your Blizzard spell.  This effect lowers the target's movement speed by 25%.  Lasts 2 sec.  In addition, increases the range of your Ice Lance spell by 2 yards.",
-@"Adds a chill effect to your Blizzard spell.  This effect lowers the target's movement speed by 40%.  Lasts 1 sec.  In addition, increases the range of your Ice Lance spell by 5 yards.",})]
+@"Adds a chill effect to your Blizzard spell.  This effect lowers the target's movement speed by 40%.  Lasts 2 sec.  In addition, increases the range of your Ice Lance spell by 5 yards.",})]
         public int IceShards { get { return _data[49]; } set { _data[49] = value; } }
         /// <summary>
         /// Icy Veins - 3% of base mana
@@ -4558,13 +4655,13 @@ The target becomes a Living Bomb, taking 1652 Fire damage over 12 sec.  After 12
 Hastens your spellcasting, increasing spell casting speed by 20% and reduces the pushback suffered from damaging attacks while casting by 100%.  Lasts 20 sec.",})]
         public int IcyVeins { get { return _data[50]; } set { _data[50] = value; } }
         /// <summary>
-        /// Gives your Chill effects a [20 / 3 * Pts]% chance to grant you the Fingers of Frost effect, which causes your next Ice Lance or Deep Freeze spell to act as if your target were frozen.  Fingers of Frost can accumulate up to 2 charges and lasts 15 sec.
+        /// Gives your Chill effects a [20 / 3 * Pts]% chance to grant you the Fingers of Frost effect, which causes your next Ice Lance or Deep Freeze spell to act as if your target were frozen and increases Ice Lance damage by 15%.  Fingers of Frost can accumulate up to 2 charges and lasts 15 sec.
         /// </summary>
         [TalentData(index: 51, name: "Fingers of Frost", maxPoints: 3, icon: "ability_mage_wintersgrasp",
          tree: 2, column: 3, row: 3, prerequisite: -1, description: new[] {
-@"Gives your Chill effects a 7% chance to grant you the Fingers of Frost effect, which causes your next Ice Lance or Deep Freeze spell to act as if your target were frozen.  Fingers of Frost can accumulate up to 2 charges and lasts 15 sec.",
-@"Gives your Chill effects a 14% chance to grant you the Fingers of Frost effect, which causes your next Ice Lance or Deep Freeze spell to act as if your target were frozen.  Fingers of Frost can accumulate up to 2 charges and lasts 15 sec.",
-@"Gives your Chill effects a 20% chance to grant you the Fingers of Frost effect, which causes your next Ice Lance or Deep Freeze spell to act as if your target were frozen.  Fingers of Frost can accumulate up to 2 charges and lasts 15 sec.",})]
+@"Gives your Chill effects a 7% chance to grant you the Fingers of Frost effect, which causes your next Ice Lance or Deep Freeze spell to act as if your target were frozen and increases Ice Lance damage by 15%.  Fingers of Frost can accumulate up to 2 charges and lasts 15 sec.",
+@"Gives your Chill effects a 14% chance to grant you the Fingers of Frost effect, which causes your next Ice Lance or Deep Freeze spell to act as if your target were frozen and increases Ice Lance damage by 15%.  Fingers of Frost can accumulate up to 2 charges and lasts 15 sec.",
+@"Gives your Chill effects a 20% chance to grant you the Fingers of Frost effect, which causes your next Ice Lance or Deep Freeze spell to act as if your target were frozen and increases Ice Lance damage by 15%.  Fingers of Frost can accumulate up to 2 charges and lasts 15 sec.",})]
         public int FingersOfFrost { get { return _data[51]; } set { _data[51] = value; } }
         /// <summary>
         /// Gives your Water Elemental's Freeze spell a [100 / 3 * Pts]% chance to grant 2 charges of Fingers of Frost.
@@ -4613,13 +4710,13 @@ When activated, this spell finishes the cooldown on all Frost spells you recentl
         /// <summary>
         /// Ice Barrier - 21% of base mana
         /// 30 sec cooldown - Instant cast
-        /// Instantly shields you, absorbing [3784+SPFR*0.807] damage.  Lasts 1 min.  While the shield holds, spellcasting will not be delayed by damage.
+        /// Instantly shields you, absorbing [[3686 + 80.7% of SPFR]] damage.  Lasts 1 min.  While the shield holds, spellcasting will not be delayed by damage.
         /// </summary>
         [TalentData(index: 57, name: "Ice Barrier", maxPoints: 1, icon: "spell_ice_lament",
          tree: 2, column: 2, row: 5, prerequisite: -1, description: new[] {
 @"Ice Barrier - 21% of base mana
 30 sec cooldown - Instant cast
-Instantly shields you, absorbing [3784+SPFR*0.807] damage.  Lasts 1 min.  While the shield holds, spellcasting will not be delayed by damage.",})]
+Instantly shields you, absorbing [[3686 + 80.7% of SPFR]] damage.  Lasts 1 min.  While the shield holds, spellcasting will not be delayed by damage.",})]
         public int IceBarrier { get { return _data[57]; } set { _data[57] = value; } }
         /// <summary>
         /// Gives the caster a [50 * Pts]% chance for the Ice Barrier spell to automatically cast with no mana cost upon taking damage that lowers the caster's life below 50%.  This effect obeys Ice Barrier's cooldown, and will trigger the cooldown when activated.
@@ -4640,30 +4737,25 @@ Instantly shields you, absorbing [3784+SPFR*0.807] damage.  Lasts 1 min.  While 
         /// <summary>
         /// Deep Freeze - 35 yd range - 9% of base mana
         /// 30 sec cooldown - Instant cast
-        /// Stuns the target for 5 sec.  Only usable on Frozen targets.  Deals 1486 to 1862 damage to targets that are permanently immune to stuns.
+        /// Stuns the target for 5 sec.  Only usable on Frozen targets.  Deals 1144 to 1434 damage to targets that are permanently immune to stuns.
         /// </summary>
         [TalentData(index: 60, name: "Deep Freeze", maxPoints: 1, icon: "ability_mage_deepfreeze",
          tree: 2, column: 2, row: 7, prerequisite: 57, description: new[] {
 @"Deep Freeze - 35 yd range - 9% of base mana
 30 sec cooldown - Instant cast
-Stuns the target for 5 sec.  Only usable on Frozen targets.  Deals 1486 to 1862 damage to targets that are permanently immune to stuns.",})]
+Stuns the target for 5 sec.  Only usable on Frozen targets.  Deals 1144 to 1434 damage to targets that are permanently immune to stuns.",})]
         public int DeepFreeze { get { return _data[60]; } set { _data[60] = value; } }
+        #endregion
     }
 
     public partial class WarlockTalents : TalentsBase
-#if RAWR3 || RAWR4
     {
         public override TalentsBase Clone()
-#else
-, ICloneable
-    {
-        public WarlockTalents Clone() { return (WarlockTalents)((ICloneable)this).Clone(); }
-        object ICloneable.Clone()
-#endif
         {
             WarlockTalents clone = (WarlockTalents)MemberwiseClone();
             clone._data = (int[])_data.Clone();
             clone._glyphData = (bool[])_glyphData.Clone();
+            clone.TreeCounts = new int[] { -1, -1, -1 };
             return clone;
         }
 
@@ -4675,10 +4767,12 @@ Stuns the target for 5 sec.  Only usable on Frozen targets.  Deals 1486 to 1862 
             LoadString(talents);
         }
         public static string[] TreeNames = new[] {
-@"Affliction",
-@"Demonology",
-@"Destruction",};
+			@"Affliction",
+			@"Demonology",
+			@"Destruction",};
 
+        #region Affliction
+        public override int TreeStartingIndexes_0 { get { return 0; } }
         /// <summary>
         /// Increases the critical strike chance of your Bane of Agony and Bane of Doom by [4 * Pts]%.
         /// </summary>
@@ -4705,18 +4799,18 @@ Stuns the target for 5 sec.  Only usable on Frozen targets.  Deals 1486 to 1862 
 @"Increases the damage done by your Corruption by 12%.",})]
         public int ImprovedCorruption { get { return _data[2]; } set { _data[2] = value; } }
         /// <summary>
-        /// Your Curse of the Elements also effects up to 15.0 nearby enemy targets within [20 * Pts] yards of the cursed target. 
+        /// Your Curse of the Elements also affects up to 15 nearby enemy targets within [20 * Pts] yards of the cursed target. 
         /// 
-        /// Also, your Curse of Weakness reduces the targets energy, rage, focus or runic power generation by [5 * Pts]% while active.
+        /// Also, your Curse of Weakness reduces the target's energy, rage, focus or runic power generation by [5 * Pts]% while active.
         /// </summary>
         [TalentData(index: 3, name: "Jinx", maxPoints: 2, icon: "ability_warlock_jinx",
          tree: 0, column: 1, row: 2, prerequisite: -1, description: new[] {
-@"Your Curse of the Elements also effects up to 15.0 nearby enemy targets within 20 yards of the cursed target. 
+@"Your Curse of the Elements also affects up to 15 nearby enemy targets within 20 yards of the cursed target. 
 
-Also, your Curse of Weakness reduces the targets energy, rage, focus or runic power generation by 5% while active.",
-@"Your Curse of the Elements also effects up to 15.0 nearby enemy targets within 40 yards of the cursed target. 
+Also, your Curse of Weakness reduces the target's energy, rage, focus or runic power generation by 5% while active.",
+@"Your Curse of the Elements also affects up to 15 nearby enemy targets within 40 yards of the cursed target. 
 
-Also, your Curse of Weakness reduces the targets energy, rage, focus or runic power generation by 10% while active.",})]
+Also, your Curse of Weakness reduces the target's energy, rage, focus or runic power generation by 10% while active.",})]
         public int Jinx { get { return _data[3]; } set { _data[3] = value; } }
         /// <summary>
         /// Increases the amount drained by your Drain Life and Drain Soul spells by an additional [3 * Pts]% for each of your Affliction effects on the target, up to a maximum of [9 * Pts]% additional effect.
@@ -4735,15 +4829,15 @@ Also, your Curse of Weakness reduces the targets energy, rage, focus or runic po
 @"When you deal damage with your Corruption spell, you have a 50% chance to be healed for 2% of your total health.",})]
         public int SiphonLife { get { return _data[5]; } set { _data[5] = value; } }
         /// <summary>
-        /// Curse of Exhaustion - 30 yd range - 6% of base mana
+        /// Curse of Exhaustion - 40 yd range - 6% of base mana
         /// Instant cast
-        /// Reduces the target's movement speed by 50% for 30 sec.  Only one Curse per Warlock can be active on any one target.
+        /// Reduces the target\'s movement speed by 30% for 30 sec.  Only one Curse per Warlock can be active on any one target.
         /// </summary>
         [TalentData(index: 6, name: "Curse of Exhaustion", maxPoints: 1, icon: "spell_shadow_grimward",
          tree: 0, column: 1, row: 3, prerequisite: -1, description: new[] {
-@"Curse of Exhaustion - 30 yd range - 6% of base mana
+@"Curse of Exhaustion - 40 yd range - 6% of base mana
 Instant cast
-Reduces the target's movement speed by 50% for 30 sec.  Only one Curse per Warlock can be active on any one target.",})]
+Reduces the target\'s movement speed by 30% for 30 sec.  Only one Curse per Warlock can be active on any one target.",})]
         public int CurseOfExhaustion { get { return _data[6]; } set { _data[6] = value; } }
         /// <summary>
         /// Causes your Fear spell to inflict a Nightmare on the target when the fear effect ends. The Nightmare effect reduces the target's movement speed by [15 * Pts]% for 5 sec.
@@ -4773,9 +4867,9 @@ Reduces the target's movement speed by 50% for 30 sec.  Only one Curse per Warlo
         /// <summary>
         /// Soul Swap - 40 yd range - 18% of base mana
         /// Instant cast
-        /// You instantly deal 1 damage, and remove your shadow damage-over-time effects from the target.
+        /// You instantly deal 167 damage, and remove your shadow damage-over-time effects from the target.
         /// 
-        /// For 20 sec afterwards, the next target you cast Soul Swap: Exhale on will be afflicted by the shadow damage-over-time effects and suffer 1 damage.
+        /// For 20 sec afterwards, the next target you cast Soul Swap: Exhale on will be afflicted by the shadow damage-over-time effects and suffer 167 damage.
         /// 
         /// You cannot Soul Swap to the same target.
         /// </summary>
@@ -4783,9 +4877,9 @@ Reduces the target's movement speed by 50% for 30 sec.  Only one Curse per Warlo
          tree: 0, column: 2, row: 4, prerequisite: 4, description: new[] {
 @"Soul Swap - 40 yd range - 18% of base mana
 Instant cast
-You instantly deal 1 damage, and remove your shadow damage-over-time effects from the target.
+You instantly deal 167 damage, and remove your shadow damage-over-time effects from the target.
 
-For 20 sec afterwards, the next target you cast Soul Swap: Exhale on will be afflicted by the shadow damage-over-time effects and suffer 1 damage.
+For 20 sec afterwards, the next target you cast Soul Swap: Exhale on will be afflicted by the shadow damage-over-time effects and suffer 167 damage.
 
 You cannot Soul Swap to the same target.",})]
         public int SoulSwap { get { return _data[10]; } set { _data[10] = value; } }
@@ -4868,14 +4962,17 @@ Your Drain Soul has a 100% chance to refresh the duration of your Unstable Affli
         /// <summary>
         /// Haunt - 40 yd range - 12% of base mana
         /// 8 sec cooldown - 1.5 sec cast
-        /// You send a ghostly soul into the target, dealing [((SP*0.429)*1.25)+1] Shadow damage and increasing all damage done by your Shadow damage-over-time effects on the target by 20% for 12 sec. When the Haunt spell ends or is dispelled, the soul returns to you, healing you for 100% of the damage it did to the target
+        /// You send a ghostly soul into the target, dealing [922 + 53.63% of SP] Shadow damage and increasing all damage done by your Shadow damage-over-time effects on the target by 20% for 12 sec. When the Haunt spell ends or is dispelled, the soul returns to you, healing you for 100% of the damage it did to the target
         /// </summary>
         [TalentData(index: 17, name: "Haunt", maxPoints: 1, icon: "ability_warlock_haunt",
          tree: 0, column: 2, row: 7, prerequisite: -1, description: new[] {
 @"Haunt - 40 yd range - 12% of base mana
 8 sec cooldown - 1.5 sec cast
-You send a ghostly soul into the target, dealing [((SP*0.429)*1.25)+1] Shadow damage and increasing all damage done by your Shadow damage-over-time effects on the target by 20% for 12 sec. When the Haunt spell ends or is dispelled, the soul returns to you, healing you for 100% of the damage it did to the target",})]
+You send a ghostly soul into the target, dealing [922 + 53.63% of SP] Shadow damage and increasing all damage done by your Shadow damage-over-time effects on the target by 20% for 12 sec. When the Haunt spell ends or is dispelled, the soul returns to you, healing you for 100% of the damage it did to the target",})]
         public int Haunt { get { return _data[17]; } set { _data[17] = value; } }
+        #endregion
+        #region Demonology
+        public override int TreeStartingIndexes_1 { get { return 18; } }
         /// <summary>
         /// Increases your total Stamina by [10 / 3 * Pts]%.
         /// </summary>
@@ -4913,24 +5010,24 @@ You send a ghostly soul into the target, dealing [((SP*0.429)*1.25)+1] Shadow da
         /// <summary>
         /// When your summoned demon critically hits with its Basic Attack, you instantly gain [2 * Pts]% total mana.
         /// 
-        /// When you gain mana from Drain Mana or Life Tap spells, your summoned demon gains [30 * Pts]% of the mana you gain.
+        /// When you gain mana from Life Tap spells, your summoned demon gains [30 * Pts]% of the mana you gain.
         /// </summary>
         [TalentData(index: 22, name: "Mana Feed", maxPoints: 2, icon: "spell_shadow_manafeed",
          tree: 1, column: 2, row: 2, prerequisite: -1, description: new[] {
 @"When your summoned demon critically hits with its Basic Attack, you instantly gain 2% total mana.
 
-When you gain mana from Drain Mana or Life Tap spells, your summoned demon gains 30% of the mana you gain.",
+When you gain mana from Life Tap spells, your summoned demon gains 30% of the mana you gain.",
 @"When your summoned demon critically hits with its Basic Attack, you instantly gain 4% total mana.
 
-When you gain mana from Drain Mana or Life Tap spells, your summoned demon gains 60% of the mana you gain.",})]
+When you gain mana from Life Tap spells, your summoned demon gains 60% of the mana you gain.",})]
         public int ManaFeed { get { return _data[22]; } set { _data[22] = value; } }
         /// <summary>
-        /// Increases the amount of health generated through spells and effects granted by your Demon Armor by an additional [5 * Pts]%, and increases the amount of health regenerated by your Fel Armor by [50 * Pts]%.
+        /// Increases the amount of health generated through spells and effects granted by your Demon Armor by an additional [5 * Pts]%, and increases the amount of health returned by your Fel Armor by [50 * Pts]%.
         /// </summary>
         [TalentData(index: 23, name: "Demonic Aegis", maxPoints: 2, icon: "spell_shadow_ragingscream",
          tree: 1, column: 3, row: 2, prerequisite: -1, description: new[] {
-@"Increases the amount of health generated through spells and effects granted by your Demon Armor by an additional 5%, and increases the amount of health regenerated by your Fel Armor by 50%.",
-@"Increases the amount of health generated through spells and effects granted by your Demon Armor by an additional 10%, and increases the amount of health regenerated by your Fel Armor by 100%.",})]
+@"Increases the amount of health generated through spells and effects granted by your Demon Armor by an additional 5%, and increases the amount of health returned by your Fel Armor by 50%.",
+@"Increases the amount of health generated through spells and effects granted by your Demon Armor by an additional 10%, and increases the amount of health returned by your Fel Armor by 100%.",})]
         public int DemonicAegis { get { return _data[23]; } set { _data[23] = value; } }
         /// <summary>
         /// Reduces the casting time of your Imp, Voidwalker, Succubus, Felhunter and Felguard Summoning spells by [0.5 * Pts] sec and the Mana cost by [50 * Pts]%.
@@ -4960,33 +5057,33 @@ Also grants your Shadow Bolt, Hand of Gul'dan, and Incinerate spells a 15% chanc
         /// <summary>
         /// Demonic Empowerment - 100 yd range - 6% of base mana
         /// 1 min cooldown - Instant
-        /// Grants the Warlock's summoned demon Empowerment.
+        /// Grants the Warlock\'s summoned demon Empowerment.
         /// 
         /// Imp - Instantly heals the Imp for 30% of its total health.
         /// 
-        /// Voidwalker - Increases the Voidwalker's health by 20%, and its threat generated from spells and attacks by 20% for 20 sec.
+        /// Voidwalker - Increases the Voidwalker\'s health by 20%, and its threat generated from spells and attacks by 20% for 20 sec.
         /// 
         /// Succubus - Instantly vanishes, causing the Succubus to go into an improved Invisibility state. The vanish effect removes all stuns, snares and movement impairing effects from the Succubus.
         /// 
         /// Felhunter - Dispels all magical effects from the Felhunter.
         /// 
-        /// Felguard - Instantly removes all stun, snare and movement impairing effects from your Felguard and makes your Felguard immune to them for 15 sec.
+        /// Felguard - Instantly removes all stun, snare, fear, banish, or horror and movement impairing effects from your Felguard and makes your Felguard immune to them for 15 sec.
         /// </summary>
         [TalentData(index: 26, name: "Demonic Empowerment", maxPoints: 1, icon: "ability_warlock_demonicempowerment",
          tree: 1, column: 2, row: 3, prerequisite: -1, description: new[] {
 @"Demonic Empowerment - 100 yd range - 6% of base mana
 1 min cooldown - Instant
-Grants the Warlock's summoned demon Empowerment.
+Grants the Warlock\'s summoned demon Empowerment.
 
 Imp - Instantly heals the Imp for 30% of its total health.
 
-Voidwalker - Increases the Voidwalker's health by 20%, and its threat generated from spells and attacks by 20% for 20 sec.
+Voidwalker - Increases the Voidwalker\'s health by 20%, and its threat generated from spells and attacks by 20% for 20 sec.
 
 Succubus - Instantly vanishes, causing the Succubus to go into an improved Invisibility state. The vanish effect removes all stuns, snares and movement impairing effects from the Succubus.
 
 Felhunter - Dispels all magical effects from the Felhunter.
 
-Felguard - Instantly removes all stun, snare and movement impairing effects from your Felguard and makes your Felguard immune to them for 15 sec.",})]
+Felguard - Instantly removes all stun, snare, fear, banish, or horror and movement impairing effects from your Felguard and makes your Felguard immune to them for 15 sec.",})]
         public int DemonicEmpowerment { get { return _data[26]; } set { _data[26] = value; } }
         /// <summary>
         /// Increases the amount of Health transferred by your Health Funnel spell by [10 * Pts]% and reduces the health cost by [10 * Pts]%. In addition, your summoned Demon takes [15 * Pts]% less damage while under the effect of your Health Funnel.
@@ -5008,13 +5105,13 @@ Felguard - Instantly removes all stun, snare and movement impairing effects from
         /// <summary>
         /// Hand of Gul'dan - 40 yd range - 7% of base mana
         /// 12 sec cooldown - 2 sec cast
-        /// Summons a falling meteor down upon the enemy target, dealing 1 Shadow damage and erupts an aura of magic within 4 yards, causing all targets within it to have a 10% increased  chance to be critically hit by any Warlock demons. The aura lasts for 15 sec.
+        /// Summons a falling meteor down upon the enemy target, dealing 1405 to 1660 Shadow damage and erupts an aura of magic within 4 yards, causing all targets within it to have a 10% increased  chance to be critically hit by any Warlock demons. The aura lasts for 15 sec.
         /// </summary>
         [TalentData(index: 29, name: "Hand of Gul'dan", maxPoints: 1, icon: "inv_summerfest_firespirit",
          tree: 1, column: 2, row: 4, prerequisite: -1, description: new[] {
 @"Hand of Gul'dan - 40 yd range - 7% of base mana
 12 sec cooldown - 2 sec cast
-Summons a falling meteor down upon the enemy target, dealing 1 Shadow damage and erupts an aura of magic within 4 yards, causing all targets within it to have a 10% increased  chance to be critically hit by any Warlock demons. The aura lasts for 15 sec.",})]
+Summons a falling meteor down upon the enemy target, dealing 1405 to 1660 Shadow damage and erupts an aura of magic within 4 yards, causing all targets within it to have a 10% increased  chance to be critically hit by any Warlock demons. The aura lasts for 15 sec.",})]
         public int HandOfGuldan { get { return _data[29]; } set { _data[29] = value; } }
         /// <summary>
         /// When your Hand of Gul'dan lands, all enemies within 4 yards will be rooted for [3 / 2 * Pts] sec and stunned for the same duration if they are still within the Curse of Gul'dan aura 6 sec afterward.
@@ -5033,11 +5130,11 @@ Summons a falling meteor down upon the enemy target, dealing 1 Shadow damage and
 @"Increases the duration of your Infernal and Doomguard summons by 20 sec.",})]
         public int AncientGrimoire { get { return _data[31]; } set { _data[31] = value; } }
         /// <summary>
-        /// Increases the radius of your Hellfire by 10 yards, and you can now channel Hellfire while moving.
+        /// Enables you to channel Hellfire while moving, and increases the duration of your Immolate by [6000/1000)] sec.
         /// </summary>
         [TalentData(index: 32, name: "Inferno", maxPoints: 1, icon: "ability_warlock_inferno",
          tree: 1, column: 2, row: 5, prerequisite: 29, description: new[] {
-@"Increases the radius of your Hellfire by 10 yards, and you can now channel Hellfire while moving.",})]
+@"Enables you to channel Hellfire while moving, and increases the duration of your Immolate by [6000/1000)] sec.",})]
         public int Inferno { get { return _data[32]; } set { _data[32] = value; } }
         /// <summary>
         /// When you Shadowbolt, Incinerate or Soul Fire a target that is at or below 25% health, the cast time of your Soul Fire spell is reduced by [20 * Pts]% for 10 sec.
@@ -5068,13 +5165,16 @@ The Demonic Pact effect increases spell power by 10%.",})]
         public int DemonicPact { get { return _data[35]; } set { _data[35] = value; } }
         /// <summary>
         /// Metamorphosis - Instant
-        /// You transform into a Demon for 30 sec.  This form increases your armor by 600%, damage by 20%, reduces the chance you'll be critically hit by melee attacks by 6% and reduces the duration of stun and snare effects by 50%.  You gain some unique demon abilities in addition to your normal abilities. 3 minute cooldown.
+        /// You transform into a Demon for 30 sec.  This form increases your armor by 600%, damage by 20%, reduces the chance you\'ll be critically hit by melee attacks by 6% and reduces the duration of stun and snare effects by 50%.  You gain some unique demon abilities in addition to your normal abilities. 3 minute cooldown.
         /// </summary>
         [TalentData(index: 36, name: "Metamorphosis", maxPoints: 1, icon: "spell_shadow_demonform",
          tree: 1, column: 2, row: 7, prerequisite: -1, description: new[] {
 @"Metamorphosis - Instant
-You transform into a Demon for 30 sec.  This form increases your armor by 600%, damage by 20%, reduces the chance you'll be critically hit by melee attacks by 6% and reduces the duration of stun and snare effects by 50%.  You gain some unique demon abilities in addition to your normal abilities. 3 minute cooldown.",})]
+You transform into a Demon for 30 sec.  This form increases your armor by 600%, damage by 20%, reduces the chance you\'ll be critically hit by melee attacks by 6% and reduces the duration of stun and snare effects by 50%.  You gain some unique demon abilities in addition to your normal abilities. 3 minute cooldown.",})]
         public int Metamorphosis { get { return _data[36]; } set { _data[36] = value; } }
+        #endregion
+        #region Destruction
+        public override int TreeStartingIndexes_2 { get { return 37; } }
         /// <summary>
         /// Reduces the casting time of your Shadow Bolt, Chaos Bolt and Immolate spells by [0.1 * Pts] sec.
         /// </summary>
@@ -5085,21 +5185,21 @@ You transform into a Demon for 30 sec.  This form increases your armor by 600%, 
 @"Reduces the casting time of your Shadow Bolt, Chaos Bolt and Immolate spells by 0.5 sec.",})]
         public int Bane { get { return _data[37]; } set { _data[37] = value; } }
         /// <summary>
-        /// Increases the damage done by your Shadow Bolt and Incinerate spells by [4 * Pts]%, and your Shadow Bolt has a [100 / 3 * Pts]% chance to cause the Improved Shadow Bolt effect to the target.
+        /// Increases the damage done by your Shadow Bolt and Incinerate spells by [4 * Pts]%, and your Shadow Bolt and Incinerate have a [100 / 3 * Pts]% chance to cause the Shadow and Flame effect to the target.
         /// 
-        /// The Improved Shadow Bolt effect causes the target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 5% for [30 * Pts] 30 sec.
+        /// The Shadow and Flame effect causes the target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 5% for 30 sec.
         /// </summary>
         [TalentData(index: 38, name: "Shadow and Flame", maxPoints: 3, icon: "spell_shadow_shadowandflame",
          tree: 2, column: 2, row: 1, prerequisite: -1, description: new[] {
-@"Increases the damage done by your Shadow Bolt and Incinerate spells by 4%, and your Shadow Bolt has a 33% chance to cause the Improved Shadow Bolt effect to the target.
+@"Increases the damage done by your Shadow Bolt and Incinerate spells by 4%, and your Shadow Bolt and Incinerate have a 33% chance to cause the Shadow and Flame effect to the target.
 
-The Improved Shadow Bolt effect causes the target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 5% for 30 sec.",
-@"Increases the damage done by your Shadow Bolt and Incinerate spells by 8%, and your Shadow Bolt has a 66% chance to cause the Improved Shadow Bolt effect to the target.
+The Shadow and Flame effect causes the target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 5% for 30 sec.",
+@"Increases the damage done by your Shadow Bolt and Incinerate spells by 8%, and your Shadow Bolt and Incinerate have a 66% chance to cause the Shadow and Flame effect to the target.
 
-The Improved Shadow Bolt effect causes the target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 5% for 30 sec.",
-@"Increases the damage done by your Shadow Bolt and Incinerate spells by 12%, and your Shadow Bolt has a 100% chance to cause the Improved Shadow Bolt effect to the target.
+The Shadow and Flame effect causes the target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 5% for 30 sec.",
+@"Increases the damage done by your Shadow Bolt and Incinerate spells by 12%, and your Shadow Bolt and Incinerate have a 100% chance to cause the Shadow and Flame effect to the target.
 
-The Improved Shadow Bolt effect causes the target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 5% for lasts 30 sec.",})]
+The Shadow and Flame effect causes the target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 5% for 30 sec.",})]
         public int ShadowAndFlame { get { return _data[38]; } set { _data[38] = value; } }
         /// <summary>
         /// Increases the damage done by your Immolate spell by [10 * Pts]%.
@@ -5110,13 +5210,13 @@ The Improved Shadow Bolt effect causes the target to be vulnerable to spell dama
 @"Increases the damage done by your Immolate spell by 20%.",})]
         public int ImprovedImmolate { get { return _data[39]; } set { _data[39] = value; } }
         /// <summary>
-        /// You increase your spell haste by [15 / 2 * Pts]% for 15 sec after you deal damage with Soul Fire. This effect has a 15 sec cooldown.
+        /// Your Rain of Fire has a [6 * Pts]% chance to Stun targets for 2 sec., and your Conflagrate has a [50 * Pts]% chance to daze the target for 5 sec.
         /// </summary>
-        [TalentData(index: 40, name: "Improved Soul Fire", maxPoints: 2, icon: "spell_fire_fireball02",
+        [TalentData(index: 40, name: "Aftermath", maxPoints: 2, icon: "spell_fire_fire",
          tree: 2, column: 1, row: 2, prerequisite: -1, description: new[] {
-@"You increase your spell haste by 7% for 15 sec after you deal damage with Soul Fire. This effect has a 15 sec cooldown.",
-@"You increase your spell haste by 15% for 15 sec after you deal damage with Soul Fire. This effect has a 15 sec cooldown.",})]
-        public int ImprovedSoulFire { get { return _data[40]; } set { _data[40] = value; } }
+@"Your Rain of Fire has a 6% chance to Stun targets for 2 sec., and your Conflagrate has a 50% chance to daze the target for 5 sec.",
+@"Your Rain of Fire has a 12% chance to Stun targets for 2 sec., and your Conflagrate has a 100% chance to daze the target for 5 sec.",})]
+        public int Aftermath { get { return _data[40]; } set { _data[40] = value; } }
         /// <summary>
         /// Reduces the cast time of your Soul Fire by [0.5 * Pts] sec and your Incinerate by [0.13 * Pts] sec.
         /// </summary>
@@ -5134,13 +5234,13 @@ The Improved Shadow Bolt effect causes the target to be vulnerable to spell dama
 @"Increases the critical strike chance of your Searing Pain spell by 40% on targets at or below 25% health.",})]
         public int ImprovedSearingPain { get { return _data[42]; } set { _data[42] = value; } }
         /// <summary>
-        /// Your Rain of Fire has a [6 * Pts]% chance to Stun targets for 2 sec., and your Conflagrate has a [50 * Pts]% chance to daze the target for 5 sec.
+        /// Increases your Fire and Shadow damage done by [4 * Pts]% for 15 sec after you deal damage with Soul Fire.
         /// </summary>
-        [TalentData(index: 43, name: "Aftermath", maxPoints: 2, icon: "spell_fire_fire",
+        [TalentData(index: 43, name: "Improved Soul Fire", maxPoints: 2, icon: "spell_fire_fireball02",
          tree: 2, column: 1, row: 3, prerequisite: -1, description: new[] {
-@"Your Rain of Fire has a 6% chance to Stun targets for 2 sec., and your Conflagrate has a 50% chance to daze the target for 5 sec.",
-@"Your Rain of Fire has a 12% chance to Stun targets for 2 sec., and your Conflagrate has a 100% chance to daze the target for 5 sec.",})]
-        public int Aftermath { get { return _data[43]; } set { _data[43] = value; } }
+@"Increases your Fire and Shadow damage done by 4% for 15 sec after you deal damage with Soul Fire.",
+@"Increases your Fire and Shadow damage done by 8% for 15 sec after you deal damage with Soul Fire.",})]
+        public int ImprovedSoulFire { get { return _data[43]; } set { _data[43] = value; } }
         /// <summary>
         /// When you cast Conflagrate, the cast time for your next three Shadow Bolt, Incinerate and Chaos Bolt spells is reduced by [10 * Pts]%. Lasts 15 sec.
         /// </summary>
@@ -5153,27 +5253,27 @@ The Improved Shadow Bolt effect causes the target to be vulnerable to spell dama
         /// <summary>
         /// Shadowburn - 40 yd range - 15% of base mana
         /// 15 sec cooldown - Instant cast
-        /// Instantly blasts the target for 103 Shadow damage.  If the target dies within 5 sec of Shadowburn, and yields experience or honor, the caster gains 3 Soul Shards. Only usable on enemies that have less than 20% health.
+        /// Instantly blasts the target for 649 to 724 Shadow damage.  If the target dies within 5 sec of Shadowburn, and yields experience or honor, the caster gains 3 Soul Shards. Only usable on enemies that have less than 20% health.
         /// </summary>
         [TalentData(index: 45, name: "Shadowburn", maxPoints: 1, icon: "spell_shadow_scourgebuild",
          tree: 2, column: 3, row: 3, prerequisite: -1, description: new[] {
 @"Shadowburn - 40 yd range - 15% of base mana
 15 sec cooldown - Instant cast
-Instantly blasts the target for 103 Shadow damage.  If the target dies within 5 sec of Shadowburn, and yields experience or honor, the caster gains 3 Soul Shards. Only usable on enemies that have less than 20% health.",})]
+Instantly blasts the target for 649 to 724 Shadow damage.  If the target dies within 5 sec of Shadowburn, and yields experience or honor, the caster gains 3 Soul Shards. Only usable on enemies that have less than 20% health.",})]
         public int Shadowburn { get { return _data[45]; } set { _data[45] = value; } }
         /// <summary>
         /// Your Soulfire and your Imp's Firebolt cause a Burning Ember damage-over-time effect on the target equal to [15 * Pts]% of the damage done lasting 7 sec.
         /// 
-        /// The Burning Ember effect deals up to [(SP*1.0+0.0)/7] fire damage every 1 sec for 7 sec.
+        /// The Burning Ember effect deals up to [20.1 + [6.07 * Pts]% of SP] fire damage every 1 sec for 7 sec.
         /// </summary>
         [TalentData(index: 46, name: "Burning Embers", maxPoints: 2, icon: "ability_warlock_burningembers",
          tree: 2, column: 1, row: 4, prerequisite: -1, description: new[] {
 @"Your Soulfire and your Imp's Firebolt cause a Burning Ember damage-over-time effect on the target equal to 15% of the damage done lasting 7 sec.
 
-The Burning Ember effect deals up to [(SP*0.5+0.0)/7] fire damage every 1 sec for 7 sec.",
+The Burning Ember effect deals up to [20.3 + 6.07% of SP] fire damage every 1 sec for 7 sec.",
 @"Your Soulfire and your Imp's Firebolt cause a Burning Ember damage-over-time effect on the target equal to 30% of the damage done lasting 7 sec.
 
-The Burning Ember effect deals up to [(SP*1.0+0.0)/7] fire damage every 1 sec for 7 sec.",})]
+The Burning Ember effect deals up to [20.1 + 12.14% of SP] fire damage every 1 sec for 7 sec.",})]
         public int BurningEmbers { get { return _data[46]; } set { _data[46] = value; } }
         /// <summary>
         /// Your Shadowburn, Soul Fire and Chaos Bolt instantly restore [2 * Pts]% of your total health and mana when they deal damage and also grant Replenishment.
@@ -5201,15 +5301,15 @@ Replenishment - Grants up to 10 party or raid members mana regeneration equal to
         /// <summary>
         /// Transforms your Shadow Ward into Nether Ward. You must be within Demon Armor or Fel Armor in order for the transformation effect to occur.
         /// 
-        /// |CFFFFFFFFNether Ward|R
-        /// Absorbs [290.0+(SP*0.807)] spell damage.  Lasts 30 sec. 30 sec cooldown.
+        /// Nether Ward
+        /// Absorbs [3551 + 80.7% of SP] spell damage.  Lasts 30 sec. 30 sec cooldown.
         /// </summary>
         [TalentData(index: 49, name: "Nether Ward", maxPoints: 1, icon: "spell_fire_felfireward",
          tree: 2, column: 4, row: 4, prerequisite: -1, description: new[] {
 @"Transforms your Shadow Ward into Nether Ward. You must be within Demon Armor or Fel Armor in order for the transformation effect to occur.
 
-|CFFFFFFFFNether Ward|R
-Absorbs [290.0+(SP*0.807)] spell damage.  Lasts 30 sec. 30 sec cooldown.",})]
+Nether Ward
+Absorbs [3551 + 80.7% of SP] spell damage.  Lasts 30 sec. 30 sec cooldown.",})]
         public int NetherWard { get { return _data[49]; } set { _data[49] = value; } }
         /// <summary>
         /// Increases the damage done by your Incinerate and Chaos Bolt spells to targets afflicted by your Immolate by [2 * Pts]%, and the critical strike chance of your Conflagrate spell is increased by [5 * Pts]%.
@@ -5223,13 +5323,13 @@ Absorbs [290.0+(SP*0.807)] spell damage.  Lasts 30 sec. 30 sec cooldown.",})]
         /// <summary>
         /// Shadowfury - 30 yd range - 27% of base mana
         /// 20 sec cooldown - Instant cast
-        /// Shadowfury is unleashed, causing 402 to 466 Shadow damage and stunning all enemies within 8 yds for 3 sec.
+        /// Shadowfury is unleashed, causing 687 to 819 Shadow damage and stunning all enemies within 8 yds for 3 sec.
         /// </summary>
         [TalentData(index: 51, name: "Shadowfury", maxPoints: 1, icon: "spell_shadow_shadowfury",
          tree: 2, column: 3, row: 5, prerequisite: -1, description: new[] {
 @"Shadowfury - 30 yd range - 27% of base mana
 20 sec cooldown - Instant cast
-Shadowfury is unleashed, causing 402 to 466 Shadow damage and stunning all enemies within 8 yds for 3 sec.",})]
+Shadowfury is unleashed, causing 687 to 819 Shadow damage and stunning all enemies within 8 yds for 3 sec.",})]
         public int Shadowfury { get { return _data[51]; } set { _data[51] = value; } }
         /// <summary>
         /// When you absorb damage through Shadow Ward, Nether Ward or other effects, you gain Nether Protection, reducing all damage by that spell school by [15 * Pts]% for 12 sec.
@@ -5265,30 +5365,25 @@ Only one target can have Bane of Havoc at a time, and only one Bane per Warlock 
         /// <summary>
         /// Chaos Bolt - 40 yd range - 7% of base mana
         /// 12 sec cooldown - 2.5 sec cast
-        /// Sends a bolt of chaotic fire at the enemy, dealing 837 to 1061 Fire damage. Chaos Bolt cannot be resisted, and pierces through all absorption effects.
+        /// Sends a bolt of chaotic fire at the enemy, dealing 1311 to 1665 Fire damage. Chaos Bolt cannot be resisted, and pierces through all absorption effects.
         /// </summary>
         [TalentData(index: 55, name: "Chaos Bolt", maxPoints: 1, icon: "ability_warlock_chaosbolt",
          tree: 2, column: 2, row: 7, prerequisite: 50, description: new[] {
 @"Chaos Bolt - 40 yd range - 7% of base mana
 12 sec cooldown - 2.5 sec cast
-Sends a bolt of chaotic fire at the enemy, dealing 837 to 1061 Fire damage. Chaos Bolt cannot be resisted, and pierces through all absorption effects.",})]
+Sends a bolt of chaotic fire at the enemy, dealing 1311 to 1665 Fire damage. Chaos Bolt cannot be resisted, and pierces through all absorption effects.",})]
         public int ChaosBolt { get { return _data[55]; } set { _data[55] = value; } }
+        #endregion
     }
 
     public partial class DruidTalents : TalentsBase
-#if RAWR3 || RAWR4
     {
         public override TalentsBase Clone()
-#else
-, ICloneable
-    {
-        public DruidTalents Clone() { return (DruidTalents)((ICloneable)this).Clone(); }
-        object ICloneable.Clone()
-#endif
         {
             DruidTalents clone = (DruidTalents)MemberwiseClone();
             clone._data = (int[])_data.Clone();
             clone._glyphData = (bool[])_glyphData.Clone();
+            clone.TreeCounts = new int[] { -1, -1, -1 };
             return clone;
         }
 
@@ -5300,10 +5395,12 @@ Sends a bolt of chaotic fire at the enemy, dealing 837 to 1061 Fire damage. Chao
             LoadString(talents);
         }
         public static string[] TreeNames = new[] {
-@"Balance",
-@"Feral Combat",
-@"Restoration",};
+			@"Balance",
+			@"Feral Combat",
+			@"Restoration",};
 
+        #region Balance
+        public override int TreeStartingIndexes_0 { get { return 0; } }
         /// <summary>
         /// You gain [5 * Pts]% spell haste after you cast Moonfire, Regrowth, or Insect Swarm, lasting 15 sec. This effect has a 1 minute cooldown. When you gain Lunar or Solar Eclipse, the cooldown of Nature's Grace is instantly reset.
         /// </summary>
@@ -5314,12 +5411,12 @@ Sends a bolt of chaotic fire at the enemy, dealing 837 to 1061 Fire damage. Chao
 @"You gain 15% spell haste after you cast Moonfire, Regrowth, or Insect Swarm, lasting 15 sec. This effect has a 1 minute cooldown. When you gain Lunar or Solar Eclipse, the cooldown of Nature's Grace is instantly reset.",})]
         public int NaturesGrace { get { return _data[0]; } set { _data[0] = value; } }
         /// <summary>
-        /// Reduces the cast time of your Wrath and Starfire spells by [0.15 * Pts] sec.
+        /// Reduces the cast time of your Wrath and Starfire spells by [0.1 * Pts] sec.
         /// </summary>
         [TalentData(index: 1, name: "Starlight Wrath", maxPoints: 3, icon: "spell_nature_abolishmagic",
          tree: 0, column: 2, row: 1, prerequisite: -1, description: new[] {
-@"Reduces the cast time of your Wrath and Starfire spells by .15 sec.",
-@"Reduces the cast time of your Wrath and Starfire spells by .25 sec.",
+@"Reduces the cast time of your Wrath and Starfire spells by 0.1 sec.",
+@"Reduces the cast time of your Wrath and Starfire spells by 0.2 sec.",
 @"Reduces the cast time of your Wrath and Starfire spells by 0.5 sec.",})]
         public int StarlightWrath { get { return _data[1]; } set { _data[1] = value; } }
         /// <summary>
@@ -5340,21 +5437,21 @@ Sends a bolt of chaotic fire at the enemy, dealing 837 to 1061 Fire damage. Chao
 @"Increases the healing done by your periodic spells and by Swiftmend by 6%, and increases the duration of your Moonfire and Insect Swarm by 6 sec.",})]
         public int Genesis { get { return _data[3]; } set { _data[3] = value; } }
         /// <summary>
-        /// Reduces the Mana cost of your damage and healing spells by [3 * Pts]%.
+        /// Reduces the mana cost of your damage and healing spells by [3 * Pts]%.
         /// </summary>
         [TalentData(index: 4, name: "Moonglow", maxPoints: 3, icon: "spell_nature_sentinal",
          tree: 0, column: 2, row: 2, prerequisite: -1, description: new[] {
-@"Reduces the Mana cost of your damage and healing spells by 3%.",
-@"Reduces the Mana cost of your damage and healing spells by 6%.",
-@"Reduces the Mana cost of your damage and healing spells by 9%.",})]
+@"Reduces the mana cost of your damage and healing spells by 3%.",
+@"Reduces the mana cost of your damage and healing spells by 6%.",
+@"Reduces the mana cost of your damage and healing spells by 9%.",})]
         public int Moonglow { get { return _data[4]; } set { _data[4] = value; } }
         /// <summary>
-        /// Increases your Nature and Arcane spell damage by [1 * Pts]% and increases your spell hit rating by an additional amount equal to [50 * Pts]% of your Spirit.
+        /// Increases your Nature and Arcane spell damage by [1 * Pts]% and increases your spell hit rating by an additional amount equal to [50 * Pts]% of any Spirit gained from items or effects.
         /// </summary>
         [TalentData(index: 5, name: "Balance of Power", maxPoints: 2, icon: "ability_druid_balanceofpower",
          tree: 0, column: 3, row: 2, prerequisite: -1, description: new[] {
-@"Increases your Nature and Arcane spell damage by 1% and increases your spell hit rating by an additional amount equal to 50% of your Spirit.",
-@"Increases your Nature and Arcane spell damage by 2% and increases your spell hit rating by an additional amount equal to 100% of your Spirit.",})]
+@"Increases your Nature and Arcane spell damage by 1% and increases your spell hit rating by an additional amount equal to 50% of any Spirit gained from items or effects.",
+@"Increases your Nature and Arcane spell damage by 2% and increases your spell hit rating by an additional amount equal to 100% of any Spirit gained from items or effects.",})]
         public int BalanceOfPower { get { return _data[5]; } set { _data[5] = value; } }
         /// <summary>
         /// While not in an Eclipse state, you have a [12 * Pts]% chance to double the Solar or Lunar energy generated by your Wrath or Starfire when they deal damage.
@@ -5373,36 +5470,36 @@ When you reach a Solar or Lunar eclipse, you instantly are restored 16% of your 
         /// <summary>
         /// Shapeshift - Moonkin Form - 13% of base mana
         /// Instant cast
-        /// Requires Tree of Life Form - Shapeshift into Moonkin Form. While in this form your Arcane and Nature spell damage is increased by 10%, the armor contribution from items is increased by 120%, and grants 5% spell haste to all nearby friendly and raid targets within 100 yards.  The Moonkin can not cast healing or resurrection spells while shapeshifted.
+        /// Shapeshift into Moonkin Form. While in this form your Arcane and Nature spell damage is increased by 10%, reduces all damage taken by 15%, and increases spell haste of all party and raid members by 5%. The Moonkin can not cast healing or resurrection spells while shapeshifted.
         /// 
-        /// The act of shapeshifting frees the caster of Movement Impairing effects.
+        /// The act of shapeshifting frees the caster of movement impairing effects.
         /// </summary>
         [TalentData(index: 7, name: "Moonkin Form", maxPoints: 1, icon: "spell_nature_forceofnature",
          tree: 0, column: 2, row: 3, prerequisite: -1, description: new[] {
 @"Shapeshift - Moonkin Form - 13% of base mana
 Instant cast
-Requires Tree of Life Form - Shapeshift into Moonkin Form. While in this form your Arcane and Nature spell damage is increased by 10%, the armor contribution from items is increased by 120%, and grants 5% spell haste to all nearby friendly and raid targets within 100 yards.  The Moonkin can not cast healing or resurrection spells while shapeshifted.
+Shapeshift into Moonkin Form. While in this form your Arcane and Nature spell damage is increased by 10%, reduces all damage taken by 15%, and increases spell haste of all party and raid members by 5%. The Moonkin can not cast healing or resurrection spells while shapeshifted.
 
-The act of shapeshifting frees the caster of Movement Impairing effects.",})]
+The act of shapeshifting frees the caster of movement impairing effects.",})]
         public int MoonkinForm { get { return _data[7]; } set { _data[7] = value; } }
         /// <summary>
-        /// Typhoon - 30 yd range - 32% of base mana
+        /// Typhoon - 30 yd range - 16% of base mana
         /// 20 sec cooldown - Instant cast
-        /// You summon a violent Typhoon that does 582 Nature damage to targets within 30 yards when in contact with hostile targets, knocking them back and dazing them for 6 sec.
+        /// You summon a violent Typhoon that does 1298 Nature damage to targets in front of the caster within 30 yards, knocking them back and dazing them for 6 sec.
         /// </summary>
         [TalentData(index: 8, name: "Typhoon", maxPoints: 1, icon: "ability_druid_typhoon",
          tree: 0, column: 3, row: 3, prerequisite: -1, description: new[] {
-@"Typhoon - 30 yd range - 32% of base mana
+@"Typhoon - 30 yd range - 16% of base mana
 20 sec cooldown - Instant cast
-You summon a violent Typhoon that does 582 Nature damage to targets within 30 yards when in contact with hostile targets, knocking them back and dazing them for 6 sec.",})]
+You summon a violent Typhoon that does 1298 Nature damage to targets in front of the caster within 30 yards, knocking them back and dazing them for 6 sec.",})]
         public int Typhoon { get { return _data[8]; } set { _data[8] = value; } }
         /// <summary>
-        /// You have a [2 * Pts]% chance when you deal damage with your Moonfire or Insect Swarm to instantly reset the cooldown of your Starsurge and reduce its cast time by 100%. Lasts 8 sec.
+        /// You have a [2 * Pts]% chance when you deal damage with your Moonfire or Insect Swarm to instantly reset the cooldown of your Starsurge and reduce its cast time by 100%. Lasts 12 sec.
         /// </summary>
         [TalentData(index: 9, name: "Shooting Stars", maxPoints: 2, icon: "ability_mage_arcanebarrage",
          tree: 0, column: 4, row: 3, prerequisite: -1, description: new[] {
-@"You have a 2% chance when you deal damage with your Moonfire or Insect Swarm to instantly reset the cooldown of your Starsurge and reduce its cast time by 100%. Lasts 8 sec.",
-@"You have a 4% chance when you deal damage with your Moonfire or Insect Swarm to instantly reset the cooldown of your Starsurge and reduce its cast time by 100%. Lasts 8 sec.",})]
+@"You have a 2% chance when you deal damage with your Moonfire or Insect Swarm to instantly reset the cooldown of your Starsurge and reduce its cast time by 100%. Lasts 12 sec.",
+@"You have a 4% chance when you deal damage with your Moonfire or Insect Swarm to instantly reset the cooldown of your Starsurge and reduce its cast time by 100%. Lasts 12 sec.",})]
         public int ShootingStars { get { return _data[9]; } set { _data[9] = value; } }
         /// <summary>
         /// Attacks done to you while in Moonkin form have a [5 * Pts]% chance to cause you to go into a Frenzy, increasing your damage by 10% and causing you to be immune to pushback while casting Balance spells. Lasts 10 sec.
@@ -5424,20 +5521,20 @@ You summon a violent Typhoon that does 582 Nature damage to targets within 30 ya
         /// <summary>
         /// Solar Beam - 40 yd range - 18% of base mana
         /// 1 min cooldown - Instant cast
-        /// You summon a beam of solar light over the enemy target's location, interrupting the enemy target and silencing all enemy targets under the beam within 5 yards while it is active. Solar Beam lasts for 10 sec.
+        /// You summon a beam of solar light over an enemy target\'s location, interrupting the target and silencing all enemies under the beam within 5 yards while it is active. Solar Beam lasts for 1 sec.
         /// </summary>
         [TalentData(index: 12, name: "Solar Beam", maxPoints: 1, icon: "ability_vehicle_sonicshockwave",
          tree: 0, column: 4, row: 4, prerequisite: -1, description: new[] {
 @"Solar Beam - 40 yd range - 18% of base mana
 1 min cooldown - Instant cast
-You summon a beam of solar light over the enemy target's location, interrupting the enemy target and silencing all enemy targets under the beam within 5 yards while it is active. Solar Beam lasts for 10 sec.",})]
+You summon a beam of solar light over an enemy target\'s location, interrupting the target and silencing all enemies under the beam within 5 yards while it is active. Solar Beam lasts for 1 sec.",})]
         public int SolarBeam { get { return _data[12]; } set { _data[12] = value; } }
         /// <summary>
         /// When you cast your Innervate on yourself, you regain an additional [15 * Pts]% of your total mana over its duration.
         /// </summary>
         [TalentData(index: 13, name: "Dreamstate", maxPoints: 2, icon: "ability_druid_dreamstate",
          tree: 0, column: 1, row: 5, prerequisite: 6, description: new[] {
-@"When you cast your Innervate on yourself, you regain an additional 15.0% of your total mana over its duration.",
+@"When you cast your Innervate on yourself, you regain an additional 15% of your total mana over its duration.",
 @"When you cast your Innervate on yourself, you regain an additional 30% of your total mana over its duration.",})]
         public int Dreamstate { get { return _data[13]; } set { _data[13] = value; } }
         /// <summary>
@@ -5466,12 +5563,12 @@ Summons 3 treants to attack enemy targets for 30 sec.",})]
 @"Your Wrath and Starfire spells apply the Earth and Moon effect, which increases spell damage taken by 8% for 12 sec.  Also increases your spell damage by 2%.",})]
         public int EarthAndMoon { get { return _data[16]; } set { _data[16] = value; } }
         /// <summary>
-        /// When your Treants die or your Wild Mushrooms are triggered, you spawn a Fungal Growth at its wake covering the area within 8 yards, slowing all enemy targets by [25 * Pts]%. Lasts 10 sec.
+        /// When your Treants die or your Wild Mushrooms are triggered, you spawn a Fungal Growth at its wake covering the area within 8 yards, slowing all enemy targets by [25 * Pts]%. Lasts 20 sec.
         /// </summary>
         [TalentData(index: 17, name: "Fungal Growth", maxPoints: 2, icon: "creature_sporemushroom",
          tree: 0, column: 2, row: 6, prerequisite: 14, description: new[] {
-@"When your Treants die or your Wild Mushrooms are triggered, you spawn a Fungal Growth at its wake covering the area within 8 yards, slowing all enemy targets by 25%. Lasts 10 sec.",
-@"When your Treants die or your Wild Mushrooms are triggered, you spawn a Fungal Growth at its wake covering the area within 8 yards, slowing all enemy targets by 50%. Lasts 10 sec.",})]
+@"When your Treants die or your Wild Mushrooms are triggered, you spawn a Fungal Growth at its wake covering the area within 8 yards, slowing all enemy targets by 25%. Lasts 20 sec.",
+@"When your Treants die or your Wild Mushrooms are triggered, you spawn a Fungal Growth at its wake covering the area within 8 yards, slowing all enemy targets by 50%. Lasts 20 sec.",})]
         public int FungalGrowth { get { return _data[17]; } set { _data[17] = value; } }
         /// <summary>
         /// When you cast Moonfire, you gain Lunar Shower. Lunar Shower increases the direct damage done by your Moonfire by [15 * Pts]%, and reduces the mana cost by [10 * Pts]%. This effect is refreshed and amplified when you move, stacking up to 3 times. Effect lasts for 3 sec.
@@ -5485,7 +5582,7 @@ Summons 3 treants to attack enemy targets for 30 sec.",})]
         /// <summary>
         /// Starfall - 35% of base mana
         /// 1 min cooldown - Instant cast
-        /// You summon a flurry of stars from the sky on all targets within 40 yards of the caster, each dealing 178 Arcane damage. Maximum 20 stars. Lasts 10 sec.  
+        /// You summon a flurry of stars from the sky on all targets within 40 yards of the caster, each dealing 368 to 428 Arcane damage. Maximum 20 stars. Lasts 10 sec.  
         /// 
         /// Shapeshifting into an animal form or mounting cancels the effect. Any effect which causes you to lose control of your character will suppress the starfall effect.
         /// </summary>
@@ -5493,17 +5590,26 @@ Summons 3 treants to attack enemy targets for 30 sec.",})]
          tree: 0, column: 2, row: 7, prerequisite: -1, description: new[] {
 @"Starfall - 35% of base mana
 1 min cooldown - Instant cast
-You summon a flurry of stars from the sky on all targets within 40 yards of the caster, each dealing 178 Arcane damage. Maximum 20 stars. Lasts 10 sec.  
+You summon a flurry of stars from the sky on all targets within 40 yards of the caster, each dealing 368 to 428 Arcane damage. Maximum 20 stars. Lasts 10 sec.  
 
 Shapeshifting into an animal form or mounting cancels the effect. Any effect which causes you to lose control of your character will suppress the starfall effect.",})]
         public int Starfall { get { return _data[19]; } set { _data[19] = value; } }
+        #endregion
+        #region Feral Combat
+        public override int TreeStartingIndexes_1 { get { return 20; } }
         /// <summary>
         /// Increases your movement speed by [15 * Pts]% in Cat Form and increases your chance to dodge while in Cat Form or Bear Form by [2 * Pts]%.
+        /// 
+        /// In addition, your Dash and Stampeding Roar have a [50 * Pts]% chance to remove all movement impairing effects from affected targets when used.
         /// </summary>
         [TalentData(index: 20, name: "Feral Swiftness", maxPoints: 2, icon: "spell_nature_spiritwolf",
          tree: 1, column: 1, row: 1, prerequisite: -1, description: new[] {
-@"Increases your movement speed by 15% in Cat Form and increases your chance to dodge while in Cat Form or Bear Form by 2%.",
-@"Increases your movement speed by 30% in Cat Form and increases your chance to dodge while in Cat Form or Bear Form by 4%.",})]
+@"Increases your movement speed by 15% in Cat Form and increases your chance to dodge while in Cat Form or Bear Form by 2%.
+
+In addition, your Dash and Stampeding Roar have a 50% chance to remove all movement impairing effects from affected targets when used.",
+@"Increases your movement speed by 30% in Cat Form and increases your chance to dodge while in Cat Form or Bear Form by 4%.
+
+In addition, your Dash and Stampeding Roar have a 100% chance to remove all movement impairing effects from affected targets when used.",})]
         public int FeralSwiftness { get { return _data[20]; } set { _data[20] = value; } }
         /// <summary>
         /// Grants you a [100 / 3 * Pts]% chance to gain 10 Rage when you shapeshift into Bear Form, allows you to keep up to [100 / 3 * Pts] of your Energy when you shapeshift into Cat Form, and increases your maximum mana by [5 * Pts]%.
@@ -5537,13 +5643,13 @@ Your finishing moves have a 20% chance per combo point to make your next non-ins
 @"Your Shred, Ravage, Maul, and Mangle attacks cause an Infected Wound in the target. The Infected Wound reduces the movement speed of the target by 50% and the attack speed by 20%. Lasts 12 sec.",})]
         public int InfectedWounds { get { return _data[23]; } set { _data[23] = value; } }
         /// <summary>
-        /// When you auto-attack while in Cat form or Bear form, you have a [5 * Pts]% chance to cause a Fury Swipe dealing 310% weapon damage. This effect cannot occur more than once every 3 sec.
+        /// When you auto-attack while in Cat form or Bear form, you have a [5 * Pts]% chance to cause a Fury Swipe dealing 0% weapon damage. This effect cannot occur more than once every 3 sec.
         /// </summary>
-        [TalentData(index: 24, name: "Fury Swipes", maxPoints: 3, icon: "ability_druid_mangle-tga",
+        [TalentData(index: 24, name: "Fury Swipes", maxPoints: 3, icon: "ability_druid_mangle.tga",
          tree: 1, column: 2, row: 2, prerequisite: -1, description: new[] {
-@"When you auto-attack while in Cat form or Bear form, you have a 5% chance to cause a Fury Swipe dealing 310% weapon damage. This effect cannot occur more than once every 3 sec.",
-@"When you auto-attack while in Cat form or Bear form, you have a 10% chance to cause a Fury Swipe dealing 310% weapon damage. This effect cannot occur more than once every 3 sec.",
-@"When you auto-attack while in Cat form or Bear form, you have a 15% chance to cause a Fury Swipe dealing 310% weapon damage. This effect cannot occur more than once every 3 sec.",})]
+@"When you auto-attack while in Cat form or Bear form, you have a 5% chance to cause a Fury Swipe dealing 0% weapon damage. This effect cannot occur more than once every 3 sec.",
+@"When you auto-attack while in Cat form or Bear form, you have a 10% chance to cause a Fury Swipe dealing 0% weapon damage. This effect cannot occur more than once every 3 sec.",
+@"When you auto-attack while in Cat form or Bear form, you have a 15% chance to cause a Fury Swipe dealing 0% weapon damage. This effect cannot occur more than once every 3 sec.",})]
         public int FurySwipes { get { return _data[24]; } set { _data[24] = value; } }
         /// <summary>
         /// Gives you a [50 * Pts]% chance to gain an additional 5 Rage anytime you get a critical strike while in Bear Form and your critical strikes from Cat Form abilities that add combo points  have a [50 * Pts]% chance to add an additional combo point.
@@ -5598,7 +5704,7 @@ Feral Charge (Cat) - Causes you to leap behind an enemy, dazing them for 3 sec. 
 @"Increases your melee haste by 30% after you use Feral Charge (Bear) for 8 sec, and your next Ravage will temporarily not require stealth for 10 sec after you use Feral Charge (Cat), and cost 100% less energy.",})]
         public int Stampede { get { return _data[29]; } set { _data[29] = value; } }
         /// <summary>
-        /// Increases your Armor contribution from cloth and leather items by [10 / 3 * Pts]%, increases armor while in Bear Form by an additional [11 * Pts]%, and reduces the chance you'll be critically hit by melee attacks by [2 * Pts]%.
+        /// Increases your Armor contribution from cloth and leather items by [10 / 3 * Pts]%, increases armor while in Bear Form by an additional [26 * Pts]%, and reduces the chance you'll be critically hit by melee attacks by [2 * Pts]%.
         /// </summary>
         [TalentData(index: 30, name: "Thick Hide", maxPoints: 3, icon: "inv_misc_pelt_bear_03",
          tree: 1, column: 4, row: 3, prerequisite: -1, description: new[] {
@@ -5607,11 +5713,11 @@ Feral Charge (Cat) - Causes you to leap behind an enemy, dazing them for 3 sec. 
 @"Increases your Armor contribution from cloth and leather items by 10%, increases armor while in Bear Form by an additional 78%, and reduces the chance you'll be critically hit by melee attacks by 6%.",})]
         public int ThickHide { get { return _data[30]; } set { _data[30] = value; } }
         /// <summary>
-        /// While in Cat Form or Bear Form, the Leader of the Pack increases critical strike chance of all party and raid members within 12 yards by 5%.  In addition, your melee critical strikes in Cat Form and Bear Form cause you to heal for 4% of your total health and gain 4% of your maximum mana.  This effect cannot occur more than once every 6 sec.
+        /// While in Cat Form or Bear Form, the Leader of the Pack increases critical strike chance of all party and raid members within 12 yards by 5%.  In addition, your melee critical strikes in Cat Form and Bear Form cause you to heal for 4% of your total health and gain 8% of your maximum mana.  This effect cannot occur more than once every 6 sec.
         /// </summary>
         [TalentData(index: 31, name: "Leader of the Pack", maxPoints: 1, icon: "spell_nature_unyeildingstamina",
          tree: 1, column: 2, row: 4, prerequisite: -1, description: new[] {
-@"While in Cat Form or Bear Form, the Leader of the Pack increases critical strike chance of all party and raid members within 12 yards by 5%.  In addition, your melee critical strikes in Cat Form and Bear Form cause you to heal for 4% of your total health and gain 4% of your maximum mana.  This effect cannot occur more than once every 6 sec.",})]
+@"While in Cat Form or Bear Form, the Leader of the Pack increases critical strike chance of all party and raid members within 12 yards by 5%.  In addition, your melee critical strikes in Cat Form and Bear Form cause you to heal for 4% of your total health and gain 8% of your maximum mana.  This effect cannot occur more than once every 6 sec.",})]
         public int LeaderOfThePack { get { return _data[31]; } set { _data[31] = value; } }
         /// <summary>
         /// Increases the stun duration of your Bash and Pounce abilities by [0.5 * Pts] sec, decreases the cooldown of Bash by [5 * Pts] sec, decreases the cooldown of Skull Bash by [25 * Pts] sec, and causes victims of your Skull Bash ability to have [5 * Pts]% increased mana cost for their spells for 10 sec.
@@ -5682,27 +5788,30 @@ Reduces all damage taken by 50% for 12 sec.  Only useable while in Bear Form or 
         /// <summary>
         /// Bear Form - Pulverize - Melee Range - 15 Rage
         /// Instant cast
-        /// Deals 120% weapon damage plus additional 242.4 damage for each of your Lacerate applications on the target, and increases your melee critical strike chance by 3% for each Lacerate application consumed for 10 sec.
+        /// Deals 80% weapon damage plus additional 360 damage for each of your Lacerate applications on the target, and increases your melee critical strike chance by 3% for each Lacerate application consumed for 10 sec.
         /// </summary>
         [TalentData(index: 40, name: "Pulverize", maxPoints: 1, icon: "ability_smash",
          tree: 1, column: 3, row: 6, prerequisite: 39, description: new[] {
 @"Bear Form - Pulverize - Melee Range - 15 Rage
 Instant cast
-Deals 120% weapon damage plus additional 242.4 damage for each of your Lacerate applications on the target, and increases your melee critical strike chance by 3% for each Lacerate application consumed for 10 sec.",})]
+Deals 80% weapon damage plus additional 360 damage for each of your Lacerate applications on the target, and increases your melee critical strike chance by 3% for each Lacerate application consumed for 10 sec.",})]
         public int Pulverize { get { return _data[40]; } set { _data[40] = value; } }
         /// <summary>
         /// Cat or Bear Form - Berserk - 3 min cooldown - Instant cast
-        /// Your Lacerate periodic damage has a 30% chance to refresh the cooldown of your Mangle (Bear) ability and make it cost no rage.  In addition, when activated this ability causes your Mangle (Bear) ability to hit up to 3 targets and have no cooldown, and reduces the energy cost of all your Cat Form abilities by 50%.  Lasts 15 sec.  You cannot use Tiger's Fury while Berserk is active. 
+        /// Your Lacerate periodic damage has a 30% chance to refresh the cooldown of your Mangle (Bear) ability and make it cost no rage.  
         /// 
-        /// Clears the effect of Fear and makes you immune to Fear for the duration.
+        /// In addition, when activated this ability causes your Mangle (Bear) ability to hit up to 3 targets and have no cooldown, and reduces the energy cost of all your Cat Form abilities by 50%.  Lasts 15 sec.  You cannot use Tiger\'s Fury while Berserk is active.
         /// </summary>
         [TalentData(index: 41, name: "Berserk", maxPoints: 1, icon: "ability_druid_berserk",
          tree: 1, column: 2, row: 7, prerequisite: -1, description: new[] {
 @"Cat or Bear Form - Berserk - 3 min cooldown - Instant cast
-Your Lacerate periodic damage has a 30% chance to refresh the cooldown of your Mangle (Bear) ability and make it cost no rage.  In addition, when activated this ability causes your Mangle (Bear) ability to hit up to 3 targets and have no cooldown, and reduces the energy cost of all your Cat Form abilities by 50%.  Lasts 15 sec.  You cannot use Tiger's Fury while Berserk is active. 
+Your Lacerate periodic damage has a 30% chance to refresh the cooldown of your Mangle (Bear) ability and make it cost no rage.  
 
-Clears the effect of Fear and makes you immune to Fear for the duration.",})]
+In addition, when activated this ability causes your Mangle (Bear) ability to hit up to 3 targets and have no cooldown, and reduces the energy cost of all your Cat Form abilities by 50%.  Lasts 15 sec.  You cannot use Tiger\'s Fury while Berserk is active.",})]
         public int Berserk { get { return _data[41]; } set { _data[41] = value; } }
+        #endregion
+        #region Restoration
+        public override int TreeStartingIndexes_2 { get { return 42; } }
         /// <summary>
         /// Increases the healing done by your Rejuvenation by [2 * Pts]% and the direct damage of your Moonfire by [3 * Pts]%.
         /// </summary>
@@ -5712,19 +5821,19 @@ Clears the effect of Fear and makes you immune to Fear for the duration.",})]
 @"Increases the healing done by your Rejuvenation by 4% and the direct damage of your Moonfire by 6%.",})]
         public int BlessingOfTheGrove { get { return _data[42]; } set { _data[42] = value; } }
         /// <summary>
-        /// Reduces the mana cost of all shapeshifting by [10 * Pts]% and increases the duration of Tree of Life Form by [5 * Pts] sec.
+        /// Reduces the mana cost of all shapeshifting by [10 * Pts]% and increases the duration of Tree of Life Form by [3 * Pts] sec.
         /// </summary>
         [TalentData(index: 43, name: "Natural Shapeshifter", maxPoints: 2, icon: "spell_nature_wispsplode",
          tree: 2, column: 2, row: 1, prerequisite: -1, description: new[] {
-@"Reduces the mana cost of all shapeshifting by 10% and increases the duration of Tree of Life Form by 5 sec.",
-@"Reduces the mana cost of all shapeshifting by 20% and increases the duration of Tree of Life Form by 10 sec.",})]
+@"Reduces the mana cost of all shapeshifting by 10% and increases the duration of Tree of Life Form by 3 sec.",
+@"Reduces the mana cost of all shapeshifting by 20% and increases the duration of Tree of Life Form by 6 sec.",})]
         public int NaturalShapeshifter { get { return _data[43]; } set { _data[43] = value; } }
         /// <summary>
-        /// Reduces the cast time of your Healing Touch and Nourish spells by [0.2 * Pts] sec.
+        /// Reduces the cast time of your Healing Touch and Nourish spells by [0.25 * Pts] sec.
         /// </summary>
         [TalentData(index: 44, name: "Naturalist", maxPoints: 2, icon: "spell_nature_healingtouch",
          tree: 2, column: 3, row: 1, prerequisite: -1, description: new[] {
-@"Reduces the cast time of your Healing Touch and Nourish spells by 0.2 sec.",
+@"Reduces the cast time of your Healing Touch and Nourish spells by 0.25 sec.",
 @"Reduces the cast time of your Healing Touch and Nourish spells by 0.5 sec.",})]
         public int Naturalist { get { return _data[44]; } set { _data[44] = value; } }
         /// <summary>
@@ -5808,12 +5917,12 @@ Replenishment - Grants up to 10 party or raid members mana regeneration equal to
         public int Revitalize { get { return _data[50]; } set { _data[50] = value; } }
         /// <summary>
         /// Nature's Swiftness - 3 min cooldown - Instant
-        /// Requires Moonkin Form - When activated, your next Nature spell with a base casting time less than 10 sec. becomes an instant cast spell.
+        /// When activated, your next Nature spell with a base casting time less than 10 sec. becomes an instant cast spell.
         /// </summary>
         [TalentData(index: 51, name: "Nature's Swiftness", maxPoints: 1, icon: "spell_nature_ravenform",
          tree: 2, column: 3, row: 3, prerequisite: -1, description: new[] {
 @"Nature's Swiftness - 3 min cooldown - Instant
-Requires Moonkin Form - When activated, your next Nature spell with a base casting time less than 10 sec. becomes an instant cast spell.",})]
+When activated, your next Nature spell with a base casting time less than 10 sec. becomes an instant cast spell.",})]
         public int NaturesSwiftness { get { return _data[51]; } set { _data[51] = value; } }
         /// <summary>
         /// Reduces the mana cost of your Wrath spell by [50 * Pts]%, and when you deal damage with your Wrath spell you have a [6 * Pts]% chance to cause your next Starfire to be instant cast within 8 sec.
@@ -5824,49 +5933,63 @@ Requires Moonkin Form - When activated, your next Nature spell with a base casti
 @"Reduces the mana cost of your Wrath spell by 100%, and when you deal damage with your Wrath spell you have a 12% chance to cause your next Starfire to be instant cast within 8 sec.",})]
         public int FuryOfStormrage { get { return _data[52]; } set { _data[52] = value; } }
         /// <summary>
-        /// Increases the critical effect chance of your Regrowth spell by [20 * Pts]%, and you have a [100 / 3 * Pts]% chance when you critically heal with Healing Touch and Nourish to reduce the remaining cooldown of your Swiftmend spell by 0.5 sec.
+        /// Increases the critical effect chance of your Regrowth spell by [20 * Pts]%.
+        /// 
+        /// In addition, when you have Rejuvenation active on three or more targets, the cast time of your Nourish spell is reduced by [10 * Pts]%.
         /// </summary>
         [TalentData(index: 53, name: "Nature's Bounty", maxPoints: 3, icon: "spell_nature_resistnature",
          tree: 2, column: 2, row: 4, prerequisite: -1, description: new[] {
-@"Increases the critical effect chance of your Regrowth spell by 20%, and you have a 33% chance when you critically heal with Healing Touch and Nourish to reduce the remaining cooldown of your Swiftmend spell by 0.5 sec.",
-@"Increases the critical effect chance of your Regrowth spell by 40%, and you have a 66% chance when you critically heal with Healing Touch and Nourish to reduce the remaining cooldown of your Swiftmend spell by 0.5 sec.",
-@"Increases the critical effect chance of your Regrowth spell by 60%, and you have a 100% chance when you critically heal with Healing Touch and Nourish to reduce the remaining cooldown of your Swiftmend spell by 0.5 sec.",})]
+@"Increases the critical effect chance of your Regrowth spell by 20%.
+
+In addition, when you have Rejuvenation active on three or more targets, the cast time of your Nourish spell is reduced by 10%.",
+@"Increases the critical effect chance of your Regrowth spell by 40%.
+
+In addition, when you have Rejuvenation active on three or more targets, the cast time of your Nourish spell is reduced by 20%.",
+@"Increases the critical effect chance of your Regrowth spell by 60%.
+
+In addition, when you have Rejuvenation active on three or more targets, the cast time of your Nourish spell is reduced by 30%.",})]
         public int NaturesBounty { get { return _data[53]; } set { _data[53] = value; } }
         /// <summary>
-        /// Increases the healing done by your Healing Touch and Nourish spells by [5 * Pts]%, and causes those spells to [50 * Pts] the duration of your Lifebloom on targets.
+        /// Increases the direct healing done by your Healing Touch, Regrowth and Nourish spells by [5 * Pts]%, and grants those spells a [50 * Pts]% chance to refresh the duration of your Lifebloom on targets.
         /// </summary>
         [TalentData(index: 54, name: "Empowered Touch", maxPoints: 2, icon: "ability_druid_empoweredtouch",
          tree: 2, column: 3, row: 4, prerequisite: -1, description: new[] {
-@"Increases the healing done by your Healing Touch and Nourish spells by 5%, and grants those spells a 50% chance to refresh the duration of your Lifebloom on targets.",
-@"Increases the healing done by your Healing Touch and Nourish spells by 10%, and causes those spells to refresh the duration of your Lifebloom on targets.",})]
+@"Increases the direct healing done by your Healing Touch, Regrowth and Nourish spells by 5%, and grants those spells a 50% chance to refresh the duration of your Lifebloom on targets.",
+@"Increases the direct healing done by your Healing Touch, Regrowth and Nourish spells by 10%, and grants those spells a 100% chance to refresh the duration of your Lifebloom on targets.",})]
         public int EmpoweredTouch { get { return _data[54]; } set { _data[54] = value; } }
         /// <summary>
         /// Whenever you heal with your Lifebloom spell, you have a [2 * Pts]% chance to cause Omen of Clarity.
+        /// 
+        /// In addition, the cooldown of your Tranquility is reduced by [5 / 2 * Pts] minutes.
         /// </summary>
         [TalentData(index: 55, name: "Malfurion's Gift", maxPoints: 2, icon: "spell_shaman_giftearthmother",
          tree: 2, column: 4, row: 4, prerequisite: -1, description: new[] {
-@"Whenever you heal with your Lifebloom spell, you have a 2% chance to cause Omen of Clarity.",
-@"Whenever you heal with your Lifebloom spell, you have a 4% chance to cause Omen of Clarity.",})]
+@"Whenever you heal with your Lifebloom spell, you have a 2% chance to cause Omen of Clarity.
+
+In addition, the cooldown of your Tranquility is reduced by 2.5 minutes.",
+@"Whenever you heal with your Lifebloom spell, you have a 4% chance to cause Omen of Clarity.
+
+In addition, the cooldown of your Tranquility is reduced by 5 minutes.",})]
         public int MalfurionsGift { get { return _data[55]; } set { _data[55] = value; } }
         /// <summary>
-        /// When you heal with your Swiftmend spell you also sprout a bed of healing flora underneath the target, healing all nearby friendly targets within 14 yards for [10 * Pts]% of the amount healed by your Swiftmend over 7 sec.  Healing effectiveness diminishes for each player beyond 6 within the area.
+        /// Your Swiftmend spell causes healing flora to sprout beneath the target, restoring health equal to [4 * Pts]% of the amount healed by your Swiftmend to the three most injured targets within 14 yards, every 1 sec for 7 sec.
         /// </summary>
         [TalentData(index: 56, name: "Efflorescence", maxPoints: 3, icon: "inv_misc_herb_talandrasrose",
          tree: 2, column: 1, row: 5, prerequisite: 49, description: new[] {
-@"When you heal with your Swiftmend spell you also sprout a bed of healing flora underneath the target, healing all nearby friendly targets within 14 yards for 10% of the amount healed by your Swiftmend over 7 sec.  Healing effectiveness diminishes for each player beyond 6 within the area.",
-@"When you heal with your Swiftmend spell you also sprout a bed of healing flora underneath the target, healing all nearby friendly targets within 14 yards for 20% of the amount healed by your Swiftmend over 7 sec.  Healing effectiveness diminishes for each player beyond 6 within the area.",
-@"When you heal with your Swiftmend spell you also sprout a bed of healing flora underneath the target, healing all nearby friendly targets within 14 yards for 30% of the amount healed by your Swiftmend over 7 sec.  Healing effectiveness diminishes for each player beyond 6 within the area.",})]
+@"Your Swiftmend spell causes healing flora to sprout beneath the target, restoring health equal to 4% of the amount healed by your Swiftmend to the three most injured targets within 14 yards, every 1 sec for 7 sec.",
+@"Your Swiftmend spell causes healing flora to sprout beneath the target, restoring health equal to 8% of the amount healed by your Swiftmend to the three most injured targets within 14 yards, every 1 sec for 7 sec.",
+@"Your Swiftmend spell causes healing flora to sprout beneath the target, restoring health equal to 12% of the amount healed by your Swiftmend to the three most injured targets within 14 yards, every 1 sec for 7 sec.",})]
         public int Efflorescence { get { return _data[56]; } set { _data[56] = value; } }
         /// <summary>
         /// Wild Growth - 40 yd range - 27% of base mana
-        /// 10 sec cooldown - Instant cast
-        /// Heals up to 5 friendly party or raid members within 30 yards of the target for 1281 over 7 sec.  Prioritizes healing most injured party members.  The amount healed is applied quickly at first, and slows down as the Wild Growth reaches its full duration.
+        /// 8 sec cooldown - Instant cast
+        /// Heals up to 5 friendly party or raid members within 30 yards of the target for 3717 over 7 sec.  Prioritizes healing most injured party members.  The amount healed is applied quickly at first, and slows down as the Wild Growth reaches its full duration.
         /// </summary>
         [TalentData(index: 57, name: "Wild Growth", maxPoints: 1, icon: "ability_druid_flourish",
          tree: 2, column: 2, row: 5, prerequisite: -1, description: new[] {
 @"Wild Growth - 40 yd range - 27% of base mana
-10 sec cooldown - Instant cast
-Heals up to 5 friendly party or raid members within 30 yards of the target for 1281 over 7 sec.  Prioritizes healing most injured party members.  The amount healed is applied quickly at first, and slows down as the Wild Growth reaches its full duration.",})]
+8 sec cooldown - Instant cast
+Heals up to 5 friendly party or raid members within 30 yards of the target for 3717 over 7 sec.  Prioritizes healing most injured party members.  The amount healed is applied quickly at first, and slows down as the Wild Growth reaches its full duration.",})]
         public int WildGrowth { get { return _data[57]; } set { _data[57] = value; } }
         /// <summary>
         /// Empowers your Remove Corruption spell to also remove a magic effect from a friendly target.
@@ -5902,7 +6025,7 @@ Heals up to 5 friendly party or raid members within 30 yards of the target for 1
         /// <summary>
         /// Shapeshift - Tree of Life - 6% of base mana
         /// 3 min cooldown - Instant cast
-        /// Shapeshift into the tree of life, increasing healing done by 15% and increasing your armor by 120%. In addition, some of your spells are temporarily enhanced while shapeshifted. Lasts 30 sec.
+        /// Shapeshift into the tree of life, increasing healing done by 15% and increasing your armor by 120%. Also protects the caster from Polymorph effects. In addition, some of your spells are temporarily enhanced while shapeshifted. Lasts 25 sec.
         /// 
         /// Enhanced spells: Lifebloom, Wild Growth, Regrowth, Entangling Roots, Wrath
         /// </summary>
@@ -5910,10 +6033,11 @@ Heals up to 5 friendly party or raid members within 30 yards of the target for 1
          tree: 2, column: 2, row: 7, prerequisite: 57, description: new[] {
 @"Shapeshift - Tree of Life - 6% of base mana
 3 min cooldown - Instant cast
-Shapeshift into the tree of life, increasing healing done by 15% and increasing your armor by 120%. In addition, some of your spells are temporarily enhanced while shapeshifted. Lasts 30 sec.
+Shapeshift into the tree of life, increasing healing done by 15% and increasing your armor by 120%. Also protects the caster from Polymorph effects. In addition, some of your spells are temporarily enhanced while shapeshifted. Lasts 25 sec.
 
 Enhanced spells: Lifebloom, Wild Growth, Regrowth, Entangling Roots, Wrath",})]
         public int TreeOfLife { get { return _data[62]; } set { _data[62] = value; } }
+        #endregion
     }
 
 }
