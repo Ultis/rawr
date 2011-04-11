@@ -1910,7 +1910,8 @@ namespace Rawr
                         count++;
                     }
                 }
-                return count != 0 ? (int)Math.Round(((double)retVal / (double)count), MidpointRounding.AwayFromZero) : 0;
+                //return count != 0 ? (int)Math.Round(((double)retVal / (double)count), MidpointRounding.AwayFromZero) : 0;  //MidpointRounding does not exist in Silverlight
+                return count != 0 ? (int)((double)retVal / (double)count) : 0;
             }
         }
 
