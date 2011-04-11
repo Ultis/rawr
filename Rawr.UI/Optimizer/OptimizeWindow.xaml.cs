@@ -248,11 +248,13 @@ namespace Rawr.UI
             {
                 Grid.SetColumnSpan(requirementCalculationCombo, 1);
                 requirementTalentsCombo.Visibility = Visibility.Visible;
+                requirementTalentsCombo.SelectedIndex = 0;
             }
             else
             {
                 Grid.SetColumnSpan(requirementCalculationCombo, 2);
                 requirementTalentsCombo.Visibility = Visibility.Collapsed;
+                requirementTalentsCombo.SelectedIndex = -1;
             }
         }
 
