@@ -273,14 +273,16 @@ namespace Rawr.DPSDK
             set { _basicStats = value; }
         }
 
-        public void DPSBreakdown(Rotation rot, float petDPS)
+        public void DPSBreakdown(Rotation rot, float[] petDPS)
         {
-            float fTotalDam = rot.TotalDamage + (petDPS * rot.CurRotationDuration);
+            float fTotalPetDPS = 0;
+            foreach (DKability b in EnumHelper.GetValues(typeof(DKability)))
+            {
+                petDPS[(int)b] *= rot.CurRotationDuration;
+                fTotalPetDPS += petDPS[(int)b];
+            }
+            float fTotalDam = rot.TotalDamage + fTotalPetDPS;
             float fTotalDPS = fTotalDam / rot.CurRotationDuration;
-#if DEBUG
-            float fTestDPS = 0;
-            float fTestDam = 0;
-#endif
             // We already have the total damage done.
             if (null != rot.ml_Rot)
             {
@@ -289,32 +291,14 @@ namespace Rawr.DPSDK
                     // take each instance of each ability and gather the sums.
                     damSub[a.AbilityIndex] += a.TotalDamage;
                     threatSub[a.AbilityIndex] += a.TotalThreat;
-    #if DEBUG
-                    fTestDam += a.TotalDamage;
-    #endif
                 }
             }
-            damSub[(int)DKability.Ghoul] = (petDPS * rot.CurRotationDuration);
             foreach (DKability b in EnumHelper.GetValues(typeof(DKability)))
             {
+                damSub[(int)b] += petDPS[(int)b];
                 dpsSub[(int)b] = DPSPoints * (damSub[(int)b] / fTotalDam);
                 tpsSub[(int)b] = rot.m_TPS * (threatSub[(int)b] / rot.TotalThreat);
-#if DEBUG
-                fTestDam += damSub[(int)b];
-                fTestDPS += dpsSub[(int)b];
-#endif
             }
-#if DEBUG
-            fTestDPS += petDPS;
-            if (Math.Floor(fTestDam) != Math.Floor(fTotalDam))
-            {
-//                throw new Exception("Missing some Damage in the breakdown.");
-            }
-            if (Math.Floor(fTestDPS) != Math.Floor(DPSPoints))
-            {
-//                throw new Exception("Missing some DPS in the breakdown.");
-            }
-#endif
         }
 
         #region Costs

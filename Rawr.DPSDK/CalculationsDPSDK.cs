@@ -503,8 +503,20 @@ namespace Rawr.DPSDK
                 rot.Solver();
 
             #region Pet Handling 
-            Pet pet = new Ghoul(stats, talents, hBossOptions, calcOpts.presence);
-            calc.dpsSub[(int)DKability.Ghoul] = pet.DPS;
+            // For UH, this is valid.  For Frost/Blood, we need to have this be 1/3 of the value since it has an uptime of 1 min for every 3.
+            float ghouluptime = 1f;
+            calc.dpsSub[(int)DKability.Gargoyle] = 0;
+            if (RotT != Rotation.Type.Unholy) ghouluptime = 1f / 3f;
+            else 
+            {
+                // Unholy will also have gargoyles.
+                Pet Gar = new Gargoyle(stats, talents, hBossOptions, calcOpts.presence);
+                float garuptime = .5f/3f;
+                calc.dpsSub[(int)DKability.Gargoyle] = Gar.DPS * garuptime;
+            }
+            Pet ghoul = new Ghoul(stats, talents, hBossOptions, calcOpts.presence);
+            calc.dpsSub[(int)DKability.Ghoul] = ghoul.DPS * ghouluptime;
+
             #endregion
 
             calc.RotationTime = rot.CurRotationDuration;
@@ -517,11 +529,16 @@ namespace Rawr.DPSDK
 
             calc.EffectiveArmor = stats.Armor;
 
-            calc.OverallPoints = calc.DPSPoints = rot.m_DPS + pet.DPS;
+            calc.OverallPoints = calc.DPSPoints = rot.m_DPS + calc.dpsSub[(int)DKability.Ghoul] + calc.dpsSub[(int)DKability.Gargoyle];
+            float[] PetDPS = new float[(int)EnumHelper.GetCount(typeof(DKability))];
+            //PetDPS[(int)DKability.Army] = calc.dpsSub[(int)DKability.Army];
+            PetDPS[(int)DKability.BloodParasite] = calc.dpsSub[(int)DKability.BloodParasite];
+            PetDPS[(int)DKability.Gargoyle] = calc.dpsSub[(int)DKability.Gargoyle];
+            PetDPS[(int)DKability.Ghoul] = calc.dpsSub[(int)DKability.Ghoul];
             if (needsDisplayCalculations)
             {
                 calcOpts.szRotReport = rot.ReportRotation();
-                calc.DPSBreakdown(rot, pet.DPS);
+                calc.DPSBreakdown(rot, PetDPS);
             }  
 
             return calc;

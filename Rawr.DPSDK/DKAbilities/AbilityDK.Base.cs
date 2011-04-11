@@ -508,8 +508,11 @@ namespace Rawr.DK
         public float TotalThreat {
             get {
                 float Threat = StatConversion.ApplyMultiplier(GetTotalDamage(), ThreatMultiplier) + _ThreatAdditiveModifier;
-                Threat = StatConversion.ApplyMultiplier(Threat, CState.m_Stats.ThreatIncreaseMultiplier);
-                Threat = StatConversion.ApplyInverseMultiplier(Threat, CState.m_Stats.ThreatReductionMultiplier);
+                if (null != CState && null != CState.m_Stats)
+                {
+                    Threat = StatConversion.ApplyMultiplier(Threat, CState.m_Stats.ThreatIncreaseMultiplier);
+                    Threat = StatConversion.ApplyInverseMultiplier(Threat, CState.m_Stats.ThreatReductionMultiplier);
+                }
                 return Threat;
             }
             set { _ThreatAdditiveModifier = value; }
