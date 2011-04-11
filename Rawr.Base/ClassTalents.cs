@@ -92,12 +92,11 @@ namespace Rawr
         {
             get
             {
-                int retVal = 0;
                 int[] trees = TreeCounts;
                 if (trees[0] >= trees[1] && trees[0] >= trees[2]) { return 0; }
                 if (trees[1] >= trees[0] && trees[1] >= trees[2]) { return 1; }
                 if (trees[2] >= trees[0] && trees[2] >= trees[1]) { return 2; }
-                return retVal;
+                return 0;
             }
         }
         //

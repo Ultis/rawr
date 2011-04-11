@@ -83,19 +83,22 @@ namespace Rawr
 		//
 		public int[] TreeCounts {
 			get {
-				if (TreeCounts[0] == -1) {
+				if (treeCounts[0] == -1) {
+					treeCounts[0] = 0;
 					for (int i = TreeStartingIndexes[0]; i < TreeStartingIndexes[1]; i++) {
-						TreeCounts[0] += Data[i];
+						treeCounts[0] += Data[i];
 					}
 				}
-				if (TreeCounts[1] == -1) {
+				if (treeCounts[1] == -1) {
+					treeCounts[1] = 0;
 					for (int i = TreeStartingIndexes[1]; i < TreeStartingIndexes[2]; i++) {
-						TreeCounts[1] += Data[i];
+						treeCounts[1] += Data[i];
 					}
 				}
-				if (TreeCounts[2] == -1) {
+				if (treeCounts[2] == -1) {
+					treeCounts[2] = 0;
 					for (int i = TreeStartingIndexes[2]; i < Data.Length; i++) {
-						TreeCounts[2] += Data[i];
+						treeCounts[2] += Data[i];
 					}
 				}
 				return TreeCounts;
@@ -105,11 +108,11 @@ namespace Rawr
 		//
 		public int HighestTree {
 			get {
-				int retVal = 1;
-				if (TreeCounts[0] >= TreeCounts[1] && TreeCounts[0] >= TreeCounts[2]) { return 0; }
-				if (TreeCounts[1] >= TreeCounts[0] && TreeCounts[1] >= TreeCounts[2]) { return 1; }
-				if (TreeCounts[2] >= TreeCounts[0] && TreeCounts[2] >= TreeCounts[1]) { return 2; }
-				return retVal;
+				int[] trees = TreeCounts;
+				if (trees[0] >= trees[1] && trees[0] >= trees[2]) { return 0; }
+				if (trees[1] >= trees[0] && trees[1] >= trees[2]) { return 1; }
+				if (trees[2] >= trees[0] && trees[2] >= trees[1]) { return 2; }
+				return 0;
 			}
 		}
 		//
