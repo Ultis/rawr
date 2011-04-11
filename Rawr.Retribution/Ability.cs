@@ -15,7 +15,7 @@ namespace Rawr.Retribution
 
             HasGCD = hasGCD;
             if (hasGCD)
-                _GCD = (AbilityType == AbilityType.Spell ? 1.5f / (1 + Stats.SpellHaste) : 1.5f);
+                _GCD = (AbilityType == AbilityType.Spell ? 1.5f / (1 + Stats.SpellHaste) : 1.5f) + Latency;
             else
                 _GCD = 0f;
         }
@@ -27,6 +27,7 @@ namespace Rawr.Retribution
         public T Talents { get { return (T)_talents; } }
         protected Stats _stats;
         public Stats Stats { get { return _stats; } }
+        public float Latency = .1f;
 
         public virtual BaseCombatTable CT { get; protected set; }
 
@@ -71,23 +72,21 @@ namespace Rawr.Retribution
         }
         #endregion
 
-        #region DPS / CD
-        public double UsagePerSec { get; set; }
-        public double CritsPerSec()
-        {
-            return UsagePerSec * CT.ChanceToCrit;
-        }
-        public float GetDPS()
-        {
-            return (float)(AverageDamage * UsagePerSec);
-        }
-
+        #region CD
         protected float _Cooldown = 1f;
         public float Cooldown { get { return _Cooldown; }
                                 set { _Cooldown = value; } }
+        public float CooldownWithLatency { get { return _Cooldown + Latency; } }
+
         public bool HasGCD;
         protected float _GCD;
         public virtual float GCD { get { return _GCD; } }
+
+        public float GetMaxNumberOfActivates(float fighttime)
+        {
+            return fighttime / CooldownWithLatency;
+        }
+
         public virtual string GetGeneralOutput()
         {
             string fmtstring = "";
@@ -104,6 +103,18 @@ namespace Rawr.Retribution
                 return "General:" + string.Format(fmtstring, GCD, Cooldown, Targets(), TickCount());
             else
                 return "";
+        }
+        #endregion
+
+        #region DPS
+        public double UsagePerSec { get; set; }
+        public double CritsPerSec()
+        {
+            return UsagePerSec * CT.ChanceToCrit;
+        }
+        public float GetDPS()
+        {
+            return (float)(AverageDamage * UsagePerSec);
         }
 
         protected float _AbilityDamage = 1f;

@@ -47,6 +47,13 @@ namespace Rawr.Retribution
             get { return hPperInq; }
             set { hPperInq = value; OnPropertyChanged("HPperInq"); }
         }
+        [DefaultValue(true)]
+        private bool newRotation;
+        public bool NewRotation
+        {
+            get { return newRotation; }
+            set { newRotation = value; OnPropertyChanged("NewRotation"); }
+        }
         #endregion
 
         #region INotifyPropertyChanged Members
