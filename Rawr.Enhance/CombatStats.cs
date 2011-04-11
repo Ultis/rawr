@@ -64,8 +64,7 @@ namespace Rawr.Enhance
         private float edUptime = 0f;
         private float edBonusCrit = 0f;
         private float ftBonusCrit = 0f;
-        private float fireTotemUptime = 0f;  //all fire totems other than searing
-        private float searingTotemUptime = 0f;  //searing totem
+        private float fireTotemUptime = 0f;
 
         private float meleeAttacksPerSec = 0f;
         private float meleeCritsPerSec = 0f;
@@ -77,6 +76,7 @@ namespace Rawr.Enhance
         private float stormstrikeBonusCrit = 0f;
         private float enhance4T11 = 0f;
         private float staticShocksPerSecond = 0f;
+        private float multiTargetMultiplier = 1f;
         private float baseMana = 0f;
         private float maxMana = 0f;
         private float baseRegen = 0f;
@@ -145,8 +145,8 @@ namespace Rawr.Enhance
         public float BaseShockSpeed { get { return 6f - .5f * _talents.Reverberation; } }
         public float BaseFireNovaSpeed { get { return 10f /*- 2f * _talents.ImprovedFireNova*/; } } // Talent removed in 4.1.0
         public float StaticShockProcsPerS { get { return staticShocksPerSecond; } }
-        public float StaticShockAvDuration { get { return /*StaticShockProcsPerS == 0 ? 600f : (3f / StaticShockProcsPerS)*/600f; } }  //FIXME Static Chock no longer consumes charges
-        public float MultiTargetMultiplier { get { return 1f /*_calcOpts.MultipleTargets ? _calcOpts.AdditionalTargets * _calcOpts.AdditionalTargetPercent : 1f*/; } }
+        public float StaticShockAvDuration { get { return 600f; } }  //TODO: Incoming damage
+        public float MultiTargetMultiplier { get { return multiTargetMultiplier; } }
             
         public float HitsPerSOH { get { return hitsPerSOH; } }
         public float HitsPerSMH { get { return hitsPerSMH; } }
@@ -167,7 +167,6 @@ namespace Rawr.Enhance
         public float UWUptime { get { return uWUptime; } }
         //public float UFUptime { get { return uFUptime; } }
         public float FireTotemUptime { get { return fireTotemUptime; } }
-        public float SearingTotemUptime { get { return searingTotemUptime; } }
         public float FireElementalUptime { get { return getFireElementalUptime(); } }
         public float AbilityCooldown(EnhanceAbility abilityType) { return _rotation.AbilityCooldown(abilityType); }
 
@@ -297,7 +296,18 @@ namespace Rawr.Enhance
             float baseHastedMHSpeed = unhastedMHSpeed / (1f + hasteBonus) / (1f + _stats.PhysicalHaste);
             float baseHastedOHSpeed = unhastedOHSpeed / (1f + hasteBonus) / (1f + _stats.PhysicalHaste);
             float chanceToProcWFPerHit = .2f + (_character.ShamanTalents.GlyphofWindfuryWeapon ? .02f : 0f);
-           
+
+            if (_bossOpts.MultiTargs && _bossOpts.Targets != null && _bossOpts.Targets.Count > 0)
+            {
+                foreach (TargetGroup tg in _bossOpts.Targets)
+                {
+                    if (tg.Frequency <= 0 || tg.Chance <= 0)
+                        continue; //bad one, skip it
+                    float upTime = (tg.Frequency / fightLength * (tg.Duration / 1000f) * tg.Chance) / fightLength;
+                    multiTargetMultiplier += (Math.Max(10, tg.NumTargs - (tg.NearBoss ? 0 : 1))) * upTime;
+                }
+            }
+
             //The Swing Loop
             //This is where we figure out feedback systems -- WF, MW, ED, Flurry, etc.
             //--------------
@@ -310,9 +320,9 @@ namespace Rawr.Enhance
             float lavaLashSpeed = firstPass ? 10f : AbilityCooldown(EnhanceAbility.LavaLash);
             float fireNovaSpeed = firstPass ? BaseFireNovaSpeed : AbilityCooldown(EnhanceAbility.FireNova);
             if (_calcOpts.PriorityInUse(EnhanceAbility.MagmaTotem))
-                fireTotemUptime = firstPass ? 1.0f : 20f / AbilityCooldown(EnhanceAbility.MagmaTotem);
+                fireTotemUptime = firstPass ? 1.0f : 60f / AbilityCooldown(EnhanceAbility.MagmaTotem);
             else if (_calcOpts.PriorityInUse(EnhanceAbility.SearingTotem))
-                searingTotemUptime = firstPass ? 1.0f : 60f / AbilityCooldown(EnhanceAbility.SearingTotem);
+                fireTotemUptime = firstPass ? 1.0f : 60f / AbilityCooldown(EnhanceAbility.SearingTotem);
             else if (_calcOpts.PriorityInUse(EnhanceAbility.RefreshTotems)) // if no Searing or Magma totem use refresh of Flametongue totem.
                 fireTotemUptime = firstPass ? 1.0f : 300f / AbilityCooldown(EnhanceAbility.RefreshTotems); 
             

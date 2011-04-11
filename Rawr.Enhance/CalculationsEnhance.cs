@@ -232,11 +232,9 @@ namespace Rawr.Enhance
             float concussionMultiplier = 1f + .02f * character.ShamanTalents.Concussion;
             float shieldBonus = 1f + .05f * character.ShamanTalents.ImprovedShields;
             float callofFlameBonus = 1f + .1f * character.ShamanTalents.CallOfFlame;
-            float fireNovaBonus = 1f; //+ .1f * character.ShamanTalents.ImprovedFireNova; // Removed in 4.1.0
             float mentalQuickness = .5f;  //AP -> SP conversion
             float windfuryWeaponBonus = 4430f;  //WFAP (Check)
             float windfuryDamageBonus = 1f;
-            float elemPrec = character.ShamanTalents.ElementalPrecision * 0.01f; //additive or multi
             switch (character.ShamanTalents.ElementalWeapons)
             {
                 case 1: windfuryDamageBonus = 1.20f; break;
@@ -263,7 +261,7 @@ namespace Rawr.Enhance
                 enhance2T11 = 0.1f;
             }
             //
-            float FTspellpower = (float)Math.Floor((float)(748f * (1 + character.ShamanTalents.ElementalWeapons * .2f)));  //FT SP Bonus (Check) 
+            float FTspellpower = (float)Math.Floor((float)(748f * (1 + character.ShamanTalents.ElementalWeapons * .2f)));
             if (calcOpts.MainhandImbue == "Flametongue")
                 stats.SpellPower += FTspellpower;
             if (calcOpts.OffhandImbue == "Flametongue")
@@ -327,7 +325,7 @@ namespace Rawr.Enhance
 
             float dpsMHMeleeTotal = ((dpsMHMeleeNormal + dpsMHMeleeCrits + dpsMHMeleeGlances) * cs.UnhastedMHSpeed / cs.HastedMHSpeed) * meleeMultipliers;
 
-            if (cs.HastedOHSpeed != 0)  //(Check) if needed
+            if (cs.HastedOHSpeed != 0)
             {
                 adjustedOHDPS = (wdpsOH + APDPS) * .5f;
                 float dpsOHMeleeNormal = adjustedOHDPS * cs.NormalHitModifierOH;
@@ -340,7 +338,7 @@ namespace Rawr.Enhance
             float damageMHSwing = adjustedMHDPS * cs.UnhastedMHSpeed;
             float damageOHSwing = adjustedOHDPS * cs.UnhastedOHSpeed;
 
-            if (cs.HastedOHSpeed != 0)  //(Check) if needed
+            if (cs.HastedOHSpeed != 0)
                 dpsMoteOfAnger = (damageMHSwing + damageOHSwing) / 2 * stats.MoteOfAnger;
             else
                 dpsMoteOfAnger = damageMHSwing * stats.MoteOfAnger;
@@ -429,11 +427,10 @@ namespace Rawr.Enhance
             {
                 float damageLBBase = 770f;
                 float coefLB = .714f;
-                // LightningSpellPower is for totem of hex/the void/ancestral guidance
                 float damageLB = concussionMultiplier * (damageLBBase + coefLB * spellPower);
                 float lbdps = damageLB / cs.AbilityCooldown(EnhanceAbility.LightningBolt);
-                float lbNormal = lbdps * /*cs.LBSpellHitModifier*/cs.NatureSpellHitModifier;
-                float lbCrit = lbdps * /*cs.LBSpellCritModifier*/cs.NatureSpellCritModifier * cs.CritMultiplierSpell;
+                float lbNormal = lbdps * cs.NatureSpellHitModifier;
+                float lbCrit = lbdps * cs.NatureSpellCritModifier * cs.CritMultiplierSpell;
                 dpsLB = (lbNormal + lbCrit) * mastery * bonusNatureDamage * bossNatureResistance;
                 if (character.ShamanTalents.GlyphofLightningBolt)
                     dpsLB *= 1.04f; // 4% bonus dmg if Lightning Bolt Glyph
@@ -441,14 +438,21 @@ namespace Rawr.Enhance
             #endregion
 
             #region Chain Lightning DPS
-            //Single Target for now.  Add in Multi target later.  FIXME
             float dpsCL = 0f;
+            float coefCL = 0f;
             if (calcOpts.PriorityInUse(EnhanceAbility.ChainLightning))
             {
+                if (character.ShamanTalents.GlyphofChainLightning)
+                {
+                    coefCL = 0.5714f * 0.9f;
+                }
+                else
+                {
+                    coefCL = 0.5714f;
+                }
                 float damageCLBase = 1092f;
-                float coefCL = 0.5714f;
                 float damageCL = concussionMultiplier * (damageCLBase + coefCL * spellPower);
-                float cldps = damageCL / cs.AbilityCooldown(EnhanceAbility.ChainLightning);
+                float cldps = (damageCL) / cs.AbilityCooldown(EnhanceAbility.ChainLightning);
                 float clNormal = cldps * cs.NatureSpellHitModifier;
                 float clCrit = cldps * cs.NatureSpellCritModifier * cs.CritMultiplierSpell;
                 dpsCL = (clNormal + clCrit) * mastery * bonusNatureDamage * bossNatureResistance;
@@ -494,7 +498,7 @@ namespace Rawr.Enhance
             else if (calcOpts.PriorityInUse(EnhanceAbility.SearingTotem))
             {
                 float damageFireTotem = (96f + .1669f * spellPower) * callofFlameBonus;
-                float FireTotemdps = damageFireTotem / 1.65f * cs.SearingTotemUptime;
+                float FireTotemdps = damageFireTotem / 1.65f * cs.FireTotemUptime;
                 float FireTotemNormal = FireTotemdps * cs.SpellHitModifier;
                 float FireTotemCrit = FireTotemdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
                 dpsFireTotem = (FireTotemNormal + FireTotemCrit) * mastery * bonusFireDamage * bossFireResistance;
@@ -504,10 +508,10 @@ namespace Rawr.Enhance
 
             #region Fire Nova DPS
             float dpsFireNova = 0f;
-            if (calcOpts.PriorityInUse(EnhanceAbility.FireNova))
+            if (calcOpts.PriorityInUse(EnhanceAbility.FireNova) && calcOpts.PriorityInUse(EnhanceAbility.FlameShock))
             {
-                float damageFireNova = (686.0f + 0.143f * spellPower) * callofFlameBonus * fireNovaBonus;
-                float FireNovadps = (damageFireNova / cs.AbilityCooldown(EnhanceAbility.FireNova)) * cs.FireTotemUptime;
+                float damageFireNova = (686.0f + 0.143f * spellPower) * callofFlameBonus;
+                float FireNovadps = (damageFireNova / cs.AbilityCooldown(EnhanceAbility.FireNova));
                 float FireNovaNormal = FireNovadps * cs.SpellHitModifier;
                 float FireNovaCrit = FireNovadps * cs.SpellCritModifier * cs.CritMultiplierSpell;
                 dpsFireNova = (FireNovaNormal + FireNovaCrit) * mastery * bonusFireDamage * bossFireResistance * cs.MultiTargetMultiplier;
@@ -518,9 +522,12 @@ namespace Rawr.Enhance
             float dpsFT = 0f;
             /*if (calcOpts.MainhandImbue == "Flametongue")
             {
-                float damageFTBase = 306f * cs.UnhastedOHSpeed / 4.0f;
-                float damageFTCoef = 0.15396f * cs.UnhastedOHSpeed;
-                float damageFT = damageFTBase + damageFTCoef * attackPower;
+                //float damageFTBase = 306f * cs.UnhastedOHSpeed / 4.0f;
+                //float damageFTCoef = 0.15396f * cs.UnhastedOHSpeed;
+                //float damageFT = damageFTBase + damageFTCoef * attackPower;
+                float damageFTBase = 306f;
+                float damageFTCoef = 0.1253f;
+                float damageFT = (damageFTBase + (damageFTCoef * attackPower)) * cs.UnhastedOHSpeed / 4.0f;
                 float FTdps = damageFT * (cs.HitsPerSOH - cs.HitsPerSLL);
                 float FTNormal = FTdps * cs.SpellHitModifier;
                 float FTCrit = FTdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
@@ -528,9 +535,12 @@ namespace Rawr.Enhance
             }*/
             if (calcOpts.OffhandImbue == "Flametongue" && character.OffHand != null)
             {
-                float damageFTBase = 306f * cs.UnhastedOHSpeed / 4.0f;
-                float damageFTCoef = 0.1253f * cs.UnhastedOHSpeed;
-                float damageFT = damageFTBase + damageFTCoef * attackPower;
+                //float damageFTBase = 306f * cs.UnhastedOHSpeed / 4.0f;
+                //float damageFTCoef = 0.1253f * cs.UnhastedOHSpeed;
+                //float damageFT = damageFTBase + damageFTCoef * attackPower;
+                float damageFTBase = 306f;
+                float damageFTCoef = 0.1253f;
+                float damageFT = (damageFTBase + (damageFTCoef * attackPower)) * cs.UnhastedOHSpeed / 4.0f;
                 float FTdps = damageFT * (cs.HitsPerSOH - cs.HitsPerSLL);
                 float FTNormal = FTdps * cs.SpellHitModifier;
                 float FTCrit = FTdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
@@ -662,7 +672,7 @@ namespace Rawr.Enhance
             calc.OHEnchantUptime = se.GetOHUptime() * 100f;
             calc.Trinket1Uptime = se.GetUptime(character.Trinket1) * 100f;
             calc.Trinket2Uptime = se.GetUptime(character.Trinket2) * 100f;
-            calc.FireTotemUptime = (cs.FireTotemUptime + cs.SearingTotemUptime) * 100f;
+            calc.FireTotemUptime = cs.FireTotemUptime * 100f;
             calc.BaseRegen = cs.BaseRegen;
             calc.ManaRegen = cs.ManaRegen;
 

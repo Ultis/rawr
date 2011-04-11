@@ -16,12 +16,7 @@ namespace Rawr.Enhance
         private int _reactionTime = 250;
         private string _mainhandImbue = "Windfury";
         private string _offhandImbue = "Flametongue";
-        /*private float _targetFireResistance = 0;
-        private float _targetNatureResistance = 0;*/
         private float _minManaSR = 1250;
-        /*private bool _multipleTargets = false;
-        private int _additionalTargets = 2;
-        private float _additionalTargetPercent = 0.25f;*/
         private bool _baseStatOption = true;
         private bool _useMana = false;
         private bool _showExportMessageBox = true;
@@ -46,17 +41,12 @@ namespace Rawr.Enhance
         public float MinManaSR { get { return _minManaSR; } set { _minManaSR = value; OnPropertyChanged("MinManaSR"); } }
         public string MainhandImbue { get { return _mainhandImbue; } set { _mainhandImbue = value; OnPropertyChanged("MainhandImbue"); } }
         public string OffhandImbue { get { return _offhandImbue; } set { _offhandImbue = value; OnPropertyChanged("OffhandImbue"); } }
-        /*public float TargetFireResistance { get { return _targetFireResistance; } set { _targetFireResistance = value; OnPropertyChanged("TargetFireResistance"); } }
-        public float TargetNatureResistance { get { return _targetNatureResistance; } set { _targetNatureResistance = value; OnPropertyChanged("TargetNatureResistance"); } }*/
         public bool Magma { get { return PriorityInUse(EnhanceAbility.MagmaTotem); } }
         public bool Searing { get { return PriorityInUse(EnhanceAbility.SearingTotem); } }
         public bool FireElemental { get { return PriorityInUse(EnhanceAbility.FireElemental); } }
         public bool BaseStatOption { get { return _baseStatOption; } set { _baseStatOption = value; OnPropertyChanged("BaseStatOption"); } }
         public bool UseMana { get { return _useMana; } set { _useMana = value; OnPropertyChanged("UseMana"); } }
         public bool ShowExportMessageBox { get { return _showExportMessageBox; } set { _showExportMessageBox = value; OnPropertyChanged("ShowExportMessageBox"); } }
-        /*public bool MultipleTargets { get { return _multipleTargets; } set { _multipleTargets = value; OnPropertyChanged("MultipleTargets"); } }
-        public int AdditionalTargets { get { return _additionalTargets; } set { _additionalTargets = value; OnPropertyChanged("AdditionalTargets"); } }
-        public float AdditionalTargetPercent { get { return _additionalTargetPercent; } set { _additionalTargetPercent = value; OnPropertyChanged("AdditionalTargetPercent"); } }*/
         public bool[] StatsList { get { return _statsList; } set { _statsList = value; OnPropertyChanged("StatsList"); } }
         public int StatsIncrement { get { return _statsIncrement; } set { _statsIncrement = value; OnPropertyChanged("StatsIncrement"); } }
         public string CalculationToGraph { get { return _calculationToGraph; } set { _calculationToGraph = value; OnPropertyChanged("CalculationToGraph"); } }
@@ -72,35 +62,6 @@ namespace Rawr.Enhance
             return xml.ToString();
         }
         #endregion
-
-        /*public void SetBoss(BossHandler boss) 
-        {
-            _targetFireResistance = (float)boss.Resistance(ItemDamageType.Fire);
-            _targetNatureResistance = (float)boss.Resistance(ItemDamageType.Nature);
-            //_additionalTargets = (int)boss.MaxNumTargets - 1;
-            {
-                float value = 0;
-                foreach (TargetGroup tg in boss.Targets)
-                {
-                    if (tg.Chance <= 0 || tg.Frequency <= 0 || tg.Duration <= 0) continue;
-                    value += tg.Frequency / boss.BerserkTimer * tg.Duration / 1000f;
-                }
-                float num = value / boss.Targets.Count;
-                _additionalTargets = (int)num - 1;
-            }
-            //_additionalTargetPercent = (float)boss.MultiTargsPerc;
-            {
-                float time = 0;
-                foreach (TargetGroup tg in boss.Targets)
-                {
-                    if (tg.Chance <= 0 || tg.Frequency <= 0 || tg.Duration <= 0) continue;
-                    time += tg.Frequency / boss.BerserkTimer * tg.Duration / 1000f;
-                }
-                float perc = time / boss.BerserkTimer;
-                _additionalTargetPercent = Math.Max(0f, Math.Min(1f, perc));
-            }
-            _multipleTargets = _additionalTargets > 0 && _additionalTargetPercent > 0;
-        }*/
 
         public bool PriorityInUse(EnhanceAbility abilityType)
         {
@@ -180,8 +141,6 @@ namespace Rawr.Enhance
                 priorityList.Add(EnhanceAbility.FireElemental, new Priority("Fire Elemental", EnhanceAbility.FireElemental, "Drop Fire Elemental Totem", true, ++priority, "FE"));
                 priorityList.Add(EnhanceAbility.SearingTotem, new Priority("Searing Totem", EnhanceAbility.SearingTotem, "Refresh Searing Totem", true, ++priority, "ST"));
                 priorityList.Add(EnhanceAbility.ShamanisticRage, new Priority("Shamanistic Rage", EnhanceAbility.ShamanisticRage, "Use Shamanistic Rage", true, ++priority, "SR"));
-                priorityList.Add(EnhanceAbility.MagmaTotem, new Priority("Magma Totem", EnhanceAbility.MagmaTotem, "Refresh Magma Totem", false, ++priority, "MT"));
-                priorityList.Add(EnhanceAbility.FireNova, new Priority("Fire Nova", EnhanceAbility.FireNova, "Use Fire Nova", false, ++priority, "FN"));
                 priorityList.Add(EnhanceAbility.LightningShield, new Priority("Lightning Shield", EnhanceAbility.LightningShield, "Refresh Lightning Shield", true, ++priority, "LS"));
                 priorityList.Add(EnhanceAbility.RefreshTotems, new Priority("Refresh Totems", EnhanceAbility.RefreshTotems, "Refresh Totems", true, ++priority, ""));
             }
