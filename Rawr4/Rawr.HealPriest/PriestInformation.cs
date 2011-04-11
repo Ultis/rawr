@@ -16,6 +16,15 @@ namespace Rawr.HealPriest
     {
         public static ePriestSpec GetPriestSpec(PriestTalents pt)
         {
+            int spec = pt.HighestTree;
+            if (spec == 0)
+                return ePriestSpec.Spec_Disc;
+            else if (spec == 1)
+                return ePriestSpec.Spec_Holy;
+            else if (spec == 2)
+                return ePriestSpec.Spec_Shadow;
+            return ePriestSpec.Spec_ERROR;
+/*
             int[] specs = new int[3];
             int spec = 0;
             int ctr = 0;
@@ -39,11 +48,29 @@ namespace Rawr.HealPriest
             else if (specs[2] > specs[0] && specs[2] > specs[1] && specs[0] <= 10 && specs[1] <= 10)
                 return ePriestSpec.Spec_Shadow;
             //throw new Exception("There seems to be a problem with the talent spec!");
-            return ePriestSpec.Spec_Unknown;
+            return ePriestSpec.Spec_Unknown;*/
         }
     }
     public static class PriestInformation
     {
+        public static float GetInnerFireSpellPowerBonus(Character character)
+        {
+            float InnerFireSpellPowerBonus = 532;
+            return InnerFireSpellPowerBonus;
+        }
+
+        public static float GetInnerFireArmorBonus(Character character)
+        {
+            float InnerFireArmorBonus = 0.6f * (character.PriestTalents.GlyphofInnerFire ? 1.5f : 1f);
+
+            return InnerFireArmorBonus;
+        }
+       
+        public static float GetImprovedPowerWordShield(int points)
+        {
+            return points * 0.1f;
+        }
+
         public static float GetTwinDisciplines(int points)
         {
             return points * 0.02f;

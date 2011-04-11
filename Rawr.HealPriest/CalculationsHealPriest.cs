@@ -217,12 +217,7 @@ namespace Rawr.HealPriest
                     "General:Health",
                     "General:Mana",
                     "General:Item Level",
-                    "General:Speed",
-                    "Attributes:Strength",
-                    "Attributes:Agility",
-                    "Attributes:Stamina",
-                    "Attributes:Intellect",
-                    "Attributes:Spirit",
+//                    "General:Speed",
                     "Spell:Spell Power",
                     "Spell:Haste",
                     "Spell:Hit",
@@ -231,14 +226,6 @@ namespace Rawr.HealPriest
                     "Spell:Combat Regen",
                     "Spell:Crit Chance",
                     "Spell:Mastery",
-                    "Defense:Armor",
-                    "Defense:Dodge",
-                    "Defense:Resilience",
-                    "Resistance:Arcane",
-                    "Resistance:Fire",
-                    "Resistance:Nature",
-                    "Resistance:Frost",
-                    "Resistance:Shadow",
                     "Model:Role",
                     "Model:Burst*This is the HPS you are expected to have if you are not limited by Mana.\r\nIn Custom Role, this displays your HPS when you dump all spells in 1 stream.",
                     "Model:Sustained*This is the HPS are expected to have when restricted by Mana.\r\nIf this value is lower than your Burst HPS, you are running out of mana in the simulation.\r\nIn Custom Role, this displays your HPS over the length of the fight, adjusted by the amount of mana available.",
@@ -248,7 +235,7 @@ namespace Rawr.HealPriest
                     "Holy Spells:Flash Heal",
                     "Holy Spells:Renew",
                     "Holy Spells:ProM*Prayer of Mending",
-                    "Holy Spells:Power Word Shield",
+                    "Holy Spells:PWS*Power Word: Shield",
                     "Holy Spells:ProH*Prayer of Healing",
                     "Holy Spells:Holy Nova",
                     "Holy Spells:Lightwell",
@@ -258,6 +245,19 @@ namespace Rawr.HealPriest
                     "Holy Spells:Divine Hymn",
                     "Holy Spells:Resurrection",
                     "Shadow Spells:Halleluja",
+                    "Attributes:Strength",
+                    "Attributes:Agility",
+                    "Attributes:Stamina",
+                    "Attributes:Intellect",
+                    "Attributes:Spirit",
+                    "Defense:Armor",
+                    "Defense:Dodge",
+                    "Defense:Resilience",
+                    "Resistance:Arcane",
+                    "Resistance:Fire",
+                    "Resistance:Nature",
+                    "Resistance:Frost",
+                    "Resistance:Shadow",
                 };
                 return _characterDisplayCalculationLabels;
             }
@@ -362,7 +362,7 @@ namespace Rawr.HealPriest
         public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot)
         {
             if (slot == ItemSlot.Ranged) return false;
-            if (slot == ItemSlot.OffHand && enchant.Id != 4091) return false;
+            if (enchant.ShieldsOnly) return false;
             return base.EnchantFitsInSlot(enchant, character, slot);
         }
 
@@ -392,6 +392,7 @@ namespace Rawr.HealPriest
                 HasteRating = stats.HasteRating,
                 MasteryRating = stats.MasteryRating,
 
+                BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
                 BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
                 BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
                 BonusManaMultiplier = stats.BonusManaMultiplier,
@@ -457,8 +458,8 @@ namespace Rawr.HealPriest
         {
             bool Yes = (
                 stats.Intellect + stats.Spirit + stats.Mana + stats.Mp5 + stats.SpellPower
-                + stats.SpellHaste + stats.SpellCrit
-                + stats.HasteRating + stats.CritRating + stats.MasteryRating
+                + stats.SpellHaste + stats.SpellCrit + stats.HasteRating + stats.CritRating + stats.MasteryRating
+                + stats.BonusSpellPowerMultiplier
                 + stats.BonusIntellectMultiplier + stats.BonusSpiritMultiplier + stats.BonusManaMultiplier + stats.BonusCritHealMultiplier
                 + stats.HealingReceivedMultiplier + stats.BonusHealingDoneMultiplier + stats.BonusManaPotionEffectMultiplier
                 + stats.ManaRestoreFromMaxManaPerSecond + stats.PriestInnerFire
@@ -791,21 +792,6 @@ namespace Rawr.HealPriest
 
         #endregion
 
-        #region Model Specific Variables and Functions
-        public static float GetInnerFireSpellPowerBonus(Character character)
-        {
-            float InnerFireSpellPowerBonus = 532;
-            return InnerFireSpellPowerBonus;
-        }
-
-        public static float GetInnerFireArmorBonus(Character character)
-        {
-            float InnerFireArmorBonus = 0.3f * (character.PriestTalents.GlyphofInnerFire ? 1.5f : 1f);
-
-            return InnerFireArmorBonus;
-        }
-        #endregion
-
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
             // First things first, we need to ensure that we aren't using bad data
@@ -872,7 +858,8 @@ namespace Rawr.HealPriest
             statsTotal.Stamina = (float)Math.Floor((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Intellect = (float)Math.Floor((statsTotal.Intellect) * (1 + statsTotal.BonusIntellectMultiplier));
             statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
-            statsTotal.SpellPower += (statsTotal.PriestInnerFire > 0 ? GetInnerFireSpellPowerBonus(character) : 0) + (statsTotal.Intellect - 10);
+            statsTotal.SpellPower += (statsTotal.PriestInnerFire > 0 ? PriestInformation.GetInnerFireSpellPowerBonus(character) : 0) + (statsTotal.Intellect - 10);
+            statsTotal.SpellPower *= (1f + statsTotal.BonusSpellPowerMultiplier);
             statsTotal.Mana += StatConversion.GetManaFromIntellect(statsTotal.Intellect);
             statsTotal.Mana *= (1f + statsTotal.BonusManaMultiplier);
             statsTotal.Health += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
@@ -880,7 +867,7 @@ namespace Rawr.HealPriest
             statsTotal.SpellCrit += StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect)
                 + StatConversion.GetSpellCritFromRating(statsTotal.CritRating);
             statsTotal.SpellHaste = (1f + statsTotal.SpellHaste) * (1f + StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating)) - 1f;
-            statsTotal.Armor *= (1 + (statsTotal.PriestInnerFire > 0 ? GetInnerFireArmorBonus(character) : 0));
+            statsTotal.Armor *= (1 + (statsTotal.PriestInnerFire > 0 ? PriestInformation.GetInnerFireArmorBonus(character) : 0));
             return statsTotal;
         }
 

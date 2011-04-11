@@ -337,6 +337,27 @@ namespace Rawr.HealPriest
     {
         protected float healBonus = 1;
 
+        protected void DivineAegis()
+        {
+            float da = PriestInformation.GetDivineAegis(character.PriestTalents.DivineAegis) * (1f + DiscMastery);
+            AbsorbMinCrit = DirectHealMinCrit * da;
+            AbsorbMaxCrit = DirectHealMaxCrit * da;
+            AbsorbAvgCrit = DirectHealAvgCrit * da;
+            AbsorbAvg = AbsorbAvgHit * (1f - CritChance) + AbsorbAvgCrit * CritChance;
+            HasAbsorb = true;
+        }
+
+        protected void EchoOfLight()
+        {
+            Holy_HoT_TickPeriod = 1;
+            Holy_HoT_Ticks = 6;
+            Holy_HoT_Duration = Holy_HoT_TickPeriod * Holy_HoT_Ticks;
+            Holy_HoT_Hit = DirectHealAvgHit * HolyMastery / Holy_HoT_Ticks;
+            Holy_HoT_Crit = DirectHealAvgCrit * HolyMastery / Holy_HoT_Ticks;
+            Holy_HoT_Avg = Holy_HoT_Hit * (1f - CritChance) + Holy_HoT_Crit * CritChance;
+            HasOverTimeHeal = true;
+        }
+
         protected void DirectHealCalcs()
         {
             HasDirectHeal = true;
@@ -353,24 +374,13 @@ namespace Rawr.HealPriest
             DirectHealAvgCrit = (DirectHealMinCrit + DirectHealMaxCrit) / 2;
             DirectHealAvg = DirectHealAvgHit * (1f - CritChance) + DirectHealAvgCrit * CritChance;
 
-            if (ps == ePriestSpec.Spec_Disc)
+            if (ps == ePriestSpec.Spec_Disc)            
             {
-                float da = PriestInformation.GetDivineAegis(character.PriestTalents.DivineAegis) * (1f + DiscMastery);
-                AbsorbMinCrit = DirectHealMinCrit * da;
-                AbsorbMaxCrit = DirectHealMaxCrit * da;
-                AbsorbAvgCrit = DirectHealAvgCrit * da;
-                AbsorbAvg = AbsorbAvgHit * (1f - CritChance) + AbsorbAvgCrit * CritChance;
-                HasAbsorb = true;
+                DivineAegis();
             }
             else if (ps == ePriestSpec.Spec_Holy)
             {
-                Holy_HoT_TickPeriod = 1;
-                Holy_HoT_Ticks = 6;
-                Holy_HoT_Duration = Holy_HoT_TickPeriod * Holy_HoT_Ticks;
-                Holy_HoT_Hit = DirectHealAvgHit * HolyMastery / Holy_HoT_Ticks;
-                Holy_HoT_Crit = DirectHealAvgCrit * HolyMastery / Holy_HoT_Ticks;
-                Holy_HoT_Avg = Holy_HoT_Hit * (1f - CritChance) + Holy_HoT_Crit * CritChance;
-                HasOverTimeHeal = true;
+                EchoOfLight();
             }
         }
     }
@@ -523,15 +533,46 @@ namespace Rawr.HealPriest
         }
     }
 
-    public class SpellPowerWordShield : HealSpell
+    public class SpellPowerWordShield : DirectHealSpell
     {
         public SpellPowerWordShield(Character character, Stats stats)
         {
-            BaseDirectValue = 0 * BaseScalar85;
-            BaseDirectCoefficient = 0f;
+            BaseDirectValue = 8.60879993438721f * BaseScalar85;
+            BaseDirectCoefficient = 0.87f;
             BaseDirectVariation = 0.0f;
 
+            BaseManaCost = 0.34f;
+
             SetPriestInformation(character, stats);
+        }
+
+        public override void UpdateSpell()
+        {
+            float shieldBonus = (1f + PriestInformation.GetImprovedPowerWordShield(character.PriestTalents.ImprovedPowerWordShield))
+                * (1f + PriestInformation.GetTwinDisciplines(character.PriestTalents.TwinDisciplines))
+                * (1f + DiscMastery);
+            float spellPowerBonus = stats.SpellPower * BaseDirectCoefficient;
+
+            base.UpdateSpell();
+            AbsorbMinHit = AbsorbMaxHit = AbsorbAvgHit = (BaseDirectValue + spellPowerBonus) * shieldBonus;
+
+            if (character.PriestTalents.GlyphofPowerWordShield)
+            {
+                DirectHealMinHit = DirectHealMaxHit = DirectHealAvgHit = AbsorbAvgHit * 0.2f;
+                DirectHealMinCrit = DirectHealMaxCrit = DirectHealAvgCrit = AbsorbAvgHit * 0.2f * CritMultiplier;
+                DirectHealAvg = DirectHealAvgHit * (1f - CritChance) + DirectHealAvgCrit * CritChance;
+                HasDirectHeal = true;
+                if (ps == ePriestSpec.Spec_Disc)
+                {
+                    DivineAegis();
+                }
+                else if (ps == ePriestSpec.Spec_Holy)
+                {
+                    EchoOfLight();
+                }
+            }
+
+            AbsorbAvg = AbsorbAvgHit + AbsorbAvgCrit * CritChance;
         }
     }
 

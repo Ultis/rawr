@@ -90,34 +90,9 @@ namespace Rawr.HealPriest
             #region General
             dictValues.Add("Health", BasicStats.Health.ToString("0"));
             dictValues.Add("Mana", BasicStats.Mana.ToString("0"));
-
-            int iLvl = 0, iCnt = 0, iLvlMax = 0, iLvlMin = int.MaxValue;
-            foreach (ItemInstance i in character.GetItems())
-            {
-                if (i != null &&
-                    i.Item._itemLevel > 0 &&
-                    !i.Item.FitsInSlot(CharacterSlot.Shirt) &&
-                    !i.Item.FitsInSlot(CharacterSlot.Tabard) &&
-                    !i.Item.FitsInSlot(CharacterSlot.OffHand))
-                {
-                    iLvl += i.Item._itemLevel;
-                    if (i.Item._itemLevel > iLvlMax)
-                        iLvlMax = i.Item._itemLevel;
-                    if (i.Item._itemLevel < iLvlMin)
-                        iLvlMin = i.Item._itemLevel;
-                    iCnt++;
-                }
-            }
-            if (iCnt == 0)
-            {   // SIGH HAX FOR EMPTY CHARS LOL.
-                iCnt = 1;
-                iLvl = 0;
-                iLvlMin = 0;
-                iLvlMax = 0;
-            }
-            dictValues.Add("Item Level", String.Format("{0}*Lowest: {1}\nHighest: {2}", ((iCnt == 0) ? 0 : iLvl / iCnt).ToString("0"), iLvlMin, iLvlMax));
-            dictValues.Add("Speed", String.Format("{0}%*{0}% Run speed",
-                ((1f + BasicStats.MovementSpeed) * 100f).ToString("0")));
+            dictValues.Add("Item Level", String.Format("{0}*Lowest: {1}\nHighest: {2}", character.GetAvgWornItemLevel.ToString("0"), character.GetMinWornItemLevel.ToString("0"), character.GetMaxWornItemLevel.ToString("0")));
+/*            dictValues.Add("Speed", String.Format("{0}%*{0}% Run speed",
+                ((1f + BasicStats.MovementSpeed) * 100f).ToString("0")));*/
             #endregion
             #region Attributes
             dictValues.Add("Strength", BasicStats.Strength.ToString());
@@ -127,7 +102,21 @@ namespace Rawr.HealPriest
             dictValues.Add("Spirit", BasicStats.Spirit.ToString());
             #endregion
             #region Spell
-            dictValues.Add("Spell Power", BasicStats.SpellPower.ToString("0"));
+            #region Spell Power
+            s = String.Empty;
+            float intPower = BasicStats.Intellect - 10;
+            if (BasicStats.PriestInnerFire > 0)
+                s += String.Format("\n{0} from Inner Fire", PriestInformation.GetInnerFireSpellPowerBonus(character));
+            activeBuff = GetActiveBuffsByGroup("Spell Power");
+            if (activeBuff != null)
+                s += makeActiveBuffTextPercent(activeBuff, activeBuff.Stats.BonusSpellPowerMultiplier);
+            dictValues.Add("Spell Power", String.Format("{0}*{1} from {2} Intellect{3}",
+                BasicStats.SpellPower.ToString("0"),
+                intPower.ToString("0"),
+                BasicStats.Intellect.ToString("0"),
+                s
+                ));
+            #endregion
             #region Haste
             s = String.Empty;
             if (character.PriestTalents.Darkness > 0)
@@ -242,6 +231,8 @@ namespace Rawr.HealPriest
             dictValues.Add("Binding Heal", String.Format("{0}*{1}", spellBindingHeal.HPS().ToString("0"), spellBindingHeal.ToString()));
             SpellPrayerOfHealing spellProH = new SpellPrayerOfHealing(character, BasicStats);
             dictValues.Add("ProH", String.Format("{0}*{1}", spellProH.HPS().ToString("0"), spellProH.ToString()));
+            SpellPowerWordShield spellPWS = new SpellPowerWordShield(character, BasicStats);
+            dictValues.Add("PWS", String.Format("{0}*{1}", spellPWS.HPS().ToString("0"), spellPWS.ToString()));
             SpellResurrection spellResurrection = new SpellResurrection(character, BasicStats);
             dictValues.Add("Resurrection", String.Format("{0}*{1}", spellResurrection.CastTime.ToString("0.00"), spellResurrection.ToString()));
             #endregion 
