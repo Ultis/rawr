@@ -187,6 +187,7 @@ namespace Rawr.TankDK {
                 case "Health": return BasicStats.Health;
                 case "Hit Rating": return BasicStats.HitRating; // Raw Hit Rating
                 case "DPS": return DPS;
+                case "Mastery": return BasicStats.Mastery;
 
                 default: return 0.0f;
             }

@@ -271,6 +271,7 @@ Points individually may be important.",
                         "Health",
                         "Hit Rating",
                         "DPS",
+                        "Mastery",
                     };
                 }
                 return _optimizableCalculationLabels;
