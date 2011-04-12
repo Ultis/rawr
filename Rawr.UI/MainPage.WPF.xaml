@@ -167,8 +167,8 @@
                 <MenuItem Header="Compare Character to Another" Click="CompareCharacters_Click"/>
             </MenuItem>
             <MenuItem x:Name="ImportMenu" Header="Import" HorizontalAlignment="Left" Margin="4,0,4,0">
-                <MenuItem Header="Reload Current Character from Battle.Net"/>
-                <MenuItem Header="Reload Current Character from Rawr Addon"/>
+                <MenuItem Header="Reload Current Character from Battle.Net" Click="ReloadFromBNet_Click"/>
+                <MenuItem Header="Reload Current Character from Rawr Addon" Click="RawrAddonReload_Click"/>
                 <Separator/>
                 <MenuItem Header="Load Possible Upgrades from Wowhead (NYI)"/>
                 <MenuItem Header="Load Items From Wowhead Filter (NYI)"/>

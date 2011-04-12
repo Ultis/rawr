@@ -649,7 +649,7 @@ If that is still not working for you, right-click anywhere within the web versio
             foreach (string existingAvailableItem in character.AvailableItems)
             {
                 string itemId = existingAvailableItem.Split('.')[0];
-                if (character.AvailableItems.Contains(itemId)) { toRemove.Add(itemId); } // add items to a remove list 
+                if (this.Character.AvailableItems.Contains(itemId)) { toRemove.Add(itemId); } // add items to a remove list 
             }
             foreach (string itemId in toRemove)
             { // and now remove them from AvailableItems - fixes issue 19657
