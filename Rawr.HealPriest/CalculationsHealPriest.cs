@@ -816,7 +816,7 @@ namespace Rawr.HealPriest
                 solver = new Solver(stats, character);
             solver.Calculate(calc);*/
             SpellPrayerOfHealing proh = new SpellPrayerOfHealing(character, stats);
-            calc.HPSBurstPoints = proh.HPCT();
+            calc.BurstPoints = proh.HPCT();
 
             float manaRegen = StatConversion.GetSpiritRegenSec(stats.Spirit, stats.Intellect) * stats.SpellCombatManaRegeneration + stats.Mp5;
             float time = 60f * 8;
@@ -824,10 +824,10 @@ namespace Rawr.HealPriest
             float missingMana = useMana - manaRegen;
             float manaDrain = stats.Mana / missingMana;
             if (manaDrain > time)
-                calc.HPSSustainPoints = calc.HPSBurstPoints;
+                calc.SustainedPoints = calc.BurstPoints;
             else
-                calc.HPSSustainPoints = calc.HPSBurstPoints * manaDrain / time +  (time - manaDrain) / time * manaRegen / useMana * calc.HPSBurstPoints;
-            calc.OverallPoints = calc.HPSBurstPoints + calc.HPSSustainPoints;
+                calc.SustainedPoints = calc.BurstPoints * manaDrain / time +  (time - manaDrain) / time * manaRegen / useMana * calc.BurstPoints;
+            calc.OverallPoints = calc.BurstPoints + calc.SustainedPoints + calc.SurvPoints;
 
             return calc;
         }

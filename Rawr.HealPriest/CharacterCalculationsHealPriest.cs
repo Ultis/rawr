@@ -1,71 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
-namespace Rawr.HealPriest
-{
-
+namespace Rawr.HealPriest {
     public class CharacterCalculationsHealPriest : CharacterCalculationsBase
     {
+        #region Variables
         private Stats basicStats;
+        public Character Character { get { return character; } set { character = value; } }
         private Character character;
-
-        public float SpiritRegen { get; set; }
         public CharacterRace Race { get; set; }
-
-        public Character Character
-        {
-            get { return character; }
-            set { character = value; }
-        }
-      
         public Stats BasicStats
         {
             get { return basicStats; }
             set { basicStats = value; }
         }
+        #endregion
 
-        public override float OverallPoints
-        {
-            get
-            {
-                float f = 0f;
-                foreach (float f2 in subPoints)
-                    f += f2;
-                return f;
-            }
-            set { }
-        }
+        public float SpiritRegen { get; set; }
 
+        #region Points
+        private float _overallPoints = 0f;
+        public override float OverallPoints { get { return _overallPoints; } set { _overallPoints = value; } }
         private float[] subPoints = new float[] { 0f, 0f, 0f };
-        public override float[] SubPoints
-        {
-            get { return subPoints; }
-            set { subPoints = value; }
-        }
-
-        public float HPSBurstPoints
-        {
-            get { return subPoints[0]; }
-            set { subPoints[0] = value; }
-        }
-
-        public float HPSSustainPoints
-        {
-            get { return subPoints[1]; }
-            set { subPoints[1] = value; }
-        }
-
-        public float SurvivabilityPoints
-        {
-            get { return subPoints[2]; }
-            set { subPoints[2] = value; }
-        }
+        public override float[] SubPoints { get { return subPoints; } set { subPoints = value; } }
+        public float BurstPoints { get { return subPoints[0]; } set { subPoints[0] = value; } }
+        public float SustainedPoints { get { return subPoints[1]; } set { subPoints[1] = value; } }
+        public float SurvPoints { get { return subPoints[2]; } set { subPoints[2] = value; } }
+        #endregion
 
         protected Buff GetActiveBuffsByGroup(string group)
         {
-            for (int x = 0; x < character.ActiveBuffs.Count; x++)
-                if (character.ActiveBuffs[x].Group == group)
-                    return character.ActiveBuffs[x];
+            for (int x = 0; x < Character.ActiveBuffs.Count; x++)
+                if (Character.ActiveBuffs[x].Group == group)
+                    return Character.ActiveBuffs[x];
             return null;
         }
 
@@ -82,15 +50,15 @@ namespace Rawr.HealPriest
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
-            Stats baseStats = BaseStats.GetBaseStats(character);
+            Stats baseStats = BaseStats.GetBaseStats(Character);
             Buff activeBuff;
             string s;
-            ePriestSpec ps = PriestSpec.GetPriestSpec(character.PriestTalents);
+            ePriestSpec ps = PriestSpec.GetPriestSpec(Character.PriestTalents);
 
             #region General
             dictValues.Add("Health", BasicStats.Health.ToString("0"));
             dictValues.Add("Mana", BasicStats.Mana.ToString("0"));
-            dictValues.Add("Item Level", String.Format("{0}*Lowest: {1}\nHighest: {2}", character.GetAvgWornItemLevel.ToString("0"), character.GetMinWornItemLevel.ToString("0"), character.GetMaxWornItemLevel.ToString("0")));
+            dictValues.Add("Item Level", String.Format("{0}*Lowest: {1}\nHighest: {2}", Character.GetAvgWornItemLevel.ToString("0"), Character.GetMinWornItemLevel.ToString("0"), Character.GetMaxWornItemLevel.ToString("0")));
 /*            dictValues.Add("Speed", String.Format("{0}%*{0}% Run speed",
                 ((1f + BasicStats.MovementSpeed) * 100f).ToString("0")));*/
             #endregion
@@ -106,7 +74,7 @@ namespace Rawr.HealPriest
             s = String.Empty;
             float intPower = BasicStats.Intellect - 10;
             if (BasicStats.PriestInnerFire > 0)
-                s += String.Format("\n{0} from Inner Fire", PriestInformation.GetInnerFireSpellPowerBonus(character));
+                s += String.Format("\n{0} from Inner Fire", PriestInformation.GetInnerFireSpellPowerBonus(Character));
             activeBuff = GetActiveBuffsByGroup("Spell Power");
             if (activeBuff != null)
                 s += makeActiveBuffTextPercent(activeBuff, activeBuff.Stats.BonusSpellPowerMultiplier);
@@ -119,8 +87,8 @@ namespace Rawr.HealPriest
             #endregion
             #region Haste
             s = String.Empty;
-            if (character.PriestTalents.Darkness > 0)
-                s += String.Format("\n{0}% from {1} points in Darkness", character.PriestTalents.Darkness, character.PriestTalents.Darkness);
+            if (Character.PriestTalents.Darkness > 0)
+                s += String.Format("\n{0}% from {1} points in Darkness", Character.PriestTalents.Darkness, Character.PriestTalents.Darkness);
             activeBuff = GetActiveBuffsByGroup("Spell Haste");
             if (activeBuff != null)
                 s += makeActiveBuffTextPercent(activeBuff, activeBuff.Stats.SpellHaste);
@@ -193,12 +161,12 @@ namespace Rawr.HealPriest
             #region Defense
             dictValues.Add("Armor", String.Format("{0}*{1}% physical damage reduction from same level target",
                 BasicStats.Armor.ToString("0"),
-                (StatConversion.GetDamageReductionFromArmor(character.Level, BasicStats.Armor) * 100f).ToString("0.00")));
+                (StatConversion.GetDamageReductionFromArmor(Character.Level, BasicStats.Armor) * 100f).ToString("0.00")));
             dictValues.Add("Dodge", String.Format("{0}%", (BasicStats.Dodge * 100f).ToString("0.00")));
             dictValues.Add("Resilience", String.Format("{0}*{1}% damage reduction on attacks from other players\n{2}% damage reduction from spells",
                 BasicStats.Resilience.ToString("0"),
                 (StatConversion.GetDamageReductionFromResilience(BasicStats.Resilience) * 100f).ToString("0.00"),
-                (character.PriestTalents.InnerSanctum * 2f).ToString("0")));
+                (Character.PriestTalents.InnerSanctum * 2f).ToString("0")));
             #endregion
             #region Resistance
             string resistTxt = "{0}*PvP\n{1}\n\nBoss\n{2}";
@@ -213,27 +181,27 @@ namespace Rawr.HealPriest
             {
                 dictValues.Add(resistList[x], String.Format(resistTxt,
                     resistances[x].ToString("0"),
-                    StatConversion.GetResistanceTableString(character.Level, character.Level, resistances[x], 0f),
-                    StatConversion.GetResistanceTableString(character.Level + 3, character.Level, resistances[x], 0f)
+                    StatConversion.GetResistanceTableString(Character.Level, Character.Level, resistances[x], 0f),
+                    StatConversion.GetResistanceTableString(Character.Level + 3, Character.Level, resistances[x], 0f)
                     ));
             }           
             #endregion
             #region Model
             #endregion
             #region Holy Spells
-            SpellHeal spellHeal = new SpellHeal(character, BasicStats);
+            SpellHeal spellHeal = new SpellHeal(Character, BasicStats);
             dictValues.Add("Heal", String.Format("{0}*{1}", spellHeal.HPS().ToString("0"), spellHeal.ToString()));
-            SpellGreaterHeal spellGreaterHeal = new SpellGreaterHeal(character, BasicStats);
+            SpellGreaterHeal spellGreaterHeal = new SpellGreaterHeal(Character, BasicStats);
             dictValues.Add("Greater Heal", String.Format("{0}*{1}", spellGreaterHeal.HPS().ToString("0"), spellGreaterHeal.ToString()));
-            SpellFlashHeal spellFlashHeal = new SpellFlashHeal(character, BasicStats);
+            SpellFlashHeal spellFlashHeal = new SpellFlashHeal(Character, BasicStats);
             dictValues.Add("Flash Heal", String.Format("{0}*{1}", spellFlashHeal.HPS().ToString("0"), spellFlashHeal.ToString()));
-            SpellBindingHeal spellBindingHeal = new SpellBindingHeal(character, BasicStats);
+            SpellBindingHeal spellBindingHeal = new SpellBindingHeal(Character, BasicStats);
             dictValues.Add("Binding Heal", String.Format("{0}*{1}", spellBindingHeal.HPS().ToString("0"), spellBindingHeal.ToString()));
-            SpellPrayerOfHealing spellProH = new SpellPrayerOfHealing(character, BasicStats);
+            SpellPrayerOfHealing spellProH = new SpellPrayerOfHealing(Character, BasicStats);
             dictValues.Add("ProH", String.Format("{0}*{1}", spellProH.HPS().ToString("0"), spellProH.ToString()));
-            SpellPowerWordShield spellPWS = new SpellPowerWordShield(character, BasicStats);
+            SpellPowerWordShield spellPWS = new SpellPowerWordShield(Character, BasicStats);
             dictValues.Add("PWS", String.Format("{0}*{1}", spellPWS.HPS().ToString("0"), spellPWS.ToString()));
-            SpellResurrection spellResurrection = new SpellResurrection(character, BasicStats);
+            SpellResurrection spellResurrection = new SpellResurrection(Character, BasicStats);
             dictValues.Add("Resurrection", String.Format("{0}*{1}", spellResurrection.CastTime.ToString("0.00"), spellResurrection.ToString()));
             #endregion 
             #region Shadow Spells
