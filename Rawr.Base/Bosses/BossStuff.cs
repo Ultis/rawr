@@ -34,8 +34,8 @@ namespace Rawr {
         /// When DamageIsPerc is true DamagePerHit = 0.75f; would be 75% of Player's Health<br/>
         /// When this is a DoT is true DamagePerHit is just the Initial Damage. The Tick contains the remaining Damage<br/>
         /// </summary>
-        [DefaultValue(100*1000)]
-        public float DamagePerHit = 100*1000;
+        [DefaultValue(0)]
+        public float DamagePerHit = 0;
         /// <summary>When set to True, DamagePerHit will be seen as a Percentage. DamagePerHit = 0.75f; would be 75% of Player's Health</summary>
         [DefaultValue(false)]
         public bool DamageIsPerc = false;
@@ -51,7 +51,6 @@ namespace Rawr {
         /// <summary>if the attack is part of a Dual Wield, there is an additional 20% chance to Miss<para>This should flag the Buff... sort of</para></summary>
         [DefaultValue(false)]
         public bool IsDualWielding = false;
-
         /// <summary>In Seconds<para>Defaults to 0. Will not return a number higher than PhaseEndTime</para></summary>
         [DefaultValue(0f)]
         public float PhaseStartTime { get { return Math.Min(_phaseStartTime, _phaseEndTime); } set { _phaseStartTime = value; } }
@@ -60,6 +59,10 @@ namespace Rawr {
         [DefaultValue(20 * 60)]
         public float PhaseEndTime { get { return Math.Max(_phaseStartTime, _phaseEndTime); } set { _phaseEndTime = value; } }
         public float _phaseEndTime = 20 * 60;
+        /// <summary>The phase number that this attack sits in. This should only be dynamically assigned in a MultiDiffBoss constructor</summary>
+        [DefaultValue(1)]
+        public int PhaseNumber { get { return _phaseNumber; } set { _phaseNumber = value; } }
+        private int _phaseNumber = 1;
 
         #region DoT Stats
         /// <summary>Whether this attack is a DoT</summary>
@@ -89,6 +92,8 @@ namespace Rawr {
         #endregion
 
         #region Player Avoidance
+        /// <summary>Missable = Dodgable = Parryable = Blockable = false</summary>
+        public void SetUnavoidable() { Missable = Dodgable = Parryable = Blockable = false; }
         /// <summary>Returns True if any of the Avoidance types are true</summary>
         public bool Avoidable { get { return Missable || Dodgable || Parryable || Blockable; } }
         /// <summary>Can this attack Miss the player</summary>
@@ -209,6 +214,8 @@ namespace Rawr {
         }
         #endregion
         #region Variables
+        /// <summary>The Name of the Attack</summary>
+        public string Name = "Unnamed";
         /// <summary>
         /// The amount of time between activations of this Impedance, in sec
         /// <para>Eg- This Impedance occurs every 45 sec</para>
@@ -228,7 +235,11 @@ namespace Rawr {
         /// <summary>In Seconds<para>Defaults to 20*60 (=1200). Will not return a number lower than PhaseStartTime</para></summary>
         [DefaultValue(20 * 60)]
         public float PhaseEndTime { get { return Math.Max(_phaseStartTime, _phaseEndTime); } set { _phaseEndTime = value; } }
-        public float _phaseEndTime = 20 * 60;
+        private float _phaseEndTime = 20 * 60;
+        /// <summary>The phase number that this attack sits in. This should only be dynamically assigned in a MultiDiffBoss constructor</summary>
+        [DefaultValue(1)]
+        public int PhaseNumber { get { return _phaseNumber; } set { _phaseNumber = value; } }
+        private int _phaseNumber = 1;
         /// <summary>
         /// A Percentage, value range from 0% to 100% (0.00f to 1.00f)
         /// <para>Eg- An Impedance effects one random raid target:</para>
@@ -425,6 +436,8 @@ namespace Rawr {
         }
         #endregion
         #region Variables
+        /// <summary>The Name of the Attack</summary>
+        public string Name = "Unnamed";
         /// <summary>In Seconds<para>Defaults to -1 as an 'invalid' flag</para></summary>
         public float Frequency = -1;
         /// <summary>In MilliSeconds (1/1000 of a second)<para>Defaults to 20 seconds</para></summary>
@@ -439,6 +452,10 @@ namespace Rawr {
         [DefaultValue(20 * 60)]
         public float PhaseEndTime { get { return Math.Max(_phaseStartTime, _phaseEndTime); } set { _phaseEndTime = value; } }
         public float _phaseEndTime = 20 * 60;
+        /// <summary>The phase number that this attack sits in. This should only be dynamically assigned in a MultiDiffBoss constructor</summary>
+        [DefaultValue(1)]
+        public int PhaseNumber { get { return _phaseNumber; } set { _phaseNumber = value; } }
+        private int _phaseNumber = 1;
         /// <summary>The Number of Targets in this Target Group<br/>Defaults to 2</summary>
         public float NumTargs = 2;
         /// <summary>
@@ -569,7 +586,11 @@ namespace Rawr {
         /// <summary>In Seconds<para>Defaults to 20*60 (=1200). Will not return a number lower than PhaseStartTime</para></summary>
         [DefaultValue(20*60)]
         public float PhaseEndTime { get { return Math.Max(_phaseStartTime, _phaseEndTime); } set { _phaseEndTime = value; } }
-        public float _phaseEndTime = 20 * 60;
+        private float _phaseEndTime = 20 * 60;
+        /// <summary>The phase number that this attack sits in. This should only be dynamically assigned in a MultiDiffBoss constructor</summary>
+        [DefaultValue(1)]
+        public int PhaseNumber { get { return _phaseNumber; } set { _phaseNumber = value; } }
+        private int _phaseNumber = 1;
 
         /// <summary>
         /// A Percentage, value range from 0% to 100% (0.00f to 1.00f)
@@ -666,4 +687,27 @@ namespace Rawr {
         }
         #endregion
     }
+
+    public class Phase
+    {
+        public string Name = "Phase";
+        public List<Attack> Attacks = new List<Attack>();
+        public List<TargetGroup> Targets = new List<TargetGroup>();
+        public List<BuffState> BuffStates = new List<BuffState>();
+        public List<Impedance> Fears = new List<Impedance>();
+        public List<Impedance> Roots = new List<Impedance>();
+        public List<Impedance> Stuns = new List<Impedance>();
+        public List<Impedance> Moves = new List<Impedance>();
+        public List<Impedance> Silences = new List<Impedance>();
+        public List<Impedance> Disarms = new List<Impedance>();
+        public Attack LastAttack { get { return Attacks[Attacks.Count - 1]; } }
+        public TargetGroup LastTarget { get { return Targets[Targets.Count - 1]; } }
+        public BuffState LastBuffState { get { return BuffStates[BuffStates.Count - 1]; } }
+        public Impedance LastFear { get { return Fears[Fears.Count - 1]; } }
+        public Impedance LastRoot { get { return Roots[Roots.Count - 1]; } }
+        public Impedance LastStun { get { return Stuns[Stuns.Count - 1]; } }
+        public Impedance LastMove { get { return Moves[Moves.Count - 1]; } }
+        public Impedance LastSilence { get { return Silences[Silences.Count - 1]; } }
+        public Impedance LastDisarm { get { return Disarms[Disarms.Count - 1]; } }
+    };
 }

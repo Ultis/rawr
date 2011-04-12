@@ -171,6 +171,7 @@ namespace Rawr.Bosses
                 });
                 this[i].Attacks[this[i].Attacks.Count - 1].SetAffectsRoles_All();
                 this[i].Moves.Add(new Impedance() {
+                    Name = "Fel Firestorm (Getting Away)",
                     Frequency = 133f,
                     // Fires are still around 3 seconds after he finishes channeling the spell and people need to get back to their groups
                     Duration = (15f + 3f) * 1000f,
@@ -191,14 +192,14 @@ namespace Rawr.Bosses
             Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
             #endregion
             #region Impedances
-            for (int i = 0; i < 2; i++)
+            /*for (int i = 0; i < 2; i++)
             {
                 //Moves;
                 //Stuns;
                 //Fears;
                 //Roots;
                 //Disarms;
-            }
+            }*/
             TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
             #endregion
             /* TODO:
@@ -251,21 +252,17 @@ namespace Rawr.Bosses
                     DamagePerHit = (24375f + 25625f) / 2f,
                     DamageType = ItemDamageType.Fire,
                     MaxNumTargets = Max_Players[i],
-                    // TODO
-                    // Not cast in P2
-                    AttackSpeed = 32f,
-
-                    // Range needs to run out of it.
-                    Interruptable = true,
+                    AttackSpeed = 32f, // TODO: Not cast in P2
+                    Interruptable = true, // Range needs to run out of it.
                 });
                 this[i].Attacks[this[i].Attacks.Count - 1].SetAffectsRoles_Healers();
                 this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
                     = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS]
                     = true;
                 this[i].Moves.Add(new Impedance {
+                    Name = "Pillar of Flame (Getting Away)",
                     Frequency = this[i].Attacks[this[i].Attacks.Count - 1].AttackSpeed,
-                    // takes about 2 seconds to move out of the Pillar
-                    Duration = 2000f,
+                    Duration = 2 * 1000f, // takes about 2 seconds to move out of the Pillar
                     // Max Players - 2 players for the MT and OT and assume 1/3rd of the remainder is melee
                     Chance = ((Max_Players[i] - 2f) * 2f / 3f) / Max_Players[i],
                     Breakable = true,
@@ -280,6 +277,7 @@ namespace Rawr.Bosses
                 // killed within 30 seconds on normal; kited and killed on the go between each slump on heroic.
                 this[i].Targets.Add(new TargetGroup
                 {
+                    Name = "Parasites",
                     NumTargs = 9f,
                     Chance = 1f,
                     Duration = new float[] { 30f, 30f, 90f, 90f }[i] * 1000f,
@@ -302,13 +300,13 @@ namespace Rawr.Bosses
                     // interuptable by moving away from the parasites
                     Interruptable = true,
                 });
-                this[i].Targets[this[i].Targets.Count - 1].SetAffectsRoles_Healers();
+                this[i].Attacks[this[i].Targets.Count - 1].SetAffectsRoles_Healers();
                 this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
                     = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS]
                     = true;
                 // This should not affect Melee and MT/OT only range and healers
-                this[i].Moves.Add(new Impedance
-                {
+                this[i].Moves.Add(new Impedance {
+                    Name = "Parasitic Infection (Avoidance)",
                     Frequency = this[i].Attacks[this[i].Attacks.Count - 1].AttackSpeed,
                     Chance = 1f,
                     Duration = 3f * 1000f,
@@ -321,6 +319,7 @@ namespace Rawr.Bosses
                     // Kiting Tank is moving all the time on heroic
                     this[i].Moves.Add(new Impedance
                     {
+                        Name = "Kiting Tank Movement",
                         Chance = new float[] { 0f, 0f, 1f, 1f }[i] / Max_Players[i],
                         Duration = new float[] { 0f, 0f, BerserkTimer[i], BerserkTimer[i] }[i] * 1000f,
                         Breakable = true, // movement is always breakable
@@ -389,21 +388,20 @@ namespace Rawr.Bosses
 
                 // While Mangle is used, half the room is hit with Ignition that affects everyone
                 // Assume 3 seconds to get out
-                this[i].Attacks.Add(new Attack
-                {
+                this[i].Attacks.Add(new Attack {
                     Name = "Ignition",
                     AttackType = ATTACK_TYPES.AT_AOE,
                     IsDoT = true,
                     DamagePerHit = (23125f + 26875f) / 2f,
                     DamageType = ItemDamageType.Physical,
-                    // should not last more than 10 seconds
-                    Duration = 10f,
+                    Duration = 10f, // should not last more than 10 seconds
                     TickInterval = 1f,
                     MaxNumTargets = Max_Players[i],
                     AttackSpeed = 90f,
                 });
                 this[i].Attacks[this[i].Attacks.Count - 1].SetAffectsRoles_All();
                 this[i].Moves.Add(new Impedance {
+                    Name = "Ignition (Getting Away)",
                     Chance = 1f,
                     Duration = 3f * 1000f,
                     Breakable = true,
@@ -430,6 +428,8 @@ namespace Rawr.Bosses
                     float timer = BerserkTimer[i] / ((BerserkTimer[i] * .7f) / 30f);
                     this[i].Targets.Add(new TargetGroup
                     {
+                        Name = "Blazing Bone Constructs",
+                        LevelOfTargets = (int)POSSIBLE_LEVELS.LVLP0,
                         NearBoss = true,
                         NumTargs = 1f,
                         Chance = new float[] { 0f, 0f, 1f, 1f }[i],
@@ -440,7 +440,7 @@ namespace Rawr.Bosses
                     this[i].Targets[this[i].Targets.Count - 1].AffectsRole[PLAYER_ROLES.OffTank] = true;
                     this[i].Attacks.Add(new Attack
                     {
-                        Name = "Blazing Bone Construct",
+                        Name = "Blazing Bone Constructs Damage",
                         DamagePerHit = BossHandler.StandardMeleePerHit[(int)Content[i]] / 2f,
                         MaxNumTargets = new float[] { 0f, 0f, 1f, 1f }[i],
                         AttackSpeed = 2.0f,
@@ -473,6 +473,7 @@ namespace Rawr.Bosses
                         = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS]
                         = true;
                     this[i].Moves.Add(new Impedance {
+                        Name = "Blazing Inferno (Getting Away)",
                         Frequency = this[i].Attacks[this[i].Attacks.Count - 1].AttackSpeed,
                         Chance = ((Max_Players[i] - 2f) * 2f / 3f) / Max_Players[i], // Max Players - 2 players for the MT and OT and assume 1/3rd of the remainder is melee
                         Duration = 2f * 1000f, // takes about 2 seconds to move out of the Pillar
@@ -527,14 +528,14 @@ namespace Rawr.Bosses
             Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
             #endregion
             #region Impedances
-            for (int i = 0; i < 2; i++)
+            /*for (int i = 0; i < 2; i++)
             {
                 //Moves;
                 //Stuns;
                 //Fears;
                 //Roots;
                 //Disarms;
-            }
+            }*/
             TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
             #endregion
             /* TODO:
@@ -623,6 +624,7 @@ namespace Rawr.Bosses
                 this[i].Attacks[this[i].Attacks.Count - 1].SetAffectsRoles_DPS();
                 this[i].Attacks[this[i].Attacks.Count - 1].SetAffectsRoles_Healers();
                 this[i].Moves.Add(new Impedance() {
+                    Name = "Acquiring Target - Flamethrower (Avoidance)",
                     Frequency = this[i].Attacks[this[i].Attacks.Count-1].AttackSpeed,
                     Duration = 4f * 1000f, // You have 4 seconds to get out of the way
                     Chance = 1f / Max_Players[i], // One random member of the raid is the one that gets targetted
@@ -677,14 +679,14 @@ namespace Rawr.Bosses
             Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
             #endregion
             #region Impedances
-            for (int i = 0; i < 2; i++)
+            /*for (int i = 0; i < 2; i++)
             {
                 //Moves;
                 //Stuns;
                 //Fears;
                 //Roots;
                 //Disarms;
-            }
+            }*/
             TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
             #endregion
         }
@@ -915,15 +917,158 @@ namespace Rawr.Bosses
             #region Attacks
             for (int i = 0; i < 4; i++)
             {
-                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
-
-                // 10 minute Berserk Timer 80+40=120 600/120=5. At most 10 phases (5 each)
-                //List<Attack> attacks = new List<Attack>();
-                //int phaseNum = 1;
-                //int phaseSubNum = 1;
                 #region Ground Phase (80 seconds)
+                Phase GroundPhase = new Phase() { Name = "Ground Phase" };
+                /* Melee - There is very little tank damage in this fight. Atramedes physical hits are for 18k-25k(10m)/25k-40k(25m) damage, however, there are
+                 *      a lot of breaks in his attacks such as when he is channeling Searing Flames or Sonic Breath, and the entire time he is in the air phase which
+                 *      does not need a tank. */
+                GroundPhase.Attacks.Add(GenAStandardMelee(this[i].Content));
+                GroundPhase.LastAttack.DamagePerHit *= 0.75f; // simming the low damage as 75% normal. TODO: Analyze WoL to find proper values
+                /* Devastation - This ability is a nonstop blasting every 1.5 seconds of Devastation fireball attacks on a player that has become Noisy! which each deal 25k fire damage.
+                 * NOTE: This attack shouldn't be modelled as it's never supposed to happen */
+                // Modulation - This is an unavoidable raid-wide pulse that deals 20k Shadow Damage and increases sound level by 7.
+                GroundPhase.Attacks.Add(new Attack {
+                    Name = "Modulation",
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamageType = ItemDamageType.Shadow,
+                    DamagePerHit = 20000,
+                    AttackSpeed = 45,
+                    MaxNumTargets = Max_Players[i],
+                    Missable = false,
+                    Dodgable = false,
+                    Parryable = false,
+                    Blockable = false,
+                });
+                GroundPhase.LastAttack.SetAffectsRoles_All();
+                /* Searing Flames - This is an 8 second channeled cast that can and should be interrupted by using an Ancient Dwarven Shield. Otherwise, every second
+                 *      the entire raid will take 10k fire damage and get a stacking debuff that increases further fire damage by 25% per stack for 4 seconds.
+                 *      Additionally, each tick of Searing Flame causes sound meters to increase by 10. */
+                GroundPhase.Attacks.Add(new Attack {
+                    Name = "Searing Flames",
+                    AttackType = ATTACK_TYPES.AT_AOE, IsDoT = true,
+                    DamageType = ItemDamageType.Fire,
+                    DamagePerTick = 10000,
+                    TickInterval = 1,
+                    Duration = 8,
+                    AttackSpeed = 45,
+                    MaxNumTargets = Max_Players[i],
+                    Missable = false,
+                    Dodgable = false,
+                    Parryable = false,
+                    Blockable = false,
+                });
+                GroundPhase.LastAttack.SetAffectsRoles_All();
+                GroundPhase.BuffStates.Add(new BuffState {
+                     Name = "Searing Flames (Debuff)",
+                     Frequency = GroundPhase.LastAttack.AttackSpeed,
+                     Duration = GroundPhase.LastAttack.Duration,
+                     Chance = 1f,
+                     Breakable = true,
+                     Stats = { },
+                     AffectsRole = GroundPhase.LastAttack.AffectsRole,
+                });
+                GroundPhase.LastBuffState.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { FireDamageTakenMultiplier = 0.05f, }, 8, 1, 1f, 8));
+                /* Sonic Breath - Atramedes will begin this ability by putting a Tracking debuff on the player in the raid (with the highest sound level???) and after a
+                 *      2 second cast, will begin to channel this Sonic Breath for 6 second in the direction of the tracked player. Anyone caught in the path will take 15k fire
+                 *      damage per second and have their sound level increased by 20 per tick. During this channel, Atramedes will spin to follow the path of the tracked target at a
+                 *      speed relative to that players sound level, moving faster if their sound meter is high, or slower if it is low. */
+                GroundPhase.Attacks.Add(new Attack {
+                    Name = "Sonic Breath",
+                    AttackType = ATTACK_TYPES.AT_RANGED, IsDoT = true,
+                    DamageType = ItemDamageType.Fire,
+                    DamagePerTick = 15000,
+                    TickInterval = 1,
+                    Duration = 6,
+                    AttackSpeed = 45,
+                    MaxNumTargets = 3, // Assuming no more than 3 would get hit at once
+                    Missable = false,
+                    Dodgable = false,
+                    Parryable = false,
+                    Blockable = false,
+                });
+                GroundPhase.LastAttack.SetAffectsRoles_All();
+                if (i == 2 || i == 3) {
+                    /* Sonar Pulse - Three of these pulsating discs are emitted from Atramedes and float straight in a random direction in the room. Players that are hit by these will
+                     *      have their sound meter increased by 5 every 0.5 seconds that they are in contact. They should always be avoided, even though they do no damage directly.
+                     *      (However, 6k arcane damage per tick in heroic) */
+                    GroundPhase.Attacks.Add(new Attack {
+                        Name = "Sonic Breath",
+                        AttackType = ATTACK_TYPES.AT_RANGED, IsDoT = true,
+                        DamageType = ItemDamageType.Arcane,
+                        DamagePerTick = 6000,
+                        TickInterval = 1,
+                        Duration = 6,
+                        AttackSpeed = 45,
+                        MaxNumTargets = 2, // Assuming no more than 2 would get hit at once
+                        Missable = false,
+                        Dodgable = false,
+                        Parryable = false,
+                        Blockable = false,
+                    });
+                    GroundPhase.LastAttack.SetAffectsRoles_All();
+                    /* Obnoxious Fiends - Two will spawn per ground phase—one in the middle and one towards the end. These attach themselves to a random raid member and must be burned
+                     *      down immediately by the raid. They have minimal health but cast Obnoxious, an cast which gives the attached player 10 additional sound if not interrupted. */
+                    GroundPhase.Targets.Add(new TargetGroup {
+                        Name = "Obnoxious Fiends",
+                        LevelOfTargets = (int)POSSIBLE_LEVELS.LVLP0,
+                        NearBoss = false,
+                        NumTargs = 2,
+                        Frequency = 45,
+                        Duration = 10,
+                        Chance = 2f / (float)Max_Players[i],
+                    });
+                    GroundPhase.LastTarget.SetAffectsRoles_All();
+                }
                 #endregion
                 #region Air Phase (40 seconds)
+                // In the Air:
+                Phase AirPhase = new Phase() { Name = "Air Phase" };
+                /* Sonar Bomb - Atramedes marks several locations on the ground with what look like Sonar Pulses, and after 3 seconds that place will be bombed which hits everyone within
+                 *      (8???) yards and deals 10k arcane damage and increases sound level by 20. (30k damage and 30 sound level in heroic)
+                 *      NOTE: Not modelling this one as you shouldn't get hit by them */
+                /* Sonic Fireball - To prevent the raid from clumping in 1 place, Atramedes will occasionally launch a few of these fireballs in the location of raid members,
+                 *      each dealing 30k fire damage to all players within (8??) yards */
+                AirPhase.Attacks.Add(new Attack {
+                    Name = "Sonic Fireball",
+                    AttackType = ATTACK_TYPES.AT_RANGED,
+                    DamageType = ItemDamageType.Fire,
+                    DamagePerHit = 30000,
+                    AttackSpeed = 45,
+                    MaxNumTargets = (float)Max_Players[i] / 3f, // Assuming 2/3 of the players aren't in range of someone that gets blasted
+                });
+                AirPhase.LastAttack.SetUnavoidable();
+                AirPhase.LastAttack.SetAffectsRoles_All();
+                AirPhase.Moves.Add(new Impedance {
+                     Name = "Sonic Fireball (Avoiding)",
+                     AffectsRole = AirPhase.LastAttack.AffectsRole,
+                     Frequency = AirPhase.LastAttack.AttackSpeed,
+                     Duration = 2f * 1000f,
+                     Chance = ((float)Max_Players[i] - 3) / (float)Max_Players[i], // All but 3 raid members need to run
+                     Breakable = true,
+                });
+                /* Roaring Flame Breath - This ability is used throughout all of the air phase. He channels a Roaring Flame Breath dealing 10k fire damage that ticks every 0.5
+                 *      seconds and follows in the path of the chosen raid member (with the highest sound level???) and moves to follow it at a speed relative to that players sound
+                 *      level, moving faster if their sound meter is high, or slower if it is low. In the wake of this ability there will be patches of Roaring Flame which deal 15k
+                 *      fire damage and increase sound level by 10 to players that touch them. Additionally, players that stand in the patches too long will gain the debuff Roaring
+                 *      Flame which deals an additional 15k fire damage and then ticks every second for 4 seconds resulting in 8k fire damage and a sound meter increase by 5.
+                 *      The ground Roaring Flame patches despawn after 45 seconds.
+                 *      (*Note: During this phase if the chased player's sound level is getting high, someone use use an Ancient Dwarven Shield to reset all sound meters, stun
+                 *      Atramedes, and force him to start pursuit again at the slowest speed following whoever caused the Resonating Clash.
+                 *  TODO: Holding off on modelling this just yet */
+                #endregion
+                #region Apply Phases
+                // 10 minute Berserk Timer 80+40=120 600/120=5. At most 10 phases (5 each)
+                int phaseStartTime = 0;
+                AddAPhasesValues(GroundPhase,  i, 1, phaseStartTime, 80); phaseStartTime += 80;
+                AddAPhasesValues(AirPhase,     i, 2, phaseStartTime, 40); phaseStartTime += 40;
+                AddAPhasesValues(GroundPhase,  i, 3, phaseStartTime, 80); phaseStartTime += 80;
+                AddAPhasesValues(AirPhase,     i, 4, phaseStartTime, 40); phaseStartTime += 40;
+                AddAPhasesValues(GroundPhase,  i, 5, phaseStartTime, 80); phaseStartTime += 80;
+                AddAPhasesValues(AirPhase,     i, 6, phaseStartTime, 40); phaseStartTime += 40;
+                AddAPhasesValues(GroundPhase,  i, 7, phaseStartTime, 80); phaseStartTime += 80;
+                AddAPhasesValues(AirPhase,     i, 8, phaseStartTime, 40); phaseStartTime += 40;
+                AddAPhasesValues(GroundPhase,  i, 9, phaseStartTime, 80); phaseStartTime += 80;
+                AddAPhasesValues(AirPhase,     i,10, phaseStartTime, 40);
                 #endregion
             }
             #endregion
@@ -938,14 +1083,14 @@ namespace Rawr.Bosses
             Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
             #endregion
             #region Impedances
-            for (int i = 0; i < 2; i++)
+            /*for (int i = 0; i < 2; i++)
             {
                 //Moves;
                 //Stuns;
                 //Fears;
                 //Roots;
                 //Disarms;
-            }
+            }*/
             TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
             #endregion
             /* TODO:
@@ -955,44 +1100,6 @@ namespace Rawr.Bosses
              *      immediately cast Sonic Flames to instantly destroy and melt the Ancient Dwarven Shield that was used.
              *      (*Note: The player that uses the Ancient Dwarven Shield will get an invisible trigger from the Resonating Clash, making them the defaut
              *      for any of Atramedes sound level based attacks until another player passes their sound level.
-             *
-             * On the ground:
-             * Melee - There is very little tank damage in this fight. Atramedes physical hits are for 18k-25k(10m)/25k-40k(25m) damage, however, there are
-             *      a lot of breaks in his attacks such as when he is channeling Searing Flames or Sonic Breath, and the entire time he is in the air phase which
-             *      does not need a tank.
-             *
-             * Devastation - This ability is a nonstop blasting every 1.5 seconds of Devastation fireball attacks on a player that has become Noisy! which each deal 25k fire damage.
-             *
-             * Modulation - This is an unavoidable raid-wide pulse that deals 20k Shadow Damage and increases sound level by 7.
-             *
-             * Searing Flames - This is an 8 second channeled cast that can and should be interrupted via using and Ancient Dwarven Shield. Otherwise, every second
-             *      the entire raid will take 10k fire damage and get a stacking debuff that increases further fire damage by 25% per stack for 4 seconds.
-             *      Additionally, each tick of Searing Flame causes sound meters to increase by 10.
-             *
-             * Sonic Breath - Atramedes will begin this ability by putting a Tracking debuff on the player in the raid (with the highest sound level???) and after a
-             *      2 second cast, will begin to channel this Sonic Breath for 6 second in the direction of the tracked player. Anyone caught in the path will take 15k fire
-             *      damage per second and have their sound level increased by 20 per tick. During this channel, Atramedes will spin to follow the path of the tracked target at a
-             *      speed relative to that players sound level, moving faster is their sound meter is high, or slower if it is low.
-             *
-             * Sonar Pulse - Three of these pulsating discs are emited from Atramedes an float straight in a random direction in the room. Players that are hit by these will
-             *      have their sound meter increased by 5 every 0.5 seconds that they are in contact. They should always be avoided, even though they do no damage directly.
-             *      (However, 6k arcane damage per tick in heroic)
-             *
-             * In the Air:
-             * Sonar Bomb - Atramedes marks several locations on the ground with what look like Sonar Pulses, and after 3 seconds that place will be bombed which hits everyone within
-             *      (8???) yards and deals 10k arcane damage and increases sound level by 20. (30k damage and 30 sound level in heroic)
-             *
-             * Sonic Fireball - To prevent the raid from clumping in 1 place, Atramedes will occasionally launch a few of these fireballs in the location of raid members,
-             *      each dealing 30k fire damage to all players within (8??) yards.
-             *
-             * Roaring Flame Breath - This ability is used throughout all of the air phase. He channels a Roaring Flame Breath dealing 10k fire damage that ticks every 0.5
-             *      seconds and follows in the path of the chosen raid member (with the highest sound level???) and moves to follow it at a speed relative to that players sound
-             *      level, moving faster is their sound meter is high, or slower if it is low. In the wake of this ability there will be patches of Roaring Flame which deal 15k
-             *      fire damage and increase sound level by 10 to players that touch them. Additionally, players that stand in the patches too long will gain the debuff Roaring
-             *      Flame which deals an additional 15k fire damage and then ticks every second for 4 seconds resulting in 8k fire damage and a sound meter increase by 5.
-             *      The ground Roaring Flame patches despawn after 45 seconds.
-             *      (*Note: During this phase if the chased player's sound level is getting high, someone use use an Ancient Dwarven Shield to reset all sound meters, stun
-             *      Atramedes, and force him to start pursuit again at the slowest speed following whoever caused the Resonating Clash.
              */
         }
     }

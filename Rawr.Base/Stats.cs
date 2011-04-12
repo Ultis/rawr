@@ -201,6 +201,9 @@ namespace Rawr
         BonusHolyDamageMultiplier,
         BonusDiseaseDamageMultiplier,
         #endregion
+        #region ===== Boss Handler Stats =====
+        FireDamageTakenMultiplier,
+        #endregion
         #endregion
         #region Added by Death Knights [Verified Jothay 2011-03-29]
         // Both
@@ -1785,6 +1788,16 @@ namespace Rawr
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusDiseaseDamageMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusDiseaseDamageMultiplier] = value; }
+        }
+        #endregion
+        #region ===== Boss Handler Stats =====
+        [DefaultValueAttribute(0f)]
+        [DisplayName("% Fire Damage Taken Multiplier")]
+        [Percentage]
+        [Category("Boss Handler")]
+        public float FireDamageTakenMultiplier {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.FireDamageTakenMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.FireDamageTakenMultiplier] = value; }
         }
         #endregion
         #endregion

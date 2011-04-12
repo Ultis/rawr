@@ -1572,6 +1572,38 @@ namespace Rawr {
             Min_Healers = new int[] { 2, 5, 2, 5 };
         }
         #region Variable Convenience Overrides
+
+        protected void AddAPhasesValues(Phase phase, int version, int phaseNumber, float phaseStartTime, float phaseDuration)
+        {
+            foreach (Attack i in phase.Attacks) { i.PhaseNumber       = phaseNumber; i.PhaseStartTime = phaseStartTime; i.PhaseEndTime = phaseStartTime + phaseDuration; i.Name += string.Format(" {{{0} ({1})}}", phase.Name, phaseNumber); }
+            foreach (TargetGroup i in phase.Targets) { i.PhaseNumber  = phaseNumber; i.PhaseStartTime = phaseStartTime; i.PhaseEndTime = phaseStartTime + phaseDuration; i.Name += string.Format(" {{{0} ({1})}}", phase.Name, phaseNumber); }
+            foreach (BuffState i in phase.BuffStates) { i.PhaseNumber = phaseNumber; i.PhaseStartTime = phaseStartTime; i.PhaseEndTime = phaseStartTime + phaseDuration; i.Name += string.Format(" {{{0} ({1})}}", phase.Name, phaseNumber); }
+            foreach (Impedance i in phase.Fears) { i.PhaseNumber      = phaseNumber; i.PhaseStartTime = phaseStartTime; i.PhaseEndTime = phaseStartTime + phaseDuration; i.Name += string.Format(" {{{0} ({1})}}", phase.Name, phaseNumber); }
+            foreach (Impedance i in phase.Roots) { i.PhaseNumber      = phaseNumber; i.PhaseStartTime = phaseStartTime; i.PhaseEndTime = phaseStartTime + phaseDuration; i.Name += string.Format(" {{{0} ({1})}}", phase.Name, phaseNumber); }
+            foreach (Impedance i in phase.Stuns) { i.PhaseNumber      = phaseNumber; i.PhaseStartTime = phaseStartTime; i.PhaseEndTime = phaseStartTime + phaseDuration; i.Name += string.Format(" {{{0} ({1})}}", phase.Name, phaseNumber); }
+            foreach (Impedance i in phase.Moves) { i.PhaseNumber      = phaseNumber; i.PhaseStartTime = phaseStartTime; i.PhaseEndTime = phaseStartTime + phaseDuration; i.Name += string.Format(" {{{0} ({1})}}", phase.Name, phaseNumber); }
+            foreach (Impedance i in phase.Silences) { i.PhaseNumber   = phaseNumber; i.PhaseStartTime = phaseStartTime; i.PhaseEndTime = phaseStartTime + phaseDuration; i.Name += string.Format(" {{{0} ({1})}}", phase.Name, phaseNumber); }
+            foreach (Impedance i in phase.Disarms) { i.PhaseNumber    = phaseNumber; i.PhaseStartTime = phaseStartTime; i.PhaseEndTime = phaseStartTime + phaseDuration; i.Name += string.Format(" {{{0} ({1})}}", phase.Name, phaseNumber); }
+            Attack[] attacks      = new Attack[phase.Attacks.Count]; phase.Attacks.CopyTo(attacks);
+            TargetGroup[] targets = new TargetGroup[phase.Targets.Count]; phase.Targets.CopyTo(targets);
+            BuffState[] buffs     = new BuffState[phase.BuffStates.Count]; phase.BuffStates.CopyTo(buffs);
+            Impedance[] fears     = new Impedance[phase.Fears.Count]; phase.Fears.CopyTo(fears);
+            Impedance[] roots     = new Impedance[phase.Roots.Count]; phase.Roots.CopyTo(roots);
+            Impedance[] stuns     = new Impedance[phase.Stuns.Count]; phase.Stuns.CopyTo(stuns);
+            Impedance[] moves     = new Impedance[phase.Moves.Count]; phase.Moves.CopyTo(moves);
+            Impedance[] silences  = new Impedance[phase.Silences.Count]; phase.Silences.CopyTo(silences);
+            Impedance[] disarms   = new Impedance[phase.Disarms.Count]; phase.Disarms.CopyTo(disarms);
+            this[version].Attacks.AddRange(attacks);
+            this[version].Targets.AddRange(targets);
+            this[version].BuffStates.AddRange(buffs);
+            this[version].Fears.AddRange(fears);
+            this[version].Roots.AddRange(roots);
+            this[version].Stuns.AddRange(stuns);
+            this[version].Moves.AddRange(moves);
+            this[version].Silences.AddRange(silences);
+            this[version].Disarms.AddRange(disarms);
+        }
+
         // Info
         public string Name
         {
