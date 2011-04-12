@@ -124,6 +124,34 @@ namespace Rawr {
             }
             set { _affectsRole = value; }
         }
+        public void SetAffectsRoles_All() {
+            AffectsRole[PLAYER_ROLES.MainTank]
+                = AffectsRole[PLAYER_ROLES.OffTank]
+                = AffectsRole[PLAYER_ROLES.TertiaryTank]
+                = AffectsRole[PLAYER_ROLES.MeleeDPS]
+                = AffectsRole[PLAYER_ROLES.RangedDPS]
+                = AffectsRole[PLAYER_ROLES.MainTankHealer]
+                = AffectsRole[PLAYER_ROLES.OffAndTertTankHealer]
+                = AffectsRole[PLAYER_ROLES.RaidHealer]
+                = true;
+        }
+        public void SetAffectsRoles_Tanks() {
+            AffectsRole[PLAYER_ROLES.MainTank]
+                = AffectsRole[PLAYER_ROLES.OffTank]
+                = AffectsRole[PLAYER_ROLES.TertiaryTank]
+                = true;
+        }
+        public void SetAffectsRoles_DPS() {
+            AffectsRole[PLAYER_ROLES.MeleeDPS]
+                = AffectsRole[PLAYER_ROLES.RangedDPS]
+                = true;
+        }
+        public void SetAffectsRoles_Healers() {
+            AffectsRole[PLAYER_ROLES.MainTankHealer]
+                = AffectsRole[PLAYER_ROLES.OffAndTertTankHealer]
+                = AffectsRole[PLAYER_ROLES.RaidHealer]
+                = true;
+        }
         #endregion
         #region Player Negation
         [DefaultValue(false)]
@@ -262,6 +290,34 @@ namespace Rawr {
                 });
             }
             set { _affectsRole = value; }
+        }
+        public void SetAffectsRoles_All() {
+            AffectsRole[PLAYER_ROLES.MainTank]
+                = AffectsRole[PLAYER_ROLES.OffTank]
+                = AffectsRole[PLAYER_ROLES.TertiaryTank]
+                = AffectsRole[PLAYER_ROLES.MeleeDPS]
+                = AffectsRole[PLAYER_ROLES.RangedDPS]
+                = AffectsRole[PLAYER_ROLES.MainTankHealer]
+                = AffectsRole[PLAYER_ROLES.OffAndTertTankHealer]
+                = AffectsRole[PLAYER_ROLES.RaidHealer]
+                = true;
+        }
+        public void SetAffectsRoles_Tanks() {
+            AffectsRole[PLAYER_ROLES.MainTank]
+                = AffectsRole[PLAYER_ROLES.OffTank]
+                = AffectsRole[PLAYER_ROLES.TertiaryTank]
+                = true;
+        }
+        public void SetAffectsRoles_DPS() {
+            AffectsRole[PLAYER_ROLES.MeleeDPS]
+                = AffectsRole[PLAYER_ROLES.RangedDPS]
+                = true;
+        }
+        public void SetAffectsRoles_Healers() {
+            AffectsRole[PLAYER_ROLES.MainTankHealer]
+                = AffectsRole[PLAYER_ROLES.OffAndTertTankHealer]
+                = AffectsRole[PLAYER_ROLES.RaidHealer]
+                = true;
         }
         #endregion
 
@@ -416,6 +472,34 @@ namespace Rawr {
             }
             set { _affectsRole = value; }
         }
+        public void SetAffectsRoles_All() {
+            AffectsRole[PLAYER_ROLES.MainTank]
+                = AffectsRole[PLAYER_ROLES.OffTank]
+                = AffectsRole[PLAYER_ROLES.TertiaryTank]
+                = AffectsRole[PLAYER_ROLES.MeleeDPS]
+                = AffectsRole[PLAYER_ROLES.RangedDPS]
+                = AffectsRole[PLAYER_ROLES.MainTankHealer]
+                = AffectsRole[PLAYER_ROLES.OffAndTertTankHealer]
+                = AffectsRole[PLAYER_ROLES.RaidHealer]
+                = true;
+        }
+        public void SetAffectsRoles_Tanks() {
+            AffectsRole[PLAYER_ROLES.MainTank]
+                = AffectsRole[PLAYER_ROLES.OffTank]
+                = AffectsRole[PLAYER_ROLES.TertiaryTank]
+                = true;
+        }
+        public void SetAffectsRoles_DPS() {
+            AffectsRole[PLAYER_ROLES.MeleeDPS]
+                = AffectsRole[PLAYER_ROLES.RangedDPS]
+                = true;
+        }
+        public void SetAffectsRoles_Healers() {
+            AffectsRole[PLAYER_ROLES.MainTankHealer]
+                = AffectsRole[PLAYER_ROLES.OffAndTertTankHealer]
+                = AffectsRole[PLAYER_ROLES.RaidHealer]
+                = true;
+        }
         #endregion
         #region Functions
         public float GetAverageTargetGroupSize(float fightDuration) {
@@ -470,13 +554,13 @@ namespace Rawr {
         /// <para>Eg- This BuffState occurs every 45 sec</para>
         /// <para>Frequency = 45f</para>
         /// </summary>
-        public float Frequency;
+        public float Frequency = 45f;
         /// <summary>
         /// The amount of time spent in this state, in millisec
         /// <para>Eg- This BuffState lasts 4 seconds:</para>
         /// <para>Duration = 4f * 1000f</para>
         /// </summary>
-        public float Duration;
+        public float Duration = 5f * 1000f;
 
         /// <summary>In Seconds<para>Defaults to 0. Will not return a number higher than PhaseEndTime</para></summary>
         [DefaultValue(0f)]
@@ -530,6 +614,34 @@ namespace Rawr {
                 });
             }
             set { _affectsRole = value; }
+        }
+        public void SetAffectsRoles_All() {
+            AffectsRole[PLAYER_ROLES.MainTank]
+                = AffectsRole[PLAYER_ROLES.OffTank]
+                = AffectsRole[PLAYER_ROLES.TertiaryTank]
+                = AffectsRole[PLAYER_ROLES.MeleeDPS]
+                = AffectsRole[PLAYER_ROLES.RangedDPS]
+                = AffectsRole[PLAYER_ROLES.MainTankHealer]
+                = AffectsRole[PLAYER_ROLES.OffAndTertTankHealer]
+                = AffectsRole[PLAYER_ROLES.RaidHealer]
+                = true;
+        }
+        public void SetAffectsRoles_Tanks() {
+            AffectsRole[PLAYER_ROLES.MainTank]
+                = AffectsRole[PLAYER_ROLES.OffTank]
+                = AffectsRole[PLAYER_ROLES.TertiaryTank]
+                = true;
+        }
+        public void SetAffectsRoles_DPS() {
+            AffectsRole[PLAYER_ROLES.MeleeDPS]
+                = AffectsRole[PLAYER_ROLES.RangedDPS]
+                = true;
+        }
+        public void SetAffectsRoles_Healers() {
+            AffectsRole[PLAYER_ROLES.MainTankHealer]
+                = AffectsRole[PLAYER_ROLES.OffAndTertTankHealer]
+                = AffectsRole[PLAYER_ROLES.RaidHealer]
+                = true;
         }
         #endregion
         #region Functions
