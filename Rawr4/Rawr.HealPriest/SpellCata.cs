@@ -169,13 +169,18 @@ namespace Rawr.HealPriest
             return ((DirectHealAvg + AbsorbAvg) / castTime + hot + hhot) * targets;
         }
 
-        public virtual float HPCT()
+        public virtual float HPC()
         {
             float targets = (Targets > 0) ? Targets : 1f;
-            float castTime = (IsInstant) ? GlobalCooldown : CastTime;
             float hot = OverTimeHealAvg * OverTimeTicks;
             float hhot = Holy_HoT_Avg * Holy_HoT_Ticks;
-            return ((DirectHealAvg + AbsorbAvg + hot + hhot) / castTime) * targets;
+            return (DirectHealAvg + AbsorbAvg + hot + hhot) * targets;
+        }
+
+        public virtual float HPCT()
+        {
+            float castTime = (IsInstant) ? GlobalCooldown : CastTime;
+            return HPC() / castTime;
         }
 
         public virtual float HPM()
@@ -484,9 +489,59 @@ namespace Rawr.HealPriest
         }
     }
 
+    public class SpellPrayerOfMending : DirectHealSpell
+    {
+        public SpellPrayerOfMending(Character character, Stats stats)
+        {
+            MaxTargets = 5;
+            Initialize(character, stats, MaxTargets);
+        }
+
+        public SpellPrayerOfMending(Character character, Stats stats, int targets)
+        {
+            MaxTargets = 5;
+            Initialize(character, stats, targets);
+        }
+
+        protected void Initialize(Character character, Stats stats, int targets)
+        {
+            BaseDirectValue = 3.14400005340576f * BaseScalar85;
+            BaseDirectCoefficient = 0.318f;
+            BaseDirectVariation = 0.0f;
+
+            Targets = targets;
+
+            BaseManaCost = 0.18f;
+
+            SetPriestInformation(character, stats);
+        }
+
+        public override void UpdateSpell()
+        {
+            healBonus = (1f + stats.BonusHealingDoneMultiplier)
+                * (1f + PriestInformation.GetTwinDisciplines(character.PriestTalents.TwinDisciplines));
+            if (character.PriestTalents.GlyphofPrayerOfMending && Targets == 1)
+                healBonus *= 1.2f;
+            base.UpdateSpell();
+            DirectHealCalcs();
+        }
+    }
+
     public class SpellPrayerOfHealing : DirectHealSpell
     {
         public SpellPrayerOfHealing(Character character, Stats stats)
+        {
+            MaxTargets = 5;
+            Initialize(character, stats, MaxTargets);
+        }
+
+        public SpellPrayerOfHealing(Character character, Stats stats, int targets)
+        {
+            MaxTargets = 5;
+            Initialize(character, stats, targets);
+        }
+
+        protected void Initialize(Character character, Stats stats, int targets)
         {
             BaseDirectValue = 3.35899996757507f * BaseScalar85;
             BaseDirectCoefficient = 0.34f;
@@ -495,8 +550,7 @@ namespace Rawr.HealPriest
             BaseCastTime = 2.5f;
             BaseManaCost = 0.26f;
 
-            Targets = 5;
-            MaxTargets = 5;
+            Targets = targets;
 
             SetPriestInformation(character, stats);
         }
@@ -530,6 +584,43 @@ namespace Rawr.HealPriest
                 HasOverTimeHeal = true;
             }
 
+        }
+    }
+
+    public class SpellCircleOfHealing : DirectHealSpell
+    {
+
+        public SpellCircleOfHealing(Character character, Stats stats)
+        {
+            MaxTargets = character.PriestTalents.GlyphofCircleOfHealing ? 6 : 5;
+            Initialize(character, stats, MaxTargets);           
+        }
+
+        public SpellCircleOfHealing(Character character, Stats stats, int targets)
+        {
+            MaxTargets = character.PriestTalents.GlyphofCircleOfHealing ? 6 : 5;
+            Initialize(character, stats, targets);
+        }
+
+        protected void Initialize(Character character, Stats stats, int targets)
+        {
+            BaseDirectValue = 2.57100009918213f * BaseScalar85;
+            BaseDirectCoefficient = 0.26f;
+            BaseDirectVariation = 0.10f;
+
+            BaseManaCost = 0.21f;
+
+            Targets = targets;
+
+            SetPriestInformation(character, stats);
+        }
+
+        public override void UpdateSpell()
+        {
+            healBonus = (1f + stats.BonusHealingDoneMultiplier)
+                * (1f + PriestInformation.GetTwinDisciplines(character.PriestTalents.TwinDisciplines));
+            base.UpdateSpell();
+            DirectHealCalcs();
         }
     }
 

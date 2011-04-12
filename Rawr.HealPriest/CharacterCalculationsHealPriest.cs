@@ -5,19 +5,8 @@ using System.Text;
 namespace Rawr.HealPriest {
     public class CharacterCalculationsHealPriest : CharacterCalculationsBase
     {
-        #region Variables
-        private Stats basicStats;
-        public Character Character { get { return character; } set { character = value; } }
-        private Character character;
-        public CharacterRace Race { get; set; }
-        public Stats BasicStats
-        {
-            get { return basicStats; }
-            set { basicStats = value; }
-        }
-        #endregion
-
-        public float SpiritRegen { get; set; }
+        public Stats BasicStats;
+        public Character Character;
 
         #region Points
         private float _overallPoints = 0f;
@@ -25,7 +14,7 @@ namespace Rawr.HealPriest {
         private float[] subPoints = new float[] { 0f, 0f, 0f };
         public override float[] SubPoints { get { return subPoints; } set { subPoints = value; } }
         public float BurstPoints { get { return subPoints[0]; } set { subPoints[0] = value; } }
-        public float SustainedPoints { get { return subPoints[1]; } set { subPoints[1] = value; } }
+        public float SustainPoints { get { return subPoints[1]; } set { subPoints[1] = value; } }
         public float SurvPoints { get { return subPoints[2]; } set { subPoints[2] = value; } }
         #endregion
 
@@ -199,6 +188,19 @@ namespace Rawr.HealPriest {
             dictValues.Add("Binding Heal", String.Format("{0}*{1}", spellBindingHeal.HPS().ToString("0"), spellBindingHeal.ToString()));
             SpellPrayerOfHealing spellProH = new SpellPrayerOfHealing(Character, BasicStats);
             dictValues.Add("ProH", String.Format("{0}*{1}", spellProH.HPS().ToString("0"), spellProH.ToString()));
+            if (Character.PriestTalents.CircleOfHealing > 0)
+            {
+                SpellCircleOfHealing spellCoH = new SpellCircleOfHealing(Character, BasicStats);
+                dictValues.Add("CoH", String.Format("{0}*{1}", spellCoH.HPS().ToString("0"), spellCoH.ToString()));
+            }
+            else
+            {
+                dictValues.Add("CoH", "N/A*You do not have the talent required.");
+            }
+            SpellPrayerOfMending spellProM = new SpellPrayerOfMending(Character, BasicStats, 1);
+            dictValues.Add("ProM", String.Format("{0}*{1}", spellProM.HPS().ToString("0"), spellProM.ToString()));
+            spellProM = new SpellPrayerOfMending(Character, BasicStats);
+            dictValues.Add("ProM 5 Hits", String.Format("{0}*{1}", spellProM.HPS().ToString("0"), spellProM.ToString()));
             SpellPowerWordShield spellPWS = new SpellPowerWordShield(Character, BasicStats);
             dictValues.Add("PWS", String.Format("{0}*{1}", spellPWS.HPS().ToString("0"), spellPWS.ToString()));
             SpellResurrection spellResurrection = new SpellResurrection(Character, BasicStats);
@@ -337,26 +339,26 @@ namespace Rawr.HealPriest {
 		{
 			switch (calculation)
 			{
-                case "Health": return basicStats.Health;
-                case "Resilience": return basicStats.Resilience;
-                case "Mana": return basicStats.Mana;
-                case "Mana Regen": return basicStats.Mp5 + StatConversion.GetSpiritRegenSec(basicStats.Spirit, basicStats.Intellect) * 5f;
-                case "Combat Regen": return basicStats.Mp5 + StatConversion.GetSpiritRegenSec(basicStats.Spirit, basicStats.Intellect) * 5f * basicStats.SpellCombatManaRegeneration;
-                case "Haste Rating": return basicStats.HasteRating;
-                case "Mastery Rating": return basicStats.MasteryRating;
-                case "Haste %": return basicStats.SpellHaste * 100f;
-                case "Crit Rating": return basicStats.CritRating;
+                case "Health": return BasicStats.Health;
+                case "Resilience": return BasicStats.Resilience;
+                case "Mana": return BasicStats.Mana;
+                case "Mana Regen": return BasicStats.Mp5 + StatConversion.GetSpiritRegenSec(BasicStats.Spirit, BasicStats.Intellect) * 5f;
+                case "Combat Regen": return BasicStats.Mp5 + StatConversion.GetSpiritRegenSec(BasicStats.Spirit, BasicStats.Intellect) * 5f * BasicStats.SpellCombatManaRegeneration;
+                case "Haste Rating": return BasicStats.HasteRating;
+                case "Mastery Rating": return BasicStats.MasteryRating;
+                case "Haste %": return BasicStats.SpellHaste * 100f;
+                case "Crit Rating": return BasicStats.CritRating;
              //   case "Healing Crit %": return (basicStats.SpellCrit * 100f) + character.PriestTalents.HolySpecialization * 1f + character.PriestTalents.RenewedHope * 2f;
              //   case "PW:Shield": return new PowerWordShield(basicStats, character).AvgHeal;
              //   case "GHeal Avg": return new Heal(basicStats, character).AvgHeal;
              //   case "FHeal Avg": return new FlashHeal(basicStats, character).AvgHeal;
              //   case "CoH Avg": return new CircleOfHealing(basicStats, character).AvgHeal;
-                case "Armor": return basicStats.Armor + basicStats.BonusArmor;
-			    case "Arcane Resistance": return basicStats.ArcaneResistance + basicStats.ArcaneResistanceBuff;
-                case "Fire Resistance": return basicStats.FireResistance + basicStats.FireResistanceBuff;
-                case "Frost Resistance": return basicStats.FrostResistance + basicStats.FrostResistance;
-                case "Nature Resistance": return basicStats.NatureResistance + basicStats.NatureResistanceBuff;
-                case "Shadow Resistance": return basicStats.ShadowResistance + basicStats.ShadowResistanceBuff;
+                case "Armor": return BasicStats.Armor + BasicStats.BonusArmor;
+			    case "Arcane Resistance": return BasicStats.ArcaneResistance + BasicStats.ArcaneResistanceBuff;
+                case "Fire Resistance": return BasicStats.FireResistance + BasicStats.FireResistanceBuff;
+                case "Frost Resistance": return BasicStats.FrostResistance + BasicStats.FrostResistance;
+                case "Nature Resistance": return BasicStats.NatureResistance + BasicStats.NatureResistanceBuff;
+                case "Shadow Resistance": return BasicStats.ShadowResistance + BasicStats.ShadowResistanceBuff;
             }
 			return 0f;
 		}

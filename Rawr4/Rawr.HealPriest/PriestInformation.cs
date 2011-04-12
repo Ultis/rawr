@@ -24,31 +24,6 @@ namespace Rawr.HealPriest
             else if (spec == 2)
                 return ePriestSpec.Spec_Shadow;
             return ePriestSpec.Spec_ERROR;
-/*
-            int[] specs = new int[3];
-            int spec = 0;
-            int ctr = 0;
-            foreach (int i in pt.Data)
-            {
-                specs[spec] += i;
-                ctr++;
-                if (ctr == 21)  // Improved Renew
-                    spec = 1;
-                else if (ctr == 42) // Darkness
-                    spec = 2;
-            }
-
-            // Check that most points are spent in holy
-            if (specs[0] > specs[1] && specs[0] > specs[2] && specs[1] <= 10 && specs[2] <= 10)
-                return ePriestSpec.Spec_Disc;
-            // Check that most points are spent in disc
-            else if (specs[1] > specs[0] && specs[1] > specs[2] && specs[0] <= 10 && specs[2] <= 10)
-                return ePriestSpec.Spec_Holy;
-            // Check that most points are spent in shadow
-            else if (specs[2] > specs[0] && specs[2] > specs[1] && specs[0] <= 10 && specs[1] <= 10)
-                return ePriestSpec.Spec_Shadow;
-            //throw new Exception("There seems to be a problem with the talent spec!");
-            return ePriestSpec.Spec_Unknown;*/
         }
     }
     public static class PriestInformation
@@ -87,11 +62,21 @@ namespace Rawr.HealPriest
             return 1f;
         }
 
+        public static float GetBorrowedTime(int points)
+        {
+            if (points == 1)
+                return 0.07f;
+            if (points == 2)
+                return 0.15f;
+            return 0.0f;
+        }
+
         public static float GetDivineAegis(int points)
         {
             return points * 0.1f;
         }
 
+        /*                          */
         public static float GetEmpoweredHealing(int points)
         {
             return points * 0.05f;

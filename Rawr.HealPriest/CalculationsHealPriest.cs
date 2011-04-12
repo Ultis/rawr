@@ -235,6 +235,7 @@ namespace Rawr.HealPriest
                     "Holy Spells:Flash Heal",
                     "Holy Spells:Renew",
                     "Holy Spells:ProM*Prayer of Mending",
+                    "Holy Spells:ProM 5 Hits*Prayer of Mending hitting 5 targets",
                     "Holy Spells:PWS*Power Word: Shield",
                     "Holy Spells:ProH*Prayer of Healing",
                     "Holy Spells:Holy Nova",
@@ -803,31 +804,44 @@ namespace Rawr.HealPriest
             Stats stats = GetCharacterStats(character, additionalItem);
             Stats statsRace = BaseStats.GetBaseStats(character);  // GetRaceStats(character);
 
-            calc.Race = character.Race;
             calc.BasicStats = stats;
             calc.Character = character;
-
-            calc.SpiritRegen = (float)Math.Floor(5 * StatConversion.GetSpiritRegenSec(calc.BasicStats.Spirit, calc.BasicStats.Intellect));
-            
+          
             /*BaseSolver solver;
             if (calcOpts.Role == eRole.CUSTOM)
                 solver = new AdvancedSolver(stats, character);
             else
                 solver = new Solver(stats, character);
             solver.Calculate(calc);*/
-            SpellPrayerOfHealing proh = new SpellPrayerOfHealing(character, stats);
-            calc.BurstPoints = proh.HPCT();
+            
+            SpellPowerWordShield pws = new SpellPowerWordShield(character, stats);
+            float burst = pws.HPC();
+            Stats tStats = new Stats() { SpellHaste = PriestInformation.GetBorrowedTime(character.PriestTalents.BorrowedTime) };
+            tStats.Accumulate(stats);
+            SpellPrayerOfHealing proh = new SpellPrayerOfHealing(character, tStats, 5);
+            burst += proh.HPC();
 
-            float manaRegen = StatConversion.GetSpiritRegenSec(stats.Spirit, stats.Intellect) * stats.SpellCombatManaRegeneration + stats.Mp5;
+            float castTime = pws.GlobalCooldown + proh.CastTime + 0.2f * 2;
+            burst /= castTime;
+            calc.BurstPoints = burst;
+            float manaRegen = StatConversion.GetSpiritRegenSec(stats.Spirit, stats.Intellect) * stats.SpellCombatManaRegeneration
+                + stats.Mp5 / 5
+                + stats.Mana * 0.07f / 30   // Rapture
+                + stats.Mana * 0.3f / 300;  // Shadowfiend
             float time = 60f * 8;
-            float useMana = proh.ManaCost / proh.CastTime;
+            float useMana = (proh.ManaCost + pws.ManaCost) / castTime;
             float missingMana = useMana - manaRegen;
             float manaDrain = stats.Mana / missingMana;
             if (manaDrain > time)
-                calc.SustainedPoints = calc.BurstPoints;
+                calc.SustainPoints = burst;
             else
-                calc.SustainedPoints = calc.BurstPoints * manaDrain / time +  (time - manaDrain) / time * manaRegen / useMana * calc.BurstPoints;
-            calc.OverallPoints = calc.BurstPoints + calc.SustainedPoints + calc.SurvPoints;
+            {
+                float fullBurst = manaDrain / time;
+                float waitCast = (time - manaDrain) / time;
+                calc.SustainPoints = burst * fullBurst
+                    + burst * (waitCast * (manaRegen / useMana));
+            }
+            calc.OverallPoints = calc.BurstPoints + calc.SustainPoints + calc.SurvPoints;
 
             return calc;
         }
