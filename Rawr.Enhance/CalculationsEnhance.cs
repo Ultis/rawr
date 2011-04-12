@@ -647,6 +647,7 @@ namespace Rawr.Enhance
             calc.AvoidedAttacks = calc.MissedAttacks + calc.DodgedAttacks + calc.ParriedAttacks;
             calc.YellowHit = (float)Math.Floor((float)(cs.AverageYellowHitChance * 10000f)) / 100f;
             calc.SpellHit = (float)Math.Floor((float)(cs.ChanceSpellHit * 10000f)) / 100f;
+            calc.ElemPrecMod = cs.ElemPrecMod;
             calc.DraeneiHitBonus = character.Race == CharacterRace.Draenei ? 0.01f : 0.00f;
             calc.OverSpellHitCap = (float)Math.Floor((float)(cs.OverSpellHitCap * 10000f)) / 100f;
             calc.OverMeleeCritCap = (float)Math.Floor((float)(cs.OverMeleeCritCap * 10000f)) / 100f;

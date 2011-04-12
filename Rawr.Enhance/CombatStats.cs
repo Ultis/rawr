@@ -64,6 +64,7 @@ namespace Rawr.Enhance
         private float edUptime = 0f;
         private float edBonusCrit = 0f;
         private float ftBonusCrit = 0f;
+        private float elemPrecMod = 0f;
         private float fireTotemUptime = 0f;
 
         private float meleeAttacksPerSec = 0f;
@@ -166,6 +167,7 @@ namespace Rawr.Enhance
         public float FlurryUptime { get { return flurryUptime; } }
         public float UWUptime { get { return uWUptime; } }
         //public float UFUptime { get { return uFUptime; } }
+        public float ElemPrecMod { get { return elemPrecMod; } }
         public float FireTotemUptime { get { return fireTotemUptime; } }
         public float FireElementalUptime { get { return getFireElementalUptime(); } }
         public float AbilityCooldown(EnhanceAbility abilityType) { return _rotation.AbilityCooldown(abilityType); }
@@ -279,12 +281,12 @@ namespace Rawr.Enhance
                 ftBonusCrit += _talents.GlyphofFlametongueWeapon ? .02f : 0f;
             if (_calcOpts.OffhandImbue == "Flametongue")
                 ftBonusCrit += _talents.GlyphofFlametongueWeapon ? .02f : 0f;
-            float elemPrecMod = (_stats.Spirit - BaseStats.GetBaseStats(_character).Spirit) * (_talents.ElementalPrecision * 1f / 3f);
 
-            float spellCritModifier = _stats.SpellCrit + _stats.SpellCritOnTarget + ftBonusCrit;
+            elemPrecMod = (_stats.Spirit - BaseStats.GetBaseStats(_character).Spirit) * (_talents.ElementalPrecision * 1f / 3f);
             float hitBonusSpell = _stats.SpellHit + StatConversion.GetSpellHitFromRating(_stats.HitRating + elemPrecMod);
             chanceSpellMiss = Math.Max(0f, SpellMissRate - hitBonusSpell);
             overSpellHitCap = Math.Max(0f, hitBonusSpell - SpellMissRate);
+            float spellCritModifier = _stats.SpellCrit + _stats.SpellCritOnTarget + ftBonusCrit;
             float baseSpellCrit = StatConversion.GetSpellCritFromRating(_stats.CritRating) +
                                   StatConversion.GetSpellCritFromIntellect(_stats.Intellect) + .01f * _talents.Acuity;
             //chanceSpellCrit = Math.Min(0.75f, (1 + _stats.BonusCritChance) * (baseSpellCrit + spellCritModifier) + .00005f); //fudge factor for rounding

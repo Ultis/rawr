@@ -444,12 +444,12 @@ namespace Rawr.Enhance
 
         public List<Buff> ActiveBuffs { get; set; }
 
-        /*private float _elemPrecMod;
+        private float _elemPrecMod;
         public float ElemPrecMod
         {
             get { return _elemPrecMod; }
             set { _elemPrecMod = value; }
-        }*/
+        }
         #endregion
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
@@ -510,9 +510,9 @@ namespace Rawr.Enhance
                 BasicStats.HasteRating.ToString("F0", CultureInfo.InvariantCulture),
                 (StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
             dictValues.Add("Spell Hit", String.Format("{0}%*Hit Rating of {1} adds {2}% Hit chance\r\n{3}% Draenei Hit Bonus",
-                (StatConversion.GetSpellHitFromRating(BasicStats.HitRating) * 100f + DraeneiHitBonus * 100f).ToString("F2", CultureInfo.InvariantCulture),  //need to factor in racials/buffs/talents that add plain hit (not rating) here
-                BasicStats.HitRating.ToString("F0", CultureInfo.InvariantCulture),
-                (StatConversion.GetSpellHitFromRating(BasicStats.HitRating) * 100f).ToString("F2", CultureInfo.InvariantCulture),
+                (StatConversion.GetSpellHitFromRating(BasicStats.HitRating + ElemPrecMod) * 100f + DraeneiHitBonus * 100f).ToString("F2", CultureInfo.InvariantCulture),  //need to factor in racials/buffs/talents that add plain hit (not rating) here
+                (BasicStats.HitRating + ElemPrecMod).ToString("F0", CultureInfo.InvariantCulture),
+                (StatConversion.GetSpellHitFromRating(BasicStats.HitRating + ElemPrecMod) * 100f).ToString("F2", CultureInfo.InvariantCulture),
                 DraeneiHitBonus * 100f));
             dictValues.Add("Spell Crit", String.Format("{0}%*Crit Rating of {1} adds {2}% Crit chance",
                 (StatConversion.GetSpellCritFromRating(BasicStats.CritRating, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture),  //need to factor in racials/buffs/talents that add plain crit (not rating) here
