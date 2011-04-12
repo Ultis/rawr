@@ -305,9 +305,6 @@ namespace Rawr.Enhance
             float bonusPhysicalDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusPhysicalDamageMultiplier);
             float bonusFireDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusFireDamageMultiplier);
             float bonusNatureDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier);
-            int baseResistance = Math.Max((bossOpts.Level - character.Level) * 5, 0);
-            float bossFireResistance = 1f - ((baseResistance + (float) bossOpts.Resist_Fire /*calcOpts.TargetFireResistance*/) / (character.Level * 5f)) * .75f;
-            float bossNatureResistance = 1f - ((baseResistance + (float) bossOpts.Resist_Nature /*calcOpts.TargetNatureResistance*/) / (character.Level * 5f)) * .75f;
             #endregion
 
             #region Individual DPS
@@ -354,7 +351,7 @@ namespace Rawr.Enhance
                 float swingDPSOH = damageOHSwing * 1.25f * cs.HitsPerSOHSS;
                 float SSnormal = (swingDPSMH * cs.YellowHitModifierMH) + (swingDPSOH * cs.YellowHitModifierOH);
                 float SScrit = ((swingDPSMH * cs.YellowCritModifierMH) + (swingDPSOH * cs.YellowCritModifierOH)) * cs.CritMultiplierMelee;
-                dpsSS = (SSnormal + SScrit) * cs.DamageReduction * focusedStrikes * (1f + enhance2T11) * bonusNatureDamage * bossNatureResistance;
+                dpsSS = (SSnormal + SScrit) * cs.DamageReduction * focusedStrikes * (1f + enhance2T11) * bonusNatureDamage;
             }
             #endregion
 
@@ -382,7 +379,7 @@ namespace Rawr.Enhance
                 float lavalashDPS = damageOHSwing * cs.HitsPerSLL;
                 float LLnormal = lavalashDPS * cs.YellowHitModifierOH;
                 float LLcrit = lavalashDPS * cs.YellowCritModifierOH * cs.CritMultiplierMelee;
-                dpsLL = (LLnormal + LLcrit) * (2f + searingFlames) * (1f + glyphLL + impLL) * (1f + flametongue) * (1f + enhance2T11) * mastery * bonusFireDamage * bossFireResistance;
+                dpsLL = (LLnormal + LLcrit) * (2f + searingFlames) * (1f + glyphLL + impLL) * (1f + flametongue) * (1f + enhance2T11) * mastery * bonusFireDamage;
             }
             #endregion
 
@@ -396,7 +393,7 @@ namespace Rawr.Enhance
                 float shockdps = damageES / cs.AbilityCooldown(EnhanceAbility.EarthShock);
                 float shockNormal = shockdps * cs.NatureSpellHitModifier;
                 float shockCrit = shockdps * cs.NatureSpellCritModifier * cs.CritMultiplierSpell;
-                dpsES = (shockNormal + shockCrit) * mastery * bonusNatureDamage * bossNatureResistance;
+                dpsES = (shockNormal + shockCrit) * mastery * bonusNatureDamage;
             }
             #endregion
 
@@ -417,7 +414,7 @@ namespace Rawr.Enhance
                 float flameShockDoTdps = damageFTDoT / usesCooldown;
                 float flameShockNormal = (flameShockdps + flameShockDoTdps) * cs.SpellHitModifier;
                 float flameShockCrit = (flameShockdps + flameShockDoTdps) * cs.SpellCritModifier * cs.CritMultiplierSpell;
-                dpsFS = (flameShockNormal + flameShockCrit) * mastery * bonusFireDamage * bossFireResistance;
+                dpsFS = (flameShockNormal + flameShockCrit) * mastery * bonusFireDamage;
             }
             #endregion
 
@@ -431,7 +428,7 @@ namespace Rawr.Enhance
                 float lbdps = damageLB / cs.AbilityCooldown(EnhanceAbility.LightningBolt);
                 float lbNormal = lbdps * cs.NatureSpellHitModifier;
                 float lbCrit = lbdps * cs.NatureSpellCritModifier * cs.CritMultiplierSpell;
-                dpsLB = (lbNormal + lbCrit) * mastery * bonusNatureDamage * bossNatureResistance;
+                dpsLB = (lbNormal + lbCrit) * mastery * bonusNatureDamage;
                 if (character.ShamanTalents.GlyphofLightningBolt)
                     dpsLB *= 1.04f; // 4% bonus dmg if Lightning Bolt Glyph
             }
@@ -455,7 +452,7 @@ namespace Rawr.Enhance
                 float cldps = (damageCL) / cs.AbilityCooldown(EnhanceAbility.ChainLightning);
                 float clNormal = cldps * cs.NatureSpellHitModifier;
                 float clCrit = cldps * cs.NatureSpellCritModifier * cs.CritMultiplierSpell;
-                dpsCL = (clNormal + clCrit) * mastery * bonusNatureDamage * bossNatureResistance;
+                dpsCL = (clNormal + clCrit) * mastery * bonusNatureDamage;
             }
             #endregion
 
@@ -481,7 +478,7 @@ namespace Rawr.Enhance
                 float lsdps = damageLS * cs.StaticShockProcsPerS;
                 float lsNormal = lsdps * cs.NatureSpellHitModifier;
                 float lsCrit = lsdps * cs.NatureSpellCritModifier * cs.CritMultiplierSpell;
-                dpsLS = (lsNormal + lsCrit) * mastery * bonusNatureDamage * bossNatureResistance;
+                dpsLS = (lsNormal + lsCrit) * mastery * bonusNatureDamage;
             }
             #endregion
 
@@ -493,7 +490,7 @@ namespace Rawr.Enhance
                 float FireTotemdps = damageFireTotem / 2f * cs.FireTotemUptime;
                 float FireTotemNormal = FireTotemdps * cs.SpellHitModifier;
                 float FireTotemCrit = FireTotemdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
-                dpsFireTotem = (FireTotemNormal + FireTotemCrit) * mastery * bonusFireDamage * bossFireResistance * cs.MultiTargetMultiplier;
+                dpsFireTotem = (FireTotemNormal + FireTotemCrit) * mastery * bonusFireDamage * cs.MultiTargetMultiplier;
             }
             else if (calcOpts.PriorityInUse(EnhanceAbility.SearingTotem))
             {
@@ -501,7 +498,7 @@ namespace Rawr.Enhance
                 float FireTotemdps = damageFireTotem / 1.65f * cs.FireTotemUptime;
                 float FireTotemNormal = FireTotemdps * cs.SpellHitModifier;
                 float FireTotemCrit = FireTotemdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
-                dpsFireTotem = (FireTotemNormal + FireTotemCrit) * mastery * bonusFireDamage * bossFireResistance;
+                dpsFireTotem = (FireTotemNormal + FireTotemCrit) * mastery * bonusFireDamage;
             }
             dpsFireTotem *= (1f - cs.FireElementalUptime);
             #endregion
@@ -514,7 +511,7 @@ namespace Rawr.Enhance
                 float FireNovadps = (damageFireNova / cs.AbilityCooldown(EnhanceAbility.FireNova));
                 float FireNovaNormal = FireNovadps * cs.SpellHitModifier;
                 float FireNovaCrit = FireNovadps * cs.SpellCritModifier * cs.CritMultiplierSpell;
-                dpsFireNova = (FireNovaNormal + FireNovaCrit) * mastery * bonusFireDamage * bossFireResistance * cs.MultiTargetMultiplier;
+                dpsFireNova = (FireNovaNormal + FireNovaCrit) * mastery * bonusFireDamage * cs.MultiTargetMultiplier;
             }
             #endregion
 
@@ -544,7 +541,7 @@ namespace Rawr.Enhance
                 float FTdps = damageFT * (cs.HitsPerSOH - cs.HitsPerSLL);
                 float FTNormal = FTdps * cs.SpellHitModifier;
                 float FTCrit = FTdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
-                dpsFT += (FTNormal + FTCrit) * mastery * bonusFireDamage * bossFireResistance;
+                dpsFT += (FTNormal + FTCrit) * mastery * bonusFireDamage;
             }
             #endregion
 
@@ -570,7 +567,7 @@ namespace Rawr.Enhance
                 float UFdps = damageUF / cs.AbilityCooldown(EnhanceAbility.UnleashElements);
                 float UFnormal = UFdps * cs.SpellHitModifier;
                 float UFcrit = UFdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
-                dpsUF = (UFnormal + UFcrit) * mastery * bonusFireDamage * bossFireResistance;
+                dpsUF = (UFnormal + UFcrit) * mastery * bonusFireDamage;
             }
             #endregion
             #endregion
@@ -629,7 +626,7 @@ namespace Rawr.Enhance
             {
                 float spellHitBonus = stats.SpellHit + StatConversion.GetHitFromRating(stats.HitRating);
                 float petSpellMissRate = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[bossOpts.Level - character.Level] - spellHitBonus);
-                float petSpellMultipliers = bonusFireDamage * bossFireResistance * callofFlameBonus;
+                float petSpellMultipliers = bonusFireDamage * callofFlameBonus;
                 float petCritRate = critbuffs * (1 + stats.BonusCritDamageMultiplier);
                 calc.FireElemental = new FireElemental(attackPower, spellPower, stats.Intellect, cs, 
                         petCritRate, petMeleeMissRate, petMeleeMultipliers, petSpellMissRate, petSpellMultipliers);
