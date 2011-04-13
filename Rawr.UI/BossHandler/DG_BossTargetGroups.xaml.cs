@@ -59,8 +59,8 @@ namespace Rawr.UI
                 NumTargs = (float)NUD_NumTargs.Value,
                 LevelOfTargets = CB_LevelOfTargets.SelectedIndex,
                 // Phase Info
-                PhaseStartTime = (float)NUD_PhaseStartTime.Value,
-                PhaseEndTime = (float)NUD_PhaseEndTime.Value,
+                //PhaseStartTime = (float)NUD_PhaseStartTime.Value,
+                //PhaseEndTime = (float)NUD_PhaseEndTime.Value,
             };
             // Targeting Includes
             s.AffectsRole[PLAYER_ROLES.MainTank]             = CK_AffectsMTank.IsChecked.GetValueOrDefault(false);
@@ -103,8 +103,8 @@ namespace Rawr.UI
                 NUD_NumTargs.Value              = selected.NumTargs;
                 CB_LevelOfTargets.SelectedIndex = selected.LevelOfTargets;
                 // Phase Info
-                NUD_PhaseStartTime.Value = selected.PhaseStartTime;
-                NUD_PhaseEndTime.Value = selected.PhaseEndTime;
+                //NUD_PhaseStartTime.Value = selected.PhaseStartTime;
+                //NUD_PhaseEndTime.Value = selected.PhaseEndTime;
                 // Targeting Includes
                 CK_AffectsMTank.IsChecked          = selected.AffectsRole[PLAYER_ROLES.MainTank];
                 CK_AffectsOTank.IsChecked          = selected.AffectsRole[PLAYER_ROLES.OffTank];

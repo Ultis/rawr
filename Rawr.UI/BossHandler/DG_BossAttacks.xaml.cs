@@ -26,6 +26,7 @@ namespace Rawr.UI
             this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
             this.WindowState = System.Windows.WindowState.Normal;
             this.WindowStyle = System.Windows.WindowStyle.ToolWindow;
+            this.SizeToContent = SizeToContent.Height;
 #endif
 
             TheList = list;
@@ -60,8 +61,8 @@ namespace Rawr.UI
                     AttackSpeed       = (float)NUD_AtkSpeed.Value,
                     AttackType        = (ATTACK_TYPES)CB_AtkType.SelectedIndex,
                     // Phase Info
-                    PhaseStartTime    = (float)NUD_PhaseStartTime.Value,
-                    PhaseEndTime      = (float)NUD_PhaseEndTime.Value,
+                    //PhaseStartTime    = (float)NUD_PhaseStartTime.Value,
+                    //PhaseEndTime      = (float)NUD_PhaseEndTime.Value,
                     // DoT Stats
                     IsDoT             = CK_IsDoT.IsChecked.GetValueOrDefault(false),
                     DamagePerTick     = (float)NUD_DmgPerTick.Value,
@@ -127,8 +128,8 @@ namespace Rawr.UI
                 NUD_AtkSpeed.Value        = selected.AttackSpeed;
                 CB_AtkType.SelectedIndex  = (int)selected.AttackType;
                 // Phase Info
-                NUD_PhaseStartTime.Value  = selected.PhaseStartTime;
-                NUD_PhaseEndTime.Value    = selected.PhaseEndTime;
+                //NUD_PhaseStartTime.Value  = selected.PhaseStartTime;
+                //NUD_PhaseEndTime.Value    = selected.PhaseEndTime;
                 // DoT Stats
                 CK_IsDoT.IsChecked        = selected.IsDoT;
                 NUD_DmgPerTick.Value      = selected.DamagePerTick;

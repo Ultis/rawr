@@ -1116,6 +1116,19 @@ namespace Rawr {
             }
             return time;
         }
+        protected float AvgUpTime(List<Impedance> imps) {
+            if (imps == null || imps.Count < 1) return 0;
+            float[] uptimes = new float[imps.Count];
+            for (int i = 0; i < imps.Count; i++) {
+                foreach (float[] t in imps[i].PhaseTimes.Values) {
+                    uptimes[i] += t[1] - t[0];
+                }
+            }
+            float avgUpTime = 0;
+            foreach (float i in uptimes) { avgUpTime += i; }
+            avgUpTime /= (float)imps.Count;
+            return avgUpTime / BerserkTimer;
+        }
         protected float Dur(List<Impedance> imps) {
             if (imps == null || imps.Count < 1) return 0;
             // Averages out the Move Durations
@@ -1178,6 +1191,7 @@ namespace Rawr {
         public float MovingTargsDur       { get { return Moves.Count > 0 ? Dur(Moves) : 0; } }
         public float MovingTargsChance    { get { return Moves.Count > 0 ? Chance(Moves) : 0; } }
         public float MovingTargsTime      { get { return Moves.Count > 0 ? Time(Moves) : 0; } }
+        public float MovingTargsAvgUpTime { get { return Moves.Count > 0 ? AvgUpTime(Moves) : 0; } }
         // Stunning Targets
         public Impedance DynamicCompiler_Stun {
             get {
@@ -1225,6 +1239,7 @@ namespace Rawr {
         public float StunningTargsDur     { get { return Stuns.Count > 0 ? Dur(Stuns) : 0; } }
         public float StunningTargsChance  { get { return Stuns.Count > 0 ? Chance(Stuns) : 0; } }
         public float StunningTargsTime    { get { return Stuns.Count > 0 ? Time(Stuns) : 0; } }
+        public float StunningTargsAvgUpTime { get { return Moves.Count > 0 ? AvgUpTime(Stuns) : 0; } }
         // Fearing Targets
         public Impedance DynamicCompiler_Fear
         {
@@ -1273,6 +1288,7 @@ namespace Rawr {
         public float FearingTargsDur      { get { return Fears.Count > 0 ? Dur(Fears) : 0; } }
         public float FearingTargsChance   { get { return Fears.Count > 0 ? Chance(Fears) : 0; } }
         public float FearingTargsTime     { get { return Fears.Count > 0 ? Time(Fears) : 0; } }
+        public float FearingTargsAvgUpTime { get { return Moves.Count > 0 ? AvgUpTime(Fears) : 0; } }
         // Rooting Targets
         public Impedance DynamicCompiler_Root
         {
@@ -1322,6 +1338,7 @@ namespace Rawr {
         public float RootingTargsDur      { get { return Roots.Count > 0 ? Dur(Roots) : 0; } }
         public float RootingTargsChance   { get { return Roots.Count > 0 ? Chance(Roots) : 0; } }
         public float RootingTargsTime     { get { return Roots.Count > 0 ? Time(Roots) : 0; } }
+        public float RootingTargsAvgUpTime { get { return Moves.Count > 0 ? AvgUpTime(Roots) : 0; } }
         // Silencing Targets
         public Impedance DynamicCompiler_Slnc
         {
@@ -1371,6 +1388,7 @@ namespace Rawr {
         public float SilencingTargsDur    { get { return Silences.Count > 0 ? Dur(Silences) : 0; } }
         public float SilencingTargsChance { get { return Silences.Count > 0 ? Chance(Silences) : 0; } }
         public float SilencingTargsTime   { get { return Silences.Count > 0 ? Time(Silences) : 0; } }
+        public float SilencingTargsAvgUpTime { get { return Moves.Count > 0 ? AvgUpTime(Silences) : 0; } }
         // Disarming Targets
         public Impedance DynamicCompiler_Dsrm
         {
@@ -1419,6 +1437,7 @@ namespace Rawr {
         public float DisarmingTargsDur    { get { return Disarms.Count > 0 ? Dur(Disarms) : 0; } }
         public float DisarmingTargsChance { get { return Disarms.Count > 0 ? Chance(Disarms) : 0; } }
         public float DisarmingTargsTime   { get { return Disarms.Count > 0 ? Time(Disarms) : 0; } }
+        public float DisarmingTargsAvgUpTime { get { return Moves.Count > 0 ? AvgUpTime(Disarms) : 0; } }
         #endregion
         #endregion
 
@@ -1454,7 +1473,7 @@ namespace Rawr {
                                   float p_missPerc, float p_dodgePerc, float p_parryPerc, float p_blockPerc, float p_blockVal)
         {
             int room = Max_Players - Min_Healers - Min_Tanks;
-            float TotalDPSNeeded = Health / (BerserkTimer - TimeBossIsInvuln - MovingTargsTime);
+            float TotalDPSNeeded = Health / (BerserkTimer - TimeBossIsInvuln - (MovingTargsTime * MovingTargsAvgUpTime));
             float dpsdps = TotalDPSNeeded * ((float)room / ((float)Min_Tanks / 2f + (float)room)) / (float)room;
             float tankdps = (TotalDPSNeeded * ((float)Min_Tanks / ((float)Min_Tanks / 2f + (float)room)) / (float)Min_Tanks) / 2f;
             string retVal = "";
@@ -1472,7 +1491,7 @@ namespace Rawr {
                 + "{1:#,##0} from each Tank {2:#,##0} from each DPS\r\n\r\n",
                 TotalDPSNeeded, tankdps, dpsdps);
             //
-            TotalDPSNeeded = Health / (SpeedKillTimer - TimeBossIsInvuln - SpeedKillTimer * (MovingTargsTime / BerserkTimer));
+            TotalDPSNeeded = Health / (SpeedKillTimer - TimeBossIsInvuln - SpeedKillTimer * ((MovingTargsTime * MovingTargsAvgUpTime) / BerserkTimer));
             dpsdps = TotalDPSNeeded * ((float)room / ((float)Min_Tanks / 2f + (float)room)) / (float)room;
             tankdps = (TotalDPSNeeded * ((float)Min_Tanks / ((float)Min_Tanks / 2f + (float)room)) / (float)Min_Tanks) / 2f;
             //
@@ -1573,37 +1592,55 @@ namespace Rawr {
         }
         #region Variable Convenience Overrides
 
-        protected void AddAPhasesValues(Phase phase, int version, int phaseNumber, float phaseStartTime, float phaseDuration)
-        {
-            foreach (Attack i in phase.Attacks) { i.PhaseNumber       = phaseNumber; i.PhaseStartTime = phaseStartTime; i.PhaseEndTime = phaseStartTime + phaseDuration; i.Name += string.Format(" {{{0} ({1})}}", phase.Name, phaseNumber); }
-            foreach (TargetGroup i in phase.Targets) { i.PhaseNumber  = phaseNumber; i.PhaseStartTime = phaseStartTime; i.PhaseEndTime = phaseStartTime + phaseDuration; i.Name += string.Format(" {{{0} ({1})}}", phase.Name, phaseNumber); }
-            foreach (BuffState i in phase.BuffStates) { i.PhaseNumber = phaseNumber; i.PhaseStartTime = phaseStartTime; i.PhaseEndTime = phaseStartTime + phaseDuration; i.Name += string.Format(" {{{0} ({1})}}", phase.Name, phaseNumber); }
-            foreach (Impedance i in phase.Fears) { i.PhaseNumber      = phaseNumber; i.PhaseStartTime = phaseStartTime; i.PhaseEndTime = phaseStartTime + phaseDuration; i.Name += string.Format(" {{{0} ({1})}}", phase.Name, phaseNumber); }
-            foreach (Impedance i in phase.Roots) { i.PhaseNumber      = phaseNumber; i.PhaseStartTime = phaseStartTime; i.PhaseEndTime = phaseStartTime + phaseDuration; i.Name += string.Format(" {{{0} ({1})}}", phase.Name, phaseNumber); }
-            foreach (Impedance i in phase.Stuns) { i.PhaseNumber      = phaseNumber; i.PhaseStartTime = phaseStartTime; i.PhaseEndTime = phaseStartTime + phaseDuration; i.Name += string.Format(" {{{0} ({1})}}", phase.Name, phaseNumber); }
-            foreach (Impedance i in phase.Moves) { i.PhaseNumber      = phaseNumber; i.PhaseStartTime = phaseStartTime; i.PhaseEndTime = phaseStartTime + phaseDuration; i.Name += string.Format(" {{{0} ({1})}}", phase.Name, phaseNumber); }
-            foreach (Impedance i in phase.Silences) { i.PhaseNumber   = phaseNumber; i.PhaseStartTime = phaseStartTime; i.PhaseEndTime = phaseStartTime + phaseDuration; i.Name += string.Format(" {{{0} ({1})}}", phase.Name, phaseNumber); }
-            foreach (Impedance i in phase.Disarms) { i.PhaseNumber    = phaseNumber; i.PhaseStartTime = phaseStartTime; i.PhaseEndTime = phaseStartTime + phaseDuration; i.Name += string.Format(" {{{0} ({1})}}", phase.Name, phaseNumber); }
-            Attack[] attacks      = new Attack[phase.Attacks.Count]; phase.Attacks.CopyTo(attacks);
-            TargetGroup[] targets = new TargetGroup[phase.Targets.Count]; phase.Targets.CopyTo(targets);
-            BuffState[] buffs     = new BuffState[phase.BuffStates.Count]; phase.BuffStates.CopyTo(buffs);
-            Impedance[] fears     = new Impedance[phase.Fears.Count]; phase.Fears.CopyTo(fears);
-            Impedance[] roots     = new Impedance[phase.Roots.Count]; phase.Roots.CopyTo(roots);
-            Impedance[] stuns     = new Impedance[phase.Stuns.Count]; phase.Stuns.CopyTo(stuns);
-            Impedance[] moves     = new Impedance[phase.Moves.Count]; phase.Moves.CopyTo(moves);
-            Impedance[] silences  = new Impedance[phase.Silences.Count]; phase.Silences.CopyTo(silences);
-            Impedance[] disarms   = new Impedance[phase.Disarms.Count]; phase.Disarms.CopyTo(disarms);
-            this[version].Attacks.AddRange(attacks);
-            this[version].Targets.AddRange(targets);
-            this[version].BuffStates.AddRange(buffs);
-            this[version].Fears.AddRange(fears);
-            this[version].Roots.AddRange(roots);
-            this[version].Stuns.AddRange(stuns);
-            this[version].Moves.AddRange(moves);
-            this[version].Silences.AddRange(silences);
-            this[version].Disarms.AddRange(disarms);
+        protected void ClearPhase1Values(ref Phase phase) {
+            for (int i = 0; i < phase.Attacks.Count; i++) { phase.Attacks[i].RemovePhase1Values(); }
+            for (int i = 0; i < phase.Targets.Count; i++) { phase.Targets[i].RemovePhase1Values(); }
+            for (int i = 0; i < phase.BuffStates.Count; i++) { phase.BuffStates[i].RemovePhase1Values(); }
+            for (int i = 0; i < phase.Fears.Count; i++) { phase.Fears[i].RemovePhase1Values(); }
+            for (int i = 0; i < phase.Roots.Count; i++) { phase.Roots[i].RemovePhase1Values(); }
+            for (int i = 0; i < phase.Stuns.Count; i++) { phase.Stuns[i].RemovePhase1Values(); }
+            for (int i = 0; i < phase.Moves.Count; i++) { phase.Moves[i].RemovePhase1Values(); }
+            for (int i = 0; i < phase.Silences.Count; i++) { phase.Silences[i].RemovePhase1Values(); }
+            for (int i = 0; i < phase.Disarms.Count; i++) { phase.Disarms[i].RemovePhase1Values(); }
         }
 
+        protected void ApplyAPhasesValues(ref Phase phase, int version, int phaseNumber, float phaseStartTime, float phaseDuration, float fightDuration)
+        {
+            for (int i = 0; i < phase.Attacks.Count; i++) { phase.Attacks[i].SetPhaseValue(phaseNumber, phaseStartTime, phaseDuration, fightDuration); }
+            for (int i = 0; i < phase.Targets.Count; i++) { phase.Targets[i].SetPhaseValue(phaseNumber, phaseStartTime, phaseDuration, fightDuration); }
+            for (int i = 0; i < phase.BuffStates.Count; i++) { phase.BuffStates[i].SetPhaseValue(phaseNumber, phaseStartTime, phaseDuration, fightDuration); }
+            for (int i = 0; i < phase.Fears.Count; i++) { phase.Fears[i].SetPhaseValue(phaseNumber, phaseStartTime, phaseDuration, fightDuration); }
+            for (int i = 0; i < phase.Roots.Count; i++) { phase.Roots[i].SetPhaseValue(phaseNumber, phaseStartTime, phaseDuration, fightDuration); }
+            for (int i = 0; i < phase.Stuns.Count; i++) { phase.Stuns[i].SetPhaseValue(phaseNumber, phaseStartTime, phaseDuration, fightDuration); }
+            for (int i = 0; i < phase.Moves.Count; i++) { phase.Moves[i].SetPhaseValue(phaseNumber, phaseStartTime, phaseDuration, fightDuration); }
+            for (int i = 0; i < phase.Silences.Count; i++) { phase.Silences[i].SetPhaseValue(phaseNumber, phaseStartTime, phaseDuration, fightDuration); }
+            for (int i = 0; i < phase.Disarms.Count; i++) { phase.Disarms[i].SetPhaseValue(phaseNumber, phaseStartTime, phaseDuration, fightDuration); }
+        }
+
+        protected void AddAPhase(Phase phase, int version)
+        {
+            string format = " {{{0}}}";
+            //
+            for (int i = 0; i < phase.Attacks.Count; i++) { if (!phase.Attacks[i].Name.Contains(string.Format(format, phase.Name))) { phase.Attacks[i].Name += string.Format(format, phase.Name); } }
+            for (int i = 0; i < phase.Targets.Count; i++) { if (!phase.Targets[i].Name.Contains(string.Format(format, phase.Name))) { phase.Targets[i].Name += string.Format(format, phase.Name); } }
+            for (int i = 0; i < phase.BuffStates.Count; i++) { if (!phase.BuffStates[i].Name.Contains(string.Format(format, phase.Name))) { phase.BuffStates[i].Name += string.Format(format, phase.Name); } }
+            for (int i = 0; i < phase.Fears.Count; i++) { if (!phase.Fears[i].Name.Contains(string.Format(format, phase.Name))) { phase.Fears[i].Name += string.Format(format, phase.Name); } }
+            for (int i = 0; i < phase.Roots.Count; i++) { if (!phase.Roots[i].Name.Contains(string.Format(format, phase.Name))) { phase.Roots[i].Name += string.Format(format, phase.Name); } }
+            for (int i = 0; i < phase.Stuns.Count; i++) { if (!phase.Stuns[i].Name.Contains(string.Format(format, phase.Name))) { phase.Stuns[i].Name += string.Format(format, phase.Name); } }
+            for (int i = 0; i < phase.Moves.Count; i++) { if (!phase.Moves[i].Name.Contains(string.Format(format, phase.Name))) { phase.Moves[i].Name += string.Format(format, phase.Name); } }
+            for (int i = 0; i < phase.Silences.Count; i++) { if (!phase.Silences[i].Name.Contains(string.Format(format, phase.Name))) { phase.Silences[i].Name += string.Format(format, phase.Name); } }
+            for (int i = 0; i < phase.Disarms.Count; i++) { if (!phase.Disarms[i].Name.Contains(string.Format(format, phase.Name))) { phase.Disarms[i].Name += string.Format(format, phase.Name); } }
+            //
+            this[version].Attacks.AddRange(phase.Attacks);
+            this[version].Targets.AddRange(phase.Targets);
+            this[version].BuffStates.AddRange(phase.BuffStates);
+            this[version].Fears.AddRange(phase.Fears);
+            this[version].Roots.AddRange(phase.Roots);
+            this[version].Stuns.AddRange(phase.Stuns);
+            this[version].Moves.AddRange(phase.Moves);
+            this[version].Silences.AddRange(phase.Silences);
+            this[version].Disarms.AddRange(phase.Disarms);
+        }
         // Info
         public string Name
         {

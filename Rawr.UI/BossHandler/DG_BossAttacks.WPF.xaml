@@ -118,10 +118,10 @@
             <WrapPanel>
             <!--ENDIFWPF-->
                 <TextBlock x:Name="LB_PhaseStartTime" Margin="4,2,0,2" Text="Phase Start Time:" VerticalAlignment="Center" />
-                <inputToolkit:NumericUpDown x:Name="NUD_PhaseStartTime" Margin="2" Value="0" Maximum="{Binding ElementName=NUD_PhaseEndTime, Path=Value, Mode=OneWay}" Minimum="0" VerticalAlignment="Center" MinWidth="60" />
+                <inputToolkit:NumericUpDown x:Name="NUD_PhaseStartTime" Margin="2" Value="0" Maximum="{Binding ElementName=NUD_PhaseEndTime, Path=Value, Mode=OneWay}" Minimum="0" VerticalAlignment="Center" MinWidth="60" IsEnabled="False" />
                 <TextBlock x:Name="LB_PhaseStartTime2" Margin="0,2,4,2" Text="sec" VerticalAlignment="Center" />
                 <TextBlock x:Name="LB_PhaseEndTime" Margin="4,2,0,2" Text="Phase End Time:" VerticalAlignment="Center" />
-                <inputToolkit:NumericUpDown x:Name="NUD_PhaseEndTime" Margin="2" Value="1200" Maximum="1200" Minimum="{Binding ElementName=NUD_PhaseStartTime, Path=Value, Mode=OneWay}" VerticalAlignment="Center" MinWidth="60" />
+                <inputToolkit:NumericUpDown x:Name="NUD_PhaseEndTime" Margin="2" Value="1200" Maximum="1200" Minimum="{Binding ElementName=NUD_PhaseStartTime, Path=Value, Mode=OneWay}" VerticalAlignment="Center" MinWidth="60" IsEnabled="False" />
                 <TextBlock x:Name="LB_PhaseEndTime2" Margin="0,2,4,2" Text="sec" VerticalAlignment="Center" />
                 <!--IFSL
             </toolkitWrap:WrapPanel>

@@ -8,6 +8,11 @@ using System.Xml.Serialization;
 
 namespace Rawr.Bosses
 {
+    /* Phase timings work kind of like this:
+    SpecialEffect primary = new SpecialEffect(Trigger.Use, new Stats(), 90, 30);
+    SpecialEffect secondary = new SpecialEffect(Trigger.Use, new Stats() { FireDamage = 50000f }, 0, 15);
+    primary.Stats.AddSpecialEffect(secondary);*/
+
     #region Baradin Hold
     // ===== Baradin Hold ====================
     public class Argaloth : MultiDiffBoss
@@ -32,95 +37,82 @@ namespace Rawr.Bosses
             Min_Tanks = new int[] { 2, 2, 0, 0 };
             Min_Healers = new int[] { 3, 5, 0, 0 };
             #endregion
-            #region Offensive
-            #region Multiple Targets
-            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
-            #endregion
-            #region Attacks
+            #region The Phases
             for (int i = 0; i < 2; i++)
             {
+                // He won't cast other abilities while channelling Fel Firestorm
+                Phase EntireFight = new Phase() { Name = "While not casting Firestorm" };
+                Phase FelFirestorm = new Phase() { Name = "During Fel Firestorm" };
+
+                #region MT and OT Melee Swapping
                 // MT and OT tank swap
                 // Each should take half of the total damage
                 // does not melee during Firestorm
-                this[i].Attacks.Add(new Attack
-                {
+                EntireFight.Attacks.Add(new Attack {
                     Name = "MT Melee",
+                    AttackType = ATTACK_TYPES.AT_MELEE, IsTheDefaultMelee = true,
                     DamageType = ItemDamageType.Physical,
                     DamagePerHit = BossHandler.StandardMeleePerHit[(int)Content[i]],
                     MaxNumTargets = 1f,
-                    AttackSpeed = this[i].BerserkTimer / ((this[i].BerserkTimer - ((15f + 3f) * 2f)) / 4),
-                    AttackType = ATTACK_TYPES.AT_MELEE,
-                    IsTheDefaultMelee = true,
+                    AttackSpeed = 2.0f,
+                    
                 });
-                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank] = true;
+                EntireFight.LastAttack.AffectsRole[PLAYER_ROLES.MainTank] = true;
 
-                this[i].Attacks.Add(new Attack
-                {
+                EntireFight.Attacks.Add(new Attack {
                     Name = "OT Melee",
+                    AttackType = ATTACK_TYPES.AT_MELEE, IsTheDefaultMelee = true,
                     DamageType = ItemDamageType.Physical,
                     DamagePerHit = BossHandler.StandardMeleePerHit[(int)Content[i]],
                     MaxNumTargets = 1f,
-                    AttackSpeed = this[i].BerserkTimer / ((this[i].BerserkTimer - ((15f + 3f) * 2f)) / 4),
-                    AttackType = ATTACK_TYPES.AT_MELEE,
-
-                    IsTheDefaultMelee = false,
+                    AttackSpeed = 2.0f,
                 });
-                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank] = true;
+                EntireFight.LastAttack.AffectsRole[PLAYER_ROLES.OffTank] = true;
+                #endregion
 
+                #region Meteor Slash
                 // Meteor Slash - Deals 200000/475000 Fire damage split between enemy targets within 65 yards in front of the caster.
                 //     Increases Fire damage taken to all targets affected by 100%.
                 //     Half the raid stacks on one side and takes the debuff for 1 stack
-                this[i].Attacks.Add(new Attack
-                {
+                EntireFight.Attacks.Add(new Attack {
                     Name = "Meteor Slash [Group 1]",
                     DamageType = ItemDamageType.Fire,
                     AttackType = ATTACK_TYPES.AT_AOE,
                     // Half the raid is getting hit with about 40k damage per attack.
-                    DamagePerHit = new float[] { 200000, 475000, 200000 * 1.25f, 475000 * 1.25f }[i],
+                    DamagePerHit = new float[] { 200000, 475000, }[i] / (Max_Players[i] / 2),
                     MaxNumTargets = Max_Players[i] / 2f,
-                    // Berserk time minus Firestorm and Firestorm cast time (Firestorm (15 second spell + 3 second cast time; spell is cast 2 times in the fight) - 264 seconds
                     // Frequency is 16.5 seconds, with a 1.25 second cast time - 17.75 seconds
-                    // Divide those two numbers to get the number of times in the fight that the spell is cast - 14.87324
-                    // all dividing the Berserk timer (should come up with 20.17045 second attack speed)
-                    AttackSpeed = this[i].BerserkTimer / ((this[i].BerserkTimer - ((15f + 3f) * 2f)) / (16.5f + 1.25f)) * 2,
-
-                    Dodgable = false,
-                    Missable = false,
-                    Parryable = false,
-                    Blockable = false,
+                    AttackSpeed = 16.5f + 1.25f,
                 });
-                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank] = true;
-                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank] = true;
-                this[i].Attacks[this[i].Attacks.Count - 1].SetAffectsRoles_DPS();
-                this[i].Attacks[this[i].Attacks.Count - 1].SetAffectsRoles_Healers();
+                EntireFight.LastAttack.SetUnavoidable();
+                EntireFight.LastAttack.AffectsRole[PLAYER_ROLES.MainTank] = true;
+                EntireFight.LastAttack.AffectsRole[PLAYER_ROLES.TertiaryTank] = true;
+                EntireFight.LastAttack.SetAffectsRoles_DPS();
+                EntireFight.LastAttack.SetAffectsRoles_Healers();
 
-                this[i].Attacks.Add(new Attack
-                {
+                EntireFight.Attacks.Add(new Attack {
                     Name = "Meteor Slash [Group 2]",
                     DamageType = ItemDamageType.Fire,
                     AttackType = ATTACK_TYPES.AT_AOE,
                     // Half the raid is getting hit with about 40k damage per attack.
-                    DamagePerHit = new float[] { 200000, 475000, 200000 * 1.25f, 475000 * 1.25f }[i],
+                    DamagePerHit = new float[] { 200000, 475000, }[i] / (Max_Players[i] / 2),
                     MaxNumTargets = Max_Players[i] / 2f,
-                    AttackSpeed = this[i].BerserkTimer / ((this[i].BerserkTimer - ((15f + 3f) * 2f)) / (16.5f + 1.25f)) * 2,
-
-                    Dodgable = false,
-                    Missable = false,
-                    Parryable = false,
-                    Blockable = false,
+                    AttackSpeed = 16.5f + 1.25f,
                 });
-                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank] = true;
-                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank] = true;
-                this[i].Attacks[this[i].Attacks.Count - 1].SetAffectsRoles_DPS();
-                this[i].Attacks[this[i].Attacks.Count - 1].SetAffectsRoles_Healers();
+                EntireFight.LastAttack.SetUnavoidable();
+                EntireFight.LastAttack.AffectsRole[PLAYER_ROLES.OffTank] = true;
+                EntireFight.LastAttack.AffectsRole[PLAYER_ROLES.TertiaryTank] = true;
+                EntireFight.LastAttack.SetAffectsRoles_DPS();
+                EntireFight.LastAttack.SetAffectsRoles_Healers();
+                #endregion
 
+                #region Consuming Darkness
                 // Consuming Darkness - The Shambling Doom inflicts 2,925 to 3,075 Shadow damage and additional Shadow damage every 0.5 sec for 15 sec. 100 yard range. Instant
                 // Damage appears to increase additively as the dot progress:
                 // .5s = 3k, 1s = 6k, 1.5s = 9k, ..., 15s = 90k
                 // total damage for the full duration is 1,395,000
                 // Can be dispelled
-                this[i].Attacks.Add(new Attack
+                EntireFight.Attacks.Add(new Attack
                 {
                     Name = "Consuming Darkness",
                     IsDoT = true,
@@ -132,26 +124,24 @@ namespace Rawr.Bosses
                     TickInterval = .5f,
                     DamagePerTick = 165000f / 10f,
                     //Interruptable = true,
-                    MaxNumTargets = new float[] { 3, 7, 3, 7 }[i],
+                    MaxNumTargets = new float[] { 3, 7, }[i],
                     // Berserk time minus Firestorm and Firestorm cast time (Firestorm (15 second spell + 3 second cast time; spell is cast 2 times in the fight) - 264 seconds
                     // Frequency is 22 seconds - 22 seconds
                     // Divide those two numbers to get the number of times in the fight that the spell is cast - 12
                     // all dividing the Berserk timer (should come up with 25 second attack speed)
-                    AttackSpeed = this[i].BerserkTimer / ((this[i].BerserkTimer - ((15f + 3f) * 2f)) / (22f)),
-
-                    Dodgable = false,
-                    Missable = false,
-                    Parryable = false,
-                    Blockable = false,
+                    AttackSpeed = 22f,
                 });
-                this[i].Attacks[this[i].Attacks.Count - 1].SetAffectsRoles_DPS();
-                this[i].Attacks[this[i].Attacks.Count - 1].SetAffectsRoles_Healers();
+                EntireFight.LastAttack.SetUnavoidable();
+                EntireFight.LastAttack.SetAffectsRoles_DPS();
+                EntireFight.LastAttack.SetAffectsRoles_Healers();
+                #endregion
 
+                #region Fel Firestorm
                 // Fel Firestorm - Used at 66% and 33%. Argaloth shoots fireballs into the air which will fall down and leave a patch of flame on the ground.
                 //        These patches deal 8,287 - 8,712 Fire damage as long as you are standing in them and they can appear (or will only appear?) directly under a players feet.
                 //        Most of the room will be covered in flames at the end of this ability (think of Mimiron hardmode) before all flames will disappear and he will resume
                 //        attacking you with his normal abilities. 50,000 yards range. 3 sec cast. Lasts 15 seconds. 
-                this[i].Attacks.Add(new Attack
+                FelFirestorm.Attacks.Add(new Attack
                 {
                     Name = "Fel Firestorm",
                     IsDoT = true,
@@ -162,25 +152,35 @@ namespace Rawr.Bosses
                     // Adjusting damage to take into account for the 100% fire damage debuff from Meteor Strike Debuff
                     DamagePerTick = ((8287f + 8712f) / 2f) * 2,
                     MaxNumTargets = Max_Players[i],
-                    AttackSpeed = 133f,
-
-                    Dodgable = false,
-                    Missable = false,
-                    Parryable = false,
-                    Blockable = false,
+                    AttackSpeed = 15+3,
                 });
-                this[i].Attacks[this[i].Attacks.Count - 1].SetAffectsRoles_All();
-                this[i].Moves.Add(new Impedance() {
+                FelFirestorm.LastAttack.SetUnavoidable();
+                FelFirestorm.LastAttack.SetAffectsRoles_All();
+                FelFirestorm.Moves.Add(new Impedance() {
                     Name = "Fel Firestorm (Getting Away)",
-                    Frequency = 133f,
+                    Frequency = 15 + 3,
                     // Fires are still around 3 seconds after he finishes channeling the spell and people need to get back to their groups
                     Duration = (15f + 3f) * 1000f,
                     Chance = 1f,
-                    Breakable = true, // Movement breakable means movement speed and jumps/charges so yes it is breakable
-                    AffectsRole = this[i].Attacks[this[i].Attacks.Count-1].AffectsRole,
+                    Breakable = true, // Movement is always breakable
+                    AffectsRole = FelFirestorm.LastAttack.AffectsRole,
                 });
+                #endregion
+
+                #region Apply Phases
+                // 5 minute Berserk Timer with Firestorm only last 18 seconds twice.
+                // Pushing distro of normal fighting to more in the first two to account for executes
+                int phaseStartTime = 0;
+                ClearPhase1Values(ref FelFirestorm);
+                ApplyAPhasesValues(ref EntireFight,  i, 1, phaseStartTime, 92, this[i].BerserkTimer); phaseStartTime += 92;
+                ApplyAPhasesValues(ref FelFirestorm, i, 2, phaseStartTime, 18, this[i].BerserkTimer); phaseStartTime += 18;
+                ApplyAPhasesValues(ref EntireFight,  i, 3, phaseStartTime, 92, this[i].BerserkTimer); phaseStartTime += 92;
+                ApplyAPhasesValues(ref FelFirestorm, i, 4, phaseStartTime, 18, this[i].BerserkTimer); phaseStartTime += 18;
+                ApplyAPhasesValues(ref EntireFight,  i, 5, phaseStartTime, 80, this[i].BerserkTimer);
+                AddAPhase(EntireFight, i);
+                AddAPhase(FelFirestorm, i);
+                #endregion
             }
-            #endregion
             #endregion
             #region Defensive
             Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
@@ -191,19 +191,7 @@ namespace Rawr.Bosses
             Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
             Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
             #endregion
-            #region Impedances
-            /*for (int i = 0; i < 2; i++)
-            {
-                //Moves;
-                //Stuns;
-                //Fears;
-                //Roots;
-                //Disarms;
-            }*/
             TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
-            #endregion
-            /* TODO:
-             */
         }
     }
     #endregion
@@ -231,133 +219,136 @@ namespace Rawr.Bosses
             Min_Tanks = new int[] { 2, 2, 3, 3 };
             Min_Healers = new int[] { 3, 5, 3, 6 };
             #endregion
-            #region Offensive
-            #region Multiple Targets
-            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
-            #endregion
-            #region Attacks
+            #region Phase Info
             for (int i = 0; i < 4; i++)
             {
-                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+                Phase NotBurnExposedHeadNormal = new Phase() { Name = "Not Burning Exposed Head", };
+                Phase NotBurnExposedHeadHeroicAbove30 = new Phase() { Name = "Not Burning Exposed Head (Above 30%)", };
+                Phase NotBurnExposedHeadHeroicUnder30 = new Phase() { Name = "Not Burning Exposed Head (Under 30%)", };
+                Phase BurnExposedHead = new Phase() { Name = "Burning Exposed Head", };
 
+                #region Not Burning Exposed Head
+                // Adding Melee as constant for the whole fight until I read otherwise
+                NotBurnExposedHeadNormal.Attacks.Add(GenAStandardMelee(this[i].Content));
+                NotBurnExposedHeadHeroicAbove30.Attacks.Add(NotBurnExposedHeadNormal.LastAttack.Clone());
+                NotBurnExposedHeadHeroicUnder30.Attacks.Add(NotBurnExposedHeadNormal.LastAttack.Clone());
+                #region Magma Spit
+                // Magmaw will constantly cast Magma Spit at random players, as well as Lava Spew. This must be healed through
+                NotBurnExposedHeadNormal.Attacks.Add(new Attack {
+                    Name = "Magma Spit",
+                    AttackType = ATTACK_TYPES.AT_RANGED,
+                    DamageType = ItemDamageType.Fire,
+                    DamagePerHit = new float[] { (30625f + 39375f), (30625f + 39375f), (39375f + 50625f), (39375f + 50625f) }[i] / 2f,
+                    MaxNumTargets = new float[] { 2f, 8f, 2f, 8f }[i],
+                    AttackSpeed = 10f,
+                });
+                NotBurnExposedHeadNormal.LastAttack.AffectsRole[PLAYER_ROLES.TertiaryTank] = true;
+                NotBurnExposedHeadNormal.LastAttack.AffectsRole[PLAYER_ROLES.RangedDPS] = true;
+                NotBurnExposedHeadNormal.LastAttack.SetAffectsRoles_Healers();
+                NotBurnExposedHeadHeroicAbove30.Attacks.Add(NotBurnExposedHeadNormal.LastAttack.Clone());
+                NotBurnExposedHeadHeroicUnder30.Attacks.Add(NotBurnExposedHeadNormal.LastAttack.Clone());
+                #endregion
+                #region Lava Spew
+                // Magmaw will constantly cast Magma Spit at random players, as well as Lava Spew. This must be healed through
+                NotBurnExposedHeadNormal.Attacks.Add(new Attack {
+                    Name = "Lava Spew",
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamageType = ItemDamageType.Fire,
+                    DamagePerHit = new float[] { (18500f + 21500f), (18500f + 21500f), (27750f + 32250f), (27750f + 32250f) }[i] / 2f,
+                    MaxNumTargets = Max_Players[i],
+                    AttackSpeed = 24f,
+                });
+                NotBurnExposedHeadNormal.LastAttack.SetAffectsRoles_All();
+                NotBurnExposedHeadHeroicAbove30.Attacks.Add(NotBurnExposedHeadNormal.LastAttack.Clone());
+                NotBurnExposedHeadHeroicUnder30.Attacks.Add(NotBurnExposedHeadNormal.LastAttack.Clone());
+                #endregion
                 #region Pillar of Flame
-                // Pillar of Flame
-                // Hurls a burst of boiling magma at an enemy, 
-                // blasting them for 24375 to 25625 damage and sundering the ground.
-                this[i].Attacks.Add(new Attack
-                {
+                // Magmaw will cast Pillar of Flame, marking a location and giving you four seconds to get out of
+                // the area. If you are too slow to move, you will be thrown into the air and take massive fall
+                // damage, most likely leading to death.
+                NotBurnExposedHeadNormal.Attacks.Add(new Attack {
                     Name = "Pillar of Flame",
                     AttackType = ATTACK_TYPES.AT_RANGED,
-                    DamagePerHit = (24375f + 25625f) / 2f,
                     DamageType = ItemDamageType.Fire,
+                    DamagePerHit = (24375f + 25625f) / 2f,
                     MaxNumTargets = Max_Players[i],
-                    AttackSpeed = 32f, // TODO: Not cast in P2
-                    Interruptable = true, // Range needs to run out of it.
+                    AttackSpeed = 32f,
                 });
-                this[i].Attacks[this[i].Attacks.Count - 1].SetAffectsRoles_Healers();
-                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
-                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS]
-                    = true;
-                this[i].Moves.Add(new Impedance {
-                    Name = "Pillar of Flame (Getting Away)",
-                    Frequency = this[i].Attacks[this[i].Attacks.Count - 1].AttackSpeed,
-                    Duration = 2 * 1000f, // takes about 2 seconds to move out of the Pillar
+                NotBurnExposedHeadNormal.LastAttack.SetAffectsRoles_Healers();
+                NotBurnExposedHeadNormal.LastAttack.AffectsRole[PLAYER_ROLES.TertiaryTank] = true;
+                NotBurnExposedHeadNormal.LastAttack.AffectsRole[PLAYER_ROLES.RangedDPS] = true;
+                NotBurnExposedHeadHeroicAbove30.Attacks.Add(NotBurnExposedHeadNormal.LastAttack.Clone());
+                NotBurnExposedHeadHeroicUnder30.Attacks.Add(NotBurnExposedHeadNormal.LastAttack.Clone());
+                NotBurnExposedHeadNormal.Moves.Add(new Impedance {
+                    Name = "Pillar of Flame (Avoiding)",
+                    Frequency = NotBurnExposedHeadNormal.LastAttack.AttackSpeed,
+                    Duration = 3f * 1000f, // takes about 3 seconds to move out of the Pillar's mark
                     // Max Players - 2 players for the MT and OT and assume 1/3rd of the remainder is melee
-                    Chance = ((Max_Players[i] - 2f) * 2f / 3f) / Max_Players[i],
+                    Chance = ((Max_Players[i] - Min_Tanks[i]) * 2f / 3f) / Max_Players[i],
                     Breakable = true,
+                    AffectsRole = NotBurnExposedHeadNormal.LastAttack.AffectsRole,
                 });
-                this[i].Moves[this[i].Moves.Count - 1].SetAffectsRoles_Healers();
-                this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
-                    = this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS]
-                    = true;
-                #endregion
-                #region Parasites
+                NotBurnExposedHeadHeroicAbove30.Moves.Add(NotBurnExposedHeadNormal.LastMove.Clone());
+                NotBurnExposedHeadHeroicUnder30.Moves.Add(NotBurnExposedHeadNormal.LastMove.Clone());
+                #region Parasites (spawned by Pillar of Flame
                 // Spawns 9 Parasites
                 // killed within 30 seconds on normal; kited and killed on the go between each slump on heroic.
-                this[i].Targets.Add(new TargetGroup
-                {
+                NotBurnExposedHeadNormal.Targets.Add(new TargetGroup {
                     Name = "Parasites",
+                    LevelOfTargets = 85,
                     NumTargs = 9f,
-                    Chance = 1f,
+                    Chance = 1.00f,
                     Duration = new float[] { 30f, 30f, 90f, 90f }[i] * 1000f,
-                    Frequency = 30f,
+                    Frequency = NotBurnExposedHeadNormal.LastAttack.AttackSpeed,
                     NearBoss = false,
+                    AffectsRole = NotBurnExposedHeadNormal.LastAttack.AffectsRole,
                 });
-                this[i].Targets[this[i].Targets.Count - 1].SetAffectsRoles_All();
+                NotBurnExposedHeadHeroicAbove30.Targets.Add(NotBurnExposedHeadNormal.LastTarget.Clone());
+                NotBurnExposedHeadHeroicUnder30.Targets.Add(NotBurnExposedHeadNormal.LastTarget.Clone());
                 // If player touches a Parasite they get a dot that does damage
-                this[i].Attacks.Add(new Attack
-                {
+                NotBurnExposedHeadNormal.Attacks.Add(new Attack {
                     Name = "Parasitic Infection",
                     AttackType = ATTACK_TYPES.AT_RANGED,
                     DamageType = ItemDamageType.Fire,
                     DamagePerHit = (12025f + 13975f) / 2f,
                     Duration = 10f,
                     TickInterval = 2f,
-                    MaxNumTargets = Max_Players[i],
+                    MaxNumTargets = NotBurnExposedHeadNormal.LastAttack.MaxNumTargets,
                     AttackSpeed = 30f,
-
-                    // interuptable by moving away from the parasites
-                    Interruptable = true,
+                    AffectsRole = NotBurnExposedHeadNormal.LastAttack.AffectsRole,
                 });
-                this[i].Attacks[this[i].Targets.Count - 1].SetAffectsRoles_Healers();
-                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
-                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS]
-                    = true;
+                NotBurnExposedHeadHeroicAbove30.Attacks.Add(NotBurnExposedHeadNormal.LastAttack.Clone());
+                NotBurnExposedHeadHeroicUnder30.Attacks.Add(NotBurnExposedHeadNormal.LastAttack.Clone());
                 // This should not affect Melee and MT/OT only range and healers
-                this[i].Moves.Add(new Impedance {
+                NotBurnExposedHeadNormal.Moves.Add(new Impedance {
                     Name = "Parasitic Infection (Avoidance)",
-                    Frequency = this[i].Attacks[this[i].Attacks.Count - 1].AttackSpeed,
+                    Frequency = NotBurnExposedHeadNormal.LastAttack.AttackSpeed,
                     Chance = 1f,
                     Duration = 3f * 1000f,
                     Breakable = true, // movement is always breakable
+                    AffectsRole = NotBurnExposedHeadNormal.LastAttack.AffectsRole,
                 });
-                this[i].Targets[this[i].Targets.Count - 1].SetAffectsRoles_Healers();
-                this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS] = true;
-                if (i == 2 || i == 3)
-                {
+                NotBurnExposedHeadHeroicAbove30.Moves.Add(NotBurnExposedHeadNormal.LastMove.Clone());
+                NotBurnExposedHeadHeroicUnder30.Moves.Add(NotBurnExposedHeadNormal.LastMove.Clone());
+                if (i == 2 || i == 3) {
+                    // disable the last move and replace it with this other one for TT on Heroic
+                    NotBurnExposedHeadHeroicAbove30.LastMove.AffectsRole[PLAYER_ROLES.TertiaryTank] = false;
+                    NotBurnExposedHeadHeroicUnder30.LastMove.AffectsRole[PLAYER_ROLES.TertiaryTank] = false;
                     // Kiting Tank is moving all the time on heroic
-                    this[i].Moves.Add(new Impedance
-                    {
+                    NotBurnExposedHeadHeroicAbove30.Moves.Add(new Impedance {
                         Name = "Kiting Tank Movement",
                         Chance = new float[] { 0f, 0f, 1f, 1f }[i] / Max_Players[i],
-                        Duration = new float[] { 0f, 0f, BerserkTimer[i], BerserkTimer[i] }[i] * 1000f,
+                        Duration = new float[] { 0f, 0f, 3, 3 }[i] * 1000f,
+                        Frequency = new float[] { 0f, 0f, 5, 5 }[i],
                         Breakable = true, // movement is always breakable
-                        Frequency = new float[] { 0f, 0f, BerserkTimer[i] - 1, BerserkTimer[i] - 1 }[i]
                     });
-                    this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank] = true;
+                    NotBurnExposedHeadHeroicAbove30.LastMove.AffectsRole[PLAYER_ROLES.TertiaryTank] = true;
+                    NotBurnExposedHeadHeroicUnder30.Moves.Add(NotBurnExposedHeadHeroicAbove30.LastMove.Clone());
                 }
                 #endregion
-                #region Magma Spit
-                this[i].Attacks.Add(new Attack
-                {
-                    Name = "Magma Spit",
-                    AttackType = ATTACK_TYPES.AT_RANGED,
-                    DamagePerHit = new float[] { (30625f + 39375f), (39375f + 50625f), (30625f + 39375f), (39375f + 50625f) }[i] / 2f,
-                    DamageType = ItemDamageType.Fire,
-                    MaxNumTargets = new float[] { 2f, 8f, 2f, 2f }[i],
-                    AttackSpeed = 10f, // TODO: Need adjusting so that it is not being cast during P2
-                });
-                this[i].Targets[this[i].Targets.Count - 1].SetAffectsRoles_Healers();
-                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
-                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS]
-                    = true;
                 #endregion
-                #region Lava Spew
-                this[i].Attacks.Add(new Attack
-                {
-                    Name = "Lava Spew",
-                    AttackType = ATTACK_TYPES.AT_AOE,
-                    DamagePerHit = new float[] { (30625f + 39375f), (39375f + 50625f), (30625f + 39375f), (39375f + 50625f) }[i] / 2f,
-                    DamageType = ItemDamageType.Fire,
-                    MaxNumTargets = Max_Players[i],
-                    AttackSpeed = 24f, // TODO: Need adjusting so that it is not being cast during P2
-                });
-                this[i].Attacks[this[i].Attacks.Count - 1].SetAffectsRoles_All();
-                #endregion
-                #region Mangle & Ignition
-                this[i].Attacks.Add(new Attack
-                {
+                #region Mangle
+                NotBurnExposedHeadNormal.Attacks.Add(new Attack {
                     Name = "Mangle",
                     AttackType = ATTACK_TYPES.AT_MELEE,
                     DamagePerHit = new float[] { (110464f + 128377f), (132557f + 154052f), (132557f + 154052f), (154649f + 179728f) }[i] / 2f,
@@ -368,30 +359,121 @@ namespace Rawr.Bosses
                     MaxNumTargets = 1f,
                     AttackSpeed = 90f,
                 });
-                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
-                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
-                    = true;
+                NotBurnExposedHeadNormal.LastAttack.AffectsRole[PLAYER_ROLES.MainTank] = true;
+                NotBurnExposedHeadNormal.LastAttack.AffectsRole[PLAYER_ROLES.OffTank] = true;
+                NotBurnExposedHeadHeroicAbove30.Attacks.Add(NotBurnExposedHeadNormal.LastAttack.Clone());
+                NotBurnExposedHeadHeroicUnder30.Attacks.Add(NotBurnExposedHeadNormal.LastAttack.Clone());
+                #endregion
+                // Mangle Triggers Phase 2, Ignition is handled as part of Phase 2
+                #region Blazing Inferno (Heroic Modes Above 30% Magmaw HP Only)
+                if (i == 2 || i == 3) {
+                    // In Heroic Mode, Blazing Infernos are spawned by Nefarian, but only above 30%
+                    #region Inferno Itself
+                    NotBurnExposedHeadHeroicAbove30.Attacks.Add(new Attack {
+                        Name = "Blazing Inferno",
+                        AttackType = ATTACK_TYPES.AT_RANGED,
+                        DamageType = ItemDamageType.Fire,
+                        DamagePerHit = new float[] { 0f, 0f, (50875f + 59125f), (50875f + 59125f) }[i] / 2f,
+                        MaxNumTargets = Max_Players[i],
+                        AttackSpeed = new float[] { 0f, 0f, 35f, 35f }[i],
+                    });
+                    NotBurnExposedHeadHeroicAbove30.LastAttack.SetAffectsRoles_Healers();
+                    NotBurnExposedHeadHeroicAbove30.LastAttack.AffectsRole[PLAYER_ROLES.TertiaryTank] = true;
+                    NotBurnExposedHeadHeroicAbove30.LastAttack.AffectsRole[PLAYER_ROLES.RangedDPS] = true;
+                    NotBurnExposedHeadHeroicAbove30.Moves.Add(new Impedance {
+                        Name = "Blazing Inferno (Avoiding)",
+                        Frequency = NotBurnExposedHeadHeroicAbove30.LastAttack.AttackSpeed,
+                        Chance = ((Max_Players[i] - Min_Tanks[i]) * 2f / 3f) / Max_Players[i], // Max Players - 2 players for the MT and OT and assume 1/3rd of the remainder is melee
+                        Duration = 2f * 1000f, // takes about 2 seconds to move out of the Pillar
+                        Breakable = true, // Movement is always breakable
+                        AffectsRole = NotBurnExposedHeadHeroicAbove30.LastAttack.AffectsRole,
+                    });
+                    #endregion
+                    #region Blazing Bone Constructs (spawned from Inferno)
+                    NotBurnExposedHeadHeroicAbove30.Targets.Add(new TargetGroup {
+                        Name = "Blazing Bone Constructs",
+                        LevelOfTargets = 85,
+                        NearBoss = true,
+                        NumTargs = 1f,
+                        Chance = new float[] { 0f, 0f, 1f, 1f }[i],
+                        Frequency = new float[] { 0f, 0f, 30f, 30f }[i],
+                        Duration = new float[] { 0f, 0f, 30f, 30f }[i] * 1000f,
+                    });
+                    NotBurnExposedHeadHeroicAbove30.LastTarget.AffectsRole[PLAYER_ROLES.OffTank] = true;
+                    NotBurnExposedHeadHeroicAbove30.LastTarget.SetAffectsRoles_DPS();
 
+                    NotBurnExposedHeadHeroicAbove30.Attacks.Add(new Attack {
+                        Name = "Blazing Bone Constructs (Melee)",
+                        AttackType = ATTACK_TYPES.AT_MELEE,
+                        DamagePerHit = BossHandler.StandardMeleePerHit[(int)Content[i]] / 2f,
+                        MaxNumTargets = new float[] { 0f, 0f, 1f, 1f }[i],
+                        AttackSpeed = 2.0f,
+                        Blockable = true,
+                        Dodgable = true,
+                        Parryable = true,
+                        Missable = true,
+                    });
+                    NotBurnExposedHeadHeroicAbove30.LastAttack.AffectsRole[PLAYER_ROLES.OffTank] = true;
+
+                    // At 20% HP these start casting an 8 second cast that if not killed, will wipe the raid
+                    NotBurnExposedHeadHeroicAbove30.Attacks.Add(new Attack {
+                        Name = "Armageddon",
+                        AttackType = ATTACK_TYPES.AT_AOE,
+                        DamageType = ItemDamageType.Fire,
+                        DamagePerHit = new float[] { 0f, 0f, (118750f + 131250f), (118750f + 131250f) }[i] / 2f,
+                        MaxNumTargets = Max_Players[i],
+                        AttackSpeed = 30f,
+                    });
+                    NotBurnExposedHeadHeroicAbove30.LastAttack.SetAffectsRoles_All(); // everyone has to burn them
+                    #endregion
+                }
+                #endregion
+                #region Shadowflame Barrage (Heroic Modes Under 30% Magmaw HP Only)
+                if (i == 2 || i == 3) {
+                    NotBurnExposedHeadHeroicUnder30.Attacks.Add(new Attack {
+                        Name = "Shadowflame Barrage",
+                        AttackType = ATTACK_TYPES.AT_AOE,
+                        DamageType = ItemDamageType.Shadow,
+                        DamagePerHit = new float[] { 0, 0, (22500f + 27500f), (36000f + 44000f) }[i] / 2f,
+                        MaxNumTargets = new float[] { 0f, 0f, 2f, 2f }[i],
+                        // attacks every second in P3 (at 30%)
+                        AttackSpeed = new float[] { 0f, 0f, 1, 1 }[i],
+                    });
+                    NotBurnExposedHeadHeroicUnder30.LastAttack.SetAffectsRoles_All();
+                }
+                #endregion
+                #endregion
+                #region Burning Exposed Head
+                // Mangle is handled as part of Phase 1
+                #region Mangle Debuff: Tanks loses 50% armor
                 // Tanks gain a 50% armor reduction after being affected by a Mangle
-                this[i].BuffStates.Add(new BuffState
-                {
+                BurnExposedHead.BuffStates.Add(new BuffState {
                     Name = "Sweltering Armor",
                     Breakable = false,
-                    Chance = 1f / Max_Players[i],
-                    Duration = 90f,
+                    Chance = 1f / 2f, // it's a 50/50 chance you will be the tank that gets it
+                    Duration = 90f * 1000f,
                     Frequency = 90f,
-                    Stats = new Stats() { BonusArmorMultiplier = -0.50f }
+                    Stats = new Stats() { ArmorReductionMultiplier = 0.50f },
                 });
-                this[i].BuffStates[this[i].BuffStates.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
-                    = this[i].BuffStates[this[i].BuffStates.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
-                    = true;
-
+                BurnExposedHead.LastBuffState.AffectsRole[PLAYER_ROLES.MainTank] = true;
+                BurnExposedHead.LastBuffState.AffectsRole[PLAYER_ROLES.OffTank] = true;
+                #endregion
+                #region Exposed Head Debuff: you deal 100% extra damage
+                BurnExposedHead.BuffStates.Add(new BuffState {
+                    Name = "Exposed Head",
+                    Breakable = false,
+                    Chance = 1f,
+                    Duration = 30f * 1000f,
+                    Frequency = 30,
+                    Stats = new Stats() { BonusDamageMultiplier = 1f },
+                });
+                BurnExposedHead.LastBuffState.SetAffectsRoles_All();
+                #endregion
+                #region Ignition
                 // While Mangle is used, half the room is hit with Ignition that affects everyone
-                // Assume 3 seconds to get out
-                this[i].Attacks.Add(new Attack {
+                BurnExposedHead.Attacks.Add(new Attack {
                     Name = "Ignition",
-                    AttackType = ATTACK_TYPES.AT_AOE,
-                    IsDoT = true,
+                    AttackType = ATTACK_TYPES.AT_AOE, IsDoT = true,
                     DamagePerHit = (23125f + 26875f) / 2f,
                     DamageType = ItemDamageType.Physical,
                     Duration = 10f, // should not last more than 10 seconds
@@ -399,124 +481,55 @@ namespace Rawr.Bosses
                     MaxNumTargets = Max_Players[i],
                     AttackSpeed = 90f,
                 });
-                this[i].Attacks[this[i].Attacks.Count - 1].SetAffectsRoles_All();
-                this[i].Moves.Add(new Impedance {
-                    Name = "Ignition (Getting Away)",
+                BurnExposedHead.LastAttack.SetAffectsRoles_All();
+                BurnExposedHead.Moves.Add(new Impedance {
+                    Name = "Ignition (Avoiding)",
                     Chance = 1f,
-                    Duration = 3f * 1000f,
-                    Breakable = true,
-                    Frequency = this[i].Attacks[this[i].Attacks.Count - 1].AttackSpeed,
-                    AffectsRole = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole,
+                    Duration = 3f * 1000f, // Assume 3 seconds to get out
+                    Breakable = true, // Movement is always breakable
+                    Frequency = BurnExposedHead.LastAttack.AttackSpeed,
+                    AffectsRole = BurnExposedHead.LastAttack.AffectsRole,
                 });
                 #endregion
-                #region Exposed Head
-                // When the exposed head is out, you deal 100% extra damage
-                this[i].BuffStates.Add(new BuffState
-                {
-                    Name = "Exposed Head",
-                    Breakable = false,
-                    Chance = 1f,
-                    Duration = 30f * 1000f,
-                    Frequency = 95f,
-                    Stats = new Stats() { BonusDamageMultiplier = 1f },
-                });
-                this[i].BuffStates[this[i].BuffStates.Count - 1].SetAffectsRoles_All();
                 #endregion
-                #region Blazing Bone Construct
-                if (i == 2 || i == 3)
-                {
-                    float timer = BerserkTimer[i] / ((BerserkTimer[i] * .7f) / 30f);
-                    this[i].Targets.Add(new TargetGroup
-                    {
-                        Name = "Blazing Bone Constructs",
-                        LevelOfTargets = (int)POSSIBLE_LEVELS.LVLP0,
-                        NearBoss = true,
-                        NumTargs = 1f,
-                        Chance = new float[] { 0f, 0f, 1f, 1f }[i],
-                        // does not spawn in P3
-                        Frequency = new float[] { 0f, 0f, timer, timer }[i],
-                        Duration = new float[] { 0f, 0f, 30f, 30f }[i],
-                    });
-                    this[i].Targets[this[i].Targets.Count - 1].AffectsRole[PLAYER_ROLES.OffTank] = true;
-                    this[i].Attacks.Add(new Attack
-                    {
-                        Name = "Blazing Bone Constructs Damage",
-                        DamagePerHit = BossHandler.StandardMeleePerHit[(int)Content[i]] / 2f,
-                        MaxNumTargets = new float[] { 0f, 0f, 1f, 1f }[i],
-                        AttackSpeed = 2.0f,
-                        AttackType = ATTACK_TYPES.AT_MELEE,
-                        AffectsRole = this[i].Targets[this[i].Targets.Count - 1].AffectsRole,
 
-                        Blockable = true,
-                        Dodgable = true,
-                        Parryable = true,
-                        Missable = true,
-                    });
+                #region Apply Phases
+                // Burn Phases should last about 30 seconds
+                int phaseStartTime = 0;
+                ClearPhase1Values(ref BurnExposedHead);
+                if (i == 0 || i == 1) {
+                    // 10 minute Berserk Timer 90+30=120 600/120=5. At most 10 phases (5 each)
+                    ApplyAPhasesValues(ref NotBurnExposedHeadNormal, i, 1, phaseStartTime, 90, this[i].BerserkTimer); phaseStartTime += 90;
+                    ApplyAPhasesValues(ref BurnExposedHead,          i, 2, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30;
+                    ApplyAPhasesValues(ref NotBurnExposedHeadNormal, i, 3, phaseStartTime, 90, this[i].BerserkTimer); phaseStartTime += 90;
+                    ApplyAPhasesValues(ref BurnExposedHead,          i, 4, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30;
+                    ApplyAPhasesValues(ref NotBurnExposedHeadNormal, i, 5, phaseStartTime, 90, this[i].BerserkTimer); phaseStartTime += 90;
+                    ApplyAPhasesValues(ref BurnExposedHead,          i, 6, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30;
+                    ApplyAPhasesValues(ref NotBurnExposedHeadNormal, i, 7, phaseStartTime, 90, this[i].BerserkTimer); phaseStartTime += 90;
+                    ApplyAPhasesValues(ref BurnExposedHead,          i, 8, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30;
+                    ApplyAPhasesValues(ref NotBurnExposedHeadNormal, i, 9, phaseStartTime, 90, this[i].BerserkTimer); phaseStartTime += 90;
+                    ApplyAPhasesValues(ref BurnExposedHead,          i,10, phaseStartTime, 30, this[i].BerserkTimer);
+                    AddAPhase(NotBurnExposedHeadNormal, i);
+                } else if (i == 2 || i == 3) {
+                    // Heroic has a Phase 3 which replace the normal phase 1 at 30% HP, start it at 600-180=420
+                    // 10 minute Berserk Timer 90+30=120 600/120=5. At most 10 phases (5 each), swap last Ph1 with a Ph3
+                    ClearPhase1Values(ref NotBurnExposedHeadHeroicUnder30);
+                    ApplyAPhasesValues(ref NotBurnExposedHeadHeroicAbove30, i, 1, phaseStartTime, 90, this[i].BerserkTimer); phaseStartTime += 90; // 90
+                    ApplyAPhasesValues(ref BurnExposedHead,                 i, 2, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30; //120
+                    ApplyAPhasesValues(ref NotBurnExposedHeadHeroicAbove30, i, 3, phaseStartTime, 90, this[i].BerserkTimer); phaseStartTime += 90; //210
+                    ApplyAPhasesValues(ref BurnExposedHead,                 i, 4, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30; //240
+                    ApplyAPhasesValues(ref NotBurnExposedHeadHeroicAbove30, i, 5, phaseStartTime, 90, this[i].BerserkTimer); phaseStartTime += 90; //330
+                    ApplyAPhasesValues(ref BurnExposedHead,                 i, 6, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30; //360
+                    ApplyAPhasesValues(ref NotBurnExposedHeadHeroicAbove30, i, 7, phaseStartTime, 90, this[i].BerserkTimer); phaseStartTime += 90; //450
+                    ApplyAPhasesValues(ref BurnExposedHead,                 i, 8, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30; //480
+                    ApplyAPhasesValues(ref NotBurnExposedHeadHeroicUnder30, i, 9, phaseStartTime, 90, this[i].BerserkTimer); phaseStartTime += 90; //570
+                    ApplyAPhasesValues(ref BurnExposedHead,                 i,10, phaseStartTime, 30, this[i].BerserkTimer);
+                    AddAPhase(NotBurnExposedHeadHeroicAbove30, i);
+                    AddAPhase(NotBurnExposedHeadHeroicUnder30, i);
                 }
-
-                // These spawn from a Blazing Inferno
-                if (i == 2 || i == 3)
-                {
-                    this[i].Attacks.Add(new Attack
-                    {
-                        Name = "Blazing Inferno",
-                        AttackType = ATTACK_TYPES.AT_RANGED,
-                        DamagePerHit = new float[] { 0f, 0f, (50875f + 59125f), (50875f + 59125f) }[i] / 2f,
-                        DamageType = ItemDamageType.Fire,
-                        MaxNumTargets = Max_Players[i],
-                        AttackSpeed = new float[] { 0f, 0f, 30f, 30f }[i], // TODO: Not cast in P2
-
-                        Interruptable = true, // Range needs to run out of it.
-                    });
-                    this[i].Attacks[this[i].Attacks.Count - 1].SetAffectsRoles_Healers();
-                    this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
-                        = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS]
-                        = true;
-                    this[i].Moves.Add(new Impedance {
-                        Name = "Blazing Inferno (Getting Away)",
-                        Frequency = this[i].Attacks[this[i].Attacks.Count - 1].AttackSpeed,
-                        Chance = ((Max_Players[i] - 2f) * 2f / 3f) / Max_Players[i], // Max Players - 2 players for the MT and OT and assume 1/3rd of the remainder is melee
-                        Duration = 2f * 1000f, // takes about 2 seconds to move out of the Pillar
-                        Breakable = true, // Movement is always breakable
-                        AffectsRole = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole,
-                    });
-                }
-
-                // At 20% HP these start casting an 8 second cast that if not killed, will wipe the raid
-                if (i == 2 || i == 3)
-                {
-                    this[i].Attacks.Add(new Attack
-                    {
-                        Name = "Armageddon",
-                        AttackType = ATTACK_TYPES.AT_AOE,
-                        DamageType = ItemDamageType.Fire,
-                        DamagePerHit = new float[] { 0f, 0f, (118750f + 131250f), (118750f + 131250f) }[i] / 2f,
-                        MaxNumTargets = Max_Players[i],
-                        AttackSpeed = 30f,
-
-                        Interruptable = true,
-                    });
-                    this[i].Attacks[this[i].Attacks.Count - 1].SetAffectsRoles_All();
-                }
-                #endregion
-                #region Shadowflame Barrage
-                if (i == 2 || i == 3)
-                {
-                    this[i].Attacks.Add(new Attack
-                    {
-                        Name = "Shadowflame Barrage",
-                        DamageType = ItemDamageType.Shadow,
-                        DamagePerHit = new float[] { 0, 0, (22500f + 27500f), (36000f + 44000f) }[i] / 2f,
-                        MaxNumTargets = new float[] { 0f, 0f, 2f, 2f }[i],
-                        // attacks every second in P3 (at 30%)
-                        AttackSpeed = new float[] { 0f, 0f, (BerserkTimer[i] / (BerserkTimer[i] * 0.3f)), (BerserkTimer[i] / (BerserkTimer[i] * 0.3f)) }[i],
-                        AttackType = ATTACK_TYPES.AT_AOE,
-                    });
-                    this[i].Attacks[this[i].Attacks.Count - 1].SetAffectsRoles_All();
-                }
+                AddAPhase(BurnExposedHead, i);
                 #endregion
             }
-            #endregion
             #endregion
             #region Defensive
             Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
@@ -527,19 +540,7 @@ namespace Rawr.Bosses
             Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
             Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
             #endregion
-            #region Impedances
-            /*for (int i = 0; i < 2; i++)
-            {
-                //Moves;
-                //Stuns;
-                //Fears;
-                //Roots;
-                //Disarms;
-            }*/
-            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
-            #endregion
-            /* TODO:
-             */
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0.00f, 0.00f };
         }
     }
 
@@ -564,21 +565,36 @@ namespace Rawr.Bosses
             Min_Tanks = new int[] { 2, 2, 2, 2 };
             Min_Healers = new int[] { 3, 5, 3, 5 };
             #endregion
-            #region Offensive
-            #region Multiple Targets
-            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
-            #endregion
-            #region Attacks
+            #region Phase Info
             for (int i = 0; i < 4; i++)
             {
-                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+                Phase Magtron = new Phase() { Name = "Magmatron (Alone)" };
+                Phase Arctron = new Phase() { Name = "Arcanotron (Alone)" };
+                Phase Toxtron = new Phase() { Name = "Toxitron (Alone)" };
+                Phase Elctron = new Phase() { Name = "Electron (Alone)" };
+#if FALSE
+                Phase MagtronArctron = new Phase() { Name = "Magmatron and Arcanotron" };
+                Phase MagtronToxtron = new Phase() { Name = "Magmatron and Toxitron" };
+                Phase MagtronElctron = new Phase() { Name = "Magmatron and Electron" };
+                Phase ArctronToxtron = new Phase() { Name = "Arcanotron and Toxitron" };
+                Phase ArctronElctron = new Phase() { Name = "Arcanotron and Electron" };
+                Phase ToxtronElctron = new Phase() { Name = "Toxitron and Electron" };
+
+                Phase MagtronArctronToxtron = new Phase() { Name = "Magmatron, Arcanotron and Toxitron" };
+                Phase MagtronArctronElctron = new Phase() { Name = "Magmatron, Arcanotron and Electron" };
+                Phase MagtronToxtronElctron = new Phase() { Name = "Magmatron, Toxitron and Electron" };
+                Phase ArctronToxtronElctron = new Phase() { Name = "Arcanotron, Toxitron and Electron" };
+#endif
 
                 #region "Magmatron, the fire golem"
+                #region Melee
+                Magtron.Attacks.Add(GenAStandardMelee(this[i].Content));
+                #endregion
+                #region Barrier - Broken
                 //  Barrier (10) / (25) - Magmatron "shield ability" in which he forms a barrier around himself, absorbing 300k(10m)/900k(25m) damage, and if broken, causes a
                 //      Backdraft (10) / (25), which deals 75k(10m)/115k(25m) to all raid members.
                 //      Basically, when he casts this, stop attacking Mamatron
-                this[i].Attacks.Add(new Attack
+                Magtron.Attacks.Add(new Attack
                 {
                     Name = "Barrier - Broken",
                     AttackType = ATTACK_TYPES.AT_AOE,
@@ -588,12 +604,13 @@ namespace Rawr.Bosses
                     AttackSpeed = 45, // In reality you don't want this ability to proc, so you "interupt" it. NOTE: Can't set this to 0 or it doesn't show up right in the UI
                     Interruptable = true, // Interupted by Stopping DPS
                 });
-                this[i].Attacks[this[i].Attacks.Count - 1].SetAffectsRoles_All();
-
+                Magtron.LastAttack.SetAffectsRoles_All();
+                #endregion
+                #region Incineration Security Measure
                 // Incineration Security Measure (10) / (25) - This ability is a raid-wide spell that is channeled and does 10k(10m)/15k(25m) fire damage every second
                 //      for 4 seconds.
                 // Has a 1.5 second cast time
-                this[i].Attacks.Add(new Attack {
+                Magtron.Attacks.Add(new Attack {
                     Name = "Incineration Security Measure",
                     AttackType = ATTACK_TYPES.AT_AOE,
                     IsDoT = true,
@@ -604,12 +621,13 @@ namespace Rawr.Bosses
                     MaxNumTargets = Max_Players[i],
                     AttackSpeed = 8f, // TODO: Get attack speed for this ability
                 });
-                this[i].Attacks[this[i].Attacks.Count - 1].SetAffectsRoles_All();
-
+                Magtron.LastAttack.SetAffectsRoles_All();
+                #endregion
+                #region Acquiring Target - Flamethrower
                 // Acquiring Target -> Flamethrower (10) / (25) - Magmatron will randomly target a raid member and channel a beam on them for 4 seconds to acquire his target.
                 //      After that time, Magmatron will use Flamethrower to that target and everyone directly behind him in a small cone, dealing 35k(10m)/50k(25m) damage
                 //      every second for 4 seconds.
-                this[i].Attacks.Add(new Attack
+                Magtron.Attacks.Add(new Attack
                 {
                     Name = "Acquiring Target - Flamethrower",
                     IsDoT = true,
@@ -621,53 +639,70 @@ namespace Rawr.Bosses
                     MaxNumTargets = 1f, // You really only want one person be hit by this. Assume it does not target a tank
                     AttackSpeed = 20f, // TODO: get attack speed for this ability
                 });
-                this[i].Attacks[this[i].Attacks.Count - 1].SetAffectsRoles_DPS();
-                this[i].Attacks[this[i].Attacks.Count - 1].SetAffectsRoles_Healers();
-                this[i].Moves.Add(new Impedance() {
+                Magtron.LastAttack.SetAffectsRoles_DPS();
+                Magtron.LastAttack.SetAffectsRoles_Healers();
+                Magtron.Moves.Add(new Impedance() {
                     Name = "Acquiring Target - Flamethrower (Avoidance)",
-                    Frequency = this[i].Attacks[this[i].Attacks.Count-1].AttackSpeed,
+                    Frequency = Magtron.LastAttack.AttackSpeed,
                     Duration = 4f * 1000f, // You have 4 seconds to get out of the way
                     Chance = 1f / Max_Players[i], // One random member of the raid is the one that gets targetted
                     Breakable = true, // Movement is always breakable
-                    AffectsRole = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole,
+                    AffectsRole = Magtron.LastAttack.AffectsRole,
                 });
+                #endregion
                 #endregion
 
                 #region "Arcanotron, the arcane golem"
+                #region Melee
+                Arctron.Attacks.Add(GenAStandardMelee(this[i].Content));
+                #endregion
+                #region Arcane Annihilator
                 /* Arcane Annihilator (10) / (25) - 1 second cast time spell used on a randomly targeted raid member, but is interruptable. It deals 40k(10m)/50k(25m) arcane
-                *      damage if it does go through.
-                *      
-                * Power Generator (10) / (25) - Creates a whirling pool of energy underneath a golem that increases the damage of any raid member or boss mob standing in it
-                *      by 50% and restores 250(10m)/500(25m) mana per every 0.5 second (Similar to Rune of Power from Iron Council). Lasts for 25 seconds (however it appears
-                *      as if the buff lasts for 10-15 seconds after the Power Generator despawns).
-                *      
-                * Power Conversion - Arcanotron's "shield ability" in which he gains a stacking buff, Converted Power, when taking damage that increases his magic damage and
-                *      cast speed by 10% per stack. Currently can be removed with a mage's Spellsteal.
-                *      */
+                 *      damage if it does go through. */
+                #endregion
+                #region Power Generator
+                /* Power Generator (10) / (25) - Creates a whirling pool of energy underneath a golem that increases the damage of any raid member or boss mob standing in it
+                 *      by 50% and restores 250(10m)/500(25m) mana per every 0.5 second (Similar to Rune of Power from Iron Council). Lasts for 25 seconds (however it appears
+                 *      as if the buff lasts for 10-15 seconds after the Power Generator despawns). */
+                #endregion
+                #region Power Conversion
+                /* Power Conversion - Arcanotron's "shield ability" in which he gains a stacking buff, Converted Power, when taking damage that increases his magic damage and
+                 *      cast speed by 10% per stack. Currently can be removed with a mage's Spellsteal. */
+                #endregion
                 #endregion
 
                 #region "Toxitron, the poison golem"
-                /* Chemical Cloud (10) / (25) - Large raidus debuff that increases damage taken by 50% and deals 3k(10m)/4k(25m) damamge every 5 seconds.
-                * 
-                * Poison Protocol (10) / (25) - Channeled for 9 seconds, and spawns 3(10m)/6(25m) Poison Bombs, one every 3(10m)/1.5(25m) seconds. The Poison Bombs (10) / (25)
-                *      have 78k(10m)/78k(25m) health and fixate on a target, then explode if they reach their target, dealing 90k(10m)/125k(25m) nature damage to players within
-                *      the area and spawn a Slime Pool which deals additional damage to players that stand in it.
-                *      
-                * Poison Soaked Shell - Toxitron's "shield ability" which causes player that attacks him to gain a stacking debuff, Soaked in Poison (10) / (25), which causes
-                *      that player to take 2k(10m)/5.5k(25m) nature damage every 2 seconds, however, they also will deal 10k additional nature damage to targets of their attacks.*/
+                #region Melee
+                Toxtron.Attacks.Add(GenAStandardMelee(this[i].Content));
+                #endregion
+                /* Chemical Cloud (10) / (25) - Large raidus debuff that increases damage taken by 50% and deals 3k(10m)/4k(25m) damamge every 5 seconds. */
+                /* Poison Protocol (10) / (25) - Channeled for 9 seconds, and spawns 3(10m)/6(25m) Poison Bombs, one every 3(10m)/1.5(25m) seconds. The Poison Bombs (10) / (25)
+                 *      have 78k(10m)/78k(25m) health and fixate on a target, then explode if they reach their target, dealing 90k(10m)/125k(25m) nature damage to players within
+                 *      the area and spawn a Slime Pool which deals additional damage to players that stand in it. */
+                /* Poison Soaked Shell - Toxitron's "shield ability" which causes player that attacks him to gain a stacking debuff, Soaked in Poison (10) / (25), which causes
+                 *      that player to take 2k(10m)/5.5k(25m) nature damage every 2 seconds, however, they also will deal 10k additional nature damage to targets of their attacks.*/
                 #endregion
 
                 #region "Electron, electricity golem"
+                #region Melee
+                Elctron.Attacks.Add(GenAStandardMelee(this[i].Content));
+                #endregion
                 /* Lightning Conductor (10) / (25) - A randomly targeted raid member will get this debuff which has a 10(10m)/15(25m) second duration and deals 25k damage to raid
-                *      members with 8 yards every 2 seconds.
-                *      
-                * Electrical Discharge (10) / (25) - A chain lightning type ability which deals 30k(10m)40k(25m) nature damage to a target and then to up to 2 additional targets
-                *      within 8 yards, damage increasing 20% each jump.
-                *      
-                * Unstable Shield - Electron's "shield ability" which causes at Static Shock at an attackers location, dealing 40k nature damage to raiders within 7 yards.*/
+                 *      members with 8 yards every 2 seconds. */
+                /* Electrical Discharge (10) / (25) - A chain lightning type ability which deals 30k(10m)40k(25m) nature damage to a target and then to up to 2 additional targets
+                 *      within 8 yards, damage increasing 20% each jump. */
+                /* Unstable Shield - Electron's "shield ability" which causes at Static Shock at an attackers location, dealing 40k nature damage to raiders within 7 yards.*/
+                #endregion
+
+                #region Apply Phases
+                // For now just doing Magmatron
+                int phaseStartTime = 0;
+                //ClearPhase1Values(ref FelFirestorm);
+                ApplyAPhasesValues(ref Magtron,  i, 1, phaseStartTime, this[i].BerserkTimer, this[i].BerserkTimer);
+                AddAPhase(Magtron, i);
+                //AddAPhase(FelFirestorm, i);
                 #endregion
             }
-            #endregion
             #endregion
             #region Defensive
             Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
@@ -678,17 +713,7 @@ namespace Rawr.Bosses
             Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
             Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
             #endregion
-            #region Impedances
-            /*for (int i = 0; i < 2; i++)
-            {
-                //Moves;
-                //Stuns;
-                //Fears;
-                //Roots;
-                //Disarms;
-            }*/
-            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
-            #endregion
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0.00f, 0.00f };
         }
     }
 
@@ -705,7 +730,7 @@ namespace Rawr.Bosses
             #region Basics
             Health = new float[] { 24700000f, 86650000f, 34631000f, 121310000f };
             MobType = (int)MOB_TYPES.DRAGONKIN;
-            BerserkTimer = new int[] { 7 * 60, 12 * 60, 7 * 60, 12 * 60 };
+            BerserkTimer = new int[] { 7 * 60, 12 * 60, 7 * 60, 12 * 60 }; // Source: http://us.battle.net/wow/en/blog/1232869
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
@@ -721,25 +746,59 @@ namespace Rawr.Bosses
             #region Attacks
             for (int i = 0; i < 4; i++)
             {
-                // Melee - TODO: After the Green Vial, doubled because of Debilitating Slime for 15 seconds
-                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+                Phase RedVial = new Phase() { Name = "Red Vial (Group Up!)" };
+                Phase BlueVial = new Phase() { Name = "Blue Vial (Spread Out!)" };
+                Phase GreenVial = new Phase() { Name = "Green Vial (Adds!)" };
+                Phase DarkVial = new Phase() { Name = "Dark Vial (Heroic!)" };
+                Phase Under25 = new Phase() { Name = "Under 25% HP" };
 
-                /* 
-                 * Release Aberrations - This is a 1.5 second summon used by the boss about every 30 seconds and can be interrupted. There will be 4 casts before each Green
-                 *      Vial phase, with each wave summoning 3 Aberration adds with 365k(10m)/1.3m(25m) health and melee for about 4k(10)/8k(25m) after mitigation and only
-                 *      1 stack of their buff, Growth Catalyst.
-                 *      
-                 * Arcane Storm (10) / (25) - This 6 second channeled spell is used often throughout the encounter and can be interrupted. It deals 8k(10m)/15k(25m) arcane
-                 *      damage to each raid member at 1 second intervals.
-                 *      
-                 * Remedy (10) / (25) - Maloriak occasionally uses this to buff himself, healing for 25k(10m)/75k(25m) and restoring 2k mana per second for 10 seconds. However,
-                 *      it can be removed with offensive magic dispels or can be taken via a mage's Spellsteal.
-                 *      
-                 * Berserk - Damage increased by 500%, attack and movement speed increased by 150%, and immune to Taunt effects. Triggered at 6 minutes into the fight.
-                 */ 
+                // TODO: Aberration and Prime Subject Damage
 
                 #region Phase 1
-                // Lets Assume each vial totals 1/3 of this phase, even if they do it multiple times
+                #region Common to all Vial Phases
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+                this[i].Attacks[this[i].Attacks.Count - 1].SetPhaseValue(1, 0, BerserkTimer[i], BerserkTimer[i]);
+                #region Arcane Storm
+                /* Arcane Storm (10) / (25) - This 6 second channeled spell is used often throughout the encounter and can be interrupted. It deals 8k(10m)/15k(25m) arcane
+                 *      damage to each raid member at 1 second intervals. */
+                RedVial.Attacks.Add(new Attack
+                {
+                    Name = "Arcane Storm",
+                    AttackType = ATTACK_TYPES.AT_AOE, IsDoT = true,
+                    DamageType = ItemDamageType.Arcane,
+                    DamagePerTick = new float[] { 14137 + 15862, 14137 + 15862, 14137 + 15862, 14137 + 15862 }[i] / 2f,
+                    Duration = 2, // Assuming players interupt him at 2s
+                    TickInterval = 1,
+                    AttackSpeed = 20, // TODO: Get proper attack speed
+                    MaxNumTargets = Max_Players[i], 
+                    Interruptable = true,
+                });
+                RedVial.LastAttack.SetUnavoidable();
+                RedVial.LastAttack.SetAffectsRoles_All();
+                BlueVial.Attacks.Add(RedVial.LastAttack.Clone());
+                GreenVial.Attacks.Add(RedVial.LastAttack.Clone());
+                #endregion
+                #region Release Aberrations
+                /* Release Aberrations - This is a 1.5 second summon used by the boss about every 30 seconds and can be interrupted. There will be 4 casts before each Green
+                 *      Vial phase, with each wave summoning 3 Aberration adds with 365k(10m)/1.3m(25m) health and melee for about 4k(10)/8k(25m) after mitigation and only
+                 *      1 stack of their buff, Growth Catalyst. */
+                RedVial.Targets.Add(new TargetGroup {
+                    Name = "Release Aberrations",
+                    LevelOfTargets = 85,
+                    NumTargs = 3,
+                    NearBoss = false,
+                    Frequency = 30,
+                    Duration = (60f * 1000f * 2f) + (15f * 1000f), // TODO: Should be tied to two phases, you build them up to nine, then AoE during a Green Vial Phase + 15 seconds to AoE them down
+                    Chance = 1.00f,
+                });
+                RedVial.LastTarget.AffectsRole[PLAYER_ROLES.OffTank] = true;
+                RedVial.LastTarget.AffectsRole[PLAYER_ROLES.RangedDPS] = true;
+                BlueVial.Targets.Add(RedVial.LastTarget.Clone());
+                GreenVial.Targets.Add(RedVial.LastTarget.Clone());
+                #endregion
+                /* TODO: Remedy (10) / (25) - Maloriak occasionally uses this to buff himself, healing for 25k(10m)/75k(25m) and restoring 2k mana per second for 10 seconds. However,
+                 *      it can be removed with offensive magic dispels or can be taken via a mage's Spellsteal. */
+                #endregion
                 #region Red Vial (Group Up!)
                 // Fire Imbued - This 40 second buff on Maloriak is triggered upon tossing a Red Vial into his cauldron. It allows the usage of his fire-based special abilities.
                 // NOTE: This has no bearing in modelling, it simply makes the other attacks active
@@ -747,48 +806,42 @@ namespace Rawr.Bosses
                 /* Consuming Flames (10) / (25) - This 10 second debuff during the Red Vial phase is placed on a random raid member and causes them to take 3k(10m)/6k(25m)
                  *      fire damage per second, and additionally, causes the target to take additional damage equal to 25% of the damage taken from other magic sources.
                  *      (Example: In 10-man, having this debuff and getting breathed on from a Scorching Blast that hits all 10 raid members, reducing the individual player's
-                 *      damage from Scorching Blast to 20k, will result in an additional 5k (which is 25% of 20,000) damage taken per second from Consuming Flames' secondary effect.)
-                 */
-                this[i].Attacks.Add(new Attack {
+                 *      damage from Scorching Blast to 20k, will result in an additional 5k (which is 25% of 20,000) damage taken per second from Consuming Flames' secondary effect.) */
+                RedVial.Attacks.Add(new Attack {
                     Name = "Consuming Flames",
-                    AttackType = ATTACK_TYPES.AT_RANGED,
-                    IsDoT = true,
+                    AttackType = ATTACK_TYPES.AT_RANGED, IsDoT = true,
                     DamageType = ItemDamageType.Fire,
                     DamagePerTick = new float[] { 3000, 6000, 3000, 6000 }[i],
                     Duration = 10,
                     TickInterval = 1,
                     MaxNumTargets = 1,
                     AttackSpeed = 45, // TODO: Get proper Attack Speed
-                    PhaseStartTime = 0,
-                    PhaseEndTime = 40,
                 });
-                this[i].Attacks[this[i].Attacks.Count - 1].SetAffectsRoles_All();
-                /* TODO: this[i].BuffStates.Add(new BuffState {
-                    Name = this[i].Attacks[this[i].Attacks.Count].Name,
-                    Frequency = this[i].Attacks[this[i].Attacks.Count].AttackSpeed,
-                    Duration = this[i].Attacks[this[i].Attacks.Count - 1].Duration,
-                    AffectsRole = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole,
-                    Chance = this[i].Attacks[this[i].Attacks.Count].MaxNumTargets / Max_Players[i],
-                    Stats = { FireResistance = -100 },
-                });*/
+                RedVial.LastAttack.SetAffectsRoles_All();
+                RedVial.BuffStates.Add(new BuffState {
+                    Name = RedVial.LastAttack.Name,
+                    Frequency = RedVial.LastAttack.AttackSpeed,
+                    Duration = RedVial.LastAttack.Duration * 1000f,
+                    AffectsRole = RedVial.LastAttack.AffectsRole,
+                    Chance = RedVial.LastAttack.MaxNumTargets / Max_Players[i],
+                    Stats = { FireDamageTakenMultiplier = 0.25f },
+                    Breakable = true, // Cloak of Shadows and similar abilities can break this debuff
+                });
                 #endregion
                 #region Scorching Blast
                 /* Scorching Blast (10) / (25) - This ability is only used when Maloriak is Fire Imbued, and deals 200k(10m)/500k(25m)
                    fire damage split between all players in a cone 60 yards in front of the boss. */
-                this[i].Attacks.Add(new Attack {
+                RedVial.Attacks.Add(new Attack {
                     Name = "Scorching Blast",
-                    AttackType = ATTACK_TYPES.AT_AOE,
-                    IsDoT = true,
+                    AttackType = ATTACK_TYPES.AT_AOE, IsDoT = true,
                     DamageType = ItemDamageType.Fire,
-                    DamagePerTick = new float[] { (14625 + 15375), (14625 + 15375) * 2, (14625 + 15375), (14625 + 15375) * 2 }[i] / 2f,
+                    DamagePerTick = new float[] { 500000f, 1250000f, (1000000f + 1250000f) / 2f, (2500000f + 3125000f) / 2f }[i] / Max_Players[i],
                     Duration = 4f,
                     TickInterval = 1f,
                     MaxNumTargets = Max_Players[i],
                     AttackSpeed = 8f, // TODO: Get attack speed for this ability
-                    PhaseStartTime = 0,
-                    PhaseEndTime = 40,
                 });
-                this[i].Attacks[this[i].Attacks.Count - 1].SetAffectsRoles_All();
+                RedVial.LastAttack.SetAffectsRoles_All();
                 #endregion
                 #endregion
                 #region Blue Vial (Spread Out!)
@@ -797,7 +850,7 @@ namespace Rawr.Bosses
                 #region Biting Chill
                 /* Biting Chill (10) / (25) - This debuff is placed on 1-2(10m)/3-5(25m) raid members that are within 10 yards of Maloriak. The debuff lasts 10 seconds and deals
                  *      5k(10m)/7.5k(25m) frost damage per second to anyone within (6???) yards. */
-                this[i].Attacks.Add(new Attack {
+                BlueVial.Attacks.Add(new Attack {
                     Name = "Biting Chill",
                     AttackType = ATTACK_TYPES.AT_AOE,
                     IsDoT = true,
@@ -807,59 +860,206 @@ namespace Rawr.Bosses
                     TickInterval = 1f,
                     MaxNumTargets = new float[] { 1+2, 3+5, 1+2, 3+5 }[i] / 2f,
                     AttackSpeed = 8f, // TODO: Get attack speed for this ability
-                    PhaseStartTime = 40,
-                    PhaseEndTime = 80,
                 });
-                this[i].Attacks[this[i].Attacks.Count - 1].SetAffectsRoles_Tanks();
-                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MeleeDPS] = true;
+                BlueVial.LastAttack.SetUnavoidable();
+                BlueVial.LastAttack.SetAffectsRoles_Tanks();
+                BlueVial.LastAttack.AffectsRole[PLAYER_ROLES.MeleeDPS] = true;
                 #endregion
                 #region Flash Freeze
                 /* Flash Freeze (10) / (25) - This ability is used on a raid member at ranged while Maloriak is Frost Imbued, encasing them in a block of ice, also called a
-                 *      Flash Freeze, with 5k(10m)/17.5k(25m) health. Upon becoming frozen, that player will be take 50k(10m)/75k(25m) frost damage and be unable to move or use
+                 *      Flash Freeze, with 5k(10m)/17.5k(25m) health. Upon becoming frozen, that player will take 50k(10m)/75k(25m) frost damage and be unable to move or use
                  *      abilities. Additionally, other players within (10???) yards of the initial target will take the damage and be placed in Flash Freeze ice blocks. When any
                  *      Flash Freeze ice block is destroyed that player will Shatter (10) / (25) dealing an additional 50k(10m)/75k(25m) frost damage to all players within (10???)
                  *      yards and removing the Flash Freeze debuff on any other players within (10???) yards, freeing them as well.
                  */
-                /*this[i].Attacks.Add(new Attack {
+                BlueVial.Attacks.Add(new Attack {
                     Name = "Flash Freeze",
                     AttackType = ATTACK_TYPES.AT_AOE,
-                    IsDoT = true,
-                    DamageType = ItemDamageType.Fire,
-                    DamagePerTick = new float[] { (14625 + 15375), (14625 + 15375) * 2, (14625 + 15375), (14625 + 15375) * 2 }[i] / 2f,
-                    Duration = 4f,
-                    TickInterval = 1f,
+                    DamageType = ItemDamageType.Frost,
+                    DamagePerHit = new float[] { (70687 + 79312) + (56550 + 63450), (70687 + 79312) + (56550 + 63450), (70687 + 79312) + (56550 + 63450), (70687 + 79312) + (56550 + 63450) }[i] / 2f, // TODO: Verify these numbers. Wowhead says the same thing on each tooltip but when you look at the spell data it says different values
                     MaxNumTargets = Max_Players[i],
                     AttackSpeed = 8f, // TODO: Get attack speed for this ability
-                    PhaseStartTime = 40,
-                    PhaseEndTime = 80,
                 });
-                this[i].Attacks[this[i].Attacks.Count - 1].SetAffectsRoles_All();*/
+                BlueVial.LastAttack.SetUnavoidable();
+                BlueVial.LastAttack.SetAffectsRoles_All();
+                BlueVial.Targets.Add(new TargetGroup {
+                    Name = "Flash Freeze",
+                    AffectsRole = BlueVial.LastAttack.AffectsRole,
+                    Duration = 4f * 1000f,
+                    Frequency = BlueVial.LastAttack.AttackSpeed,
+                    NearBoss = false,
+                    NumTargs = 2, // Assuming 2 people get frozen
+                    Chance = 2f / Max_Players[i], // 2 DPS need to work them down after healers top off the encased player's HP
+                    LevelOfTargets = 85,
+                });
                 #endregion
                 #endregion
                 #region Green Vial (Adds!)
+                #region Debilitating Slime
                 /* Debilitating Slime (10) / (25) - When the Green Vial is tossed into the cauldron, it will knock Maloriak back 15 yards and cover the room in a green spray,
-                 *      debuffing all friendly and enemy targets in the room for 15 seconds which increases damage taken by 100%(10m)/150%(25m), additionally, it will temporarily
-                 *      remove the Growth Catalyst buff on any Aberrations or from Maloriak himself. This will make incoming tank damage very high, but will also drastically increase raid DPS.
-                 *
-                 * "Release All"
-                 * Release All - When Maloriak reaches 20% health, he will cast this ability, summoning two Prime Subject and will summon 3 Aberrations for every Release Aberration
-                 *      cast that was interrupted throughout the fight. The Prime Subjects have 8.6million(10m)/30.1million(25m) health and melee much harder than the smaller adds,
-                 *      with each hit for about 20k-25k(10m)/30k-40k(25m) damage after mitigation. They will occasionally fixate a random target at attempt to kill it.
-                 *
-                 * Magma Jets (10) / (25) - This ability is only used by Maloriak after he has used Release All. After a 2 second cast, the boss will charge toward a random raid
-                 *      member and deal 25k(10m)/50k(25m) fire damage to anyone in the path and knock them back 30 yards. It will also leave a path of fire that deals 5k(10m)/10k(25m)
-                 *      fire damage per second to anyone that gets within 3 yards. The trails dissipate after 20 seconds.
-                 *
-                 * Absolute Zero (10) / (25) - This ability is only used by Maloriak after he has used Release All. This ability will form a circle near a random raid member that will
-                 *      spawn a floating ice sphere after 3 seconds. When the ball becomes active, it will float randomly around the room. If it comes into contact with a player, it
-                 *      will explode dealing 20k(10m)/40k(25m) frost damage and cause a 10 yard knock back to all nearby players.
-                 *
-                 * Acid Nova (10) / (25) - This ability is only used by Maloriak after he has used Release All. This ability is as a blast that will place a 10 second debuff on everyone
-                 *      in the raid which deals 5k(10m)/7.5k(25m) nature damage per second.
-                 */
+                 *  debuffing all friendly and enemy targets in the room for 15 seconds which increases damage taken by 100%(10m)/150%(25m), additionally, it will temporarily remove
+                 *  the Growth Catalyst buff on any Aberrations or from Maloriak himself. This will make incoming tank damage very high, but will also drastically increase raid DPS. */
+                GreenVial.BuffStates.Add(new BuffState {
+                    Name = "Debilitating Slime (Buff, Debuff)",
+                    Frequency = 45,
+                    Duration = 15f * 1000f,
+                    Chance = 1.00f,
+                    Stats = {
+                        DamageTakenReductionMultiplier = new float[] { -1.00f, -1.00f, -1.50f, -1.50f }[i],
+                        BonusDamageMultiplier          = new float[] { -1.00f, -1.00f, -1.50f, -1.50f }[i]
+                    },
+                });
+                GreenVial.LastBuffState.SetAffectsRoles_All();
+                #endregion
+                #endregion
+                #region Dark Vial (Heroic Only)
+                // TODO: Dark Sludge
+                #region Vile Swill
+                DarkVial.Targets.Add(new TargetGroup {
+                    Name = "Vile Swill",
+                    Frequency = BerserkTimer[i],
+                    Chance = 1.00f,
+                    Duration = 30 * 1000f,
+                    NearBoss =  false, // They are kiting around the outside of the room
+                    LevelOfTargets = 88,
+                    NumTargs = 3, // TODO: Confirm this
+                });
+                DarkVial.LastTarget.SetAffectsRoles_All();
+                #endregion
+                #region Engulfing Darkness
+                DarkVial.Attacks.Add(new Attack {
+                    Name = "Engulfing Darkness",
+                    DamageType = ItemDamageType.Shadow,
+                    AttackType = ATTACK_TYPES.AT_RANGED,
+                    DamagePerHit = 25000,
+                    AttackSpeed = 10,
+                    MaxNumTargets = 1, // Only one person should ever be hit by it, the main tank
+                });
+                DarkVial.LastAttack.SetUnavoidable();
+                DarkVial.LastAttack.AffectsRole[PLAYER_ROLES.MainTank] = true;
+                DarkVial.BuffStates.Add(new BuffState {
+                    Name = "Engulfing Darkness (Debuff)",
+                    Breakable = false,
+                    Chance = 1.00f, // Frontal cone, guaranteed to hit the tank
+                    Duration = 8f * 1000f,
+                    Frequency = DarkVial.LastAttack.AttackSpeed,
+                    Stats = { HealingReceivedMultiplier = -1.00f, },
+                    AffectsRole = DarkVial.LastAttack.AffectsRole,
+                });
+                #endregion
                 #endregion
                 #endregion
                 #region Phase 2 (at 25% HP)
+                #region Release All
+                /* "Release All"
+                 * Release All - When Maloriak reaches 20% health, he will cast this ability, summoning two Prime Subject and will summon 3 Aberrations for every Release Aberration
+                 *      cast that was interrupted throughout the fight. The Prime Subjects have 8.6million(10m)/30.1million(25m) health and melee much harder than the smaller adds,
+                 *      with each hit for about 20k-25k(10m)/30k-40k(25m) damage after mitigation. They will occasionally fixate a random target and attempt to kill it. */
+                Under25.Targets.Add(new TargetGroup {
+                    Name = "Release All (Aberrations)",
+                    LevelOfTargets = 85,
+                    NumTargs = 3 * 3, // Assuming 3 were interupted
+                    NearBoss = false,
+                    Frequency = BerserkTimer[i]-1,
+                    Duration = 15f * 1000f,
+                    Chance = 1.00f,
+                });
+                Under25.LastTarget.AffectsRole[PLAYER_ROLES.OffTank] = true;
+                Under25.LastTarget.AffectsRole[PLAYER_ROLES.MeleeDPS] = true;
+                Under25.LastTarget.AffectsRole[PLAYER_ROLES.RangedDPS] = true;
+                Under25.Targets.Add(new TargetGroup {
+                    Name = "Release All (Prime Subjects)",
+                    LevelOfTargets = 88,
+                    NumTargs = 2,
+                    NearBoss = Under25.LastTarget.NearBoss,
+                    Frequency = Under25.LastTarget.Frequency,
+                    Duration = 30f * 1000f,
+                    Chance = Under25.LastTarget.Chance,
+                    AffectsRole = Under25.LastTarget.AffectsRole,
+                });
+                #endregion
+                #region Magma Jets
+                /* Magma Jets (10) / (25) - This ability is only used by Maloriak after he has used Release All. After a 2 second cast, the boss will charge toward a random raid
+                 *      member and deal 25k(10m)/50k(25m) fire damage to anyone in the path and knock them back 30 yards. It will also leave a path of fire that deals 5k(10m)/10k(25m)
+                 *      fire damage per second to anyone that gets within 3 yards. The trails dissipate after 20 seconds. */
+                Under25.Attacks.Add(new Attack {
+                    Name = "Magma Jets",
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamageType = ItemDamageType.Fire,
+                    DamagePerHit = new float[] { 38000 + 42000, 38000 + 42000, 38000 + 42000, 38000 + 42000 }[i] / 2f,
+                    AttackSpeed = 20, // TODO: Get proper attack speed
+                    MaxNumTargets = Max_Players[i],
+                });
+                Under25.LastAttack.SetUnavoidable();
+                Under25.LastAttack.SetAffectsRoles_All();
+                #endregion
+                #region Absolute Zero
+                /* Absolute Zero (10) / (25) - This ability is only used by Maloriak after he has used Release All. This ability will form a circle near a random raid member that will
+                 *      spawn a floating ice sphere after 3 seconds. When the ball becomes active, it will float randomly around the room. If it comes into contact with a player, it
+                 *      will explode dealing 20k(10m)/40k(25m) frost damage and cause a 10 yard knock back to all nearby players. */
+                Under25.Moves.Add(new Impedance {
+                    Name = "Absolute Zero Spheres (Avoiding)",
+                    Frequency = 20,
+                    Duration = 4f * 1000f, // Assuming takes 4s to move out of the way
+                    Chance = 1f / Max_Players[i],
+                    Breakable = true, // movement is always breakable
+                });
+                Under25.LastMove.SetAffectsRoles_All();
+                #endregion
+                #region Acid Nova
+                /* Acid Nova (10) / (25) - This ability is only used by Maloriak after he has used Release All. This ability is as a blast that will place a 10 second debuff on everyone
+                 *      in the raid which deals 5k(10m)/7.5k(25m) nature damage per second. */
+                Under25.Attacks.Add(new Attack {
+                    Name = "Acid Nova",
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamageType = ItemDamageType.Nature, IsDoT = true,
+                    DamagePerTick = new float[] { 7500, 7500, 15000, 15000 }[i],
+                    Duration = 10,
+                    TickInterval = 1,
+                    AttackSpeed = 20, // TODO: Get proper attack speed
+                    MaxNumTargets = Max_Players[i],
+                });
+                Under25.LastAttack.SetUnavoidable();
+                Under25.LastAttack.SetAffectsRoles_All();
+                #endregion
+                #endregion
+                #region Apply Phases
+                // 5 minute Berserk Timer with Firestorm only last 18 seconds twice.
+                // Pushing distro of normal fighting to more in the first two to account for executes
+                int phaseStartTime = 0;
+                ClearPhase1Values(ref BlueVial);
+                ClearPhase1Values(ref GreenVial);
+                ClearPhase1Values(ref Under25);
+                if (i == 0 || i == 1) {
+                    ApplyAPhasesValues(ref RedVial,   i, 1, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
+                    ApplyAPhasesValues(ref BlueVial,  i, 2, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
+                    ApplyAPhasesValues(ref GreenVial, i, 3, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
+                    ApplyAPhasesValues(ref RedVial,   i, 4, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
+                    ApplyAPhasesValues(ref BlueVial,  i, 5, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
+                    ApplyAPhasesValues(ref GreenVial, i, 6, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
+                    ApplyAPhasesValues(ref Under25,   i, 7, phaseStartTime, 60, this[i].BerserkTimer);
+                }
+                else if (i == 0 || i == 1)
+                {
+                    ApplyAPhasesValues(ref DarkVial,  i, 1, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
+                    ApplyAPhasesValues(ref RedVial,   i, 2, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
+                    ApplyAPhasesValues(ref BlueVial,  i, 3, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
+                    ApplyAPhasesValues(ref GreenVial, i, 4, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
+                    ApplyAPhasesValues(ref DarkVial,  i, 5, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
+                    ApplyAPhasesValues(ref RedVial,   i, 6, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
+                    ApplyAPhasesValues(ref BlueVial,  i, 7, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
+                    ApplyAPhasesValues(ref GreenVial, i, 8, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
+                    ApplyAPhasesValues(ref DarkVial,  i, 9, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
+                    ApplyAPhasesValues(ref RedVial,   i,10, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
+                    ApplyAPhasesValues(ref BlueVial,  i,11, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
+                    ApplyAPhasesValues(ref Under25,   i,12, phaseStartTime, 60, this[i].BerserkTimer);
+
+                    AddAPhase(DarkVial, i);
+                }
+                AddAPhase(RedVial, i);
+                AddAPhase(BlueVial, i);
+                AddAPhase(GreenVial, i);
+                AddAPhase(Under25, i);
                 #endregion
             }
             #endregion
@@ -873,18 +1073,7 @@ namespace Rawr.Bosses
             Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
             Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
             #endregion
-            #region Impedances
-            for (int i = 0; i < 2; i++)
-            {
-                //Moves;
-                //Stuns;
-                //Fears;
-                //Roots;
-                //Disarms;
-            }
-            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
-            #endregion
-
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0.00f, 0.00f };
         }
     }
 
@@ -934,11 +1123,8 @@ namespace Rawr.Bosses
                     DamagePerHit = 20000,
                     AttackSpeed = 45,
                     MaxNumTargets = Max_Players[i],
-                    Missable = false,
-                    Dodgable = false,
-                    Parryable = false,
-                    Blockable = false,
                 });
+                GroundPhase.LastAttack.SetUnavoidable();
                 GroundPhase.LastAttack.SetAffectsRoles_All();
                 /* Searing Flames - This is an 8 second channeled cast that can and should be interrupted by using an Ancient Dwarven Shield. Otherwise, every second
                  *      the entire raid will take 10k fire damage and get a stacking debuff that increases further fire damage by 25% per stack for 4 seconds.
@@ -952,16 +1138,13 @@ namespace Rawr.Bosses
                     Duration = 8,
                     AttackSpeed = 45,
                     MaxNumTargets = Max_Players[i],
-                    Missable = false,
-                    Dodgable = false,
-                    Parryable = false,
-                    Blockable = false,
                 });
+                GroundPhase.LastAttack.SetUnavoidable();
                 GroundPhase.LastAttack.SetAffectsRoles_All();
                 GroundPhase.BuffStates.Add(new BuffState {
                      Name = "Searing Flames (Debuff)",
                      Frequency = GroundPhase.LastAttack.AttackSpeed,
-                     Duration = GroundPhase.LastAttack.Duration,
+                     Duration = GroundPhase.LastAttack.Duration * 1000f,
                      Chance = 1f,
                      Breakable = true,
                      Stats = { },
@@ -981,11 +1164,8 @@ namespace Rawr.Bosses
                     Duration = 6,
                     AttackSpeed = 45,
                     MaxNumTargets = 3, // Assuming no more than 3 would get hit at once
-                    Missable = false,
-                    Dodgable = false,
-                    Parryable = false,
-                    Blockable = false,
                 });
+                GroundPhase.LastAttack.SetUnavoidable();
                 GroundPhase.LastAttack.SetAffectsRoles_All();
                 if (i == 2 || i == 3) {
                     /* Sonar Pulse - Three of these pulsating discs are emitted from Atramedes and float straight in a random direction in the room. Players that are hit by these will
@@ -1000,11 +1180,8 @@ namespace Rawr.Bosses
                         Duration = 6,
                         AttackSpeed = 45,
                         MaxNumTargets = 2, // Assuming no more than 2 would get hit at once
-                        Missable = false,
-                        Dodgable = false,
-                        Parryable = false,
-                        Blockable = false,
                     });
+                    GroundPhase.LastAttack.SetUnavoidable();
                     GroundPhase.LastAttack.SetAffectsRoles_All();
                     /* Obnoxious Fiends - Two will spawn per ground phase—one in the middle and one towards the end. These attach themselves to a random raid member and must be burned
                      *      down immediately by the raid. They have minimal health but cast Obnoxious, an cast which gives the attached player 10 additional sound if not interrupted. */
@@ -1014,7 +1191,7 @@ namespace Rawr.Bosses
                         NearBoss = false,
                         NumTargs = 2,
                         Frequency = 45,
-                        Duration = 10,
+                        Duration = 10 * 1000,
                         Chance = 2f / (float)Max_Players[i],
                     });
                     GroundPhase.LastTarget.SetAffectsRoles_All();
@@ -1059,16 +1236,19 @@ namespace Rawr.Bosses
                 #region Apply Phases
                 // 10 minute Berserk Timer 80+40=120 600/120=5. At most 10 phases (5 each)
                 int phaseStartTime = 0;
-                AddAPhasesValues(GroundPhase,  i, 1, phaseStartTime, 80); phaseStartTime += 80;
-                AddAPhasesValues(AirPhase,     i, 2, phaseStartTime, 40); phaseStartTime += 40;
-                AddAPhasesValues(GroundPhase,  i, 3, phaseStartTime, 80); phaseStartTime += 80;
-                AddAPhasesValues(AirPhase,     i, 4, phaseStartTime, 40); phaseStartTime += 40;
-                AddAPhasesValues(GroundPhase,  i, 5, phaseStartTime, 80); phaseStartTime += 80;
-                AddAPhasesValues(AirPhase,     i, 6, phaseStartTime, 40); phaseStartTime += 40;
-                AddAPhasesValues(GroundPhase,  i, 7, phaseStartTime, 80); phaseStartTime += 80;
-                AddAPhasesValues(AirPhase,     i, 8, phaseStartTime, 40); phaseStartTime += 40;
-                AddAPhasesValues(GroundPhase,  i, 9, phaseStartTime, 80); phaseStartTime += 80;
-                AddAPhasesValues(AirPhase,     i,10, phaseStartTime, 40);
+                ClearPhase1Values(ref AirPhase);
+                ApplyAPhasesValues(ref GroundPhase,  i, 1, phaseStartTime, 80, this[i].BerserkTimer); phaseStartTime += 80;
+                ApplyAPhasesValues(ref AirPhase,     i, 2, phaseStartTime, 40, this[i].BerserkTimer); phaseStartTime += 40;
+                ApplyAPhasesValues(ref GroundPhase,  i, 3, phaseStartTime, 80, this[i].BerserkTimer); phaseStartTime += 80;
+                ApplyAPhasesValues(ref AirPhase,     i, 4, phaseStartTime, 40, this[i].BerserkTimer); phaseStartTime += 40;
+                ApplyAPhasesValues(ref GroundPhase,  i, 5, phaseStartTime, 80, this[i].BerserkTimer); phaseStartTime += 80;
+                ApplyAPhasesValues(ref AirPhase,     i, 6, phaseStartTime, 40, this[i].BerserkTimer); phaseStartTime += 40;
+                ApplyAPhasesValues(ref GroundPhase,  i, 7, phaseStartTime, 80, this[i].BerserkTimer); phaseStartTime += 80;
+                ApplyAPhasesValues(ref AirPhase,     i, 8, phaseStartTime, 40, this[i].BerserkTimer); phaseStartTime += 40;
+                ApplyAPhasesValues(ref GroundPhase,  i, 9, phaseStartTime, 80, this[i].BerserkTimer); phaseStartTime += 80;
+                ApplyAPhasesValues(ref AirPhase,     i,10, phaseStartTime, 40, this[i].BerserkTimer);
+                AddAPhase(GroundPhase, i);
+                AddAPhase(AirPhase, i);
                 #endregion
             }
             #endregion
@@ -1093,14 +1273,12 @@ namespace Rawr.Bosses
             }*/
             TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
             #endregion
-            /* TODO:
-             * "Ancient Dwarven Shield" - There are 8 of these (4 on each side of the room) and can be interacted with by any raid member. Using one
+            /* TODO: "Ancient Dwarven Shield" - There are 8 of these (4 on each side of the room) and can be interacted with by any raid member. Using one
              *      causes a Resonating Clash which clears all sound meters and interrupts any spells being cast by Atramedes, as well as giving him a
              *      temporary feeling of Vertigo which causes a 5 second stun where he is vulnerable and takes 50% increased damage. Afterwards, he will
              *      immediately cast Sonic Flames to instantly destroy and melt the Ancient Dwarven Shield that was used.
              *      (*Note: The player that uses the Ancient Dwarven Shield will get an invisible trigger from the Resonating Clash, making them the defaut
-             *      for any of Atramedes sound level based attacks until another player passes their sound level.
-             */
+             *      for any of Atramedes sound level based attacks until another player passes their sound level. */
         }
     }
 
@@ -1352,7 +1530,7 @@ namespace Rawr.Bosses
                     this[i].Stuns.Add(new Impedance
                     {
                         Chance = 1f,
-                        Duration = 2000f,
+                        Duration = 2 * 1000f,
                         Breakable = false,
                         Frequency = this[i].Attacks[this[i].Attacks.Count - 1].AttackSpeed,
                     });
@@ -1651,7 +1829,7 @@ namespace Rawr.Bosses
                             Breakable = false,
                             Chance = this[i].Attacks[this[i].Attacks.Count - 1].MaxNumTargets / Max_Players[i],
                             Frequency = this[i].Attacks[this[i].Attacks.Count - 1].AttackSpeed,
-                            Duration = this[i].Attacks[this[i].Attacks.Count - 1].Duration,
+                            Duration = this[i].Attacks[this[i].Attacks.Count - 1].Duration * 1000f,
                         });
                         this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
                             = this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer]

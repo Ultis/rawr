@@ -21,6 +21,10 @@ namespace Rawr {
 
     /// <summary>A single Attack of various types</summary>
     public class Attack {
+        public Attack Clone() {
+            Attack clone = (Attack)this.MemberwiseClone();
+            return clone;
+        }
         /// <summary>The Name of the Attack</summary>
         public string Name = "Unnamed";
         /// <summary>The type of damage done, use the ItemDamageType enumerator to select</summary>
@@ -51,18 +55,50 @@ namespace Rawr {
         /// <summary>if the attack is part of a Dual Wield, there is an additional 20% chance to Miss<para>This should flag the Buff... sort of</para></summary>
         [DefaultValue(false)]
         public bool IsDualWielding = false;
-        /// <summary>In Seconds<para>Defaults to 0. Will not return a number higher than PhaseEndTime</para></summary>
-        [DefaultValue(0f)]
-        public float PhaseStartTime { get { return Math.Min(_phaseStartTime, _phaseEndTime); } set { _phaseStartTime = value; } }
-        private float _phaseStartTime = 0f;
-        /// <summary>In Seconds<para>Defaults to 20*60 (=1200). Will not return a number lower than PhaseStartTime</para></summary>
+
+        #region Phase Info
+        public SerializableDictionary<int, float[]> PhaseTimes {
+            get {
+                if (_phaseTimes == null) {
+                    _phaseTimes = new SerializableDictionary<int,float[]>() {
+                        { 1, new float[] { 0f, 20f*60f }}, // Default of only one phase in the fight which lasts the maximumum BerserkTimer value
+                    };
+                }
+                return _phaseTimes;
+            }
+            set { _phaseTimes = value; }
+        }
+        private SerializableDictionary<int, float[]> _phaseTimes = null;
+        public void RemovePhase1Values() { PhaseTimes.Remove(1); }
+        public void SetPhaseValue(int phaseNumber, float phaseStartTime, float phaseDuration, float fightDuration)
+        {
+            FightDuration = fightDuration;
+            PhaseTimes[phaseNumber] = new float[] { Math.Min(phaseStartTime, FightDuration), Math.Min(FightDuration, phaseStartTime + phaseDuration) };
+            _fightUptimePercent = -1f;
+        }
+        /// <summary>Pass in the BerserkTimer, this is for % of Fight Uptime calcs</summary>
         [DefaultValue(20 * 60)]
-        public float PhaseEndTime { get { return Math.Max(_phaseStartTime, _phaseEndTime); } set { _phaseEndTime = value; } }
-        public float _phaseEndTime = 20 * 60;
-        /// <summary>The phase number that this attack sits in. This should only be dynamically assigned in a MultiDiffBoss constructor</summary>
-        [DefaultValue(1)]
-        public int PhaseNumber { get { return _phaseNumber; } set { _phaseNumber = value; } }
-        private int _phaseNumber = 1;
+        public float FightDuration { get { return _fightDuration; } set { _fightDuration = value; if (_fightDuration > 20 * 60) { _fightDuration = 20 * 60; } _fightUptimePercent = -1f; } }
+        private float _fightDuration = 20 * 60;
+        public float FightUptimePercent
+        {
+            get
+            {
+                if (FightDuration <= 0f) { return 0f; }
+                if (_fightUptimePercent == -1f)
+                {
+                    float uptime = 0f;
+                    foreach (float[] i in PhaseTimes.Values)
+                    {
+                        uptime += i[1] - i[0];
+                    }
+                    _fightUptimePercent = Math.Max(0f, Math.Min(uptime, FightDuration) / FightDuration);
+                }
+                return _fightUptimePercent;
+            }
+        }
+        private float _fightUptimePercent = -1f;
+        #endregion
 
         #region DoT Stats
         /// <summary>Whether this attack is a DoT</summary>
@@ -182,12 +218,13 @@ namespace Rawr {
         public override string ToString()
         {
             if (!Validate) { return "None"; }
-            return string.Format("{0:#,##0}{1}{2} every {3:0.#}s to {4:0} targets{5}",
-                DamagePerHit, DamageIsPerc ? "%" : "",
-                (DamagePerTick != 0 && NumTicks != 0) ? string.Format("+{0:#,##0}/{1:0.#}s(x{2:0.#})", DamagePerTick, TickInterval, NumTicks) : "",
-                AttackSpeed,
-                MaxNumTargets,
-                Name != "Dynamic" ? " [" + Name + "]" : "");
+            string damage = "";
+            if (DamagePerHit != 0) { damage += string.Format("{0:#,##0}{1}", DamagePerHit, DamageIsPerc ? "%" : ""); }
+            if (DamagePerTick != 0 && NumTicks != 0) { damage += string.Format("{3}{0:#,##0}/{1:0.#}s(x{2:0.#})", DamagePerTick, TickInterval, NumTicks, damage != "" ? "+" : ""); }
+            return string.Format("{0} every {1:0.#}s to {2:0} targets{3}{4}",
+                damage, AttackSpeed, MaxNumTargets,
+                Name != "Dynamic" ? " [" + Name + "]" : "",
+                string.Format(" {0:0.#%} phase uptime", FightUptimePercent));
         }
     }
     /// <summary>A single Impedance of various types</summary>
@@ -195,7 +232,7 @@ namespace Rawr {
         #region Constructors
         public Impedance() {
             Frequency = 120f;
-            Duration  = 5000f;
+            Duration  = 5 * 1000f;
             Chance    = 1.00f;
             Breakable = true;
         }
@@ -211,6 +248,11 @@ namespace Rawr {
             Duration  = clone.Duration;
             Chance    = clone.Chance;
             Breakable = clone.Breakable;
+        }
+        public Impedance Clone()
+        {
+            Impedance clone = (Impedance)this.MemberwiseClone();
+            return clone;
         }
         #endregion
         #region Variables
@@ -228,7 +270,8 @@ namespace Rawr {
         /// <para>Duration = 4f * 1000f</para>
         /// </summary>
         public float Duration;
-        /// <summary>In Seconds<para>Defaults to 0. Will not return a number higher than PhaseEndTime</para></summary>
+        #region Phase Info
+        /*/// <summary>In Seconds<para>Defaults to 0. Will not return a number higher than PhaseEndTime</para></summary>
         [DefaultValue(0f)]
         public float PhaseStartTime { get { return Math.Min(_phaseStartTime, _phaseEndTime); } set { _phaseStartTime = value; } }
         private float _phaseStartTime = 0f;
@@ -239,7 +282,48 @@ namespace Rawr {
         /// <summary>The phase number that this attack sits in. This should only be dynamically assigned in a MultiDiffBoss constructor</summary>
         [DefaultValue(1)]
         public int PhaseNumber { get { return _phaseNumber; } set { _phaseNumber = value; } }
-        private int _phaseNumber = 1;
+        private int _phaseNumber = 1;*/
+        public SerializableDictionary<int, float[]> PhaseTimes
+        {
+            get
+            {
+                if (_phaseTimes == null)
+                {
+                    _phaseTimes = new SerializableDictionary<int, float[]>() {
+                        { 1, new float[] { 0f, 20f*60f }}, // Default of only one phase in the fight which lasts the maximumum BerserkTimer value
+                    };
+                }
+                return _phaseTimes;
+            }
+            set { _phaseTimes = value; _fightUptimePercent = -1f; }
+        }
+        private SerializableDictionary<int, float[]> _phaseTimes = null;
+        public void RemovePhase1Values() { PhaseTimes.Remove(1); }
+        public void SetPhaseValue(int phaseNumber, float phaseStartTime, float phaseDuration, float fightDuration) {
+            FightDuration = fightDuration;
+            PhaseTimes[phaseNumber] = new float[] { Math.Min(phaseStartTime, FightDuration), Math.Min(FightDuration, phaseStartTime + phaseDuration) };
+            _fightUptimePercent = -1f;
+        }
+        /// <summary>Pass in the BerserkTimer, this is for % of Fight Uptime calcs</summary>
+        [DefaultValue(20*60)]
+        public float FightDuration { get { return _fightDuration; } set { _fightDuration = value; if (_fightDuration > 20 * 60) { _fightDuration = 20 * 60; } _fightUptimePercent = -1f; } }
+        private float _fightDuration = 20 * 60;
+        public float FightUptimePercent {
+            get {
+                if (FightDuration <= 0f) { return 0f; }
+                if (_fightUptimePercent == -1f) {
+                    float uptime = 0f;
+                    foreach (float[] i in PhaseTimes.Values)
+                    {
+                        uptime += i[1] - i[0];
+                    }
+                    _fightUptimePercent = Math.Max(0f, Math.Min(uptime, FightDuration) / FightDuration);
+                }
+                return _fightUptimePercent;
+            }
+        }
+        private float _fightUptimePercent = -1f;
+        #endregion
         /// <summary>
         /// A Percentage, value range from 0% to 100% (0.00f to 1.00f)
         /// <para>Eg- An Impedance effects one random raid target:</para>
@@ -270,14 +354,16 @@ namespace Rawr {
             get {
                 if (Chance <= 0) { return false; }
                 if (Frequency <= 0 || Frequency > 20 * 60) { return false; }
-                if (Duration <= 0 || Duration > 20 * 1000) { return false; }
+                if (Duration <= 0 || Duration > 20 * 60 * 1000) { return false; }
                 return true;
             }
         }
         public override string ToString() {
             if (!Validate) { return "None"; }
-            return string.Format("F: {0:0}s D: {1:0}ms C: {2:0.0%}{3}",
-                Frequency, Duration, Chance, Breakable ? " : B" : "");
+            return string.Format("{0:0.#%} chance every {1:0.#}s for {2:0.##}s{3}{4}{5}",
+                Chance, Frequency, Duration / 1000f, Breakable ? ", Breakable" : "",
+                Name != "Dynamic" ? " [" + Name + "]" : "",
+                string.Format(" {0:0.#%} phase uptime", FightUptimePercent));
         }
         #endregion
         #region Player Targeting
@@ -434,6 +520,11 @@ namespace Rawr {
             NumTargs  = clone.NumTargs;
             NearBoss  = clone.NearBoss;
         }
+        public TargetGroup Clone()
+        {
+            TargetGroup clone = (TargetGroup)this.MemberwiseClone();
+            return clone;
+        }
         #endregion
         #region Variables
         /// <summary>The Name of the Attack</summary>
@@ -444,7 +535,8 @@ namespace Rawr {
         public float Duration = 20 * 1000;
         /// <summary>Percentage, 0.50f = 50% Chance that this occurs<para>Defaults to and almost every time in usage this should be 1.00f=100%</para></summary>
         public float Chance = 1.00f;
-        /// <summary>In Seconds<para>Defaults to 0. Will not return a number higher than PhaseEndTime</para></summary>
+        #region Phase Info
+        /*/// <summary>In Seconds<para>Defaults to 0. Will not return a number higher than PhaseEndTime</para></summary>
         [DefaultValue(0f)]
         public float PhaseStartTime { get { return Math.Min(_phaseStartTime, _phaseEndTime); } set { _phaseStartTime = value; } }
         private float _phaseStartTime = 0f;
@@ -455,7 +547,52 @@ namespace Rawr {
         /// <summary>The phase number that this attack sits in. This should only be dynamically assigned in a MultiDiffBoss constructor</summary>
         [DefaultValue(1)]
         public int PhaseNumber { get { return _phaseNumber; } set { _phaseNumber = value; } }
-        private int _phaseNumber = 1;
+        private int _phaseNumber = 1;*/
+        public SerializableDictionary<int, float[]> PhaseTimes
+        {
+            get
+            {
+                if (_phaseTimes == null)
+                {
+                    _phaseTimes = new SerializableDictionary<int, float[]>() {
+                        { 1, new float[] { 0f, 20f*60f }}, // Default of only one phase in the fight which lasts the maximumum BerserkTimer value
+                    };
+                }
+                return _phaseTimes;
+            }
+            set { _phaseTimes = value; }
+        }
+        private SerializableDictionary<int, float[]> _phaseTimes = null;
+        public void RemovePhase1Values() { PhaseTimes.Remove(1); }
+        public void SetPhaseValue(int phaseNumber, float phaseStartTime, float phaseDuration, float fightDuration)
+        {
+            FightDuration = fightDuration;
+            PhaseTimes[phaseNumber] = new float[] { Math.Min(phaseStartTime, FightDuration), Math.Min(FightDuration, phaseStartTime + phaseDuration) };
+            _fightUptimePercent = -1f;
+        }
+        /// <summary>Pass in the BerserkTimer, this is for % of Fight Uptime calcs</summary>
+        [DefaultValue(20 * 60)]
+        public float FightDuration { get { return _fightDuration; } set { _fightDuration = value; if (_fightDuration > 20 * 60) { _fightDuration = 20 * 60; } _fightUptimePercent = -1f; } }
+        private float _fightDuration = 20 * 60;
+        public float FightUptimePercent
+        {
+            get
+            {
+                if (FightDuration <= 0f) { return 0f; }
+                if (_fightUptimePercent == -1f)
+                {
+                    float uptime = 0f;
+                    foreach (float[] i in PhaseTimes.Values)
+                    {
+                        uptime += i[1] - i[0];
+                    }
+                    _fightUptimePercent = Math.Max(0f, Math.Min(uptime, FightDuration) / FightDuration);
+                }
+                return _fightUptimePercent;
+            }
+        }
+        private float _fightUptimePercent = -1f;
+        #endregion
         /// <summary>The Number of Targets in this Target Group<br/>Defaults to 2</summary>
         public float NumTargs = 2;
         /// <summary>
@@ -527,8 +664,10 @@ namespace Rawr {
         public override string ToString()
         {
             if (!Validated) { return "None"; }
-            return string.Format("L: {5} #T: {0:0.00} F: {1:0.0}s D: {2:0.00}s C: {3:0%}{4}",
-                NumTargs, Frequency, Duration / 1000f, Chance, NearBoss ? " : NB" : "", LevelOfTargets);
+            return string.Format("{0:0.#%} chance of {1:0.##} Lvl {2} targs{3} every {4:0.#}s for {5:0.##}s{6}{7}",
+                Chance, NumTargs, LevelOfTargets, NearBoss ? " Near Boss" : "", Frequency, Duration / 1000f,
+                Name != "Dynamic" ? " [" + Name + "]" : "",
+                string.Format(" {0:0.#%} phase uptime", FightUptimePercent));
         }
         #endregion
     }
@@ -539,7 +678,7 @@ namespace Rawr {
         public BuffState() {
             Name = "Unnamed";
             Frequency = 120f;
-            Duration  = 5000f;
+            Duration  = 5f * 1000f;
             Chance    = 1.00f;
             Breakable = true;
             Stats = new Stats();
@@ -562,6 +701,11 @@ namespace Rawr {
             Breakable = clone.Breakable;
             Stats = clone.Stats.Clone();
         }
+        public BuffState Clone()
+        {
+            BuffState clone = (BuffState)this.MemberwiseClone();
+            return clone;
+        }
         #endregion
         #region Variables
         /// <summary>The Name of the BuffState</summary>
@@ -579,7 +723,8 @@ namespace Rawr {
         /// </summary>
         public float Duration = 5f * 1000f;
 
-        /// <summary>In Seconds<para>Defaults to 0. Will not return a number higher than PhaseEndTime</para></summary>
+        #region Phase Info
+        /*/// <summary>In Seconds<para>Defaults to 0. Will not return a number higher than PhaseEndTime</para></summary>
         [DefaultValue(0f)]
         public float PhaseStartTime { get { return Math.Min(_phaseStartTime, _phaseEndTime); } set { _phaseStartTime = value; } }
         private float _phaseStartTime = 0f;
@@ -590,7 +735,52 @@ namespace Rawr {
         /// <summary>The phase number that this attack sits in. This should only be dynamically assigned in a MultiDiffBoss constructor</summary>
         [DefaultValue(1)]
         public int PhaseNumber { get { return _phaseNumber; } set { _phaseNumber = value; } }
-        private int _phaseNumber = 1;
+        private int _phaseNumber = 1;*/
+        public SerializableDictionary<int, float[]> PhaseTimes
+        {
+            get
+            {
+                if (_phaseTimes == null)
+                {
+                    _phaseTimes = new SerializableDictionary<int, float[]>() {
+                        { 1, new float[] { 0f, 20f*60f }}, // Default of only one phase in the fight which lasts the maximumum BerserkTimer value
+                    };
+                }
+                return _phaseTimes;
+            }
+            set { _phaseTimes = value; }
+        }
+        private SerializableDictionary<int, float[]> _phaseTimes = null;
+        public void RemovePhase1Values() { PhaseTimes.Remove(1); }
+        public void SetPhaseValue(int phaseNumber, float phaseStartTime, float phaseDuration, float fightDuration)
+        {
+            FightDuration = fightDuration;
+            PhaseTimes[phaseNumber] = new float[] { Math.Min(phaseStartTime, FightDuration), Math.Min(FightDuration, phaseStartTime + phaseDuration) };
+            _fightUptimePercent = -1f;
+        }
+        /// <summary>Pass in the BerserkTimer, this is for % of Fight Uptime calcs</summary>
+        [DefaultValue(20 * 60)]
+        public float FightDuration { get { return _fightDuration; } set { _fightDuration = value; if (_fightDuration > 20 * 60) { _fightDuration = 20 * 60; } _fightUptimePercent = -1f; } }
+        private float _fightDuration = 20 * 60;
+        public float FightUptimePercent
+        {
+            get
+            {
+                if (FightDuration <= 0f) { return 0f; }
+                if (_fightUptimePercent == -1f)
+                {
+                    float uptime = 0f;
+                    foreach (float[] i in PhaseTimes.Values)
+                    {
+                        uptime += i[1] - i[0];
+                    }
+                    _fightUptimePercent = Math.Max(0f, Math.Min(uptime, FightDuration) / FightDuration);
+                }
+                return _fightUptimePercent;
+            }
+        }
+        private float _fightUptimePercent = -1f;
+        #endregion
 
         /// <summary>
         /// A Percentage, value range from 0% to 100% (0.00f to 1.00f)
@@ -676,14 +866,16 @@ namespace Rawr {
             get {
                 if (Chance <= 0) { return false; }
                 if (Frequency <= 0 || Frequency > 20 * 60) { return false; }
-                if (Duration <= 0 || Duration > 20 * 1000) { return false; }
+                if (Duration <= 0 || Duration > 20 * 60 * 1000) { return false; }
                 return true;
             }
         }
         public override string ToString() {
             if (!Validate) { return "None"; }
-            return string.Format("N: {5} : F: {0:0}s D: {1:0}ms C: {2:0.0%}{3} : {4}",
-                Frequency, Duration, Chance, Breakable ? " : B" : "", Stats, Name);
+            return string.Format("{0:0.#%} chance of {1} every {2:0.#}s for {3:0.##}s{4}{5}{6}",
+                Chance, Stats, Frequency, Duration / 1000f, Breakable ? ", Breakable" : "",
+                Name != "Dynamic" ? " [" + Name + "]" : "",
+                string.Format(" {0:0.#%} phase uptime", FightUptimePercent));
         }
         #endregion
     }
@@ -691,6 +883,23 @@ namespace Rawr {
     public class Phase
     {
         public string Name = "Phase";
+        //
+        public Phase Clone() {
+            Phase clone = (Phase)this.MemberwiseClone();
+            //
+            clone.Attacks    = new List<Attack>(); foreach (Attack i in this.Attacks) { clone.Attacks.Add(i.Clone()); }
+            clone.Targets    = new List<TargetGroup>(); foreach (TargetGroup i in this.Targets) { clone.Targets.Add(i.Clone()); }
+            clone.BuffStates = new List<BuffState>(); foreach (BuffState i in this.BuffStates) { clone.BuffStates.Add(i.Clone()); }
+            clone.Moves      = new List<Impedance>(); foreach (Impedance i in this.Moves) { clone.Moves.Add(i.Clone()); }
+            clone.Stuns      = new List<Impedance>(); foreach (Impedance i in this.Stuns) { clone.Stuns.Add(i.Clone()); }
+            clone.Fears      = new List<Impedance>(); foreach (Impedance i in this.Fears) { clone.Fears.Add(i.Clone()); }
+            clone.Roots      = new List<Impedance>(); foreach (Impedance i in this.Roots) { clone.Roots.Add(i.Clone()); }
+            clone.Silences   = new List<Impedance>(); foreach (Impedance i in this.Silences) { clone.Silences.Add(i.Clone()); }
+            clone.Disarms    = new List<Impedance>(); foreach (Impedance i in this.Disarms) { clone.Disarms.Add(i.Clone()); }
+            //
+            return clone;
+        }
+        //
         public List<Attack> Attacks = new List<Attack>();
         public List<TargetGroup> Targets = new List<TargetGroup>();
         public List<BuffState> BuffStates = new List<BuffState>();
@@ -700,6 +909,7 @@ namespace Rawr {
         public List<Impedance> Moves = new List<Impedance>();
         public List<Impedance> Silences = new List<Impedance>();
         public List<Impedance> Disarms = new List<Impedance>();
+        //
         public Attack LastAttack { get { return Attacks[Attacks.Count - 1]; } }
         public TargetGroup LastTarget { get { return Targets[Targets.Count - 1]; } }
         public BuffState LastBuffState { get { return BuffStates[BuffStates.Count - 1]; } }

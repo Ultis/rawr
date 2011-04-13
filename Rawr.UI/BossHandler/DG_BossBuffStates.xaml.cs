@@ -76,8 +76,8 @@ namespace Rawr.UI
                 Chance = ((float)NUD_Chance.Value) / 100f,
                 Stats = statControl.CurrentStats,
                 // Phase Info
-                PhaseStartTime    = (float)NUD_PhaseStartTime.Value,
-                PhaseEndTime      = (float)NUD_PhaseEndTime.Value,
+                //PhaseStartTime    = (float)NUD_PhaseStartTime.Value,
+                //PhaseEndTime      = (float)NUD_PhaseEndTime.Value,
             };
             // Targeting Includes
             s.AffectsRole[PLAYER_ROLES.MainTank]             = CK_AffectsMTank.IsChecked.GetValueOrDefault(false);
@@ -121,8 +121,8 @@ namespace Rawr.UI
                 NUD_Chance.Value         = selected.Chance * 100f;
                 statControl.CurrentStats = selected.Stats;
                 // Phase Info
-                NUD_PhaseStartTime.Value = selected.PhaseStartTime;
-                NUD_PhaseEndTime.Value = selected.PhaseEndTime;
+                //NUD_PhaseStartTime.Value = selected.PhaseStartTime;
+                //NUD_PhaseEndTime.Value = selected.PhaseEndTime;
                 // Targeting Includes
                 CK_AffectsMTank.IsChecked          = selected.AffectsRole[PLAYER_ROLES.MainTank];
                 CK_AffectsOTank.IsChecked          = selected.AffectsRole[PLAYER_ROLES.OffTank];
