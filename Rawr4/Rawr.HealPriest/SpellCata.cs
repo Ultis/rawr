@@ -1,13 +1,4 @@
 ﻿using System;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
 
 namespace Rawr.HealPriest
 {
@@ -54,6 +45,8 @@ namespace Rawr.HealPriest
         public float GlobalCooldown { get; protected set; }
         public float CritChance { get; protected set; }
         public float CritMultiplier { get; protected set; }
+        public float BaseCooldown { get; protected set; }
+        public float Cooldown { get; protected set; }
 
         public virtual void SetPriestInformation(Character character, Stats stats) { this.character = character; this.stats = stats;  UpdateSpell(); }
         
@@ -81,6 +74,8 @@ namespace Rawr.HealPriest
                 retval += String.Format("\nMana Cost: {0}", ManaCost.ToString("0"));
             if (CritChance > 0)
                 retval += String.Format("\nCrit Chance: {0}%", (CritChance * 100f).ToString("0.00"));
+            if (Cooldown > 0)
+                retval += String.Format("\nCooldown: {0} seconds", Cooldown.ToString("0"));
             if (Targets > 0)
                 retval += String.Format("\nTargets hit: {0}", Targets);
             if (HasDirectDamage)
@@ -143,12 +138,12 @@ namespace Rawr.HealPriest
         public float OverTimeTicks { get; protected set; }
         public float OverTimeDuration { get; protected set; }
 
-        public float Holy_HoT_Hit { get; protected set; }
-        public float Holy_HoT_Crit { get; protected set; }
-        public float Holy_HoT_Avg { get; protected set; }
-        public float Holy_HoT_TickPeriod { get; protected set; }
-        public float Holy_HoT_Ticks { get; protected set; }
-        public float Holy_HoT_Duration { get; protected set; }
+        public float EoL_Hit { get; protected set; }
+        public float EoL_Crit { get; protected set; }
+        public float EoL_Avg { get; protected set; }
+        public float EoL_TickPeriod { get; protected set; }
+        public float EoL_Ticks { get; protected set; }
+        public float EoL_Duration { get; protected set; }
 
         public float AbsorbMinHit { get; protected set; }
         public float AbsorbMaxHit { get; protected set; }
@@ -165,7 +160,7 @@ namespace Rawr.HealPriest
             float targets = (Targets > 0) ? Targets : 1f;
             float castTime = (IsInstant) ? GlobalCooldown : CastTime;
             float hot = (OverTimeTickPeriod > 0) ? (OverTimeHealAvg / OverTimeTickPeriod) : 0f;
-            float hhot = (Holy_HoT_TickPeriod > 0) ? (Holy_HoT_Avg / Holy_HoT_TickPeriod) : 0f;
+            float hhot = (EoL_TickPeriod > 0) ? (EoL_Avg / EoL_TickPeriod) : 0f;
             return ((DirectHealAvg + AbsorbAvg) / castTime + hot + hhot) * targets;
         }
 
@@ -173,7 +168,7 @@ namespace Rawr.HealPriest
         {
             float targets = (Targets > 0) ? Targets : 1f;
             float hot = OverTimeHealAvg * OverTimeTicks;
-            float hhot = Holy_HoT_Avg * Holy_HoT_Ticks;
+            float hhot = EoL_Avg * EoL_Ticks;
             return (DirectHealAvg + AbsorbAvg + hot + hhot) * targets;
         }
 
@@ -187,7 +182,7 @@ namespace Rawr.HealPriest
         {
             float targets = (Targets > 0) ? Targets : 1f;
             float hot = OverTimeHealAvg * OverTimeTicks;
-            float hhot = Holy_HoT_Avg * Holy_HoT_Ticks;
+            float hhot = EoL_Avg * EoL_Ticks;
             return ((DirectHealAvg + AbsorbAvg + hot + hhot) / ManaCost) * targets;
         }
 
@@ -218,8 +213,8 @@ namespace Rawr.HealPriest
             OverTimeHealHit = 0; OverTimeHealCrit = 0; OverTimeHealAvg = 0;
             OverTimeTickPeriod = 0; OverTimeTicks = 0;
 
-            Holy_HoT_Hit = 0; Holy_HoT_Crit = 0; Holy_HoT_Avg = 0;
-            Holy_HoT_Duration = 0; Holy_HoT_TickPeriod = 0; Holy_HoT_Ticks = 0;
+            EoL_Hit = 0; EoL_Crit = 0; EoL_Avg = 0;
+            EoL_Duration = 0; EoL_TickPeriod = 0; EoL_Ticks = 0;
 
             AbsorbMinHit = 0; AbsorbMaxHit = 0; AbsorbAvgHit = 0;
             AbsorbMinCrit = 0; AbsorbMaxCrit = 0; AbsorbAvgCrit = 0;
@@ -263,16 +258,16 @@ namespace Rawr.HealPriest
                 {
                     s += String.Format(", Crit {0}, Avg: {1}", OverTimeHealCrit.ToString("0"), OverTimeHealAvg.ToString("0"));
                 }
-                s += String.Format("\nHoT ticks {0} times every {1} seconds for a total of {2} seconds", OverTimeTicks.ToString("0"), OverTimeTickPeriod.ToString("0"), OverTimeDuration.ToString("0"));
+                s += String.Format("\nHoT ticks a total of {0} times, once every {1} seconds, for a duration of {2} seconds", OverTimeTicks.ToString("0"), OverTimeTickPeriod.ToString("0.00"), OverTimeDuration.ToString("0.00"));
             }
-            if (Holy_HoT_Hit > 0)
+            if (EoL_Hit > 0)
             {
-                s += String.Format("\nHoly HoT: Hit {0}", Holy_HoT_Hit.ToString("0"));
-                if (Holy_HoT_Hit != Holy_HoT_Crit)
+                s += String.Format("\nEcho of Light: Hit {0}", EoL_Hit.ToString("0"));
+                if (EoL_Hit != EoL_Crit)
                 {
-                    s += String.Format(", Crit {0}, Avg {1}", Holy_HoT_Crit.ToString("0"), Holy_HoT_Avg.ToString("0"));
+                    s += String.Format(", Crit {0}, Avg {1}", EoL_Crit.ToString("0"), EoL_Avg.ToString("0"));
                 }
-                s += String.Format("\nHoly HoT ticks {0} times every {1} seconds for a total of {2} seconds", Holy_HoT_Ticks.ToString("0"), Holy_HoT_TickPeriod.ToString("0"), Holy_HoT_Duration.ToString("0"));
+                s += String.Format("\nEcho of Light ticks a total of {0} times, once every {1} seconds, for a duration of {2} seconds", EoL_Ticks.ToString("0"), EoL_TickPeriod.ToString("0"), EoL_Duration.ToString("0"));
             }
             return s;
         }
@@ -354,12 +349,12 @@ namespace Rawr.HealPriest
 
         protected void EchoOfLight()
         {
-            Holy_HoT_TickPeriod = 1;
-            Holy_HoT_Ticks = 6;
-            Holy_HoT_Duration = Holy_HoT_TickPeriod * Holy_HoT_Ticks;
-            Holy_HoT_Hit = DirectHealAvgHit * HolyMastery / Holy_HoT_Ticks;
-            Holy_HoT_Crit = DirectHealAvgCrit * HolyMastery / Holy_HoT_Ticks;
-            Holy_HoT_Avg = Holy_HoT_Hit * (1f - CritChance) + Holy_HoT_Crit * CritChance;
+            EoL_TickPeriod = 1;
+            EoL_Ticks = 6;
+            EoL_Duration = EoL_TickPeriod * EoL_Ticks;
+            EoL_Hit = DirectHealAvgHit * HolyMastery / EoL_Ticks;
+            EoL_Crit = DirectHealAvgCrit * HolyMastery / EoL_Ticks;
+            EoL_Avg = EoL_Hit * (1f - CritChance) + EoL_Crit * CritChance;
             HasOverTimeHeal = true;
         }
 
@@ -489,6 +484,249 @@ namespace Rawr.HealPriest
         }
     }
 
+    public class SpellSerenity : DirectHealSpell
+    {
+        public SpellSerenity(Character character, Stats stats)
+        {
+            BaseDirectValue = 5.97700023651123f * BaseScalar85;
+            BaseDirectCoefficient = 0.486f;
+            BaseDirectVariation = 0.16f;
+
+            BaseManaCost = 0.08f;
+
+            BaseCooldown = 15f;
+            SetPriestInformation(character, stats);
+        }
+
+        public override void UpdateSpell()
+        {
+            healBonus = (1f + stats.BonusHealingDoneMultiplier)
+                * (1f + PriestInformation.GetTwinDisciplines(character.PriestTalents.TwinDisciplines));
+            base.UpdateSpell();
+            Cooldown = BaseCooldown * PriestInformation.GetTomeOfLight(character.PriestTalents.TomeOfLight);
+            DirectHealCalcs();
+        }
+    }
+
+    public class SpellRenew : DirectHealSpell
+    {
+        public SpellRenew(Character character, Stats stats)
+        {
+            BaseOverTimeValue = 1.29499995708466f * BaseScalar85;
+            BaseOverTimeCoefficient = 0.131f;
+            BaseOverTimeTickPeriod = 3f;
+            BaseOverTimeTicks = 4f;
+
+            BaseManaCost = 0.17f;
+
+            SetPriestInformation(character, stats);
+        }
+
+        public override void UpdateSpell()
+        {
+            healBonus = (1f + stats.BonusHealingDoneMultiplier)
+                * (1f + PriestInformation.GetTwinDisciplines(character.PriestTalents.TwinDisciplines))
+                * (1f + PriestInformation.GetImprovedRenew(character.PriestTalents.ImprovedRenew))
+                * (character.PriestTalents.GlyphofRenew ? 1.1f : 1.0f);
+
+            base.UpdateSpell();
+
+            float spellPowerBonus = stats.SpellPower * BaseOverTimeCoefficient;
+
+            OverTimeHealHit = (BaseOverTimeValue + spellPowerBonus) * healBonus;
+            OverTimeHealCrit = OverTimeHealHit * CritMultiplier;
+            OverTimeHealAvg = OverTimeHealHit * (1f - CritChance) + OverTimeHealCrit * CritChance;
+            float haste = (1f + stats.SpellHaste);
+            OverTimeTickPeriod = BaseOverTimeTickPeriod / haste;
+            // You get k more ticks for a hot/dot that has m ticks at 0% haste if your haste is higher than (2k-1)/2m.
+            OverTimeTicks = (float)Math.Floor(BaseOverTimeTicks * haste + 0.5f);
+            OverTimeDuration = OverTimeTickPeriod * OverTimeTicks;
+            HasOverTimeHeal = true;
+
+            if (character.PriestTalents.DivineAegis > 0)
+            {
+                float da = PriestInformation.GetDivineAegis(character.PriestTalents.DivineAegis) * (1f + DiscMastery);
+                AbsorbMinCrit = AbsorbMaxCrit = AbsorbAvgCrit = OverTimeHealCrit * da;
+                AbsorbAvg = AbsorbAvgHit * (1f - CritChance) + AbsorbAvgCrit * CritChance;
+                HasAbsorb = true;
+            }
+
+            if (character.PriestTalents.DivineTouch > 0)
+            {
+                DirectHealMinHit = DirectHealMaxHit = DirectHealAvgHit = OverTimeHealHit * OverTimeTicks;
+                DirectHealMinCrit = DirectHealMaxCrit = DirectHealAvgCrit = OverTimeHealCrit * OverTimeTicks;
+                DirectHealAvg = DirectHealAvgHit * (1f - CritChance) + DirectHealAvgCrit * CritChance;
+                HasDirectHeal = true;
+                if (ps == ePriestSpec.Spec_Disc)
+                {
+                    DivineAegis();
+                }
+                else if (ps == ePriestSpec.Spec_Holy)
+                {
+                    EchoOfLight();
+                }
+            }
+        }
+
+        protected override string ToStringOverTimeHeal()
+        {
+            float nonRatingHaste = (1f + stats.SpellHaste) / (1f + StatConversion.GetSpellHasteFromRating(stats.HasteRating));
+            // Check how much haste is needed to gain an additional tick.
+            float extraTickHaste = (OverTimeTicks + 0.5f) / BaseOverTimeTicks;
+            float extraHasteRating = (extraTickHaste / nonRatingHaste - 1f) / StatConversion.GetSpellHasteFromRating(1f) - stats.HasteRating;
+            
+            return String.Format("{0}\n{1} more Haste Rating needed for an additional tick.",
+                base.ToStringOverTimeHeal(),
+                extraHasteRating.ToString("0"));
+        }
+    }
+
+    public class SpellLightwell : DirectHealSpell
+    {
+        public SpellLightwell(Character character, Stats stats)
+        {
+            BaseOverTimeValue = 3.04500007629395f * BaseScalar85;
+            BaseOverTimeCoefficient = 0.308f;
+            BaseOverTimeTickPeriod = 2f;
+            BaseOverTimeTicks = 3f;
+
+            BaseManaCost = 0.30f;
+
+            MaxTargets = character.PriestTalents.GlyphofLightwell ? 15 : 10;
+            Targets = MaxTargets;
+
+            BaseCooldown = 3 * 60;
+
+            SetPriestInformation(character, stats);
+        }
+
+        public override void UpdateSpell()
+        {
+            healBonus = (1f + stats.BonusHealingDoneMultiplier)
+                * (1f + PriestInformation.GetTwinDisciplines(character.PriestTalents.TwinDisciplines));
+
+            base.UpdateSpell();
+            Cooldown = BaseCooldown;
+
+            float spellPowerBonus = stats.SpellPower * BaseOverTimeCoefficient;
+
+            OverTimeHealHit = (BaseOverTimeValue + spellPowerBonus) * healBonus;
+            OverTimeHealCrit = OverTimeHealHit * CritMultiplier;
+            OverTimeHealAvg = OverTimeHealHit * (1f - CritChance) + OverTimeHealCrit * CritChance;
+            float haste = (1f + stats.SpellHaste);
+            OverTimeTickPeriod = BaseOverTimeTickPeriod / haste;
+            // You get k more ticks for a hot/dot that has m ticks at 0% haste if your haste is higher than (2k-1)/2m.
+            OverTimeTicks = (float)Math.Floor(BaseOverTimeTicks * haste + 0.5f);
+            OverTimeDuration = OverTimeTickPeriod * OverTimeTicks;
+            HasOverTimeHeal = true;
+        }
+
+        protected override string ToStringOverTimeHeal()
+        {
+            float nonRatingHaste = (1f + stats.SpellHaste) / (1f + StatConversion.GetSpellHasteFromRating(stats.HasteRating));
+            // Check how much haste is needed to gain an additional tick.
+            float extraTickHaste = (OverTimeTicks + 0.5f) / BaseOverTimeTicks;
+            float extraHasteRating = (extraTickHaste / nonRatingHaste - 1f) / StatConversion.GetSpellHasteFromRating(1f) - stats.HasteRating;
+
+            return String.Format("{0}\n{1} more Haste Rating needed for an additional tick.",
+                base.ToStringOverTimeHeal(),
+                extraHasteRating.ToString("0"));
+        }
+    }
+
+    public class SpellPenance : DirectHealSpell
+    {
+        public SpellPenance(Character character, Stats stats)
+        {
+            BaseDirectValue = 3.1800000667572f * BaseScalar85;
+            BaseDirectCoefficient = 0.321f;
+            BaseDirectVariation = 0.122f;
+
+            BaseCastTime = 2f;
+            BaseManaCost = 0.14f;
+
+            Targets = MaxTargets = 3;
+
+            BaseCooldown = 12;
+
+            SetPriestInformation(character, stats);
+        }
+
+        public override void UpdateSpell()
+        {
+            healBonus = (1f + stats.BonusHealingDoneMultiplier)
+                * (1f + PriestInformation.GetTwinDisciplines(character.PriestTalents.TwinDisciplines));
+
+            base.UpdateSpell();
+            Cooldown = BaseCooldown - (character.PriestTalents.GlyphofPenance ? 2f : 0f);
+
+            float spellPowerBonus = stats.SpellPower * BaseDirectCoefficient;
+            DirectHealCalcs();
+        }
+
+        protected override string ToStringDirectHeal()
+        {
+            return String.Format("{0}\nPenance ticks a total of {1} times, once every {2} seconds, for a duration of {3} seconds",
+                base.ToStringDirectHeal(),
+                3,
+                (CastTime / 2).ToString("0.00"),    // First tick is instant.
+                CastTime.ToString("0.00")
+                );
+        }
+    }
+
+    public class SpellDivineHymn : DirectHealSpell
+    {
+        public SpellDivineHymn(Character character, Stats stats)
+        {
+            BaseDirectValue = 4.24200010299683f * BaseScalar85;
+            BaseDirectCoefficient = 0.429f;
+            BaseDirectVariation = 0.0f;
+
+            BaseCastTime = 8f;
+            BaseOverTimeTickPeriod = 2f;
+            BaseOverTimeTicks = BaseCastTime / BaseOverTimeTickPeriod;
+
+            BaseManaCost = 0.36f;
+
+            Targets = MaxTargets = 12;
+
+            BaseCooldown = 60 * 8;
+
+            SetPriestInformation(character, stats);
+        }
+
+        public override void UpdateSpell()
+        {
+            healBonus = (1f + stats.BonusHealingDoneMultiplier)
+                * (1f + PriestInformation.GetTwinDisciplines(character.PriestTalents.TwinDisciplines));
+
+            base.UpdateSpell();
+            Cooldown = BaseCooldown;
+            float haste = (1f + stats.SpellHaste);
+
+            OverTimeTickPeriod = BaseOverTimeTickPeriod / haste;
+            // You get k more ticks for a hot/dot that has m ticks at 0% haste if your haste is higher than (2k-1)/2m.
+            OverTimeTicks = (float)Math.Floor(BaseOverTimeTicks * haste + 0.5f);
+            OverTimeDuration = OverTimeTickPeriod * OverTimeTicks;
+
+            DirectHealCalcs();
+        }
+
+        protected override string ToStringDirectHeal()
+        {
+            float nonRatingHaste = (1f + stats.SpellHaste) / (1f + StatConversion.GetSpellHasteFromRating(stats.HasteRating));
+            // Check how much haste is needed to gain an additional tick.
+            float extraTickHaste = (OverTimeTicks + 0.5f) / BaseOverTimeTicks;
+            float extraHasteRating = (extraTickHaste / nonRatingHaste - 1f) / StatConversion.GetSpellHasteFromRating(1f) - stats.HasteRating;
+            
+            return String.Format("{0}\n{1} more Haste Rating needed for an additional tick.",
+                base.ToStringDirectHeal(),
+                extraHasteRating.ToString("0"));
+        }
+    }
+
+
     public class SpellPrayerOfMending : DirectHealSpell
     {
         public SpellPrayerOfMending(Character character, Stats stats)
@@ -513,6 +751,8 @@ namespace Rawr.HealPriest
 
             BaseManaCost = 0.18f;
 
+            BaseCooldown = 10;
+
             SetPriestInformation(character, stats);
         }
 
@@ -523,6 +763,7 @@ namespace Rawr.HealPriest
             if (character.PriestTalents.GlyphofPrayerOfMending && Targets == 1)
                 healBonus *= 1.2f;
             base.UpdateSpell();
+            Cooldown = BaseCooldown;
             DirectHealCalcs();
         }
     }
@@ -587,6 +828,42 @@ namespace Rawr.HealPriest
         }
     }
 
+    public class SpellHolyNova : DirectHealSpell
+    {
+        public SpellHolyNova(Character character, Stats stats)
+        {
+            MaxTargets = 5;
+            Initialize(character, stats, MaxTargets);
+        }
+
+        public SpellHolyNova(Character character, Stats stats, int targets)
+        {
+            MaxTargets = 5;
+            Initialize(character, stats, targets);
+        }
+
+        protected void Initialize(Character character, Stats stats, int targets)
+        {
+            BaseDirectValue = 0.316000014543533f * BaseScalar85;
+            BaseDirectCoefficient = 0.143f;
+            BaseDirectVariation = 0.15f;
+
+            BaseManaCost = 0.15f;
+
+            Targets = targets;
+
+            SetPriestInformation(character, stats);
+        }
+
+        public override void UpdateSpell()
+        {
+            healBonus = (1f + stats.BonusHealingDoneMultiplier)
+                * (1f + PriestInformation.GetTwinDisciplines(character.PriestTalents.TwinDisciplines));
+            base.UpdateSpell();
+            DirectHealCalcs();
+        }
+    }
+
     public class SpellCircleOfHealing : DirectHealSpell
     {
 
@@ -612,6 +889,8 @@ namespace Rawr.HealPriest
 
             Targets = targets;
 
+            BaseCooldown = 10;
+
             SetPriestInformation(character, stats);
         }
 
@@ -620,6 +899,66 @@ namespace Rawr.HealPriest
             healBonus = (1f + stats.BonusHealingDoneMultiplier)
                 * (1f + PriestInformation.GetTwinDisciplines(character.PriestTalents.TwinDisciplines));
             base.UpdateSpell();
+            Cooldown = BaseCooldown;
+            DirectHealCalcs();
+        }
+    }
+
+    public class SpellSanctuary : DirectHealSpell
+    {
+        private float ticks = 9;
+
+        public SpellSanctuary(Character character, Stats stats)
+        {
+            MaxTargets = 6;
+            Initialize(character, stats, MaxTargets);
+        }
+
+        public SpellSanctuary(Character character, Stats stats, int targets)
+        {
+            MaxTargets = 6;
+            Initialize(character, stats, targets);
+        }
+
+        protected void Initialize(Character character, Stats stats, int targets)
+        {
+            BaseDirectValue = 0.345999985933304f * BaseScalar85;
+            BaseDirectCoefficient = 0.031f;
+            BaseDirectVariation = 0.173f;
+
+            BaseManaCost = 0.44f;
+
+            Targets = targets;
+
+            BaseCooldown = 40;
+
+            SetPriestInformation(character, stats);
+        }
+
+        public override float HPC()
+        {
+            return base.HPC() * ticks;
+        }
+        public override float HPS()
+        {
+            float oldCastTime = CastTime;
+            CastTime = 2;
+            float result = base.HPS();
+            CastTime = oldCastTime;
+            return result;
+        }
+        public override float HPM()
+        {
+            return base.HPM() * ticks;
+        }
+
+
+        public override void UpdateSpell()
+        {
+            healBonus = (1f + stats.BonusHealingDoneMultiplier)
+                * (1f + PriestInformation.GetTwinDisciplines(character.PriestTalents.TwinDisciplines));
+            base.UpdateSpell();
+            Cooldown = BaseCooldown * (1f - PriestInformation.GetTomeOfLight(character.PriestTalents.TomeOfLight));
             DirectHealCalcs();
         }
     }
@@ -634,6 +973,8 @@ namespace Rawr.HealPriest
 
             BaseManaCost = 0.34f;
 
+            BaseCooldown = 3;
+
             SetPriestInformation(character, stats);
         }
 
@@ -645,6 +986,8 @@ namespace Rawr.HealPriest
             float spellPowerBonus = stats.SpellPower * BaseDirectCoefficient;
 
             base.UpdateSpell();
+            Cooldown = BaseCooldown - PriestInformation.GetSoulWarding(character.PriestTalents.SoulWarding);
+
             AbsorbMinHit = AbsorbMaxHit = AbsorbAvgHit = (BaseDirectValue + spellPowerBonus) * shieldBonus;
 
             if (character.PriestTalents.GlyphofPowerWordShield)
@@ -670,12 +1013,36 @@ namespace Rawr.HealPriest
     public class SpellResurrection : SpellCata
     {
         public SpellResurrection(Character character, Stats stats)
-        {
-            BaseCastTime = 10.0f;
+        {            BaseCastTime = 10.0f;
             BaseManaCost = 0.6f;
 
             SetPriestInformation(character, stats);
             CritChance = 0f;
         }
     }
+
+    public class SpellGiftOfTheNaaru : DirectHealSpell
+    {
+        public SpellGiftOfTheNaaru(Character character, Stats stats)
+        {
+            SetPriestInformation(character, stats);
+            CritChance = 0f;
+        }
+
+        public override void UpdateSpell()
+        {
+            base.UpdateSpell();
+            HasOverTimeHeal = true;
+            OverTimeTicks = 5;
+            OverTimeTickPeriod = 3;
+            OverTimeDuration = OverTimeTicks * OverTimeTickPeriod;
+            OverTimeHealHit = OverTimeHealCrit = OverTimeHealAvg = stats.Health * 0.04f;            
+        }
+/*
+        protected override string ToStringOverTimeHeal()
+        {
+            return 
+        }*/
+    }
+
 }

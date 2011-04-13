@@ -176,6 +176,15 @@ namespace Rawr.HealPriest {
             }           
             #endregion
             #region Model
+            CalculationOptionsHealPriest calcOpts = Character.CalculationOptions as CalculationOptionsHealPriest;
+            if (calcOpts != null)
+            {
+                PriestSolver solver = new PriestSolverDisciplineRaid(this, calcOpts);
+                solver.Solve();
+                dictValues.Add("Role", solver.Name);
+                dictValues.Add("Burst", this.BurstPoints.ToString("0"));
+                dictValues.Add("Sustained", this.SustainPoints.ToString("0"));
+            }
             #endregion
             #region Holy Spells
             SpellHeal spellHeal = new SpellHeal(Character, BasicStats);
@@ -186,8 +195,19 @@ namespace Rawr.HealPriest {
             dictValues.Add("Flash Heal", String.Format("{0}*{1}", spellFlashHeal.HPS().ToString("0"), spellFlashHeal.ToString()));
             SpellBindingHeal spellBindingHeal = new SpellBindingHeal(Character, BasicStats);
             dictValues.Add("Binding Heal", String.Format("{0}*{1}", spellBindingHeal.HPS().ToString("0"), spellBindingHeal.ToString()));
+            SpellRenew spellRenew = new SpellRenew(Character, BasicStats);
+            dictValues.Add("Renew", String.Format("{0}*{1}", spellRenew.HPS().ToString("0"), spellRenew.ToString()));
+            if (Character.PriestTalents.Lightwell > 0)
+            {
+                SpellLightwell spellLW = new SpellLightwell(Character, BasicStats);
+                dictValues.Add("Lightwell", String.Format("{0}*{1}", spellLW.HPS().ToString("0"), spellLW.ToString()));
+            }
+            else
+                dictValues.Add("Lightwell", "N/A*You do not have the talent required.");
             SpellPrayerOfHealing spellProH = new SpellPrayerOfHealing(Character, BasicStats);
             dictValues.Add("ProH", String.Format("{0}*{1}", spellProH.HPS().ToString("0"), spellProH.ToString()));
+            SpellHolyNova spellHolyNova = new SpellHolyNova(Character, BasicStats);
+            dictValues.Add("Holy Nova", String.Format("NYI*{1}", spellHolyNova.HPS().ToString("0"), spellHolyNova.ToString()));
             if (Character.PriestTalents.CircleOfHealing > 0)
             {
                 SpellCircleOfHealing spellCoH = new SpellCircleOfHealing(Character, BasicStats);
@@ -197,12 +217,44 @@ namespace Rawr.HealPriest {
             {
                 dictValues.Add("CoH", "N/A*You do not have the talent required.");
             }
+            if (ps == ePriestSpec.Spec_Disc)
+            {
+                SpellPenance spellPenance = new SpellPenance(Character, BasicStats);
+                dictValues.Add("Penance", String.Format("{0}*{1}", spellPenance.HPS().ToString("0"), spellPenance.ToString()));
+            }
+            else
+            {
+                dictValues.Add("Penance", "N/A*You do not have the correct Talent specialization.");
+            }
+            if (Character.PriestTalents.Revelations > 0)
+            {
+                SpellSerenity spellSerenity = new SpellSerenity(Character, BasicStats);
+                dictValues.Add("HW Serenity", String.Format("{0}*{1}", spellSerenity.HPS().ToString("0"), spellSerenity.ToString()));
+                SpellSanctuary spellSanctuary = new SpellSanctuary(Character, BasicStats);
+                dictValues.Add("HW Sanctuary", String.Format("{0}*{1}", spellSanctuary.HPS().ToString("0"), spellSanctuary.ToString()));
+            }
+            else
+            {
+                dictValues.Add("HW Serenity", "N/A*You do not have the talent required.");
+                dictValues.Add("HW Sanctuary", "N/A*You do not have the talent required.");
+            }
             SpellPrayerOfMending spellProM = new SpellPrayerOfMending(Character, BasicStats, 1);
             dictValues.Add("ProM", String.Format("{0}*{1}", spellProM.HPS().ToString("0"), spellProM.ToString()));
             spellProM = new SpellPrayerOfMending(Character, BasicStats);
             dictValues.Add("ProM 5 Hits", String.Format("{0}*{1}", spellProM.HPS().ToString("0"), spellProM.ToString()));
             SpellPowerWordShield spellPWS = new SpellPowerWordShield(Character, BasicStats);
             dictValues.Add("PWS", String.Format("{0}*{1}", spellPWS.HPS().ToString("0"), spellPWS.ToString()));
+            SpellDivineHymn spellDivineHymn = new SpellDivineHymn(Character, BasicStats);
+            dictValues.Add("Divine Hymn", String.Format("{0}*{1}", spellDivineHymn.HPS().ToString("0"), spellDivineHymn.ToString()));
+            if (Character.Race == CharacterRace.Draenei)
+            {
+                SpellGiftOfTheNaaru spellGoat = new SpellGiftOfTheNaaru(Character, BasicStats);
+                dictValues.Add("Gift of the Naaru", String.Format("{0}*{1}", spellGoat.HPS().ToString("0"), spellGoat.ToString()));
+            }
+            else
+            {
+                dictValues.Add("Gift of the Naaru", "N/A*You are not a spacegoat!");
+            }
             SpellResurrection spellResurrection = new SpellResurrection(Character, BasicStats);
             dictValues.Add("Resurrection", String.Format("{0}*{1}", spellResurrection.CastTime.ToString("0.00"), spellResurrection.ToString()));
             #endregion 
@@ -347,6 +399,7 @@ namespace Rawr.HealPriest {
                 case "Haste Rating": return BasicStats.HasteRating;
                 case "Mastery Rating": return BasicStats.MasteryRating;
                 case "Haste %": return BasicStats.SpellHaste * 100f;
+                case "Renew Ticks": return new SpellRenew(Character, BasicStats).OverTimeTicks;
                 case "Crit Rating": return BasicStats.CritRating;
              //   case "Healing Crit %": return (basicStats.SpellCrit * 100f) + character.PriestTalents.HolySpecialization * 1f + character.PriestTalents.RenewedHope * 2f;
              //   case "PW:Shield": return new PowerWordShield(basicStats, character).AvgHeal;

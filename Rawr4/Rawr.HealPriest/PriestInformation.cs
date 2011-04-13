@@ -62,6 +62,11 @@ namespace Rawr.HealPriest
             return 1f;
         }
 
+        public static float GetSoulWarding(int points)
+        {
+            return points * 1f;
+        }
+
         public static float GetBorrowedTime(int points)
         {
             if (points == 1)
@@ -71,12 +76,34 @@ namespace Rawr.HealPriest
             return 0.0f;
         }
 
+        public static float GetRapture(int points)
+        {
+            if (points == 1)
+                return 0.02f;
+            if (points == 2)
+                return 0.04f;
+            if (points == 3)
+                return 0.07f;
+            return 0f;
+        }
+
         public static float GetDivineAegis(int points)
         {
             return points * 0.1f;
         }
 
-        /*                          */
+        /*           HOLEY               */
+        public static float GetImprovedRenew(int points)
+        {
+            return points * 0.05f;
+        }
+
+        public static float GetDivineTouch(int points)
+        {
+            return points * 0.05f;
+        }
+
+
         public static float GetEmpoweredHealing(int points)
         {
             return points * 0.05f;
@@ -91,6 +118,11 @@ namespace Rawr.HealPriest
             if (points == 3)
                 return 0.5f;
             return 0f;
+        }
+
+        public static float GetTomeOfLight(int points)
+        {
+            return points * 0.15f;
         }
 
     }

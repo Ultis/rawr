@@ -103,6 +103,7 @@
     <Compile Include="..\..\Rawr3\Rawr.HealPriest\HealPriestConverters.cs">
       <Link>HealPriestConverters.cs</Link>
     </Compile>
+    <Compile Include="PriestSolver.cs" />
     <Compile Include="PriestInformation.cs" />
     <Compile Include="SpellCata.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
