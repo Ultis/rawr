@@ -30,21 +30,45 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <TextBlock x:Name="LB_Notice" FontWeight="SemiBold" Foreground="#FFB4B524" Text="NOTICE: Many models do not yet support the Boss Handler so changes here will not have any effect on your character in those models." TextAlignment="Center" TextWrapping="Wrap" Margin="2" Grid.Row="1" Visibility="Collapsed"/>
         <local:GroupBox x:Name="GB_Preset" Header="Select a Preset" Margin="0,2" d:LayoutOverrides="Width" Grid.Row="2">
             <Grid>
-                <dataInput:Label x:Name="LB_where" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Where"/>
-                <dataInput:Label x:Name="LB_Is" HorizontalAlignment="Left" Margin="122,1,0,0" VerticalAlignment="Top" Content="is"/>
-                <ComboBox x:Name="CB_BL_FilterType" Height="21" HorizontalAlignment="Left" Margin="41,0,0,0" VerticalAlignment="Top" Width="80" SelectionChanged="CB_BL_FilterType_SelectedIndexChanged">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="23" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                
+                <!-- Row 1 -->
+                <dataInput:Label x:Name="LB_Where" Content="Where" Margin="2,0"/>
+                <ComboBox x:Name="CB_BL_FilterType" Grid.Row="0" Grid.Column="1" Margin="2,0" Width="80" SelectionChanged="CB_BL_FilterType_SelectedIndexChanged">
                     <System:String>Content</System:String>
                     <System:String>Instance</System:String>
                     <System:String>Name</System:String>
                 </ComboBox>
-                <ComboBox x:Name="CB_BL_Filter" Height="21" Margin="138,0,0,0" VerticalAlignment="Top" SelectionChanged="CB_BL_Filter_SelectedIndexChanged">
+                <dataInput:Label x:Name="LB_Is" Grid.Row="0" Grid.Column="2" Margin="2,0" Content="is"/>
+                <ComboBox x:Name="CB_BL_Filter" Grid.Row="0" Grid.Column="3" Margin="2,0" SelectionChanged="CB_BL_Filter_SelectedIndexChanged">
                     <System:String>All</System:String>
                 </ComboBox>
-                <ComboBox x:Name="CB_BossList" Height="21" Margin="0,25,0,0" VerticalAlignment="Top" SelectionChanged="CB_BossList_SelectedIndexChanged">
+                <Button x:Name="BT_GetHelp" Grid.Row="0" Grid.Column="4" Margin="2,0" Content="?" Width="23" Height="23" Click="BT_GetHelp_Click" FontWeight="Bold" Foreground="White">
+                    <Button.Background>
+                        <RadialGradientBrush>
+                            <GradientStop Color="Blue" Offset="0.568" />
+                            <GradientStop Color="White" Offset="1" />
+                        </RadialGradientBrush>
+                    </Button.Background>
+                </Button>
+                <!-- Row 2 -->
+                <ComboBox x:Name="CB_BossList" Grid.Row="1" Grid.ColumnSpan="5" Margin="2" SelectionChanged="CB_BossList_SelectedIndexChanged">
                     <System:String>Custom</System:String>
                 </ComboBox>
             </Grid>
@@ -162,9 +186,15 @@
                     <Button x:Name="BT_Attacks" Margin="2" Click="BT_Attacks_Click" IsEnabled="False" Grid.Row="11" Grid.Column="3" Content="Edit" />
                     <CheckBox x:Name="CK_BuffStates" Content="Buffs/Debuffs You: *" ToolTipService.ToolTip="" IsChecked="{Binding HasBuffStates, Mode=TwoWay}" Margin="2" VerticalAlignment="Center" Grid.Row="13" FontWeight="Bold" Grid.ColumnSpan="3" />
                     <Button x:Name="BT_BuffStates" Margin="2" Click="BT_BuffStates_Click" IsEnabled="False" Grid.Row="13" Grid.Column="3" Content="Edit" />
-                    <TextBlock Grid.Row="10" HorizontalAlignment="Stretch" Margin="4,2" Text="{Binding Path=DynamicString_MultiTargs}" Grid.ColumnSpan="4" Name="LB_MultiTargs" TextWrapping="Wrap" />
-                    <TextBlock Grid.Row="12" HorizontalAlignment="Stretch" Margin="4,2" Text="{Binding Path=DynamicString_Attacks}" Grid.ColumnSpan="4" Name="LB_Attacks" TextWrapping="Wrap" />
-                    <TextBlock Grid.Row="15" HorizontalAlignment="Stretch" Margin="4,2" Text="{Binding Path=DynamicString_BuffStates}" Grid.ColumnSpan="4" Name="LB_BuffStates" TextWrapping="Wrap" />
+                    <ScrollViewer Grid.Row="10" HorizontalAlignment="Stretch" MaxHeight="150" Grid.ColumnSpan="4" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                        <TextBlock HorizontalAlignment="Stretch" Margin="4,2" Text="{Binding Path=DynamicString_MultiTargs}" Name="LB_MultiTargs" FontSize="10" />
+                    </ScrollViewer>
+                    <ScrollViewer Grid.Row="12" HorizontalAlignment="Stretch" MaxHeight="150" Grid.ColumnSpan="4" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                        <TextBlock HorizontalAlignment="Stretch" Margin="4,2" Text="{Binding Path=DynamicString_Attacks}" Name="LB_Attacks" FontSize="10" />
+                    </ScrollViewer>
+                    <ScrollViewer Grid.Row="15" HorizontalAlignment="Stretch" MaxHeight="150" Grid.ColumnSpan="4" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                        <TextBlock HorizontalAlignment="Stretch" Margin="4,2" Text="{Binding Path=DynamicString_BuffStates}" Name="LB_BuffStates" FontSize="10" />
+                    </ScrollViewer>
                 </Grid>
             </sdk:TabItem>
             <sdk:TabItem Name="Tab_Imp" Header="Impedances">
@@ -200,12 +230,24 @@
                     <Button x:Name="BT_Slncs" Margin="2" Click="BT_Silences_Click" IsEnabled="False" Grid.Column="1" Grid.Row="8" Content="   Edit   " />
                     <CheckBox x:Name="CK_Dsrms" IsChecked="{Binding DisarmingTargs, Mode=TwoWay}" Content="Boss Disarms You *" ToolTipService.ToolTip="This functionality is disabled as no bosses Disarm in WotLK" TabIndex="38" Margin="2" VerticalAlignment="Center" Grid.Row="10" FontWeight="Bold" />
                     <Button x:Name="BT_Dsrms" Margin="2" Click="BT_Disarms_Click" IsEnabled="False" Grid.Column="1" Grid.Row="10" Content="   Edit   " />
-                    <TextBlock Grid.Row="1" HorizontalAlignment="Stretch" Margin="4,2" Text="{Binding Path=DynamicString_Move}" Grid.ColumnSpan="2" Name="LB_Moves" TextWrapping="Wrap" />
-                    <TextBlock Grid.Row="3" HorizontalAlignment="Stretch" Margin="4,2" Text="{Binding Path=DynamicString_Stun}" Grid.ColumnSpan="2" Name="LB_Stuns" TextWrapping="Wrap" />
-                    <TextBlock Grid.Row="5" HorizontalAlignment="Stretch" Margin="4,2" Text="{Binding Path=DynamicString_Fear}" Grid.ColumnSpan="2" Name="LB_Fears" TextWrapping="Wrap" />
-                    <TextBlock Grid.Row="7" HorizontalAlignment="Stretch" Margin="4,2" Text="{Binding Path=DynamicString_Root}" Grid.ColumnSpan="2" Name="LB_Roots" TextWrapping="Wrap" />
-                    <TextBlock Grid.Row="9" HorizontalAlignment="Stretch" Margin="4,2" Text="{Binding Path=DynamicString_Slnc}" Grid.ColumnSpan="2" Name="LB_Slncs" TextWrapping="Wrap" />
-                    <TextBlock Grid.Row="11" HorizontalAlignment="Stretch" Margin="4,2" Text="{Binding Path=DynamicString_Dsrm}" Grid.ColumnSpan="2" Name="LB_Dsrms" TextWrapping="Wrap" />
+                    <ScrollViewer Grid.ColumnSpan="2" Grid.Row="1" HorizontalAlignment="Stretch" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="150">
+                        <TextBlock Margin="4,2" Text="{Binding Path=DynamicString_Move}" Name="LB_Moves" FontSize="10" />
+                    </ScrollViewer>
+                    <ScrollViewer Grid.ColumnSpan="2" Grid.Row="3" HorizontalAlignment="Stretch" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="150">
+                        <TextBlock Margin="4,2" Text="{Binding Path=DynamicString_Stun}" Name="LB_Stuns" FontSize="10" />
+                    </ScrollViewer>
+                    <ScrollViewer Grid.ColumnSpan="2" Grid.Row="5" HorizontalAlignment="Stretch" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="150">
+                        <TextBlock Margin="4,2" Text="{Binding Path=DynamicString_Fear}" Name="LB_Fears" FontSize="10" />
+                    </ScrollViewer>
+                    <ScrollViewer Grid.ColumnSpan="2" Grid.Row="7" HorizontalAlignment="Stretch" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="150">
+                        <TextBlock Margin="4,2" Text="{Binding Path=DynamicString_Root}" Name="LB_Roots" FontSize="10" />
+                    </ScrollViewer>
+                    <ScrollViewer Grid.ColumnSpan="2" Grid.Row="9" HorizontalAlignment="Stretch" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="150">
+                        <TextBlock Margin="4,2" Text="{Binding Path=DynamicString_Slnc}" Name="LB_Slncs" FontSize="10" />
+                    </ScrollViewer>
+                    <ScrollViewer Grid.ColumnSpan="2" Grid.Row="11" HorizontalAlignment="Stretch" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="150">
+                        <TextBlock Margin="4,2" Text="{Binding Path=DynamicString_Dsrm}" Name="LB_Dsrms" FontSize="10" />
+                    </ScrollViewer>
                 </Grid>
             </sdk:TabItem>
             <sdk:TabItem Name="Tab_Def" Header="Defensive">
@@ -245,9 +287,15 @@
                 </Grid>
             </sdk:TabItem>
         </sdk:TabControl>
+
         <TextBlock Grid.Row="4" Text="Summary" Margin="4,2" VerticalAlignment="Center" FontWeight="Bold" />
         <TextBox x:Name="TB_BossInfo"  Grid.Row="5" TextWrapping="Wrap" IsReadOnly="True" TabIndex="46" d:LayoutOverrides="Width" Margin="2"
                  VerticalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto"
                  Text="Boss Information would normally be displayed here" />
+
+        <TextBlock Grid.Row="6" Text="Alert!" Margin="4,2" VerticalAlignment="Center" FontWeight="Bold" Visibility="Collapsed"  />
+        <TextBox x:Name="TB_Alerts"  Grid.Row="7" TextWrapping="Wrap" IsReadOnly="True" TabIndex="46" d:LayoutOverrides="Width" Margin="2"
+                 VerticalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto"
+                 Text="If there is a problem, it would be noted here" Visibility="Collapsed" />
     </Grid>
 </UserControl>

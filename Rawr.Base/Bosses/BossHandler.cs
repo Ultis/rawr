@@ -311,6 +311,13 @@ namespace Rawr {
         [DefaultValue("")]
         public string BossName { get { return BOSSNAME; } set { BOSSNAME = value; OnPropertyChanged("BossName"); } }
         #endregion
+
+        public bool HasAProblem {
+            get {
+                if (DefaultMeleeAttack != null && DefaultMeleeAttack.DamagePerHit < 115000f) return true;
+                return false;
+            }
+        }
     }
 
 #if !SILVERLIGHT

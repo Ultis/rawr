@@ -38,6 +38,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -55,7 +56,8 @@
                     <inputToolkit:NumericUpDown Grid.Row="2" Grid.Column="1" DecimalPlaces="0" Increment="1" Minimum="1" Maximum="3" Value="{Binding HPperInq, Mode=TwoWay, UpdateSourceTrigger=Default}" Height="20" />
                     <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource LabelDescriptionStyle}" Text="Wait for Crusader Strike if CD &lt;:" />
                     <inputToolkit:NumericUpDown Grid.Row="3" Grid.Column="1" DecimalPlaces="1" Increment="0.1" Minimum=".1" Maximum="1" Value="{Binding SkipToCrusader, Mode=TwoWay, UpdateSourceTrigger=Default}" Height="20" />
-                    <Button Grid.Row="4" Grid.ColumnSpan="2" Margin="4,2" Content="Display Stat Graph" Click="BT_StatsGraph_Click" />
+                     <CheckBox x:Name="CK_NewRot" Content="New Rotation" Grid.Row="4" Grid.Column="1" Margin="0" IsChecked="{Binding NewRotation, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                    <Button Grid.Row="5" Grid.ColumnSpan="2" Margin="4,2" Content="Display Stat Graph" Click="BT_StatsGraph_Click" />
                 </Grid>
             </controls:TabItem>
         </controls:TabControl>

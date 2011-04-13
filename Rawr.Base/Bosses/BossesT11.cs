@@ -1112,7 +1112,7 @@ namespace Rawr.Bosses
                  *      a lot of breaks in his attacks such as when he is channeling Searing Flames or Sonic Breath, and the entire time he is in the air phase which
                  *      does not need a tank. */
                 GroundPhase.Attacks.Add(GenAStandardMelee(this[i].Content));
-                GroundPhase.LastAttack.DamagePerHit *= 0.75f; // simming the low damage as 75% normal. TODO: Analyze WoL to find proper values
+                GroundPhase.LastAttack.DamagePerHit *= 0.85f; // simming the low damage as 85% normal. TODO: Analyze WoL to find proper values
                 /* Devastation - This ability is a nonstop blasting every 1.5 seconds of Devastation fireball attacks on a player that has become Noisy! which each deal 25k fire damage.
                  * NOTE: This attack shouldn't be modelled as it's never supposed to happen */
                 // Modulation - This is an unavoidable raid-wide pulse that deals 20k Shadow Damage and increases sound level by 7.

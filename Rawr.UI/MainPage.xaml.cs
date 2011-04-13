@@ -14,6 +14,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+//using System.Windows.Threading;
 #if !SILVERLIGHT
 using Microsoft.Win32;
 #endif
@@ -88,6 +89,7 @@ namespace Rawr.UI
             StatusMessaging.Ready = true;
 
             ResetItemCacheBecauseOfNewVersion();
+            //BossHandlerHasAnIssue(null, null);
         }
 
         #region Variables
@@ -1713,5 +1715,37 @@ In Silverlight, the online version of Rawr, you will be prompted with quick link
 #endif
             webHelp.Show();
         }
+
+
+        /*private System.Timers.Timer bh_hasIssueTimer = null;
+        private bool blinkOn = true;
+        private bool bhisbusy = false;
+        //private System.Timers.TimerCallback asd;
+        private void BossHandlerHasAnIssue(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            if (bh_hasIssueTimer == null) {
+                bh_hasIssueTimer = new System.Timers.Timer(2 * 1000);
+                bh_hasIssueTimer.Elapsed += new System.Timers.ElapsedEventHandler(BossHandlerHasAnIssue);
+                bh_hasIssueTimer.Enabled = true;
+            }
+            blinkOn = !blinkOn;
+            if (!bhisbusy) {
+                bhisbusy = true;
+                //try {
+                    // Normal: #FF8C8E94
+                    SolidColorBrush brush = new SolidColorBrush(Color.FromArgb(255, 140, 142, 148));
+                    if (Character.BossOptions.HasAProblem && blinkOn) {
+                        // Bad: Red
+                        brush = new SolidColorBrush(Colors.Red);
+                    }
+                    if (BossTab.Dispatcher.CheckAccess()) {
+                        BossTab.BorderBrush = brush;
+                    } else {
+                        BossTab.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(() => { BossTab.BorderBrush = brush; }));
+                    }
+                //} catch (System.InvalidOperationException) { }
+                bhisbusy = false;
+            }
+        }*/
     }
 }

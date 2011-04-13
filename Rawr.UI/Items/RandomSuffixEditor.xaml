@@ -9,7 +9,7 @@
     mc:Ignorable="d"
     xmlns:local="clr-namespace:Rawr.UI"
     x:Class="Rawr.UI.RandomSuffixEditor"    
-    Title="Edit Random Suffixes" Width="300" Height="400">
+    Title="Edit Random Suffixes" Width="700" Height="400">
 
     <Grid x:Name="LayoutRoot" Background="White">
         <Grid.ColumnDefinitions>
@@ -23,7 +23,8 @@
         <sdk:DataGrid Name="SuffixGrid" AutoGenerateColumns="False">
             <sdk:DataGrid.Columns>
                 <sdk:DataGridTextColumn CanUserReorder="True" CanUserResize="True" CanUserSort="True" Binding="{Binding Id}" Header="Id" IsReadOnly="True" Width="Auto" />
-                <sdk:DataGridTextColumn CanUserReorder="True" CanUserResize="True" CanUserSort="True" Binding="{Binding Suffix}" Header="Suffix" IsReadOnly="True" Width="*" />
+                <sdk:DataGridTextColumn CanUserReorder="True" CanUserResize="True" CanUserSort="True" Binding="{Binding Suffix}" Header="Suffix" IsReadOnly="True" Width="Auto" />
+                <sdk:DataGridTextColumn CanUserReorder="True" CanUserResize="True" CanUserSort="True" Binding="{Binding Stats}" Header="Stats" IsReadOnly="True" Width="6*" />
                 <sdk:DataGridCheckBoxColumn CanUserReorder="True" CanUserResize="True" CanUserSort="True" Binding="{Binding Available}" Header="Available" Width="Auto" />
             </sdk:DataGrid.Columns>
         </sdk:DataGrid>

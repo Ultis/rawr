@@ -484,5 +484,11 @@ namespace Rawr.UI
                 bossOpts_PropertyChanged(null, null);
             }
         }
+
+        private void BT_GetHelp_Click(object sender, RoutedEventArgs e)
+        {
+            WebHelp webHelp = new WebHelp("BossHandler");
+            webHelp.Show();
+        }
     }
 }
