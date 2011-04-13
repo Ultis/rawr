@@ -232,6 +232,7 @@ namespace Rawr
         ArmorPenetration,
         ThreatReductionMultiplier,
         TargetArmorReduction,
+        ArmorReductionMultiplier,
         ManaCostReductionMultiplier,
         DamageTakenReductionMultiplier,
         SpellDamageTakenReductionMultiplier,
@@ -1599,27 +1600,27 @@ namespace Rawr
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusBleedDamageMultiplier] = value; }
         }
         [DefaultValueAttribute(0f)]
+        [DisplayName("% Bonus Damage Multiplier")]
         [Percentage]
         [Category("Buffs / Debuffs")]
-        [DisplayName("% Damage")]
         public float BonusDamageMultiplier
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusDamageMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusDamageMultiplier] = value; }
         }
         [DefaultValueAttribute(0f)]
+        [DisplayName("% White Damage Bonus Multiplier")]
         [Percentage]
         [Category("Buffs / Debuffs")]
-        [DisplayName("% White Damage Bonus")]
         public float BonusWhiteDamageMultiplier
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusWhiteDamageMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusWhiteDamageMultiplier] = value; }
         }
         [DefaultValueAttribute(0f)]
+        [DisplayName("% Bonus DoT Damage Multiplier")]
         [Percentage]
         [Category("Buffs / Debuffs")]
-        [DisplayName("% DOT Dmg")]
         public float BonusPeriodicDamageMultiplier
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusPeriodicDamageMultiplier]; }
@@ -1918,6 +1919,19 @@ namespace Rawr
         {
             get { return _rawInverseMultiplicativeData[(int)InverseMultiplicativeStat.TargetArmorReduction]; }
             set { _rawInverseMultiplicativeData[(int)InverseMultiplicativeStat.TargetArmorReduction] = value; }
+        }
+        /// <summary>
+        /// This is a negative multiplier on *you*<br/>
+        /// 0.50f = 50% Armor Reduction. Use as:<br/>
+        /// Armor *= (1f - ArmorReductionMultiplier);
+        /// </summary>
+        [DefaultValueAttribute(0f)]
+        [DisplayName("% Player Armor Reduction")]
+        [Percentage]
+        [Category("Boss Handler")]
+        public float ArmorReductionMultiplier {
+            get { return _rawInverseMultiplicativeData[(int)InverseMultiplicativeStat.ArmorReductionMultiplier]; }
+            set { _rawInverseMultiplicativeData[(int)InverseMultiplicativeStat.ArmorReductionMultiplier] = value; }
         }
         /// <summary>
         /// 50% = Abilities cost 50% less than they normally would. An Ability with a Mana Cost of "10% of base mana" would become 5%.

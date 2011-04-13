@@ -21,6 +21,7 @@ namespace Rawr.UI
         {
             public int Id { get; set; }
             public string Suffix { get; set; }
+            public Stats Stats { get; set; }
             public bool Available { get; set; }
         }
 
@@ -38,12 +39,14 @@ namespace Rawr.UI
             data = new List<SuffixAvailability>();
             foreach (var s in RandomSuffix.GetAllSuffixes())
             {
-                data.Add(new SuffixAvailability()
+                SuffixAvailability sa;
+                data.Add(sa = new SuffixAvailability()
                 {
                     Id = s,
                     Suffix = RandomSuffix.GetSuffix(s),
                     Available = item.AllowedRandomSuffixes != null && item.AllowedRandomSuffixes.Contains(s)
                 });
+                RandomSuffix.AccumulateStats(sa.Stats = new Stats(), item, s);
             }
 
             SuffixGrid.ItemsSource = data;

@@ -806,7 +806,7 @@ namespace Rawr.HealPriest
 
             calc.BasicStats = stats;
             calc.Character = character;
-          
+            
             /*BaseSolver solver;
             if (calcOpts.Role == eRole.CUSTOM)
                 solver = new AdvancedSolver(stats, character);
