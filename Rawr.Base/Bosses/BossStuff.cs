@@ -52,9 +52,12 @@ namespace Rawr {
         /// <summary>The Attack Type (for AoE vs. single-target Melee/Ranged)</summary>
         [DefaultValue(ATTACK_TYPES.AT_MELEE)]
         public ATTACK_TYPES AttackType = ATTACK_TYPES.AT_MELEE;
-        /// <summary>if the attack is part of a Dual Wield, there is an additional 20% chance to Miss<para>This should flag the Buff... sort of</para></summary>
+        /// <summary>If the attack is part of a Dual Wield, there is an additional 20% chance to Miss<para>This should flag the Buff... sort of</para></summary>
         [DefaultValue(false)]
         public bool IsDualWielding = false;
+        /// <summary>If the attack is coming from Adds, that affects the Special Boss calcs</summary>
+        [DefaultValue(false)]
+        public bool IsFromAnAdd = false;
 
         #region Phase Info
         public SerializableDictionary<int, float[]> PhaseTimes {
@@ -205,21 +208,48 @@ namespace Rawr {
         /// <para>Frequency is <= 0 or > 20 min</para>
         /// <para>Duration <= 0 or > 20 sec</para>
         /// </summary>
-        public bool Validate
+        public bool Validate {
+            get {
+                // If it's Named invalid... it's for a reason
+                if (Name == "Invalid") { return false; }
+                // Can't have a negative attack speed or an attack speed greater than berserk timer
+                if (AttackSpeed <= 0 || AttackSpeed > 20 * 60) { return false; }
+                // Damage Per Hit (and dot damage) in total are negative
+                if ((DamagePerHit + (DamagePerTick*NumTicks)) <= 0) { return false; }
+                // Has to affect someone
+                bool anyroles = false;
+                foreach (bool b in AffectsRole.Values) { if (b) { anyroles = true; break; } }
+                if (!anyroles) { return false; }
+                // Didn't fail, must be valid
+                return true;
+            }
+        }
+        /// <summary>Returns the reason it is invalid</summary>
+        public string ValidateString
         {
             get
             {
-                if (Name == "Invalid") { return false; }
-                if (AttackSpeed <= 0 || AttackSpeed > (20+1) * 60) { return false; }
-                if ((DamagePerHit + (DamagePerTick*NumTicks)) <= 0) { return false; }
-                return true;
+                // If it's Named invalid... it's for a reason
+                if (Name == "Invalid") { return "This attack was specifically marked invalid"; }
+                // Can't have a negative frequency and can't be more than the zerk timer
+                if (AttackSpeed <= 0) { return "Negative Attack Speed value"; }
+                if (AttackSpeed > 20 * 60) { return "Attack Speed is above Berserk timer"; }
+                // Damage Per Hit (and dot damage) in total are negative
+                if ((DamagePerHit + (DamagePerTick * NumTicks)) <= 0) { return "Total Damage is negative"; }
+                // Has to affect someone
+                bool anyroles = false;
+                foreach (bool b in AffectsRole.Values) { if (b) { anyroles = true; break; } }
+                if (!anyroles) { return "It is not affecting any Player Roles"; }
+                // Didn't fail, must be valid
+                return "";
             }
         }
         public override string ToString()
         {
-            if (!Validate) { return "None"; }
+            if (!Validate) { return Name + " is Invalid: " + ValidateString; }
             string damage = "";
-            if (DamagePerHit != 0) { damage += string.Format("{0:#,##0}{1}", DamagePerHit, DamageIsPerc ? "%" : ""); }
+            if (DamagePerHit != 0 &&  DamageIsPerc) { damage += string.Format("{0:0.##%}", DamagePerHit); }
+            if (DamagePerHit != 0 && !DamageIsPerc) { damage += string.Format("{0:#,##0}", DamagePerHit); }
             if (DamagePerTick != 0 && NumTicks != 0) { damage += string.Format("{3}{0:#,##0}/{1:0.#}s(x{2:0.#})", DamagePerTick, TickInterval, NumTicks, damage != "" ? "+" : ""); }
             return string.Format("{0} every {1:0.#}s to {2:0} targets{3}{4}",
                 damage, AttackSpeed, MaxNumTargets,
@@ -271,19 +301,7 @@ namespace Rawr {
         /// </summary>
         public float Duration;
         #region Phase Info
-        /*/// <summary>In Seconds<para>Defaults to 0. Will not return a number higher than PhaseEndTime</para></summary>
-        [DefaultValue(0f)]
-        public float PhaseStartTime { get { return Math.Min(_phaseStartTime, _phaseEndTime); } set { _phaseStartTime = value; } }
-        private float _phaseStartTime = 0f;
-        /// <summary>In Seconds<para>Defaults to 20*60 (=1200). Will not return a number lower than PhaseStartTime</para></summary>
-        [DefaultValue(20 * 60)]
-        public float PhaseEndTime { get { return Math.Max(_phaseStartTime, _phaseEndTime); } set { _phaseEndTime = value; } }
-        private float _phaseEndTime = 20 * 60;
-        /// <summary>The phase number that this attack sits in. This should only be dynamically assigned in a MultiDiffBoss constructor</summary>
-        [DefaultValue(1)]
-        public int PhaseNumber { get { return _phaseNumber; } set { _phaseNumber = value; } }
-        private int _phaseNumber = 1;*/
-        public SerializableDictionary<int, float[]> PhaseTimes
+       public SerializableDictionary<int, float[]> PhaseTimes
         {
             get
             {
@@ -352,14 +370,42 @@ namespace Rawr {
         /// </summary>
         public bool Validate {
             get {
+                // Has to at least have some chance of happening
                 if (Chance <= 0) { return false; }
+                // Can't have a negative frequency and can't be more than the zerk timer
                 if (Frequency <= 0 || Frequency > 20 * 60) { return false; }
-                if (Duration <= 0 || Duration > 20 * 60 * 1000) { return false; }
+                // Can't have a negative duration and can't be greater than zerk timer, modifying for the phase uptime
+                if (Duration <= 0 || (Duration * FightUptimePercent) > 20 * 60 * 1000) { return false; }
+                // Has to affect someone
+                bool anyroles = false;
+                foreach (bool b in AffectsRole.Values) { if (b) { anyroles = true; break; } }
+                if (!anyroles) { return false; }
+                // Didn't fail, must be valid
                 return true;
             }
         }
+        /// <summary>Returns the reason it is invalid</summary>
+        public string ValidateString
+        {
+            get {
+                // Has to at least have some chance of happening
+                if (Chance <= 0) { return "Negative Chance value"; }
+                // Can't have a negative frequency and can't be more than the zerk timer
+                if (Frequency <= 0) { return "Negative Frequency value"; }
+                if (Frequency > 20 * 60) { return "Frequency is above Berserk timer"; }
+                // Can't have a negative duration and can't be greater than zerk timer, modifying for the phase uptime
+                if (Duration <= 0) { return "Negative Duration value"; }
+                if ((Duration * FightUptimePercent) > 20 * 60 * 1000) { return "Duration is above Berserk Timer"; }
+                // Has to affect someone
+                bool anyroles = false;
+                foreach (bool b in AffectsRole.Values) { if (b) { anyroles = true; break; } }
+                if (!anyroles) { return "It is not affecting any Player Roles"; }
+                // Didn't fail, must be valid
+                return "";
+            }
+        }
         public override string ToString() {
-            if (!Validate) { return "None"; }
+            if (!Validate) { return Name + " is Invalid: " + ValidateString; }
             return string.Format("{0:0.#%} chance every {1:0.#}s for {2:0.##}s{3}{4}{5}",
                 Chance, Frequency, Duration / 1000f, Breakable ? ", Breakable" : "",
                 Name != "Dynamic" ? " [" + Name + "]" : "",
@@ -536,18 +582,6 @@ namespace Rawr {
         /// <summary>Percentage, 0.50f = 50% Chance that this occurs<para>Defaults to and almost every time in usage this should be 1.00f=100%</para></summary>
         public float Chance = 1.00f;
         #region Phase Info
-        /*/// <summary>In Seconds<para>Defaults to 0. Will not return a number higher than PhaseEndTime</para></summary>
-        [DefaultValue(0f)]
-        public float PhaseStartTime { get { return Math.Min(_phaseStartTime, _phaseEndTime); } set { _phaseStartTime = value; } }
-        private float _phaseStartTime = 0f;
-        /// <summary>In Seconds<para>Defaults to 20*60 (=1200). Will not return a number lower than PhaseStartTime</para></summary>
-        [DefaultValue(20 * 60)]
-        public float PhaseEndTime { get { return Math.Max(_phaseStartTime, _phaseEndTime); } set { _phaseEndTime = value; } }
-        public float _phaseEndTime = 20 * 60;
-        /// <summary>The phase number that this attack sits in. This should only be dynamically assigned in a MultiDiffBoss constructor</summary>
-        [DefaultValue(1)]
-        public int PhaseNumber { get { return _phaseNumber; } set { _phaseNumber = value; } }
-        private int _phaseNumber = 1;*/
         public SerializableDictionary<int, float[]> PhaseTimes
         {
             get
@@ -657,13 +691,53 @@ namespace Rawr {
         #endregion
         #region Functions
         public float GetAverageTargetGroupSize(float fightDuration) {
-            if (!Validated) { return 0f; }
+            if (!Validate) { return 0f; }
             return new SpecialEffect(Trigger.Use, null, Duration / 1000f, Frequency, Chance, (int)NumTargs).GetAverageStackSize(0, 1f, 3, fightDuration);
         }
-        public bool Validated { get { return Frequency != -1 && Duration > 0 && Chance > 0 && NumTargs > 1; } }
+        /// <summary>
+        /// Returns False if
+        /// <para>Chance is <= 0</para>
+        /// <para>Frequency is <= 0 or > 20 min</para>
+        /// <para>Duration <= 0 or > 20 sec</para>
+        /// </summary>
+        public bool Validate {
+            get {
+                // Has to at least have some chance of happening
+                if (Chance <= 0) { return false; }
+                // Can't have a negative frequency and can't be more than the zerk timer
+                if (Frequency <= 0 || Frequency > 20 * 60) { return false; }
+                // Can't have a negative duration and can't be greater than zerk timer, modifying for the phase uptime
+                if (Duration <= 0 || (Duration * FightUptimePercent) > 20 * 60 * 1000) { return false; }
+                // Has to affect someone
+                bool anyroles = false;
+                foreach (bool b in AffectsRole.Values) { if (b) { anyroles = true; break; } }
+                if (!anyroles) { return false; }
+                // Didn't fail, must be valid
+                return true;
+            }
+        }
+        /// <summary>Returns the reason it is invalid</summary>
+        public string ValidateString {
+            get {
+                // Has to at least have some chance of happening
+                if (Chance <= 0) { return "Negative Chance value"; }
+                // Can't have a negative frequency and can't be more than the zerk timer
+                if (Frequency <= 0) { return "Negative Frequency value"; }
+                if (Frequency > 20 * 60) { return "Frequency is above Berserk timer"; }
+                // Can't have a negative duration and can't be greater than zerk timer, modifying for the phase uptime
+                if (Duration <= 0) { return "Negative Duration value"; }
+                if ((Duration * FightUptimePercent) > 20 * 60 * 1000) { return "Duration is above Berserk Timer"; }
+                // Has to affect someone
+                bool anyroles = false;
+                foreach (bool b in AffectsRole.Values) { if (b) { anyroles = true; break; } }
+                if (!anyroles) { return "It is not affecting any Player Roles"; }
+                // Didn't fail, must be valid
+                return "";
+            }
+        }
         public override string ToString()
         {
-            if (!Validated) { return "None"; }
+            if (!Validate) { return Name + " is Invalid: " + ValidateString; }
             return string.Format("{0:0.#%} chance of {1:0.##} Lvl {2} targs{3} every {4:0.#}s for {5:0.##}s{6}{7}",
                 Chance, NumTargs, LevelOfTargets, NearBoss ? " Near Boss" : "", Frequency, Duration / 1000f,
                 Name != "Dynamic" ? " [" + Name + "]" : "",
@@ -724,18 +798,6 @@ namespace Rawr {
         public float Duration = 5f * 1000f;
 
         #region Phase Info
-        /*/// <summary>In Seconds<para>Defaults to 0. Will not return a number higher than PhaseEndTime</para></summary>
-        [DefaultValue(0f)]
-        public float PhaseStartTime { get { return Math.Min(_phaseStartTime, _phaseEndTime); } set { _phaseStartTime = value; } }
-        private float _phaseStartTime = 0f;
-        /// <summary>In Seconds<para>Defaults to 20*60 (=1200). Will not return a number lower than PhaseStartTime</para></summary>
-        [DefaultValue(20*60)]
-        public float PhaseEndTime { get { return Math.Max(_phaseStartTime, _phaseEndTime); } set { _phaseEndTime = value; } }
-        private float _phaseEndTime = 20 * 60;
-        /// <summary>The phase number that this attack sits in. This should only be dynamically assigned in a MultiDiffBoss constructor</summary>
-        [DefaultValue(1)]
-        public int PhaseNumber { get { return _phaseNumber; } set { _phaseNumber = value; } }
-        private int _phaseNumber = 1;*/
         public SerializableDictionary<int, float[]> PhaseTimes
         {
             get
@@ -864,14 +926,42 @@ namespace Rawr {
         /// </summary>
         public bool Validate {
             get {
+                // Has to at least have some chance of happening
                 if (Chance <= 0) { return false; }
+                // Can't have a negative frequency and can't be more than the zerk timer
                 if (Frequency <= 0 || Frequency > 20 * 60) { return false; }
-                if (Duration <= 0 || Duration > 20 * 60 * 1000) { return false; }
+                // Can't have a negative duration and can't be greater than zerk timer, modifying for the phase uptime
+                if (Duration <= 0 || (Duration * FightUptimePercent) > 20 * 60 * 1000) { return false; }
+                // Has to affect someone
+                bool anyroles = false;
+                foreach (bool b in AffectsRole.Values) { if (b) { anyroles = true; break; } }
+                if (!anyroles) { return false; }
+                // Didn't fail, must be valid
                 return true;
             }
         }
+        /// <summary>Returns the reason it is invalid</summary>
+        public string ValidateString
+        {
+            get {
+                // Has to at least have some chance of happening
+                if (Chance <= 0) { return "Negative Chance value"; }
+                // Can't have a negative frequency and can't be more than the zerk timer
+                if (Frequency <= 0) { return "Negative Frequency value"; }
+                if (Frequency > 20 * 60) { return "Frequency is above Berserk timer"; }
+                // Can't have a negative duration and can't be greater than zerk timer, modifying for the phase uptime
+                if (Duration <= 0) { return "Negative Duration value"; }
+                if ((Duration * FightUptimePercent) > 20 * 60 * 1000) { return "Duration is above Berserk Timer"; }
+                // Has to affect someone
+                bool anyroles = false;
+                foreach (bool b in AffectsRole.Values) { if (b) { anyroles = true; break; } }
+                if (!anyroles) { return "It is not affecting any Player Roles"; }
+                // Didn't fail, must be valid
+                return "";
+            }
+        }
         public override string ToString() {
-            if (!Validate) { return "None"; }
+            if (!Validate) { return Name + " is Invalid: " + ValidateString; }
             return string.Format("{0:0.#%} chance of {1} every {2:0.#}s for {3:0.##}s{4}{5}{6}",
                 Chance, Stats, Frequency, Duration / 1000f, Breakable ? ", Breakable" : "",
                 Name != "Dynamic" ? " [" + Name + "]" : "",

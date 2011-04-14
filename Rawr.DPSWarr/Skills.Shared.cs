@@ -377,7 +377,7 @@ namespace Rawr.DPSWarr.Skills
                 // Next, let's figure out how often we see MultiTargs
                 foreach (TargetGroup tg in DPSWarrChar.BossOpts.Targets)
                 {
-                    if (tg.Validated) {
+                    if (tg.Validate) {
                         result += FightDuration / tg.Frequency;
                     }
                 }

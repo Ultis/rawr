@@ -311,13 +311,6 @@ namespace Rawr {
         [DefaultValue("")]
         public string BossName { get { return BOSSNAME; } set { BOSSNAME = value; OnPropertyChanged("BossName"); } }
         #endregion
-
-        public bool HasAProblem {
-            get {
-                if (DefaultMeleeAttack != null && DefaultMeleeAttack.DamagePerHit < 115000f) return true;
-                return false;
-            }
-        }
     }
 
 #if !SILVERLIGHT
@@ -340,6 +333,32 @@ namespace Rawr {
             clone.Disarms = new List<Impedance>(this.Disarms);
             //
             return clone;
+        }
+
+        public string HasAProblem {
+            get {
+                string systemic = " If this is occurring on one of the presets, please use the Submit an Issue button at the top-right of Rawr.";
+                string afterfix = " After fixing this issue, the regular summary data will appear.";
+                // Default Melee too Low
+                if (DefaultMeleeAttack != null && DefaultMeleeAttack.DamagePerHit < 115000f)
+                    return "The Damage Per Hit on your current Default Melee Attack is too low. You need to Edit the Attack or select a more appropriate boss." + systemic + afterfix;
+                // One of these things just DOESN'T BELONG HERE!!!
+                foreach (Attack i in Attacks)       { if (!i.Validate) { return i.Name + " is invalid. You need to Edit the Attack." + systemic + afterfix; } }
+                foreach (TargetGroup i in Targets)  { if (!i.Validate) { return i.Name + " is invalid. You need to Edit the Target Group." + systemic + afterfix; } }
+                foreach (BuffState i in BuffStates) { if (!i.Validate) { return i.Name + " is invalid. You need to Edit the Buff State." + systemic + afterfix; } }
+                foreach (Impedance i in Moves)      { if (!i.Validate) { return i.Name + " is invalid. You need to Edit the Move." + systemic + afterfix; } }
+                foreach (Impedance i in Stuns)      { if (!i.Validate) { return i.Name + " is invalid. You need to Edit the Stun." + systemic + afterfix; } }
+                foreach (Impedance i in Fears)      { if (!i.Validate) { return i.Name + " is invalid. You need to Edit the Fear." + systemic + afterfix; } }
+                foreach (Impedance i in Roots)      { if (!i.Validate) { return i.Name + " is invalid. You need to Edit the Root." + systemic + afterfix; } }
+                foreach (Impedance i in Disarms)    { if (!i.Validate) { return i.Name + " is invalid. You need to Edit the Disarm." + systemic + afterfix; } }
+                foreach (Impedance i in Silences)   { if (!i.Validate) { return i.Name + " is invalid. You need to Edit the Silence." + systemic + afterfix; } }
+                // Additional Calcs that could go wrong
+                if ((Health / (BerserkTimer - TimeBossIsInvuln - (MovingTargsTime * MovingTargsAvgUpTime))) < 0) {
+                    return "Your total movement is too high and is causing a summary calc inversion. You need to tone down the amount of movement." + systemic + afterfix;
+                }
+                // Didn't fail
+                return "";
+            }
         }
 
         #region Variables
@@ -1479,20 +1498,15 @@ namespace Rawr {
         public string GenInfoString(float BossDamageBonus, float BossDamagePenalty,
                                   float p_missPerc, float p_dodgePerc, float p_parryPerc, float p_blockPerc, float p_blockVal)
         {
+            // Return problem string only if there's a problem
+            string hasproblem = HasAProblem;
+            if (!string.IsNullOrEmpty(hasproblem)) { return string.Format("!!!! ALERT !!!!\r\n{0}", hasproblem); }
+            // Some Calcs for display
             int room = Max_Players - Min_Healers - Min_Tanks;
             float TotalDPSNeeded = Health / (BerserkTimer - TimeBossIsInvuln - (MovingTargsTime * MovingTargsAvgUpTime));
             float dpsdps = TotalDPSNeeded * ((float)room / ((float)Min_Tanks / 2f + (float)room)) / (float)room;
             float tankdps = (TotalDPSNeeded * ((float)Min_Tanks / ((float)Min_Tanks / 2f + (float)room)) / (float)Min_Tanks) / 2f;
             string retVal = "";
-            //
-            /*retVal += string.Format("Name: {0}\r\nContent: {1}\r\nInstance: {2}\r\nHealth: {3:#,##0}\r\n",
-                Name, ContentString.Replace("  "," "), Instance, Health);*/
-            //
-            /*retVal += string.Format("Enrage Timer: {0:mm} min {0:ss} sec\r\nSpeed Kill Timer: {1:mm} min {1:ss} sec\r\n\r\n",
-                TimeSpan.FromSeconds(BerserkTimer), TimeSpan.FromSeconds(SpeedKillTimer));*/
-            //
-            /*retVal += string.Format("Raid Setup: {0:0} man ({1:0} Tanks {2:0} Healers {3:0} DPS)\r\n\r\n",
-                Max_Players, Min_Tanks, Min_Healers, room);*/
             //
             retVal += string.Format("To beat the Enrage Timer you need {0:#,##0} Total DPS\r\n"
                 + "{1:#,##0} from each Tank {2:#,##0} from each DPS\r\n\r\n",

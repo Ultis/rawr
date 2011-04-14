@@ -351,7 +351,7 @@ namespace Rawr.Bosses
                 NotBurnExposedHeadNormal.Attacks.Add(new Attack {
                     Name = "Mangle",
                     AttackType = ATTACK_TYPES.AT_MELEE,
-                    DamagePerHit = new float[] { (110464f + 128377f), (132557f + 154052f), (132557f + 154052f), (154649f + 179728f) }[i] / 2f,
+                    DamagePerTick = new float[] { (110464f + 128377f), (132557f + 154052f), (132557f + 154052f), (154649f + 179728f) }[i] / 2f,
                     DamageType = ItemDamageType.Physical,
                     IsDoT = true,
                     Duration = 5f, // should not last more than 5 seconds
@@ -403,7 +403,7 @@ namespace Rawr.Bosses
                     NotBurnExposedHeadHeroicAbove30.LastTarget.SetAffectsRoles_DPS();
 
                     NotBurnExposedHeadHeroicAbove30.Attacks.Add(new Attack {
-                        Name = "Blazing Bone Constructs (Melee)",
+                        Name = "Blazing Bone Constructs (Melee)", IsFromAnAdd = true,
                         AttackType = ATTACK_TYPES.AT_MELEE,
                         DamagePerHit = BossHandler.StandardMeleePerHit[(int)Content[i]] / 2f,
                         MaxNumTargets = new float[] { 0f, 0f, 1f, 1f }[i],
@@ -474,7 +474,7 @@ namespace Rawr.Bosses
                 BurnExposedHead.Attacks.Add(new Attack {
                     Name = "Ignition",
                     AttackType = ATTACK_TYPES.AT_AOE, IsDoT = true,
-                    DamagePerHit = (23125f + 26875f) / 2f,
+                    DamagePerTick = (23125f + 26875f) / 2f,
                     DamageType = ItemDamageType.Physical,
                     Duration = 10f, // should not last more than 10 seconds
                     TickInterval = 1f,
@@ -1332,12 +1332,11 @@ namespace Rawr.Bosses
                     // Assume that players are staying above the 10k mark for bile
                     Name = "Caustic Slime in P1",
                     DamageType = ItemDamageType.Nature,
-                    DamagePerHit = .999999f,
-                    DamageIsPerc = true,
+                    DamagePerHit = 0.99f, DamageIsPerc = true,
                     MaxNumTargets = new float[] { 1, 3, 1, 3 }[i],
                     AttackType = ATTACK_TYPES.AT_AOE,
                     // Only happens in P1 and until 23% where he stops casting it.
-                        AttackSpeed = this[i].BerserkTimer / ((((this[i].BerserkTimer * .80f) / 60f) / 2f) / 15f),
+                    AttackSpeed = this[i].BerserkTimer / ((((this[i].BerserkTimer * .80f) / 60f) / 2f) / 15f),
                 });
                 this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MeleeDPS] = true;
                 this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS] = true;
@@ -1352,6 +1351,7 @@ namespace Rawr.Bosses
                     Frequency = this[i].BerserkTimer / ((((this[i].BerserkTimer * .77f) / 60f) / 2f) / 15f),
                     Chance = new float[] { 1, 3, 1, 3 }[i] / (this[i].Max_Players - this[i].Min_Tanks),
                     Breakable = false,
+                    AffectsRole = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole,
                 });
             }
             #endregion
@@ -1482,7 +1482,7 @@ namespace Rawr.Bosses
                     {
                         Name = "Onxyia's Shadowflame Breath",
                         DamageType = ItemDamageType.Shadow,
-                        DamagePerHit = 35000f,
+                        DamagePerTick = 35000f,
                         IsDoT = true,
                         Duration = 1.5f,
                         TickInterval = 0.5f,
@@ -1563,7 +1563,7 @@ namespace Rawr.Bosses
                     });
                     this[i].Attacks.Add(new Attack
                     {
-                        Name = "Animated Bone Warrior Melee",
+                        Name = "Animated Bone Warrior Melee", IsFromAnAdd = true,
                         DamageType = ItemDamageType.Physical,
                         // these hit for about 10k damage
                         DamagePerHit = (BossHandler.StandardMeleePerHit[(int)this[i].Content]) * 0.1f,
@@ -1679,7 +1679,7 @@ namespace Rawr.Bosses
                     {
                         Name = "Nefarian's Shadowflame Breath",
                         DamageType = ItemDamageType.Shadow,
-                        DamagePerHit = 35000f,
+                        DamagePerTick = 35000f,
                         IsDoT = true,
                         TickInterval = 0.5f,
                         Duration = 1.5f,

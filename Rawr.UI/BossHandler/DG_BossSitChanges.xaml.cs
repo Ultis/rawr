@@ -17,7 +17,7 @@ namespace Rawr.UI
     {
         static DG_BossSitChanges() { }
 
-        public DG_BossSitChanges()
+        public DG_BossSitChanges(List<Impedance> list, Flags f)
         {
             InitializeComponent();
 
@@ -25,12 +25,9 @@ namespace Rawr.UI
             this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
             this.WindowState = System.Windows.WindowState.Normal;
             this.WindowStyle = System.Windows.WindowStyle.ToolWindow;
+            this.SizeToContent = SizeToContent.Height;
 #endif
-        }
 
-        public DG_BossSitChanges(List<Impedance> list, Flags f)
-        {
-            InitializeComponent();
             Flag = f;
             TheList = list;
             string s = "";
@@ -79,6 +76,7 @@ namespace Rawr.UI
         {
             Impedance s = new Impedance()
             {
+                Name = TB_Name.Text,
                 Frequency = (float)NUD_Freq.Value,
                 Duration = (float)NUD_Dur.Value,
                 Chance = ((float)NUD_Chance.Value) / 100f,
@@ -121,6 +119,7 @@ namespace Rawr.UI
             if (LB_TheList.SelectedIndex != -1) {
                 Impedance selected = LB_TheList.SelectedItem as Impedance;
                 //
+                TB_Name.Text = selected.Name;
                 NUD_Freq.Value = selected.Frequency;
                 NUD_Dur.Value = selected.Duration;
                 NUD_Chance.Value = selected.Chance * 100f;
@@ -141,6 +140,7 @@ namespace Rawr.UI
                 isEditing = true;
             } else {
                 // Reset the UI to a blank buff state
+                TB_Name.Text = "Unnamed";
                 NUD_Freq.Value = 45;
                 NUD_Dur.Value = 10 * 1000;
                 NUD_Chance.Value = 100f;

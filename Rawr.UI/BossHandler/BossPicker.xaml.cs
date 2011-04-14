@@ -108,12 +108,19 @@ namespace Rawr.UI
             LB_Dsrms.Text = BossOptions.DynamicString_Dsrm.ToString();
             // Summary
             TB_BossInfo.Text = BossOptions.GenInfoString(Character);
+            if (origbrush == null) { origbrush = TB_BossInfo.Foreground; }
+            if (TB_BossInfo.Text.Contains("ALERT")) {
+                TB_BossInfo.Foreground = new SolidColorBrush(Colors.Red);
+            } else {
+                TB_BossInfo.Foreground = origbrush;
+            }
             //
             if (CB_BossList.SelectedIndex == -1) { CB_BossList.SelectedIndex = 0; } // Sets it to Custom
             isLoading = false;
             //
             Character.OnCalculationsInvalidated();
         }
+        private Brush origbrush = null;
 
         public BossPicker()
         {

@@ -41,7 +41,6 @@ namespace Rawr.UI
             LB_TheList.Items.Clear();
             foreach (Attack s in TheList)
             {
-                //string str = s.ToString();
                 LB_TheList.Items.Add(s);
             }
         }
@@ -72,6 +71,7 @@ namespace Rawr.UI
                     Interruptable     = CK_Interruptable.IsChecked.GetValueOrDefault(false),
                     IsTheDefaultMelee = CK_IsDefaultMelee.IsChecked.GetValueOrDefault(false),
                     IsDualWielding    = CK_IsDualWielding.IsChecked.GetValueOrDefault(false),
+                    IsFromAnAdd       = CK_IsFromAnAdd.IsChecked.GetValueOrDefault(false),
                     // Player Avoidances
                     Missable          = (bool)CK_Missable.IsChecked,
                     Dodgable          = (bool)CK_Dodgable.IsChecked,
@@ -122,8 +122,9 @@ namespace Rawr.UI
                 // Basics
                 TB_Name.Text              = selected.Name;
                 CB_DmgType.SelectedIndex  = (int)selected.DamageType;
-                NUD_DmgPerHit.Value       = selected.DamagePerHit;
                 CK_DamageIsPerc.IsChecked = selected.DamageIsPerc;
+                CK_DamageIsPerc_Checked(null, null);
+                NUD_DmgPerHit.Value       = selected.DamagePerHit;
                 NUD_MaxNumTargs.Value     = selected.MaxNumTargets;
                 NUD_AtkSpeed.Value        = selected.AttackSpeed;
                 CB_AtkType.SelectedIndex  = (int)selected.AttackType;
@@ -139,6 +140,7 @@ namespace Rawr.UI
                 CK_Interruptable.IsChecked  = selected.Interruptable;
                 CK_IsDefaultMelee.IsChecked = selected.IsTheDefaultMelee;
                 CK_IsDualWielding.IsChecked = selected.IsDualWielding;
+                CK_IsFromAnAdd.IsChecked    = selected.IsFromAnAdd;
                 // Player Avoidances
                 CK_Missable.IsChecked  = selected.Missable;
                 CK_Dodgable.IsChecked  = selected.Dodgable;
@@ -177,6 +179,7 @@ namespace Rawr.UI
                 CK_Interruptable.IsChecked  = false;
                 CK_IsDefaultMelee.IsChecked = true;
                 CK_IsDualWielding.IsChecked = false;
+                CK_IsFromAnAdd.IsChecked    = false;
                 // Player Avoidances
                 CK_Missable.IsChecked  = true;
                 CK_Dodgable.IsChecked  = true;
@@ -194,6 +197,13 @@ namespace Rawr.UI
                 //
                 isEditing = false;
             }
+        }
+
+        private void CK_DamageIsPerc_Checked(object sender, RoutedEventArgs e) {
+            if (CK_DamageIsPerc.IsChecked.GetValueOrDefault(false)) { NUD_DmgPerHit.DecimalPlaces = 6; } else { NUD_DmgPerHit.DecimalPlaces = 0; }
+        }
+        private void CK_DamageIsPerc_Unchecked(object sender, RoutedEventArgs e) {
+            if (CK_DamageIsPerc.IsChecked.GetValueOrDefault(false)) { NUD_DmgPerHit.DecimalPlaces = 6; } else { NUD_DmgPerHit.DecimalPlaces = 0; }
         }
 
         private void OKButton_Click(object sender, RoutedEventArgs e) { this.DialogResult = true; }

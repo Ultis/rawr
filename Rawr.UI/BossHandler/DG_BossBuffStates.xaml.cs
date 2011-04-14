@@ -17,7 +17,7 @@ namespace Rawr.UI
     {
         static DG_BossBuffStates() { }
 
-        public DG_BossBuffStates()
+        public DG_BossBuffStates(List<BuffState> list)
         {
             InitializeComponent();
 
@@ -25,14 +25,9 @@ namespace Rawr.UI
             this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
             this.WindowState = System.Windows.WindowState.Normal;
             this.WindowStyle = System.Windows.WindowStyle.ToolWindow;
+            this.SizeToContent = SizeToContent.Height;
 #endif
 
-            statControl.CurrentStats = new Stats();
-        }
-
-        public DG_BossBuffStates(List<BuffState> list)
-        {
-            InitializeComponent();
             TheList = list;
             statControl.CurrentStats = new Stats();
             SetListBox();
@@ -52,8 +47,7 @@ namespace Rawr.UI
             LB_TheList.Items.Clear();
             foreach (BuffState s in TheList)
             {
-                string str = s.ToString();
-                LB_TheList.Items.Add(str);
+                LB_TheList.Items.Add(s);
             }
         }
 

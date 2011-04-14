@@ -514,8 +514,8 @@ namespace Rawr {
 
         private void CalculateEZAttack(List<Attack> attacks, int maxPlayers, string name, bool defaultmelee, out Attack toAdd) {
             bool isDot = attacks[0].IsDoT;
-            float perhit = BossHandler.StandardMeleePerHit[(int)BossHandler.TierLevels.T11_25H], // start at normal attack, some bosses could be less and it will pick that up
-                pertick = BossHandler.StandardMeleePerHit[(int)BossHandler.TierLevels.T11_25H],
+            float perhit = BossHandler.StandardMeleePerHit[(int)BossHandler.TierLevels.T11_25H] * 2, // start at normal attack, some bosses could be less and it will pick that up
+                pertick = BossHandler.StandardMeleePerHit[(int)BossHandler.TierLevels.T11_25H] * 2,
                 duration = 20*60,
                 //phasestarttime = 0,
                 //phaseendtime = 20*60,
@@ -594,7 +594,120 @@ namespace Rawr {
                 toAdd.AffectsRole[pr] = ARCounts[pr] > 0;
             }
         }
-        private void CalculateAvgAttack(List<Attack> attacks, int maxPlayers, string name, bool defaultmelee, out Attack toAdd) {
+        private void CalculateEZTargetGroup(List<TargetGroup> groups, int maxPlayers, string name, out TargetGroup toAdd) {
+            float duration = 20 * 60 * 1000,
+                freq = 20 * 60,
+                chance = 1f,
+                numtrg = 10;
+            Dictionary<bool, int> NBCounts = new Dictionary<bool, int>() {
+                { false, 0 },
+                { true, 0 },
+            };
+            Dictionary<int, int> LvlCounts = new Dictionary<int, int>() {
+                { (int)POSSIBLE_LEVELS.LVLP0, 0 },
+                { (int)POSSIBLE_LEVELS.LVLP1, 0 },
+                { (int)POSSIBLE_LEVELS.LVLP2, 0 },
+                { (int)POSSIBLE_LEVELS.LVLP3, 0 },
+            };
+            Dictionary<PLAYER_ROLES, int> ARCounts = new Dictionary<PLAYER_ROLES, int>() {
+                { PLAYER_ROLES.MainTank, 0 },
+                { PLAYER_ROLES.OffTank, 0 },
+                { PLAYER_ROLES.TertiaryTank, 0 },
+                { PLAYER_ROLES.MeleeDPS, 0 },
+                { PLAYER_ROLES.RangedDPS, 0 },
+                { PLAYER_ROLES.RaidHealer, 0 },
+                { PLAYER_ROLES.MainTankHealer, 0 },
+                { PLAYER_ROLES.OffAndTertTankHealer, 0 },
+            };
+            //
+            foreach (TargetGroup t in groups) {
+                duration = Math.Min(duration, t.Duration);
+                freq = Math.Min(freq, t.Frequency);
+                chance = Math.Min(chance, t.Chance);
+                numtrg = Math.Min(numtrg, t.NumTargs);
+                NBCounts[t.NearBoss]++;
+                LvlCounts[t.LevelOfTargets]++;
+                for (int i = 0; i < (int)PLAYER_ROLES.RaidHealer; i++) {
+                    if (t.AffectsRole[(PLAYER_ROLES)i]) { ARCounts[(PLAYER_ROLES)i]++; }
+                }
+            }
+            //
+            bool snb = false;
+            foreach(bool nb in NBCounts.Keys){
+                if (NBCounts[nb] > NBCounts[snb]) { snb = nb; }
+                if (NBCounts[snb] == NBCounts[false]) { snb = false; }
+            }
+            int slvl = (int)POSSIBLE_LEVELS.LVLP3;
+            foreach(int lvl in LvlCounts.Keys){
+                if (LvlCounts[lvl] > LvlCounts[slvl]) { slvl = lvl; }
+                if (LvlCounts[slvl] == LvlCounts[(int)POSSIBLE_LEVELS.LVLP3]) { slvl = (int)POSSIBLE_LEVELS.LVLP3; }
+            }
+            toAdd = new TargetGroup {
+                Name = name,
+                Duration = duration,
+                Frequency = freq,
+                Chance = chance,
+                NumTargs = numtrg,
+                LevelOfTargets = slvl,
+                NearBoss = snb,
+            };
+            foreach (PLAYER_ROLES pr in ARCounts.Keys) {
+                toAdd.AffectsRole[pr] = ((float)ARCounts[pr] / (float)groups.Count) > 0.25f; // at least 25% of the affected roles matched
+            }
+        }
+        private void CalculateEZImpedance(List<Impedance> imps, int maxPlayers, string name, out Impedance toAdd)
+        {
+            float duration = 20 * 60 * 1000,
+                freq = 20 * 60,
+                chance = 1f;
+            Dictionary<bool, int> BreakCounts = new Dictionary<bool, int>() {
+                { false, 0 },
+                { true, 0 },
+            };
+            Dictionary<PLAYER_ROLES, int> ARCounts = new Dictionary<PLAYER_ROLES, int>() {
+                { PLAYER_ROLES.MainTank, 0 },
+                { PLAYER_ROLES.OffTank, 0 },
+                { PLAYER_ROLES.TertiaryTank, 0 },
+                { PLAYER_ROLES.MeleeDPS, 0 },
+                { PLAYER_ROLES.RangedDPS, 0 },
+                { PLAYER_ROLES.RaidHealer, 0 },
+                { PLAYER_ROLES.MainTankHealer, 0 },
+                { PLAYER_ROLES.OffAndTertTankHealer, 0 },
+            };
+            //
+            foreach (Impedance t in imps)
+            {
+                duration = Math.Min(duration, t.Duration);
+                freq = Math.Min(freq, t.Frequency);
+                chance = Math.Min(chance, t.Chance);
+                BreakCounts[t.Breakable]++;
+                for (int i = 0; i < (int)PLAYER_ROLES.RaidHealer; i++)
+                {
+                    if (t.AffectsRole[(PLAYER_ROLES)i]) { ARCounts[(PLAYER_ROLES)i]++; }
+                }
+            }
+            //
+            bool snb = false;
+            foreach (bool nb in BreakCounts.Keys)
+            {
+                if (BreakCounts[nb] > BreakCounts[snb]) { snb = nb; }
+                if (BreakCounts[snb] == BreakCounts[false]) { snb = false; }
+            }
+            toAdd = new Impedance
+            {
+                Name = name,
+                Duration = duration,
+                Frequency = freq,
+                Chance = chance,
+                Breakable = snb,
+            };
+            foreach (PLAYER_ROLES pr in ARCounts.Keys)
+            {
+                toAdd.AffectsRole[pr] = ((float)ARCounts[pr] / (float)imps.Count) > 0.25f; // at least 25% of the affected roles matched
+            }
+        }
+        private void CalculateAvgAttack(List<Attack> attacks, int maxPlayers, string name, bool defaultmelee, out Attack toAdd)
+        {
             bool isDot = attacks[0].IsDoT;
             float perhit = 0,
                 pertick = 0,
@@ -678,7 +791,129 @@ namespace Rawr {
                 toAdd.AffectsRole[pr] = ((float)ARCounts[pr] / (float)attacks.Count) > 0.25f; // at least 25% of the affected roles matched
             }
         }
-        private void CalculateHardAttack(List<Attack> attacks, int maxPlayers, string name, bool defaultmelee, out Attack toAdd) {
+        private void CalculateAvgTargetGroup(List<TargetGroup> groups, int maxPlayers, string name, out TargetGroup toAdd) {
+            float duration = 0,
+                freq = 0,
+                chance = 0,
+                numtrg = 0;
+            Dictionary<bool, int> NBCounts = new Dictionary<bool, int>() {
+                { false, 0 },
+                { true, 0 },
+            };
+            Dictionary<int, int> LvlCounts = new Dictionary<int, int>() {
+                { (int)POSSIBLE_LEVELS.LVLP0, 0 },
+                { (int)POSSIBLE_LEVELS.LVLP1, 0 },
+                { (int)POSSIBLE_LEVELS.LVLP2, 0 },
+                { (int)POSSIBLE_LEVELS.LVLP3, 0 },
+            };
+            Dictionary<PLAYER_ROLES, int> ARCounts = new Dictionary<PLAYER_ROLES, int>() {
+                { PLAYER_ROLES.MainTank, 0 },
+                { PLAYER_ROLES.OffTank, 0 },
+                { PLAYER_ROLES.TertiaryTank, 0 },
+                { PLAYER_ROLES.MeleeDPS, 0 },
+                { PLAYER_ROLES.RangedDPS, 0 },
+                { PLAYER_ROLES.RaidHealer, 0 },
+                { PLAYER_ROLES.MainTankHealer, 0 },
+                { PLAYER_ROLES.OffAndTertTankHealer, 0 },
+            };
+            //
+            foreach (TargetGroup t in groups) {
+                duration += t.Duration;
+                freq += t.Frequency;
+                chance += t.Chance;
+                numtrg += t.NumTargs;
+                NBCounts[t.NearBoss]++;
+                LvlCounts[t.LevelOfTargets]++;
+                for (int i = 0; i < (int)PLAYER_ROLES.RaidHealer; i++) {
+                    if (t.AffectsRole[(PLAYER_ROLES)i]) { ARCounts[(PLAYER_ROLES)i]++; }
+                }
+            }
+            //
+            duration /= (float)groups.Count;
+            freq /= (float)groups.Count;
+            chance /= (float)groups.Count;
+            numtrg /= (float)groups.Count;
+            //
+            bool snb = false;
+            foreach(bool nb in NBCounts.Keys){
+                if (NBCounts[nb] > NBCounts[snb]) { snb = nb; }
+                if (NBCounts[snb] == NBCounts[false]) { snb = false; }
+            }
+            int slvl = (int)POSSIBLE_LEVELS.LVLP3;
+            foreach(int lvl in LvlCounts.Keys){
+                if (LvlCounts[lvl] > LvlCounts[slvl]) { slvl = lvl; }
+                if (LvlCounts[slvl] == LvlCounts[(int)POSSIBLE_LEVELS.LVLP3]) { slvl = (int)POSSIBLE_LEVELS.LVLP3; }
+            }
+            toAdd = new TargetGroup {
+                Name = name,
+                Duration = duration,
+                Frequency = freq,
+                Chance = chance,
+                NumTargs = numtrg,
+                LevelOfTargets = slvl,
+                NearBoss = snb,
+            };
+            foreach (PLAYER_ROLES pr in ARCounts.Keys) {
+                toAdd.AffectsRole[pr] = ((float)ARCounts[pr] / (float)groups.Count) > 0.25f; // at least 25% of the affected roles matched
+            }
+        }
+        private void CalculateAvgImpedance(List<Impedance> imps, int maxPlayers, string name, out Impedance toAdd)
+        {
+            float duration = 0,
+                freq = 0,
+                chance = 0;
+            Dictionary<bool, int> BreakCounts = new Dictionary<bool, int>() {
+                { false, 0 },
+                { true, 0 },
+            };
+            Dictionary<PLAYER_ROLES, int> ARCounts = new Dictionary<PLAYER_ROLES, int>() {
+                { PLAYER_ROLES.MainTank, 0 },
+                { PLAYER_ROLES.OffTank, 0 },
+                { PLAYER_ROLES.TertiaryTank, 0 },
+                { PLAYER_ROLES.MeleeDPS, 0 },
+                { PLAYER_ROLES.RangedDPS, 0 },
+                { PLAYER_ROLES.RaidHealer, 0 },
+                { PLAYER_ROLES.MainTankHealer, 0 },
+                { PLAYER_ROLES.OffAndTertTankHealer, 0 },
+            };
+            //
+            foreach (Impedance t in imps)
+            {
+                duration += t.Duration;
+                freq += t.Frequency;
+                chance += t.Chance;
+                BreakCounts[t.Breakable]++;
+                for (int i = 0; i < (int)PLAYER_ROLES.RaidHealer; i++)
+                {
+                    if (t.AffectsRole[(PLAYER_ROLES)i]) { ARCounts[(PLAYER_ROLES)i]++; }
+                }
+            }
+            //
+            duration /= (float)imps.Count;
+            freq /= (float)imps.Count;
+            chance /= (float)imps.Count;
+            //
+            bool snb = false;
+            foreach (bool nb in BreakCounts.Keys)
+            {
+                if (BreakCounts[nb] > BreakCounts[snb]) { snb = nb; }
+                if (BreakCounts[snb] == BreakCounts[false]) { snb = false; }
+            }
+            toAdd = new Impedance
+            {
+                Name = name,
+                Duration = duration,
+                Frequency = freq,
+                Chance = chance,
+                Breakable = snb,
+            };
+            foreach (PLAYER_ROLES pr in ARCounts.Keys)
+            {
+                toAdd.AffectsRole[pr] = ((float)ARCounts[pr] / (float)imps.Count) > 0.25f; // at least 25% of the affected roles matched
+            }
+        }
+        private void CalculateHardAttack(List<Attack> attacks, int maxPlayers, string name, bool defaultmelee, out Attack toAdd)
+        {
             bool isDot = attacks[0].IsDoT;
             float perhit = 0,
                 pertick = 0,
@@ -754,7 +989,157 @@ namespace Rawr {
                 toAdd.AffectsRole[pr] = ARCounts[pr] > 0;
             }
         }
-        private BossHandler GenTheEZModeBoss(BossHandler[] passedList) {
+        private void CalculateHardTargetGroup(List<TargetGroup> groups, int maxPlayers, string name, out TargetGroup toAdd) {
+            float duration = 0,
+                freq = 0,
+                chance = 0,
+                numtrg = 0;
+            Dictionary<bool, int> NBCounts = new Dictionary<bool, int>() {
+                { false, 0 },
+                { true, 0 },
+            };
+            Dictionary<int, int> LvlCounts = new Dictionary<int, int>() {
+                { (int)POSSIBLE_LEVELS.LVLP0, 0 },
+                { (int)POSSIBLE_LEVELS.LVLP1, 0 },
+                { (int)POSSIBLE_LEVELS.LVLP2, 0 },
+                { (int)POSSIBLE_LEVELS.LVLP3, 0 },
+            };
+            Dictionary<PLAYER_ROLES, int> ARCounts = new Dictionary<PLAYER_ROLES, int>() {
+                { PLAYER_ROLES.MainTank, 0 },
+                { PLAYER_ROLES.OffTank, 0 },
+                { PLAYER_ROLES.TertiaryTank, 0 },
+                { PLAYER_ROLES.MeleeDPS, 0 },
+                { PLAYER_ROLES.RangedDPS, 0 },
+                { PLAYER_ROLES.RaidHealer, 0 },
+                { PLAYER_ROLES.MainTankHealer, 0 },
+                { PLAYER_ROLES.OffAndTertTankHealer, 0 },
+            };
+            //
+            foreach (TargetGroup t in groups) {
+                duration = Math.Max(duration, t.Duration);
+                freq = Math.Max(freq, t.Frequency);
+                chance = Math.Max(chance, t.Chance);
+                numtrg = Math.Max(numtrg, t.NumTargs);
+                NBCounts[t.NearBoss]++;
+                LvlCounts[t.LevelOfTargets]++;
+                for (int i = 0; i < (int)PLAYER_ROLES.RaidHealer; i++) {
+                    if (t.AffectsRole[(PLAYER_ROLES)i]) { ARCounts[(PLAYER_ROLES)i]++; }
+                }
+            }
+            //
+            bool snb = false;
+            foreach(bool nb in NBCounts.Keys){
+                if (NBCounts[nb] > NBCounts[snb]) { snb = nb; }
+                if (NBCounts[snb] == NBCounts[false]) { snb = false; }
+            }
+            int slvl = (int)POSSIBLE_LEVELS.LVLP3;
+            foreach(int lvl in LvlCounts.Keys){
+                if (LvlCounts[lvl] > LvlCounts[slvl]) { slvl = lvl; }
+                if (LvlCounts[slvl] == LvlCounts[(int)POSSIBLE_LEVELS.LVLP3]) { slvl = (int)POSSIBLE_LEVELS.LVLP3; }
+            }
+            toAdd = new TargetGroup {
+                Name = name,
+                Duration = duration,
+                Frequency = freq,
+                Chance = chance,
+                NumTargs = numtrg,
+                LevelOfTargets = slvl,
+                NearBoss = snb,
+            };
+            foreach (PLAYER_ROLES pr in ARCounts.Keys) {
+                toAdd.AffectsRole[pr] = ((float)ARCounts[pr] / (float)groups.Count) > 0.25f; // at least 25% of the affected roles matched
+            }
+        }
+        private void CalculateHardImpedance(List<Impedance> imps, int maxPlayers, string name, out Impedance toAdd)
+        {
+            float duration = 0,
+                freq = 0,
+                chance = 0;
+            Dictionary<bool, int> BreakCounts = new Dictionary<bool, int>() {
+                { false, 0 },
+                { true, 0 },
+            };
+            Dictionary<PLAYER_ROLES, int> ARCounts = new Dictionary<PLAYER_ROLES, int>() {
+                { PLAYER_ROLES.MainTank, 0 },
+                { PLAYER_ROLES.OffTank, 0 },
+                { PLAYER_ROLES.TertiaryTank, 0 },
+                { PLAYER_ROLES.MeleeDPS, 0 },
+                { PLAYER_ROLES.RangedDPS, 0 },
+                { PLAYER_ROLES.RaidHealer, 0 },
+                { PLAYER_ROLES.MainTankHealer, 0 },
+                { PLAYER_ROLES.OffAndTertTankHealer, 0 },
+            };
+            //
+            foreach (Impedance t in imps)
+            {
+                duration = Math.Max(duration, t.Duration);
+                freq = Math.Max(freq, t.Frequency);
+                chance = Math.Max(chance, t.Chance);
+                BreakCounts[t.Breakable]++;
+                for (int i = 0; i < (int)PLAYER_ROLES.RaidHealer; i++)
+                {
+                    if (t.AffectsRole[(PLAYER_ROLES)i]) { ARCounts[(PLAYER_ROLES)i]++; }
+                }
+            }
+            //
+            bool snb = false;
+            foreach (bool nb in BreakCounts.Keys)
+            {
+                if (BreakCounts[nb] > BreakCounts[snb]) { snb = nb; }
+                if (BreakCounts[snb] == BreakCounts[false]) { snb = false; }
+            }
+            toAdd = new Impedance
+            {
+                Name = name,
+                Duration = duration,
+                Frequency = freq,
+                Chance = chance,
+                Breakable = snb,
+            };
+            foreach (PLAYER_ROLES pr in ARCounts.Keys)
+            {
+                toAdd.AffectsRole[pr] = ((float)ARCounts[pr] / (float)imps.Count) > 0.25f; // at least 25% of the affected roles matched
+            }
+        }
+        private void calcImp(BossHandler[] passedList, ref BossHandler retboss, int type, int level) {
+            List<Impedance> imps = new List<Impedance>();
+            foreach (BossHandler boss in passedList)
+            {
+                switch (type)
+                {
+                    case 1: { imps.AddRange(boss.Moves.FindAll(a => a.Validate)); break; }
+                    case 2: { imps.AddRange(boss.Stuns.FindAll(a => a.Validate)); break; }
+                    case 3: { imps.AddRange(boss.Fears.FindAll(a => a.Validate)); break; }
+                    case 4: { imps.AddRange(boss.Roots.FindAll(a => a.Validate)); break; }
+                    case 5: { imps.AddRange(boss.Silences.FindAll(a => a.Validate)); break; }
+                    case 6: { imps.AddRange(boss.Disarms.FindAll(a => a.Validate)); break; }
+                    default: { break; }
+                }
+            }
+            if (imps.Count > 0)
+            {
+                Impedance toAdd;
+                switch (level)
+                {
+                    case 1: { CalculateEZImpedance(imps, retboss.Max_Players, "Easy ", out toAdd); break; }
+                    case 2: { CalculateAvgImpedance(imps, retboss.Max_Players, "Avg ", out toAdd); break; }
+                    case 3:
+                    default: { CalculateHardImpedance(imps, retboss.Max_Players, "Impossible ", out toAdd); break; }
+                }
+                switch (type)
+                {
+                    case 1: { toAdd.Name += "Movement"; retboss.Moves.Add(toAdd); break; }
+                    case 2: { toAdd.Name += "Stuns"; retboss.Stuns.Add(toAdd); break; }
+                    case 3: { toAdd.Name += "Fears"; retboss.Fears.Add(toAdd); break; }
+                    case 4: { toAdd.Name += "Roots"; retboss.Roots.Add(toAdd); break; }
+                    case 5: { toAdd.Name += "Silences"; retboss.Silences.Add(toAdd); break; }
+                    case 6: { toAdd.Name += "Disarms"; retboss.Disarms.Add(toAdd); break; }
+                    default: { break; }
+                }
+            }
+        }
+        private BossHandler GenTheEZModeBoss(BossHandler[] passedList)
+        {
             useGoodBoyAvg = true;
             BossHandler retboss = new BossHandler();
             if (passedList.Length < 1) { return retboss; }
@@ -798,12 +1183,19 @@ namespace Rawr {
             #endregion
             #region Offensive
             #region Multi-Targets
-            {   // Multi-targs
-                float f = -1, d = -1, n = 1;
-                value = 0; foreach (BossHandler boss in passedList) { if (boss.MultiTargsFreq <= 0) { value = 0f; break; } else { value = Math.Max(value, boss.MultiTargsFreq); } } f = (value >= retboss.BerserkTimer || value <= 0 ? 0000 : value);
-                value = 5000; foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.MultiTargsDur); } d = (value >= retboss.BerserkTimer || value <= 0 ? 5000 : value);
-                value = 0; foreach (BossHandler boss in passedList) { value = Math.Min(value, (float)boss.MultiTargsNum); } n = value;
-                if (!(f <= 0 || d <= 0 || n <= 0)) { retboss.Targets.Add(new TargetGroup() { Frequency = f, Duration = d, Chance = 1f, NumTargs = n, NearBoss = true, }); }
+            {
+                // Target Groups
+                List<TargetGroup> groups = new List<TargetGroup>();
+                foreach (BossHandler boss in passedList)
+                {
+                    groups.AddRange(boss.Targets.FindAll(a => a.Validate));
+                }
+                if (groups.Count > 0)
+                {
+                    TargetGroup toAdd;
+                    CalculateEZTargetGroup(groups, retboss.Max_Players, "Easy Target Groups", out toAdd);
+                    retboss.Targets.Add(toAdd);
+                }
             }
             #endregion
             #region Attacks
@@ -812,7 +1204,7 @@ namespace Rawr {
                     // Regular Melee
                     List<Attack> attacks = new List<Attack>();
                     foreach (BossHandler boss in passedList) {
-                        attacks.AddRange(boss.Attacks.FindAll(a => (a.AttackType == ATTACK_TYPES.AT_MELEE) && a.Validate && a.AttackSpeed < 5 && !a.DamageIsPerc && !a.IsDoT));
+                        attacks.AddRange(boss.Attacks.FindAll(a => (a.AttackType == ATTACK_TYPES.AT_MELEE) && a.Validate && !a.IsFromAnAdd && a.AttackSpeed < 5 && !a.DamageIsPerc && !a.IsDoT));
                     }
                     if (attacks.Count > 0) {
                         Attack toAdd;
@@ -829,6 +1221,18 @@ namespace Rawr {
                     if (attacks.Count > 0) {
                         Attack toAdd;
                         CalculateEZAttack(attacks, retboss.Max_Players, "Easy Special Melee", false, out toAdd);
+                        retboss.Attacks.Add(toAdd);
+                    }
+                }
+                {
+                    // Melee from Adds
+                    List<Attack> attacks = new List<Attack>();
+                    foreach (BossHandler boss in passedList) {
+                        attacks.AddRange(boss.Attacks.FindAll(a => (a.AttackType == ATTACK_TYPES.AT_MELEE) && a.Validate && a.IsFromAnAdd && a.AttackSpeed < 5 && !a.DamageIsPerc && !a.IsDoT));
+                    }
+                    if (attacks.Count > 0) {
+                        Attack toAdd;
+                        CalculateEZAttack(attacks, retboss.Max_Players, "Easy Melee from Adds", false, out toAdd);
                         retboss.Attacks.Add(toAdd);
                     }
                 }
@@ -881,36 +1285,12 @@ namespace Rawr {
             }
             #endregion
             #region Impedances
-            {   // Move
-                float f = -1, d = -1;
-                value = 0;      foreach (BossHandler boss in passedList) { if (boss.MovingTargsFreq    <= 0) { value = 0f; break; } else { value = Math.Max(value, boss.MovingTargsFreq); } } f = (value >= retboss.BerserkTimer || value <= 0 ? 0000 : value);
-                value = 5000;   foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.MovingTargsDur); } d = (value >= retboss.BerserkTimer || value <= 0 ? 5000 : value);
-                if (!(f <= 0 || d <= 0)) { retboss.Moves.Add(new Impedance() { Frequency = f, Duration = d, Chance = 1f, Breakable = true, }); }
-            }
-            {   // Stun
-                float f = -1, d = -1;
-                value = 0;      foreach (BossHandler boss in passedList) { if (boss.StunningTargsFreq  <= 0) { value = 0f; break; } else { value = Math.Max(value, boss.StunningTargsFreq  ); } } f  = (value >= retboss.BerserkTimer || value <= 0 ? 0000 : value);
-                value = 10*1000;foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.StunningTargsDur  ); } d   = (value >= retboss.BerserkTimer || value <= 0 ? 5000 : value);
-                if (!(f <= 0 || d <= 0)) { retboss.Stuns.Add(new Impedance() { Frequency = f, Duration = d, Chance = 1f, Breakable = true, }); }
-            }
-            {   // Fear
-                float f = -1, d = -1;
-                value = 0;      foreach (BossHandler boss in passedList) { if (boss.FearingTargsFreq   <= 0) { value = 0f; break; } else { value = Math.Max(value, boss.FearingTargsFreq   ); } } f   = (value >= retboss.BerserkTimer || value <= 0 ? 0000 : value);
-                value = 5000;   foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.FearingTargsDur   ); } d    = (value >= retboss.BerserkTimer || value <= 0 ? 5000 : value);
-                if (!(f <= 0 || d <= 0)) { retboss.Fears.Add(new Impedance() { Frequency = f, Duration = d, Chance = 1f, Breakable = true, }); }
-            }
-            {   // Root
-                float f = -1, d = -1;
-                value = 0;      foreach (BossHandler boss in passedList) { if (boss.RootingTargsFreq   <= 0) { value = 0f; break; } else { value = Math.Max(value, boss.RootingTargsFreq   ); } } f = (value >= retboss.BerserkTimer || value <= 0 ? 0000 : value);
-                value = 5000;   foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.RootingTargsDur   ); } d = (value >= retboss.BerserkTimer || value <= 0 ? 5000 : value);
-                if (!(f <= 0 || d <= 0)) { retboss.Roots.Add(new Impedance() { Frequency = f, Duration = d, Chance = 1f, Breakable = true, }); }
-            }
-            {   // Disarm
-                float f = -1, d = -1;
-                value = 0;      foreach (BossHandler boss in passedList) { if (boss.DisarmingTargsFreq <= 0) { value = 0f; break; } else { value = Math.Max(value, boss.DisarmingTargsFreq ); } } f = (value >= retboss.BerserkTimer || value <= 0 ? 0000 : value);
-                value = 5000;   foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.DisarmingTargsDur ); } d  = (value >= retboss.BerserkTimer || value <= 0 ? 5000 : value);
-                if (!(f <= 0 || d <= 0)) { retboss.Disarms.Add(new Impedance() { Frequency = f, Duration = d, Chance = 1f, Breakable = true, }); }
-            }
+            calcImp(passedList, ref retboss, 1, 1);
+            calcImp(passedList, ref retboss, 2, 1);
+            calcImp(passedList, ref retboss, 3, 1);
+            calcImp(passedList, ref retboss, 4, 1);
+            calcImp(passedList, ref retboss, 5, 1);
+            calcImp(passedList, ref retboss, 6, 1);
             #endregion
             //
             return retboss;
@@ -961,13 +1341,17 @@ namespace Rawr {
             #region Offensive
             #region MultiTargs
             {
-                float f = -1, d = -1, n = 1;
-                value = 0f; foreach (BossHandler boss in passedList) { value += (boss.MultiTargsFreq > 0 && boss.MultiTargsFreq < boss.BerserkTimer) ? boss.MultiTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; f = value;
-                value = 0f; foreach (BossHandler boss in passedList) { value += boss.MultiTargsDur; } value /= passedList.Length; d = value;
-                value = 0f; foreach (BossHandler boss in passedList) { value += (float)boss.MultiTargsNum; } value /= passedList.Length; n = value;
-                if (f <= 0 || d == 0) {
-                } else {
-                    retboss.Targets.Add(new TargetGroup() { Frequency = f, Duration = d, Chance = 1f, NumTargs = n, NearBoss = true, });
+                // Target Groups
+                List<TargetGroup> groups = new List<TargetGroup>();
+                foreach (BossHandler boss in passedList)
+                {
+                    groups.AddRange(boss.Targets.FindAll(a => a.Validate));
+                }
+                if (groups.Count > 0)
+                {
+                    TargetGroup toAdd;
+                    CalculateAvgTargetGroup(groups, retboss.Max_Players, "Avg Target Groups", out toAdd);
+                    retboss.Targets.Add(toAdd);
                 }
             }
             #endregion
@@ -978,7 +1362,7 @@ namespace Rawr {
                     List<Attack> attacks = new List<Attack>();
                     foreach (BossHandler boss in passedList)
                     {
-                        attacks.AddRange(boss.Attacks.FindAll(a => (a.AttackType == ATTACK_TYPES.AT_MELEE) && a.Validate && a.AttackSpeed < 5 && !a.DamageIsPerc && !a.IsDoT));
+                        attacks.AddRange(boss.Attacks.FindAll(a => (a.AttackType == ATTACK_TYPES.AT_MELEE) && a.Validate && !a.IsFromAnAdd && a.AttackSpeed < 5 && !a.DamageIsPerc && !a.IsDoT));
                     }
                     if (attacks.Count > 0)
                     {
@@ -998,6 +1382,20 @@ namespace Rawr {
                     {
                         Attack toAdd;
                         CalculateAvgAttack(attacks, retboss.Max_Players, "Avg Special Melee", false, out toAdd);
+                        retboss.Attacks.Add(toAdd);
+                    }
+                }
+                {
+                    // Melee from Adds
+                    List<Attack> attacks = new List<Attack>();
+                    foreach (BossHandler boss in passedList)
+                    {
+                        attacks.AddRange(boss.Attacks.FindAll(a => (a.AttackType == ATTACK_TYPES.AT_MELEE) && a.Validate && a.IsFromAnAdd && a.AttackSpeed < 5 && !a.DamageIsPerc && !a.IsDoT));
+                    }
+                    if (attacks.Count > 0)
+                    {
+                        Attack toAdd;
+                        CalculateAvgAttack(attacks, retboss.Max_Players, "Avg Melee from Adds", true, out toAdd);
                         retboss.Attacks.Add(toAdd);
                     }
                 }
@@ -1057,56 +1455,12 @@ namespace Rawr {
             }
             #endregion
             #region Impedances
-            {
-                // Move
-                float f = -1, d = -1;
-                value = 0f; foreach (BossHandler boss in passedList) { value += (boss.MovingTargsFreq > 0 && boss.MovingTargsFreq < boss.BerserkTimer) ? boss.MovingTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; f = value;
-                value = 0f; foreach (BossHandler boss in passedList) { value += boss.MovingTargsDur; } value /= passedList.Length; d = value;
-                if (f <= 0 || d == 0) {
-                } else {
-                    retboss.Moves.Add(new Impedance() { Frequency = f, Duration = d, Chance = 1f, Breakable = true, });
-                }
-            }
-            {
-                // Stun
-                float f = -1, d = -1;
-                value = 0f; foreach (BossHandler boss in passedList) { value += (boss.StunningTargsFreq > 0 && boss.StunningTargsFreq < boss.BerserkTimer) ? boss.StunningTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; f = value;
-                value = 0f; foreach (BossHandler boss in passedList) { value += boss.StunningTargsDur; } value /= passedList.Length; d = value;
-                if (f <= 0 || d == 0) {
-                } else {
-                    retboss.Stuns.Add(new Impedance() { Frequency = f, Duration = d, Chance = 1f, Breakable = true, });
-                }
-            }
-            {
-                // Fear
-                float f = -1, d = -1;
-                value = 0f; foreach (BossHandler boss in passedList) { value += (boss.FearingTargsFreq > 0 && boss.FearingTargsFreq < boss.BerserkTimer) ? boss.FearingTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; f = value;
-                value = 0f; foreach (BossHandler boss in passedList) { value += boss.FearingTargsDur; } value /= passedList.Length; d = value;
-                if (f <= 0 || d == 0) {
-                } else {
-                    retboss.Fears.Add(new Impedance() { Frequency = f, Duration = d, Chance = 1f, Breakable = true, });
-                }
-            }
-            {
-                // Root
-                float f = -1, d = -1;
-                value = 0f; foreach (BossHandler boss in passedList) { value += (boss.RootingTargsFreq > 0 && boss.RootingTargsFreq < boss.BerserkTimer) ? boss.RootingTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; f = value;
-                value = 0f; foreach (BossHandler boss in passedList) { value += boss.RootingTargsDur; } value /= passedList.Length; d = value;
-                if (f <= 0 || d == 0) {
-                } else {
-                    retboss.Roots.Add(new Impedance() { Frequency = f, Duration = d, Chance = 1f, Breakable = true, });
-                }
-            }
-            {
-                // Disarm
-                float f = -1, d = -1;
-                value = 0f; foreach (BossHandler boss in passedList) { value += (boss.DisarmingTargsFreq > 0 && boss.DisarmingTargsFreq < boss.BerserkTimer) ? boss.DisarmingTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; f = value;
-                value = 0f; foreach (BossHandler boss in passedList) { value += boss.DisarmingTargsDur; } value /= passedList.Length; d = value;
-                if (f <= 0 || d == 0) {
-                } else {
-                    retboss.Disarms.Add(new Impedance() { Frequency = f, Duration = d, Chance = 1f, Breakable = true, });
-                }
-            }
+            calcImp(passedList, ref retboss, 1, 2);
+            calcImp(passedList, ref retboss, 2, 2);
+            calcImp(passedList, ref retboss, 3, 2);
+            calcImp(passedList, ref retboss, 4, 2);
+            calcImp(passedList, ref retboss, 5, 2);
+            calcImp(passedList, ref retboss, 6, 2);
             #endregion
             //
             return retboss;
@@ -1157,12 +1511,19 @@ namespace Rawr {
             #endregion
             #region Offensive
             #region MultiTargs
-            {   // Multi-targs
-                float f = -1, d = -1, n = 1;
-                value = 0; foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.MultiTargsFreq > 0 ? boss.MultiTargsFreq : value); } f = value;
-                value = 0; foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.MultiTargsDur); } d = value;
-                value = 0; foreach (BossHandler boss in passedList) { value = Math.Max(value, (float)boss.MultiTargsNum); } n = value;
-                if (!(f == 0 || d == 0)) { retboss.Targets.Add(new TargetGroup() { Frequency = f, Duration = d, Chance = 1f, NumTargs = n, NearBoss = false, }); }
+            {
+                // Target Groups
+                List<TargetGroup> groups = new List<TargetGroup>();
+                foreach (BossHandler boss in passedList)
+                {
+                    groups.AddRange(boss.Targets.FindAll(a => a.Validate));
+                }
+                if (groups.Count > 0)
+                {
+                    TargetGroup toAdd;
+                    CalculateHardTargetGroup(groups, retboss.Max_Players, "Hard Target Groups", out toAdd);
+                    retboss.Targets.Add(toAdd);
+                }
             }
             #endregion
             #region Attacks
@@ -1172,7 +1533,7 @@ namespace Rawr {
                     List<Attack> attacks = new List<Attack>();
                     foreach (BossHandler boss in passedList)
                     {
-                        attacks.AddRange(boss.Attacks.FindAll(a => (a.AttackType == ATTACK_TYPES.AT_MELEE) && a.Validate && a.AttackSpeed < 5 && !a.DamageIsPerc && !a.IsDoT));
+                        attacks.AddRange(boss.Attacks.FindAll(a => (a.AttackType == ATTACK_TYPES.AT_MELEE) && a.Validate && !a.IsFromAnAdd && a.AttackSpeed < 5 && !a.DamageIsPerc && !a.IsDoT));
                     }
                     if (attacks.Count > 0)
                     {
@@ -1192,6 +1553,20 @@ namespace Rawr {
                     {
                         Attack toAdd;
                         CalculateHardAttack(attacks, retboss.Max_Players, "Impossible Special Melee", false, out toAdd);
+                        retboss.Attacks.Add(toAdd);
+                    }
+                }
+                {
+                    // Melee from Adds
+                    List<Attack> attacks = new List<Attack>();
+                    foreach (BossHandler boss in passedList)
+                    {
+                        attacks.AddRange(boss.Attacks.FindAll(a => (a.AttackType == ATTACK_TYPES.AT_MELEE) && a.Validate && a.IsFromAnAdd && a.AttackSpeed < 5 && !a.DamageIsPerc && !a.IsDoT));
+                    }
+                    if (attacks.Count > 0)
+                    {
+                        Attack toAdd;
+                        CalculateHardAttack(attacks, retboss.Max_Players, "Impossible Melee from Adds", true, out toAdd);
                         retboss.Attacks.Add(toAdd);
                     }
                 }
@@ -1244,56 +1619,12 @@ namespace Rawr {
             foreach (ItemDamageType t in DamageTypes) { value = 0f; foreach (BossHandler boss in passedList) { value = (float)Math.Max(value, boss.Resistance(t)); } retboss.Resistance(t, value); }
             #endregion
             #region Impedances
-            {
-                // Move
-                float f = -1, d = -1;
-                value = 19 * 20;    foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.MovingTargsFreq    > 0 ? boss.MovingTargsFreq    : value); } f    = Math.Max(20,value);
-                value = 0f;         foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.MovingTargsDur     ); } d    = Math.Min(10*1000,value);
-                if (f == 0 || d == 0) {
-                } else {
-                    retboss.Moves.Add(new Impedance() { Frequency = f, Duration = d, Chance = 1f, Breakable = true, });
-                }
-            }
-            {
-                // Stun
-                float f = -1, d = -1;
-                value = 19 * 20;    foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.StunningTargsFreq  > 0 ? boss.StunningTargsFreq  : value); } f  = Math.Max(20,value);
-                value = 0f;         foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.StunningTargsDur   ); } d  = Math.Min(10*1000,value);
-                if (f == 0 || d == 0) {
-                } else {
-                    retboss.Stuns.Add(new Impedance() { Frequency = f, Duration = d, Chance = 1f, Breakable = true, });
-                }
-            }
-            {
-                // Fear
-                float f = -1, d = -1;
-                value = 19 * 20;    foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.FearingTargsFreq   > 0 ? boss.FearingTargsFreq   : value); } f   = Math.Max(20,value);
-                value = 0f;         foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.FearingTargsDur    ); } d   = Math.Min(10*1000,value);
-                if (f == 0 || d == 0) {
-                } else {
-                    retboss.Fears.Add(new Impedance() { Frequency = f, Duration = d, Chance = 1f, Breakable = true, });
-                }
-            }
-            {
-                // Root
-                float f = -1, d = -1;
-                value = 19 * 20;    foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.RootingTargsFreq   > 0 ? boss.RootingTargsFreq   : value); } f   = Math.Max(20,value);
-                value = 0f;         foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.RootingTargsDur    ); } d   = Math.Min(10*1000,value);
-                if (f == 0 || d == 0) {
-                } else {
-                    retboss.Roots.Add(new Impedance() { Frequency = f, Duration = d, Chance = 1f, Breakable = true, });
-                }
-            }
-            {
-                // Disarm
-                float f = -1, d = -1;
-                value = 19 * 20;    foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.DisarmingTargsFreq < 0 ? boss.DisarmingTargsFreq : value); } f = Math.Max(20,value);
-                value = 0f;         foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.DisarmingTargsDur  ); } d = Math.Min(10*1000,value);
-                if (f == 0 || d == 0) {
-                } else {
-                    retboss.Disarms.Add(new Impedance() { Frequency = f, Duration = d, Chance = 1f, Breakable = true, });
-                }
-            }
+            calcImp(passedList, ref retboss, 1, 3);
+            calcImp(passedList, ref retboss, 2, 3);
+            calcImp(passedList, ref retboss, 3, 3);
+            calcImp(passedList, ref retboss, 4, 3);
+            calcImp(passedList, ref retboss, 5, 3);
+            calcImp(passedList, ref retboss, 6, 3);
             #endregion
             //
             return retboss;
