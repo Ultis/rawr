@@ -18,7 +18,7 @@ namespace Rawr.Properties
         {
             _default = new RecentSettings();
 
-            _default.RecentFiles = "";
+            _default.RecentFiles = new List<string>() { };
             _default.RecentModel = "Bear";
 
             _default.RecentChars = new List<string>() { };
@@ -35,7 +35,7 @@ namespace Rawr.Properties
         /// For Main Form, so it remembers where to load files from
         /// <para>NOTE: This appears to be getting set with some other setting, this is not in use</para>
         /// </summary>
-        public string RecentFiles { get; set; }
+        public List<string> RecentFiles { get; set; }
         /// <summary>For Main Form, so it starts on the last model used</summary>
         public string RecentModel { get; set; }
         /// <summary>For Load from Armory dialog, so we can remember last several characters loaded</summary>

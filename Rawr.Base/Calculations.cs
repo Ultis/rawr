@@ -200,6 +200,10 @@ namespace Rawr
         {
             return Instance.GetEnchantCalculations(slot, character, currentCalcs, equippedOnly, forceSlotName);
         }
+        public static ComparisonCalculationBase GetBossCalculations(BossHandler boss, BossHandler easy, Character character, CharacterCalculationsBase currentCalcs)
+        {
+            return Instance.GetBossCalculations(boss, easy, character, currentCalcs);
+        }
         public static List<ComparisonCalculationBase> GetTinkeringCalculations(ItemSlot slot, Character character, CharacterCalculationsBase currentCalcs, bool equippedOnly, bool forceSlotName = false)
         {
             return Instance.GetTinkeringCalculations(slot, character, currentCalcs, equippedOnly, forceSlotName);
@@ -968,6 +972,39 @@ namespace Rawr
                 if (equippedOnly && isEquipped) break;
             }
             return enchantCalcs;
+        }
+
+        public virtual ComparisonCalculationBase GetBossCalculations(BossHandler boss, BossHandler easy, Character character, CharacterCalculationsBase currentCalcs)
+        {
+            ClearCache();
+            CharacterCalculationsBase calcsEquipped = null;
+            CharacterCalculationsBase calcsUnequipped = null;
+            // only need to get unequipped value once not every time around the loop
+            Character charUnequipped = character.Clone();
+            charUnequipped.BossOptions = BossOptions.CloneBossHandler(easy);
+            calcsUnequipped = GetCharacterCalculations(charUnequipped, null, false, false, false);
+            //
+            bool isEquipped = false;
+            Character charEquipped = character.Clone();
+            charUnequipped.BossOptions = BossOptions.CloneBossHandler(boss);
+            calcsEquipped = GetCharacterCalculations(charEquipped, null, false, false, false);
+            ComparisonCalculationBase bossCalc = CreateNewComparisonCalculation();
+            bossCalc.Name = boss.Name + " (" + boss.ContentString + ")";
+            bossCalc.Item = new Item(boss.Name + " (" + boss.ContentString + ")", ItemQuality.Temp, ItemType.None,
+                boss.GetHashCode(), null, ItemSlot.None, null,
+                false, new Stats(), null, ItemSlot.None, ItemSlot.None, ItemSlot.None,
+                0, 0, ItemDamageType.Physical, 0, null);
+            bossCalc.Equipped = isEquipped;
+            bossCalc.OverallPoints = calcsEquipped.OverallPoints - calcsUnequipped.OverallPoints;
+            float[] subPoints = new float[calcsEquipped.SubPoints.Length];
+            for (int i = 0; i < calcsEquipped.SubPoints.Length; i++)
+            {
+                subPoints[i] = calcsEquipped.SubPoints[i] - calcsUnequipped.SubPoints[i];
+            }
+            bossCalc.SubPoints = subPoints;
+            //bossCalc.ImageSource = boss.IconSource;
+            //
+            return bossCalc;
         }
 
         public virtual List<ComparisonCalculationBase> GetReforgeCalculations(CharacterSlot slot, Character character, CharacterCalculationsBase currentCalcs, bool equippedOnly)

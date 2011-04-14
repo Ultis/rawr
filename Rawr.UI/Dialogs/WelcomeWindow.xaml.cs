@@ -18,17 +18,20 @@ namespace Rawr.UI
         {
             InitializeComponent();
             //
-#if !SILVERLIGHT
-            this.ResizeMode = System.Windows.ResizeMode.NoResize;
-            this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
-            this.WindowStyle = System.Windows.WindowStyle.ToolWindow;
-            this.WindowState = System.Windows.WindowState.Normal;
-#endif
+            #if !SILVERLIGHT
+                this.ResizeMode = System.Windows.ResizeMode.NoResize;
+                this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+                this.WindowStyle = System.Windows.WindowStyle.ToolWindow;
+                this.WindowState = System.Windows.WindowState.Normal;
+                this.ShowInTaskbar = false;
+            #endif
             //
             SetUpTips();
             SetUpFAQ();
             SetUpPatchNotes();
             SetUpKI();
+            //
+            SetUpRecentCharsList();
         }
 
         #region Variables
@@ -2072,6 +2075,32 @@ Note that some models are in fact ready, such as DPSWarr.Arms, Mage, Bear and Ca
             CB_Issues.SelectedIndex = 0;
             CB_Issues_SelectedIndexChanged(null, null);
         }
+        private void SetUpRecentCharsList() {
+#if !SILVERLIGHT
+            if (Rawr.Properties.RecentSettings.Default.RecentFiles.Count > 0) {
+                foreach (string s in Rawr.Properties.RecentSettings.Default.RecentFiles) {
+                    List<string> sl = s.Split('\\').ToList();
+                    Button b = new Button() {
+                        Content = sl[sl.Count - 1].Replace(".xml", ""),
+                        Margin = new Thickness(4, 0, 4, 0),
+                        Tag = s,
+                        Background = new SolidColorBrush(Colors.White),
+                    };
+                    b.Click += new RoutedEventHandler(b_Click);
+                    SP_RecentChars.Children.Insert(1, b);
+                }
+            }
+#endif
+        }
+
+#if !SILVERLIGHT
+        void b_Click(object sender, RoutedEventArgs e)
+        {
+            Button b = sender as Button;
+            MainPage.Instance.OpenCharacter(b.Tag as string);
+            this.DialogResult = true;
+        }
+#endif
 
         #region Info Operations
         private void CB_Tips_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)

@@ -988,13 +988,20 @@ If that is still not working for you, right-click anywhere within the web versio
             ofd.Filter = "character file (*.xml)|*.xml";
             if (ofd.ShowDialog().GetValueOrDefault(false))
             {
-#if SILVERLIGHT
+                #if SILVERLIGHT
                 using (StreamReader reader = ofd.File.OpenText()) {
                     lastSavedPath = "";// ofd.File.DirectoryName;//FullName; // populate the path, but we can't do that in Silverlight because of permissions issues
-#else
+                #else
                 using (StreamReader reader = new StreamReader(ofd.OpenFile())) {
                     lastSavedPath = ofd.FileName; // populate the path
-#endif
+                    while (Rawr.Properties.RecentSettings.Default.RecentFiles.Contains(lastSavedPath)) {
+                        Rawr.Properties.RecentSettings.Default.RecentFiles.Remove(lastSavedPath);
+                    }
+                    while (Rawr.Properties.RecentSettings.Default.RecentFiles.Count > 4) {
+                        Rawr.Properties.RecentSettings.Default.RecentFiles.RemoveAt(0);
+                    }
+                    Rawr.Properties.RecentSettings.Default.RecentFiles.Add(lastSavedPath);
+                #endif
                     // TODO: we'll have to expand this considerably to get to Rawr2 functionality
                     Character loadedCharacter = Character.LoadFromXml(reader.ReadToEnd());
                     EnsureItemsLoaded(loadedCharacter.GetAllEquippedAndAvailableGearIds());
@@ -1003,6 +1010,27 @@ If that is still not working for you, right-click anywhere within the web versio
                 _unsavedChanges = false;
             }
         }
+
+#if !SILVERLIGHT
+        public void OpenCharacter(string path) {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.FileName = path;
+            using (StreamReader reader = new StreamReader(ofd.OpenFile())) {
+                lastSavedPath = ofd.FileName; // populate the path
+                while (Rawr.Properties.RecentSettings.Default.RecentFiles.Contains(lastSavedPath)) {
+                    Rawr.Properties.RecentSettings.Default.RecentFiles.Remove(lastSavedPath);
+                }
+                while (Rawr.Properties.RecentSettings.Default.RecentFiles.Count > 4) {
+                    Rawr.Properties.RecentSettings.Default.RecentFiles.RemoveAt(0);
+                }
+                Rawr.Properties.RecentSettings.Default.RecentFiles.Add(lastSavedPath);
+                // TODO: we'll have to expand this considerably to get to Rawr2 functionality // uhh what?
+                Character loadedCharacter = Character.LoadFromXml(reader.ReadToEnd());
+                EnsureItemsLoaded(loadedCharacter.GetAllEquippedAndAvailableGearIds());
+                Character = loadedCharacter;
+            }
+        }
+#endif
 
         private static bool CancelToSave = false;
         public void NeedToSaveCharacter() {

@@ -47,7 +47,7 @@ namespace Rawr.HealPriest {
             #region General
             dictValues.Add("Health", BasicStats.Health.ToString("0"));
             dictValues.Add("Mana", BasicStats.Mana.ToString("0"));
-            dictValues.Add("Item Level", String.Format("{0}*Lowest: {1}\nHighest: {2}", Character.GetAvgWornItemLevel.ToString("0"), Character.GetMinWornItemLevel.ToString("0"), Character.GetMaxWornItemLevel.ToString("0")));
+            dictValues.Add("Item Level", String.Format("{0}*Lowest: {1}\nHighest: {2}", Character.AvgWornItemLevel.ToString("0"), Character.MinWornItemLevel.ToString("0"), Character.MaxWornItemLevel.ToString("0")));
 /*            dictValues.Add("Speed", String.Format("{0}%*{0}% Run speed",
                 ((1f + BasicStats.MovementSpeed) * 100f).ToString("0")));*/
             #endregion

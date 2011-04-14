@@ -1878,7 +1878,7 @@ namespace Rawr
         #endregion
 
         #region Items in Slots
-        public int GetMaxWornItemLevel {
+        public int MaxWornItemLevel {
             get {
                 int retVal = 0;
                 foreach (CharacterSlot slot in EquippableCharacterSlots) {
@@ -1891,7 +1891,7 @@ namespace Rawr
                 return retVal;
             }
         }
-        public int GetMinWornItemLevel {
+        public int MinWornItemLevel {
             get {
                 int retVal = 10000;
                 foreach (CharacterSlot slot in EquippableCharacterSlots) {
@@ -1905,7 +1905,7 @@ namespace Rawr
                 return retVal;
             }
         }
-        public int GetAvgWornItemLevel {
+        public int AvgWornItemLevel {
             get {
                 int retVal = 0;
                 int count = 0;
@@ -3168,7 +3168,7 @@ namespace Rawr
                 ItemInstance itemInstance = _item[i];
                 if (itemInstance != null) clonedItemInstances[i] = itemInstance.Clone();
             }
-            Character clone = new Character(this.Name, this.Realm, this.Region, this.Race, this.BossOptions,
+            Character clone = new Character(this.Name, this.Realm, this.Region, this.Race, this.BossOptions.Clone(),
                 clonedItemInstances, ActiveBuffs, CurrentModel);
             clone.CalculationOptions = this.CalculationOptions;
             clone.itemSetList = this.itemSetList;
@@ -3181,7 +3181,7 @@ namespace Rawr
             clone.HandsBlacksmithingSocketEnabled = this.HandsBlacksmithingSocketEnabled;
             clone.OptimizationRequirements = this.OptimizationRequirements;
             clone.CalculationToOptimize = this.CalculationToOptimize;
-            clone.BossOptions = this.BossOptions;
+            clone.BossOptions = this.BossOptions.Clone();
             return clone;
         }
     

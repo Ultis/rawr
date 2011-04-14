@@ -215,6 +215,51 @@ namespace Rawr {
             BossOptions clone = (BossOptions)this.MemberwiseClone();
             return clone;
         }
+        public static BossOptions CloneBossHandler(BossHandler toClone)
+        {
+            BossHandler clone = (BossHandler)toClone.Clone();
+            BossOptions retClone = new BossOptions();
+            // Info
+            retClone.Name = clone.Name;
+            retClone.Content = clone.Content;
+            retClone.Instance = clone.Instance;
+            retClone.Comment = clone.Comment;
+            // Basics
+            retClone.Level = clone.Level;
+            retClone.Armor = clone.Armor;
+            retClone.Health = clone.Health;
+            retClone.MobType = clone.MobType;
+            retClone.BerserkTimer = clone.BerserkTimer;
+            retClone.SpeedKillTimer = clone.SpeedKillTimer;
+            retClone.InBackPerc_Melee = clone.InBackPerc_Melee;
+            retClone.InBackPerc_Ranged = clone.InBackPerc_Ranged;
+            retClone.InBack = (retClone.InBackPerc_Melee + retClone.InBackPerc_Ranged) > 0f;
+            retClone.Max_Players = clone.Max_Players;
+            retClone.Min_Healers = clone.Min_Healers;
+            retClone.Min_Tanks = clone.Min_Tanks;
+            // Offensive
+            retClone.Targets = clone.Targets; retClone.MultiTargs = retClone.Targets != null && retClone.Targets.Count > 0;
+            retClone.BuffStates = clone.BuffStates; retClone.HasBuffStates = retClone.BuffStates != null && retClone.BuffStates.Count > 0;
+            retClone.Attacks = clone.Attacks; retClone.DamagingTargs = (retClone.Attacks != null && retClone.Attacks.Count > 0);
+            // Defensive
+            retClone.Resist_Physical = clone.Resist_Physical;
+            retClone.Resist_Frost = clone.Resist_Frost;
+            retClone.Resist_Fire = clone.Resist_Fire;
+            retClone.Resist_Nature = clone.Resist_Nature;
+            retClone.Resist_Arcane = clone.Resist_Arcane;
+            retClone.Resist_Shadow = clone.Resist_Shadow;
+            retClone.Resist_Holy = clone.Resist_Holy;
+            // Impedances
+            retClone.Moves = clone.Moves; retClone.MovingTargs = retClone.Moves != null && retClone.Moves.Count > 0;
+            retClone.Stuns = clone.Stuns; retClone.StunningTargs = retClone.Stuns != null && retClone.Stuns.Count > 0;
+            retClone.Fears = clone.Fears; retClone.FearingTargs = retClone.Fears != null && retClone.Fears.Count > 0;
+            retClone.Roots = clone.Roots; retClone.RootingTargs = retClone.Roots != null && retClone.Roots.Count > 0;
+            retClone.Silences = clone.Silences; retClone.SilencingTargs = retClone.Silences != null && retClone.Silences.Count > 0;
+            retClone.Disarms = clone.Disarms; retClone.DisarmingTargs = retClone.Disarms != null && retClone.Disarms.Count > 0;
+            retClone.TimeBossIsInvuln = clone.TimeBossIsInvuln;
+            //
+            return retClone;
+        }
         public BossOptions CloneThis(BossHandler toClone)
         {
             BossHandler clone = (BossHandler)toClone.Clone();
@@ -401,12 +446,12 @@ namespace Rawr {
         private string _comment = "No comments have been written for this Boss.";
         #endregion
         #region ==== Basics ====
-        [DefaultValue(1000000f)]
+        [DefaultValue(20000000f)]
         public float Health { get { return _health; } set { _health = value; OnPropertyChanged("Health"); } }
-        private float _health = 1000000f;
-        [DefaultValue(10 * 60)]
+        private float _health = 20000000f;
+        [DefaultValue(8 * 60)]
         public int BerserkTimer { get { return _berserkTimer; } set { _berserkTimer = value; OnPropertyChanged("BerserkTimer"); } }
-        private int _berserkTimer = 10 * 60;
+        private int _berserkTimer = 8 * 60;
         [DefaultValue(3 * 60)]
         public int SpeedKillTimer { get { return _speedKillTimer; } set { _speedKillTimer = value; OnPropertyChanged("SpeedKillTimer"); } }
         private int _speedKillTimer = 3 * 60;

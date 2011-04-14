@@ -1387,11 +1387,32 @@ focus on Survival Points.",
             return statsBuffs;
         }
         public override void SetDefaults(Character character) {
-            // Need a Boss Attack
+            #region Boss Options
+            // Never in back of the Boss
+            character.BossOptions.InBack = false;
+
+            int avg = character.AvgWornItemLevel;
+            int[] points = new int[] { 350, 358, 365 };
+            #region Need a Boss Attack
             character.BossOptions.DamagingTargs = true;
             if (character.BossOptions.DefaultMeleeAttack == null) {
                 character.BossOptions.Attacks.Add(BossHandler.ADefaultMeleeAttack);
             }
+            if        (avg <= points[0]) {
+                character.BossOptions.Health = 20000000;
+                character.BossOptions.DefaultMeleeAttack.DamagePerHit = BossHandler.StandardMeleePerHit[(int)BossHandler.TierLevels.T11_10];
+            } else if (avg <= points[1]) {
+                character.BossOptions.Health = 35000000;
+                character.BossOptions.DefaultMeleeAttack.DamagePerHit = BossHandler.StandardMeleePerHit[(int)BossHandler.TierLevels.T11_25];
+            } else if (avg <= points[2]) {
+                character.BossOptions.Health = 50000000;
+                character.BossOptions.DefaultMeleeAttack.DamagePerHit = BossHandler.StandardMeleePerHit[(int)BossHandler.TierLevels.T11_10H];
+            } else if (avg >  points[2]) {
+                character.BossOptions.Health = 65000000;
+                character.BossOptions.DefaultMeleeAttack.DamagePerHit = BossHandler.StandardMeleePerHit[(int)BossHandler.TierLevels.T11_25H];
+            }
+            #endregion
+            #endregion
         }
         #endregion
     }

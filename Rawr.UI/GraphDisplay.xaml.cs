@@ -256,6 +256,7 @@ namespace Rawr.UI
                 case "Item Sets":           UpdateGraphItemSets(parts[1]); break;
                 case "Available":           UpdateGraphAvailable(parts[1]); break;
                 case "Direct Upgrades":     UpdateGraphDirectUpgrades(parts[1]); break;
+                case "Bosses":              UpdateGraphBosses(parts[1]); break;
                 case "Stat Values":         UpdateGraphStatValues(parts[1]); break;
                 case "Search Results":      UpdateGraphSearchResults(parts[1]); break;
                 default: UpdateGraphModelSpecific(parts[1]); break;
@@ -276,6 +277,7 @@ namespace Rawr.UI
         private ComparisonCalculationBase[] _searchCalculations = null;
         private ComparisonCalculationBase[] _itemSetCalculations = null;
         private ComparisonCalculationBase[] _enchantCalculations = null;
+        private ComparisonCalculationBase[] _bossCalculations = null;
         private ComparisonCalculationBase[] _buffCalculations = null;
         private ComparisonCalculationBase[] _raceCalculations = null;
         private ComparisonCalculationBase[] _talentCalculations = null;
@@ -1369,6 +1371,55 @@ namespace Rawr.UI
             // Now Push the results to the screen
             ComparisonGraph.DisplayCalcs(_searchCalculations = searchCalculations.ToArray());
         }
+
+        private void UpdateGraphBosses(string subgraph)
+        {
+            SetGraphControl(ComparisonGraph);
+            List<ComparisonCalculationBase> bossCalculations = new List<ComparisonCalculationBase>();
+#if DEBUG
+            DateTime start;
+#endif
+            BossList bosslist = new BossList();
+            List<BossHandler> bosses = new List<BossHandler>();
+
+            string filter = "All";
+
+            // Determine which chart we are looking for. All will have the whole list, specific will just have that content in the list
+            if (subgraph == "All (This is Slow to Calc)") {
+                filter = "All";
+            } else {
+                filter = subgraph;
+            }
+            BossHandler[] calledList = bosslist.GenCalledList(BossList.FilterType.Content, filter);
+            if (filter == "All") {
+                bosses.Add(bosslist.TheEZModeBoss.Clone());
+                bosses.Add(bosslist.TheAvgBoss.Clone());
+                bosses.Add(bosslist.TheHardestBoss.Clone());
+            } else {
+                bosses.Add(bosslist.TheEZModeBoss_Called.Clone());
+                bosses.Add(bosslist.TheAvgBoss_Called.Clone());
+                bosses.Add(bosslist.TheHardestBoss_Called.Clone());
+            }
+            foreach (BossHandler bh in calledList) { bosses.Add(bh.Clone()); }
+            BossHandler easy = bosses.Find(b => b.Name.Contains("Easy"));
+
+            CGL_Legend.LegendItems = Calculations.SubPointNameColors;
+            ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
+            ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine("Starting Boss Comparison Calculations");
+            start = DateTime.Now;
+#endif
+            foreach (BossHandler bh in bosses)
+            {
+                bossCalculations.Add(Calculations.GetBossCalculations(bh, easy, Character, Calculations.GetCharacterCalculations(Character)));
+            }
+            ComparisonGraph.DisplayCalcs(_bossCalculations = bossCalculations.ToArray());
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine("Finished Boss Comparison Calculations: Total " + DateTime.Now.Subtract(start).TotalMilliseconds.ToString() + "ms");
+#endif
+        }
+
 
         private void UpdateGraphDirectUpgrades(string subgraph)
         {

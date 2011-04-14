@@ -45,6 +45,7 @@ namespace Rawr.UI
             Items.Add(new ChartPickerItem("Equipped", "All", "Gear", "Enchants", "Tinkerings", "Buffs"));
             Items.Add(new ChartPickerItem("Available", "All", "Gear", "Enchants", "Tinkerings"));
             Items.Add(new ChartPickerItem("Direct Upgrades", "Gear", "Gear / Cost", "Enchants", "Tinkerings"));
+            //Items.Add(new ChartPickerItem("Bosses", "All (This is Slow to Calc)", "Tier 11 10N", "Tier 11 25N", "Tier 11 10H", "Tier 11 25H")); // These charts don't work yet
             Items.Add(new ChartPickerItem("Stat Values", "Relative Stat Values"));
             Items.Add(new ChartPickerItem("Search Results", "Search Results"));
             //new ChartPickerItem("{0} Specific")
