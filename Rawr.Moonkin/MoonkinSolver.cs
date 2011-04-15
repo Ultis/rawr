@@ -352,8 +352,8 @@ namespace Rawr.Moonkin
                         // Heart of Ignacious
                         if (childEffect.Stats.SpellPower > 0)
                         {
-                            float averageStack = childEffect.GetAverageStackSize(rot.RotationData.Duration / (rot.RotationData.CastCount - rot.RotationData.InsectSwarmCasts), baseHit, 3.0f, proc.Effect.Duration);
-                            currentSpellPower += childEffect.Stats.SpellPower * averageStack * proc.Effect.GetAverageUptime(rot.RotationData.Duration / (rot.RotationData.CastCount - rot.RotationData.InsectSwarmCasts), baseHit);
+                            float averageStack = childEffect.GetAverageStackSize(rot.RotationData.Duration / rot.RotationData.CastCount, baseHit, 3.0f, proc.Effect.Duration);
+                            currentSpellPower += childEffect.Stats.SpellPower * averageStack * proc.Effect.GetAverageUptime(rot.RotationData.Duration / rot.RotationData.CastCount, baseHit);
                         }
                         // 4T11
                         if (childEffect.Stats.SpellCrit != 0)
