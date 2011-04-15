@@ -349,19 +349,11 @@ namespace Rawr.Moonkin
                     if (proc.Effect.Stats._rawSpecialEffectDataSize > 0)
                     {
                         SpecialEffect childEffect = proc.Effect.Stats._rawSpecialEffectData[0];
-                        // Nevermelting Ice Crystal
-                        if (childEffect.Stats.CritRating != 0)
+                        // Heart of Ignacious
+                        if (childEffect.Stats.SpellPower > 0)
                         {
-                            float maxStack = proc.Effect.Stats.CritRating;
-                            float numNegativeStacks = childEffect.GetAverageStackSize(rot.RotationData.Duration / (rot.RotationData.CastCount - rot.RotationData.InsectSwarmCasts), Math.Min(1.0f, baseCrit + StatConversion.GetSpellCritFromRating(maxStack)), 3.0f, proc.Effect.Duration);
-                            float averageNegativeValue = childEffect.Stats.CritRating * numNegativeStacks;
-                            float averageCritRating = maxStack + averageNegativeValue;
-                            currentCrit += StatConversion.GetSpellCritFromRating(averageCritRating * proc.Effect.GetAverageUptime(0f, 1f));
-                        }
-                        // Fetish of Volatile Power
-                        if (childEffect.Stats.HasteRating != 0)
-                        {
-                            currentHaste += StatConversion.GetSpellHasteFromRating(childEffect.Stats.HasteRating * childEffect.GetAverageStackSize(rot.RotationData.Duration / rot.RotationData.CastCount, 1f, 3.0f, proc.Effect.Duration) * proc.Effect.GetAverageUptime(0f, 1f));
+                            float averageStack = childEffect.GetAverageStackSize(rot.RotationData.Duration / (rot.RotationData.CastCount - rot.RotationData.InsectSwarmCasts), baseHit, 3.0f, proc.Effect.Duration);
+                            currentSpellPower += childEffect.Stats.SpellPower * averageStack * proc.Effect.GetAverageUptime(rot.RotationData.Duration / (rot.RotationData.CastCount - rot.RotationData.InsectSwarmCasts), baseHit);
                         }
                         // 4T11
                         if (childEffect.Stats.SpellCrit != 0)
