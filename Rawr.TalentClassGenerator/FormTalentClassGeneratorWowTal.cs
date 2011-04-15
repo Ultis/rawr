@@ -24,9 +24,10 @@ namespace Rawr.TalentClassGenerator
 
 		private void buttonGenerateCode_Click(object sender, EventArgs e)
 		{
-			textBoxCode.Text = @"using System;
-using System.Text;
+            textBoxCode.Text = @"using System;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Text;
 
 namespace Rawr
 {
@@ -74,75 +75,191 @@ namespace Rawr
 	{
 		public abstract int[] Data { get; }
 		public virtual bool[] GlyphData { get { return null; } }
-		//
-		public virtual int TreeStartingIndexes_0 { get { return 0; } }
-		public virtual int TreeStartingIndexes_1 { get { return 0; } }
-		public virtual int TreeStartingIndexes_2 { get { return 0; } }
-		public int[] TreeStartingIndexes { get { return new int[] { TreeStartingIndexes_0, TreeStartingIndexes_1, TreeStartingIndexes_2 }; } }
-		public int[] treeCounts = { -1, -1, -1 };
-		//
-		public int[] TreeCounts {
-			get {
-				if (treeCounts[0] == -1) {
-					treeCounts[0] = 0;
-					for (int i = TreeStartingIndexes[0]; i < TreeStartingIndexes[1]; i++) {
-						treeCounts[0] += Data[i];
-					}
-				}
-				if (treeCounts[1] == -1) {
-					treeCounts[1] = 0;
-					for (int i = TreeStartingIndexes[1]; i < TreeStartingIndexes[2]; i++) {
-						treeCounts[1] += Data[i];
-					}
-				}
-				if (treeCounts[2] == -1) {
-					treeCounts[2] = 0;
-					for (int i = TreeStartingIndexes[2]; i < Data.Length; i++) {
-						treeCounts[2] += Data[i];
-					}
-				}
-				return TreeCounts;
-			}
-			protected set { treeCounts = value; }
-		}
-		//
-		public int HighestTree {
-			get {
-				int[] trees = TreeCounts;
-				if (trees[0] >= trees[1] && trees[0] >= trees[2]) { return 0; }
-				if (trees[1] >= trees[0] && trees[1] >= trees[2]) { return 1; }
-				if (trees[2] >= trees[0] && trees[2] >= trees[1]) { return 2; }
-				return 0;
-			}
-		}
-		//
-		protected void LoadString(string code)
-		{
-			if (string.IsNullOrEmpty(code)) return;
-			int[] _data = Data;
-			string[] tmp = code.Split('.');
-			string talents = tmp[0];
-			if (talents.Length >= _data.Length)
-			{
-				List<int> data = new List<int>();
-				foreach (Char digit in talents)
-					data.Add(int.Parse(digit.ToString()));
-				data.CopyTo(0, _data, 0, _data.Length);
-			}
-			if (tmp.Length > 1)
-			{
-				string glyphs = tmp[1];
-				bool[] _glyphData = GlyphData;
-				if (_glyphData != null && glyphs.Length == _glyphData.Length)
-				{
-					List<bool> data = new List<bool>();
-					foreach (Char digit in glyphs)
-						data.Add(int.Parse(digit.ToString()) == 1);
-					data.CopyTo(_glyphData);
-				}
-			}
-		}
+        //
+        public virtual int TreeStartingIndexes_0 { get { return 0; } }
+        public virtual int TreeStartingIndexes_1 { get { return 0; } }
+        public virtual int TreeStartingIndexes_2 { get { return 0; } }
+        public int[] TreeStartingIndexes { get { return new int[] { TreeStartingIndexes_0, TreeStartingIndexes_1, TreeStartingIndexes_2 }; } }
+        public int[] TreeLengths {
+            get {
+                return new int[] {
+                    TreeStartingIndexes_1,
+                    TreeStartingIndexes_2 - TreeStartingIndexes_1,
+                    Data.Length - TreeStartingIndexes_2,
+                };
+            }
+        }
+        public virtual int GlyphTreeStartingIndexes_0 { get { return 0; } }
+        public virtual int GlyphTreeStartingIndexes_1 { get { return 0; } }
+        public virtual int GlyphTreeStartingIndexes_2 { get { return 0; } }
+        public int[] GlyphTreeStartingIndexes { get { return new int[] { GlyphTreeStartingIndexes_0, GlyphTreeStartingIndexes_1, GlyphTreeStartingIndexes_2 }; } }
+        public int[] GlyphTreeLengths {
+            get {
+                return new int[] {
+                    GlyphTreeStartingIndexes_1,
+                    GlyphTreeStartingIndexes_2 - GlyphTreeStartingIndexes_1,
+                    GlyphData.Length - GlyphTreeStartingIndexes_2,
+                };
+            }
+        }
+        public int[] treeCounts = { -1, -1, -1 };
+        public int[] glyphtreeCounts = { -1, -1, -1 };
+        //
+        public int[] TreeCounts
+        {
+            get
+            {
+                if (treeCounts[0] == -1)
+                {
+                    treeCounts[0] = 0;
+                    for (int i = TreeStartingIndexes[0]; i < TreeStartingIndexes[1]; i++)
+                    {
+                        treeCounts[0] += Data[i];
+                    }
+                }
+                if (treeCounts[1] == -1)
+                {
+                    treeCounts[1] = 0;
+                    for (int i = TreeStartingIndexes[1]; i < TreeStartingIndexes[2]; i++)
+                    {
+                        treeCounts[1] += Data[i];
+                    }
+                }
+                if (treeCounts[2] == -1)
+                {
+                    treeCounts[2] = 0;
+                    for (int i = TreeStartingIndexes[2]; i < Data.Length; i++)
+                    {
+                        treeCounts[2] += Data[i];
+                    }
+                }
+                return treeCounts;
+            }
+            protected set { treeCounts = value; }
+        }
+        public int[] GlyphTreeCounts
+        {
+            get
+            {
+                if (glyphtreeCounts[0] == -1)
+                {
+                    glyphtreeCounts[0] = 0;
+                    for (int i = GlyphTreeStartingIndexes[0]; i < GlyphTreeStartingIndexes[1]; i++)
+                    {
+                        glyphtreeCounts[0] += GlyphData[i] ? 1 : 0;
+                    }
+                }
+                if (glyphtreeCounts[1] == -1)
+                {
+                    glyphtreeCounts[1] = 0;
+                    for (int i = GlyphTreeStartingIndexes[1]; i < GlyphTreeStartingIndexes[2]; i++)
+                    {
+                        glyphtreeCounts[1] += GlyphData[i] ? 1 : 0;
+                    }
+                }
+                if (glyphtreeCounts[2] == -1)
+                {
+                    glyphtreeCounts[2] = 0;
+                    for (int i = GlyphTreeStartingIndexes[2]; i < GlyphData.Length; i++)
+                    {
+                        glyphtreeCounts[2] += GlyphData[i] ? 1 : 0;
+                    }
+                }
+                return glyphtreeCounts;
+            }
+            protected set { glyphtreeCounts = value; }
+        }
+        //
+        public int HighestTree
+        {
+            get
+            {
+                int[] trees = TreeCounts;
+                if (trees[0] >= trees[1] && trees[0] >= trees[2]) { return 0; }
+                if (trees[1] >= trees[0] && trees[1] >= trees[2]) { return 1; }
+                if (trees[2] >= trees[0] && trees[2] >= trees[1]) { return 2; }
+                return 0;
+            }
+        }
+        //
+        protected void LoadString(string code, int[][] glyphEncodes=null)
+        {
+            if (string.IsNullOrEmpty(code)) return;
+            int[] _data = Data;
+            string[] tmp = code.Split('.');
+            string talents = tmp[0];
+            if (talents.Length >= _data.Length)
+            {
+                List<int> data = new List<int>();
+                foreach (Char digit in talents)
+                    data.Add(int.Parse(digit.ToString()));
+                data.CopyTo(0, _data, 0, _data.Length);
+            }
+            if (tmp.Length > 1)
+            {
+                string glyphs = tmp[1];
+                bool[] _glyphData = GlyphData;
+                if (_glyphData != null && glyphs.Length == _glyphData.Length)
+                {
+                    List<bool> data = new List<bool>();
+                    foreach (Char digit in glyphs)
+                        data.Add(int.Parse(digit.ToString()) == 1);
+                    data.CopyTo(_glyphData);
+                }
+            } else if (glyphEncodes != null) {
+                // This makes it determine the glyphs active from WowHead Glyph IDs
+                // (numbered as [0-2][0-5]), see TalentPicker.xaml.cs for details
+                bool[] _glyphData = GlyphData;
+                if (_glyphData != null) {
+                    List<GlyphDataAttribute> glyphsInOrder_Prime = new List<GlyphDataAttribute>();
+                    List<GlyphDataAttribute> glyphsInOrder_Major = new List<GlyphDataAttribute>();
+                    List<GlyphDataAttribute> glyphsInOrder_Minor = new List<GlyphDataAttribute>();
+                    foreach (PropertyInfo pi in this.GetType().GetProperties()) {
+                        GlyphDataAttribute[] glyphDatas = pi.GetCustomAttributes(typeof(GlyphDataAttribute), true) as GlyphDataAttribute[];
+                        if (glyphDatas.Length > 0) {
+                            if      (glyphDatas[0].Type == GlyphType.Prime) { glyphsInOrder_Prime.Add(glyphDatas[0]); }
+                            else if (glyphDatas[0].Type == GlyphType.Major) { glyphsInOrder_Major.Add(glyphDatas[0]); }
+                            else if (glyphDatas[0].Type == GlyphType.Minor) { glyphsInOrder_Minor.Add(glyphDatas[0]); }
+                        }
+                    }
+                    glyphsInOrder_Prime.Sort(CompareGlyphsById);
+                    glyphsInOrder_Major.Sort(CompareGlyphsById);
+                    glyphsInOrder_Minor.Sort(CompareGlyphsById);
+                    int counter = 0;
+                    for (int i = 0; i < glyphsInOrder_Prime.Count; i++)
+                    {
+                        for (int e = 0; e < 3; e++)
+                        {
+                            if (counter == glyphEncodes[0][e]) { _glyphData[glyphsInOrder_Prime[i].Index] = true; break; }
+                        }
+                        // Iterate Counter, but we can't do 6-9 of any 10 block
+                        counter++;
+                        if (counter == 6 || counter == 16 || counter == 26) { counter -= 6; counter += 10; }
+                    }
+                }
+            }
+        }
 
+        private static int CompareGlyphsById(GlyphDataAttribute x, GlyphDataAttribute y) {
+            if (x == null) {
+                if (y == null) {
+                    // If x is null and y is null, they're equal
+                    return 0;
+                } else {
+                    // If x is null and y is not null, y is greater
+                    return -1;
+                }
+            } else {
+                // If x is not null...
+                if (y == null) { // ...and y is null, x is greater.
+                    return 1;
+                } else {
+                    // sort them with ordinary string comparison.
+                    return x.SpellID.CompareTo(y.SpellID);
+                }
+            }
+        }
+        //
 		public override string ToString()
 		{
 			StringBuilder ret = new StringBuilder();
@@ -367,9 +484,9 @@ namespace Rawr
             code.AppendFormat("		private int[] _data = new int[{0}];\r\n", talents.Count);
             code.Append("		public override int[] Data { get { return _data; } }\r\n");
             code.AppendFormat("		public {0}() {{ }}\r\n", className);
-            code.AppendFormat("		public {0}(string talents)\r\n", className);
+            code.AppendFormat("		public {0}(string talents, int[][] glyphEncodes=null)\r\n", className);
             code.Append("		{\r\n");
-            code.Append("			LoadString(talents);\r\n");
+            code.Append("			LoadString(talents, glyphEncodes);\r\n");
             code.Append("		}\r\n");
             code.Append("		public static string[] TreeNames = new [] {");
 			foreach (string tree in classData.TreeNames)

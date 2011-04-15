@@ -19,8 +19,10 @@ namespace Rawr.UI
             InitializeComponent();
 
 #if !SILVERLIGHT
+            this.ShowInTaskbar = false;
             this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
             this.WindowState = System.Windows.WindowState.Normal;
+            this.SizeToContent = SizeToContent.Height;
 #endif
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Text;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Text;
 
 namespace Rawr
 {
@@ -53,7 +54,34 @@ namespace Rawr
         public virtual int TreeStartingIndexes_1 { get { return 0; } }
         public virtual int TreeStartingIndexes_2 { get { return 0; } }
         public int[] TreeStartingIndexes { get { return new int[] { TreeStartingIndexes_0, TreeStartingIndexes_1, TreeStartingIndexes_2 }; } }
+        public int[] TreeLengths
+        {
+            get
+            {
+                return new int[] {
+                    TreeStartingIndexes_1,
+                    TreeStartingIndexes_2 - TreeStartingIndexes_1,
+                    Data.Length - TreeStartingIndexes_2,
+                };
+            }
+        }
+        public virtual int GlyphTreeStartingIndexes_0 { get { return 0; } }
+        public virtual int GlyphTreeStartingIndexes_1 { get { return 0; } }
+        public virtual int GlyphTreeStartingIndexes_2 { get { return 0; } }
+        public int[] GlyphTreeStartingIndexes { get { return new int[] { GlyphTreeStartingIndexes_0, GlyphTreeStartingIndexes_1, GlyphTreeStartingIndexes_2 }; } }
+        public int[] GlyphTreeLengths
+        {
+            get
+            {
+                return new int[] {
+                    GlyphTreeStartingIndexes_1,
+                    GlyphTreeStartingIndexes_2 - GlyphTreeStartingIndexes_1,
+                    GlyphData.Length - GlyphTreeStartingIndexes_2,
+                };
+            }
+        }
         public int[] treeCounts = { -1, -1, -1 };
+        public int[] glyphtreeCounts = { -1, -1, -1 };
         //
         public int[] TreeCounts
         {
@@ -87,6 +115,38 @@ namespace Rawr
             }
             protected set { treeCounts = value; }
         }
+        public int[] GlyphTreeCounts
+        {
+            get
+            {
+                if (glyphtreeCounts[0] == -1)
+                {
+                    glyphtreeCounts[0] = 0;
+                    for (int i = GlyphTreeStartingIndexes[0]; i < GlyphTreeStartingIndexes[1]; i++)
+                    {
+                        glyphtreeCounts[0] += GlyphData[i] ? 1 : 0;
+                    }
+                }
+                if (glyphtreeCounts[1] == -1)
+                {
+                    glyphtreeCounts[1] = 0;
+                    for (int i = GlyphTreeStartingIndexes[1]; i < GlyphTreeStartingIndexes[2]; i++)
+                    {
+                        glyphtreeCounts[1] += GlyphData[i] ? 1 : 0;
+                    }
+                }
+                if (glyphtreeCounts[2] == -1)
+                {
+                    glyphtreeCounts[2] = 0;
+                    for (int i = GlyphTreeStartingIndexes[2]; i < GlyphData.Length; i++)
+                    {
+                        glyphtreeCounts[2] += GlyphData[i] ? 1 : 0;
+                    }
+                }
+                return glyphtreeCounts;
+            }
+            protected set { glyphtreeCounts = value; }
+        }
         //
         public int HighestTree
         {
@@ -100,7 +160,7 @@ namespace Rawr
             }
         }
         //
-        protected void LoadString(string code)
+        protected void LoadString(string code, int[][] glyphEncodes = null)
         {
             if (string.IsNullOrEmpty(code)) return;
             int[] _data = Data;
@@ -125,8 +185,96 @@ namespace Rawr
                     data.CopyTo(_glyphData);
                 }
             }
+            else if (glyphEncodes != null)
+            {
+                // This makes it determine the glyphs active from WowHead Glyph IDs
+                // (numbered as [0-2][0-5]), see TalentPicker.xaml.cs for details
+                bool[] _glyphData = GlyphData;
+                if (_glyphData != null)
+                {
+                    List<GlyphDataAttribute> glyphsInOrder_Prime = new List<GlyphDataAttribute>();
+                    List<GlyphDataAttribute> glyphsInOrder_Major = new List<GlyphDataAttribute>();
+                    List<GlyphDataAttribute> glyphsInOrder_Minor = new List<GlyphDataAttribute>();
+                    foreach (PropertyInfo pi in this.GetType().GetProperties())
+                    {
+                        GlyphDataAttribute[] glyphDatas = pi.GetCustomAttributes(typeof(GlyphDataAttribute), true) as GlyphDataAttribute[];
+                        if (glyphDatas.Length > 0)
+                        {
+                            if (glyphDatas[0].Type == GlyphType.Prime) { glyphsInOrder_Prime.Add(glyphDatas[0]); }
+                            else if (glyphDatas[0].Type == GlyphType.Major) { glyphsInOrder_Major.Add(glyphDatas[0]); }
+                            else if (glyphDatas[0].Type == GlyphType.Minor) { glyphsInOrder_Minor.Add(glyphDatas[0]); }
+                        }
+                    }
+                    glyphsInOrder_Prime.Sort(CompareGlyphsById);
+                    glyphsInOrder_Major.Sort(CompareGlyphsById);
+                    glyphsInOrder_Minor.Sort(CompareGlyphsById);
+                    int counter = 0;
+                    for (int i = 0; i < glyphsInOrder_Prime.Count; i++)
+                    {
+                        for (int e = 0; e < 3; e++)
+                        {
+                            if (counter == glyphEncodes[0][e]) { _glyphData[glyphsInOrder_Prime[i].Index] = true; break; }
+                        }
+                        // Iterate Counter, but we can't do 6-9 of any 10 block
+                        counter++;
+                        if (counter == 6 || counter == 16 || counter == 26) { counter -= 6; counter += 10; }
+                    }
+                    counter = 0;
+                    for (int i = 0; i < glyphsInOrder_Major.Count; i++)
+                    {
+                        for (int e = 0; e < 3; e++)
+                        {
+                            if (counter == glyphEncodes[1][e]) { _glyphData[glyphsInOrder_Major[i].Index] = true; break; }
+                        }
+                        // Iterate Counter, but we can't do 6-9 of any 10 block
+                        counter++;
+                        if (counter == 6 || counter == 16 || counter == 26) { counter -= 6; counter += 10; }
+                    }
+                    counter = 0;
+                    for (int i = 0; i < glyphsInOrder_Minor.Count; i++)
+                    {
+                        for (int e = 0; e < 3; e++)
+                        {
+                            if (counter == glyphEncodes[2][e]) { _glyphData[glyphsInOrder_Minor[i].Index] = true; break; }
+                        }
+                        // Iterate Counter, but we can't do 6-9 of any 10 block
+                        counter++;
+                        if (counter == 6 || counter == 16 || counter == 26) { counter -= 6; counter += 10; }
+                    }
+                }
+            }
         }
 
+        private static int CompareGlyphsById(GlyphDataAttribute x, GlyphDataAttribute y)
+        {
+            if (x == null)
+            {
+                if (y == null)
+                {
+                    // If x is null and y is null, they're equal
+                    return 0;
+                }
+                else
+                {
+                    // If x is null and y is not null, y is greater
+                    return -1;
+                }
+            }
+            else
+            {
+                // If x is not null...
+                if (y == null)
+                { // ...and y is null, x is greater.
+                    return 1;
+                }
+                else
+                {
+                    // sort them with ordinary string comparison.
+                    return x.SpellID.CompareTo(y.SpellID);
+                }
+            }
+        }
+        //
         public override string ToString()
         {
             StringBuilder ret = new StringBuilder();
@@ -174,9 +322,9 @@ namespace Rawr
         private int[] _data = new int[61];
         public override int[] Data { get { return _data; } }
         public WarriorTalents() { }
-        public WarriorTalents(string talents)
+        public WarriorTalents(string talents, int[][] glyphEncodes = null)
         {
-            LoadString(talents);
+            LoadString(talents, glyphEncodes);
         }
         public static string[] TreeNames = new[] {
 			@"Arms",
@@ -737,9 +885,9 @@ Sends a wave of force in front of you, causing [75% of AP] damage (based on atta
         private int[] _data = new int[60];
         public override int[] Data { get { return _data; } }
         public PaladinTalents() { }
-        public PaladinTalents(string talents)
+        public PaladinTalents(string talents, int[][] glyphEncodes = null)
         {
-            LoadString(talents);
+            LoadString(talents, glyphEncodes);
         }
         public static string[] TreeNames = new[] {
 			@"Holy",
@@ -1322,9 +1470,9 @@ Your Crusader Strike generates 3 charges of Holy Power per strike for the next 2
         private int[] _data = new int[58];
         public override int[] Data { get { return _data; } }
         public HunterTalents() { }
-        public HunterTalents(string talents)
+        public HunterTalents(string talents, int[][] glyphEncodes = null)
         {
-            LoadString(talents);
+            LoadString(talents, glyphEncodes);
         }
         public static string[] TreeNames = new[] {
 			@"Beast Mastery",
@@ -1897,9 +2045,9 @@ Requires Ranged Weapon - Fires a Black Arrow at the target, dealing 2035 Shadow 
         private int[] _data = new int[57];
         public override int[] Data { get { return _data; } }
         public RogueTalents() { }
-        public RogueTalents(string talents)
+        public RogueTalents(string talents, int[][] glyphEncodes = null)
         {
-            LoadString(talents);
+            LoadString(talents, glyphEncodes);
         }
         public static string[] TreeNames = new[] {
 			@"Assassination",
@@ -2425,9 +2573,9 @@ Enter the Shadow Dance for 6 sec, allowing the use of Sap, Garrote, Ambush, Chea
         private int[] _data = new int[63];
         public override int[] Data { get { return _data; } }
         public PriestTalents() { }
-        public PriestTalents(string talents)
+        public PriestTalents(string talents, int[][] glyphEncodes = null)
         {
-            LoadString(talents);
+            LoadString(talents, glyphEncodes);
         }
         public static string[] TreeNames = new[] {
 			@"Discipline",
@@ -3102,9 +3250,9 @@ Dispersion can be cast while stunned, feared or silenced and clears all snare an
         private int[] _data = new int[60];
         public override int[] Data { get { return _data; } }
         public DeathKnightTalents() { }
-        public DeathKnightTalents(string talents)
+        public DeathKnightTalents(string talents, int[][] glyphEncodes = null)
         {
-            LoadString(talents);
+            LoadString(talents, glyphEncodes);
         }
         public static string[] TreeNames = new[] {
 			@"Blood",
@@ -3667,9 +3815,9 @@ A Gargoyle flies into the area and bombards the target with Nature damage modifi
         private int[] _data = new int[58];
         public override int[] Data { get { return _data; } }
         public ShamanTalents() { }
-        public ShamanTalents(string talents)
+        public ShamanTalents(string talents, int[][] glyphEncodes = null)
         {
-            LoadString(talents);
+            LoadString(talents, glyphEncodes);
         }
         public static string[] TreeNames = new[] {
 			@"Elemental",
@@ -4201,9 +4349,9 @@ Heals a friendly target for 2363 and another 3725 over 15 sec.  Your next Chain 
         private int[] _data = new int[61];
         public override int[] Data { get { return _data; } }
         public MageTalents() { }
-        public MageTalents(string talents)
+        public MageTalents(string talents, int[][] glyphEncodes = null)
         {
-            LoadString(talents);
+            LoadString(talents, glyphEncodes);
         }
         public static string[] TreeNames = new[] {
 			@"Arcane",
@@ -4765,9 +4913,9 @@ Stuns the target for 5 sec.  Only usable on Frozen targets.  Deals 1144 to 1434 
         private int[] _data = new int[56];
         public override int[] Data { get { return _data; } }
         public WarlockTalents() { }
-        public WarlockTalents(string talents)
+        public WarlockTalents(string talents, int[][] glyphEncodes = null)
         {
-            LoadString(talents);
+            LoadString(talents, glyphEncodes);
         }
         public static string[] TreeNames = new[] {
 			@"Affliction",
@@ -5393,9 +5541,9 @@ Sends a bolt of chaotic fire at the enemy, dealing 1311 to 1665 Fire damage. Cha
         private int[] _data = new int[63];
         public override int[] Data { get { return _data; } }
         public DruidTalents() { }
-        public DruidTalents(string talents)
+        public DruidTalents(string talents, int[][] glyphEncodes = null)
         {
-            LoadString(talents);
+            LoadString(talents, glyphEncodes);
         }
         public static string[] TreeNames = new[] {
 			@"Balance",

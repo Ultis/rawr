@@ -21,11 +21,13 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Button x:Name="OKButton" Content="OK" Click="OKButton_Click" Width="75" HorizontalAlignment="Right" Grid.Row="3" Grid.Column="0" d:LayoutOverrides="Height" Grid.ColumnSpan="2" Margin="4,4,4,4" />
-        <Button x:Name="CancelButton" Content="Cancel" Click="CancelButton_Click"  Margin="4,4,83,4" Grid.Row="3" Grid.Column="0" d:LayoutOverrides="Height" Grid.ColumnSpan="2" Width="75" HorizontalAlignment="Right" />
-        <TextBlock Grid.Row="1" Text="Overwrite Talent Spec:" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="4,4,4,4"/>
         <TextBlock Text="New Talent Spec:" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="4,4,4,4"/>
         <TextBox x:Name="NewText" Grid.Column="1" TextWrapping="Wrap" Margin="4,4,4,4" Width="170" TextChanged="New_TextChanged"/>
+
+        <TextBlock Grid.Row="1" Text="Overwrite Talent Spec:" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="4,4,4,4"/>
         <ComboBox x:Name="UpdateCombo" Grid.Column="1" Grid.Row="1" Margin="4,4,4,4" Width="170" SelectionChanged="Update_SelectionChanged"/>
+
+        <Button x:Name="OKButton" Content="OK" Click="OKButton_Click" Width="75" HorizontalAlignment="Right" Grid.Row="3" Grid.Column="0" d:LayoutOverrides="Height" Grid.ColumnSpan="2" Margin="4,4,4,4" />
+        <Button x:Name="CancelButton" Content="Cancel" Click="CancelButton_Click"  Margin="4,4,83,4" Grid.Row="3" Grid.Column="0" d:LayoutOverrides="Height" Grid.ColumnSpan="2" Width="75" HorizontalAlignment="Right" />
     </Grid>
 </basics2:ChildWindow>

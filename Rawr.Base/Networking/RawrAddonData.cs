@@ -185,7 +185,7 @@ namespace Rawr
                     GlyphDataAttribute[] glyphDatas = pi.GetCustomAttributes(typeof(GlyphDataAttribute), true) as GlyphDataAttribute[];
                     if (glyphDatas.Length > 0) {
                         GlyphDataAttribute glyphData = glyphDatas[0];
-                        if (glyphData.ID == glyphId) { character.CurrentTalents.GlyphData[glyphData.Index] = true; }
+                        if (glyphData.EffectID == glyphId) { character.CurrentTalents.GlyphData[glyphData.Index] = true; }
                     }
                 }
             }

@@ -41,7 +41,7 @@
                 <Button Content="Load from Rawr4 Repository..." Padding="8,3" Grid.Row="4" Name="BT_LoadRawrRepo" Click="BT_LoadRawrRepo_Click" />
                 <ScrollViewer Name="SV_RecentChars" Grid.Row="5" Padding="0" VerticalScrollBarVisibility="Auto">
                     <StackPanel Name="SP_RecentChars" Margin="0">
-                        
+                        <TextBlock Text="Recent Character Files" TextAlignment="Center" FontWeight="Bold" Margin="4,2" />
                     </StackPanel>
                 </ScrollViewer>
             </Grid>
