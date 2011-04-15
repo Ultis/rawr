@@ -118,7 +118,10 @@ namespace Rawr.HealPriest
                 gtList.AddRange(MakeGemmingTemplatesFor(reckless, quick, purified, quick, ember, -1));
                 // Mastery > Intellect and Spirit
                 gtList.AddRange(MakeGemmingTemplatesFor(artful, fractured, zen, fractured, ember, -1));
-
+                // Intellect > Crit & Spirit + Revitalizing
+                gtList.AddRange(MakeGemmingTemplatesFor(brilliant, potent, purified, brilliant, revitalizing, 1));
+                // Intellect > Haste & Spirit + Revitalizing
+                gtList.AddRange(MakeGemmingTemplatesFor(brilliant, reckless, purified, brilliant, revitalizing, 1));
 
                 gtList.Add(new GemmingTemplate()
                 {
@@ -174,7 +177,7 @@ namespace Rawr.HealPriest
             character.ActiveBuffsAdd("Power Word: Fortitude");
             character.ActiveBuffsAdd("Rampage");
             character.ActiveBuffsAdd("Resistance Aura");
-            character.ActiveBuffsAdd("Totem of Wrath (Spell Power)");
+            character.ActiveBuffsAdd("Totemic Wrath");
             character.ActiveBuffsAdd("Vampiric Touch");
             character.ActiveBuffsAdd("Wrath of Air Totem");
         }
@@ -574,43 +577,43 @@ namespace Rawr.HealPriest
             get
             {
                 if (_customChartNames == null)
-                    _customChartNames = new string[] { "MP5 Sources", "Spell HpS", "Spell HpM", "Spell AoE HpS", "Spell AoE HpM"}; //, "Relative Stat Values" };
+                    _customChartNames = new string[] { "Mana Regen Sources" }; // , "Spell HpS", "Spell HpM", "Spell AoE HpS", "Spell AoE HpM"}; //, "Relative Stat Values" };
                 return _customChartNames;
             }
         }
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
-            return null;
-            /*List<ComparisonCalculationBase> comparisonList = new List<ComparisonCalculationBase>();
+            List<ComparisonCalculationBase> comparisonList = new List<ComparisonCalculationBase>();
             ComparisonCalculationBase comparison;
-            CharacterCalculationsHealPriest p;
-            List<Spell> spellList;
+            CalculationOptionsHealPriest calcOpts = character.CalculationOptions as CalculationOptionsHealPriest;
+            if (calcOpts == null)
+                return null;
+            CharacterCalculationsHealPriest calcs = GetCharacterCalculations(character) as CharacterCalculationsHealPriest;
+            if (calcs == null)
+                return null;
 
             _currentChartTotal = 0;
             switch (chartName)
             {
-                case "MP5 Sources":
+                case "Mana Regen Sources":
                     _currentChartName = chartName;
-                    CharacterCalculationsHealPriest mscalcs = GetCharacterCalculations(character) as CharacterCalculationsHealPriest;
-                    BaseSolver mssolver;
-                    if ((character.CalculationOptions as CalculationOptionsHealPriest).Role == eRole.CUSTOM)
-                        mssolver = new AdvancedSolver(mscalcs.BasicStats, character);
-                    else
-                        mssolver = new Solver(mscalcs.BasicStats, character);
-                    mssolver.Calculate(mscalcs);
-                    foreach (Solver.ManaSource Source in mssolver.ManaSources)
+                    PriestSolver solver = new PriestSolverDisciplineRaid(calcs, calcOpts, true);
+                    solver.Solve();
+                    
+                    foreach (ManaSource manaSource in solver.ManaSources)
                     {
                         comparison = CreateNewComparisonCalculation();
-                        comparison.Name = Source.Name;
-                        comparison.SubPoints[0] = Source.Value * 5;
-                        _currentChartTotal += comparison.SubPoints[0];
-                        comparison.OverallPoints = comparison.SubPoints[0];
+                        comparison.Name = manaSource.Name;
+                        comparison.SubPoints[1] = manaSource.Value * 5f; // Convert to Mp5
+                        _currentChartTotal += comparison.SubPoints[1];
+                        comparison.OverallPoints = comparison.SubPoints[1];
                         comparison.Equipped = false;
                         comparisonList.Add(comparison);
                     }
                     return comparisonList.ToArray();
-                case "Spell AoE HpS":
+                #region old old old
+                /*case "Spell AoE HpS":
                     _currentChartName = chartName;
                     p = GetCharacterCalculations(character) as CharacterCalculationsHealPriest;
                     spellList = new List<Spell>();
@@ -726,72 +729,12 @@ namespace Rawr.HealPriest
                     }
 
                     return comparisonList.ToArray();
-
-                case "Relative Stat Values":
-                    _currentChartName = chartName;
-                    CharacterCalculationsHealPriest calcsBase = GetCharacterCalculations(character) as CharacterCalculationsHealPriest;
-                    CharacterCalculationsHealPriest calcsIntellect = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Intellect = 50 } }) as CharacterCalculationsHealPriest;
-                    CharacterCalculationsHealPriest calcsSpirit = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Spirit = 50 } }) as CharacterCalculationsHealPriest;
-                    CharacterCalculationsHealPriest calcsMP5 = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Mp5 = 50 } }) as CharacterCalculationsHealPriest;
-                    CharacterCalculationsHealPriest calcsSpellPower = GetCharacterCalculations(character, new Item() { Stats = new Stats() { SpellPower = 50 } }) as CharacterCalculationsHealPriest;
-                    CharacterCalculationsHealPriest calcsHaste = GetCharacterCalculations(character, new Item() { Stats = new Stats() { HasteRating = 50 } }) as CharacterCalculationsHealPriest;
-                    CharacterCalculationsHealPriest calcsCrit = GetCharacterCalculations(character, new Item() { Stats = new Stats() { CritRating = 50 } }) as CharacterCalculationsHealPriest;
-                    CharacterCalculationsHealPriest calcsSta = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Stamina = 50 } }) as CharacterCalculationsHealPriest;
-                    CharacterCalculationsHealPriest calcsRes = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Resilience = 50 } }) as CharacterCalculationsHealPriest;
-
-                    return new ComparisonCalculationBase[] {
-                        new ComparisonCalculationHealPriest() { Name = "1 Intellect",
-                            OverallPoints = (calcsIntellect.OverallPoints - calcsBase.OverallPoints) / 50,
-                            HealPoints = (calcsIntellect.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
-                            RegenPoints = (calcsIntellect.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
-                            HastePoints = (calcsIntellect.SubPoints[2] - calcsBase.SubPoints[2]) / 50
-                        },
-                        new ComparisonCalculationHealPriest() { Name = "1 Spirit",
-                            OverallPoints = (calcsSpirit.OverallPoints - calcsBase.OverallPoints) / 50,
-                            HealPoints = (calcsSpirit.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
-                            RegenPoints = (calcsSpirit.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
-                            HastePoints = (calcsSpirit.SubPoints[2] - calcsBase.SubPoints[2]) / 50
-                        },
-                        new ComparisonCalculationHealPriest() { Name = "1 MP5",
-                            OverallPoints = (calcsMP5.OverallPoints - calcsBase.OverallPoints) / 50,
-                            HealPoints = (calcsMP5.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
-                            RegenPoints = (calcsMP5.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
-                            HastePoints = (calcsMP5.SubPoints[2] - calcsBase.SubPoints[2]) / 50
-                        },
-                        new ComparisonCalculationHealPriest() { Name = "1 Spell Power",
-                            OverallPoints = (calcsSpellPower.OverallPoints - calcsBase.OverallPoints) / 50,
-                            HealPoints = (calcsSpellPower.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
-                            RegenPoints = (calcsSpellPower.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
-                            HastePoints = (calcsSpellPower.SubPoints[2] - calcsBase.SubPoints[2]) / 50
-                        },
-                        new ComparisonCalculationHealPriest() { Name = "1 Haste",
-                            OverallPoints = (calcsHaste.OverallPoints - calcsBase.OverallPoints) / 50,
-                            HealPoints = (calcsHaste.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
-                            RegenPoints = (calcsHaste.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
-                            HastePoints = (calcsHaste.SubPoints[2] - calcsBase.SubPoints[2]) / 50
-                        },
-                        new ComparisonCalculationHealPriest() { Name = "1 Crit",
-                            OverallPoints = (calcsCrit.OverallPoints - calcsBase.OverallPoints) / 50,
-                            HealPoints = (calcsCrit.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
-                            RegenPoints = (calcsCrit.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
-                            HastePoints = (calcsCrit.SubPoints[2] - calcsBase.SubPoints[2]) / 50
-                        },
-                        new ComparisonCalculationHealPriest() { Name = "1 Stamina",
-                            OverallPoints = (calcsSta.OverallPoints - calcsBase.OverallPoints) / 50,
-                            HealPoints = (calcsSta.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
-                            RegenPoints = (calcsSta.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
-                            HastePoints = (calcsSta.SubPoints[2] - calcsBase.SubPoints[2]) / 50
-                        },
-                        new ComparisonCalculationHealPriest() { Name = "1 Resilience",
-                            OverallPoints = (calcsRes.OverallPoints - calcsBase.OverallPoints) / 50,
-                            HealPoints = (calcsRes.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
-                            RegenPoints = (calcsRes.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
-                            HastePoints = (calcsRes.SubPoints[2] - calcsBase.SubPoints[2]) / 50
-                        }};
+                    */
+                #endregion
                 default:
                     _currentChartName = null;
                     return new ComparisonCalculationBase[0];
-            }*/
+            }
         }
 
         #endregion
@@ -809,7 +752,7 @@ namespace Rawr.HealPriest
             calc.BasicStats = stats;
             calc.Character = character;
 
-            PriestSolver solver = new PriestSolverDisciplineRaid(calc, calcOpts);
+            PriestSolver solver = new PriestSolverDisciplineRaid(calc, calcOpts, needsDisplayCalculations);
             solver.Solve();
             
             return calc;

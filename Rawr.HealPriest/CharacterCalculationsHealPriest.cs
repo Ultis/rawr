@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -179,7 +179,7 @@ namespace Rawr.HealPriest {
             CalculationOptionsHealPriest calcOpts = Character.CalculationOptions as CalculationOptionsHealPriest;
             if (calcOpts != null)
             {
-                PriestSolver solver = new PriestSolverDisciplineRaid(this, calcOpts);
+                PriestSolver solver = new PriestSolverDisciplineRaid(this, calcOpts, true);
                 solver.Solve();
                 dictValues.Add("Role", solver.Name);
                 dictValues.Add("Burst", this.BurstPoints.ToString("0"));

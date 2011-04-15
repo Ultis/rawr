@@ -15,6 +15,8 @@ namespace Rawr.HealPriest
         protected Character character;
         protected Stats stats;
 
+        public string Name { get; protected set; }
+
         public bool IsInstant { get; protected set; }
         public bool HasDirectDamage { get; protected set; }
         public bool HasOverTimeDamage { get; protected set; }
@@ -389,6 +391,8 @@ namespace Rawr.HealPriest
     {
         public SpellHeal(Character character, Stats stats)
         {
+            Name = "Heal";
+
             BaseDirectValue = 3.58699989318848f * BaseScalar85;
             BaseDirectCoefficient = 0.362f;
             BaseDirectVariation = 0.15f;
@@ -413,6 +417,8 @@ namespace Rawr.HealPriest
     {
         public SpellGreaterHeal(Character character, Stats stats)
         {
+            Name = "Greater Heal";
+
             BaseDirectValue = 9.56400012969971f * BaseScalar85;
             BaseDirectCoefficient = 0.967f;
             BaseDirectVariation = 0.15f;
@@ -437,6 +443,8 @@ namespace Rawr.HealPriest
     {
         public SpellFlashHeal(Character character, Stats stats)
         {
+            Name = "Flash Heal";
+
             BaseDirectValue = 7.17399978637695f * BaseScalar85;
             BaseDirectCoefficient = 0.725f;
             BaseDirectVariation = 0.15f;
@@ -461,6 +469,8 @@ namespace Rawr.HealPriest
     {
         public SpellBindingHeal(Character character, Stats stats)
         {
+            Name = "Binding Heal";
+
             BaseDirectValue = 5.74599981307983f * BaseScalar85;
             BaseDirectCoefficient = 0.544f;
             BaseDirectVariation = 0.25f;
@@ -488,6 +498,8 @@ namespace Rawr.HealPriest
     {
         public SpellSerenity(Character character, Stats stats)
         {
+            Name = "Holy Word Serenity";
+
             BaseDirectValue = 5.97700023651123f * BaseScalar85;
             BaseDirectCoefficient = 0.486f;
             BaseDirectVariation = 0.16f;
@@ -512,6 +524,8 @@ namespace Rawr.HealPriest
     {
         public SpellRenew(Character character, Stats stats)
         {
+            Name = "Renew";
+
             BaseOverTimeValue = 1.29499995708466f * BaseScalar85;
             BaseOverTimeCoefficient = 0.131f;
             BaseOverTimeTickPeriod = 3f;
@@ -585,6 +599,8 @@ namespace Rawr.HealPriest
     {
         public SpellLightwell(Character character, Stats stats)
         {
+            Name = "Lightwell";
+
             BaseOverTimeValue = 3.04500007629395f * BaseScalar85;
             BaseOverTimeCoefficient = 0.308f;
             BaseOverTimeTickPeriod = 2f;
@@ -638,6 +654,8 @@ namespace Rawr.HealPriest
     {
         public SpellPenance(Character character, Stats stats)
         {
+            Name = "Penance";
+
             BaseDirectValue = 3.1800000667572f * BaseScalar85;
             BaseDirectCoefficient = 0.321f;
             BaseDirectVariation = 0.122f;
@@ -679,6 +697,8 @@ namespace Rawr.HealPriest
     {
         public SpellDivineHymn(Character character, Stats stats)
         {
+            Name = "Divine Hymn";
+
             BaseDirectValue = 4.24200010299683f * BaseScalar85;
             BaseDirectCoefficient = 0.429f;
             BaseDirectVariation = 0.0f;
@@ -743,6 +763,8 @@ namespace Rawr.HealPriest
 
         protected void Initialize(Character character, Stats stats, int targets)
         {
+            Name = "Prayer of Mending";
+
             BaseDirectValue = 3.14400005340576f * BaseScalar85;
             BaseDirectCoefficient = 0.318f;
             BaseDirectVariation = 0.0f;
@@ -761,7 +783,7 @@ namespace Rawr.HealPriest
             healBonus = (1f + stats.BonusHealingDoneMultiplier)
                 * (1f + PriestInformation.GetTwinDisciplines(character.PriestTalents.TwinDisciplines));
             if (character.PriestTalents.GlyphofPrayerOfMending && Targets == 1)
-                healBonus *= 1.2f;
+                healBonus *= 1.6f;
             base.UpdateSpell();
             Cooldown = BaseCooldown;
             DirectHealCalcs();
@@ -784,6 +806,8 @@ namespace Rawr.HealPriest
 
         protected void Initialize(Character character, Stats stats, int targets)
         {
+            Name = "Prayer of Healing";
+
             BaseDirectValue = 3.35899996757507f * BaseScalar85;
             BaseDirectCoefficient = 0.34f;
             BaseDirectVariation = 0.055f;
@@ -844,6 +868,8 @@ namespace Rawr.HealPriest
 
         protected void Initialize(Character character, Stats stats, int targets)
         {
+            Name = "Holy Nova";
+
             BaseDirectValue = 0.316000014543533f * BaseScalar85;
             BaseDirectCoefficient = 0.143f;
             BaseDirectVariation = 0.15f;
@@ -881,6 +907,8 @@ namespace Rawr.HealPriest
 
         protected void Initialize(Character character, Stats stats, int targets)
         {
+            Name = "Circle of Healing";
+
             BaseDirectValue = 2.57100009918213f * BaseScalar85;
             BaseDirectCoefficient = 0.26f;
             BaseDirectVariation = 0.10f;
@@ -922,6 +950,8 @@ namespace Rawr.HealPriest
 
         protected void Initialize(Character character, Stats stats, int targets)
         {
+            Name = "Holy Word Sanctuary";
+
             BaseDirectValue = 0.345999985933304f * BaseScalar85;
             BaseDirectCoefficient = 0.031f;
             BaseDirectVariation = 0.173f;
@@ -967,6 +997,8 @@ namespace Rawr.HealPriest
     {
         public SpellPowerWordShield(Character character, Stats stats)
         {
+            Name = "Power Word Shield";
+
             BaseDirectValue = 8.60879993438721f * BaseScalar85;
             BaseDirectCoefficient = 0.87f;
             BaseDirectVariation = 0.0f;
@@ -1013,7 +1045,10 @@ namespace Rawr.HealPriest
     public class SpellResurrection : SpellCata
     {
         public SpellResurrection(Character character, Stats stats)
-        {            BaseCastTime = 10.0f;
+        {
+            Name = "Resurrection";
+
+            BaseCastTime = 10.0f;
             BaseManaCost = 0.6f;
 
             SetPriestInformation(character, stats);

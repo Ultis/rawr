@@ -67,6 +67,11 @@ namespace Rawr.HealPriest
             return points * 1f;
         }
 
+        public static float GetRenewedHope(int points)
+        {
+            return points * 0.05f;
+        }
+
         public static float GetBorrowedTime(int points)
         {
             if (points == 1)
@@ -90,6 +95,11 @@ namespace Rawr.HealPriest
         public static float GetDivineAegis(int points)
         {
             return points * 0.1f;
+        }
+
+        public static float GetGrace(int points)
+        {
+            return points * 0.04f;
         }
 
         /*           HOLEY               */
@@ -125,6 +135,15 @@ namespace Rawr.HealPriest
             return points * 0.15f;
         }
 
+        public static float GetDarkness(int points)
+        {
+            return points * 0.01f;
+        }
+
+        public static float GetVeiledShadows(int points)
+        {
+            return points * 30f;
+        }
     }
 
     /*
