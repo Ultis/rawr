@@ -42,7 +42,7 @@ namespace Rawr.Elemental.Spells
             totalCoef += args.Stats.BonusDamageMultiplierLavaBurst; // t9 4 piece
             critModifier += new float[] { 0f, 0.06f, 0.12f, 0.24f }[args.Talents.LavaFlows];
             spellPower += args.Stats.SpellFireDamageRating;
-            if (args.Talents.GlyphofLava)
+            if (args.Talents.GlyphofLavaBurst)
                 spCoef += .1f;
             totalCoef *= 1 + args.Stats.BonusFireDamageMultiplier;
 

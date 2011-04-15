@@ -271,7 +271,7 @@ namespace Rawr.Warlock
         {
             base.FinalizeModifiers();
             SpecialModifiers.AddMultiplicativeMultiplier(.05f * Mommy.Talents.DarkArts);
-            if (Mommy.Talents.GlyphFelguard)
+            if (Mommy.Talents.GlyphOfFelguard)
             {
                 SpecialModifiers.AddMultiplicativeMultiplier(.05f);
             }
@@ -359,7 +359,7 @@ namespace Rawr.Warlock
 
             // multipliers go into SpecialModifiers
             SpecialModifiers.AddMultiplicativeMultiplier(Stats.BonusFireDamageMultiplier);
-            if (Mommy.Talents.GlyphImp)
+            if (Mommy.Talents.GlyphOfImp)
             {
                 SpecialModifiers.AddMultiplicativeMultiplier(.2f);
             }
@@ -389,7 +389,7 @@ namespace Rawr.Warlock
 
             // multipliers go into SpecialModifiers
             SpecialModifiers.AddMultiplicativeMultiplier(Stats.BonusShadowDamageMultiplier);
-            if (Mommy.Talents.GlyphLashPain)
+            if (Mommy.Talents.GlyphOfLashPain)
             {
                 SpecialModifiers.AddMultiplicativeMultiplier(0.25f);
             }

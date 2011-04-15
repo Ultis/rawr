@@ -613,7 +613,7 @@ namespace Rawr.Warlock
                 SpellTree.Destruction,
                 .07f, // percentBaseMana,
                 (2.5f - talentValues[mommy.Talents.Bane]) * (mommy.Warlock_T11_2P ? 0.9f : 1f), // baseCastTime,
-                mommy.Talents.GlyphChaosBolt ? 10f : 12f, // cooldown,
+                mommy.Talents.GlyphOfChaosBolt ? 10f : 12f, // cooldown,
                 0f, // recastPeriod,
                 WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // avgDirectDamage
                 COEFF, // directCoefficient
@@ -664,7 +664,7 @@ namespace Rawr.Warlock
                 SpellTree.Destruction,
                 .16f, // percentBaseMana,
                 0f, // baseCastTime,
-                COOLDOWN - (mommy.Talents.GlyphConflag ? 2f : 0f), // cooldown,
+                COOLDOWN - (mommy.Talents.GlyphOfConflagrate ? 2f : 0f), // cooldown,
                 0f, // recastPeriod,
                 0f, // avgDirectDamage, will be set in SetDamageStats
                 0f, // directCoefficient, already accounted for by Immolate AvgTickDamage
@@ -827,7 +827,7 @@ namespace Rawr.Warlock
                 .1f, // percent base mana
                 0f, // cast time
                 0f, // cooldown
-                mommy.Talents.GlyphCoA ? 28f : 24f, // recast period
+                mommy.Talents.GlyphOfBaneOfAgony ? 28f : 24f, // recast period
                 0f, // damage per tick - set below
                 0f, // num ticks - set below
                 COEFF, // tick coefficient
@@ -841,9 +841,9 @@ namespace Rawr.Warlock
             // BoA consists of 4 weak ticks, 4 medium ticks, 4 strong ticks, and if glyphed, 2 very strong ticks.
             // Additional ticks from haste are weak ticks. TODO: this is wrong.
             float baseDamage = WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE * 12f;
-            float baseNumTicks = mommy.Talents.GlyphCoA ? 14f : 12f;
+            float baseNumTicks = mommy.Talents.GlyphOfBaneOfAgony ? 14f : 12f;
             NumTicks = (int)((baseNumTicks / mommy.AvgHaste) + 0.5f);
-            BaseTickDamage = baseDamage * (1f + (NumTicks - baseNumTicks) * .042f + (mommy.Talents.GlyphCoA ? .3325f : 0f)) / NumTicks;
+            BaseTickDamage = baseDamage * (1f + (NumTicks - baseNumTicks) * .042f + (mommy.Talents.GlyphOfBaneOfAgony ? .3325f : 0f)) / NumTicks;
         }
     }
 
@@ -1110,7 +1110,7 @@ namespace Rawr.Warlock
                                               missFollowingHitUprate.GetValue(), missChance * hitChance, 
                                               0f, missChance * missChance);
 
-            AvgBonus = (Mommy.Talents.GlyphHaunt ? .23f : .2f) * uprate;
+            AvgBonus = (Mommy.Talents.GlyphOfHaunt ? .23f : .2f) * uprate;
             return AvgBonus;
         }
     }
@@ -1144,7 +1144,7 @@ namespace Rawr.Warlock
                 WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * TICKSCALE, // baseTickDamage,
                 (int)(((5f + (mommy.Talents.Inferno > 0 ? 2f : 0f)) / mommy.AvgHaste) + 0.5f), // numTicks,
                 TICKCOEFF, // tickCoefficient,
-                (mommy.Talents.GlyphImmolate ? .1f : 0f)
+                (mommy.Talents.GlyphOfImmolate ? .1f : 0f)
                     + mommy.Talents.ImprovedImmolate * .1f, // addedTickMultiplier,
                 true, // canTickCrit,
                 0f, // bonusCritChance,
@@ -1226,7 +1226,7 @@ namespace Rawr.Warlock
                 0f, // recastPeriod,
                 WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // avgDirectDamage,
                 COEFF, // directCoefficient,
-                (1f + (mommy.Talents.GlyphIncinerate ? .05f : 0f)) * (1f + mommy.Talents.ShadowAndFlame * .04f), // addedDirectMultiplier,
+                (1f + (mommy.Talents.GlyphOfIncinerate ? .05f : 0f)) * (1f + mommy.Talents.ShadowAndFlame * .04f), // addedDirectMultiplier,
                 0f, // bonusCritChance,
                 1f) // bonus crit multiplier
         { }
@@ -1361,7 +1361,7 @@ namespace Rawr.Warlock
                 false) // can miss
         { 
             ManaCost = (mommy.CalcHealth() * .15f) * (1.2f + mommy.Talents.ImprovedLifeTap * .1f);
-            GCDBonus = mommy.Talents.GlyphLifeTap ? 0.5f : 0f;
+            GCDBonus = mommy.Talents.GlyphOfLifeTap ? 0.5f : 0f;
         }
 
         public override bool IsCastable()
@@ -1442,7 +1442,7 @@ namespace Rawr.Warlock
                 mommy, // options
                 MagicSchool.Shadow, // magic school
                 SpellTree.Destruction, // spell tree
-                .1f * (mommy.Talents.GlyphSB ? 0.85f : 1f), // percent base mana
+                .1f * (mommy.Talents.GlyphOfShadowBolt ? 0.85f : 1f), // percent base mana
                 GetBaseCastTime(mommy), // cast time
                 0f, // cooldown
                 0f, // recast period
@@ -1458,7 +1458,7 @@ namespace Rawr.Warlock
     {
         public static bool IsCastable(WarlockTalents talents, List<string> priorities)
         {
-            return priorities.Contains("Corruption") && (talents.GlyphCorruption || talents.Nightfall > 0);
+            return priorities.Contains("Corruption") && (talents.GlyphOfCorruption || talents.Nightfall > 0);
         }
 
         public ShadowBolt_Instant(CharacterCalculationsWarlock mommy) : base(mommy)
@@ -1472,7 +1472,7 @@ namespace Rawr.Warlock
             // should instead factor in the probability that it will proc twice
             // (or more) while casting higher priority spells.
             float procChance = Mommy.Talents.Nightfall * .02f;
-            if (Mommy.Talents.GlyphCorruption)
+            if (Mommy.Talents.GlyphOfCorruption)
             {
                 procChance += .04f;
             }
@@ -1559,7 +1559,7 @@ namespace Rawr.Warlock
                 MagicSchool.Shadow,
                 SpellTree.Affliction,
                 .15f, // percent base mana
-                mommy.Talents.GlyphUA ? 1.3f : 1.5f, // cast time
+                mommy.Talents.GlyphOfUnstableAffliction ? 1.3f : 1.5f, // cast time
                 0f, // cooldown
                 15f, // recast period
                 WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // tick damage
@@ -1570,7 +1570,7 @@ namespace Rawr.Warlock
                 mommy.Talents.EverlastingAffliction * .05f, // bonus crit chance
                 1f) // bonus crit multiplier
         { 
-            if (mommy.Talents.GlyphUA)
+            if (mommy.Talents.GlyphOfUnstableAffliction)
             {
                 GCDBonus = .2f;
             }

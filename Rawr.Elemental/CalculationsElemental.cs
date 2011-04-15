@@ -510,7 +510,7 @@ namespace Rawr.Elemental {
 
             // Water shield assumed
             statsTotal.Mp5 += 100;
-            if (character.ShamanTalents.GlyphofWaterMastery) statsTotal.Mp5 += 30;
+            if (character.ShamanTalents.GlyphofWaterShield) statsTotal.Mp5 += 30;
 
             return statsTotal;
         }

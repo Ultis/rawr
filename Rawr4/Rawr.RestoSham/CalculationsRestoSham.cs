@@ -1242,7 +1242,7 @@ namespace Rawr.RestoSham
             totalStats.SpellHaste = (1 + StatConversion.GetSpellHasteFromRating(totalStats.HasteRating, CharacterClass.Shaman)) * (1 + totalStats.SpellHaste) - 1;
             totalStats.Mp5 += (StatConversion.GetSpiritRegenSec(totalStats.Spirit, totalStats.Intellect, CharacterClass.Shaman)) * 2.5f;
             if (calcOpts.WaterShield)
-                totalStats.Mp5 += 354 * (character.ShamanTalents.GlyphofWaterMastery ? 1.5f : 1f);
+                totalStats.Mp5 += 354 * (character.ShamanTalents.GlyphofWaterShield ? 1.5f : 1f);
                 //totalStats.Mp5 += (character.ShamanTalents.GlyphofWaterMastery ? 1350 : 900) + 900f * totalStats.WaterShieldIncrease;
             totalStats.SpellCrit = .022f + 
                 StatConversion.GetSpellCritFromIntellect(totalStats.Intellect, CharacterClass.Shaman) + 

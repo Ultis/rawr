@@ -882,7 +882,7 @@ namespace Rawr.Warlock
             float cooldown = 180f;
             
             float duration = 30f;
-            if (Talents.GlyphMetamorphosis)
+            if (Talents.GlyphOfMetamorphosis)
             {
                 duration += 6f;
             }
