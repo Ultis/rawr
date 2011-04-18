@@ -87,39 +87,40 @@ namespace Rawr.UI
                     switch ((int)Sort)
                     {
                         case 3: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[0] + a.SubPoints[1]); break; }
-                        case 4: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[0] + a.SubPoints[2]); break; }
-                        default: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[1] + a.SubPoints[2]); break; }
+                        case 4: { subPointCompare = (b.SubPoints[0] + b.SubPoints[2]).CompareTo(a.SubPoints[0] + a.SubPoints[2]); break; }
+                        default: { subPointCompare = (b.SubPoints[1] + b.SubPoints[2]).CompareTo(a.SubPoints[1] + a.SubPoints[2]); break; }
                     }
                 }
                 else if (b.SubPoints.Length == 4)
                 {
                     switch ((int)Sort)
                     {
-                        case 3: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[0] + a.SubPoints[1]); break; }
-                        case 4: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[0] + a.SubPoints[2]); break; }
-                        case 5: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[0] + a.SubPoints[3]); break; }
-                        case 6: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[1] + a.SubPoints[2]); break; }
-                        case 7: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[1] + a.SubPoints[2]); break; }
-                        default: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[2] + a.SubPoints[3]); break; }
+                        case 4: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[0] + a.SubPoints[1]); break; }
+                        case 5: { subPointCompare = (b.SubPoints[0] + b.SubPoints[2]).CompareTo(a.SubPoints[0] + a.SubPoints[2]); break; }
+                        case 6: { subPointCompare = (b.SubPoints[0] + b.SubPoints[3]).CompareTo(a.SubPoints[0] + a.SubPoints[3]); break; }
+                        case 7: { subPointCompare = (b.SubPoints[1] + b.SubPoints[2]).CompareTo(a.SubPoints[1] + a.SubPoints[2]); break; }
+                        case 8: { subPointCompare = (b.SubPoints[1] + b.SubPoints[2]).CompareTo(a.SubPoints[1] + a.SubPoints[2]); break; }
+                        default: { subPointCompare = (b.SubPoints[2] + b.SubPoints[3]).CompareTo(a.SubPoints[2] + a.SubPoints[3]); break; }
                     }
                 }
-                else /*if (calcs[0].SubPoints.Length == 5)*/
+                // Note a Subpoints Length of greater than 5 would mean we would enter here by default if this was just an else (...)
+                // and that would throw off the case values.
+                else if (b.SubPoints.Length == 5) 
                 {
                     switch ((int)Sort)
                     {
-                        case 3: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[0] + a.SubPoints[1]); break; }
-                        case 4: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[0] + a.SubPoints[2]); break; }
-                        case 5: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[0] + a.SubPoints[3]); break; }
-                        case 6: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[0] + a.SubPoints[4]); break; }
-                        case 7: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[1] + a.SubPoints[2]); break; }
-                        case 8: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[1] + a.SubPoints[3]); break; }
-                        case 9: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[1] + a.SubPoints[4]); break; }
-                        case 10: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[2] + a.SubPoints[3]); break; }
-                        case 11: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[2] + a.SubPoints[4]); break; }
-                        default: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[3] + a.SubPoints[4]); break; }
+                        case 5: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[0] + a.SubPoints[1]); break; }
+                        case 6: { subPointCompare = (b.SubPoints[0] + b.SubPoints[2]).CompareTo(a.SubPoints[0] + a.SubPoints[2]); break; }
+                        case 7: { subPointCompare = (b.SubPoints[0] + b.SubPoints[3]).CompareTo(a.SubPoints[0] + a.SubPoints[3]); break; }
+                        case 8: { subPointCompare = (b.SubPoints[0] + b.SubPoints[4]).CompareTo(a.SubPoints[0] + a.SubPoints[4]); break; }
+                        case 9: { subPointCompare = (b.SubPoints[1] + b.SubPoints[2]).CompareTo(a.SubPoints[1] + a.SubPoints[2]); break; }
+                        case 10: { subPointCompare = (b.SubPoints[1] + b.SubPoints[3]).CompareTo(a.SubPoints[1] + a.SubPoints[3]); break; }
+                        case 11: { subPointCompare = (b.SubPoints[1] + b.SubPoints[4]).CompareTo(a.SubPoints[1] + a.SubPoints[4]); break; }
+                        case 12: { subPointCompare = (b.SubPoints[2] + b.SubPoints[3]).CompareTo(a.SubPoints[2] + a.SubPoints[3]); break; }
+                        case 13: { subPointCompare = (b.SubPoints[2] + b.SubPoints[4]).CompareTo(a.SubPoints[2] + a.SubPoints[4]); break; }
+                        default: { subPointCompare = (b.SubPoints[3] + b.SubPoints[4]).CompareTo(a.SubPoints[3] + a.SubPoints[4]); break; }
                     }
                 }
-
                 if (subPointCompare != 0) { return subPointCompare; }
 
                 if (b.OverallPoints != a.OverallPoints) { return b.OverallPoints.CompareTo(a.OverallPoints); }
