@@ -28,6 +28,12 @@ namespace Rawr.HealPriest
     }
     public static class PriestInformation
     {
+        public static float DisciplineMasteryBase = 8f;
+        public static float DisciplineMasteryEffect = 0.025f;
+
+        public static float HolyMasteryBase = 8f;
+        public static float HolyMasteryEffect = 0.0125f;
+
         public static float GetInnerFireSpellPowerBonus(Character character)
         {
             float InnerFireSpellPowerBonus = 532;
@@ -131,6 +137,11 @@ namespace Rawr.HealPriest
         }
 
         public static float GetTomeOfLight(int points)
+        {
+            return points * 0.15f;
+        }
+
+        public static float GetHolyConcentration(int points)
         {
             return points * 0.15f;
         }

@@ -28,19 +28,4 @@ namespace Rawr.HealPriest
             return System.Convert.ToDouble(value) / 100d;
         }
     }
-    public class eRoleConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            Type origType = value.GetType();
-            if (targetType == typeof(int)    && origType == typeof(string)) return System.Convert.ToInt32(value);
-            return value;
-        }
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            Type origType = value.GetType();
-            if (targetType == typeof(int)    && origType == typeof(string)) return System.Convert.ToInt32(value);
-            return value;
-        }
-    }
 }

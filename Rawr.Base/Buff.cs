@@ -864,22 +864,6 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { "Mage Class Armor" }),
                 AllowedClasses = new List<CharacterClass> { CharacterClass.Mage }
             });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Inner Fire",
-                Group = "Class Buffs",
-                Stats = { PriestInnerFire = 1f },
-                ConflictingBuffs = new List<string>(new string[] { "Priest Class Armor" }),
-                AllowedClasses = new List<CharacterClass> { CharacterClass.Priest }
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Inner Will (NYI)",
-                Group = "Class Buffs",
-                Stats = { PriestInnerFire = 1f },
-                ConflictingBuffs = new List<string>(new string[] { "Priest Class Armor" }),
-                AllowedClasses = new List<CharacterClass> { CharacterClass.Priest }
-            });
             #endregion
 
             #region Temp Power Boosts

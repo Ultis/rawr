@@ -275,9 +275,6 @@ namespace Rawr
         JudgementCDReduction,
         RighteousVengeanceCanCrit,
         #endregion
-        #region Added by Priests  [Verified Jothay 2011-03-29]
-        PriestInnerFire,
-        #endregion
         #region Added by Rogues   [Verified Jothay 2011-03-29]
         Rogue_T11_2P,
         Rogue_T11_4P,
@@ -2126,16 +2123,6 @@ namespace Rawr
         {
             get { return _rawNoStackData[(int)NonStackingStat.RighteousVengeanceCanCrit]; }
             set { _rawNoStackData[(int)NonStackingStat.RighteousVengeanceCanCrit] = value; }
-        }
-        #endregion
-        #region Added by Priest
-        [DefaultValueAttribute(0f)]
-        [DisplayName("Inner Fire (Priest)")]
-        [Category("Priest")]
-        public float PriestInnerFire
-        {
-            get { return _rawNoStackData[(int)NonStackingStat.PriestInnerFire]; }
-            set { _rawNoStackData[(int)NonStackingStat.PriestInnerFire] = value; }
         }
         #endregion
         #region Added by Rogues

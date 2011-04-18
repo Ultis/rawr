@@ -19,7 +19,8 @@ namespace Rawr.HealPriest
             serializer.Serialize(writer, this);
             return xml.ToString();
         }
-
+        private string _Model = PriestModels.GetDefault();
+        public string Model { get { return _Model; } set { _Model = value; OnPropertyChanged("Model"); } }
         private float _FSRRatio = 93f;
         public float FSRRatio { get { return _FSRRatio; } set { _FSRRatio = value; OnPropertyChanged("FSRRatio"); } }
         private float _FightLengthSeconds = 480f;

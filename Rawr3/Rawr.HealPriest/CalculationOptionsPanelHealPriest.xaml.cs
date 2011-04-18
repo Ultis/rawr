@@ -58,17 +58,19 @@ namespace Rawr.HealPriest
             calcOpts = Character.CalculationOptions as CalculationOptionsHealPriest;
             // Model Specific Code
             //
+            cbRotation.ItemsSource = PriestModels.Models;
+            cbRotation.SelectedItem = calcOpts.Model;
             _loadingCalculationOptions = false;
-            CalculationOptionsPanelHealPriest_PropertyChanged(null, new PropertyChangedEventArgs("Role"));
+            CalculationOptionsPanelHealPriest_PropertyChanged(null, new PropertyChangedEventArgs("Model"));
         }
 
         void CalculationOptionsPanelHealPriest_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (_loadingCalculationOptions) { return; }
             // This would handle any special changes, especially combobox assignments, but not when the pane is trying to load
-/*            if (e.PropertyName == "Role") {
+            if (e.PropertyName == "Model") {
                 // Do some code
-                bool isCustom = calcOpts.Role == eRole.CUSTOM;
+                bool isCustom = false; //calcOpts. == eRole.CUSTOM;
                 numFlashHealCast.IsEnabled = isCustom;
                 numBindingHealCast.IsEnabled = isCustom;
                 numGreaterHealCast.IsEnabled = isCustom;
@@ -82,7 +84,7 @@ namespace Rawr.HealPriest
                 numDivineHymnCast.IsEnabled = isCustom;
                 numDispelCast.IsEnabled = isCustom;
                 numMDCast.IsEnabled = isCustom;
-            }*/
+            }
             //
             if (Character != null) { Character.OnCalculationsInvalidated(); }
         }

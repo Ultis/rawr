@@ -13,7 +13,7 @@ namespace Rawr.HealPriest
     public abstract class SpellCata
     {
         protected Character character;
-        protected Stats stats;
+        protected StatsPriest stats;
 
         public string Name { get; protected set; }
 
@@ -50,7 +50,7 @@ namespace Rawr.HealPriest
         public float BaseCooldown { get; protected set; }
         public float Cooldown { get; protected set; }
 
-        public virtual void SetPriestInformation(Character character, Stats stats) { this.character = character; this.stats = stats;  UpdateSpell(); }
+        public virtual void SetPriestInformation(Character character, StatsPriest stats) { this.character = character; this.stats = stats;  UpdateSpell(); }
         
         public virtual void UpdateSpell() {
             HasDirectDamage = false; HasDirectHeal = false; HasAbsorb = false; HasOverTimeDamage = false; HasOverTimeHeal = false;
@@ -121,10 +121,6 @@ namespace Rawr.HealPriest
 
     public abstract class HealSpell : SpellCata
     {
-        protected float DiscMastery = 0f;
-        protected float HolyMastery = 0f;
-        protected ePriestSpec ps = ePriestSpec.Spec_ERROR;
-
         public float DirectHealMinHit { get; protected set; }
         public float DirectHealMaxHit { get; protected set; }
         public float DirectHealMinCrit { get; protected set; }
@@ -188,20 +184,10 @@ namespace Rawr.HealPriest
             return ((DirectHealAvg + AbsorbAvg + hot + hhot) / ManaCost) * targets;
         }
 
-        public override void SetPriestInformation(Character character, Stats stats)
+        public override void SetPriestInformation(Character character, StatsPriest stats)
         {
             this.character = character;
             this.stats = stats;
-
-            ps = PriestSpec.GetPriestSpec(character.PriestTalents);
-            if (ps == ePriestSpec.Spec_Disc)
-            {
-                DiscMastery = (8f + StatConversion.GetMasteryFromRating(stats.MasteryRating)) * 0.025f;
-            }
-            else if (ps == ePriestSpec.Spec_Holy)
-            {
-                HolyMastery = (8f + StatConversion.GetMasteryFromRating(stats.MasteryRating)) * 0.0125f;
-            }
             UpdateSpell();
         }
 
@@ -341,7 +327,7 @@ namespace Rawr.HealPriest
 
         protected void DivineAegis()
         {
-            float da = PriestInformation.GetDivineAegis(character.PriestTalents.DivineAegis) * (1f + DiscMastery);
+            float da = PriestInformation.GetDivineAegis(character.PriestTalents.DivineAegis) * (1f + stats.ShieldDiscipline);
             AbsorbMinCrit = DirectHealMinCrit * da;
             AbsorbMaxCrit = DirectHealMaxCrit * da;
             AbsorbAvgCrit = DirectHealAvgCrit * da;
@@ -354,8 +340,8 @@ namespace Rawr.HealPriest
             EoL_TickPeriod = 1;
             EoL_Ticks = 6;
             EoL_Duration = EoL_TickPeriod * EoL_Ticks;
-            EoL_Hit = DirectHealAvgHit * HolyMastery / EoL_Ticks;
-            EoL_Crit = DirectHealAvgCrit * HolyMastery / EoL_Ticks;
+            EoL_Hit = DirectHealAvgHit * stats.EchoofLight / EoL_Ticks;
+            EoL_Crit = DirectHealAvgCrit * stats.EchoofLight / EoL_Ticks;
             EoL_Avg = EoL_Hit * (1f - CritChance) + EoL_Crit * CritChance;
             HasOverTimeHeal = true;
         }
@@ -376,11 +362,11 @@ namespace Rawr.HealPriest
             DirectHealAvgCrit = (DirectHealMinCrit + DirectHealMaxCrit) / 2;
             DirectHealAvg = DirectHealAvgHit * (1f - CritChance) + DirectHealAvgCrit * CritChance;
 
-            if (ps == ePriestSpec.Spec_Disc)            
+            if (stats.PriestSpec == ePriestSpec.Spec_Disc)            
             {
                 DivineAegis();
             }
-            else if (ps == ePriestSpec.Spec_Holy)
+            else if (stats.PriestSpec == ePriestSpec.Spec_Holy)
             {
                 EchoOfLight();
             }
@@ -389,7 +375,7 @@ namespace Rawr.HealPriest
 
     public class SpellHeal : DirectHealSpell
     {
-        public SpellHeal(Character character, Stats stats)
+        public SpellHeal(Character character, StatsPriest stats)
         {
             Name = "Heal";
 
@@ -415,7 +401,7 @@ namespace Rawr.HealPriest
 
     public class SpellGreaterHeal : DirectHealSpell
     {
-        public SpellGreaterHeal(Character character, Stats stats)
+        public SpellGreaterHeal(Character character, StatsPriest stats)
         {
             Name = "Greater Heal";
 
@@ -441,7 +427,7 @@ namespace Rawr.HealPriest
     
     public class SpellFlashHeal : DirectHealSpell
     {
-        public SpellFlashHeal(Character character, Stats stats)
+        public SpellFlashHeal(Character character, StatsPriest stats)
         {
             Name = "Flash Heal";
 
@@ -467,7 +453,7 @@ namespace Rawr.HealPriest
 
     public class SpellBindingHeal : DirectHealSpell
     {
-        public SpellBindingHeal(Character character, Stats stats)
+        public SpellBindingHeal(Character character, StatsPriest stats)
         {
             Name = "Binding Heal";
 
@@ -496,7 +482,7 @@ namespace Rawr.HealPriest
 
     public class SpellSerenity : DirectHealSpell
     {
-        public SpellSerenity(Character character, Stats stats)
+        public SpellSerenity(Character character, StatsPriest stats)
         {
             Name = "Holy Word Serenity";
 
@@ -522,7 +508,7 @@ namespace Rawr.HealPriest
 
     public class SpellRenew : DirectHealSpell
     {
-        public SpellRenew(Character character, Stats stats)
+        public SpellRenew(Character character, StatsPriest stats)
         {
             Name = "Renew";
 
@@ -559,7 +545,7 @@ namespace Rawr.HealPriest
 
             if (character.PriestTalents.DivineAegis > 0)
             {
-                float da = PriestInformation.GetDivineAegis(character.PriestTalents.DivineAegis) * (1f + DiscMastery);
+                float da = PriestInformation.GetDivineAegis(character.PriestTalents.DivineAegis) * (1f + stats.ShieldDiscipline);
                 AbsorbMinCrit = AbsorbMaxCrit = AbsorbAvgCrit = OverTimeHealCrit * da;
                 AbsorbAvg = AbsorbAvgHit * (1f - CritChance) + AbsorbAvgCrit * CritChance;
                 HasAbsorb = true;
@@ -571,11 +557,11 @@ namespace Rawr.HealPriest
                 DirectHealMinCrit = DirectHealMaxCrit = DirectHealAvgCrit = OverTimeHealCrit * OverTimeTicks;
                 DirectHealAvg = DirectHealAvgHit * (1f - CritChance) + DirectHealAvgCrit * CritChance;
                 HasDirectHeal = true;
-                if (ps == ePriestSpec.Spec_Disc)
+                if (stats.PriestSpec == ePriestSpec.Spec_Disc)
                 {
                     DivineAegis();
                 }
-                else if (ps == ePriestSpec.Spec_Holy)
+                else if (stats.PriestSpec == ePriestSpec.Spec_Holy)
                 {
                     EchoOfLight();
                 }
@@ -597,7 +583,7 @@ namespace Rawr.HealPriest
 
     public class SpellLightwell : DirectHealSpell
     {
-        public SpellLightwell(Character character, Stats stats)
+        public SpellLightwell(Character character, StatsPriest stats)
         {
             Name = "Lightwell";
 
@@ -652,7 +638,7 @@ namespace Rawr.HealPriest
 
     public class SpellPenance : DirectHealSpell
     {
-        public SpellPenance(Character character, Stats stats)
+        public SpellPenance(Character character, StatsPriest stats)
         {
             Name = "Penance";
 
@@ -695,7 +681,7 @@ namespace Rawr.HealPriest
 
     public class SpellDivineHymn : DirectHealSpell
     {
-        public SpellDivineHymn(Character character, Stats stats)
+        public SpellDivineHymn(Character character, StatsPriest stats)
         {
             Name = "Divine Hymn";
 
@@ -749,19 +735,19 @@ namespace Rawr.HealPriest
 
     public class SpellPrayerOfMending : DirectHealSpell
     {
-        public SpellPrayerOfMending(Character character, Stats stats)
+        public SpellPrayerOfMending(Character character, StatsPriest stats)
         {
             MaxTargets = 5;
             Initialize(character, stats, MaxTargets);
         }
 
-        public SpellPrayerOfMending(Character character, Stats stats, int targets)
+        public SpellPrayerOfMending(Character character, StatsPriest stats, int targets)
         {
             MaxTargets = 5;
             Initialize(character, stats, targets);
         }
 
-        protected void Initialize(Character character, Stats stats, int targets)
+        protected void Initialize(Character character, StatsPriest stats, int targets)
         {
             Name = "Prayer of Mending";
 
@@ -792,19 +778,19 @@ namespace Rawr.HealPriest
 
     public class SpellPrayerOfHealing : DirectHealSpell
     {
-        public SpellPrayerOfHealing(Character character, Stats stats)
+        public SpellPrayerOfHealing(Character character, StatsPriest stats)
         {
             MaxTargets = 5;
             Initialize(character, stats, MaxTargets);
         }
 
-        public SpellPrayerOfHealing(Character character, Stats stats, int targets)
+        public SpellPrayerOfHealing(Character character, StatsPriest stats, int targets)
         {
             MaxTargets = 5;
             Initialize(character, stats, targets);
         }
 
-        protected void Initialize(Character character, Stats stats, int targets)
+        protected void Initialize(Character character, StatsPriest stats, int targets)
         {
             Name = "Prayer of Healing";
 
@@ -827,9 +813,9 @@ namespace Rawr.HealPriest
                 * td;
             base.UpdateSpell();
             DirectHealCalcs();
-            if (ps == ePriestSpec.Spec_Disc)
+            if (stats.PriestSpec == ePriestSpec.Spec_Disc)
             {   // Prayer of Healing has Absorbs for Hit and Crit
-                float da = PriestInformation.GetDivineAegis(character.PriestTalents.DivineAegis) * (1f + DiscMastery);
+                float da = PriestInformation.GetDivineAegis(character.PriestTalents.DivineAegis) * (1f + stats.ShieldDiscipline);
                 AbsorbMinHit = DirectHealMinHit * da;
                 AbsorbMaxHit = DirectHealMaxHit * da;
                 AbsorbAvgHit = DirectHealAvgHit * da;
@@ -854,19 +840,19 @@ namespace Rawr.HealPriest
 
     public class SpellHolyNova : DirectHealSpell
     {
-        public SpellHolyNova(Character character, Stats stats)
+        public SpellHolyNova(Character character, StatsPriest stats)
         {
             MaxTargets = 5;
             Initialize(character, stats, MaxTargets);
         }
 
-        public SpellHolyNova(Character character, Stats stats, int targets)
+        public SpellHolyNova(Character character, StatsPriest stats, int targets)
         {
             MaxTargets = 5;
             Initialize(character, stats, targets);
         }
 
-        protected void Initialize(Character character, Stats stats, int targets)
+        protected void Initialize(Character character, StatsPriest stats, int targets)
         {
             Name = "Holy Nova";
 
@@ -893,19 +879,19 @@ namespace Rawr.HealPriest
     public class SpellCircleOfHealing : DirectHealSpell
     {
 
-        public SpellCircleOfHealing(Character character, Stats stats)
+        public SpellCircleOfHealing(Character character, StatsPriest stats)
         {
             MaxTargets = character.PriestTalents.GlyphofCircleOfHealing ? 6 : 5;
             Initialize(character, stats, MaxTargets);           
         }
 
-        public SpellCircleOfHealing(Character character, Stats stats, int targets)
+        public SpellCircleOfHealing(Character character, StatsPriest stats, int targets)
         {
             MaxTargets = character.PriestTalents.GlyphofCircleOfHealing ? 6 : 5;
             Initialize(character, stats, targets);
         }
 
-        protected void Initialize(Character character, Stats stats, int targets)
+        protected void Initialize(Character character, StatsPriest stats, int targets)
         {
             Name = "Circle of Healing";
 
@@ -936,19 +922,19 @@ namespace Rawr.HealPriest
     {
         private float ticks = 9;
 
-        public SpellSanctuary(Character character, Stats stats)
+        public SpellSanctuary(Character character, StatsPriest stats)
         {
             MaxTargets = 6;
             Initialize(character, stats, MaxTargets);
         }
 
-        public SpellSanctuary(Character character, Stats stats, int targets)
+        public SpellSanctuary(Character character, StatsPriest stats, int targets)
         {
             MaxTargets = 6;
             Initialize(character, stats, targets);
         }
 
-        protected void Initialize(Character character, Stats stats, int targets)
+        protected void Initialize(Character character, StatsPriest stats, int targets)
         {
             Name = "Holy Word Sanctuary";
 
@@ -995,9 +981,9 @@ namespace Rawr.HealPriest
 
     public class SpellPowerWordShield : DirectHealSpell
     {
-        public SpellPowerWordShield(Character character, Stats stats)
+        public SpellPowerWordShield(Character character, StatsPriest stats)
         {
-            Name = "Power Word Shield";
+            Name = "Power Word: Shield";
 
             BaseDirectValue = 8.60879993438721f * BaseScalar85;
             BaseDirectCoefficient = 0.87f;
@@ -1014,7 +1000,7 @@ namespace Rawr.HealPriest
         {
             float shieldBonus = (1f + PriestInformation.GetImprovedPowerWordShield(character.PriestTalents.ImprovedPowerWordShield))
                 * (1f + PriestInformation.GetTwinDisciplines(character.PriestTalents.TwinDisciplines))
-                * (1f + DiscMastery);
+                * (1f + stats.ShieldDiscipline);
             float spellPowerBonus = stats.SpellPower * BaseDirectCoefficient;
 
             base.UpdateSpell();
@@ -1028,11 +1014,11 @@ namespace Rawr.HealPriest
                 DirectHealMinCrit = DirectHealMaxCrit = DirectHealAvgCrit = AbsorbAvgHit * 0.2f * CritMultiplier;
                 DirectHealAvg = DirectHealAvgHit * (1f - CritChance) + DirectHealAvgCrit * CritChance;
                 HasDirectHeal = true;
-                if (ps == ePriestSpec.Spec_Disc)
+                if (stats.PriestSpec == ePriestSpec.Spec_Disc)
                 {
                     DivineAegis();
                 }
-                else if (ps == ePriestSpec.Spec_Holy)
+                else if (stats.PriestSpec == ePriestSpec.Spec_Holy)
                 {
                     EchoOfLight();
                 }
@@ -1044,7 +1030,7 @@ namespace Rawr.HealPriest
 
     public class SpellResurrection : SpellCata
     {
-        public SpellResurrection(Character character, Stats stats)
+        public SpellResurrection(Character character, StatsPriest stats)
         {
             Name = "Resurrection";
 
@@ -1058,7 +1044,7 @@ namespace Rawr.HealPriest
 
     public class SpellGiftOfTheNaaru : DirectHealSpell
     {
-        public SpellGiftOfTheNaaru(Character character, Stats stats)
+        public SpellGiftOfTheNaaru(Character character, StatsPriest stats)
         {
             SetPriestInformation(character, stats);
             CritChance = 0f;

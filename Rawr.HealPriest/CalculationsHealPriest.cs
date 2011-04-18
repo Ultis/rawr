@@ -172,7 +172,6 @@ namespace Rawr.HealPriest
             character.ActiveBuffsAdd("Blessing of Might (Mp5)");
             character.ActiveBuffsAdd("Devotion Aura");
             character.ActiveBuffsAdd("Flask of the Draconic Mind");
-            character.ActiveBuffsAdd("Inner Fire");
             character.ActiveBuffsAdd("Intellect Food");
             character.ActiveBuffsAdd("Power Word: Fortitude");
             character.ActiveBuffsAdd("Rampage");
@@ -180,6 +179,7 @@ namespace Rawr.HealPriest
             character.ActiveBuffsAdd("Totemic Wrath");
             character.ActiveBuffsAdd("Vampiric Touch");
             character.ActiveBuffsAdd("Wrath of Air Totem");
+            character.ActiveBuffsAdd("Mana Tide Totem");
         }
 
         private Dictionary<string, Color> _subPointNameColors = null;
@@ -190,7 +190,7 @@ namespace Rawr.HealPriest
                 _subPointNameColors = new Dictionary<string, Color>();
                 switch (_currentChartName)
                 {
-                    case "MP5 Sources":
+                    /*case "MP5 Sources":
                         _subPointNameColors.Add(string.Format("MP5 Sources ({0} total)", _currentChartTotal.ToString("0")), Color.FromArgb(255, 0, 0, 255));
                         break;
                     case "Spell HpS":
@@ -198,7 +198,7 @@ namespace Rawr.HealPriest
                         break;
                     case "Spell HpM":
                         _subPointNameColors.Add("HpM", Color.FromArgb(255, 255, 0, 0));
-                        break;
+                        break;*/
                     default:
                         _subPointNameColors.Add("HPS-Burst", Color.FromArgb(255, 255, 0, 0));
                         _subPointNameColors.Add("HPS-Sustained", Color.FromArgb(255, 0, 0, 255));
@@ -343,6 +343,8 @@ namespace Rawr.HealPriest
                 _relevantGlyphs.Add("Glyph of Prayer of Mending");
                 _relevantGlyphs.Add("Glyph of Divine Accuracy");
                 _relevantGlyphs.Add("Glyph of Smite");
+                _relevantGlyphs.Add("Glyph of Shadowfiend");
+                _relevantGlyphs.Add("Glyph of Fortitude");
 
             }
             return _relevantGlyphs;
@@ -369,7 +371,11 @@ namespace Rawr.HealPriest
         public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot)
         {
             if (slot == ItemSlot.Ranged) return false;
-            if (enchant.ShieldsOnly) return false;
+            if (slot == ItemSlot.OffHand)
+            {
+                if (enchant.ShieldsOnly) return false;
+                if (enchant.Slot == ItemSlot.OneHand || enchant.Slot == ItemSlot.MainHand) return false;
+            }
             return base.EnchantFitsInSlot(enchant, character, slot);
         }
 
@@ -411,7 +417,6 @@ namespace Rawr.HealPriest
                 BonusHealthMultiplier = stats.BonusHealthMultiplier,
                 BonusManaPotionEffectMultiplier = stats.BonusManaPotionEffectMultiplier,
                 ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
-                PriestInnerFire = stats.PriestInnerFire,
                 Healed = stats.Healed,
 
                 ManaRestore = stats.ManaRestore,
@@ -454,6 +459,7 @@ namespace Rawr.HealPriest
                 || se.Trigger == Trigger.HealingSpellHit
                 || se.Trigger == Trigger.SpellCast
                 || se.Trigger == Trigger.SpellCrit
+                || se.Trigger == Trigger.DamageOrHealingDone
                 || se.Trigger == Trigger.Use)
             {
                 return _HasRelevantStats(se.Stats) || (se.Stats._rawSpecialEffectDataSize > 0 && _HasRelevantStats(se.Stats._rawSpecialEffectData[0].Stats));
@@ -469,8 +475,7 @@ namespace Rawr.HealPriest
                 + stats.BonusSpellPowerMultiplier
                 + stats.BonusIntellectMultiplier + stats.BonusSpiritMultiplier + stats.BonusManaMultiplier + stats.BonusCritHealMultiplier
                 + stats.HealingReceivedMultiplier + stats.BonusHealingDoneMultiplier + stats.BonusManaPotionEffectMultiplier
-                + stats.ManaRestoreFromMaxManaPerSecond + stats.PriestInnerFire
-                + stats.Healed
+                + stats.ManaRestoreFromMaxManaPerSecond + stats.Healed
 
                 + stats.ManaRestore + stats.SpellsManaCostReduction + stats.HolySpellsManaCostReduction + stats.HighestStat
                 + stats.ShieldFromHealedProc
@@ -572,12 +577,13 @@ namespace Rawr.HealPriest
         private float _currentChartTotal = 0;
 
         private string[] _customChartNames = null;
+        private const string _customChartManaSources = "Mana Regen Sources";
         public override string[] CustomChartNames
         {
             get
             {
                 if (_customChartNames == null)
-                    _customChartNames = new string[] { "Mana Regen Sources" }; // , "Spell HpS", "Spell HpM", "Spell AoE HpS", "Spell AoE HpM"}; //, "Relative Stat Values" };
+                    _customChartNames = new string[] { _customChartManaSources }; // , "Spell HpS", "Spell HpM", "Spell AoE HpS", "Spell AoE HpM"}; //, "Relative Stat Values" };
                 return _customChartNames;
             }
         }
@@ -596,15 +602,16 @@ namespace Rawr.HealPriest
             _currentChartTotal = 0;
             switch (chartName)
             {
-                case "Mana Regen Sources":
+                case _customChartManaSources:
                     _currentChartName = chartName;
-                    PriestSolver solver = new PriestSolverDisciplineRaid(calcs, calcOpts, true);
+                    PriestSolver solver = PriestModels.GetModel(calcs, calcOpts, true);
                     solver.Solve();
                     
                     foreach (ManaSource manaSource in solver.ManaSources)
                     {
                         comparison = CreateNewComparisonCalculation();
                         comparison.Name = manaSource.Name;
+                        comparison.Description = manaSource.Description;
                         comparison.SubPoints[1] = manaSource.Value * 5f; // Convert to Mp5
                         _currentChartTotal += comparison.SubPoints[1];
                         comparison.OverallPoints = comparison.SubPoints[1];
@@ -746,45 +753,51 @@ namespace Rawr.HealPriest
             if (character == null) { return calc; }
             CalculationOptionsHealPriest calcOpts = character.CalculationOptions as CalculationOptionsHealPriest;
             if (calcOpts == null) { return calc; }
-            //
-            Stats stats = GetCharacterStats(character, additionalItem);
 
-            calc.BasicStats = stats;
+            calc.BasicStats = GetCharacterStats(character, additionalItem) as StatsPriest;
             calc.Character = character;
 
-            PriestSolver solver = new PriestSolverDisciplineRaid(calc, calcOpts, needsDisplayCalculations);
+            PriestSolver solver = PriestModels.GetModel(calc, calcOpts, needsDisplayCalculations);
             solver.Solve();
             
             return calc;
         }
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
-        {
-            
+        {           
             CalculationOptionsHealPriest calcOpts = character.CalculationOptions as CalculationOptionsHealPriest;
-            Stats statsRace = BaseStats.GetBaseStats(character);
-            statsRace.BonusIntellectMultiplier = 0.05f;     // Cloth bonus
-            Stats statsBaseGear = GetItemStats(character, additionalItem);
-            Stats statsBuffs = GetBuffsStats(character, calcOpts);
 
-            ePriestSpec ps = PriestSpec.GetPriestSpec(character.PriestTalents);
-            if (ps == ePriestSpec.Spec_ERROR)
-                throw new Exception("Unpossible Talent Spec!");
-
-            Stats statsTalents = new Stats()
+            StatsPriest statsTotal = new StatsPriest()
             {
-                BonusIntellectMultiplier = (ps == ePriestSpec.Spec_Disc) ? 0.15f : 0f,
-                BonusHealingDoneMultiplier = (ps == ePriestSpec.Spec_Holy) ? 0.15f : 0f,
-                SpellHaste = character.PriestTalents.Darkness * 0.01f,
-                SpellCombatManaRegeneration = 0.5f + character.PriestTalents.HolyConcentration * 0.15f,
+                SpellHaste = PriestInformation.GetDarkness(character.PriestTalents.Darkness),
+                InnerFire = true,
+                BonusIntellectMultiplier = 0.05f,   // Cloth bonus.
+                PriestSpec = PriestSpec.GetPriestSpec(character.PriestTalents),
             };
+            if (statsTotal.PriestSpec == ePriestSpec.Spec_Disc)
+            {
+                statsTotal.SpellCombatManaRegeneration = 0.5f;
+                statsTotal.BonusIntellectMultiplier = 0.15f;
+            }
+            else if (statsTotal.PriestSpec == ePriestSpec.Spec_Holy)
+            {
+                statsTotal.SpellCombatManaRegeneration = 0.5f + PriestInformation.GetHolyConcentration(character.PriestTalents.HolyConcentration);
+                statsTotal.BonusHealingDoneMultiplier = 0.15f;
+            }
+            else if (statsTotal.PriestSpec == ePriestSpec.Spec_ERROR)
+            {
+                throw new Exception("Unpossible Talent Spec!");
+            }
 
-            Stats statsTotal = statsBaseGear + statsBuffs + statsRace + statsTalents;
+            statsTotal.Accumulate(BaseStats.GetBaseStats(character));
+            statsTotal.Accumulate(GetItemStats(character, additionalItem));
+            statsTotal.Accumulate(GetBuffsStats(character, calcOpts));
 
+          
             statsTotal.Stamina = (float)Math.Floor((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Intellect = (float)Math.Floor((statsTotal.Intellect) * (1 + statsTotal.BonusIntellectMultiplier));
             statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
-            statsTotal.SpellPower += (statsTotal.PriestInnerFire > 0 ? PriestInformation.GetInnerFireSpellPowerBonus(character) : 0) + (statsTotal.Intellect - 10);
+            statsTotal.SpellPower += (statsTotal.InnerFire ? PriestInformation.GetInnerFireSpellPowerBonus(character) : 0) + (statsTotal.Intellect - 10);
             statsTotal.SpellPower *= (1f + statsTotal.BonusSpellPowerMultiplier);
             statsTotal.Mana += StatConversion.GetManaFromIntellect(statsTotal.Intellect);
             statsTotal.Mana *= (1f + statsTotal.BonusManaMultiplier);
@@ -793,7 +806,17 @@ namespace Rawr.HealPriest
             statsTotal.SpellCrit += StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect)
                 + StatConversion.GetSpellCritFromRating(statsTotal.CritRating);
             statsTotal.SpellHaste = (1f + statsTotal.SpellHaste) * (1f + StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating)) - 1f;
-            statsTotal.Armor *= (1 + (statsTotal.PriestInnerFire > 0 ? PriestInformation.GetInnerFireArmorBonus(character) : 0));
+            statsTotal.Armor *= (1 + (statsTotal.InnerFire ? PriestInformation.GetInnerFireArmorBonus(character) : 0));
+
+            if (statsTotal.PriestSpec == ePriestSpec.Spec_Disc)
+            {
+                statsTotal.ShieldDiscipline = (PriestInformation.DisciplineMasteryBase + StatConversion.GetMasteryFromRating(statsTotal.MasteryRating)) * PriestInformation.DisciplineMasteryEffect;
+            }
+            else if (statsTotal.PriestSpec == ePriestSpec.Spec_Holy)
+            {
+                statsTotal.EchoofLight = (PriestInformation.HolyMasteryBase + StatConversion.GetMasteryFromRating(statsTotal.MasteryRating)) * PriestInformation.HolyMasteryEffect;
+            }
+
             return statsTotal;
         }
 
