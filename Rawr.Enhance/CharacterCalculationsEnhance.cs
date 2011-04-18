@@ -467,7 +467,7 @@ namespace Rawr.Enhance
             dictValues.Add("Agility", String.Format("{0}*Increases Attack Power by {1}\r\nIncreases Critical Hit chance by {2}%",
                 BasicStats.Agility.ToString("F0", CultureInfo.InvariantCulture),
                 ((BasicStats.Agility * 2f) - 20f).ToString("F0", CultureInfo.InvariantCulture),
-                (StatConversion.GetCritFromAgility((BasicStats.Agility), CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
+                (StatConversion.GetCritFromAgility(BasicStats.Agility, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
             dictValues.Add("Stamina", String.Format("{0}*Increase Health by {1}",
                 BasicStats.Stamina.ToString("F0", CultureInfo.InvariantCulture),
                 (StatConversion.GetHealthFromStamina(BasicStats.Stamina)).ToString("F0", CultureInfo.InvariantCulture)));
@@ -490,32 +490,32 @@ namespace Rawr.Enhance
             dictValues.Add("Attack Power", BasicStats.AttackPower.ToString("F0", CultureInfo.InvariantCulture));
             //dictValues.Add("Speed"
             dictValues.Add("Melee Haste", String.Format("{0}%*Haste Rating of {1} adds {2}% Haste",
-                (StatConversion.GetHasteFromRating(BasicStats.HasteRating, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture),  //need to factor in racials/buffs/talents that add plain haste (not rating) here
+                (StatConversion.GetHasteFromRating(BasicStats.HasteRating, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture),
                 BasicStats.HasteRating.ToString("F0", CultureInfo.InvariantCulture),
                 (StatConversion.GetHasteFromRating(BasicStats.HasteRating, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
             dictValues.Add("Melee Hit", String.Format("{0}%*Hit Rating of {1} adds {2}% Hit chance\r\n{3}% Draenei Hit Bonus",
-                (StatConversion.GetHitFromRating(BasicStats.HitRating) * 100f + DraeneiHitBonus * 100f).ToString("F2", CultureInfo.InvariantCulture),  //need to factor in racials/buffs/talents that add plain hit (not rating) here
+                (StatConversion.GetHitFromRating(BasicStats.HitRating) * 100f + DraeneiHitBonus * 100f).ToString("F2", CultureInfo.InvariantCulture),
                 BasicStats.HitRating.ToString("F0", CultureInfo.InvariantCulture),
                 (StatConversion.GetHitFromRating(BasicStats.HitRating) * 100f).ToString("F2", CultureInfo.InvariantCulture),
                 DraeneiHitBonus * 100f));
             dictValues.Add("Melee Crit", String.Format("{0}%*Crit Rating of {1} adds {2}% Crit chance",
-                (StatConversion.GetCritFromRating(BasicStats.CritRating, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture),  //need to factor in racials/buffs/talents that add plain crit (not rating) here
+                ((StatConversion.GetCritFromRating(BasicStats.CritRating, CharacterClass.Shaman) * 100f) + (StatConversion.GetCritFromAgility(BasicStats.Agility, CharacterClass.Shaman) * 100f)).ToString("F2", CultureInfo.InvariantCulture),
                 BasicStats.CritRating.ToString("F0", CultureInfo.InvariantCulture),
                 (StatConversion.GetCritFromRating(BasicStats.CritRating, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
             dictValues.Add("Expertise",getExpertiseString());// String.Format("{0} / {1}*Reduces chance to be dodged or parried by {2}% / {3}%\r\nExpertise Rating of {4} adds {5} Expertise",
 
             dictValues.Add("Spell Power", BasicStats.SpellPower.ToString("F0", CultureInfo.InvariantCulture));
             dictValues.Add("Spell Haste", String.Format("{0}%*Haste Rating of {1} adds {2}% Haste",
-                (StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture),  //need to factor in racials/buffs/talents that add plain haste (not rating) here
+                (StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture),
                 BasicStats.HasteRating.ToString("F0", CultureInfo.InvariantCulture),
                 (StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
             dictValues.Add("Spell Hit", String.Format("{0}%*Hit Rating of {1} adds {2}% Hit chance\r\n{3}% Draenei Hit Bonus",
-                (StatConversion.GetSpellHitFromRating(BasicStats.HitRating + ElemPrecMod) * 100f + DraeneiHitBonus * 100f).ToString("F2", CultureInfo.InvariantCulture),  //need to factor in racials/buffs/talents that add plain hit (not rating) here
+                (StatConversion.GetSpellHitFromRating(BasicStats.HitRating + ElemPrecMod) * 100f + DraeneiHitBonus * 100f).ToString("F2", CultureInfo.InvariantCulture),
                 (BasicStats.HitRating + ElemPrecMod).ToString("F0", CultureInfo.InvariantCulture),
                 (StatConversion.GetSpellHitFromRating(BasicStats.HitRating + ElemPrecMod) * 100f).ToString("F2", CultureInfo.InvariantCulture),
                 DraeneiHitBonus * 100f));
             dictValues.Add("Spell Crit", String.Format("{0}%*Crit Rating of {1} adds {2}% Crit chance",
-                (StatConversion.GetSpellCritFromRating(BasicStats.CritRating, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture),  //need to factor in racials/buffs/talents that add plain crit (not rating) here
+                ((StatConversion.GetSpellCritFromRating(BasicStats.CritRating, CharacterClass.Shaman) * 100f) + (StatConversion.GetSpellCritFromIntellect(BasicStats.Intellect, CharacterClass.Shaman) * 100f)).ToString("F2", CultureInfo.InvariantCulture),
                 BasicStats.CritRating.ToString("F0", CultureInfo.InvariantCulture),
                 (StatConversion.GetSpellCritFromRating(BasicStats.CritRating, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
             dictValues.Add("Combat Regen", String.Format("{0}*{0} mana regenerated every 5 seconds while in combat",
