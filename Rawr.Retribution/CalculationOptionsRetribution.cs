@@ -15,6 +15,7 @@ namespace Rawr.Retribution
             clone.Seal = Seal;
             clone.InqRefresh = InqRefresh;
             clone.SkipToCrusader = SkipToCrusader;
+            clone.NewRotation = NewRotation;
             return clone;
         }
 
