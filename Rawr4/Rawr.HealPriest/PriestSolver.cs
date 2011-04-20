@@ -50,6 +50,9 @@ namespace Rawr.HealPriest
                     MessageBox.Show(String.Format("Currently selected model might not work optimally due to:{0}", String.Join("\n", msg)));
                 }
             }*/
+
+            if (model == null)
+                throw new Exception("No model selection for Healing Priest. Not a good situation.");
             return model;
         }
 
@@ -82,6 +85,7 @@ namespace Rawr.HealPriest
         protected StatsPriest stats;
         protected CharacterCalculationsHealPriest calc;
         protected CalculationOptionsHealPriest calcOpts;
+        protected BossOptions bossOptions;
         protected bool verbose;
 
         protected float fightLength;
@@ -97,6 +101,7 @@ namespace Rawr.HealPriest
             this.stats = calc.BasicStats;
             this.calc = calc;
             this.calcOpts = calcOpts;
+            this.bossOptions = character.BossOptions;
             this.verbose = verbose;
 
             fightLength = calcOpts.FightLengthSeconds;
@@ -121,22 +126,19 @@ namespace Rawr.HealPriest
         }
 
         private float CalcShadowfiend(float mana)
-        {   // 3% mana every hit, 15s dura, 1.5s swing timer = 10 swings = 30% mana
+        {   // 3% mana every hit, 15s dura
+            // FIXME: 2s swing timer = 7.5 ~ 8 swings = 8*3 = 24% mana. Assume hasted by haste.
             float casts = (float)Math.Floor((fightLength - 30f) / (60f * 5f - PriestInformation.GetVeiledShadows(character.PriestTalents.VeiledShadows))) + 1f;
-            return mana * (0.03f * 10f) * casts / fightLength;
+            return mana * (0.03f * 8f) * casts / fightLength * (1f + calcOpts.Shadowfiend / 100f);
         }
 
-        private float CalcRapture(float mana, float procCooldown)
+        private float CalcRapture(float mana)
         {
-            return mana * PriestInformation.GetRapture(character.PriestTalents.Rapture) / procCooldown;
+            return mana * PriestInformation.GetRapture(character.PriestTalents.Rapture) / calcOpts.Rapture;
         }
 
         protected float CalcManaReg(float castsPerSecond, float critsPerSecond)
         {
-            // Gotta be rehashed later variables:
-            float raptureProcInterval = 30f;
-            float replenishmentUptime = 0.8f;
-
             // Other things
             bool bBloodElf = character.Race == CharacterRace.BloodElf;
 
@@ -164,16 +166,16 @@ namespace Rawr.HealPriest
 
             if (character.PriestTalents.Rapture > 0)
             {
-                tmpReg = CalcRapture(stats.Mana, raptureProcInterval);
+                tmpReg = CalcRapture(stats.Mana);
                 if (verbose)
-                    ManaSources.Add(new ManaSource("Rapture", String.Format("Assuming you gain the Rapture proc every {0} seconds", raptureProcInterval.ToString("0")), tmpReg));
+                    ManaSources.Add(new ManaSource("Rapture", String.Format("Assuming you gain the Rapture proc every {0} seconds", calcOpts.Rapture.ToString("0")), tmpReg));
                 manaReg += tmpReg;
             }
             if (stats.ManaRestoreFromMaxManaPerSecond > 0)
             {
-                tmpReg = stats.Mana * stats.ManaRestoreFromMaxManaPerSecond;
+                tmpReg = stats.Mana * stats.ManaRestoreFromMaxManaPerSecond * (calcOpts.Replenishment / 100f);
                 if (verbose)
-                    ManaSources.Add(new ManaSource("Replenishment", String.Format("Assuming an uptime of {0}%.", (replenishmentUptime * 100f).ToString("0.00")), tmpReg));
+                    ManaSources.Add(new ManaSource("Replenishment", String.Format("Assuming an uptime of {0}%.", calcOpts.Replenishment.ToString("0.00")), tmpReg));
                 manaReg += tmpReg;
             }
             if (bBloodElf)
@@ -184,60 +186,112 @@ namespace Rawr.HealPriest
                 manaReg += tmpReg;
             }
 
-            foreach (SpecialEffect se in stats.SpecialEffects())
+            if (calcOpts.ModelProcs)
             {
-                float uptime = 0;
-                if (se.Trigger == Trigger.Use)
+                foreach (SpecialEffect se in stats.SpecialEffects())
                 {
-                    uptime = se.GetAverageUptime(se.Cooldown, 1f);
-                }
-                else if (se.Trigger == Trigger.HealingSpellCast
-                    || se.Trigger == Trigger.HealingSpellCrit
-                    || se.Trigger == Trigger.SpellCast
-                    || se.Trigger == Trigger.SpellCrit
-                    || se.Trigger == Trigger.DamageOrHealingDone)
-                {
-                    uptime = se.GetAverageUptime(castsPerSecond, (se.Trigger == Trigger.HealingSpellCrit || se.Trigger == Trigger.SpellCrit) ? critsPerSecond : 1f);
-                }
-                if (se.Stats.Spirit > 0)
-                {   // Bonus Spirit
-                    float bonusSpirit = se.Stats.Spirit * (1f + stats.BonusSpiritMultiplier);
-                    tmpReg = CalcSpiritRegen(bonusSpirit, stats.Intellect, stats.SpellCombatManaRegeneration) * uptime;
-                    if (verbose)
-                        ManaSources.Add(new ManaSource(se.ToString(), String.Format("{0}% expected uptime", (uptime * 100f).ToString("0.00")), tmpReg));
-                    manaReg += tmpReg;
-                }
-                if (se.Stats.Intellect > 0)
-                {   // Bonus Intellect
-                    float bonusInt = se.Stats.Intellect * (1f + stats.BonusIntellectMultiplier);
-                    float bonusMana = StatConversion.GetManaFromIntellect(bonusInt) * (1f + stats.BonusManaMultiplier);
-                    float spiritReg = CalcSpiritRegen(stats.Spirit, stats.Intellect + bonusInt, stats.SpellCombatManaRegeneration) - spiritBaseRegen;
-                    float raptureReg = CalcRapture(bonusMana, raptureProcInterval);
-                    float replenishmentReg = bonusMana * stats.ManaRestoreFromMaxManaPerSecond;
-                    float shadowfiendReg = CalcShadowfiend(bonusMana);
-                    float bloodelfReg = bBloodElf ? bonusMana * 0.06f / 120 : 0;
-                    tmpReg = (spiritReg + replenishmentReg + raptureReg + shadowfiendReg + bloodelfReg) * uptime;
-                    if (verbose)
-                        ManaSources.Add(new ManaSource(se.ToString(), String.Format("{0}% expected uptime", (uptime * 100f).ToString("0.00")), tmpReg));
-                    manaReg += tmpReg;
-                }
-                if (se.Stats.BonusSpiritMultiplier > 0)
-                {   // Mana Tide
-                    // Do some assumptions about the shamans gearing. Lets assume that he stacked spirit in the same way we stacked our best secondary stat.
-                    // This may cause some issues which further buff our primary secondary stat, but oh well
-                    float maxSecondary = Math.Max(Math.Max(stats.CritRating, stats.HasteRating), Math.Max(stats.Spirit, stats.MasteryRating));
-                    float bonusSpirit = maxSecondary * (1f + se.Stats.BonusSpiritMultiplier);
-                    tmpReg = CalcSpiritRegen(bonusSpirit, stats.Intellect, stats.SpellCombatManaRegeneration) * uptime;
-                    if (verbose)
-                        ManaSources.Add(new ManaSource(se.ToString(), String.Format("{0}% expected uptime\n{1} Spirit bonus for duration", (uptime * 100f).ToString("0.00"), bonusSpirit.ToString("0")), tmpReg));
-                    manaReg += tmpReg;
+                    float uptime = 0;
+                    if (se.Trigger == Trigger.Use)
+                    {
+                        uptime = se.GetAverageUptime(se.Cooldown, 1f);
+                    }
+                    else if (se.Trigger == Trigger.HealingSpellCast
+                        || se.Trigger == Trigger.HealingSpellCrit
+                        || se.Trigger == Trigger.SpellCast
+                        || se.Trigger == Trigger.SpellCrit
+                        || se.Trigger == Trigger.DamageOrHealingDone)
+                    {
+                        uptime = se.GetAverageUptime(castsPerSecond, (se.Trigger == Trigger.HealingSpellCrit || se.Trigger == Trigger.SpellCrit) ? critsPerSecond : 1f);
+                    }
+                    if (se.Stats.Spirit > 0)
+                    {   // Bonus Spirit
+                        float bonusSpirit = se.Stats.Spirit * (1f + stats.BonusSpiritMultiplier);
+                        tmpReg = CalcSpiritRegen(bonusSpirit, stats.Intellect, stats.SpellCombatManaRegeneration) * uptime;
+                        if (verbose)
+                            ManaSources.Add(new ManaSource(se.ToString(), String.Format("{0}% expected uptime", (uptime * 100f).ToString("0.00")), tmpReg));
+                        manaReg += tmpReg;
+                    }
+                    if (se.Stats.Intellect > 0)
+                    {   // Bonus Intellect
+                        float bonusInt = se.Stats.Intellect * (1f + stats.BonusIntellectMultiplier);
+                        float bonusMana = StatConversion.GetManaFromIntellect(bonusInt) * (1f + stats.BonusManaMultiplier);
+                        float spiritReg = CalcSpiritRegen(stats.Spirit, stats.Intellect + bonusInt, stats.SpellCombatManaRegeneration) - spiritBaseRegen;
+                        float raptureReg = CalcRapture(bonusMana);
+                        float replenishmentReg = bonusMana * stats.ManaRestoreFromMaxManaPerSecond * (calcOpts.Replenishment / 100f);
+                        float shadowfiendReg = CalcShadowfiend(bonusMana);
+                        float bloodelfReg = bBloodElf ? bonusMana * 0.06f / 120 : 0;
+                        tmpReg = (spiritReg + replenishmentReg + raptureReg + shadowfiendReg + bloodelfReg) * uptime;
+                        if (verbose)
+                            ManaSources.Add(new ManaSource(se.ToString(), String.Format("{0}% expected uptime", (uptime * 100f).ToString("0.00")), tmpReg));
+                        manaReg += tmpReg;
+                    }
+                    if (se.Stats.BonusSpiritMultiplier > 0)
+                    {   // Mana Tide
+                        // Do some assumptions about the shamans gearing. Lets assume that he stacked spirit in the same way we stacked our best secondary stat.
+                        // This may cause some issues which further buff our primary secondary stat, but oh well
+                        float maxSecondary = Math.Max(Math.Max(stats.CritRating, stats.HasteRating), Math.Max(stats.Spirit, stats.MasteryRating));
+                        float bonusSpirit = maxSecondary * (1f + se.Stats.BonusSpiritMultiplier);
+                        tmpReg = CalcSpiritRegen(bonusSpirit, stats.Intellect, stats.SpellCombatManaRegeneration) * uptime;
+                        if (verbose)
+                            ManaSources.Add(new ManaSource(se.ToString(), String.Format("{0}% expected uptime\n{1} Spirit bonus for duration", (uptime * 100f).ToString("0.00"), bonusSpirit.ToString("0")), tmpReg));
+                        manaReg += tmpReg;
+                    }
                 }
             }
-
             return manaReg;
         }
 
         protected void DoCalcs()
+        {
+            float healed = 0;
+            float castTime = 0, baseCastTime = 0;
+            float manaCost = 0;
+            float critChance = 0;
+            
+            for (int x = 0; x < castSequence.Count; x++)
+            {
+                DirectHealSpell dhs = castSequence[x];
+                healed += dhs.HPC();
+                baseCastTime += dhs.IsInstant ? dhs.BaseGlobalCooldown : dhs.BaseCastTime;
+                castTime += dhs.IsInstant ? dhs.GlobalCooldown : dhs.CastTime;
+                manaCost += dhs.ManaCost;
+                critChance += dhs.CritChance;
+            }
+
+            float effectiveFightLength = bossOptions.BerserkTimer * calcOpts.ActivityRatio / 100f;
+            float repeats = effectiveFightLength / baseCastTime;
+            float castsPerSecond = castSequence.Count / baseCastTime;
+            float critsPerSecond = critChance / baseCastTime;
+
+            healed *= repeats;
+            baseCastTime *= repeats;
+            castTime *= repeats;
+            manaCost *= repeats;
+            critChance *= repeats;
+
+            float manaRegen = CalcManaReg(castsPerSecond, critsPerSecond);
+
+
+            float totalMana = (stats.Mana + stats.ManaRestore * (1f + stats.BonusManaPotionEffectMultiplier))
+                + manaRegen * calcOpts.FightLengthSeconds;
+
+            calc.BurstPoints = (healed / castTime);
+            calc.SustainPoints = (healed / baseCastTime) * (totalMana / manaCost);
+            calc.SurvPoints = 0;
+            calc.OverallPoints = calc.BurstPoints + calc.SustainPoints + calc.SurvPoints;
+
+            if (verbose)
+            {
+                List<string> modelInfo = new List<string>();
+                modelInfo.Add("The model uses the following spell rotation:");
+                for (int x = 0; x < castSequence.Count; x++)
+                    modelInfo.Add(castSequence[x].Name);
+
+                Name = String.Format("{0}*{1}", Name, String.Join("\n", modelInfo));
+            }
+        }
+
+        protected void DoCalcs2()
         {
             float burst = 0, sustain = 0;
             float castTime = 0, baseCastTime = 0;
@@ -247,11 +301,12 @@ namespace Rawr.HealPriest
             {
                 DirectHealSpell dhs = castSequence[x];
                 burst += dhs.HPC();
-                baseCastTime += dhs.IsInstant ? dhs.BaseGlobalCooldown : dhs.BaseCastTime + 0.2f;
-                castTime += dhs.IsInstant ? dhs.GlobalCooldown : dhs.CastTime + 0.2f;
+                baseCastTime += dhs.IsInstant ? dhs.BaseGlobalCooldown : dhs.BaseCastTime;
+                castTime += dhs.IsInstant ? dhs.GlobalCooldown : dhs.CastTime;
                 manaSustainUse += dhs.ManaCost;
                 critChance += dhs.CritChance;
             }
+            baseCastTime /= (calcOpts.ActivityRatio / 100f);
             sustain = burst / baseCastTime;
             burst /= castTime;
             manaSustainUse = manaSustainUse / baseCastTime;
@@ -260,17 +315,24 @@ namespace Rawr.HealPriest
 
             float manaRegen = CalcManaReg(castsPerSecond, critsPerSecond);
 
-            calc.BurstPoints = burst;
-
-            float missingMana = manaSustainUse - manaRegen;
-            float manaDrain = (stats.Mana + stats.ManaRestore) / missingMana;
-            float fullBurst = manaDrain / fightLength;
+            float manaMissing = manaSustainUse - manaRegen;
+            float fullBurst = ((stats.Mana + stats.ManaRestore) / manaMissing) / fightLength;
             float waitCast = 1f - fullBurst;
-            calc.SustainPoints = sustain * fullBurst
-                + sustain * ((manaRegen / missingMana) * waitCast);
+            if (waitCast < 0)
+                waitCast = 0;
+//            calc.SustainPoints = sustain * fullBurst
+//                + sustain * ((manaRegen / manaSustainUse) * waitCast);
 
-            if (calc.SustainPoints > calc.BurstPoints)
-                calc.SustainPoints = calc.BurstPoints;  // NOT FRIGGEN LIKELY EVER LOLZ
+//            if (calc.SustainPoints > calc.BurstPoints)
+//                calc.SustainPoints = calc.BurstPoints;
+            //calc.BurstPoints = burst * fullBurst;
+            //calc.SustainPoints = sustain * ((manaRegen / manaSustainUse) * waitCast);
+
+            calc.BurstPoints = burst;
+            if (fullBurst > 1)
+                calc.SustainPoints = calc.BurstPoints;
+            else
+                calc.SustainPoints = burst * fullBurst;
 
             calc.OverallPoints = calc.BurstPoints + calc.SustainPoints + calc.SurvPoints;
 
@@ -595,6 +657,12 @@ namespace Rawr.HealPriest
         public override void Solve()
         {
         }
+
+        public override List<string> MeetsRequirements()
+        {
+            List<string> faults = new List<string>();
+            return faults;
+        }
     }
 
     public class PriestSolverHolyRaid : PriestSolver
@@ -607,6 +675,12 @@ namespace Rawr.HealPriest
 
         public override void Solve()
         {
+        }
+
+        public override List<string> MeetsRequirements()
+        {
+            List<string> faults = new List<string>();
+            return faults;
         }
     }
 }

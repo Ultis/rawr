@@ -130,13 +130,13 @@ namespace Rawr.HealPriest {
             if (BasicStats.PriestSpec == ePriestSpec.Spec_Disc)
             {
                 masteryBase = PriestInformation.DisciplineMasteryBase;
-                masteryBonus = PriestInformation.DisciplineMasteryEffect;
+                masteryBonus = PriestInformation.DisciplineMasteryEffect * 100f;
                 s += String.Format("\n\nEach point of mastery increases the potency of Absorbs by an additional {0}%.", masteryBonus.ToString("0.00"));
             }
             else if (BasicStats.PriestSpec == ePriestSpec.Spec_Holy)
             {
                 masteryBase = PriestInformation.HolyMasteryBase;
-                masteryBonus = PriestInformation.HolyMasteryEffect;
+                masteryBonus = PriestInformation.HolyMasteryEffect * 100f;
                 s += String.Format("\n\nEach point of mastery provides an additional {0}% healing over 6 sec.", masteryBonus.ToString("0.00"));
             }
             dictValues["Mastery"] = String.Format("{0}%*{1}% from {2} Mastery Rating\n{3}% from {4} Base Mastery{5}",

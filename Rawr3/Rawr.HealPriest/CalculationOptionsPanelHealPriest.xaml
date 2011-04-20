@@ -37,15 +37,16 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="113*" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Name="LB_Surv" Text="Survivability" Margin="4,2" FontWeight="Bold" />
-                    <TextBlock Grid.Column="2" Name="LB_SurvVal" Text="{Binding Path=Survivability, StringFormat=\{0:0\}x}" Margin="4,2" TextAlignment="Right" />
-                    <Slider Grid.ColumnSpan="3" Grid.Row="1" Name="trkSurvivability" Margin="4,2" Height="22" Maximum="100" SmallChange="1" LargeChange="5" ToolTipService.ToolTip="Change this slider to tell Rawr how much you value your Health. Use 0-5% for PvE, 10-15% for PvP." Value="{Binding Path=Survivability, Mode=TwoWay}" />
+                    <TextBlock Name="LB_Surv" Text="Survivability" Margin="4,74,4,69" FontWeight="Bold" Visibility="Collapsed" Grid.Row="19" />
+                    <TextBlock Grid.Column="2" Name="LB_SurvVal" Text="{Binding Path=Survivability, StringFormat=\{0:0\}x}" Margin="4,74,4,69" TextAlignment="Right" Grid.Row="19" Visibility="Collapsed" />
+                    <Slider Grid.ColumnSpan="3" Grid.Row="19" Name="trkSurvivability" Margin="4,94,4,43" Height="22" Maximum="100" SmallChange="1" LargeChange="5" ToolTipService.ToolTip="Change this slider to tell Rawr how much you value your Health. Use 0-5% for PvE, 10-15% for PvP." Value="{Binding Path=Survivability, Mode=TwoWay}" Visibility="Collapsed" />
                     <TextBlock Grid.Row="2" Name="textBlock4" Text="Pick your Role:" Margin="4,2" Grid.ColumnSpan="3" FontWeight="Bold" />
                     <TextBlock Grid.Row="4" Name="textBlock5" Text="Spells" Margin="4,2" FontWeight="Bold" FontSize="11" />
                     <TextBlock Grid.Column="1" Grid.Row="4" Name="textBlock6" Text="Casts" Margin="4,2" FontWeight="Bold" FontSize="11" />
@@ -97,30 +98,31 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="290*" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Name="lblActivity" Text="Time in FSR" Margin="4,2" Grid.ColumnSpan="2" FontWeight="Bold" />
-                    <Slider Grid.ColumnSpan="3" Grid.Row="1" Name="trkActivity" Margin="4,2" Maximum="100" LargeChange="5" SmallChange="1" Value="{Binding Path=FSRRatio, Mode=TwoWay}" />
-                    <TextBlock Grid.Column="2" Name="lblActivityVal" Text="{Binding Path=FSRRatio, StringFormat=\{0:0\}%}" Margin="4,2" />
-                    <TextBlock Grid.Row="2" Name="lblReplenishment" Text="% Replenishment" Margin="4,2" Grid.ColumnSpan="2" FontWeight="Bold" />
+                    <TextBlock Name="lblActivity" Text="% Time spent casting" Margin="4,2" Grid.ColumnSpan="2" FontWeight="Bold" />
+                    <Slider Grid.ColumnSpan="3" Grid.Row="1" Name="trkActivity" Margin="4,2" Maximum="100" LargeChange="5" SmallChange="1" Value="{Binding Path=ActivityRatio, Mode=TwoWay}" Minimum="50" />
+                    <TextBlock Grid.Column="2" Name="lblActivityVal" Text="{Binding Path=ActivityRatio, StringFormat=\{0:0\}%}" Margin="4,2" />
+                    <TextBlock Grid.Row="2" Name="lblReplenishment" Text="% Uptime of Replenishment" Margin="4,2" Grid.ColumnSpan="2" FontWeight="Bold" />
                     <Slider Grid.ColumnSpan="3" Grid.Row="3" Name="trkReplenishment" Margin="4,2" Maximum="100" LargeChange="5" SmallChange="1" Value="{Binding Path=Replenishment, Mode=TwoWay}" />
                     <TextBlock Grid.Column="2" Grid.Row="2" Name="lblReplenishmentVal" Text="{Binding Path=Replenishment, StringFormat=\{0:0\}%}" Margin="4,2" />
-                    <TextBlock Grid.Row="4" Name="lblShadowfiend" Text="% Shadowfiend" Margin="4,2" Grid.ColumnSpan="2" FontWeight="Bold" />
+                    <TextBlock Grid.Row="4" Name="lblShadowfiend" Text="% Max Shadowfiend Effect" Margin="4,2" Grid.ColumnSpan="2" FontWeight="Bold" />
                     <Slider Grid.ColumnSpan="3" Grid.Row="5" Name="trkShadowfiend" Margin="4,2" Maximum="150" LargeChange="5" SmallChange="1" Value="{Binding Path=Shadowfiend, Mode=TwoWay}" />
                     <TextBlock Grid.Column="2" Grid.Row="4" Name="lblShadowfiendVal" Text="{Binding Path=Shadowfiend, StringFormat=\{0:0\}%}" Margin="4,2" />
-                    <TextBlock Grid.Row="6" Name="lblSerendipity" Text="% T5 2 Set Bonus" Margin="4,2" Grid.ColumnSpan="2" FontWeight="Bold" />
-                    <Slider Grid.ColumnSpan="3" Grid.Row="7" Name="trkSerendipity" Margin="4,2" SmallChange="1" LargeChange="5" Maximum="100" Value="{Binding Path=Serendipity, Mode=TwoWay}" />
-                    <TextBlock Grid.Column="2" Grid.Row="6" Name="lblSerendipityVal" Text="{Binding Path=Serendipity, StringFormat=\{0:0\}%}" Margin="4,2" />
-                    <TextBlock Grid.Row="8" Name="lblTestOfFaith" Text="% Test Of Faith or Improved Flash Heal" Margin="4,2" Grid.ColumnSpan="2" FontWeight="Bold" />
+                    <TextBlock Grid.Row="13" Name="lblSerendipity" Text="% T5 2 Set Bonus" Margin="4,42,4,270" FontWeight="Bold" Visibility="Collapsed" Grid.Column="1" />
+                    <Slider Grid.ColumnSpan="2" Grid.Row="13" Name="trkSerendipity" Margin="4,62,4,248" SmallChange="1" LargeChange="5" Maximum="100" Value="{Binding Path=Serendipity, Mode=TwoWay}" Visibility="Collapsed" Grid.Column="1" />
+                    <TextBlock Grid.Column="2" Grid.Row="13" Name="lblSerendipityVal" Text="{Binding Path=Serendipity, StringFormat=\{0:0\}%}" Margin="2,58,6,274" Visibility="Collapsed" />
+                    <TextBlock Grid.Row="8" Name="lblTestOfFaith" Text="% Heals landing with Test Of Faith bonus" Margin="4,2" Grid.ColumnSpan="2" FontWeight="Bold" />
                     <Slider Grid.ColumnSpan="3" Grid.Row="9" Name="trkTestOfFaith" Margin="4,2" SmallChange="1" LargeChange="5" Maximum="100" Value="{Binding Path=TestOfFaith, Mode=TwoWay}" />
                     <TextBlock Grid.Column="2" Grid.Row="8" Name="lblTestOfFaithVal" Text="{Binding Path=TestOfFaith, StringFormat=\{0:0\}%}" Margin="4,2" />
-                    <TextBlock Grid.Row="10" Name="lblRapture" Text="% Rapture" Margin="4,2" Grid.ColumnSpan="2" FontWeight="Bold" />
-                    <Slider Grid.ColumnSpan="3" Grid.Row="11" Name="trkRapture" Margin="4,2" SmallChange="1" LargeChange="5" Maximum="100" Value="{Binding Path=Rapture, Mode=TwoWay}" />
-                    <TextBlock Grid.Column="2" Grid.Row="10" Name="lblRaptureVal" Text="{Binding Path=Rapture, StringFormat=\{0:0\}%}" Margin="4,2" />
+                    <TextBlock Grid.Row="10" Name="lblRapture" Text="Time between Rapture procs (seconds)" Margin="4,2" Grid.ColumnSpan="2" FontWeight="Bold" />
+                    <Slider Grid.ColumnSpan="3" Grid.Row="11" Name="trkRapture" Margin="4,2" SmallChange="1" LargeChange="5" Maximum="60" Value="{Binding Path=Rapture, Mode=TwoWay}" Minimum="12" />
+                    <TextBlock Grid.Column="2" Grid.Row="10" Name="lblRaptureVal" Text="{Binding Path=Rapture, StringFormat=\{0:0\}}" Margin="4,2" />
                     <CheckBox Content="Model items with Procs and Use" Grid.ColumnSpan="3" Grid.Row="12" Name="cbModelProcs" Margin="4,2" IsChecked="{Binding Path=ModelProcs, Mode=TwoWay}" FontWeight="Bold" />
                 </Grid>
             </controls:TabItem>

@@ -19,21 +19,22 @@ namespace Rawr.HealPriest
             serializer.Serialize(writer, this);
             return xml.ToString();
         }
-        private string _Model = PriestModels.GetDefault();
-        public string Model { get { return _Model; } set { _Model = value; OnPropertyChanged("Model"); } }
-        private float _FSRRatio = 93f;
-        public float FSRRatio { get { return _FSRRatio; } set { _FSRRatio = value; OnPropertyChanged("FSRRatio"); } }
         private float _FightLengthSeconds = 480f;
         public float FightLengthSeconds { get { return _FightLengthSeconds; } set { _FightLengthSeconds = value; OnPropertyChanged("FightLengthSeconds"); } }
+        private float _Survivability = 2f;
+        public float Survivability { get { return _Survivability; } set { _Survivability = value; OnPropertyChanged("Survivability"); } }
+
+        private string _Model = PriestModels.GetDefault();
+        public string Model { get { return _Model; } set { _Model = value; OnPropertyChanged("Model"); } }
+        private float _ActivityRatio = 88f;
+        public float ActivityRatio { get { return _ActivityRatio; } set { _ActivityRatio = value; OnPropertyChanged("ActivityRatio"); } }
         private float _Serendipity = 75f;
         public float Serendipity { get { return _Serendipity; } set { _Serendipity = value; OnPropertyChanged("Serendipity"); } }
-        private float _Replenishment = 75f;
+        private float _Replenishment = 95f;
         public float Replenishment { get { return _Replenishment; } set { _Replenishment = value; OnPropertyChanged("Replenishment"); } }
         private float _Shadowfiend = 100f;
         public float Shadowfiend { get { return _Shadowfiend; } set { _Shadowfiend = value; OnPropertyChanged("Shadowfiend"); } }
-        private float _Survivability = 2f;
-        public float Survivability { get { return _Survivability; } set { _Survivability = value; OnPropertyChanged("Survivability"); } }
-        private float _Rapture = 25f;
+        private float _Rapture = 30f;
         public float Rapture { get { return _Rapture; } set { _Rapture = value; OnPropertyChanged("Rapture"); } }
         private float _TestOfFaith = 25f;
         public float TestOfFaith { get { return _TestOfFaith; } set { _TestOfFaith = value; OnPropertyChanged("TestOfFaith"); } }
