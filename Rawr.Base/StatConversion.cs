@@ -812,9 +812,10 @@ namespace Rawr
                     baseAvoid += stats.Parry * 100f;
                     // Assuring we don't run off the bottom w/ negative parry rating.
                     stats.ParryRating = Math.Max(stats.ParryRating, 0f);
+                    if (character.Class == CharacterClass.DeathKnight) stats.ParryRating += (stats.Strength - BaseStats.GetBaseStats(character).Strength) * 0.25f;
                     modifiedAvoid += (GetParryFromRating(stats.ParryRating) * 100f);
                     modifiedAvoid = DRMath(CAP_PARRY_INV[iClass], DR_COEFFIENT[iClass], modifiedAvoid);
-                    finalAvoid = (baseAvoid + modifiedAvoid);
+                    finalAvoid = Math.Max(baseAvoid + modifiedAvoid, 0);
                     finalAvoid = Math.Min(finalAvoid, CAP_PARRY[iClass]);
                     break;
                 case HitResult.Miss:
@@ -824,7 +825,7 @@ namespace Rawr
                     modifiedAvoid = DRMath( (1f/CAP_MISSED[iClass]), DR_COEFFIENT[iClass], modifiedAvoid );
                     // Factoring in the Miss Cap. 
                     modifiedAvoid = Math.Min(CAP_MISSED[iClass], modifiedAvoid);
-                    finalAvoid = (baseAvoid + modifiedAvoid);
+                    finalAvoid = Math.Max(baseAvoid + modifiedAvoid, 0);
                     finalAvoid = Math.Min(finalAvoid, CAP_MISSED[iClass]);
                     break;
                 case HitResult.Block:
@@ -832,9 +833,8 @@ namespace Rawr
                     baseAvoid += stats.Block * 100f;
                     // Assuring we don't run off the bottom w/ negative block rating.
                     stats.BlockRating = Math.Max(stats.BlockRating, 0f);
-
                     modifiedAvoid += (GetBlockFromRating(stats.BlockRating) * 100f);
-                    finalAvoid = (baseAvoid + modifiedAvoid);
+                    finalAvoid = Math.Max(baseAvoid + modifiedAvoid, 0);
                     break;
                 case HitResult.Crit:
                     // Resilience doesn't change crit chance anymore.

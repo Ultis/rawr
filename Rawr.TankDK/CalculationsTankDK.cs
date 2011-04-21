@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Media;
 using System.Xml.Serialization;
 using Rawr.DK;
+//using Rawr.Graph;
 
 namespace Rawr.TankDK
 {
@@ -391,15 +392,18 @@ Points individually may be important.",
 
         #region Custom Charts
         /// <summary>The names of all custom charts provided by the model, if any.</summary>
-        public override string[] CustomChartNames {
-            get {
-                if (_customChartNames == null) {
-                    _customChartNames = new string[] { };
-                }
+        private string[] _customChartNames = null;
+        public override string[] CustomChartNames
+        {
+            get
+            {
+                if (_customChartNames == null)
+                    _customChartNames = new string[] { "Stats Graph"};
                 return _customChartNames;
             }
         }
-        private string[] _customChartNames = null;
+
+        
         /// <summary>
         /// Gets data to fill a custom chart, based on the chart name, as defined in CustomChartNames.
         /// </summary>
@@ -410,6 +414,60 @@ Points individually may be important.",
         {
             return new ComparisonCalculationBase[0];
         }
+
+        public override System.Windows.Controls.Control GetCustomChartControl(string chartName)
+        {
+            switch (chartName)
+            {
+                case "Stats Graph":
+//                case "Scaling vs Dodge Rating":
+//                case "Scaling vs Parry Rating":
+//                case "Scaling vs Mastery Rating":
+                    return Graph.Instance;
+                default:
+                    return null;
+            }
+        }
+
+
+        public override void UpdateCustomChartData(Character character, string chartName, System.Windows.Controls.Control control)
+        {
+            Color[] statColors = new Color[] {
+                Color.FromArgb(0xFF, 0xFF, 0, 0), 
+                Color.FromArgb(0xFF, 0xFF, 165, 0), 
+                Color.FromArgb(0xFF, 0x80, 0x80, 0x00), 
+                Color.FromArgb(0xFF, 154, 205, 50), 
+                Color.FromArgb(0xFF, 0x00, 0xFF, 0xFF), 
+                Color.FromArgb(0xFF, 0, 0, 0xFF), 
+                Color.FromArgb(0xFF, 0x80, 0, 0xFF),
+                Color.FromArgb(0xFF, 0, 0x80, 0xFF),
+            };
+
+            List<float> X = new List<float>();
+            List<ComparisonCalculationBase[]> Y = new List<ComparisonCalculationBase[]>();
+
+            Stats[] statsList = new Stats[] {
+                        new Stats() { ParryRating = 10 },
+                        new Stats() { DodgeRating = 10 },
+                        new Stats() { MasteryRating = 10 },
+                        new Stats() { Stamina = 10 },
+                        new Stats() { Agility = 10 },
+                        new Stats() { Armor = 10 },
+                        new Stats() { HasteRating = 10 },
+                    };
+
+            switch (chartName)
+            {
+                case "Stats Graph":
+                    Graph.Instance.UpdateStatsGraph(character, statsList, statColors, 200, "", null);
+                    break;
+//                case "Scaling vs Parry Rating":
+//                    Graph.Instance.UpdateScalingGraph(character, statsList, new Stats() { ParryRating = 5 }, true, statColors, 100, "", null);
+//                    break;
+            }
+        }
+
+        
         #endregion
 
         #region Stat Relevancy
@@ -871,7 +929,6 @@ Points individually may be important.",
             }
             // Figure out what the new Physical DPS should be based on that.
             fSegmentDPS = TDK.bo.GetDPSByType(ATTACK_TYPES.AT_MELEE, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-//            fNewIncPhysDPS = TDK.bo.GetDPSByType(ATTACK_TYPES.AT_MELEE, 0, 0, 0, fBossAttackSpeedReduction, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
             fNewIncPhysDPS = fSegmentDPS / (1 + fBossAttackSpeedReduction);
             // Send the difference to the Mitigation value.
             fSegmentMitigation = fSegmentDPS - fNewIncPhysDPS;
@@ -1112,7 +1169,8 @@ Points individually may be important.",
             #region **** Burst: DS & Blood Shield ****
             float DSDam = calcs.DTPS * 5f;
             float minDSHeal = stats.Health * .07f;
-            float DamDSHeal = (DSDam * .15f) * (1 + .15f * TDK.Char.DeathKnightTalents.ImprovedDeathStrike); // DS heals for avg damage over the last 5 secs.
+            // 4.1 PTR: DS Heals for 20% of Damage Taken.
+            float DamDSHeal = (DSDam * .20f) * (1 + .15f * TDK.Char.DeathKnightTalents.ImprovedDeathStrike); // DS heals for avg damage over the last 5 secs.
             float DSHeal = Math.Max(minDSHeal, DamDSHeal);
             calcs.DSHeal = DSHeal;
             calcs.DSOverHeal = DSHeal * TDK.calcOpts.pOverHealing;
@@ -1428,7 +1486,7 @@ Points individually may be important.",
             ProcessRatings(statsTotal);
             ProcessAvoidance(statsTotal, TDK.bo.Level, TDK.Char, PreRatingsBase);
             statsTotal.EffectiveParry = 0;
-            if (character.MainHand != null || character.OffHand != null)
+            //if (character.MainHand != null || character.OffHand != null)
             {
                 statsTotal.EffectiveParry = statsTotal.Parry;
             }
@@ -1549,7 +1607,8 @@ Points individually may be important.",
             ProcessStatModifiers(statsTotal, character.DeathKnightTalents.BladedArmor, character);
             ProcessAvoidance(statsTotal, TDK.bo.Level, TDK.Char, PreRatingsBase);
             if (statsTotal.Mastery < 8) {
-                throw new Exception("Mastery over-written during GetCharacterStats");
+//                throw new Exception("Mastery over-written during GetCharacterStats");
+                statsTotal.Mastery = 8; 
             }
             return (statsTotal);
         }
@@ -1606,8 +1665,6 @@ Points individually may be important.",
             }
             // AP, crit, etc.  already being factored in w/ multiplier.
             statsTotal.AttackPower += StatConversion.ApplyMultiplier((statsTotal.Strength * 2), statsTotal.BonusAttackPowerMultiplier);
-            statsTotal.ParryRating += (statsTotal.Strength - BaseStats.GetBaseStats(c).Strength) * 0.25f;
-            statsTotal.Dodge += StatConversion.GetDodgeFromAgility(statsTotal.Agility, CharacterClass.DeathKnight);
         }
 
         /// <summary>
@@ -1653,9 +1710,10 @@ Points individually may be important.",
             }
 
             // So let's populate the miss, dodge and parry values for the UI display as well as pulling them out of the avoidance number.
-            statsTotal.Miss = Math.Min((StatConversion.CAP_MISSED[(int)CharacterClass.DeathKnight] / 100), fAvoidance[(int)HitResult.Miss]);
-            statsTotal.Dodge = Math.Min((StatConversion.CAP_DODGE[(int)CharacterClass.DeathKnight] / 100), fAvoidance[(int)HitResult.Dodge]);
-            statsTotal.Parry = Math.Min((StatConversion.CAP_PARRY[(int)CharacterClass.DeathKnight] / 100), fAvoidance[(int)HitResult.Parry]);
+            // Cap and floor is already factored in as part of the GetDRAvoidanceChance.
+            statsTotal.Miss = fAvoidance[(int)HitResult.Miss];
+            statsTotal.Dodge = fAvoidance[(int)HitResult.Dodge];
+            statsTotal.Parry = fAvoidance[(int)HitResult.Parry];
         }
         #endregion
     }

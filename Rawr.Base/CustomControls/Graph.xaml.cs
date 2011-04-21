@@ -42,6 +42,15 @@ namespace Rawr
             UpdateStatsGraph(character, statsList, colors, scale, explanatoryText, calculation);            
         }
 
+        /// <summary>
+        /// Generate a graph to compare stat progressions.
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="statsList">Array of Stats objects that contain what stats to evalutate.</param>
+        /// <param name="colors">Color for each stat object.  Should be same or > # of elements as statsList</param>
+        /// <param name="scale">How many increments of the stats values should be performed?  Larger values mean much larger calculation times.</param>
+        /// <param name="explanatoryText"></param>
+        /// <param name="calculation">[In] Generally pass in null or "Overall Points" otherwise pass in the specific subpoint string you are concerned about.</param>
         public void UpdateStatsGraph(Character character, Stats[] statsList, Color[] colors, int scale, string explanatoryText, string calculation)
         {
             CharacterCalculationsBase baseCalc = Calculations.GetCharacterCalculations(character);
