@@ -81,7 +81,7 @@ namespace Rawr.Bosses
                     // Half the raid is getting hit with about 40k damage per attack.
                     DamagePerHit = new float[] { 200000, 475000, }[i] / (Max_Players[i] / 2),
                     MaxNumTargets = Max_Players[i] / 2f,
-                    // Frequency is 16.5 seconds, with a 1.25 second cast time - 17.75 seconds
+                    // Frequency is 16.5 seconds, with a 1.25 second cast time - 17.75 seconds, Verified DBM v4.74-r5279
                     AttackSpeed = 16.5f + 1.25f,
                 });
                 EntireFight.LastAttack.SetUnavoidable();
@@ -97,6 +97,7 @@ namespace Rawr.Bosses
                     // Half the raid is getting hit with about 40k damage per attack.
                     DamagePerHit = new float[] { 200000, 475000, }[i] / (Max_Players[i] / 2),
                     MaxNumTargets = Max_Players[i] / 2f,
+                    // Frequency is 16.5 seconds, with a 1.25 second cast time - 17.75 seconds, Verified DBM v4.74-r5279
                     AttackSpeed = 16.5f + 1.25f,
                 });
                 EntireFight.LastAttack.SetUnavoidable();
@@ -227,6 +228,8 @@ namespace Rawr.Bosses
                 Phase NotBurnExposedHeadHeroicUnder30 = new Phase() { Name = "Not Burning Exposed Head (Under 30%)", };
                 Phase BurnExposedHead = new Phase() { Name = "Burning Exposed Head", };
 
+                // JOTHAY TODO: Review phase times to ensure accuracy based on new data from DBM
+
                 #region Not Burning Exposed Head
                 // Adding Melee as constant for the whole fight until I read otherwise
                 NotBurnExposedHeadNormal.Attacks.Add(GenAStandardMelee(this[i].Content));
@@ -256,7 +259,7 @@ namespace Rawr.Bosses
                     DamageType = ItemDamageType.Fire,
                     DamagePerHit = new float[] { (18500f + 21500f), (18500f + 21500f), (27750f + 32250f), (27750f + 32250f) }[i] / 2f,
                     MaxNumTargets = Max_Players[i],
-                    AttackSpeed = 24f,
+                    AttackSpeed = 26, // Verified DBM 4.74-r5279
                 });
                 NotBurnExposedHeadNormal.LastAttack.SetAffectsRoles_All();
                 NotBurnExposedHeadHeroicAbove30.Attacks.Add(NotBurnExposedHeadNormal.LastAttack.Clone());
@@ -272,7 +275,7 @@ namespace Rawr.Bosses
                     DamageType = ItemDamageType.Fire,
                     DamagePerHit = (24375f + 25625f) / 2f,
                     MaxNumTargets = Max_Players[i],
-                    AttackSpeed = 32f,
+                    AttackSpeed = 32.5f,  // Verified DBM 4.74-r5279. The cooldown resets at 30s, bosses uses between 30s and 40s. Most commonly 32.5s
                 });
                 NotBurnExposedHeadNormal.LastAttack.SetAffectsRoles_Healers();
                 NotBurnExposedHeadNormal.LastAttack.AffectsRole[PLAYER_ROLES.TertiaryTank] = true;
@@ -357,7 +360,7 @@ namespace Rawr.Bosses
                     Duration = 5f, // should not last more than 5 seconds
                     TickInterval = 5f,
                     MaxNumTargets = 1f,
-                    AttackSpeed = 90f,
+                    AttackSpeed = 95f, // Verified DBM 4.74-r5279 - 95s cooldown, 30s uptime
                 });
                 NotBurnExposedHeadNormal.LastAttack.AffectsRole[PLAYER_ROLES.MainTank] = true;
                 NotBurnExposedHeadNormal.LastAttack.AffectsRole[PLAYER_ROLES.OffTank] = true;
@@ -375,7 +378,7 @@ namespace Rawr.Bosses
                         DamageType = ItemDamageType.Fire,
                         DamagePerHit = new float[] { 0f, 0f, (50875f + 59125f), (50875f + 59125f) }[i] / 2f,
                         MaxNumTargets = Max_Players[i],
-                        AttackSpeed = new float[] { 0f, 0f, 35f, 35f }[i],
+                        AttackSpeed = new float[] { 0f, 0f, 35f, 35f }[i], // Verified DBM 4.74-r5279
                     });
                     NotBurnExposedHeadHeroicAbove30.LastAttack.SetAffectsRoles_Healers();
                     NotBurnExposedHeadHeroicAbove30.LastAttack.AffectsRole[PLAYER_ROLES.TertiaryTank] = true;
@@ -498,7 +501,7 @@ namespace Rawr.Bosses
                 int phaseStartTime = 0;
                 ClearPhase1Values(ref BurnExposedHead);
                 if (i == 0 || i == 1) {
-                    // 10 minute Berserk Timer 90+30=120 600/120=5. At most 10 phases (5 each)
+                    // 10 minute Berserk Timer 95+30=125 600/125=4.8. At most 10 phases (5 each)
                     ApplyAPhasesValues(ref NotBurnExposedHeadNormal, i, 1, phaseStartTime, 90, this[i].BerserkTimer); phaseStartTime += 90;
                     ApplyAPhasesValues(ref BurnExposedHead,          i, 2, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30;
                     ApplyAPhasesValues(ref NotBurnExposedHeadNormal, i, 3, phaseStartTime, 90, this[i].BerserkTimer); phaseStartTime += 90;
@@ -593,7 +596,7 @@ namespace Rawr.Bosses
                 #region Barrier - Broken
                 //  Barrier (10) / (25) - Magmatron "shield ability" in which he forms a barrier around himself, absorbing 300k(10m)/900k(25m) damage, and if broken, causes a
                 //      Backdraft (10) / (25), which deals 75k(10m)/115k(25m) to all raid members.
-                //      Basically, when he casts this, stop attacking Mamatron
+                //      Basically, when he casts this, stop attacking Magmatron
                 Magtron.Attacks.Add(new Attack
                 {
                     Name = "Barrier - Broken",
@@ -601,8 +604,8 @@ namespace Rawr.Bosses
                     DamageType = ItemDamageType.Fire,
                     DamagePerHit = (73125 + 76875) / 2f,
                     MaxNumTargets = Max_Players[i],
-                    AttackSpeed = 45, // In reality you don't want this ability to proc, so you "interupt" it. NOTE: Can't set this to 0 or it doesn't show up right in the UI
-                    Interruptable = true, // Interupted by Stopping DPS
+                    AttackSpeed = 10+1.5f, // In reality you don't want this ability to proc, so you "interrupt" it. NOTE: Can't set this to 0 or it doesn't show up right in the UI
+                    Interruptable = true, // Interrupted by Stopping DPS
                 });
                 Magtron.LastAttack.SetAffectsRoles_All();
                 #endregion
@@ -619,7 +622,7 @@ namespace Rawr.Bosses
                     Duration = 4f,
                     TickInterval = 1f,
                     MaxNumTargets = Max_Players[i],
-                    AttackSpeed = 8f, // TODO: Get attack speed for this ability
+                    AttackSpeed = 26.5f, // Verified DBM 4.74 --Timer Series, 10, 27, 32 (on normal) from activate til shutdown.
                 });
                 Magtron.LastAttack.SetAffectsRoles_All();
                 #endregion
@@ -637,7 +640,7 @@ namespace Rawr.Bosses
                     Duration = 4f,
                     TickInterval = 1f,
                     MaxNumTargets = 1f, // You really only want one person be hit by this. Assume it does not target a tank
-                    AttackSpeed = 20f, // TODO: get attack speed for this ability
+                    AttackSpeed = 40f, // Verified DBM 4.74
                 });
                 Magtron.LastAttack.SetAffectsRoles_DPS();
                 Magtron.LastAttack.SetAffectsRoles_Healers();
@@ -659,15 +662,18 @@ namespace Rawr.Bosses
                 #region Arcane Annihilator
                 /* Arcane Annihilator (10) / (25) - 1 second cast time spell used on a randomly targeted raid member, but is interruptable. It deals 40k(10m)/50k(25m) arcane
                  *      damage if it does go through. */
+                // DBM CD is 8 after overcharge is cast
                 #endregion
                 #region Power Generator
                 /* Power Generator (10) / (25) - Creates a whirling pool of energy underneath a golem that increases the damage of any raid member or boss mob standing in it
                  *      by 50% and restores 250(10m)/500(25m) mana per every 0.5 second (Similar to Rune of Power from Iron Council). Lasts for 25 seconds (however it appears
                  *      as if the buff lasts for 10-15 seconds after the Power Generator despawns). */
+                // DBM CD is 30s
                 #endregion
                 #region Power Conversion
                 /* Power Conversion - Arcanotron's "shield ability" in which he gains a stacking buff, Converted Power, when taking damage that increases his magic damage and
                  *      cast speed by 10% per stack. Currently can be removed with a mage's Spellsteal. */
+                // DBM CD is 10+1.5
                 #endregion
                 #endregion
 
@@ -676,22 +682,28 @@ namespace Rawr.Bosses
                 Toxtron.Attacks.Add(GenAStandardMelee(this[i].Content));
                 #endregion
                 /* Chemical Cloud (10) / (25) - Large raidus debuff that increases damage taken by 50% and deals 3k(10m)/4k(25m) damamge every 5 seconds. */
+                // DBM CD is 30: Timer Series, 11, 30, 36 (on normal) from activate til shutdown.
                 /* Poison Protocol (10) / (25) - Channeled for 9 seconds, and spawns 3(10m)/6(25m) Poison Bombs, one every 3(10m)/1.5(25m) seconds. The Poison Bombs (10) / (25)
                  *      have 78k(10m)/78k(25m) health and fixate on a target, then explode if they reach their target, dealing 90k(10m)/125k(25m) nature damage to players within
                  *      the area and spawn a Slime Pool which deals additional damage to players that stand in it. */
+                // DBM CD is 45
                 /* Poison Soaked Shell - Toxitron's "shield ability" which causes player that attacks him to gain a stacking debuff, Soaked in Poison (10) / (25), which causes
                  *      that player to take 2k(10m)/5.5k(25m) nature damage every 2 seconds, however, they also will deal 10k additional nature damage to targets of their attacks.*/
+                // DBM CD is 30 with 10+1.5 uptime
                 #endregion
 
-                #region "Electron, electricity golem"
+                #region "Electron, the electricity golem"
                 #region Melee
                 Elctron.Attacks.Add(GenAStandardMelee(this[i].Content));
                 #endregion
-                /* Lightning Conductor (10) / (25) - A randomly targeted raid member will get this debuff which has a 10(10m)/15(25m) second duration and deals 25k damage to raid
+                /* TODO: Lightning Conductor (10) / (25) - A randomly targeted raid member will get this debuff which has a 10(10m)/15(25m) second duration and deals 25k damage to raid
                  *      members with 8 yards every 2 seconds. */
-                /* Electrical Discharge (10) / (25) - A chain lightning type ability which deals 30k(10m)40k(25m) nature damage to a target and then to up to 2 additional targets
+                // DBM CD is 25
+                /* TODO: Electrical Discharge (10) / (25) - A chain lightning type ability which deals 30k(10m)40k(25m) nature damage to a target and then to up to 2 additional targets
                  *      within 8 yards, damage increasing 20% each jump. */
-                /* Unstable Shield - Electron's "shield ability" which causes at Static Shock at an attackers location, dealing 40k nature damage to raiders within 7 yards.*/
+                // TODO: DBM CD is unknown
+                /* TODO: Unstable Shield - Electron's "shield ability" which causes at Static Shock at an attackers location, dealing 40k nature damage to raiders within 7 yards.*/
+                // DBM CD is 10+1.5
                 #endregion
 
                 #region Apply Phases

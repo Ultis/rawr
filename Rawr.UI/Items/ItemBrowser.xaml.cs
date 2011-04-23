@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Data;
-using System.Collections.ObjectModel;
-using System.Text.RegularExpressions;
 using System.Windows.Media;
 
 namespace Rawr.UI
@@ -26,6 +26,7 @@ namespace Rawr.UI
 #if !SILVERLIGHT
             this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
             this.WindowState = System.Windows.WindowState.Normal;
+            this.ShowInTaskbar = false;
 #endif
 
             ItemCache.Instance.ItemsChanged += new EventHandler(Instance_ItemsChanged);

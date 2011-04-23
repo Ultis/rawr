@@ -14,7 +14,6 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-//using System.Windows.Threading;
 #if !SILVERLIGHT
 using Microsoft.Win32;
 #endif

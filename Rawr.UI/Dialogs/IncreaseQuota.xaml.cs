@@ -14,7 +14,6 @@ namespace Rawr.UI
 {
     public partial class IncreaseQuota : ChildWindow
     {
-
         private int size;
 
         public IncreaseQuota(int kilobytes)

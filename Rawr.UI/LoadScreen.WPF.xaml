@@ -5,6 +5,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     x:Class="Rawr.UI.LoadScreen">
+    
     <UserControl.Resources>
         <Style x:Key="LoadingTextStyle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="#FFFFFFFF"/>

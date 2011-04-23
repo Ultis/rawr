@@ -1,7 +1,7 @@
 ﻿using System;
-using Rawr.Properties;
 using System.IO;
 using System.Xml.Serialization;
+using Rawr.Properties;
 
 namespace Rawr
 {
