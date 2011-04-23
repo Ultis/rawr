@@ -55,7 +55,6 @@ namespace Rawr.Bosses
                     DamagePerHit = BossHandler.StandardMeleePerHit[(int)Content[i]],
                     MaxNumTargets = 1f,
                     AttackSpeed = 2.0f,
-                    
                 });
                 EntireFight.LastAttack.AffectsRole[PLAYER_ROLES.MainTank] = true;
 
@@ -742,7 +741,7 @@ namespace Rawr.Bosses
             #region Basics
             Health = new float[] { 24700000f, 86650000f, 34631000f, 121310000f };
             MobType = (int)MOB_TYPES.DRAGONKIN;
-            BerserkTimer = new int[] { 7 * 60, 12 * 60, 7 * 60, 12 * 60 }; // Source: http://us.battle.net/wow/en/blog/1232869
+            BerserkTimer = new int[] { 7 * 60, 7 * 60, 12 * 60, 12 * 60 }; // Source: http://us.battle.net/wow/en/blog/1232869
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
@@ -800,7 +799,7 @@ namespace Rawr.Bosses
                     NumTargs = 3,
                     NearBoss = false,
                     Frequency = 30,
-                    Duration = (60f * 1000f * 2f) + (15f * 1000f), // TODO: Should be tied to two phases, you build them up to nine, then AoE during a Green Vial Phase + 15 seconds to AoE them down
+                    Duration = (47f * 1000f * 2f) + (15f * 1000f), // TODO: Should be tied to two phases, you build them up to nine, then AoE during a Green Vial Phase + 15 seconds to AoE them down
                     Chance = 1.00f,
                 });
                 RedVial.LastTarget.AffectsRole[PLAYER_ROLES.OffTank] = true;
@@ -999,9 +998,10 @@ namespace Rawr.Bosses
                     AttackType = ATTACK_TYPES.AT_AOE,
                     DamageType = ItemDamageType.Fire,
                     DamagePerHit = new float[] { 38000 + 42000, 38000 + 42000, 38000 + 42000, 38000 + 42000 }[i] / 2f,
-                    AttackSpeed = 20, // TODO: Get proper attack speed
+                    AttackSpeed = 12.5f,
                     MaxNumTargets = Max_Players[i],
                 });
+                // It targets the MT but anyone is able to walk into the fire after it is up.
                 Under25.LastAttack.SetUnavoidable();
                 Under25.LastAttack.SetAffectsRoles_All();
                 #endregion
@@ -1011,8 +1011,8 @@ namespace Rawr.Bosses
                  *      will explode dealing 20k(10m)/40k(25m) frost damage and cause a 10 yard knock back to all nearby players. */
                 Under25.Moves.Add(new Impedance {
                     Name = "Absolute Zero Spheres (Avoiding)",
-                    Frequency = 20,
-                    Duration = 4f * 1000f, // Assuming takes 4s to move out of the way
+                    Frequency = 12.5,
+                    Duration = 3f * 1000f, // Assuming takes 3s to move out of the way
                     Chance = 1f / Max_Players[i],
                     Breakable = true, // movement is always breakable
                 });
@@ -1042,29 +1042,30 @@ namespace Rawr.Bosses
                 ClearPhase1Values(ref BlueVial);
                 ClearPhase1Values(ref GreenVial);
                 ClearPhase1Values(ref Under25);
+                // Under 25% needs to hit after the second Green Vial phase, especially on heroic or raids will hit the enrage timer
                 if (i == 0 || i == 1) {
-                    ApplyAPhasesValues(ref RedVial,   i, 1, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
-                    ApplyAPhasesValues(ref BlueVial,  i, 2, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
-                    ApplyAPhasesValues(ref GreenVial, i, 3, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
-                    ApplyAPhasesValues(ref RedVial,   i, 4, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
-                    ApplyAPhasesValues(ref BlueVial,  i, 5, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
-                    ApplyAPhasesValues(ref GreenVial, i, 6, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
+                    ApplyAPhasesValues(ref RedVial,   i, 1, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 47;
+                    ApplyAPhasesValues(ref BlueVial,  i, 2, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 47;
+                    ApplyAPhasesValues(ref GreenVial, i, 3, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 47;
+                    ApplyAPhasesValues(ref RedVial,   i, 4, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 47;
+                    ApplyAPhasesValues(ref BlueVial,  i, 5, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 47;
+                    ApplyAPhasesValues(ref GreenVial, i, 6, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 47;
                     ApplyAPhasesValues(ref Under25,   i, 7, phaseStartTime, 60, this[i].BerserkTimer);
                 }
-                else if (i == 0 || i == 1)
+                else if (i == 2 || i == 3)
                 {
-                    ApplyAPhasesValues(ref DarkVial,  i, 1, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
-                    ApplyAPhasesValues(ref RedVial,   i, 2, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
-                    ApplyAPhasesValues(ref BlueVial,  i, 3, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
-                    ApplyAPhasesValues(ref GreenVial, i, 4, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
-                    ApplyAPhasesValues(ref DarkVial,  i, 5, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
-                    ApplyAPhasesValues(ref RedVial,   i, 6, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
-                    ApplyAPhasesValues(ref BlueVial,  i, 7, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
-                    ApplyAPhasesValues(ref GreenVial, i, 8, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
-                    ApplyAPhasesValues(ref DarkVial,  i, 9, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
-                    ApplyAPhasesValues(ref RedVial,   i,10, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
-                    ApplyAPhasesValues(ref BlueVial,  i,11, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
-                    ApplyAPhasesValues(ref Under25,   i,12, phaseStartTime, 60, this[i].BerserkTimer);
+                    ApplyAPhasesValues(ref DarkVial,  i, 1, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 100;
+                    ApplyAPhasesValues(ref RedVial,   i, 2, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 47;
+                    ApplyAPhasesValues(ref BlueVial,  i, 3, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 47;
+                    ApplyAPhasesValues(ref GreenVial, i, 4, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 47;
+                    ApplyAPhasesValues(ref DarkVial,  i, 5, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 100;
+                    ApplyAPhasesValues(ref RedVial,   i, 6, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 47;
+                    ApplyAPhasesValues(ref BlueVial,  i, 7, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 47;
+                    ApplyAPhasesValues(ref GreenVial, i, 8, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 47;
+//                    ApplyAPhasesValues(ref DarkVial,  i, 9, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
+//                    ApplyAPhasesValues(ref RedVial,   i,10, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
+//                    ApplyAPhasesValues(ref BlueVial,  i,11, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
+                    ApplyAPhasesValues(ref Under25,   i,9, phaseStartTime, 60, this[i].BerserkTimer);
 
                     AddAPhase(DarkVial, i);
                 }
@@ -1197,16 +1198,19 @@ namespace Rawr.Bosses
                     GroundPhase.LastAttack.SetAffectsRoles_All();
                     /* Obnoxious Fiends - Two will spawn per ground phase—one in the middle and one towards the end. These attach themselves to a random raid member and must be burned
                      *      down immediately by the raid. They have minimal health but cast Obnoxious, an cast which gives the attached player 10 additional sound if not interrupted. */
-                    GroundPhase.Targets.Add(new TargetGroup {
-                        Name = "Obnoxious Fiends",
-                        LevelOfTargets = (int)POSSIBLE_LEVELS.LVLP0,
-                        NearBoss = false,
-                        NumTargs = 2,
-                        Frequency = 45,
-                        Duration = 10 * 1000,
-                        Chance = 2f / (float)Max_Players[i],
-                    });
-                    GroundPhase.LastTarget.SetAffectsRoles_All();
+                    // Only appear on Heroic
+                    if ((i == 2) || (i == 3)) {
+                        GroundPhase.Targets.Add(new TargetGroup {
+                            Name = "Obnoxious Fiends",
+                            LevelOfTargets = (int)POSSIBLE_LEVELS.LVLP0,
+                            NearBoss = false,
+                            NumTargs = 2,
+                            Frequency = 45,
+                            Duration = 10 * 1000,
+                            Chance = 2f / (float)Max_Players[i],
+                        });
+                        GroundPhase.LastTarget.SetAffectsRoles_All();
+                    }
                 }
                 #endregion
                 #region Air Phase (40 seconds)

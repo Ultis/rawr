@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-16"?>
+<?xml version="1.0" encoding="utf-16"?>
 <ArrayOfItem xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Item>
     <ItemLevel>1</ItemLevel>
@@ -77178,6 +77178,7 @@
       <Agility>168</Agility>
       <Stamina>252</Stamina>
       <CritRating>125</CritRating>
+	<MasteryRating>90</MasteryRating>
       <Armor>580</Armor>
     </Stats>
     <Quality>Rare</Quality>
