@@ -19,8 +19,8 @@ namespace Rawr.HealPriest
             serializer.Serialize(writer, this);
             return xml.ToString();
         }
-        private float _FightLengthSeconds = 480f;
-        public float FightLengthSeconds { get { return _FightLengthSeconds; } set { _FightLengthSeconds = value; OnPropertyChanged("FightLengthSeconds"); } }
+        /*private float _FightLengthSeconds = 480f;
+        public float FightLengthSeconds { get { return _FightLengthSeconds; } set { _FightLengthSeconds = value; OnPropertyChanged("FightLengthSeconds"); } }*/
         private float _Survivability = 2f;
         public float Survivability { get { return _Survivability; } set { _Survivability = value; OnPropertyChanged("Survivability"); } }
 

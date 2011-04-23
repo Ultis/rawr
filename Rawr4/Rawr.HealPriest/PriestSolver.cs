@@ -88,8 +88,6 @@ namespace Rawr.HealPriest
         protected BossOptions bossOptions;
         protected bool verbose;
 
-        protected float fightLength;
-
         public List<ManaSource> ManaSources = new List<ManaSource>();
         protected List<DirectHealSpell> castSequence = new List<DirectHealSpell>();
       
@@ -103,8 +101,6 @@ namespace Rawr.HealPriest
             this.calcOpts = calcOpts;
             this.bossOptions = character.BossOptions;
             this.verbose = verbose;
-
-            fightLength = calcOpts.FightLengthSeconds;
         }
 
         public virtual List<string> MeetsRequirements()
@@ -116,8 +112,8 @@ namespace Rawr.HealPriest
         {
             calc.BurstPoints = 0;
             calc.SustainPoints = 0;
-            calc.SurvPoints = 0;
-            calc.OverallPoints = calc.BurstPoints + calc.SustainPoints + calc.SurvPoints;
+            calc.ManaPoints = 0;
+            calc.OverallPoints = calc.BurstPoints + calc.SustainPoints + calc.ManaPoints;
         }
 
         private float CalcSpiritRegen(float Spirit, float Intellect, float combatRegen)
@@ -128,8 +124,8 @@ namespace Rawr.HealPriest
         private float CalcShadowfiend(float mana)
         {   // 3% mana every hit, 15s dura
             // FIXME: 2s swing timer = 7.5 ~ 8 swings = 8*3 = 24% mana. Assume hasted by haste.
-            float casts = (float)Math.Floor((fightLength - 30f) / (60f * 5f - PriestInformation.GetVeiledShadows(character.PriestTalents.VeiledShadows))) + 1f;
-            return mana * (0.03f * 8f) * casts / fightLength * (1f + calcOpts.Shadowfiend / 100f);
+            float casts = (float)Math.Floor((bossOptions.BerserkTimer - 30f) / (60f * 5f - PriestInformation.GetVeiledShadows(character.PriestTalents.VeiledShadows))) + 1f;
+            return mana * (0.03f * 8f) * casts / bossOptions.BerserkTimer * (1f + calcOpts.Shadowfiend / 100f);
         }
 
         private float CalcRapture(float mana)
@@ -247,6 +243,60 @@ namespace Rawr.HealPriest
             float castTime = 0, baseCastTime = 0;
             float manaCost = 0;
             float critChance = 0;
+
+            for (int x = 0; x < castSequence.Count; x++)
+            {
+                DirectHealSpell dhs = castSequence[x];
+                healed += dhs.HPC();
+                baseCastTime += dhs.IsInstant ? dhs.BaseGlobalCooldown : dhs.BaseCastTime;
+                castTime += dhs.IsInstant ? dhs.GlobalCooldown : dhs.CastTime;
+                manaCost += dhs.ManaCost;
+                critChance += dhs.CritChance;
+            }
+
+            float effectiveFightLength = bossOptions.BerserkTimer * calcOpts.ActivityRatio / 100f;
+            float repeats = effectiveFightLength / baseCastTime;
+            float castsPerSecond = castSequence.Count / baseCastTime;
+            float critsPerSecond = critChance / baseCastTime;
+
+            healed *= repeats;
+            baseCastTime *= repeats;
+            castTime *= repeats;
+            manaCost *= repeats;
+            critChance *= repeats;
+
+            float manaRegen = CalcManaReg(castsPerSecond, critsPerSecond);
+
+
+            float totalMana = (stats.Mana + stats.ManaRestore * (1f + stats.BonusManaPotionEffectMultiplier))
+                + manaRegen * bossOptions.BerserkTimer;
+
+            calc.BurstGoal = 20000f;
+            calc.SustainGoal = calc.BurstGoal * 0.5f;
+            calc.ManaGoal = manaCost;
+            calc.BurstPoints = (1f - (float)Math.Exp(-1f * (((healed / castTime)) / calc.BurstGoal))) * 100000f;
+            calc.SustainPoints = (1f - (float)Math.Exp(-1f * ((healed / baseCastTime / calc.SustainGoal)))) * 100000f;
+            calc.ManaPoints = (1f - (float)Math.Exp(-1f * (totalMana / calc.ManaGoal))) * 100000f;
+            calc.OverallPoints = calc.BurstPoints + calc.SustainPoints + calc.ManaPoints;
+
+            if (verbose)
+            {
+                List<string> modelInfo = new List<string>();
+                modelInfo.Add("The model uses the following spell rotation:");
+                for (int x = 0; x < castSequence.Count; x++)
+                    modelInfo.Add(castSequence[x].Name);
+
+                Name = String.Format("{0}*{1}", Name, String.Join("\n", modelInfo));
+            }
+        }
+
+
+        protected void DoCalcs3()
+        {
+            float healed = 0;
+            float castTime = 0, baseCastTime = 0;
+            float manaCost = 0;
+            float critChance = 0;
             
             for (int x = 0; x < castSequence.Count; x++)
             {
@@ -273,12 +323,12 @@ namespace Rawr.HealPriest
 
 
             float totalMana = (stats.Mana + stats.ManaRestore * (1f + stats.BonusManaPotionEffectMultiplier))
-                + manaRegen * calcOpts.FightLengthSeconds;
+                + manaRegen * bossOptions.BerserkTimer;
 
             calc.BurstPoints = (healed / castTime);
             calc.SustainPoints = (healed / baseCastTime) * (totalMana / manaCost);
-            calc.SurvPoints = 0;
-            calc.OverallPoints = calc.BurstPoints + calc.SustainPoints + calc.SurvPoints;
+            calc.ManaPoints = 0;
+            calc.OverallPoints = calc.BurstPoints + calc.SustainPoints + calc.ManaPoints;
 
             if (verbose)
             {
@@ -316,7 +366,7 @@ namespace Rawr.HealPriest
             float manaRegen = CalcManaReg(castsPerSecond, critsPerSecond);
 
             float manaMissing = manaSustainUse - manaRegen;
-            float fullBurst = ((stats.Mana + stats.ManaRestore) / manaMissing) / fightLength;
+            float fullBurst = ((stats.Mana + stats.ManaRestore) / manaMissing) / bossOptions.BerserkTimer;
             float waitCast = 1f - fullBurst;
             if (waitCast < 0)
                 waitCast = 0;
@@ -334,7 +384,7 @@ namespace Rawr.HealPriest
             else
                 calc.SustainPoints = burst * fullBurst;
 
-            calc.OverallPoints = calc.BurstPoints + calc.SustainPoints + calc.SurvPoints;
+            calc.OverallPoints = calc.BurstPoints + calc.SustainPoints + calc.ManaPoints;
 
             if (verbose)
             {

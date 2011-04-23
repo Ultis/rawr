@@ -11,11 +11,14 @@ namespace Rawr.HealPriest {
         #region Points
         private float _overallPoints = 0f;
         public override float OverallPoints { get { return _overallPoints; } set { _overallPoints = value; } }
-        private float[] subPoints = new float[] { 0f, 0f, 0f };
-        public override float[] SubPoints { get { return subPoints; } set { subPoints = value; } }
-        public float BurstPoints { get { return subPoints[0]; } set { subPoints[0] = value; } }
-        public float SustainPoints { get { return subPoints[1]; } set { subPoints[1] = value; } }
-        public float SurvPoints { get { return subPoints[2]; } set { subPoints[2] = value; } }
+        private float[] _subPoints = new float[] { 0f, 0f, 0f };
+        public override float[] SubPoints { get { return _subPoints; } set { _subPoints = value; } }
+        public float BurstPoints { get { return _subPoints[0]; } set { _subPoints[0] = value; } }
+        public float SustainPoints { get { return _subPoints[1]; } set { _subPoints[1] = value; } }
+        public float ManaPoints { get { return _subPoints[2]; } set { _subPoints[2] = value; } }
+        public float BurstGoal { get; set; }
+        public float SustainGoal { get; set; }
+        public float ManaGoal { get; set; }
         #endregion
 
         protected Buff GetActiveBuffsByGroup(string group)
@@ -188,8 +191,12 @@ namespace Rawr.HealPriest {
                 else
                     disp = solver.Name;
                 dictValues["Role"] = disp;
+                dictValues["Burst Goal"] = this.BurstGoal.ToString("0");
+                dictValues["Sust. Goal"] = this.SustainGoal.ToString("0");
+                dictValues["Mana Goal"] = this.ManaGoal.ToString("0");
                 dictValues["Burst"] = this.BurstPoints.ToString("0");
                 dictValues["Sustained"] = this.SustainPoints.ToString("0");
+                dictValues["Mana "] = this.ManaPoints.ToString("0");
             }
             #endregion
             #region Holy Spells

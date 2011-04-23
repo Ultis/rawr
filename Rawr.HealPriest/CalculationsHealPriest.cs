@@ -164,51 +164,7 @@ namespace Rawr.HealPriest
                 return gtList;
             }
         }
-
-        public override void SetDefaults(Character character)
-        {
-            character.ActiveBuffsAdd("Arcane Brilliance (Mana)");
-            character.ActiveBuffsAdd("Blessing of Kings");
-            character.ActiveBuffsAdd("Blessing of Might (Mp5)");
-            character.ActiveBuffsAdd("Devotion Aura");
-            character.ActiveBuffsAdd("Flask of the Draconic Mind");
-            character.ActiveBuffsAdd("Intellect Food");
-            character.ActiveBuffsAdd("Power Word: Fortitude");
-            character.ActiveBuffsAdd("Rampage");
-            character.ActiveBuffsAdd("Resistance Aura");
-            character.ActiveBuffsAdd("Totemic Wrath");
-            character.ActiveBuffsAdd("Vampiric Touch");
-            character.ActiveBuffsAdd("Wrath of Air Totem");
-            character.ActiveBuffsAdd("Mana Tide Totem");
-        }
-
-        private Dictionary<string, Color> _subPointNameColors = null;
-        public override Dictionary<string, Color> SubPointNameColors
-        {
-            get
-            {
-                _subPointNameColors = new Dictionary<string, Color>();
-                switch (_currentChartName)
-                {
-                    /*case "MP5 Sources":
-                        _subPointNameColors.Add(string.Format("MP5 Sources ({0} total)", _currentChartTotal.ToString("0")), Color.FromArgb(255, 0, 0, 255));
-                        break;
-                    case "Spell HpS":
-                        _subPointNameColors.Add("HpS", Color.FromArgb(255, 255, 0, 0));
-                        break;
-                    case "Spell HpM":
-                        _subPointNameColors.Add("HpM", Color.FromArgb(255, 255, 0, 0));
-                        break;*/
-                    default:
-                        _subPointNameColors.Add("HPS-Burst", Color.FromArgb(255, 255, 0, 0));
-                        _subPointNameColors.Add("HPS-Sustained", Color.FromArgb(255, 0, 0, 255));
-                        _subPointNameColors.Add("Survivability", Color.FromArgb(255, 0, 128, 0));
-                        break;
-                }
-                _currentChartName = null;
-                return _subPointNameColors;
-            }
-        }
+        #endregion
 
         private string[] _characterDisplayCalculationLabels = null;
         public override string[] CharacterDisplayCalculationLabels
@@ -230,8 +186,12 @@ namespace Rawr.HealPriest
                     "Spell:Crit Chance",
                     "Spell:Mastery",
                     "Model:Role",
-                    "Model:Burst*This is the HPS you are expected to have if you are not limited by Mana.\r\nIn Custom Role, this displays your HPS when you dump all spells in 1 stream.",
-                    "Model:Sustained*This is the HPS are expected to have when restricted by Mana.\r\nIf this value is lower than your Burst HPS, you are running out of mana in the simulation.\r\nIn Custom Role, this displays your HPS over the length of the fight, adjusted by the amount of mana available.",
+                    "Model:Burst Goal*This is your goal for Burst Healing output.\nYour potential healing done limited by time.\nThis value is Heal Per Second (HPS)",
+                    "Model:Sust. Goal*This is your goal for Sustained Healing output.\nThe healing needed over an entire fight adjusted for Damage Evasion and Reduction.\nThis value is Heal Per Second (HPS).",
+                    "Model:Mana Goal*This is the Mana you need to fuel your Sustained healing.\nThis value is Total Mana needed over fight.",
+                    "Model:Burst*This is your Burst Score. (0-100000)",
+                    "Model:Sustained*This is your Sustained Score. (0-100000)",
+                    "Model:Mana *This is your Mana Score. (0-100000)",
                     "Holy Spells:Heal",
                     "Holy Spells:Binding Heal",
                     "Holy Spells:Greater Heal",
@@ -317,9 +277,24 @@ namespace Rawr.HealPriest
             return calcOpts;
         }
 
-        #endregion
-
         #region Relevancy
+        public override void SetDefaults(Character character)
+        {
+            character.ActiveBuffsAdd("Arcane Brilliance (Mana)");
+            character.ActiveBuffsAdd("Blessing of Kings");
+            character.ActiveBuffsAdd("Blessing of Might (Mp5)");
+            character.ActiveBuffsAdd("Devotion Aura");
+            character.ActiveBuffsAdd("Flask of the Draconic Mind");
+            character.ActiveBuffsAdd("Intellect Food");
+            character.ActiveBuffsAdd("Power Word: Fortitude");
+            character.ActiveBuffsAdd("Rampage");
+            character.ActiveBuffsAdd("Resistance Aura");
+            character.ActiveBuffsAdd("Totemic Wrath");
+            character.ActiveBuffsAdd("Vampiric Touch");
+            character.ActiveBuffsAdd("Wrath of Air Totem");
+            character.ActiveBuffsAdd("Mana Tide Totem");
+        }
+
         private static List<string> _relevantGlyphs;
         public override List<string> GetRelevantGlyphs()
         {
@@ -578,12 +553,13 @@ namespace Rawr.HealPriest
 
         private string[] _customChartNames = null;
         private const string _customChartManaSources = "Mana Regen Sources";
+        private const string _customChartStatsGraph = "Stats Graph";
         public override string[] CustomChartNames
         {
             get
             {
                 if (_customChartNames == null)
-                    _customChartNames = new string[] { _customChartManaSources }; // , "Spell HpS", "Spell HpM", "Spell AoE HpS", "Spell AoE HpM"}; //, "Relative Stat Values" };
+                    _customChartNames = new string[] { _customChartManaSources, _customChartStatsGraph };
                 return _customChartNames;
             }
         }
@@ -600,10 +576,10 @@ namespace Rawr.HealPriest
                 return null;
 
             _currentChartTotal = 0;
+            _currentChartName = chartName;
             switch (chartName)
             {
                 case _customChartManaSources:
-                    _currentChartName = chartName;
                     PriestSolver solver = PriestModels.GetModel(calcs, calcOpts, true);
                     solver.Solve();
                     
@@ -612,13 +588,15 @@ namespace Rawr.HealPriest
                         comparison = CreateNewComparisonCalculation();
                         comparison.Name = manaSource.Name;
                         comparison.Description = manaSource.Description;
-                        comparison.SubPoints[1] = manaSource.Value * 5f; // Convert to Mp5
-                        _currentChartTotal += comparison.SubPoints[1];
-                        comparison.OverallPoints = comparison.SubPoints[1];
+                        comparison.SubPoints[2] = manaSource.Value * 5f; // Convert to Mp5
+                        _currentChartTotal += comparison.SubPoints[2];
+                        comparison.OverallPoints = comparison.SubPoints[2];
                         comparison.Equipped = false;
                         comparisonList.Add(comparison);
                     }
                     return comparisonList.ToArray();
+                //case _customChartStatsGraph:
+                //    return new ComparisonCalculationBase[0];
                 #region old old old
                 /*case "Spell AoE HpS":
                     _currentChartName = chartName;
@@ -739,8 +717,84 @@ namespace Rawr.HealPriest
                     */
                 #endregion
                 default:
-                    _currentChartName = null;
                     return new ComparisonCalculationBase[0];
+            }
+        }
+
+        public override System.Windows.Controls.Control GetCustomChartControl(string chartName)
+        {
+            switch (chartName)
+            {
+                case _customChartStatsGraph:
+                    return Graph.Instance;
+                default:
+                    return null;
+            }
+        }
+
+        public override void UpdateCustomChartData(Character character, string chartName, System.Windows.Controls.Control control)
+        {
+            switch (chartName)
+            {
+                case _customChartStatsGraph:
+                    Color[] statColors = new Color[] {
+                        Color.FromArgb(0xFF, 0xFF, 0x00, 0x00), 
+                        Color.FromArgb(0xFF, 0x00, 0x00, 0xFF), 
+                        Color.FromArgb(0xFF, 0xFF, 0xFF, 0x00), 
+                        Color.FromArgb(0xFF, 0x00, 0x00, 0x00), 
+                        Color.FromArgb(0xFF, 0xFF, 0xCC, 0x00), 
+                        Color.FromArgb(0xFF, 0x00, 0xFF, 0x00), 
+                        Color.FromArgb(0xFF, 0x00, 0xCC, 0xFF),
+                    };
+
+                    List<float> X = new List<float>();
+                    List<ComparisonCalculationBase[]> Y = new List<ComparisonCalculationBase[]>();
+
+                    Stats[] statsList = new Stats[] {
+                                new Stats() { Intellect = 10 },
+                                new Stats() { Spirit = 10 },
+                                new Stats() { HasteRating = 10 },
+                                new Stats() { CritRating = 10 },
+                                new Stats() { MasteryRating = 10 },
+                                new Stats() { Mp5 = 10 },
+                            };
+
+                    Graph.Instance.UpdateStatsGraph(character, statsList, statColors, 500, "", null);
+                    break;
+            }
+        }
+
+        private Dictionary<string, Color> _subPointNameColors = null;
+        public override Dictionary<string, Color> SubPointNameColors
+        {
+            get
+            {
+                if (_subPointNameColors == null)
+                {
+                    _subPointNameColors = new Dictionary<string, Color>();
+                    _subPointNameColors.Add("Burst", Color.FromArgb(255, 192, 0, 0));
+                    _subPointNameColors.Add("Sustained", Color.FromArgb(255, 192, 96, 96));
+                    _subPointNameColors.Add("Mana", Color.FromArgb(255, 0, 0, 192));
+                }
+                return _subPointNameColors;
+                /*
+                switch (_currentChartName)
+                {
+                    case _customChartManaSources:
+                        _subPointNameColors = new Dictionary<string, Color>();
+                        _subPointNameColors.Add("Mana", Color.FromArgb(255, 0, 0, 192));
+                        break;
+                    case _customChartStatsGraph:
+                        _subPointNameColors = new Dictionary<string, Color>();
+                        break;
+                    default:
+                        _subPointNameColors = new Dictionary<string, Color>();
+                        _subPointNameColors.Add("Burst", Color.FromArgb(255, 192, 0, 0));
+                        _subPointNameColors.Add("Sustained", Color.FromArgb(255, 192, 96, 96));
+                        _subPointNameColors.Add("Mana", Color.FromArgb(255, 0, 0, 192));
+                        break;
+                }
+                return _subPointNameColors;*/
             }
         }
 
