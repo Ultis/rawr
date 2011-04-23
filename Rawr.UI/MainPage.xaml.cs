@@ -1092,6 +1092,9 @@ If that is still not working for you, right-click anywhere within the web versio
             sfd.Filter = "character file (*.xml)|*.xml";
             if (sfd.ShowDialog().GetValueOrDefault(false))
             {
+#if !SILVERLIGHT
+                sfd.FileName = lastSavedPath;
+#endif
                 using (Stream s = sfd.OpenFile())
                 {
                     Character.Save(s);
@@ -1742,7 +1745,6 @@ In Silverlight, the online version of Rawr, you will be prompted with quick link
 #endif
             webHelp.Show();
         }
-
 
         /*private System.Timers.Timer bh_hasIssueTimer = null;
         private bool blinkOn = true;
