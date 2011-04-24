@@ -772,15 +772,21 @@ namespace Rawr.Bosses
                 #region Arcane Storm
                 /* Arcane Storm (10) / (25) - This 6 second channeled spell is used often throughout the encounter and can be interrupted. It deals 8k(10m)/15k(25m) arcane
                  *      damage to each raid member at 1 second intervals. */
+				/* 10 man - http://www.wowhead.com/spell=77908
+				    25 man - http://www.wowhead.com/spell=92961
+					10 man heroic - http://www.wowhead.com/spell=92962
+					25 man heroic - http://www.wowhead.com/spell=92963 */
                 RedVial.Attacks.Add(new Attack
                 {
                     Name = "Arcane Storm",
                     AttackType = ATTACK_TYPES.AT_AOE, IsDoT = true,
                     DamageType = ItemDamageType.Arcane,
-                    DamagePerTick = new float[] { 14137 + 15862, 14137 + 15862, 14137 + 15862, 14137 + 15862 }[i] / 2f,
+                    DamagePerTick = new float[] { (14137 + 15862), (14137 + 15862), (47125 + 52875), (47125 + 52875) }[i] / 2f,
                     Duration = 2, // Assuming players interupt him at 2s
                     TickInterval = 1,
-                    AttackSpeed = 20, // TODO: Get proper attack speed
+					// Deadly Boss Mods is quoting 14 seconds as of April 23rd, 2011; release version 5621.
+					// BigWigs does not show a timer for this
+                    AttackSpeed = 14,
                     MaxNumTargets = Max_Players[i], 
                     Interruptable = true,
                 });
@@ -793,13 +799,18 @@ namespace Rawr.Bosses
                 /* Release Aberrations - This is a 1.5 second summon used by the boss about every 30 seconds and can be interrupted. There will be 4 casts before each Green
                  *      Vial phase, with each wave summoning 3 Aberration adds with 365k(10m)/1.3m(25m) health and melee for about 4k(10)/8k(25m) after mitigation and only
                  *      1 stack of their buff, Growth Catalyst. */
+				// http://www.wowhead.com/spell=77569
                 RedVial.Targets.Add(new TargetGroup {
                     Name = "Release Aberrations",
                     LevelOfTargets = 85,
                     NumTargs = 3,
                     NearBoss = false,
-                    Frequency = 30,
-                    Duration = (47f * 1000f * 2f) + (15f * 1000f), // TODO: Should be tied to two phases, you build them up to nine, then AoE during a Green Vial Phase + 15 seconds to AoE them down
+					// Deadly Boss Mods is quoting 15 seconds as of April 23rd, 2011; release version 5621.
+					// BigWigs does not show a timer for this
+                    Frequency = 15,
+					// Each Red and Blue Phase lasts for 47 seconds as posted by BigWigs as of April 23rd, 2011; release version 8327.
+					// Deadly Boss Mods is quoting 49 seconds as of April 23rd, 2011; release version 5621. Will average them out.
+                    Duration = (48f * 1000f * 2f) + (15f * 1000f), // TODO: Should be tied to two phases, you build them up to nine, then AoE during a Green Vial Phase + 15 seconds to AoE them down
                     Chance = 1.00f,
                 });
                 RedVial.LastTarget.AffectsRole[PLAYER_ROLES.OffTank] = true;
@@ -809,24 +820,36 @@ namespace Rawr.Bosses
                 #endregion
                 /* TODO: Remedy (10) / (25) - Maloriak occasionally uses this to buff himself, healing for 25k(10m)/75k(25m) and restoring 2k mana per second for 10 seconds. However,
                  *      it can be removed with offensive magic dispels or can be taken via a mage's Spellsteal. */
+				/* 10 man - http://www.wowhead.com/spell=77912
+				    25 man - http://www.wowhead.com/spell=92965
+					10 man heroic - http://www.wowhead.com/spell=92966
+					25 man heroic - http://www.wowhead.com/spell=92967 */
                 #endregion
                 #region Red Vial (Group Up!)
                 // Fire Imbued - This 40 second buff on Maloriak is triggered upon tossing a Red Vial into his cauldron. It allows the usage of his fire-based special abilities.
                 // NOTE: This has no bearing in modelling, it simply makes the other attacks active
+				// http://www.wowhead.com/spell=78896
                 #region Consuming Frames
                 /* Consuming Flames (10) / (25) - This 10 second debuff during the Red Vial phase is placed on a random raid member and causes them to take 3k(10m)/6k(25m)
-                 *      fire damage per second, and additionally, causes the target to take additional damage equal to 25% of the damage taken from other magic sources.
+                 *      fire damage per second, and additionally, causes the target to take additional damage equal to 50% of the damage taken from other magic sources.
                  *      (Example: In 10-man, having this debuff and getting breathed on from a Scorching Blast that hits all 10 raid members, reducing the individual player's
                  *      damage from Scorching Blast to 20k, will result in an additional 5k (which is 25% of 20,000) damage taken per second from Consuming Flames' secondary effect.) */
+				/* 10 man - http://www.wowhead.com/spell=77786
+				    25 man - http://www.wowhead.com/spell=92972
+					10 man heroic - http://www.wowhead.com/spell=92971
+					25 man heroic - http://www.wowhead.com/spell=92973 */
                 RedVial.Attacks.Add(new Attack {
                     Name = "Consuming Flames",
                     AttackType = ATTACK_TYPES.AT_RANGED, IsDoT = true,
                     DamageType = ItemDamageType.Fire,
-                    DamagePerTick = new float[] { 3000, 6000, 3000, 6000 }[i],
+                    DamagePerTick = new float[] { 4500, 7500, 9000, 13500 }[i],
                     Duration = 10,
                     TickInterval = 1,
                     MaxNumTargets = 1,
-                    AttackSpeed = 45, // TODO: Get proper Attack Speed
+					// Cast 4 times during Red Vial phase according to logs
+					// 2nd is 12 seconds after 1st cast, 3rd is 7 seconds after, 4th is 12 seconds after
+					// Neither BigWigs or DBM show a timer for this.
+                    AttackSpeed = 10.3f,
                 });
                 RedVial.LastAttack.SetAffectsRoles_All();
                 RedVial.BuffStates.Add(new BuffState {
@@ -835,13 +858,17 @@ namespace Rawr.Bosses
                     Duration = RedVial.LastAttack.Duration * 1000f,
                     AffectsRole = RedVial.LastAttack.AffectsRole,
                     Chance = RedVial.LastAttack.MaxNumTargets / Max_Players[i],
-                    Stats = { FireDamageTakenMultiplier = 0.25f },
+                    Stats = { FireDamageTakenMultiplier = 0.50f },
                     Breakable = true, // Cloak of Shadows and similar abilities can break this debuff
                 });
                 #endregion
                 #region Scorching Blast
                 /* Scorching Blast (10) / (25) - This ability is only used when Maloriak is Fire Imbued, and deals 200k(10m)/500k(25m)
                    fire damage split between all players in a cone 60 yards in front of the boss. */
+				/* 10 man - http://www.wowhead.com/spell=77679
+				   25 man - http://www.wowhead.com/spell=92968
+				   10 man heroic - http://www.wowhead.com/spell=92969
+				   25 man heroic - http://www.wowhead.com/spell=92970 */
                 RedVial.Attacks.Add(new Attack {
                     Name = "Scorching Blast",
                     AttackType = ATTACK_TYPES.AT_AOE, IsDoT = true,
@@ -850,7 +877,9 @@ namespace Rawr.Bosses
                     Duration = 4f,
                     TickInterval = 1f,
                     MaxNumTargets = Max_Players[i],
-                    AttackSpeed = 8f, // TODO: Get attack speed for this ability
+					// Both DBM and BigWigs is saying 10 second cooldown as of April 23rd, 2011; release version 5621 and 8327 respectively.
+					// Logs are showing 19 seconds between each cast
+                    AttackSpeed = 19f,
                 });
                 RedVial.LastAttack.SetAffectsRoles_All();
                 #endregion
@@ -861,16 +890,22 @@ namespace Rawr.Bosses
                 #region Biting Chill
                 /* Biting Chill (10) / (25) - This debuff is placed on 1-2(10m)/3-5(25m) raid members that are within 10 yards of Maloriak. The debuff lasts 10 seconds and deals
                  *      5k(10m)/7.5k(25m) frost damage per second to anyone within (6???) yards. */
+				/* 10 man - http://www.wowhead.com/spell=77763
+				   25 man - http://www.wowhead.com/spell=92975
+				   10 man heroic - http://www.wowhead.com/spell=92976
+				   25 man heroic - http://www.wowhead.com/spell=92977 */
                 BlueVial.Attacks.Add(new Attack {
                     Name = "Biting Chill",
                     AttackType = ATTACK_TYPES.AT_AOE,
                     IsDoT = true,
                     DamageType = ItemDamageType.Frost,
-                    DamagePerTick = new float[] { 5000, 7500, 5000, 7500 }[i] / 2f,
+					// spell description shows 5000 damage for each version, however logs are showing 10,000 damage for heroics (10 and 25)
+                    DamagePerTick = new float[] { 5000, 5000, 10000, 10000 }[i],
                     Duration = 10f,
                     TickInterval = 1f,
                     MaxNumTargets = new float[] { 1+2, 3+5, 1+2, 3+5 }[i] / 2f,
-                    AttackSpeed = 8f, // TODO: Get attack speed for this ability
+					// DBM is reporting a 10 second cooldown as of April 23rd, 2011; release version 5621
+                    AttackSpeed = 10f,
                 });
                 BlueVial.LastAttack.SetUnavoidable();
                 BlueVial.LastAttack.SetAffectsRoles_Tanks();
@@ -881,15 +916,22 @@ namespace Rawr.Bosses
                  *      Flash Freeze, with 5k(10m)/17.5k(25m) health. Upon becoming frozen, that player will take 50k(10m)/75k(25m) frost damage and be unable to move or use
                  *      abilities. Additionally, other players within (10???) yards of the initial target will take the damage and be placed in Flash Freeze ice blocks. When any
                  *      Flash Freeze ice block is destroyed that player will Shatter (10) / (25) dealing an additional 50k(10m)/75k(25m) frost damage to all players within (10???)
-                 *      yards and removing the Flash Freeze debuff on any other players within (10???) yards, freeing them as well.
-                 */
+                 *      yards and removing the Flash Freeze debuff on any other players within (10???) yards, freeing them as well. */
+				/* 10 man - http://www.wowhead.com/spell=77699
+				   25 man - http://www.wowhead.com/spell=92978
+				   10 man heroic - http://www.wowhead.com/spell=92979
+				   25 man heroic - http://www.wowhead.com/spell=92980 */
                 BlueVial.Attacks.Add(new Attack {
                     Name = "Flash Freeze",
                     AttackType = ATTACK_TYPES.AT_AOE,
                     DamageType = ItemDamageType.Frost,
-                    DamagePerHit = new float[] { (70687 + 79312) + (56550 + 63450), (70687 + 79312) + (56550 + 63450), (70687 + 79312) + (56550 + 63450), (70687 + 79312) + (56550 + 63450) }[i] / 2f, // TODO: Verify these numbers. Wowhead says the same thing on each tooltip but when you look at the spell data it says different values
-                    MaxNumTargets = Max_Players[i],
-                    AttackSpeed = 8f, // TODO: Get attack speed for this ability
+					// Everyone should be spread out so that any extra damage is non-existant. The damage here is applied after the iceblock is "killed"
+					// Wowhead does have the damage range just it is not reflected in the tooltip
+                    DamagePerHit = new float[] { (70687 + 79312), (70687 + 79312), (84825 + 95175), (117812 + 132187) }[i] / 2f,
+                    MaxNumTargets = 1f,
+					// DBM is reporting a 14 second cooldown as of April 23rd, 2011; release version 5621
+					// BigWigs is reporting a 15 second cooldown as of April 23rd, 2011; release version 8327; using a medium of the two
+                    AttackSpeed = 14.5f,
                 });
                 BlueVial.LastAttack.SetUnavoidable();
                 BlueVial.LastAttack.SetAffectsRoles_All();
@@ -899,8 +941,8 @@ namespace Rawr.Bosses
                     Duration = 4f * 1000f,
                     Frequency = BlueVial.LastAttack.AttackSpeed,
                     NearBoss = false,
-                    NumTargs = 2, // Assuming 2 people get frozen
-                    Chance = 2f / Max_Players[i], // 2 DPS need to work them down after healers top off the encased player's HP
+                    NumTargs = 1, // Only one player gets frozen at a given time.
+                    Chance = 1f / Max_Players[i], // 2 DPS need to work them down after healers top off the encased player's HP
                     LevelOfTargets = 85,
                 });
                 #endregion
@@ -910,6 +952,7 @@ namespace Rawr.Bosses
                 /* Debilitating Slime (10) / (25) - When the Green Vial is tossed into the cauldron, it will knock Maloriak back 15 yards and cover the room in a green spray,
                  *  debuffing all friendly and enemy targets in the room for 15 seconds which increases damage taken by 100%(10m)/150%(25m), additionally, it will temporarily remove
                  *  the Growth Catalyst buff on any Aberrations or from Maloriak himself. This will make incoming tank damage very high, but will also drastically increase raid DPS. */
+				// http://www.wowhead.com/spell=77615
                 GreenVial.BuffStates.Add(new BuffState {
                     Name = "Debilitating Slime (Buff, Debuff)",
                     Frequency = 45,
@@ -926,24 +969,29 @@ namespace Rawr.Bosses
                 #region Dark Vial (Heroic Only)
                 // TODO: Dark Sludge
                 #region Vile Swill
+				// http://www.wowhead.com/npc=49811
                 DarkVial.Targets.Add(new TargetGroup {
                     Name = "Vile Swill",
                     Frequency = BerserkTimer[i],
                     Chance = 1.00f,
-                    Duration = 30 * 1000f,
+					// Both DBM and BigWigs is reporting a 100 second Dark Phase as of April 23rd, 2011; release version 5621 and 8327 respectively
+                    Duration = 100 * 1000f, // It usually takes the full length of the phase to kill them
                     NearBoss =  false, // They are kiting around the outside of the room
                     LevelOfTargets = 88,
-                    NumTargs = 3, // TODO: Confirm this
+                    NumTargs = new float[] { 0f, 0f, 3f, 5f }[i] // TODO: Confirm 10 man number of adds, 25 man has 5 spawns
                 });
                 DarkVial.LastTarget.SetAffectsRoles_All();
                 #endregion
                 #region Engulfing Darkness
+				// http://www.wowhead.com/spell=92983
                 DarkVial.Attacks.Add(new Attack {
                     Name = "Engulfing Darkness",
                     DamageType = ItemDamageType.Shadow,
                     AttackType = ATTACK_TYPES.AT_RANGED,
                     DamagePerHit = 25000,
-                    AttackSpeed = 10,
+					// Deadly Boss Mods is quoting 12 seconds as of April 23rd, 2011; release version 5621.
+					// BigWigs does not show a timer for this
+                    AttackSpeed = 12,
                     MaxNumTargets = 1, // Only one person should ever be hit by it, the main tank
                 });
                 DarkVial.LastAttack.SetUnavoidable();
@@ -963,9 +1011,10 @@ namespace Rawr.Bosses
                 #region Phase 2 (at 25% HP)
                 #region Release All
                 /* "Release All"
-                 * Release All - When Maloriak reaches 20% health, he will cast this ability, summoning two Prime Subject and will summon 3 Aberrations for every Release Aberration
+                 * Release All - When Maloriak reaches 25% health, he will cast this ability, summoning two Prime Subject and will summon 3 Aberrations for every Release Aberration
                  *      cast that was interrupted throughout the fight. The Prime Subjects have 8.6million(10m)/30.1million(25m) health and melee much harder than the smaller adds,
                  *      with each hit for about 20k-25k(10m)/30k-40k(25m) damage after mitigation. They will occasionally fixate a random target and attempt to kill it. */
+				// http://www.wowhead.com/spell=77991
                 Under25.Targets.Add(new TargetGroup {
                     Name = "Release All (Aberrations)",
                     LevelOfTargets = 85,
@@ -978,13 +1027,15 @@ namespace Rawr.Bosses
                 Under25.LastTarget.AffectsRole[PLAYER_ROLES.OffTank] = true;
                 Under25.LastTarget.AffectsRole[PLAYER_ROLES.MeleeDPS] = true;
                 Under25.LastTarget.AffectsRole[PLAYER_ROLES.RangedDPS] = true;
+				// http://www.wowhead.com/npc=41841
                 Under25.Targets.Add(new TargetGroup {
                     Name = "Release All (Prime Subjects)",
                     LevelOfTargets = 88,
                     NumTargs = 2,
                     NearBoss = Under25.LastTarget.NearBoss,
                     Frequency = Under25.LastTarget.Frequency,
-                    Duration = 30f * 1000f,
+					// these are tanked for as much as 132 seconds on normal and 232 on heroic
+                    Duration = new float[] { 132, 132, 232, 232}[i] * 1000f,
                     Chance = Under25.LastTarget.Chance,
                     AffectsRole = Under25.LastTarget.AffectsRole,
                 });
@@ -993,11 +1044,17 @@ namespace Rawr.Bosses
                 /* Magma Jets (10) / (25) - This ability is only used by Maloriak after he has used Release All. After a 2 second cast, the boss will charge toward a random raid
                  *      member and deal 25k(10m)/50k(25m) fire damage to anyone in the path and knock them back 30 yards. It will also leave a path of fire that deals 5k(10m)/10k(25m)
                  *      fire damage per second to anyone that gets within 3 yards. The trails dissipate after 20 seconds. */
+				/* 10 man - http://www.wowhead.com/spell=78095
+				   25 man - http://www.wowhead.com/spell=93014
+				   10 man heroic - http://www.wowhead.com/spell=93015
+				   25 man heroic - http://www.wowhead.com/spell=93016 */
+				// TODO: Tank can move away from the attack
+				// TODO: Add 30 yard knockback to main tank
                 Under25.Attacks.Add(new Attack {
                     Name = "Magma Jets",
                     AttackType = ATTACK_TYPES.AT_AOE,
                     DamageType = ItemDamageType.Fire,
-                    DamagePerHit = new float[] { 38000 + 42000, 38000 + 42000, 38000 + 42000, 38000 + 42000 }[i] / 2f,
+                    DamagePerHit = new float[] { (38000 + 42000), (37700 + 42300), (70687 + 79312), (70687 + 79312) }[i] / 2f,
                     AttackSpeed = 12.5f,
                     MaxNumTargets = Max_Players[i],
                 });
@@ -1009,9 +1066,16 @@ namespace Rawr.Bosses
                 /* Absolute Zero (10) / (25) - This ability is only used by Maloriak after he has used Release All. This ability will form a circle near a random raid member that will
                  *      spawn a floating ice sphere after 3 seconds. When the ball becomes active, it will float randomly around the room. If it comes into contact with a player, it
                  *      will explode dealing 20k(10m)/40k(25m) frost damage and cause a 10 yard knock back to all nearby players. */
+				/* 10 man - http://www.wowhead.com/spell=78208
+				   25 man - http://www.wowhead.com/spell=93041
+				   10 man heroic - http://www.wowhead.com/spell=93042
+				   25 man heroic - http://www.wowhead.com/spell=93043
+				   NPC - http://www.wowhead.com/npc=41961 */ 
                 Under25.Moves.Add(new Impedance {
                     Name = "Absolute Zero Spheres (Avoiding)",
-                    Frequency = 12.5,
+					// According to logs, it is cast every 7 seconds
+					// DBM and BigWigs do not show any cooldown
+                    Frequency = 7,
                     Duration = 3f * 1000f, // Assuming takes 3s to move out of the way
                     Chance = 1f / Max_Players[i],
                     Breakable = true, // movement is always breakable
@@ -1021,6 +1085,10 @@ namespace Rawr.Bosses
                 #region Acid Nova
                 /* Acid Nova (10) / (25) - This ability is only used by Maloriak after he has used Release All. This ability is as a blast that will place a 10 second debuff on everyone
                  *      in the raid which deals 5k(10m)/7.5k(25m) nature damage per second. */
+				/* 10 man - http://www.wowhead.com/spell=78225
+				   25 man - http://www.wowhead.com/spell=93011
+				   10 man heroic - http://www.wowhead.com/spell=93012
+				   25 man heroic - http://www.wowhead.com/spell=93013 */
                 Under25.Attacks.Add(new Attack {
                     Name = "Acid Nova",
                     AttackType = ATTACK_TYPES.AT_AOE,
@@ -1028,7 +1096,9 @@ namespace Rawr.Bosses
                     DamagePerTick = new float[] { 7500, 7500, 15000, 15000 }[i],
                     Duration = 10,
                     TickInterval = 1,
-                    AttackSpeed = 20, // TODO: Get proper attack speed
+					// Logs are showing a 30 second cooldown
+					// Both DBM and BigWigs do not show a timer for this
+                    AttackSpeed = 30,
                     MaxNumTargets = Max_Players[i],
                 });
                 Under25.LastAttack.SetUnavoidable();
@@ -1042,30 +1112,33 @@ namespace Rawr.Bosses
                 ClearPhase1Values(ref BlueVial);
                 ClearPhase1Values(ref GreenVial);
                 ClearPhase1Values(ref Under25);
+				// DBM is reporting a 49 second phase length for Red, Blue, and Green phases as of April 23rd, 2011; release version 5621
+				// BigWigs is reporting a 47 second phase length for Red, Blue, and Green phases as of April 23rd, 2011; release version 8327. Using a medium of the two
+				// DBM and BigWigs is reporting a 100 second Black phase as of April 23rd, 2011; release version 5621 and 8327 respectively
                 // Under 25% needs to hit after the second Green Vial phase, especially on heroic or raids will hit the enrage timer
                 if (i == 0 || i == 1) {
-                    ApplyAPhasesValues(ref RedVial,   i, 1, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 47;
-                    ApplyAPhasesValues(ref BlueVial,  i, 2, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 47;
-                    ApplyAPhasesValues(ref GreenVial, i, 3, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 47;
-                    ApplyAPhasesValues(ref RedVial,   i, 4, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 47;
-                    ApplyAPhasesValues(ref BlueVial,  i, 5, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 47;
-                    ApplyAPhasesValues(ref GreenVial, i, 6, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 47;
-                    ApplyAPhasesValues(ref Under25,   i, 7, phaseStartTime, 60, this[i].BerserkTimer);
+                    ApplyAPhasesValues(ref RedVial,   i, 1, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
+                    ApplyAPhasesValues(ref BlueVial,  i, 2, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
+                    ApplyAPhasesValues(ref GreenVial, i, 3, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
+                    ApplyAPhasesValues(ref RedVial,   i, 4, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
+                    ApplyAPhasesValues(ref BlueVial,  i, 5, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
+                    ApplyAPhasesValues(ref GreenVial, i, 6, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
+                    ApplyAPhasesValues(ref Under25,   i, 7, phaseStartTime, 132, this[i].BerserkTimer);
                 }
                 else if (i == 2 || i == 3)
                 {
-                    ApplyAPhasesValues(ref DarkVial,  i, 1, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 100;
-                    ApplyAPhasesValues(ref RedVial,   i, 2, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 47;
-                    ApplyAPhasesValues(ref BlueVial,  i, 3, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 47;
-                    ApplyAPhasesValues(ref GreenVial, i, 4, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 47;
-                    ApplyAPhasesValues(ref DarkVial,  i, 5, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 100;
-                    ApplyAPhasesValues(ref RedVial,   i, 6, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 47;
-                    ApplyAPhasesValues(ref BlueVial,  i, 7, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 47;
-                    ApplyAPhasesValues(ref GreenVial, i, 8, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 47;
+                    ApplyAPhasesValues(ref DarkVial,  i, 1, phaseStartTime, 100, this[i].BerserkTimer); phaseStartTime += 100;
+                    ApplyAPhasesValues(ref RedVial,   i, 2, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
+                    ApplyAPhasesValues(ref BlueVial,  i, 3, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
+                    ApplyAPhasesValues(ref GreenVial, i, 4, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
+                    ApplyAPhasesValues(ref DarkVial,  i, 5, phaseStartTime, 100, this[i].BerserkTimer); phaseStartTime += 100;
+                    ApplyAPhasesValues(ref RedVial,   i, 6, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
+                    ApplyAPhasesValues(ref BlueVial,  i, 7, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
+                    ApplyAPhasesValues(ref GreenVial, i, 8, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
 //                    ApplyAPhasesValues(ref DarkVial,  i, 9, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
 //                    ApplyAPhasesValues(ref RedVial,   i,10, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
 //                    ApplyAPhasesValues(ref BlueVial,  i,11, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
-                    ApplyAPhasesValues(ref Under25,   i,9, phaseStartTime, 60, this[i].BerserkTimer);
+                    ApplyAPhasesValues(ref Under25,   i,9, phaseStartTime, 232, this[i].BerserkTimer);
 
                     AddAPhase(DarkVial, i);
                 }
