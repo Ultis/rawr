@@ -804,9 +804,13 @@ namespace Rawr.DK
 
             // Simple ITx1, PSx1, BSx1, SSx4 & Festx4.
             // Initial rotation build.
-            ml_Rot.Add(Dark); // Dark Transformation.
-            int curRP = Dark.RunicPower;
-
+            int curRP = 0;
+            if (m_CT.m_CState.m_Talents.DarkTransformation > 0)
+            {
+                // this won't be there if they're not spec'd for it.
+                ml_Rot.Add(Dark); // Dark Transformation.
+                curRP = Dark.RunicPower;
+            }
             uint subrotDuration = 0;
             uint GCDdur = MIN_GCD_MS;
             // Fill the 3 mins duration 

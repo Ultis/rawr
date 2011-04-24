@@ -346,23 +346,6 @@ namespace Rawr.DPSDK
             }
         }
 
-        private string[] _customChartNames = null;
-        public override string[] CustomChartNames {
-            get {
-                if (_customChartNames == null) 
-                { 
-                    _customChartNames = new string[] 
-                        { 
-                            "Item Budget (10 point steps)", 
-                            "Item Budget (25 point steps)", 
-                            "Item Budget (50 point steps)", 
-                            "Item Budget (100 point steps)",
-                            "Presences",
-                        }; }
-                return _customChartNames;
-            }
-        }
-
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
         public override ICalculationOptionsPanel CalculationOptionsPanel
         {
@@ -453,7 +436,7 @@ namespace Rawr.DPSDK
             calc.BasicStats = stats.Clone() as StatsDK; 
 
             DKCombatTable combatTable = new DKCombatTable(character, stats, calc, calcOpts, hBossOptions);
-            combatTable.PostAbilitiesSingleUse(false);
+            if (needsDisplayCalculations) combatTable.PostAbilitiesSingleUse(false);
             Rotation rot = new Rotation(combatTable);
             Rotation.Type RotT = rot.GetRotationType(character.DeathKnightTalents);
 
@@ -674,9 +657,8 @@ namespace Rawr.DPSDK
             statsTotal.Accumulate(statsBuffs);
             statsTotal.Accumulate(statsRace);
             statsTotal = GetRelevantStats(statsTotal) as StatsDK; // GetRel removes any stats specific to the StatsDK object.
-            statsTotal.Mastery += 8;
-            AccumulatePresenceStats(statsTotal, calcOpts.presence, talents);
             AccumulateTalents(statsTotal, character);
+            AccumulatePresenceStats(statsTotal, calcOpts.presence, talents);
 
             return (statsTotal);
         }
@@ -1345,13 +1327,29 @@ namespace Rawr.DPSDK
         }
 
         #region Custom Charts
+        private string[] _customChartNames = null;
+        public override string[] CustomChartNames
+        {
+            get
+            {
+                if (_customChartNames == null)
+                {
+                    _customChartNames = new string[] 
+                        { 
+                            "Stats Graph", 
+                            "Presences",
+                        };
+                }
+                return _customChartNames;
+            }
+        }
+        
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
             List<ComparisonCalculationBase> comparisonList = new List<ComparisonCalculationBase>();
             CharacterCalculationsDPSDK baseCalc, calc;
             ComparisonCalculationBase comparison;
             float[] subPoints;
-            float fMultiplier = 1f;
 
             baseCalc = GetCharacterCalculations(character) as CharacterCalculationsDPSDK;
 
@@ -1369,28 +1367,6 @@ namespace Rawr.DPSDK
 
             switch (chartName)
             {
-
-                //"Item Budget (10 point steps)","Item Budget (25 point steps)","Item Budget(50 point steps)","Item Budget (100 point steps)"
-                case "Item Budget (10 point steps)":
-                    {
-                        fMultiplier = 1f;
-                        break;
-                    }
-                case "Item Budget (25 point steps)":
-                    {
-                        fMultiplier = 2.5f;
-                        break;
-                    }
-                case "Item Budget (50 point steps)":
-                    {
-                        fMultiplier = 5f;
-                        break;
-                    }
-                case "Item Budget (100 point steps)":
-                    {
-                        fMultiplier = 10f;
-                        break;
-                    }
                 case "Presences":
                     {
                         string[] listPresence = EnumHelper.GetNames(typeof(Presence));
@@ -1428,39 +1404,57 @@ namespace Rawr.DPSDK
                 default:
                     return new ComparisonCalculationBase[0];
             }
-
-            // Item Budget list. since it's used multiple times.
-            Item[] itemList = new Item[] 
-            {
-                new Item() { Stats = new Stats() { Strength = 10 * fMultiplier } },
-                new Item() { Stats = new Stats() { Agility = 10 * fMultiplier } },
-                new Item() { Stats = new Stats() { AttackPower = 20 * fMultiplier } },
-                new Item() { Stats = new Stats() { CritRating = 10 * fMultiplier } },
-                new Item() { Stats = new Stats() { HitRating = 10 * fMultiplier } },
-                new Item() { Stats = new Stats() { ExpertiseRating = 10 * fMultiplier } },
-                new Item() { Stats = new Stats() { HasteRating = 10 * fMultiplier } },
-                new Item() { Stats = new Stats() { MasteryRating = 10 * fMultiplier } },
-            };
-            // Do the math.
-            for (int index = 0; index < itemList.Length; index++)
-            {
-                calc = GetCharacterCalculations(character, itemList[index]) as CharacterCalculationsDPSDK;
-
-                comparison = CreateNewComparisonCalculation();
-                comparison.Name = statList[index];
-                comparison.Equipped = false;
-                comparison.OverallPoints = calc.OverallPoints - baseCalc.OverallPoints;
-                subPoints = new float[calc.SubPoints.Length];
-                for (int i = 0; i < calc.SubPoints.Length; i++)
-                {
-                    subPoints[i] = calc.SubPoints[i] - baseCalc.SubPoints[i];
-                }
-                comparison.SubPoints = subPoints;
-
-                comparisonList.Add(comparison);
-            }
-            return comparisonList.ToArray();
         }
+
+        public override System.Windows.Controls.Control GetCustomChartControl(string chartName)
+        {
+            switch (chartName)
+            {
+                case "Stats Graph":
+                    return Graph.Instance;
+                default:
+                    return null;
+            }
+        }
+
+        public override void UpdateCustomChartData(Character character, string chartName, System.Windows.Controls.Control control)
+        {
+            Color[] statColors = new Color[] { 
+                Color.FromArgb(0xFF, 0xFF, 0, 0), 
+                Color.FromArgb(0xFF, 0xFF, 165, 0), 
+                Color.FromArgb(0xFF, 0x80, 0x80, 0x00), 
+                Color.FromArgb(0xFF, 154, 205, 50), 
+                Color.FromArgb(0xFF, 0x00, 0xFF, 0xFF), 
+                Color.FromArgb(0xFF, 0, 0, 0xFF), 
+                Color.FromArgb(0xFF, 0x80, 0, 0xFF),
+                Color.FromArgb(0xFF, 0, 0x80, 0xFF),
+            };
+
+            List<float> X = new List<float>();
+            List<ComparisonCalculationBase[]> Y = new List<ComparisonCalculationBase[]>();
+
+            Stats[] statsList = new Stats[] {
+                        new Stats() { Strength = 10 },
+                        new Stats() { Agility = 10 },
+                        new Stats() { AttackPower = 10 },
+                        new Stats() { CritRating = 10 },
+                        new Stats() { HitRating = 10 },
+                        new Stats() { ExpertiseRating = 10 },
+                        new Stats() { HasteRating = 10 },
+                        new Stats() { MasteryRating = 10 },
+                    };
+
+            switch (chartName)
+            {
+                case "Stats Graph":
+                    Graph.Instance.UpdateStatsGraph(character, statsList, statColors, 200, "", null);
+                    break;
+                //                case "Scaling vs Parry Rating":
+                //                    Graph.Instance.UpdateScalingGraph(character, statsList, new Stats() { ParryRating = 5 }, true, statColors, 100, "", null);
+                //                    break;
+            }
+        }
+
         #endregion
 
         #region Relevant Stats?
