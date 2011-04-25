@@ -14,8 +14,8 @@ namespace Rawr.DK
             this.CState = CS;
             this.szName = "Howling Blast";
             this.AbilityCost[(int)DKCostTypes.Frost] = 1;
-            this.uMinDamage = 1152 / 2;
-            this.uMaxDamage = 1250 / 2;
+            this.uMinDamage = (uint)(1152 / 2 * 1.2); // 4.1 increases damage by 20%
+            this.uMaxDamage = (uint)(1250 / 2 * 1.2); // 4.1 increases damage by 20%
             this.tDamageType = ItemDamageType.Frost;
             this.bWeaponRequired = false;
             this.fWeaponDamageModifier = 0;
@@ -72,9 +72,10 @@ namespace Rawr.DK
                 float fDamageCount = (float)(uDuration / Math.Max(1, uTickRate));
 
                 iDamage *= fDamageCount * (1f + CritChance) * Math.Min(1f, HitChance);
-                if (bAOE == true) {
+                if (bAOE == true) 
+                {
                     // Need to ensure this value is reasonable for all abilities.
-                    iDamage += (iDamage * 0.40f) * (Math.Max(1f, this.CState.m_NumberOfTargets) - 1); // damage to secondary targets @ 40%
+                    iDamage += (iDamage * 0.50f) * (Math.Max(1f, this.CState.m_NumberOfTargets) - 1); // damage to secondary targets @ 50% (patch 4.1)
                 }
                 return iDamage;
             }

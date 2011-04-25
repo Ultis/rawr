@@ -66,7 +66,7 @@ namespace Rawr.DK
             get
             {
                 float DMM = base.DamageMultiplierModifer;
-                DMM += (.12f * CState.m_Talents.RageOfRivendare);
+                DMM += (.15f * CState.m_Talents.RageOfRivendare); // 4.1 raised to 15% per level
                 return DMM;
             }
             set

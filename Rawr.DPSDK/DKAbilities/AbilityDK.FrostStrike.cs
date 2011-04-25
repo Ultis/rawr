@@ -16,7 +16,7 @@ namespace Rawr.DK
             this.uBaseDamage = 0;
             this.tDamageType = ItemDamageType.Frost;
             this.bWeaponRequired = true;
-            this.fWeaponDamageModifier = 1.1f;
+            this.fWeaponDamageModifier = 1.3f;
             this.bTriggersGCD = true;
             this.AbilityIndex = (int)DKability.FrostStrike;
             UpdateCombatState(CS);

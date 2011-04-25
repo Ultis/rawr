@@ -15,7 +15,8 @@ namespace Rawr.DK
             this.CState = CS;
             this.szName = "Festering Strike";
             this.AbilityCost[(int)DKCostTypes.Frost] = 1;
-            this.AbilityCost[(int)DKCostTypes.RunicPower] = -10;
+            this.AbilityCost[(int)DKCostTypes.Blood] = 1;
+            this.AbilityCost[(int)DKCostTypes.RunicPower] = -20;
             this.DamageAdditiveModifer = 560 * 150 / 100;
             this.fWeaponDamageModifier = 1.5f;
             this.bWeaponRequired = true;
@@ -39,7 +40,7 @@ namespace Rawr.DK
             get
             {
                 float DMM = base.DamageMultiplierModifer;
-                DMM += (.12f * CState.m_Talents.RageOfRivendare);
+                DMM += (.15f * CState.m_Talents.RageOfRivendare); // 4.1 raised to 15% per level
                 return DMM;
             }
             set

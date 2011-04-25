@@ -12,6 +12,10 @@ namespace Rawr.DK
         {
             Custom, Blood, Frost, Unholy, Unknown,
         }
+        public enum TalentTrees
+        {
+            Blood, Frost, Unholy, 
+        }
 
         #region Variables
         public DKCombatTable m_CT;
@@ -84,39 +88,17 @@ namespace Rawr.DK
         public Type GetRotationType(DeathKnightTalents t)
         {
             curRotationType = Type.Custom;
-            const int indexBlood = 0; // start index of Blood Talents.
-            const int indexFrost = 20; // start index of Frost Talents.
-            const int indexUnholy = indexFrost + 20; // start index of Unholy Talents.
-            int[] TalentCounter = new int[4];
-            int index = indexBlood;
-            foreach (int i in t.Data)
-            {
-                // Blood
-                if (index < indexFrost)
-                    TalentCounter[(int)Rotation.Type.Blood]+= i;
-                // Frost
-                else if ((indexFrost <= index) && (index < indexUnholy))
-                {
-                    TalentCounter[(int)Rotation.Type.Frost]+= i;
-                }
-                // Unholy
-                else if (index >= indexUnholy)
-                {
-                    TalentCounter[(int)Rotation.Type.Unholy]+= i;
-                }
-                index++;
-            }
-            if ((TalentCounter[(int)Rotation.Type.Blood] > TalentCounter[(int)Rotation.Type.Frost]) && (TalentCounter[(int)Rotation.Type.Blood] > TalentCounter[(int)Rotation.Type.Unholy]))
+            if ((t.TreeCounts[(int)TalentTrees.Blood] > t.TreeCounts[(int)TalentTrees.Frost]) && (t.TreeCounts[(int)TalentTrees.Blood] > t.TreeCounts[(int)TalentTrees.Unholy]))
             {
                 // Blood
                 curRotationType = Rotation.Type.Blood;
             }
-            else if ((TalentCounter[(int)Rotation.Type.Frost] > TalentCounter[(int)Rotation.Type.Blood]) && (TalentCounter[(int)Rotation.Type.Frost] > TalentCounter[(int)Rotation.Type.Unholy]))
+            else if ((t.TreeCounts[(int)TalentTrees.Frost] > t.TreeCounts[(int)TalentTrees.Blood]) && (t.TreeCounts[(int)TalentTrees.Frost] > t.TreeCounts[(int)TalentTrees.Unholy]))
             {
                 // Frost
                 curRotationType = Rotation.Type.Frost;
             }
-            else if ((TalentCounter[(int)Rotation.Type.Unholy] > TalentCounter[(int)Rotation.Type.Frost]) && (TalentCounter[(int)Rotation.Type.Unholy] > TalentCounter[(int)Rotation.Type.Blood]))
+            else if ((t.TreeCounts[(int)TalentTrees.Unholy] > t.TreeCounts[(int)TalentTrees.Frost]) && (t.TreeCounts[(int)TalentTrees.Unholy] > t.TreeCounts[(int)TalentTrees.Blood]))
             {
                 // Unholy
                 curRotationType = Rotation.Type.Unholy;
@@ -376,7 +358,7 @@ namespace Rawr.DK
         {
             ResetRotation();
             // Let's do some basic rune tracking internal to the function before doing the heavy cost building.
-            int[] abCost = new int[EnumHelper.GetCount(typeof(DKCostTypes))];
+            int[] ResourcesAvailable = new int[EnumHelper.GetCount(typeof(DKCostTypes))];
 
             AbilityDK_IcyTouch IT = new AbilityDK_IcyTouch(m_CT.m_CState);
             AbilityDK_PlagueStrike PS = new AbilityDK_PlagueStrike(m_CT.m_CState);
@@ -384,7 +366,10 @@ namespace Rawr.DK
             AbilityDK_RuneStrike RS = new AbilityDK_RuneStrike(m_CT.m_CState);
             AbilityDK_DeathCoil DC = new AbilityDK_DeathCoil(m_CT.m_CState);
             AbilityDK_FrostStrike FS = new AbilityDK_FrostStrike(m_CT.m_CState);
+            // Unique Abilities for a given Spec:
             AbilityDK_DancingRuneWeapon DRW = new AbilityDK_DancingRuneWeapon(m_CT.m_CState);
+            DarkTranformation Dark = new DarkTranformation(m_CT.m_CState);
+
             // Setup our working lists:
             List<AbilityDK_Base> l_Openning = new List<AbilityDK_Base>();
 
@@ -407,30 +392,32 @@ namespace Rawr.DK
             ml_Rot.Add(PS); // U
             ml_Rot.Add(PS.ml_TriggeredAbility[0]);
 
-            abCost[(int)DKCostTypes.Blood] = 2;
-            abCost[(int)DKCostTypes.Frost] = 1;
-            abCost[(int)DKCostTypes.UnHoly] = 1;
-            abCost[(int)DKCostTypes.Death] = 0;
-            abCost[(int)DKCostTypes.RunicPower] = 0;
-
-            if ((GetRotationType(m_CT.m_CState.m_Talents) == Type.Blood) 
-                && (m_CT.m_CState.m_Talents.ScarletFever > 0))
+            if (m_CT.m_CState.m_Spec == Type.Frost)
             {
-                ml_Rot.Add(new AbilityDK_BloodBoil(m_CT.m_CState));
-                abCost[(int)DKCostTypes.Blood] -= 1;
+                ResourcesAvailable[(int)DKCostTypes.Death] = 2;
+                ResourcesAvailable[(int)DKCostTypes.Blood] = 0;
             }
+            else
+            {
+                ResourcesAvailable[(int)DKCostTypes.Blood] = 2;
+                ResourcesAvailable[(int)DKCostTypes.Death] = 0;
+            }
+            ResourcesAvailable[(int)DKCostTypes.Frost] = 1;
+            ResourcesAvailable[(int)DKCostTypes.UnHoly] = 1;
+            ResourcesAvailable[(int)DKCostTypes.RunicPower] = 0;
 
             List<AbilityDK_Base> RPList = new List<AbilityDK_Base>();
             int MaxIterations = 2;
             for (int i = 0; i < MaxIterations; i++)
             {
                 // Do this until we're out of runes.
-                while (abCost[(int)DKCostTypes.Blood] != 0
-                    || abCost[(int)DKCostTypes.Frost] != 0
-                    || abCost[(int)DKCostTypes.UnHoly] != 0)
+                while (ResourcesAvailable[(int)DKCostTypes.Blood] != 0
+                    || ResourcesAvailable[(int)DKCostTypes.Frost] != 0
+                    || ResourcesAvailable[(int)DKCostTypes.UnHoly] != 0
+                    || ResourcesAvailable[(int)DKCostTypes.Death] != 0)
                 {
                     // TODO: Integrate Ability CD & durations.
-                    RPList = GetFilteredListOfAbilities(abCost[(int)DKCostTypes.Blood], abCost[(int)DKCostTypes.Frost], abCost[(int)DKCostTypes.UnHoly], 0);
+                    RPList = GetFilteredListOfAbilities(ResourcesAvailable[(int)DKCostTypes.Blood], ResourcesAvailable[(int)DKCostTypes.Frost], ResourcesAvailable[(int)DKCostTypes.UnHoly], ResourcesAvailable[(int)DKCostTypes.Death]);
                     foreach (AbilityDK_Base ab in RPList)
                     {
                         ab.UpdateCombatState(m_CT.m_CState);
@@ -440,16 +427,25 @@ namespace Rawr.DK
                     else
                         RPList.Sort(AbilityDK_Base.CompareDPSByRunes);
                     ml_Rot.Add(RPList[0]);
-                    abCost[(int)DKCostTypes.Blood] -= RPList[0].AbilityCost[(int)DKCostTypes.Blood];
-                    abCost[(int)DKCostTypes.Frost] -= RPList[0].AbilityCost[(int)DKCostTypes.Frost];
-                    abCost[(int)DKCostTypes.UnHoly] -= RPList[0].AbilityCost[(int)DKCostTypes.UnHoly];
-                    abCost[(int)DKCostTypes.Death] -= RPList[0].AbilityCost[(int)DKCostTypes.Death];
-                    abCost[(int)DKCostTypes.RunicPower] -= RPList[0].AbilityCost[(int)DKCostTypes.RunicPower];
+                    ResourcesAvailable[(int)DKCostTypes.Blood] -= RPList[0].AbilityCost[(int)DKCostTypes.Blood];
+                    ResourcesAvailable[(int)DKCostTypes.Frost] -= RPList[0].AbilityCost[(int)DKCostTypes.Frost];
+                    ResourcesAvailable[(int)DKCostTypes.UnHoly] -= RPList[0].AbilityCost[(int)DKCostTypes.UnHoly];
+                    ResourcesAvailable[(int)DKCostTypes.Death] -= RPList[0].AbilityCost[(int)DKCostTypes.Death];
+                    ResourcesAvailable[(int)DKCostTypes.RunicPower] -= RPList[0].AbilityCost[(int)DKCostTypes.RunicPower];
                 }
                 // reset runes for multiple passes:
-                abCost[(int)DKCostTypes.Blood] = 2;
-                abCost[(int)DKCostTypes.Frost] = 2;
-                abCost[(int)DKCostTypes.UnHoly] = 2;
+                if (m_CT.m_CState.m_Spec == Type.Frost)
+                {
+                    ResourcesAvailable[(int)DKCostTypes.Death] = 2;
+                    ResourcesAvailable[(int)DKCostTypes.Blood] = 0;
+                }
+                else
+                {
+                    ResourcesAvailable[(int)DKCostTypes.Blood] = 2;
+                    ResourcesAvailable[(int)DKCostTypes.Death] = 0;
+                }
+                ResourcesAvailable[(int)DKCostTypes.Frost] = 2;
+                ResourcesAvailable[(int)DKCostTypes.UnHoly] = 2;
             }
 
             #region Runic Power
@@ -686,13 +682,14 @@ namespace Rawr.DK
             ml_Rot.Add(PS);
             ml_Rot.Add(BP);
 
+            // TODO: 4.1 Blood Runes are ALWAYS Death Runes.
             // These will create DeathRunes that can allow flexibility in the rotation later on.
-            ml_Rot.Add(BS);
-            ml_Rot.Add(BS);
+            // ml_Rot.Add(BS);
+            // ml_Rot.Add(BS);
 
             ml_Rot.Add(OB);
+            ml_Rot.Add(OB);
 
-            // ml_Rot.Add(HB); // Assuming the free HB due to proc.
             ml_Rot.Add(OB);
             ml_Rot.Add(OB);
             ml_Rot.Add(OB);
@@ -736,11 +733,12 @@ namespace Rawr.DK
                         ability.AbilityCost[(int)DKCostTypes.Frost] = 0;
                         ability.AbilityCost[(int)DKCostTypes.UnHoly] = 0;
                         ability.AbilityCost[(int)DKCostTypes.Death] = 0;
+                        ability.AbilityCost[(int)DKCostTypes.RunicPower] = 0;
                         ability.szName += " (Rime)";
                         ml_Rot.Add(ability);
                     }
                 }
-                if (fRimeMod > 0 && fRimeMod < 1)// 
+                if (fRimeMod > 0 && fRimeMod < 1)
                 {
                     // we want 1 full use, and then any sub values.
                     if (HB.DPS > IT.DPS)
@@ -758,6 +756,7 @@ namespace Rawr.DK
                     ability.AbilityCost[(int)DKCostTypes.Frost] = 0;
                     ability.AbilityCost[(int)DKCostTypes.UnHoly] = 0;
                     ability.AbilityCost[(int)DKCostTypes.Death] = 0;
+                    ability.AbilityCost[(int)DKCostTypes.RunicPower] = 0;
                     ability.szName += " (Rime_partial)";
                     ability.uBaseDamage = (uint)Math.Floor(ability.uBaseDamage * fRimeMod);
                     ml_Rot.Add(ability);

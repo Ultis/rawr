@@ -3725,13 +3725,13 @@ Induces a friendly unit into a killing frenzy for 30 sec.  The target is Enraged
 @"Increases the spell damage absorption of your Anti-Magic Shell by an additional 25%, and increases the runic power generated when damage is absorbed by Anti-Magic Shell.",})]
         public int MagicSuppression { get { return _data[51]; } set { _data[51] = value; } }
         /// <summary>
-        /// Increases the damage of your Plague Strike, Scourge Strike, and Festering Strike abilities by [12 * Pts]%.
+        /// Increases the damage of your Plague Strike, Scourge Strike, and Festering Strike abilities by [15 * Pts]%.
         /// </summary>
         [TalentData(index: 52, name: "Rage of Rivendare", maxPoints: 3, icon: "inv_weapon_halberd14",
          tree: 2, column: 3, row: 4, prerequisite: -1, description: new[] {
-@"Increases the damage of your Plague Strike, Scourge Strike, and Festering Strike abilities by 12%.",
-@"Increases the damage of your Plague Strike, Scourge Strike, and Festering Strike abilities by 24%.",
-@"Increases the damage of your Plague Strike, Scourge Strike, and Festering Strike abilities by 36%.",})]
+@"Increases the damage of your Plague Strike, Scourge Strike, and Festering Strike abilities by 15%.",
+@"Increases the damage of your Plague Strike, Scourge Strike, and Festering Strike abilities by 30%.",
+@"Increases the damage of your Plague Strike, Scourge Strike, and Festering Strike abilities by 45%.",})]
         public int RageOfRivendare { get { return _data[52]; } set { _data[52] = value; } }
         /// <summary>
         /// Causes the victims of your Death Coil to be surrounded by a vile swarm of unholy insects, taking 10% of the damage done by the Death Coil over 10 sec, and preventing any diseases on the victim from being dispelled.
