@@ -73,6 +73,9 @@ namespace Rawr.Bosses
                 // Meteor Slash - Deals 200000/475000 Fire damage split between enemy targets within 65 yards in front of the caster.
                 //     Increases Fire damage taken to all targets affected by 100%.
                 //     Half the raid stacks on one side and takes the debuff for 1 stack
+				/* 10 man - http://www.wowhead.com/spell=88942
+				   25 man - http://www.wowhead.com/spell=95172 */
+				// TODO: Add Fire taken damage debuff
                 EntireFight.Attacks.Add(new Attack {
                     Name = "Meteor Slash [Group 1]",
                     DamageType = ItemDamageType.Fire,
@@ -81,6 +84,7 @@ namespace Rawr.Bosses
                     DamagePerHit = new float[] { 200000, 475000, }[i] / (Max_Players[i] / 2),
                     MaxNumTargets = Max_Players[i] / 2f,
                     // Frequency is 16.5 seconds, with a 1.25 second cast time - 17.75 seconds, Verified DBM v4.74-r5279
+					// Bigwigs is registering a 17 second frequency - release # 8327
                     AttackSpeed = 16.5f + 1.25f,
                 });
                 EntireFight.LastAttack.SetUnavoidable();
@@ -97,6 +101,7 @@ namespace Rawr.Bosses
                     DamagePerHit = new float[] { 200000, 475000, }[i] / (Max_Players[i] / 2),
                     MaxNumTargets = Max_Players[i] / 2f,
                     // Frequency is 16.5 seconds, with a 1.25 second cast time - 17.75 seconds, Verified DBM v4.74-r5279
+					// Bigwigs is registering a 17 second frequency - release # 8327
                     AttackSpeed = 16.5f + 1.25f,
                 });
                 EntireFight.LastAttack.SetUnavoidable();
@@ -112,24 +117,28 @@ namespace Rawr.Bosses
                 // .5s = 3k, 1s = 6k, 1.5s = 9k, ..., 15s = 90k
                 // total damage for the full duration is 1,395,000
                 // Can be dispelled
+				/* 10 man - http://www.wowhead.com/spell=88954
+				   25 man - http://www.wowhead.com/spell=95173 */
                 EntireFight.Attacks.Add(new Attack
                 {
                     Name = "Consuming Darkness",
                     IsDoT = true,
                     AttackType = ATTACK_TYPES.AT_RANGED,
                     DamageType = ItemDamageType.Shadow,
-                    DamagePerHit = (2925f + 3075f) / 2f,
+                    //DamagePerHit = (3900f + 4100f) / 2f,
                     // Assume it takes 5 seconds to remove all.
                     Duration = 5f, //15f,
                     TickInterval = .5f,
-                    DamagePerTick = 165000f / 10f,
+                    //DamagePerTick = 165000f / 10f,
+                    DamagePerTick = (3900f + 4100f) / 2f,
                     //Interruptable = true,
                     MaxNumTargets = new float[] { 3, 7, }[i],
                     // Berserk time minus Firestorm and Firestorm cast time (Firestorm (15 second spell + 3 second cast time; spell is cast 2 times in the fight) - 264 seconds
                     // Frequency is 22 seconds - 22 seconds
                     // Divide those two numbers to get the number of times in the fight that the spell is cast - 12
                     // all dividing the Berserk timer (should come up with 25 second attack speed)
-                    AttackSpeed = 22f,
+					// Deadly Boss mods is reporting a 24 second cooldown - Release # 5621
+                    AttackSpeed = 24f,
                 });
                 EntireFight.LastAttack.SetUnavoidable();
                 EntireFight.LastAttack.SetAffectsRoles_DPS();
@@ -140,7 +149,11 @@ namespace Rawr.Bosses
                 // Fel Firestorm - Used at 66% and 33%. Argaloth shoots fireballs into the air which will fall down and leave a patch of flame on the ground.
                 //        These patches deal 8,287 - 8,712 Fire damage as long as you are standing in them and they can appear (or will only appear?) directly under a players feet.
                 //        Most of the room will be covered in flames at the end of this ability (think of Mimiron hardmode) before all flames will disappear and he will resume
-                //        attacking you with his normal abilities. 50,000 yards range. 3 sec cast. Lasts 15 seconds. 
+                //        attacking you with his normal abilities. 50,000 yards range. 3 sec cast. Lasts 15 seconds.
+				// http://www.wowhead.com/spell=88972
+				// Places Fel Flames on the ground every 3 seconds
+				// 10 man - http://www.wowhead.com/spell=89000
+				// 25 man - http://www.wowhead.com/spell=95177
                 FelFirestorm.Attacks.Add(new Attack
                 {
                     Name = "Fel Firestorm",
@@ -150,7 +163,7 @@ namespace Rawr.Bosses
                     TickInterval = 1f,
                     Duration = 15f,
                     // Adjusting damage to take into account for the 100% fire damage debuff from Meteor Strike Debuff
-                    DamagePerTick = ((8287f + 8712f) / 2f) * 2,
+                    DamagePerTick = ((11700f + 12300f) / 2f) * 2,
                     MaxNumTargets = Max_Players[i],
                     AttackSpeed = 15+3,
                 });
