@@ -661,14 +661,7 @@ namespace Rawr.Mage
             float igniteFactor = template.IgniteFactor;
             float critMultiplier = 1 + (critBonus - 1) * Math.Max(0, CritRate);
             float dotCritMultiplier;
-            if (solver.CalculationOptions.ModePTR)
-            {
-                dotCritMultiplier = 1 + (critBonus / (1 + solver.IgniteFactor) - 1) * Math.Max(0, CritRate);
-            }
-            else
-            {
-                dotCritMultiplier = 1 + (critBonus - 1) * Math.Max(0, CritRate);
-            }
+            dotCritMultiplier = 1 + (critBonus / (1 + solver.IgniteFactor) - 1) * Math.Max(0, CritRate);
             float resistMultiplier = (forceHit ? 1.0f : HitRate) * PartialResistFactor;
             float commonMultiplier = SpellModifier * resistMultiplier;
             float nukeMultiplier = commonMultiplier * DirectDamageModifier * critMultiplier;
@@ -718,17 +711,6 @@ namespace Rawr.Mage
                 averageDamage += BasePeriodicDamage * dotFactor;
                 damagePerSpellPower += DotDamageCoefficient * dotFactor;
                 float dotIgniteDamage = 0;
-                if ((solver.NeedsDisplayCalculations || solver.Specialization == Specialization.Fire) && (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) && solver.MageTalents.Ignite > 0 && !solver.CalculationOptions.ModePTR)
-                {
-                    float igniteMultiplier = dotFactor / dotCritMultiplier * critBonus * igniteFactor / (1 + igniteFactor) * Math.Max(0, CritRate);
-                    dotIgniteDamage = (BasePeriodicDamage + DotDamageCoefficient * spellPower) * igniteMultiplier;
-                    igniteDamage += dotIgniteDamage;
-                    igniteDamagePerSpellPower += DotDamageCoefficient * igniteMultiplier;
-                    if (solver.Specialization == Specialization.Fire)
-                    {
-                        damagePerMastery += dotIgniteDamage / (1 + solver.FlashburnBonus) * solver.FlashburnMultiplier;
-                    }
-                }
                 if (solver.Specialization == Specialization.Fire)
                 {
                     damagePerMastery += (BasePeriodicDamage * dotFactor - dotIgniteDamage) / template.BaseDotDamageModifier * solver.FlashburnMultiplier;
@@ -795,14 +777,7 @@ namespace Rawr.Mage
             float critBonus = CritBonus;
             float igniteFactor = template.IgniteFactor;
             float critMultiplier;
-            if (solver.CalculationOptions.ModePTR)
-            {
-                critMultiplier = 1 + (critBonus / (1 + solver.IgniteFactor) - 1) * Math.Max(0, CritRate);
-            }
-            else
-            {
-                critMultiplier = 1 + (critBonus - 1) * Math.Max(0, CritRate);
-            }
+            critMultiplier = 1 + (critBonus / (1 + solver.IgniteFactor) - 1) * Math.Max(0, CritRate);
             float commonMultiplier = SpellModifier * resistMultiplier * critMultiplier;
             float averageDamage = 0.0f;
             damagePerSpellPower = 0.0f;
@@ -818,16 +793,6 @@ namespace Rawr.Mage
                 dotFactor *= (1 + DotExtraTicks * DotTickInterval / DotDuration);
                 averageDamage = BasePeriodicDamage * dotFactor;
                 damagePerSpellPower = DotDamageCoefficient * dotFactor;
-                if ((solver.NeedsDisplayCalculations || solver.Specialization == Specialization.Fire) && (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) && solver.MageTalents.Ignite > 0 && !solver.CalculationOptions.ModePTR)
-                {
-                    float igniteMultiplier = dotFactor / critMultiplier * critBonus * igniteFactor / (1 + igniteFactor) * Math.Max(0, CritRate);
-                    igniteDamage = (BasePeriodicDamage + DotDamageCoefficient * spellPower) * igniteMultiplier;
-                    igniteDamagePerSpellPower = DotDamageCoefficient * igniteMultiplier;
-                    if (solver.Specialization == Specialization.Fire)
-                    {
-                        damagePerMastery = igniteDamage / (1 + solver.FlashburnBonus) * solver.FlashburnMultiplier;
-                    }
-                }
                 if (solver.Specialization == Specialization.Fire)
                 {
                     damagePerMastery += (BasePeriodicDamage * dotFactor - igniteDamage) / template.BaseDotDamageModifier * solver.FlashburnMultiplier;

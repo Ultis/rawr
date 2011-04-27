@@ -501,7 +501,7 @@ namespace Rawr.Mage
             bs = BaseState.GetSpell(SpellId.FlamestrikeSpammed);
             dictValues.Add("FlamestrikeSpam", GetSpellTooltip(bs));
             Spell abss = BaseState.GetSpell(SpellId.MageWard);
-            dictValues.Add("Fire Ward", string.Format("{0:F} Absorb*{1:F} Mps\r\nAverage Cast Time: {2:F}\r\n{3:F} Mana", abss.Absorb, ((Cycle)abss).ManaPerSecond, abss.CastTime - abss.Latency, abss.ABCost));
+            dictValues.Add("Mage Ward", string.Format("{0:F} Absorb*{1:F} Mps\r\nAverage Cast Time: {2:F}\r\n{3:F} Mana", abss.Absorb, ((Cycle)abss).ManaPerSecond, abss.CastTime - abss.Latency, abss.ABCost));
             float totalDamage = (CalculationOptions.TargetDamage > 0.0f) ? CalculationOptions.TargetDamage : BaseCalculations.DpsRating * CalculationOptions.FightDuration;
             dictValues.Add("Total Damage", String.Format("{0:F}*Upper Bound: {1:F}\r\nLower Bound: {2:F}", totalDamage, UpperBound, LowerBound));
             dictValues.Add("Score", String.Format("{0:F}", BaseCalculations.OverallPoints));

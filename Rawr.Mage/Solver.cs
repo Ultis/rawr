@@ -5481,19 +5481,10 @@ namespace Rawr.Mage
                 switch (Specialization)
                 {
                     case Specialization.Arcane:
-                        if (CalculationOptions.ModePTR)
-                        {
-                            spellList.Add(CycleId.AE4AB);
-                            spellList.Add(CycleId.AERampAB);
-                            spellList.Add(CycleId.Blizzard);
-                        }
-                        else
-                        {
-                            spellList.Add(CycleId.ArcaneExplosion);
-                        }
+                        spellList.Add(CycleId.AE4AB);
+                        spellList.Add(CycleId.AERampAB);
                         break;
                     case Specialization.Fire:
-                        spellList.Add(CycleId.Blizzard);
                         spellList.Add(CycleId.FBLB3Pyro);
                         spellList.Add(CycleId.FFBLB3Pyro);
                         break;
