@@ -120,7 +120,7 @@ namespace Rawr.Tree
 
                        if (sequence > 103)
                        {
-                           Efflorescence eff = new Efflorescence(character, stats, rejuv, 3);
+                           Efflorescence eff = new Efflorescence(character, stats, rejuv);
                            eff.CastFraction = sm.CastFraction;
                            spells.Add(eff);
                        }
@@ -596,9 +596,9 @@ namespace Rawr.Tree
         public float WildGrowthCPS { get { return WildGrowthCF / wildGrowth.CastTime; } }
         public float WildGrowthCPM { get { return 60f * WildGrowthCPS; } set { WildGrowthCF = value * (float)wildGrowth.CastTime / 60f; } }
         public float WildGrowthAvg { get { return WildGrowthCPS * wildGrowth.Duration; } }
-        public float WildGrowthHPS { get { return WildGrowthAvg * wildGrowth.maxTargets * wildGrowth.PeriodicTick; } }
+        public float WildGrowthHPS { get { return WildGrowthAvg * wildGrowth.HPS; } }
         public float WildGrowthMPS { get { return WildGrowthCPS * wildGrowth.ManaCost; } }
-        public float WildGrowthHealsPerMinute { get { return WildGrowthCPM * wildGrowth.maxTargets * wildGrowth.PeriodicTicks; } }
+        public float WildGrowthHealsPerMinute { get { return WildGrowthCPM * wildGrowth.MaxTargets * wildGrowth.PeriodicTicks; } }
         #endregion
 
         #region Swiftmend
@@ -666,7 +666,7 @@ namespace Rawr.Tree
         public float RejuvenationHealsPerMinute { get { return RejuvHealsPerMinute; } }
 
         public float RevitalizeChance = 0f;
-        public float RevitalizeProcsPerMinute { get { return RevitalizeChance * (RejuvCPM * rejuvenate.PeriodicTicks + WildGrowthCPM * wildGrowth.PeriodicTicks * wildGrowth.maxTargets); } }
+        public float RevitalizeProcsPerMinute { get { return RevitalizeChance * (RejuvCPM * rejuvenate.PeriodicTicks + WildGrowthCPM * wildGrowth.PeriodicTicks * wildGrowth.MaxTargets); } }
     }
 
     public enum HealingSpell : int

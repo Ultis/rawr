@@ -1292,8 +1292,8 @@ applied and result is scaled down by 100)",
                         {
                             Name = "Wild Growth (single target)",
                             Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.WildGrowthHPS / calculationResult.Sustained.spellMix.wildGrowth.maxTargets,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.WildGrowthHPS / calculationResult.Sustained.spellMix.wildGrowth.maxTargets }
+                            OverallPoints = calculationResult.Sustained.spellMix.WildGrowthHPS / calculationResult.Sustained.spellMix.wildGrowth.MaxTargets,
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.WildGrowthHPS / calculationResult.Sustained.spellMix.wildGrowth.MaxTargets }
                         };
                         comparisonList.Add(wildGrowthSingle);
                         ComparisonCalculationTree swiftmend = new ComparisonCalculationTree()
@@ -1395,16 +1395,16 @@ applied and result is scaled down by 100)",
                         {
                             Name = "Wild Growth",
                             Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.wildGrowth.HPCT * calculationResult.Sustained.spellMix.wildGrowth.maxTargets,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.wildGrowth.HPCT * calculationResult.Sustained.spellMix.wildGrowth.maxTargets, 0, 0 }
+                            OverallPoints = calculationResult.Sustained.spellMix.wildGrowth.HPCT,
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.wildGrowth.HPCT, 0, 0 }
                         };
                         comparisonList.Add(wildGrowth);
                         ComparisonCalculationTree wildGrowthSingle = new ComparisonCalculationTree()
                         {
                             Name = "Wild Growth (single target)",
                             Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.wildGrowth.HPCT,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.wildGrowth.HPCT, 0, 0 }
+                            OverallPoints = calculationResult.Sustained.spellMix.wildGrowth.HPCT / calculationResult.Sustained.spellMix.wildGrowth.MaxTargets,
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.wildGrowth.HPCT / calculationResult.Sustained.spellMix.wildGrowth.MaxTargets, 0, 0 }
                         };
                         comparisonList.Add(wildGrowthSingle);
                         if (calculationResult.Sustained.spellMix.swiftmend != null)
@@ -1552,16 +1552,16 @@ applied and result is scaled down by 100)",
                         {
                             Name = "Wild Growth",
                             Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.wildGrowth.HPS * calculationResult.Sustained.spellMix.wildGrowth.maxTargets,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.wildGrowth.HPS * calculationResult.Sustained.spellMix.wildGrowth.maxTargets, 0, 0 }
+                            OverallPoints = calculationResult.Sustained.spellMix.wildGrowth.HPS,
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.wildGrowth.HPS, 0, 0 }
                         };
                         comparisonList.Add(wildGrowth);
                         ComparisonCalculationTree wildGrowthSingle = new ComparisonCalculationTree()
                         {
                             Name = "Wild Growth (single target)",
                             Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.wildGrowth.HPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.wildGrowth.HPS, 0, 0 }
+                            OverallPoints = calculationResult.Sustained.spellMix.wildGrowth.HPS / calculationResult.Sustained.spellMix.wildGrowth.MaxTargets,
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.wildGrowth.HPS / calculationResult.Sustained.spellMix.wildGrowth.MaxTargets, 0, 0 }
                         };
                         comparisonList.Add(wildGrowthSingle);
                         if (calculationResult.Sustained.spellMix.swiftmend != null)
@@ -1706,16 +1706,16 @@ applied and result is scaled down by 100)",
                         {
                             Name = "Wild Growth",
                             Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.wildGrowth.HPM * calculationResult.Sustained.spellMix.wildGrowth.maxTargets,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.wildGrowth.HPM * calculationResult.Sustained.spellMix.wildGrowth.maxTargets, 0, 0 }
+                            OverallPoints = calculationResult.Sustained.spellMix.wildGrowth.HPM,
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.wildGrowth.HPM, 0, 0 }
                         };
                         comparisonList.Add(wildGrowth);
                         ComparisonCalculationTree wildGrowthSingle = new ComparisonCalculationTree()
                         {
                             Name = "Wild Growth (one target)",
                             Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.wildGrowth.HPM,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.wildGrowth.HPM, 0, 0 }
+                            OverallPoints = calculationResult.Sustained.spellMix.wildGrowth.HPM / calculationResult.Sustained.spellMix.wildGrowth.MaxTargets,
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.wildGrowth.HPM / calculationResult.Sustained.spellMix.wildGrowth.MaxTargets, 0, 0 }
                         };
                         comparisonList.Add(wildGrowthSingle);
                         if (calculationResult.Sustained.spellMix.swiftmend != null)

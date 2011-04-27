@@ -204,10 +204,10 @@ namespace Rawr.Tree {
             dictValues.Add("HT HPCT", Math.Round(Sustained.spellMix.healingTouch.HPCT_DH, 2).ToString());
 
             dictValues.Add("WG first Tick", Sustained.spellMix.wildGrowth.TickToString());
-            dictValues.Add("WG HPS(single target)", Math.Round(Sustained.spellMix.wildGrowth.HPS, 2).ToString());
-            dictValues.Add("WG HPM(single target)", Sustained.spellMix.wildGrowth.HPMToString());
-            dictValues.Add("WG HPS(max)", Math.Round(Sustained.spellMix.wildGrowth.HPS * Sustained.spellMix.wildGrowth.maxTargets, 2).ToString());
-            dictValues.Add("WG HPM(max)", Math.Round(Sustained.spellMix.wildGrowth.HPM * Sustained.spellMix.wildGrowth.maxTargets, 2).ToString());
+            dictValues.Add("WG HPS(single target)", Math.Round(Sustained.spellMix.wildGrowth.HPS / Sustained.spellMix.wildGrowth.MaxTargets, 2).ToString());
+            dictValues.Add("WG HPM(single target)", Math.Round(Sustained.spellMix.wildGrowth.HPM / Sustained.spellMix.wildGrowth.MaxTargets, 2).ToString());
+            dictValues.Add("WG HPS(max)", Sustained.spellMix.wildGrowth.HPSToString());
+            dictValues.Add("WG HPM(max)",Sustained.spellMix.wildGrowth.HPMToString());
 
             dictValues.Add("N Heal",Sustained.spellMix.nourish[0].ToString());
             dictValues.Add("N HPM", Sustained.spellMix.nourish[0].HPMToString());
@@ -234,8 +234,8 @@ namespace Rawr.Tree {
             dictValues.Add("SM Heal", swift.ToString());
             dictValues.Add("SM HPM", swift.HPMToString());
             dictValues.Add("SM Rejuv Lost Ticks", Math.Round(swift.rejuvTicksLost, 2).ToString());
-            Efflorescence efflorescence = new Efflorescence(LocalCharacter, BasicStats, new Rejuvenation(LocalCharacter, CombatStats), 3);
-            dictValues.Add("Efflorescence Heal", efflorescence.ToString());
+            Efflorescence efflorescence = new Efflorescence(LocalCharacter, BasicStats, new Rejuvenation(LocalCharacter, CombatStats));
+            dictValues.Add("Efflorescence Heal", efflorescence.TickToString());
             
             return dictValues;
         }
