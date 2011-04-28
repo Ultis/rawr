@@ -7,35 +7,19 @@ using System.Xml.Serialization;
 namespace Rawr.Cat
 {
 #if !SILVERLIGHT
-	[Serializable]
+    [Serializable]
 #endif
-    public class CalculationOptionsCat : 
-        ICalculationOptionBase, 
-        INotifyPropertyChanged,
-        ICharacterCalculationOptions
-	{
-		public string GetXml()
-		{
-			System.Xml.Serialization.XmlSerializer serializer =
-				new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsCat));
-			StringBuilder xml = new StringBuilder();
-			System.IO.StringWriter writer = new System.IO.StringWriter(xml);
-			serializer.Serialize(writer, this);
-			return xml.ToString();
-		}
+    public class CalculationOptionsCat : ICalculationOptionBase, INotifyPropertyChanged
+    {
+        public string GetXml()
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsCat));
+            StringBuilder xml = new StringBuilder();
+            System.IO.StringWriter writer = new System.IO.StringWriter(xml);
+            serializer.Serialize(writer, this);
+            return xml.ToString();
+        }
 
-		private int _targetLevel = 88;
-		public int TargetLevel
-		{
-			get { return _targetLevel; }
-			set { if (_targetLevel != value && value >= 85 && value <= 88) { _targetLevel = value; OnPropertyChanged("TargetLevel"); } }
-		}
-		private int _targetArmor = (int)StatConversion.NPC_ARMOR[88 - 85];
-		public int TargetArmor
-		{
-			get { return _targetArmor; }
-			set { if (_targetArmor != value) { _targetArmor = value; OnPropertyChanged("TargetArmor"); } }
-		}
         private bool _customUseShred = false;
         public bool CustomUseShred
         {
@@ -54,6 +38,12 @@ namespace Rawr.Cat
             get { return _customUseRake; }
             set { if (_customUseRake != value) { _customUseRake = value; OnPropertyChanged("CustomUseRake"); } }
         }
+        private bool _customUseMangle = false;
+        public bool CustomUseMangle
+        {
+            get { return _customUseMangle; }
+            set { if (_customUseMangle != value) { _customUseMangle = value; OnPropertyChanged("CustomUseMangle"); } }
+        }
         private int _customCPFerociousBite = 0;
         public int CustomCPFerociousBite
         {
@@ -65,12 +55,6 @@ namespace Rawr.Cat
         {
             get { return _customCPSavageRoar; }
             set { if (_customCPSavageRoar != value) { _customCPSavageRoar = value; OnPropertyChanged("CustomCPSavageRoar"); } }
-        }
-        private int _duration = 300;
-        public int Duration
-        {
-            get { return _duration; }
-            set { if (_duration != value) { _duration = value; OnPropertyChanged("Duration"); } }
         }
         private float _trinketOffset = 0f;
         public float TrinketOffset
@@ -85,14 +69,6 @@ namespace Rawr.Cat
             set { if (_lagVariance != value) { _lagVariance = value; OnPropertyChanged("LagVariance"); } }
         }
 
-        private Character _character;
-        [XmlIgnore]
-        public Character Character
-        {
-            get { return _character; }
-            set { _character = value; }
-        }
-
         #region INotifyPropertyChanged Members
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -102,12 +78,8 @@ namespace Rawr.Cat
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
-            if (Character != null)
-            {
-                Character.OnCalculationsInvalidated();
-            }
         }
 
         #endregion
-	}
+    }
 }

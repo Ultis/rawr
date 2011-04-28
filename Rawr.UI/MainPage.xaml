@@ -14,7 +14,8 @@
     xmlns:Rawr="clr-namespace:Rawr;assembly=Rawr.Base"
     mc:Ignorable="d"
     x:Class="Rawr.UI.MainPage"
-    d:DesignWidth="915" d:DesignHeight="844" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+    d:DesignWidth="915" d:DesignHeight="844"
+    VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
 
     <UserControl.DataContext>
         <Rawr:Character/>

@@ -301,6 +301,7 @@ namespace Rawr.Cat
             CalculationOptionsCat calcOpts = character.CalculationOptions as CalculationOptionsCat;
             if (calcOpts == null) { return calculatedStats; }
             BossOptions bossOpts = character.BossOptions;
+            if (bossOpts == null) { return calculatedStats; }
             
             int targetLevel = bossOpts.Level;
             int characterLevel = character.Level;
@@ -309,8 +310,16 @@ namespace Rawr.Cat
             int levelDifference = (targetLevel - characterLevel);
             calculatedStats.BasicStats = stats;
             calculatedStats.TargetLevel = targetLevel;
-            bool maintainMangle = stats.BonusBleedDamageMultiplier == 0f; //TODO
-            stats.BonusBleedDamageMultiplier = 0.3f;
+            bool maintainMangleBecauseNooneElseIs = !character.ActiveBuffsConflictingBuffContains("Bleed Damage");
+            int T11Count;
+            character.SetBonusCount.TryGetValue("Stormrider's Battlegarb", out T11Count);
+            MangleUsage mangleusage = maintainMangleBecauseNooneElseIs ? MangleUsage.MaintainMangle : MangleUsage.None;
+            if (calcOpts.CustomUseMangle && T11Count >= 4) { mangleusage = MangleUsage.Maintain4T11; }
+            if (mangleusage != MangleUsage.None) {
+                stats.BonusBleedDamageMultiplier = (1f + stats.BonusBleedDamageMultiplier)
+                    * (1f + (maintainMangleBecauseNooneElseIs ? 0.30f : 0f)) // if someone else is putting up mangle, don't try to add to it here as it won't stack
+                    - 1f;
+            }
 
             #region Basic Chances and Constants
             float modArmor = 1f - StatConversion.GetArmorDamageReduction(character.Level, bossOpts.Armor,
@@ -484,8 +493,7 @@ namespace Rawr.Cat
                 ((character.MainHand.MinDamage + character.MainHand.MaxDamage) / 2f) / character.MainHand.Speed,
                 attackSpeed, modArmor, hasteBonus, critMultiplier, chanceAvoided, chanceCritWhite, chanceCritYellow, chanceCritYellow,
                 chanceCritYellow, chanceCritYellow, chanceCritRake, chanceCritRip, chanceCritBite, chanceGlance);
-            var rotationCalculator = new CatRotationCalculator(abilities, calcOpts.Duration,
-                maintainMangle ? MangleUsage.MaintainMangle : MangleUsage.None); 
+            var rotationCalculator = new CatRotationCalculator(abilities, bossOpts.BerserkTimer, mangleusage);
             var optimalRotation = rotationCalculator.GetOptimalRotation(); //TODO: Check for 4T11, maintain it if so
             calculatedStats.Abilities = abilities;
             calculatedStats.HighestDPSRotation = optimalRotation;
@@ -530,7 +538,7 @@ namespace Rawr.Cat
             calculatedStats.CritChance = chanceCritYellow * 100f;
             calculatedStats.AttackSpeed = attackSpeed;
             calculatedStats.ArmorMitigation = (1f - modArmor) * 100f;
-            calculatedStats.Duration = calcOpts.Duration;
+            calculatedStats.Duration = bossOpts.BerserkTimer;
 
 
             float magicDPS = (stats.ShadowDamage + stats.ArcaneDamage + stats.NatureDamage + stats.FireDamage + stats.FrostDamage) * (1f + chanceCritYellow);
@@ -561,7 +569,7 @@ namespace Rawr.Cat
             {
                 BonusAgilityMultiplier = Character.ValidateArmorSpecialization(character, ItemType.Leather) ? 0.05f : 0f,
                 BonusAttackPowerMultiplier = (1f + 0.25f) * (1f + talents.HeartOfTheWild * 0.1f / 3f) - 1f,
-                BonusBleedDamageMultiplier = (character.ActiveBuffsContains("Mangle") || character.ActiveBuffsContains("Trauma") ? 0f : 0.3f),
+                //BonusBleedDamageMultiplier = (character.ActiveBuffsConflictingBuffContains("Bleed Damage") ? 0f : 0.3f),
 
                 MovementSpeed = 0.15f * talents.FeralSwiftness,
                 RavageCritChanceOnTargetsAbove80Percent = 0.25f * talents.PredatoryStrikes,
@@ -600,7 +608,7 @@ namespace Rawr.Cat
 
             statsTotal.Accumulate(BaseStats.GetBaseStats(character.Level, character.Class, character.Race, BaseStats.DruidForm.Cat));
             statsTotal.Accumulate(GetItemStats(character, additionalItem));
-            statsTotal.Accumulate(GetBuffsStats(character, calcOpts));
+            AccumulateBuffsStats(statsTotal, character.ActiveBuffs);
 
             statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
             statsTotal.Strength = (float)Math.Floor(statsTotal.Strength * (1f + statsTotal.BonusStrengthMultiplier));
@@ -684,18 +692,18 @@ namespace Rawr.Cat
                     && triggerIntervals.ContainsKey(effect.Stats._rawSpecialEffectData[0].Trigger))
                 {
                     float upTime = effect.GetAverageUptime(triggerIntervals[effect.Trigger],
-                        triggerChances[effect.Trigger], 1f, calcOpts.Duration);
+                        triggerChances[effect.Trigger], 1f, bossOpts.BerserkTimer);
                     statsProcs.Accumulate(effect.Stats._rawSpecialEffectData[0].GetAverageStats(
                         triggerIntervals[effect.Stats._rawSpecialEffectData[0].Trigger],
-                        triggerChances[effect.Stats._rawSpecialEffectData[0].Trigger], 1f, calcOpts.Duration),
+                        triggerChances[effect.Stats._rawSpecialEffectData[0].Trigger], 1f, bossOpts.BerserkTimer),
                         upTime);
                 } else if (effect.Stats.MoteOfAnger > 0) {
                     // When in effect stats, MoteOfAnger is % of melee hits
                     // When in character stats, MoteOfAnger is average procs per second
                     statsProcs.MoteOfAnger = effect.Stats.MoteOfAnger * effect.GetAverageProcsPerSecond(triggerIntervals[effect.Trigger],
-                        triggerChances[effect.Trigger], 1f, calcOpts.Duration) / effect.MaxStack;
+                        triggerChances[effect.Trigger], 1f, bossOpts.BerserkTimer) / effect.MaxStack;
                 } else {
-                    statsProcs.Accumulate(effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], 1f, calcOpts.Duration));
+                    statsProcs.Accumulate(effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], 1f, bossOpts.BerserkTimer));
                 }
             }
 
@@ -748,7 +756,7 @@ namespace Rawr.Cat
             else if (tempCritEffects.Count == 1)
             { //Only one, add it to
                 SpecialEffect effect = tempCritEffects[0];
-                float uptime = effect.GetAverageUptime(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], 1f, calcOpts.Duration) * tempCritEffectScales[0];
+                float uptime = effect.GetAverageUptime(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], 1f, bossOpts.BerserkTimer) * tempCritEffectScales[0];
                 float totalAgi = (float)effect.MaxStack * (effect.Stats.Agility + effect.Stats.HighestStat + effect.Stats.Paragon) * (1f + statsTotal.BonusAgilityMultiplier);
                 statsTotal.TemporaryCritRatingUptimes = new WeightedStat[] { new WeightedStat() { Chance = uptime, Value = 
                             effect.Stats.CritRating + StatConversion.GetCritFromAgility(totalAgi,
@@ -778,7 +786,8 @@ namespace Rawr.Cat
                 {
                     offset[0] = calcOpts.TrinketOffset;
                 }
-                WeightedStat[] critWeights = SpecialEffect.GetAverageCombinedUptimeCombinations(tempCritEffects.ToArray(), intervals, chances, offset, tempCritEffectScales.ToArray(), 1f, calcOpts.Duration, tempCritEffectsValues.ToArray());
+                WeightedStat[] critWeights = SpecialEffect.GetAverageCombinedUptimeCombinations(tempCritEffects.ToArray(), intervals, chances, offset,
+                    tempCritEffectScales.ToArray(), 1f, bossOpts.BerserkTimer, tempCritEffectsValues.ToArray());
                 statsTotal.TemporaryCritRatingUptimes = critWeights;
             }
 
@@ -928,41 +937,45 @@ namespace Rawr.Cat
             return relevant;
         }
 
+#if FALSE
         public Stats GetBuffsStats(Character character, CalculationOptionsCat calcOpts) {
-            //List<Buff> removedBuffs = new List<Buff>();
-            //List<Buff> addedBuffs = new List<Buff>();
+            List<Buff> removedBuffs = new List<Buff>();
+            List<Buff> addedBuffs = new List<Buff>();
 
-            //float hasRelevantBuff;
+            List<Buff> buffGroup = new List<Buff>();
 
-            #region Passive Ability Auto-Fixing
-            // Removes the Trueshot Aura Buff and it's equivalents Unleashed Rage and Abomination's Might if you are
-            // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
-            // value to relevant talents
-            /*{
-                hasRelevantBuff = character.HunterTalents.TrueshotAura;
-                Buff a = Buff.GetBuffByName("Trueshot Aura");
-                Buff b = Buff.GetBuffByName("Unleashed Rage");
-                Buff c = Buff.GetBuffByName("Abomination's Might");
-                if (hasRelevantBuff > 0)
-                {
-                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
-                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
-                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); removedBuffs.Add(c); }
-                }
-            }*/
+            #region Maintenance Auto-Fixing
+            // Removes the Sunder Armor if you are maintaining it yourself
+            // Also removes Acid Spit and Expose Armor
+            // We are now calculating this internally for better accuracy and to provide value to relevant talents
+            if (calcOpts.CustomUseMangle)
+            {
+                buffGroup.Clear();
+                buffGroup.Add(Buff.GetBuffByName("Sunder Armor"));
+                buffGroup.Add(Buff.GetBuffByName("Expose Armor"));
+                buffGroup.Add(Buff.GetBuffByName("Faerie Fire"));
+                buffGroup.Add(Buff.GetBuffByName("Corrosive Spit"));
+                buffGroup.Add(Buff.GetBuffByName("Tear Armor"));
+                MaintBuffHelper(buffGroup, character, removedBuffs);
+            }
             #endregion
 
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs, character.SetBonusCount);
+            StatsCat statsBuffs = new StatsCat();
+            statsBuffs.Accumulate(GetBuffsStats(character.ActiveBuffs, character.SetBonusCount));
 
-            /*foreach (Buff b in removedBuffs) {
-                character.ActiveBuffsAdd(b);
-            }
-            foreach (Buff b in addedBuffs) {
-                character.ActiveBuffs.Remove(b);
-            }*/
+            foreach (Buff b in removedBuffs) { character.ActiveBuffsAdd(b); }
+            foreach (Buff b in addedBuffs) { character.ActiveBuffs.Remove(b); }
 
             return statsBuffs;
         }
+        private static void MaintBuffHelper(List<Buff> buffGroup, Character character, List<Buff> removedBuffs)
+        {
+            foreach (Buff b in buffGroup)
+            {
+                if (character.ActiveBuffs.Remove(b)) { removedBuffs.Add(b); }
+            }
+        }
+#endif
         public override void SetDefaults(Character character)
         {
             character.ActiveBuffsAdd("Horn of Winter");

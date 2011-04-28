@@ -1068,6 +1068,9 @@ If that is still not working for you, right-click anywhere within the web versio
                     }
                     _unsavedChanges = false;
                     CancelToSave = false;
+#if !SILVERLIGHT
+                    lastSavedPath = sfd.SafeFileName;
+#endif
                 }
             }
 #if !SILVERLIGHT
@@ -1083,6 +1086,7 @@ If that is still not working for you, right-click anywhere within the web versio
                 }
                 _unsavedChanges = false;
                 CancelToSave = false;
+                lastSavedPath = sfd.SafeFileName;
             }
 #endif
         }
