@@ -48,7 +48,7 @@ namespace Rawr.Retribution
             get { return hPperInq; }
             set { hPperInq = value; OnPropertyChanged("HPperInq"); }
         }
-        [DefaultValue(true)]
+        [DefaultValue(false)]
         private bool newRotation;
         public bool NewRotation
         {

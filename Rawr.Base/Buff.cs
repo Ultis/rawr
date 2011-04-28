@@ -3556,9 +3556,7 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Reinforced Sapphirium Battleplate",
-                Stats = {
-                    BonusDamageMultiplierTemplarsVerdict = .1f
-                },
+                Stats = {},
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
             });
@@ -3568,9 +3566,7 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Reinforced Sapphirium Battleplate",
-                Stats = {
-                    BonusRet_T11_4P_InqHP = 1f
-                },
+                Stats = {},
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
             });

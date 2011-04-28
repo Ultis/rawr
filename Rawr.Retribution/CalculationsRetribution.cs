@@ -528,15 +528,26 @@ namespace Rawr.Retribution
             Stats statsRace = BaseStats.GetBaseStats(character.Level, CharacterClass.Paladin, character.Race);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character, calcOpts);
+            Stats statsTalentsAndSets = new Stats();
 
             // Adjust expertise for racial passive
-            statsRace.Expertise += BaseStats.GetRacialExpertise(character, ItemSlot.MainHand);
+            statsTalentsAndSets.Expertise += BaseStats.GetRacialExpertise(character, ItemSlot.MainHand);
             // Judgements of the pure (Flat because it has nearly always a 100% chance.
-            statsRace.PhysicalHaste += PaladinConstants.JUDGEMENTS_OF_THE_PURE * talents.JudgementsOfThePure;
-            statsRace.SpellHaste += PaladinConstants.JUDGEMENTS_OF_THE_PURE * talents.JudgementsOfThePure;
+            statsTalentsAndSets.PhysicalHaste += PaladinConstants.JUDGEMENTS_OF_THE_PURE * talents.JudgementsOfThePure;
+            statsTalentsAndSets.SpellHaste += PaladinConstants.JUDGEMENTS_OF_THE_PURE * talents.JudgementsOfThePure;
+
+            //Sets
+            #region Sets
+            int T11Count;
+            character.SetBonusCount.TryGetValue("Reinforced Sapphirium Battleplate", out T11Count);
+            if (T11Count >= 2)
+                statsTalentsAndSets.BonusDamageMultiplierTemplarsVerdict = 0.1f;
+            if (T11Count >= 4)
+                statsTalentsAndSets.BonusRet_T11_4P_InqHP = 1f;
+            #endregion
 
             // Combine stats
-            Stats stats = statsBaseGear + statsBuffs + statsRace;
+            Stats stats = statsBaseGear + statsBuffs + statsRace + statsTalentsAndSets;
             // If wanted, Average out any Proc and OnUse effects into the stats
             if (computeAverageStats)
             {
