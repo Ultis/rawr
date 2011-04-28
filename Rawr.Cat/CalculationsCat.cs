@@ -979,18 +979,13 @@ namespace Rawr.Cat
         public override void SetDefaults(Character character)
         {
             character.ActiveBuffsAdd("Horn of Winter");
-            character.ActiveBuffsAdd("Battle Shout");
             character.ActiveBuffsAdd("Unleashed Rage");
-            character.ActiveBuffsAdd("Improved Moonkin Form");
             character.ActiveBuffsAdd("Leader of the Pack");
             character.ActiveBuffsAdd("Improved Icy Talons");
             character.ActiveBuffsAdd("Power Word: Fortitude");
             character.ActiveBuffsAdd("Mark of the Wild");
-            character.ActiveBuffsAdd("Blessing of Kings");
-            character.ActiveBuffsAdd("Sunder Armor");
             character.ActiveBuffsAdd("Faerie Fire");
-            character.ActiveBuffsAdd("Totem of Wrath");
-            character.ActiveBuffsAdd("Flask of Endless Rage");
+            character.ActiveBuffsAdd("Flask of the Winds");
             character.ActiveBuffsAdd("Agility Food");
             character.ActiveBuffsAdd("Heroism/Bloodlust");
 
