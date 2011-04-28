@@ -256,7 +256,7 @@ namespace Rawr.ProtPaladin {
             Ability     = ability;
             CalcOpts    = calcOpts;
             BossOpts    = bossOpts;
-            
+
             Talents     = Character.PaladinTalents;
             AttackTable = new AttackTable(character, stats, ability, CalcOpts, BossOpts);
 
