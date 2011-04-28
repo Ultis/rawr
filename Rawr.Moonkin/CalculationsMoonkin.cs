@@ -961,20 +961,27 @@ namespace Rawr.Moonkin
             statsTotal.Accumulate(GetItemStats(character, additionalItem));
             statsTotal.Accumulate(GetBuffsStats(character, calcOpts));
 
-            bool leatherSpecialization = character.Head != null && character.Head.Type == ItemType.Leather &&
-                                            character.Shoulders != null && character.Shoulders.Type == ItemType.Leather &&
-                                            character.Chest != null && character.Chest.Type == ItemType.Leather &&
-                                            character.Wrist != null && character.Wrist.Type == ItemType.Leather &&
-                                            character.Hands != null && character.Hands.Type == ItemType.Leather &&
-                                            character.Waist != null && character.Waist.Type == ItemType.Leather &&
-                                            character.Legs != null && character.Legs.Type == ItemType.Leather &&
-                                            character.Feet != null && character.Feet.Type == ItemType.Leather;
+            #region Set Bonuses
+            int T11Count;
+            character.SetBonusCount.TryGetValue("Stormrider's Regalia", out T11Count);
+            if (T11Count >= 2) {
+                // 2 pieces: Increases the critical strike chance of your Insect Swarm and Moonfire spells by 5%.
+                statsTotal.BonusCritChanceInsectSwarm = 0.05f;
+                statsTotal.BonusCritChanceMoonfire = 0.05f;
+            }
+            if (T11Count >= 4) {
+                // 4 pieces: Whenever Eclipse triggers, your critical strike chance with spells is increased by 99%
+                //           for 8 sec. Each critical strike you achieve reduces that bonus by 33%.
+                SpecialEffect effect = new SpecialEffect(Trigger.EclipseProc, new Stats() { SpellCrit = 0.99f }, 8.0f, 0f, 1f, 1);
+                effect.Stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCrit, new Stats() { SpellCrit = -0.33f }, float.PositiveInfinity, 0.0f, 1f, 3));
+                statsTotal.AddSpecialEffect(effect);
+            }
+            #endregion
 
             // Talented bonus multipliers
-
             Stats statsTalents = new Stats()
             {
-                BonusIntellectMultiplier = (1 + 0.02f * character.DruidTalents.HeartOfTheWild) * (leatherSpecialization ? 1.05f : 1f) - 1,
+                BonusIntellectMultiplier = (1 + 0.02f * character.DruidTalents.HeartOfTheWild) * (Character.ValidateArmorSpecialization(character, ItemType.Leather) ? 1.05f : 1f) - 1f,
                 BonusManaMultiplier = 0.05f * character.DruidTalents.Furor,
                 BonusSpellPowerMultiplier = (1 + 0.01f * character.DruidTalents.BalanceOfPower) * (1 + 0.02f * character.DruidTalents.EarthAndMoon) *
                                             (1 + 0.01f * character.DruidTalents.MoonkinForm) *

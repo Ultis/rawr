@@ -689,7 +689,7 @@ namespace Rawr.Moonkin
         private void UpdateSpells(Character character, ref CharacterCalculationsMoonkin calcs)
         {
             DruidTalents talents = character.DruidTalents;
-            Stats stats = calcs.BasicStats;
+            StatsMoonkin stats = calcs.BasicStats;
 
             switch (talents.StarlightWrath)
             {
@@ -746,6 +746,8 @@ namespace Rawr.Moonkin
 
             // Add set bonuses
             UpdateSpellsFromSetBonuses(character.ActiveBuffs.FindAll(buff => buff.Group == "Set Bonuses"));
+            Moonfire.CriticalChanceModifier += stats.BonusCritChanceMoonfire;
+            InsectSwarm.CriticalChanceModifier += stats.BonusCritChanceInsectSwarm;
 
             // PTR changes go here
             if (calcs.PtrMode)
@@ -778,16 +780,16 @@ namespace Rawr.Moonkin
                         }
                         break;
                     // Tier 11: Stormrider's
-                    case "Stormrider's Regalia":
+                    /*case "Stormrider's Regalia":
                         switch (buff.SetThreshold)
                         {
                             // 2-piece bonus: 5% additional crit chance on dots
                             case 2:
-                                Moonfire.CriticalChanceModifier += 0.05f;
-                                InsectSwarm.CriticalChanceModifier += 0.05f;
+                                //Moonfire.CriticalChanceModifier += 0.05f;
+                                //InsectSwarm.CriticalChanceModifier += 0.05f;
                                 break;
                         }
-                        break;
+                        break;*/
                 }
             }
         }
