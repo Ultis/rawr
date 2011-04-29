@@ -78,8 +78,8 @@ namespace Rawr.Moonkin
                         new Spell()
                         {
                             Name = "SS",
-                            BaseDamage = (1272 + 1756) / 2f,
-                            SpellDamageModifier = 1.535f,
+                            BaseDamage = (1272 + 1756) / 2f * 0.8f,
+                            SpellDamageModifier = 1.535f * 0.8f,
                             BaseCastTime = 2.0f,
                             BaseManaCost = (float)(int)(BaseMana * 0.11f),
                             DotEffect = null,
@@ -752,9 +752,6 @@ namespace Rawr.Moonkin
             // PTR changes go here
             if (calcs.PtrMode)
             {
-                // 4.1 PTR: Starsurge damage -20% (base and coefficient)
-                Starsurge.BaseDamage *= 0.8f;
-                Starsurge.SpellDamageModifier *= 0.8f;
             }
         }
 
