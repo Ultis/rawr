@@ -26,6 +26,7 @@ namespace Rawr.Warlock
         public List<WeightedStat> Haste { get; private set; }
 
         public float BaseMana { get; private set; }
+        public float BaseIntellect { get; private set; }
         public float HitChance { get; private set; }
         public float AvgTimeUsed { get; private set; }
         public float ExtraCritAtMax { get; private set; }
@@ -82,6 +83,7 @@ namespace Rawr.Warlock
             PreProcStats = Stats.Clone();
             PetBuffs = petBuffs;
             BaseMana = BaseStats.GetBaseStats(character).Mana;
+            BaseIntellect = BaseStats.GetBaseStats(character).Intellect;
             Spells = new Dictionary<string, Spell>();
             CastSpells = new Dictionary<string, Spell>();
             HitChance = Math.Min(1f, Options.GetBaseHitRate() / 100f + CalcSpellHit());
@@ -106,13 +108,13 @@ namespace Rawr.Warlock
         }
 
         public float CalcStamina() { return StatUtils.CalcStamina(Stats); }
-        public float CalcIntellect() { return StatUtils.CalcIntellect(Stats); }
+        public float CalcIntellect() { return StatUtils.CalcIntellect(Stats, BaseIntellect, Options.PlayerLevel); }
         public float CalcHealth() { return StatUtils.CalcHealth(Stats); }
-        public float CalcMana() { return StatUtils.CalcMana(Stats); }
-        public float CalcUsableMana(float fightLen) { return StatUtils.CalcUsableMana(Stats, fightLen); }
-        public float CalcSpellCrit() { return StatUtils.CalcSpellCrit(Stats, Options.PlayerLevel); }
+        public float CalcMana() { return StatUtils.CalcMana(Stats, BaseIntellect, Options.PlayerLevel); }
+        public float CalcUsableMana(float fightLen) { return StatUtils.CalcUsableMana(Stats, fightLen, BaseIntellect, Options.PlayerLevel); }
+        public float CalcSpellCrit() { return StatUtils.CalcSpellCrit(Stats, BaseIntellect, Options.PlayerLevel); }
         public float CalcSpellHit() { return StatUtils.CalcSpellHit(Stats, Options.PlayerLevel); }
-        public float CalcSpellPower() { return StatUtils.CalcSpellPower(Stats); }
+        public float CalcSpellPower() { return StatUtils.CalcSpellPower(Stats, BaseIntellect, Options.PlayerLevel); }
         public float CalcSpellHaste() { return StatUtils.CalcSpellHaste(Stats, Options.PlayerLevel); }
         public float CalcMastery() { return StatUtils.CalcMastery(Stats, Options.PlayerLevel); }
 
@@ -137,10 +139,10 @@ namespace Rawr.Warlock
             dictValues.Add("Pet DPS", string.Format("{0:0}", PetDps));
             dictValues.Add("Total DPS", string.Format("{0:0}", OverallPoints));
 
-            dictValues.Add("Health", string.Format("{0:0.0}*{1:0.0} stamina", CalcHealth(), CalcStamina()));
-            dictValues.Add("Mana", string.Format("{0:0.0}*{1:0.0} intellect", CalcMana(), CalcIntellect()));
+            dictValues.Add("Health", string.Format("{0:0}*{1:0} stamina", CalcHealth(), CalcStamina()));
+            dictValues.Add("Mana", string.Format("{0:0}*{1:0} intellect", CalcMana(), CalcIntellect()));
 
-            dictValues.Add("Bonus Damage", string.Format("{0:0.0}*{1:0.0}\tBefore Procs", CalcSpellPower(), StatUtils.CalcSpellPower(PreProcStats)));
+            dictValues.Add("Bonus Damage", string.Format("{0:0.0}*{1:0.0}\tBefore Procs", CalcSpellPower(), StatUtils.CalcSpellPower(PreProcStats, BaseIntellect, Options.PlayerLevel)));
 
             #region Hit Rating
             float onePercentOfHitRating = (1 / StatUtils.GetSpellHitFromRating(1, Options.PlayerLevel));
@@ -169,7 +171,7 @@ namespace Rawr.Warlock
                     (totalHit > 1) ? "above" : "below"));
             #endregion
 
-            dictValues.Add("Crit Chance", string.Format("{0:0.00%}*{1:0.00%}\tBefore Procs", CalcSpellCrit(), StatUtils.CalcSpellCrit(PreProcStats, Options.PlayerLevel)));
+            dictValues.Add("Crit Chance", string.Format("{0:0.00%}*{1:0.00%}\tBefore Procs", CalcSpellCrit(), StatUtils.CalcSpellCrit(PreProcStats, BaseIntellect, Options.PlayerLevel)));
             dictValues.Add("Average Haste", 
                 string.Format(
                     "{0:0.00}%*"
@@ -230,7 +232,7 @@ namespace Rawr.Warlock
 
             float timeRemaining = Options.Duration;
             float totalMana = CalcUsableMana(timeRemaining);
-            float maxMana = StatUtils.CalcMana(PreProcStats);
+            float maxMana = StatUtils.CalcMana(PreProcStats, BaseIntellect, Options.PlayerLevel);
             float manaFromEffects = totalMana - maxMana;
             float manaUsed = 0f;
 
@@ -601,8 +603,8 @@ namespace Rawr.Warlock
                 procStats.Accumulate(proc);
                 if (effect.Trigger == Trigger.Use && !IsDoublePot(effect))
                 {
-                    ExtraCritAtMax += StatUtils.CalcSpellCrit(effect.Stats, Options.PlayerLevel)
-                                    - StatUtils.CalcSpellCrit(proc, Options.PlayerLevel);
+                    ExtraCritAtMax += StatUtils.CalcSpellCrit(effect.Stats, BaseIntellect, Options.PlayerLevel)
+                                    - StatUtils.CalcSpellCrit(proc, BaseIntellect, Options.PlayerLevel);
                 }
             }
             return procStats;
@@ -899,7 +901,7 @@ namespace Rawr.Warlock
         public void AddShadowModifiers(SpellModifiers modifiers)
         {
             modifiers.AddMultiplicativeMultiplier(Stats.BonusShadowDamageMultiplier);
-            modifiers.AddMultiplicativeMultiplier(Affliction ? (Options.PTRMode ? .3f : .25f) : 0f); // Shadow Mastery
+            modifiers.AddMultiplicativeMultiplier(Affliction ? .3f : 0f); // Shadow Mastery
             modifiers.AddMultiplicativeMultiplier(Demonology ? .15f : 0f);
             if (Affliction)
             {

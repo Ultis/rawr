@@ -144,7 +144,7 @@ namespace Rawr.Warlock
         }
         public float CalcIntellect()
         {
-            return StatUtils.CalcIntellect(Stats);
+            return StatUtils.CalcIntellect(Stats, Mommy.BaseIntellect, Mommy.Options.PlayerLevel);
         }
         public float CalcHealth()
         {
@@ -154,11 +154,11 @@ namespace Rawr.Warlock
         }
         public float CalcSpellPower()
         {
-            return StatUtils.CalcSpellPower(Stats);
+            return StatUtils.CalcSpellPower(Stats, Mommy.BaseIntellect, Mommy.Options.PlayerLevel);
         }
         public float CalcSpellCrit()
         {
-            return StatUtils.CalcSpellCrit(Stats, Mommy.Options.PlayerLevel);
+            return StatUtils.CalcSpellCrit(Stats, Mommy.BaseIntellect, Mommy.Options.PlayerLevel);
         }
         public float CalcAttackPower()
         {
@@ -290,8 +290,8 @@ namespace Rawr.Warlock
             DamagePerAttackPower = .12f;
 
             //spellid 54049, effectid 46748-9
-            SpecialBaseDamage = WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * (mommy.Options.PTRMode ? 0.126f : 0.0630000010f);
-            SpecialDamagePerSpellPower = .5f * (mommy.Options.PTRMode ? 1.228f : .614f);
+            SpecialBaseDamage = WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * 0.126f;
+            SpecialDamagePerSpellPower = .5f * 1.228f;
             SpecialCooldown = 6f;
         }
 

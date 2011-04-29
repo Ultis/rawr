@@ -44,31 +44,33 @@ namespace Rawr.Warlock
         }
         public static float CalcStamina(Stats stats)
         {
-            return stats.Stamina * (1f + stats.BonusStaminaMultiplier);
+            return (float)Math.Round(stats.Stamina * (1f + stats.BonusStaminaMultiplier) - 0.00001f);
         }
-        public static float CalcIntellect(Stats stats)
+        public static float CalcIntellect(Stats stats, float baseIntellect, int playerLevel)
         {
-            return stats.Intellect * (1f + stats.BonusIntellectMultiplier);
+            return (float)Math.Round((  Math.Floor(0.00001 + baseIntellect * (1 + (playerLevel > 50 ? .05f : 0f)))
+                                      + Math.Floor(0.00001 + (stats.Intellect - baseIntellect) * (1 + (playerLevel > 50 ? .05f : 0f))))
+                                     * (1 + stats.BonusIntellectMultiplier) - 0.00001);
         }
         public static float CalcHealth(Stats stats)
         {
-            return (stats.Health + StatConversion.GetHealthFromStamina(CalcStamina(stats))) * (1 + stats.BonusHealthMultiplier);
+            return (float)Math.Round((stats.Health + StatConversion.GetHealthFromStamina(CalcStamina(stats))) * (1 + stats.BonusHealthMultiplier) - 0.00001f);
         }
-        public static float CalcMana(Stats stats)
+        public static float CalcMana(Stats stats, float baseIntellect, int playerLevel)
         {
-            return (stats.Mana + StatConversion.GetManaFromIntellect(CalcIntellect(stats))) * (1 + stats.BonusManaMultiplier);
+            return (float)Math.Round((stats.Mana + StatConversion.GetManaFromIntellect(CalcIntellect(stats, baseIntellect, playerLevel))) * (1 + stats.BonusManaMultiplier) - 0.00001f);
         }
-        public static float CalcUsableMana(Stats stats, float fightLen)
+        public static float CalcUsableMana(Stats stats, float fightLen, float baseIntellect, int playerLevel)
         {
             float mps = stats.Mp5 / 5f + stats.Mana * stats.ManaRestoreFromMaxManaPerSecond;
-            return CalcMana(stats) + stats.ManaRestore + mps * fightLen;
+            return CalcMana(stats, baseIntellect, playerLevel) + stats.ManaRestore + mps * fightLen;
         }
-        public static float CalcSpellCrit(Stats stats, int playerLevel)
+        public static float CalcSpellCrit(Stats stats, float baseIntellect, int playerLevel)
         {
             if (playerLevel == 85)
             {
                 return stats.SpellCrit
-                    + StatConversion.GetSpellCritFromIntellect(CalcIntellect(stats))
+                    + StatConversion.GetSpellCritFromIntellect(CalcIntellect(stats, baseIntellect, playerLevel))
                     + StatConversion.GetSpellCritFromRating(stats.CritRating)
                     + stats.BonusCritChance
                     + stats.SpellCritOnTarget;
@@ -76,7 +78,7 @@ namespace Rawr.Warlock
             else
             {
                 return stats.SpellCrit
-                    + GetSpellCritFromIntellect(CalcIntellect(stats), playerLevel)
+                    + GetSpellCritFromIntellect(CalcIntellect(stats, baseIntellect, playerLevel), playerLevel)
                     + GetSpellCritFromRating(stats.CritRating, playerLevel)
                     + stats.BonusCritChance
                     + stats.SpellCritOnTarget;
@@ -173,21 +175,22 @@ namespace Rawr.Warlock
                 return points / scaling[playerLevel - 80];
             }
         }
-        public static float CalcSpellPower(Stats stats)
+        public static float CalcSpellPower(Stats stats, float baseIntellect, int playerLevel)
         {
-            return (stats.SpellPower) * (1f + stats.BonusSpellPowerMultiplier) + CalcIntellect(stats) - 10f;
+            return (float)Math.Round((stats.SpellPower) * (1f + stats.BonusSpellPowerMultiplier)) + CalcIntellect(stats, baseIntellect, playerLevel) - 10f;
         }
+        // mainly used by pets
         public static float CalcStrength(Stats stats)
         {
-            return stats.Strength * (1 + stats.BonusStrengthMultiplier);
+            return (float)Math.Round(stats.Strength * (1 + stats.BonusStrengthMultiplier));
         }
         public static float CalcAgility(Stats stats)
         {
-            return stats.Agility * (1 + stats.BonusAgilityMultiplier);
+            return (float)Math.Round(stats.Agility * (1 + stats.BonusAgilityMultiplier));
         }
         public static float CalcAttackPower(Stats stats, float apPerStrength, float apPerAgility)
         {
-            return (1 + stats.BonusAttackPowerMultiplier) * (stats.AttackPower + CalcStrength(stats) * apPerStrength + CalcAgility(stats) * apPerAgility);
+            return (float)Math.Round((1 + stats.BonusAttackPowerMultiplier) * (stats.AttackPower + CalcStrength(stats) * apPerStrength + CalcAgility(stats) * apPerAgility));
         }
         public static float CalcPhysicalCrit(Stats stats, float critPerAgility, int levelDelta)
         {

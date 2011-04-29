@@ -758,13 +758,7 @@ namespace Rawr.Warlock
                 RecastPeriod = tc * maleficusDuration(new float[maxTicks + 1, maxTriggers + 1], tc, p, 1 / t, (int)(fightLen / tc), 6, 0);
             }
             NumTicks = RecastPeriod / tc;
-        }
-
-        public override void FinalizeSpellModifiers()
-        {
-            base.FinalizeSpellModifiers();
-            //SpellModifiers.AddMultiplicativeMultiplier(Mommy.Stats.Warlock4T9);
-        }
+        }       
         private static float maleficusDuration(float[,] cache, float TC, float P, float T, int maxTicks, int accumTicks, int triggerIndex)
         {
             if (accumTicks >= maxTicks)
@@ -1031,7 +1025,7 @@ namespace Rawr.Warlock
     //spellID 48181, effectID 40331
     public class Haunt : Spell
     {
-        private const float SCALE = 0.7369999886f;
+        private const float SCALE = 0.9581f;
         private const float COEFF = (1.5f / 3.5f) * 1.25f; //client tooltips show no scaling, but that contradicts experiments
 
         private float AvgBonus;
@@ -1049,13 +1043,7 @@ namespace Rawr.Warlock
                 COEFF, // direct coefficient
                 0f, // bonus direct multiplier
                 0f, // bonus crit chance
-                1f) // bonus crit multiplier
-        {
-            if (mommy.Options.PTRMode)
-            {
-                BaseDamage = WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * 0.9581f;
-            }
-        } 
+                1f) { } // bonus crit multiplier
 
         public override bool IsCastable()
         {

@@ -169,8 +169,7 @@ namespace Rawr.Warlock
 
             float[] demonicEmbraceValues = { 0f, .04f, .07f, .1f };
             Stats statsTalents = new Stats {
-                BonusStaminaMultiplier = demonicEmbraceValues[talents.DemonicEmbrace], //Demonic Embrace
-                BonusIntellectMultiplier = options.PlayerLevel > 50 ? .05f : 0 // Nethermancy
+                BonusStaminaMultiplier = demonicEmbraceValues[talents.DemonicEmbrace] //Demonic Embrace
             };
 
             if (talents.Eradication > 0)
