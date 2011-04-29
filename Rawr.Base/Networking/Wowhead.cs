@@ -2879,6 +2879,7 @@ namespace Rawr
                             case "5088": return "The Stonecore";
                             case "5396": return "Lost City of the Tol'vir";
                             case "5723": return "Firelands";
+							case "1977": return "Zul'Gurub";
                             #endregion
                             #region Raids
                             case "5094": return "Blackwing Descent";
