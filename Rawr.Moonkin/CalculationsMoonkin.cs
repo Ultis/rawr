@@ -949,6 +949,18 @@ namespace Rawr.Moonkin
             return calc;
         }
 
+        private static SpecialEffect _se_t114p = null;
+        public static SpecialEffect _SE_T114P {
+            get
+            {
+                if (_se_t114p == null) {
+                    _se_t114p = new SpecialEffect(Trigger.EclipseProc, new Stats() { SpellCrit = 0.99f }, 8.0f, 0f, 1f, 1);
+                    _se_t114p.Stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCrit, new Stats() { SpellCrit = -0.33f }, float.PositiveInfinity, 0.0f, 1f, 3));
+                }
+                return _se_t114p;
+            }
+        }
+
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
             CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
@@ -972,9 +984,7 @@ namespace Rawr.Moonkin
             if (T11Count >= 4) {
                 // 4 pieces: Whenever Eclipse triggers, your critical strike chance with spells is increased by 99%
                 //           for 8 sec. Each critical strike you achieve reduces that bonus by 33%.
-                SpecialEffect effect = new SpecialEffect(Trigger.EclipseProc, new Stats() { SpellCrit = 0.99f }, 8.0f, 0f, 1f, 1);
-                effect.Stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCrit, new Stats() { SpellCrit = -0.33f }, float.PositiveInfinity, 0.0f, 1f, 3));
-                statsTotal.AddSpecialEffect(effect);
+                statsTotal.AddSpecialEffect(_SE_T114P);
             }
             #endregion
 
