@@ -55,7 +55,7 @@ namespace Rawr.ProtWarr
                     break;
                 case Ability.Devastate:
                     // Assumes 3 stacks of Sunder Armor debuff
-                    baseDamage = (Lookup.WeaponDamage(Player, true) * 1.5f) + (336.0f * 3.0f);
+                    baseDamage = (Lookup.WeaponDamage(Player, true) * 1.5f) + (854.0f * 3.0f);
                     if (Player.Talents.GlyphOfDevastate)
                         DamageMultiplier *= 1.05f;
                     DamageMultiplier *= (1.0f + Player.Stats.BonusDevastateDamageMultiplier) * (1.0f + 0.05f * Player.Talents.WarAcademy);
