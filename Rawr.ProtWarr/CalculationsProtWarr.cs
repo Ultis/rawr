@@ -660,7 +660,10 @@ threat and limited threat scaled by the threat scale.",
 
             foreach (SpecialEffect effect in player.Stats.SpecialEffects()) 
             {
-                ApplySpecialEffect(player, effect, weaponSpeed, TriggerIntervals, TriggerChances, ref statsSpecialEffects);
+                if (RelevantTriggers.Contains(effect.Trigger))
+                {
+                    ApplySpecialEffect(player, effect, weaponSpeed, TriggerIntervals, TriggerChances, ref statsSpecialEffects);
+                }
             }
 
             // Base Stats
@@ -1024,19 +1027,36 @@ threat and limited threat scaled by the threat scale.",
 
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
-                if ((effect.Trigger == Trigger.Use
-                    || effect.Trigger == Trigger.MeleeCrit    || effect.Trigger == Trigger.MeleeHit
-                    || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit
-                    || effect.Trigger == Trigger.DoTTick
-                    || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DamageOrHealingDone
-                    || effect.Trigger == Trigger.DamageParried || effect.Trigger == Trigger.DamageAvoided
-                    || effect.Trigger == Trigger.DamageTaken || effect.Trigger == Trigger.DamageTakenPutsMeBelow35PercHealth) && HasRelevantStats(effect.Stats))
+                if (RelevantTriggers.Contains(effect.Trigger) && HasRelevantStats(effect.Stats))
                 {
                     relevantStats.AddSpecialEffect(effect);
                 }
             }
 
             return relevantStats;
+        }
+
+        private List<Trigger> _relevantTriggers = null;
+        public List<Trigger> RelevantTriggers {
+            get {
+                if (_relevantTriggers == null) {
+                    _relevantTriggers = new List<Trigger>(){
+                        Trigger.Use,
+                        Trigger.MeleeCrit,
+                        Trigger.MeleeHit,
+                        Trigger.PhysicalCrit,
+                        Trigger.PhysicalHit,
+                        Trigger.DoTTick,
+                        Trigger.DamageDone,
+                        Trigger.DamageOrHealingDone,
+                        Trigger.DamageParried,
+                        Trigger.DamageAvoided,
+                        Trigger.DamageTaken,
+                        Trigger.DamageTakenPutsMeBelow35PercHealth,
+                    };
+                }
+                return _relevantTriggers;
+            }
         }
 
         public override bool HasRelevantStats(Stats stats)
@@ -1078,13 +1098,7 @@ threat and limited threat scaled by the threat scale.",
             {
                 foreach (SpecialEffect effect in stats.SpecialEffects())
                 {
-                    if ((effect.Trigger == Trigger.Use
-                        || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
-                        || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit
-                        || effect.Trigger == Trigger.DoTTick
-                        || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DamageOrHealingDone
-                        || effect.Trigger == Trigger.DamageParried || effect.Trigger == Trigger.DamageAvoided
-                        || effect.Trigger == Trigger.DamageTaken || effect.Trigger == Trigger.DamageTakenPutsMeBelow35PercHealth) && HasRelevantStats(effect.Stats))
+                    if (RelevantTriggers.Contains(effect.Trigger) && HasRelevantStats(effect.Stats))
                     {
                         relevant |= HasRelevantStats(effect.Stats);
                         if (relevant) break;
