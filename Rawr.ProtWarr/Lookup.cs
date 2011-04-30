@@ -92,6 +92,22 @@ namespace Rawr.ProtWarr
             }
         }
 
+        public static float MaxEffectiveMasteryRating(Player player)
+        {
+            if (player.DefendModel != null)
+                return ((1.0f - player.DefendModel.DefendTable.BaseAnyAvoid) / 0.015f) * StatConversion.RATING_PER_MASTERY;
+            else
+                return float.MaxValue;
+        }
+
+        public static float MaxEffectiveBuffedMasteryRating(Player player)
+        {
+            if (player.DefendModel != null)
+                return ((1.0f - player.DefendModel.DefendTable.BuffedAnyAvoid) / 0.015f) * StatConversion.RATING_PER_MASTERY;
+            else
+                return float.MaxValue;
+        }
+
         public static float BonusMasteryBlockPercentage(Player player)
         {
             return 0.015f * (8.0f + StatConversion.GetMasteryFromRating(player.Stats.MasteryRating, CharacterClass.Warrior));

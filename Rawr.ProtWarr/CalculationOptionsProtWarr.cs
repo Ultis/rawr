@@ -25,8 +25,8 @@ namespace Rawr.ProtWarr
 		{
 			BossAttackValue = 160000;
 			BossAttackSpeed = 2.0f;
+            HitsToSurvive = 3.1f;
             ThreatScale = 0.8f; // 10%
-			MitigationScale = 0.125f;
 			RankingMode = 1;
             HeroicStrikeFrequency = 0.9f;
             AverageVengeance = 0.6f;
@@ -55,11 +55,11 @@ namespace Rawr.ProtWarr
             set { _threatScale = value; OnPropertyChanged("ThreatScale"); }
         }
 
-        private float _mitigationScale;
-        public float MitigationScale
+        private float _hitsToSurvive;
+        public float HitsToSurvive
         {
-            get { return _mitigationScale; }
-            set { _mitigationScale = value; OnPropertyChanged("MitigationScale"); }
+            get { return _hitsToSurvive; }
+            set { _hitsToSurvive = value; OnPropertyChanged("HitsToSurvive"); }
         }
 
         private int _rankingMode;

@@ -34,6 +34,7 @@ namespace Rawr.ProtWarr
         public string Description { get; private set; }
         public float ThreatPerSecond { get; private set; }
         public float DamagePerSecond { get; private set; }
+        public float WeaponSpeed { get; private set; }
         public float WeaponAttacksPerSecond { get; private set; }
         public float HitsPerSecond { get; private set; }
         public float CritsPerSecond { get; private set; }
@@ -47,6 +48,10 @@ namespace Rawr.ProtWarr
             float modelCrits = 0.0f;
             float modelHits = 0.0f;
             float modelWeaponAttacks = 0.0f;
+
+            WeaponSpeed = 1.0f;
+            if (Player.Character.MainHand != null)
+                WeaponSpeed = Player.Character.MainHand.Speed;
 
             // Rotation Auto-Detection
             if (AttackModelMode == AttackModelMode.Optimal)

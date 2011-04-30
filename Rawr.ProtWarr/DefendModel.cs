@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rawr.ProtWarr
 {
-    class DefendModel
+    public class DefendModel
     {
         private Player Player;
         private float AttackSpeed;

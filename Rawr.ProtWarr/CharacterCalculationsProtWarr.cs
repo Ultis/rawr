@@ -149,18 +149,8 @@ namespace Rawr.ProtWarr
                                 "{3:0} damage per critically blocked attack" + Environment.NewLine +
                                 "{4:0} damage per critical attack", DamageTaken, DamageTakenPerHit, DamageTakenPerBlock, DamageTakenPerCritBlock, DamageTakenPerCrit));
             
-            dictValues.Add("Resilience",
-                string.Format(@"{0}"/*+"*Reduces the damage of critical strikes and chance to be critically hit by {1}%."*/,
-                                BasicStats.Resilience/*,
-                                StatConversion.GetCritReductionFromResilience(BasicStats.Resilience, CharacterClass.Warrior)*/));
-            
             if (CritVulnerability > 0.0001f)
-            {
-                float resilienceNeeded = (float)Math.Ceiling((StatConversion.RATING_PER_RESILIENCE * CritVulnerability));
-                dictValues.Add("Chance to be Crit",
-                    string.Format("{0:0.00%}*CRITTABLE! Short by {1:0} resilience to be uncrittable.",
-                                    CritVulnerability, resilienceNeeded));
-            }
+                dictValues.Add("Chance to be Crit", string.Format("{0:0.00%}*CRITTABLE!", CritVulnerability));
             else
                 dictValues.Add("Chance to be Crit", string.Format("{0:0.00%}*Chance to crit reduced by {1:0.00%}", CritVulnerability, CritReduction));
 
@@ -191,7 +181,7 @@ namespace Rawr.ProtWarr
                 string.Format("{0:0.00%}*Attacks Missed: {1:0.00%}" + Environment.NewLine + "Attacks Dodged: {2:0.00%}" + Environment.NewLine + 
                                 "Attacks Parried: {3:0.00%}", AvoidedAttacks, MissedAttacks, DodgedAttacks, ParriedAttacks));
             dictValues.Add("Total Damage/sec", string.Format("{0:0.0}", TotalDamagePerSecond));
-            dictValues.Add("Total Threat/sec", string.Format("{0:0.0}*{1:0%} of Swings converted to Heroic Strikes", ThreatPerSecond, HeroicStrikeFrequency));
+            dictValues.Add("Total Threat/sec", string.Format("{0:0.0}*Heroic Strike used every {1:0.0} seconds", ThreatPerSecond, 3.0f / HeroicStrikeFrequency));
             dictValues.Add("Rotation", ThreatModelName + "*" + ThreatModel);
 
             switch (RankingMode)
@@ -205,7 +195,7 @@ namespace Rawr.ProtWarr
                     dictValues.Add("Survival Points", string.Format("{0:0}*Survival is not weighted in this mode", SurvivalPoints, SurvivalPoints / 100.0f));
                     break;
                 default: 
-                    dictValues.Add("Ranking Mode", "Mitigation Scale*Customizable scale which allows you to weight mitigation vs. effective health.");
+                    dictValues.Add("Ranking Mode", "Mitigation Scale*Default scale which compares mitigation, effective health, and threat.");
                     dictValues.Add("Survival Points", string.Format("{0:0}*Effective Health", SurvivalPoints));
                     break;
             }

@@ -15,7 +15,6 @@
     <UserControl.Resources>
         <local:CalculationOptionsProtWarr x:Key="CalculationOptionsProtWarrDataSource" d:IsDataSource="True"/>
         <local:RankingModeConverter x:Key="RankingModeConverter"/>
-        <local:MitigationScaleConverter x:Key="MitigationScaleConverter"/>
         <local:ThreatScaleConverter x:Key="ThreatScaleConverter"/>
     </UserControl.Resources>
 
@@ -52,11 +51,11 @@
                 <System:String>Burst Time</System:String>
                 <System:String>Damage Output</System:String>
             </ComboBox>
+
+            <TextBlock x:Name="HitsToSurviveLabel" Grid.Row="1" Margin="2,4,4,4" Text="Hits to Survive:" TextAlignment="Right" VerticalAlignment="Center" />
+            <inputToolkit:NumericUpDown x:Name="HitsToSurvive" Grid.Row="1" Grid.Column="1" Margin="2,4,90,4" Minimum="0" Maximum="10" DecimalPlaces="1" Increment="0.1"
+                                        Value="{Binding Mode=TwoWay, UpdateSourceTrigger=Default, Path=HitsToSurvive}" DataContext="{Binding}" />
             
-            <TextBlock x:Name="MitigationLabel" Grid.Row="1" Margin="2,4,4,4" Text="Mitigation Weight:" TextAlignment="Right" VerticalAlignment="Center" />
-            <inputToolkit:NumericUpDown x:Name="MitigationValue" Grid.Row="1" Grid.Column="1" Margin="2,4,90,4" Minimum="0" Maximum="1" DecimalPlaces="1" Increment="0.1" 
-                                        Value="{Binding Path=MitigationScale, Converter={StaticResource MitigationScaleConverter}, Mode=TwoWay }" />
-                                        
             <TextBlock x:Name="ThreatLabel" Grid.Row="2" Margin="2,4,4,4" Text="Threat Weight:" TextAlignment="Right" VerticalAlignment="Center" />
             <inputToolkit:NumericUpDown x:Name="ThreatValue" Grid.Row="2" Grid.Column="1" Margin="2,4,90,4" Minimum="0" Maximum="1" DecimalPlaces="1" Increment="0.1"
                                         Value="{Binding ThreatScale, Converter={StaticResource ThreatScaleConverter}, Mode=TwoWay, UpdateSourceTrigger=Default}" />

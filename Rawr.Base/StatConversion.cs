@@ -514,7 +514,9 @@ namespace Rawr
         #region Functions for More complex things.
 
         /// <summary>Originally from Bear. This should be updated once per expansion</summary>
-        public const float MitigationScaler = 78591f;
+        public const float MitigationScaler         = 78591f;
+        public const double SurvivalScalerBase      = 0.1574901d; // fourToTheNegativeFourThirds = Math.Pow(4d, -4d / 3d)
+        public const double SurvivalScalerTopRight  = 0.6299605d; // topRight = Math.Pow(fourToTheNegativeFourThirds, 1d / 4d)
 
         /// <summary>
         /// Returns how much physical damage is reduced from Armor. (0.095 = 9.5% reduction)

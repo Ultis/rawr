@@ -14,6 +14,8 @@ namespace Rawr.ProtWarr
         public WarriorTalents Talents;
         public CalculationOptionsProtWarr Options;
         public BossOptions Boss;
+        public DefendModel DefendModel;
+        public AttackModel AttackModel;
 
         public Player(Character character)
         {
@@ -22,6 +24,8 @@ namespace Rawr.ProtWarr
             this.Talents = this.Character.WarriorTalents;
             this.Options = this.Character.CalculationOptions as CalculationOptionsProtWarr;
             this.Boss = this.Character.BossOptions;
+            this.DefendModel = null;
+            this.AttackModel = null;
         }
     }
 
@@ -136,7 +140,6 @@ namespace Rawr.ProtWarr
                     "Defensive Stats:Block",
                     "Defensive Stats:Critical Block",
                     "Defensive Stats:Miss",
-                    "Defensive Stats:Resilience",
                     "Defensive Stats:Chance to be Crit",
                     "Defensive Stats:Guaranteed Reduction",
                     "Defensive Stats:Avoidance",
@@ -291,6 +294,7 @@ threat and limited threat scaled by the threat scale.",
         {
             character.ActiveBuffsAdd(("Battle Shout"));
             character.ActiveBuffsAdd(("Devotion Aura"));
+            character.ActiveBuffsAdd(("Ancestral Healing"));
             character.ActiveBuffsAdd(("Trueshot Aura"));
             character.ActiveBuffsAdd(("Ferocious Inspiration"));
             character.ActiveBuffsAdd(("Power Word: Fortitude"));
@@ -304,7 +308,7 @@ threat and limited threat scaled by the threat scale.",
             character.ActiveBuffsAdd(("Flask of Steelskin"));
             if (character.PrimaryProfession == Profession.Alchemy || character.SecondaryProfession == Profession.Alchemy)
                 character.ActiveBuffsAdd(("Flask of Steelskin (Mixology)"));
-            character.ActiveBuffsAdd(("Fish Feast"));
+            character.ActiveBuffsAdd(("Mastery Food"));
 
             #region Boss Options
             // Never in back of the Boss
@@ -407,12 +411,13 @@ threat and limited threat scaled by the threat scale.",
             // Error-handling if swapping models
             if (character == null || character.CalculationOptions == null || !(character.CalculationOptions is CalculationOptionsProtWarr))
                 return calculatedStats;
-            
+
             Player player = new Player(character);
+
             AccumulateCharacterStats(player, additionalItem);
 
-            DefendModel dm = new DefendModel(player);
-            AttackModel am = new AttackModel(player, AttackModelMode.Optimal);
+            player.DefendModel = new DefendModel(player);
+            player.AttackModel = new AttackModel(player, AttackModelMode.Optimal);
 
             if (needsDisplayCalculations)
             {
@@ -421,11 +426,11 @@ threat and limited threat scaled by the threat scale.",
 
                 calculatedStats.BaseAttackerSpeed = player.Options.BossAttackSpeed;
                 calculatedStats.AttackerSpeed = Lookup.TargetWeaponSpeed(player);
-                calculatedStats.DamageTakenPerHit = dm.DamagePerHit;
-                calculatedStats.DamageTakenPerBlock = dm.DamagePerBlock;
-                calculatedStats.DamageTakenPerCritBlock = dm.DamagePerCritBlock;
-                calculatedStats.DamageTakenPerCrit = dm.DamagePerCrit;
-                calculatedStats.DamageTaken = dm.DamagePerSecond;
+                calculatedStats.DamageTakenPerHit = player.DefendModel.DamagePerHit;
+                calculatedStats.DamageTakenPerBlock = player.DefendModel.DamagePerBlock;
+                calculatedStats.DamageTakenPerCritBlock = player.DefendModel.DamagePerCritBlock;
+                calculatedStats.DamageTakenPerCrit = player.DefendModel.DamagePerCrit;
+                calculatedStats.DamageTaken = player.DefendModel.DamagePerSecond;
 
                 calculatedStats.ArcaneReduction = (1.0f - Lookup.MagicReduction(player, DamageType.Arcane));
                 calculatedStats.FireReduction = (1.0f - Lookup.MagicReduction(player, DamageType.Fire));
@@ -433,30 +438,30 @@ threat and limited threat scaled by the threat scale.",
                 calculatedStats.NatureReduction = (1.0f - Lookup.MagicReduction(player, DamageType.Nature));
                 calculatedStats.ShadowReduction = (1.0f - Lookup.MagicReduction(player, DamageType.Shadow));
 
-                calculatedStats.Crit = am.Abilities[Ability.None].AttackTable.Critical;
+                calculatedStats.Crit = player.AttackModel.Abilities[Ability.None].AttackTable.Critical;
                 calculatedStats.Expertise = Lookup.BonusExpertisePercentage(player);
                 calculatedStats.Haste = Lookup.BonusHastePercentage(player);
                 calculatedStats.WeaponSpeed = Lookup.WeaponSpeed(player);
             }
 
             calculatedStats.TargetLevel = player.Boss.Level;
-            calculatedStats.Abilities = am.Abilities;
+            calculatedStats.Abilities = player.AttackModel.Abilities;
             calculatedStats.BasicStats = player.Stats;
 
-            calculatedStats.Miss = dm.DefendTable.Miss;
-            calculatedStats.Dodge = dm.DefendTable.Dodge;
-            calculatedStats.Parry = dm.DefendTable.Parry;
-            calculatedStats.Block = dm.DefendTable.AnyBlock;
-            calculatedStats.BaseBlock = dm.DefendTable.BaseBlock + dm.DefendTable.BaseCriticalBlock;
-            calculatedStats.BuffedBlock = dm.DefendTable.BuffedBlock + dm.DefendTable.BuffedCriticalBlock;
-            calculatedStats.CriticalBlock = dm.DefendTable.CriticalBlock;
-            calculatedStats.AnyMiss = dm.DefendTable.AnyMiss;
-            calculatedStats.AnyAvoid = dm.DefendTable.AnyAvoid;
-            calculatedStats.BaseAnyAvoid = dm.DefendTable.BaseAnyAvoid;
-            calculatedStats.BuffedAnyAvoid = dm.DefendTable.BuffedAnyAvoid;
-            calculatedStats.CritVulnerability = dm.DefendTable.Critical;
-            calculatedStats.GuaranteedReduction = dm.GuaranteedReduction;
-            calculatedStats.TotalMitigation = dm.Mitigation;
+            calculatedStats.Miss = player.DefendModel.DefendTable.Miss;
+            calculatedStats.Dodge = player.DefendModel.DefendTable.Dodge;
+            calculatedStats.Parry = player.DefendModel.DefendTable.Parry;
+            calculatedStats.Block = player.DefendModel.DefendTable.AnyBlock;
+            calculatedStats.BaseBlock = player.DefendModel.DefendTable.BaseBlock + player.DefendModel.DefendTable.BaseCriticalBlock;
+            calculatedStats.BuffedBlock = player.DefendModel.DefendTable.BuffedBlock + player.DefendModel.DefendTable.BuffedCriticalBlock;
+            calculatedStats.CriticalBlock = player.DefendModel.DefendTable.CriticalBlock;
+            calculatedStats.AnyMiss = player.DefendModel.DefendTable.AnyMiss;
+            calculatedStats.AnyAvoid = player.DefendModel.DefendTable.AnyAvoid;
+            calculatedStats.BaseAnyAvoid = player.DefendModel.DefendTable.BaseAnyAvoid;
+            calculatedStats.BuffedAnyAvoid = player.DefendModel.DefendTable.BuffedAnyAvoid;
+            calculatedStats.CritVulnerability = player.DefendModel.DefendTable.Critical;
+            calculatedStats.GuaranteedReduction = player.DefendModel.GuaranteedReduction;
+            calculatedStats.TotalMitigation = player.DefendModel.Mitigation;
 
             calculatedStats.ArcaneSurvivalPoints = player.Stats.Health / Lookup.MagicReduction(player, DamageType.Arcane);
             calculatedStats.FireSurvivalPoints = player.Stats.Health / Lookup.MagicReduction(player, DamageType.Fire);
@@ -465,39 +470,52 @@ threat and limited threat scaled by the threat scale.",
             calculatedStats.ShadowSurvivalPoints = player.Stats.Health / Lookup.MagicReduction(player, DamageType.Shadow);
 
             calculatedStats.Hit = Lookup.BonusHitPercentage(player);
-            calculatedStats.AvoidedAttacks = am.Abilities[Ability.None].AttackTable.AnyMiss;
-            calculatedStats.DodgedAttacks = am.Abilities[Ability.None].AttackTable.Dodge;
-            calculatedStats.ParriedAttacks = am.Abilities[Ability.None].AttackTable.Parry;
-            calculatedStats.MissedAttacks = am.Abilities[Ability.None].AttackTable.Miss;
+            calculatedStats.AvoidedAttacks = player.AttackModel.Abilities[Ability.None].AttackTable.AnyMiss;
+            calculatedStats.DodgedAttacks = player.AttackModel.Abilities[Ability.None].AttackTable.Dodge;
+            calculatedStats.ParriedAttacks = player.AttackModel.Abilities[Ability.None].AttackTable.Parry;
+            calculatedStats.MissedAttacks = player.AttackModel.Abilities[Ability.None].AttackTable.Miss;
 
             calculatedStats.HeroicStrikeFrequency = player.Options.HeroicStrikeFrequency;
-            calculatedStats.ThreatPerSecond = am.ThreatPerSecond;
-            calculatedStats.ThreatModelName = am.ShortName;
-            calculatedStats.ThreatModel = am.Name + "\n" + am.Description;
-            calculatedStats.TotalDamagePerSecond = am.DamagePerSecond;
+            calculatedStats.ThreatPerSecond = player.AttackModel.ThreatPerSecond;
+            calculatedStats.ThreatModelName = player.AttackModel.ShortName;
+            calculatedStats.ThreatModel = player.AttackModel.Name + "\n" + player.AttackModel.Description;
+            calculatedStats.TotalDamagePerSecond = player.AttackModel.DamagePerSecond;
 
-            calculatedStats.BurstTime = dm.BurstTime;
+            calculatedStats.BurstTime = player.DefendModel.BurstTime;
             calculatedStats.RankingMode = player.Options.RankingMode;
-            calculatedStats.ThreatPoints = (player.Options.ThreatScale * am.ThreatPerSecond);
             switch (player.Options.RankingMode)
             {
                 case 3:
                     // Burst Time Mode
-                    calculatedStats.SurvivalPoints = (dm.BurstTime * 100.0f);
-                    calculatedStats.MitigationPoints = 0.0f;
-                    calculatedStats.ThreatPoints = 0.0f;
+                    calculatedStats.SurvivalPoints      = player.DefendModel.BurstTime * 100.0f;
+                    calculatedStats.MitigationPoints    = 0.0f;
+                    calculatedStats.ThreatPoints        = 0.0f;
                     break;
                 case 4:
                     // Damage Output Mode
-                    calculatedStats.SurvivalPoints = 0.0f;
-                    calculatedStats.MitigationPoints = 0.0f;
-                    calculatedStats.ThreatPoints = calculatedStats.TotalDamagePerSecond;
+                    calculatedStats.SurvivalPoints      = 0.0f;
+                    calculatedStats.MitigationPoints    = 0.0f;
+                    calculatedStats.ThreatPoints        = calculatedStats.TotalDamagePerSecond;
                     break;
                 default:
                     // Mitigation Scale Mode
-                    calculatedStats.SurvivalPoints = (dm.EffectiveHealth) / 10.0f;
-                    calculatedStats.MitigationPoints = dm.Mitigation * player.Options.BossAttackValue * player.Options.MitigationScale * 18.0f;
-                    calculatedStats.ThreatPoints /= 10.0f;
+                    double survivalCap = player.Options.HitsToSurvive * player.Options.BossAttackValue / 1000.0d;
+                    double survivalRaw = player.DefendModel.EffectiveHealth / 1000.0d;
+
+                    if (survivalRaw <= survivalCap)
+                    {
+                        calculatedStats.SurvivalPoints = player.DefendModel.EffectiveHealth;
+                    }
+                    else
+                    {
+                        double topLeft          = Math.Pow(((survivalRaw - survivalCap) / survivalCap) + StatConversion.SurvivalScalerBase, 1.0d / 4.0d);
+                        double fraction         = (topLeft - StatConversion.SurvivalScalerTopRight) / 2.0d;
+                        double cappedSurvival   = survivalCap * fraction + survivalCap;
+                        calculatedStats.SurvivalPoints = (float)cappedSurvival * 1000.0f;
+                    }
+
+                    calculatedStats.MitigationPoints    = StatConversion.MitigationScaler / (1.0f - player.DefendModel.Mitigation);
+                    calculatedStats.ThreatPoints        = player.AttackModel.ThreatPerSecond * player.Options.ThreatScale;
                     break;
             }
 
@@ -517,7 +535,7 @@ threat and limited threat scaled by the threat scale.",
 
         private void AccumulateCharacterStats(Player player, Item additionalItem)
         {
-            float baseStrength = 0.0f;
+            float baseStrength, baseBonusMasteryBlockPercentage, baseParryRatingFromStrength;
 
             // Items and Buffs
             StatsWarrior statsItemsBuffs = new StatsWarrior();
@@ -532,7 +550,8 @@ threat and limited threat scaled by the threat scale.",
             player.Stats.Accumulate(statsRace);
 
             // Talents
-            StatsWarrior statsTalents = new StatsWarrior() {
+            StatsWarrior statsTalents = new StatsWarrior() 
+            {
                 Block = 0.15f, // Sentinel
                 BonusStaminaMultiplier = (1.0f + 0.15f) * (1.0f + (Character.ValidateArmorSpecialization(player.Character, ItemType.Plate) ? 0.05f : 0.0f)) - 1.0f, // Sentinel & Plate Specialization
                 BaseArmorMultiplier = player.Talents.Toughness * 0.03f,
@@ -552,6 +571,12 @@ threat and limited threat scaled by the threat scale.",
             player.Stats.Agility = (float)Math.Floor((statsRace.Agility + statsTalents.Agility) * (1.0f + player.Stats.BonusAgilityMultiplier));
             player.Stats.Agility += (float)Math.Floor(statsItemsBuffs.Agility * (1.0f + player.Stats.BonusAgilityMultiplier));
 
+            // First-Pass Avoidance for Accurate Special Effect Trigger Chances
+            baseBonusMasteryBlockPercentage = Lookup.BonusMasteryBlockPercentage(player);
+            baseParryRatingFromStrength = (player.Stats.Strength - baseStrength) * 0.25f; // Parry Rating conversion ignores base Strength
+            player.Stats.Block += baseBonusMasteryBlockPercentage;
+            player.Stats.ParryRating += baseParryRatingFromStrength; 
+
             // Calculate Procs and Special Effects
             player.Stats.Accumulate(GetSpecialEffectStats(player));
 
@@ -561,11 +586,11 @@ threat and limited threat scaled by the threat scale.",
             else
                 player.Stats.Agility += (float)Math.Floor((player.Stats.HighestStat + player.Stats.Paragon) * (1.0f + player.Stats.BonusAgilityMultiplier));
 
-            // Defensive Stats
+            // Defensive Stats, Add Difference of First-Pass and Second-Pass Block/Parry
             player.Stats.Armor = (float)Math.Ceiling(player.Stats.Armor * (1.0f + player.Stats.BaseArmorMultiplier));
             player.Stats.Armor += (float)Math.Ceiling(player.Stats.BonusArmor * (1.0f + player.Stats.BonusArmorMultiplier));
-            player.Stats.Block += Lookup.BonusMasteryBlockPercentage(player);
-            player.Stats.ParryRating += (player.Stats.Strength - baseStrength) * 0.25f; // Parry Rating conversion ignores base Strength
+            player.Stats.Block += (Lookup.BonusMasteryBlockPercentage(player) - baseBonusMasteryBlockPercentage);
+            player.Stats.ParryRating += (((player.Stats.Strength - baseStrength) * 0.25f) - baseParryRatingFromStrength); // Parry Rating conversion ignores base Strength
 
             player.Stats.NatureResistance += player.Stats.NatureResistanceBuff;
             player.Stats.FireResistance += player.Stats.FireResistanceBuff;
@@ -611,58 +636,83 @@ threat and limited threat scaled by the threat scale.",
             return statsBuffs;
         }
 
-        private Dictionary<Trigger, float> TriggerIntervals = new Dictionary<Trigger, float>();
-        private Dictionary<Trigger, float> TriggerChances   = new Dictionary<Trigger, float>();
-
         private StatsWarrior GetSpecialEffectStats(Player player)
         {
             StatsWarrior statsSpecialEffects = new StatsWarrior();
 
-            float weaponSpeed = 1.0f;
-            if (player.Character.MainHand != null)
-                weaponSpeed = player.Character.MainHand.Speed;
+            Dictionary<Trigger, float> triggerIntervals = new Dictionary<Trigger, float>();
+            Dictionary<Trigger, float> triggerChances   = new Dictionary<Trigger, float>();
 
-            AttackModel am = new AttackModel(player, AttackModelMode.Optimal);
-            DefendModel dm = new DefendModel(player);
+            player.DefendModel = new DefendModel(player);
+            player.AttackModel = new AttackModel(player, AttackModelMode.Optimal);
+
+            float effectiveMasteryRating        = Lookup.MaxEffectiveMasteryRating(player);
+            float effectiveBuffedMasteryRating  = effectiveMasteryRating * (1.0f - 10.0f / player.Options.ShieldBlockInterval) +
+                                                    Lookup.MaxEffectiveBuffedMasteryRating(player) * (10.0f / player.Options.ShieldBlockInterval);
             
-            TriggerIntervals[Trigger.Use]                   = 0.0f;
-            TriggerIntervals[Trigger.MeleeAttack]           = (1.0f / am.WeaponAttacksPerSecond);
-            TriggerIntervals[Trigger.MeleeHit]              = TriggerIntervals[Trigger.MeleeAttack];
-            TriggerIntervals[Trigger.MeleeCrit]             = TriggerIntervals[Trigger.MeleeAttack];
-            TriggerIntervals[Trigger.PhysicalHit]           = TriggerIntervals[Trigger.MeleeAttack];
-            TriggerIntervals[Trigger.PhysicalAttack]        = TriggerIntervals[Trigger.MeleeAttack];
-            TriggerIntervals[Trigger.PhysicalCrit]          = TriggerIntervals[Trigger.MeleeAttack];
-            TriggerIntervals[Trigger.ExecuteHit]            = TriggerIntervals[Trigger.MeleeAttack];
-            TriggerIntervals[Trigger.DoTTick]               = (player.Talents.DeepWounds > 0) ? 2.0f : 0.0f;
-            TriggerIntervals[Trigger.DamageDone]            = TriggerIntervals[Trigger.MeleeAttack] + TriggerIntervals[Trigger.DoTTick];
-            TriggerIntervals[Trigger.DamageOrHealingDone]   = TriggerIntervals[Trigger.DamageDone];
-            TriggerIntervals[Trigger.DamageTaken]           = 1.0f / dm.AttackerSwingsPerSecond;
-            TriggerIntervals[Trigger.DamageAvoided]         = TriggerIntervals[Trigger.DamageTaken];
-            TriggerIntervals[Trigger.DamageParried]         = TriggerIntervals[Trigger.DamageTaken];
-            TriggerIntervals[Trigger.DamageTakenPutsMeBelow35PercHealth] = TriggerIntervals[Trigger.DamageTaken];
+            triggerIntervals[Trigger.Use]                   = 0.0f;
+            triggerIntervals[Trigger.MeleeAttack]           = player.AttackModel.WeaponAttacksPerSecond;
+            triggerIntervals[Trigger.MeleeHit]              = triggerIntervals[Trigger.MeleeAttack];
+            triggerIntervals[Trigger.MeleeCrit]             = triggerIntervals[Trigger.MeleeAttack];
+            triggerIntervals[Trigger.PhysicalHit]           = triggerIntervals[Trigger.MeleeAttack];
+            triggerIntervals[Trigger.PhysicalAttack]        = triggerIntervals[Trigger.MeleeAttack];
+            triggerIntervals[Trigger.PhysicalCrit]          = triggerIntervals[Trigger.MeleeAttack];
+            triggerIntervals[Trigger.ExecuteHit]            = triggerIntervals[Trigger.MeleeAttack];
+            triggerIntervals[Trigger.DoTTick]               = (player.Talents.DeepWounds > 0) ? 2.0f : 0.0f;
+            triggerIntervals[Trigger.DamageDone]            = triggerIntervals[Trigger.MeleeAttack] + triggerIntervals[Trigger.DoTTick];
+            triggerIntervals[Trigger.DamageOrHealingDone]   = triggerIntervals[Trigger.DamageDone];
+            triggerIntervals[Trigger.DamageTaken]           = 1.0f / player.DefendModel.AttackerSwingsPerSecond;
+            triggerIntervals[Trigger.DamageAvoided]         = triggerIntervals[Trigger.DamageTaken];
+            triggerIntervals[Trigger.DamageParried]         = triggerIntervals[Trigger.DamageTaken];
+            triggerIntervals[Trigger.DamageTakenPutsMeBelow35PercHealth] = triggerIntervals[Trigger.DamageTaken];
 
-            TriggerChances[Trigger.Use]                     = 1.0f;
-            TriggerChances[Trigger.MeleeAttack]             = 1.0f;
-            TriggerChances[Trigger.MeleeHit]                = am.HitsPerSecond / am.WeaponAttacksPerSecond;
-            TriggerChances[Trigger.MeleeCrit]               = am.CritsPerSecond / am.WeaponAttacksPerSecond;
-            TriggerChances[Trigger.PhysicalAttack]          = 1.0f;
-            TriggerChances[Trigger.PhysicalHit]             = TriggerChances[Trigger.MeleeHit];
-            TriggerChances[Trigger.PhysicalCrit]            = TriggerChances[Trigger.MeleeCrit];
-            TriggerChances[Trigger.ExecuteHit]              = TriggerChances[Trigger.MeleeHit];
-            TriggerChances[Trigger.DoTTick]                 = (player.Talents.DeepWounds > 0) ? 1.0f : 0.0f;
-            TriggerChances[Trigger.DamageDone]              = (am.HitsPerSecond + ((player.Talents.DeepWounds > 0) ? 2.0f : 0.0f)) 
-                                                                / (am.WeaponAttacksPerSecond + ((player.Talents.DeepWounds > 0) ? 1.0f : 0.0f));
-            TriggerChances[Trigger.DamageOrHealingDone]     = TriggerChances[Trigger.DamageDone];
-            TriggerChances[Trigger.DamageTaken]             = dm.AttackerHitsPerSecond / dm.AttackerSwingsPerSecond;
-            TriggerChances[Trigger.DamageAvoided]           = dm.DefendTable.AnyAvoid;
-            TriggerChances[Trigger.DamageParried]           = dm.DefendTable.Parry;
-            TriggerChances[Trigger.DamageTakenPutsMeBelow35PercHealth] = TriggerChances[Trigger.DamageTaken] * 0.35f;
+            triggerChances[Trigger.Use]                     = 1.0f;
+            triggerChances[Trigger.MeleeAttack]             = 1.0f;
+            triggerChances[Trigger.MeleeHit]                = player.AttackModel.HitsPerSecond / player.AttackModel.WeaponAttacksPerSecond;
+            triggerChances[Trigger.MeleeCrit]               = player.AttackModel.CritsPerSecond / player.AttackModel.WeaponAttacksPerSecond;
+            triggerChances[Trigger.PhysicalAttack]          = 1.0f;
+            triggerChances[Trigger.PhysicalHit]             = triggerChances[Trigger.MeleeHit];
+            triggerChances[Trigger.PhysicalCrit]            = triggerChances[Trigger.MeleeCrit];
+            triggerChances[Trigger.ExecuteHit]              = triggerChances[Trigger.MeleeHit];
+            triggerChances[Trigger.DoTTick]                 = (player.Talents.DeepWounds > 0) ? 1.0f : 0.0f;
+            triggerChances[Trigger.DamageDone]              = (player.AttackModel.HitsPerSecond + ((player.Talents.DeepWounds > 0) ? 2.0f : 0.0f))
+                                                                / (player.AttackModel.WeaponAttacksPerSecond + ((player.Talents.DeepWounds > 0) ? 1.0f : 0.0f));
+            triggerChances[Trigger.DamageOrHealingDone]     = triggerChances[Trigger.DamageDone];
+            triggerChances[Trigger.DamageTaken]             = player.DefendModel.AttackerHitsPerSecond / player.DefendModel.AttackerSwingsPerSecond;
+            triggerChances[Trigger.DamageAvoided]           = player.DefendModel.DefendTable.AnyAvoid;
+            triggerChances[Trigger.DamageParried]           = player.DefendModel.DefendTable.Parry;
+            triggerChances[Trigger.DamageTakenPutsMeBelow35PercHealth] = triggerChances[Trigger.DamageTaken] * 0.35f;
 
             foreach (SpecialEffect effect in player.Stats.SpecialEffects()) 
             {
                 if (RelevantTriggers.Contains(effect.Trigger))
                 {
-                    ApplySpecialEffect(player, effect, weaponSpeed, TriggerIntervals, TriggerChances, ref statsSpecialEffects);
+                    // Effective Mastery Capping on Large Proc Effects
+                    if ((effect.Trigger == Trigger.Use && effect.Stats.MasteryRating > effectiveMasteryRating) || effect.Stats.MasteryRating > effectiveBuffedMasteryRating)
+                    {
+                        Stats cappedStats = new Stats();
+                        cappedStats.Accumulate(effect.Stats);
+
+                        // Assume Use Effects Bypass Shield Block Collision
+                        if (effect.Trigger == Trigger.Use)
+                            cappedStats.MasteryRating = effectiveMasteryRating;
+                        else
+                            cappedStats.MasteryRating = effectiveBuffedMasteryRating;
+
+                        SpecialEffect cappedEffect = new SpecialEffect(effect.Trigger, cappedStats, effect.Duration, effect.Cooldown, effect.LimitedToExecutePhase);
+                        
+                        if (effect.Trigger == Trigger.ExecuteHit)
+                            cappedEffect.AccumulateAverageStats(statsSpecialEffects, triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], player.AttackModel.WeaponSpeed, player.Boss.BerserkTimer * (float)player.Boss.Under20Perc);
+                        else
+                            cappedEffect.AccumulateAverageStats(statsSpecialEffects, triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], player.AttackModel.WeaponSpeed, player.Boss.BerserkTimer);
+                    }
+                    else
+                    {
+                        if (effect.Trigger == Trigger.ExecuteHit)
+                            effect.AccumulateAverageStats(statsSpecialEffects, triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], player.AttackModel.WeaponSpeed, player.Boss.BerserkTimer * (float)player.Boss.Under20Perc);
+                        else
+                            effect.AccumulateAverageStats(statsSpecialEffects, triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], player.AttackModel.WeaponSpeed, player.Boss.BerserkTimer);
+                    }
                 }
             }
 
@@ -672,50 +722,6 @@ threat and limited threat scaled by the threat scale.",
             statsSpecialEffects.Agility = (float)Math.Floor(statsSpecialEffects.Agility * (1.0f + player.Stats.BonusAgilityMultiplier));
 
             return statsSpecialEffects;
-        }
-
-        private void ApplySpecialEffect(Player player, SpecialEffect effect, float weaponSpeed, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances, ref Base.StatsWarrior statsSpecialEffects)
-        {
-            float upTime        = 0.0f;
-            float fightDuration = player.Boss.BerserkTimer;
-            Stats effectStats   = effect.Stats;
-
-            if (effect.Trigger == Trigger.Use) 
-            {
-                if (effect.Stats._rawSpecialEffectDataSize == 1) 
-                {
-                    upTime = effect.GetAverageUptime(triggerIntervals[Trigger.Use], triggerChances[Trigger.Use], weaponSpeed, fightDuration);
-                    List<SpecialEffect> nestedEffect = new List<SpecialEffect>();
-                    nestedEffect.Add(effect.Stats._rawSpecialEffectData[0]);
-                    Base.StatsWarrior _stats2 = new Base.StatsWarrior();
-                    ApplySpecialEffect(player, effect.Stats._rawSpecialEffectData[0], weaponSpeed, triggerIntervals, triggerChances, ref _stats2);
-                    effectStats = _stats2;
-                } 
-                else 
-                {
-                    upTime = effect.GetAverageStackSize(triggerIntervals[Trigger.Use], triggerChances[Trigger.Use], weaponSpeed, fightDuration); 
-                }
-            }
-            else if (effect.Duration == 0.0f)
-            {
-                upTime = effect.GetAverageProcsPerSecond(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], weaponSpeed, fightDuration);
-            }
-            else if (effect.Trigger == Trigger.ExecuteHit)
-            {
-                upTime = effect.GetAverageStackSize(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], weaponSpeed, fightDuration * (float)player.Boss.Under20Perc);
-            }
-            else if (triggerIntervals.ContainsKey(effect.Trigger))
-            {
-                upTime = effect.GetAverageStackSize(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], weaponSpeed, fightDuration);
-            }
-
-            if (upTime > 0.0f) 
-            {
-                if (effect.Duration == 0.0f)
-                    statsSpecialEffects.Accumulate(effectStats, upTime * fightDuration);
-                else if (upTime <= effect.MaxStack)
-                    statsSpecialEffects.Accumulate(effectStats, upTime);
-            }
         }
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
@@ -847,7 +853,6 @@ threat and limited threat scaled by the threat scale.",
                     CharacterCalculationsProtWarr calcHasteValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { HasteRating = 100.0f } }) as CharacterCalculationsProtWarr;
                     CharacterCalculationsProtWarr calcExpertiseValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { ExpertiseRating = 100.0f } }) as CharacterCalculationsProtWarr;
                     CharacterCalculationsProtWarr calcHitValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 100.0f } }) as CharacterCalculationsProtWarr;
-                    CharacterCalculationsProtWarr calcResilValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Resilience = 100.0f } }) as CharacterCalculationsProtWarr;
 
                     return new ComparisonCalculationBase[] { 
                         new ComparisonCalculationProtWarr() { Name = "100 Strength",
@@ -905,11 +910,6 @@ threat and limited threat scaled by the threat scale.",
                             MitigationPoints = (calcHitValue.MitigationPoints - calcBaseValue.MitigationPoints),
                             SurvivalPoints = (calcHitValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
                             ThreatPoints = (calcHitValue.ThreatPoints - calcBaseValue.ThreatPoints)},
-                        new ComparisonCalculationProtWarr() { Name = "100 Resilience",
-                            OverallPoints = (calcResilValue.OverallPoints - calcBaseValue.OverallPoints), 
-                            MitigationPoints = (calcResilValue.MitigationPoints - calcBaseValue.MitigationPoints),
-                            SurvivalPoints = (calcResilValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
-                            ThreatPoints = (calcResilValue.ThreatPoints - calcBaseValue.ThreatPoints)},
                     };
                 #endregion
                 default:
@@ -976,7 +976,6 @@ threat and limited threat scaled by the threat scale.",
                 ParryRating = stats.ParryRating,
                 BlockRating = stats.BlockRating,
                 MasteryRating = stats.MasteryRating,
-                Resilience = stats.Resilience,
                 BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
                 BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
                 BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
@@ -1061,23 +1060,52 @@ threat and limited threat scaled by the threat scale.",
 
         public override bool HasRelevantStats(Stats stats)
         {
-            // Stats that will automatically mark the item as relevant
-            bool superRelevant =
+            bool superRelevant  = IsSuperRelevant(stats);   // Stats that will automatically mark the item as relevant
+            bool relevant       = false;                    // Stats which are potentially relevant
+            bool notRelevant    = false;                    // Stats which mark the item as irrelevant if not super-relevant
+
+            if (!superRelevant)
+            {
+                relevant    = IsRelevant(stats);
+                notRelevant = IsNotRelevant(stats);
+                
+                foreach (SpecialEffect effect in stats.SpecialEffects())
+                {
+                    if (RelevantTriggers.Contains(effect.Trigger))
+                    {
+                        superRelevant |= IsSuperRelevant(effect.Stats);
+                        if (superRelevant)
+                            break;
+
+                        relevant    |= IsRelevant(effect.Stats);
+                        notRelevant &= IsNotRelevant(effect.Stats);
+                    }
+                }
+            }
+
+            return (superRelevant || (relevant && !notRelevant));
+        }
+
+        private bool IsSuperRelevant(Stats stats)
+        {
+            return
                 (
                     stats.BonusArmor + stats.BonusArmorMultiplier +
-                    stats.BonusStaminaMultiplier + stats.Dodge + stats.DodgeRating + stats.ParryRating + stats.BlockRating + stats.MasteryRating + stats.BonusHealthMultiplier + 
+                    stats.BonusStaminaMultiplier + stats.Dodge + stats.DodgeRating + stats.ParryRating + stats.BlockRating + stats.MasteryRating + stats.BonusHealthMultiplier +
                     stats.DamageTakenReductionMultiplier + stats.PhysicalDamageTakenReductionMultiplier + stats.BossPhysicalDamageDealtReductionMultiplier + stats.Miss +
                     stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance +
                     stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff +
                     stats.NatureResistanceBuff + stats.FireResistanceBuff + stats.FrostResistanceBuff + stats.ShadowResistanceBuff +
                     stats.ThreatIncreaseMultiplier + stats.BonusBlockValueMultiplier
                 ) != 0;
+        }
 
-            // Stats which are potentially relevant
-            bool relevant =
+        private bool IsRelevant(Stats stats)
+        {
+            return
                 (stats.Agility + stats.Armor +
                     stats.BonusAgilityMultiplier + stats.BonusStrengthMultiplier + stats.BonusAttackPowerMultiplier +
-                    stats.Health + stats.BattlemasterHealthProc + stats.Stamina + stats.Resilience +
+                    stats.Health + stats.BattlemasterHealthProc + stats.Stamina +
                     stats.Strength + stats.AttackPower + stats.CritRating + stats.HitRating + stats.HasteRating +
                     stats.PhysicalHit + stats.PhysicalHaste + stats.PhysicalCrit +
                     stats.ExpertiseRating + stats.ArmorPenetration + stats.TargetArmorReduction + stats.WeaponDamage +
@@ -1087,27 +1115,16 @@ threat and limited threat scaled by the threat scale.",
                     stats.HighestStat + stats.Paragon +
                     stats.MovementSpeed + stats.FearDurReduc + stats.StunDurReduc + stats.SnareRootDurReduc
                 ) != 0;
+        }
 
-            // Stats which mark the item as irrelevant if not super-relevant
-            bool notRelevant =
-                (stats.Mp5 + stats.SpellPower + stats.Mana + stats.SpellPenetration +
+        private bool IsNotRelevant(Stats stats)
+        {
+            return
+                (stats.Spirit + stats.Intellect + stats.SpellPower + stats.Mana + stats.Mp5 + stats.SpellPenetration +
                     stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier + stats.BonusManaMultiplier
                 ) != 0;
-
-            if (!superRelevant) // No reason to check effects if it's already known as relevant
-            {
-                foreach (SpecialEffect effect in stats.SpecialEffects())
-                {
-                    if (RelevantTriggers.Contains(effect.Trigger) && HasRelevantStats(effect.Stats))
-                    {
-                        relevant |= HasRelevantStats(effect.Stats);
-                        if (relevant) break;
-                    }
-                }
-            }
-
-            return (superRelevant || (relevant && !notRelevant));
         }
+
 
     }
 }

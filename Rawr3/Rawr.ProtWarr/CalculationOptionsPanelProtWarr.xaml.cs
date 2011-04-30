@@ -19,7 +19,6 @@ namespace Rawr.ProtWarr
         public CalculationOptionsPanelProtWarr()
         {
             InitializeComponent();
-            //this.Layout.SelectAll();
         }
 
         #region ICalculationOptionsPanel Members
@@ -64,16 +63,10 @@ namespace Rawr.ProtWarr
             if (calcOpts.RankingMode == 1)
                 showSliders = true;
 
-            MitigationLabel.Visibility = (showSliders ? Visibility.Visible : Visibility.Collapsed);
-            MitigationValue.Visibility = (showSliders ? Visibility.Visible : Visibility.Collapsed);
-            //MitigationValue.Value = calcOpts.MitigationScale;
-
+            HitsToSurviveLabel.Visibility = (showSliders ? Visibility.Visible : Visibility.Collapsed);
+            HitsToSurvive.Visibility = (showSliders ? Visibility.Visible : Visibility.Collapsed);
             ThreatLabel.Visibility = (showSliders ? Visibility.Visible : Visibility.Collapsed);
             ThreatValue.Visibility = (showSliders ? Visibility.Visible : Visibility.Collapsed);
-            //ThreatValue.Text = calcOpts.ThreatScale.ToString();
-            //
-
-            //ShieldBlockInterval.IsEnabled = calcOpts.UseShieldBlock;
 
             _loadingCalculationOptions = false;
         }
@@ -90,16 +83,12 @@ namespace Rawr.ProtWarr
                     if (calcOpts.RankingMode == 1)
                         showSliders = true;
 
-                    MitigationLabel.Visibility = (showSliders ? Visibility.Visible : Visibility.Collapsed);
-                    MitigationValue.Visibility = (showSliders ? Visibility.Visible : Visibility.Collapsed);
+                    HitsToSurviveLabel.Visibility = (showSliders ? Visibility.Visible : Visibility.Collapsed);
+                    HitsToSurvive.Visibility = (showSliders ? Visibility.Visible : Visibility.Collapsed);
                     ThreatLabel.Visibility = (showSliders ? Visibility.Visible : Visibility.Collapsed);
                     ThreatValue.Visibility = (showSliders ? Visibility.Visible : Visibility.Collapsed);
                     break;
-                case "UseShieldBlock":
-                    //ShieldBlockInterval.IsEnabled = calcOpts.UseShieldBlock;
-                    break;
             }
-            //
 
             if (Character != null) { Character.OnCalculationsInvalidated(); }
         }
@@ -147,23 +136,6 @@ namespace Rawr.ProtWarr
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             return (float)((double)value * 8.0d);
-        }
-
-        #endregion
-    }
-
-    public class MitigationScaleConverter : IValueConverter
-    {
-        #region IValueConverter Members
-
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            return (double)((float)value / 0.125f);
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            return (float)((double)value * 0.125d);
         }
 
         #endregion
