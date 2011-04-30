@@ -160,6 +160,180 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes()
         {
+#region Rawr 4.1.04 (Apr 29, 2011) [r60390]
+VNStuff.Add("Rawr 4.1.04 (Apr 29, 2011) [r60390]",
+@"Cataclysm Release
+
+General:
+- Tank Models now have new methods in the SetDefaults function. They will dynamically adjust the starting values for bosses based on the avg ilevel worn. This is to make the model start with more appropriate values for it's level.
+
+Rawr.Base:
+- Fix for Issue 20418: 'T11_0' is not a valid value for TierLevels error on character file load - Had updated the other possible values but forgot T11
+- Added a Rawr Web Help dialog to display individual help topics across Rawr directly in the program
+- More Web Help work
+- Updated TalentClassGenerator with some new code for getting tree counts
+- Updated Talents to 4.1.0 (Build 13726) values
+- Updated TalentClassGenerator with a couple fixes TNSe identified
+- Character.GetXiLevel now ignores tabard, shirt, projectile and projectile bag slots
+- Welcome Window in WPF now recalls last 5 loaded character files and lists them for you, newest on top
+- Implemented Import Talent Spec from Wowhead feature. Still need glyphs data to be updated for most classes to work
+- Glyphs audited, now fully standardized and updated to 4.1.0. Current positioning will allow import talent spec from wowhead to function correctly
+- Fix for defect 20537: Exception thrown sorting by subpoint values because the array indexes were off
+- Fix for Issue 20551: Save Character File... vs Save As to Character File... not working correctly
+- Added line to ensure lastSavedPath gets updated
+- Fixed a bug with Save Character vs Save Character As
+
+Rawr.BossHandler:
+- Updated lower melee attack damage values per WoL parsing
+- Argaloth: Separated Meteor Slash into Group 1 and Group 2 with different affects roles and the attack speed halfed (meaning it would hit each group alternately)
+- Argaloth: Meteor Slash now actually targets players
+- Argaloth: Consuming Darkness updated to Ranged
+- Argaloth: Consuming Darkness now actually targets players
+- Argaloth: Consuming Darkness updated to AoE
+- Argaloth: Fel Firestorm now actually targets players
+- Argaloth: Fel Firestorm's movement is breakable because it's movement
+- Argaloth: Fel Firestorm's movement now actually targets players
+- Magmaw: Pillar of Flame's movement is now properly set up to be valid
+- Magmaw: Parasites TargetGroup now affects roles
+- Omnotron: Corrected Magmatron's attacks
+- Maloriak: Added Red Vial phase attacks 
+- More T11 work
+- Overhauled modelling to allow Phase setups, which are much easier to set up and provide more information
+- Argaloth, Magmaw, Maloriak and Atremedes are each about 90% modelled now 
+- Upped Atremede's melee damage to 85% from 75% of normal
+- Added a HasAProblem bool to BossOptions, to be used later
+- Added Help button to the Pane
+- Added Alert! section to the Pane, to be used later
+- Mangle fixed to DamagePerTick instead of DamagePerHit
+- Blazing Bone Constructs Melee is now marked as from an add
+- Ignition fixed to DamagePerTick instead of DamagePerHit
+- Caustic Slime Damage adjusted
+- Caustic Slime Debuff Roles fixed
+- Onyxia's Shadowflame Breath fixed to DamagePerTick instead of DamagePerHit
+- Animated Bone Warrior Melee is now marked as from an add
+- Nefarian's Shadowflame Breath fixed to DamagePerTick instead of DamagePerHit
+- HasAProblem bool moved down to BossHandler from BossOptions
+- HasAProblem changed to return a string stating the issue instead of bool
+- Boss Summary Message now states ALERT! and the HasAProblem string. Also turns the text red
+- Special Bosses and their TargetGroups and Impedances have had thier routines updated to the new method used by Attacks routines. Allows for far more dynamic and accurate assignment of averages
+- Special Bosses Melee now distinguishes between Boss Melee and Adds Melee to prevent the low adds melee from improperly affecting EZ and Avg bosses
+- Attacks, TargetGroups, BuffStates and Impedances now provide more information when they are invalid, telling the user exactly what's wrong
+- Attacks Editor now properly adjusts the decimal points of Damage Per Hit when changing to and from Damage is Perc
+- Some corrections and updates in other Boss Editors
+- Updated some of the default values for a Boss
+- Added a lot of Documentation to Maloriak
+- Adjusted a few damage numbers especially for heroic abilities
+- Updated phase lengths on a few bosses in Blackwing Descent
+- Updated a few Heroic only info on said bosses
+
+Rawr.Buffs:
+- Fix for Issue 19984: Flask Mixology and Double Pot Trick mutually exclusive - Not actually mutually exclusive per the code set up. The problem was in the ValidateActiveBuffs code wasn't null-checking the strings in the ConflictingBuffs list, so it was allowing a null to match a null. 
+
+Rawr.Enchants:
+- Added flag to determine that the enchant is only applicable to Shields 
+
+Rawr.Items:
+- Updated all meta gems
+- Updated all trinkets that use the PhysicalAttack trigger
+- Removed Gift of the Godfather trinket (not in the game...YET)
+- Updated filters so that all T11 bosses, Baradin Hold, and PvP is shown by default 
+- Fix for Issue 20438: Shard of Woe missing the mana cost reduc - Fixed the Item
+- Fixed an unrelated typo with another stat as well 
+- Fix for Issue 20477: Razorshell items don't really exist - Removed 56511 and 56515
+- Updated Razor Edge Cloak with missing Mastery stat
+- Updated Item Cache and Item Filter with 4.1 items
+
+Rawr.LoadCharacter:
+- Fix for Issue 20433: Unable to save/load to/from Rawr4 Repository - Replace wasn't in the right spot
+- Fix for Reload from Rawr Addon not properly marking items available
+
+Rawr.Optimizer:
+- Fix for Issue 20490: Optimizer crash when adding talent requirement and not selecting talent - Changed it so when you select talent requirement it auto-selects the first talent instead of staying blank. Will blank out when you select away from it, this way it's impossible to start an optimize with an empty box 
+
+Rawr.Bear:
+- Reordered some of the calculations for better grouping and placed some extra comments and better variable naming to reduce confusion for someone new looking at the code. No actual calculational changes occurred
+- Fix for Issue 20425: Feral Tier 11 four-piece bonus for cat form being utilized in bear form in Rawr.Bear - Reimplemented Feral T11 Set Bonuses to new Set Bonus method and updated them to the current standings (verified PTR Wowhead said the same thing for forward compatibility)
+
+Rawr.Cat:
+- Partial Fix for Issue 20559: Razor-edged Cloak and Meta Gem - Meta Gem templates updated for Cat
+- Fix for Issues 20586, 20587, 20588: Mangle Buff and T11 4P doesn't properly affect Rotation (also causes Glyph of Mangle to not have Value) - Changed logic of application of Mangle
+- Updated Default Buffs
+
+Rawr.DPSDK:
+- Fix for Issue 20443: Crash on selecting Unholy Talent Spec - Dark Transformation wasn't passing in CombatState as part of the constructor. When calling GetTotalThreat later, would fail on null error.
+- Additional Pet implementation
+- Fix custom charts
+- Update UH rotation to only call Dark Transform if spec'd for it
+
+Rawr.DPSWarr:
+- Fix for Issue 20451: Unable to do single-minded fury - Couple of checks weren't looking to see if the OH was empty first
+- Fixed a bug with BossHandler modelling in DPSWarr
+- Reviewed all PTR 4.1.0 changes and ensured up to date with latest changes
+- Migrated Set Bonuses to new method
+- PTR 4.1.0 changes made standard
+
+Rawr.Enhance:
+- More work on tying Enhance module to the Boss Options
+- Armour Spec cleanup
+- Removed Spell Resistances based on level differences
+- Fix for Crit Display
+- Elemental Precision shows properly in spell hit display
+- Crit from agility/intellect was being counted but not displayed
+
+Rawr.HealPriest:
+- Checking in some stuff I had forgotten to check in. Nothing still works
+- Continued work on HealPriest for 4.x
+- Updated Priest stats
+- Added GetDamageReductionFromResilience
+- Wroom Wroom. Changes be made. Still not useable for anything but dolling
+- Further work
+- Even further work
+- Work in Progress!
+- Fix for ComparisonCalculationsHealPriest class being totally fubar
+- Work goes onwardeth
+- I need sleep now. v2
+- Gnaw Gnaw Gnaw
+- OMG, we may have a winner!
+
+Rawr.Hunter:
+- Fix for Issue 20434: Crash Loading Character - CalculateTriggers function wasn't using best practices, so the add function could cause breaks
+
+Rawr.Mage:
+- Switching to 4.1 default
+
+Rawr.Moonkin:
+- Heart of Ignacious
+- Change the trigger rate of Heart of Ignacious. It procs on all damaging spell casts
+- Migrated T11 Set bonuses to the new method
+- Changed handling for T11 2P
+- Mainline 4.1 PTR changes now that the patch has been released
+- Converted T11 4P to use a cached single static instance of the special effect rather than generate a new one each calc
+
+Rawr.Retribution:
+- First draft of new rotation. See Optionpanel
+- More Work on new Rotation 
+- Change to new SetBonus handling
+- 4.1.0 Ready
+
+Rawr.TankDK:
+- Fixed the top two most expensive operations in calcs. Now runs at 1/6 original speed
+- Allow users to optimize by Mastery
+- Adding Stats Graph to help stat valuation research
+
+Rawr.Tree:
+- Efflorescence changed to 4.1 handling+fixed to now actually consider heals to multiple targets.
+- Lifebloom bloom nerf of 4.1 
+
+Rawr.Warlock: Some work on verifying basic numbers
+- Update BaseStats for warlocks
+- Fix T11 tooltips, move to new set bonus model
+- Add a PTR mode checkbox under Options | Debug, tied to relevant values (shadow mastery, shadow bite, haunt)
+- Fix mastery, spell power display to more closely match character sheet
+- Fix bug with talented/inherent multipliers to dot damage
+- Fix bug with Drain Soul damage calculation 
+- Update for 4.1; fix some rounding errors
+");
+#endregion
 #region Rawr 4.1.03 (Apr 04, 2011) [r59318]
 VNStuff.Add("Rawr 4.1.03 (Apr 04, 2011) [r59318]",
 @"Cataclysm Release
