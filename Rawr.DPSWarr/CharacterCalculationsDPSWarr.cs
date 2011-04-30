@@ -522,7 +522,7 @@ I'm not sure, and it's a bit hard for me to test, any input on this would be app
 Grants a (16%+{0:0.0%}={1:0.0%}) chance for your melee attacks to instantly
 trigger an additional melee attack for {2:0%} normal damage. Each point of
 Mastery increases this chance by 2%.",
-                            MasteryVal * (PTRMode ? Skills.StrikesOfOpportunity.BonusChancePTR : Skills.StrikesOfOpportunity.BonusChance),
+                            MasteryVal * Skills.StrikesOfOpportunity.BonusChance,
                             Skills.StrikesOfOpportunity.BaseChance + MasteryVal * Skills.StrikesOfOpportunity.BonusChance,
                             Skills.StrikesOfOpportunity.DamageModifier)
                         )

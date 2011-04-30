@@ -235,8 +235,8 @@ namespace Rawr.DPSWarr.Skills
             //
             Initialize();
         }
-        public static readonly float DamageMultiplier = 1.0f;
-        public static readonly float DamageMultiplierPTR = 1.20f;
+        public static readonly float DamageMultiplier = 1.20f;
+        //public static readonly float DamageMultiplierPTR = 1.20f;
         // Raging Blow while dual wielding executes two separate attacks; assume no offhand in base case
         public override float DamageOverride { get { return GetDamage(false) + GetDamage(true); } }
         /// <summary></summary>
@@ -296,7 +296,7 @@ namespace Rawr.DPSWarr.Skills
 
                 // ==== RESULT ====
 //                float Damage = DamageMH + DamageOH;
-                return (DamageMH + DamageOH) * AvgTargets * (DPSWarrChar.CalcOpts.PtrMode ? DamageMultiplierPTR : DamageMultiplier);
+                return (DamageMH + DamageOH) * AvgTargets * DamageMultiplier;
             }
         }
     }

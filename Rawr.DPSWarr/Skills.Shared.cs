@@ -889,8 +889,8 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
             Duration = 15f; // In Seconds
-            CD = 1.5f - (DPSWarrChar.CalcOpts.PtrMode ? DPSWarrChar.Talents.ImprovedHamstring * 0.5f : 0f);
-            GCDTime = 1.5f - (DPSWarrChar.CalcOpts.PtrMode ? DPSWarrChar.Talents.ImprovedHamstring * 0.5f : 0f);
+            CD = 1.5f - DPSWarrChar.Talents.ImprovedHamstring * 0.5f;
+            GCDTime = 1.5f - DPSWarrChar.Talents.ImprovedHamstring * 0.5f;
             RageCost = 10f;// -(DPSWarrChar.Talents.FocusedRage * 1f);
             //Targets += DPSWarrChar.StatS.BonusTargets;
             StanceOkFury = StanceOkArms = true;
@@ -1078,11 +1078,9 @@ namespace Rawr.DPSWarr.Skills
             RageCost = -(15f + (DPSWarrChar.Talents.Blitz * 5f));
             float cdi = 0f;
             CD = (15f + cdi); // In Seconds
-            if (DPSWarrChar.CalcOpts.PtrMode) { CD -= DPSWarrChar.Talents.Juggernaut * 1f; }
+            CD -= DPSWarrChar.Talents.Juggernaut * 1f;
             if (DPSWarrChar.Talents.GlyphOfRapidCharge) { CD -= 1f; }
-            float di = 0f;
-            if (DPSWarrChar.Talents.Juggernaut > 0) { di = 2f; }
-            Duration = 1.5f + (DPSWarrChar.CalcOpts.PtrMode ? 0f : di);
+            Duration = 1.5f;
             Targets = -1;
             if (DPSWarrChar.Talents.Warbringer == 1) {
                 StanceOkArms = StanceOkFury = StanceOkDef = true;
@@ -1119,7 +1117,7 @@ namespace Rawr.DPSWarr.Skills
             CD = 30f - (DPSWarrChar.CombatFactors.FuryStance ? DPSWarrChar.Talents.Skirmisher * 5f : 0f) - (DPSWarrChar.StatS != null ? DPSWarrChar.StatS.BonusWarrior_PvP_4P_InterceptCDReduc : 0); // In Seconds
             RageCost = 10f;
             Targets = -1;
-            Duration = (DPSWarrChar.CalcOpts.PtrMode ? 1.5f : 3f) + (DPSWarrChar.Talents.GlyphOfIntercept ? 1f : 0f);
+            Duration = 1.5f + (DPSWarrChar.Talents.GlyphOfIntercept ? 1f : 0f);
             StanceOkFury = true; StanceOkArms = StanceOkDef = (DPSWarrChar.Talents.Warbringer == 1);
             DamageBase = (DPSWarrChar.StatS != null ? DPSWarrChar.StatS.AttackPower * 0.12f : 0);
             //
@@ -1213,7 +1211,7 @@ namespace Rawr.DPSWarr.Skills
             DPSWarrChar = dpswarrchar;
             //
             //AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Pummel_;
-            UseHitTable = DPSWarrChar.CalcOpts.PtrMode ? false : true; // 4.1.0 make it always hit
+            UseHitTable = false; // 4.1.0 makes it always hit
             ReqMeleeWeap = ReqMeleeRange = true;
             StanceOkArms = StanceOkFury = StanceOkDef = true;
             CD = 10f; // In Seconds

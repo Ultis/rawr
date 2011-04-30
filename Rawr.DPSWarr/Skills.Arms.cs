@@ -30,7 +30,7 @@ namespace Rawr.DPSWarr.Skills
             //
             AbilIterater = (int)Maintenance.MortalStrike;
             ReqMeleeWeap = ReqMeleeRange = StanceOkArms = true;
-            DamageBase = DPSWarrChar.CombatFactors.NormalizedMHWeaponDmg * (DPSWarrChar.CalcOpts.PtrMode ? DamageMultiplierPTR : DamageMultiplier) + DamageBaseBonus;
+            DamageBase = DPSWarrChar.CombatFactors.NormalizedMHWeaponDmg * DamageMultiplier + DamageBaseBonus;
             DamageBonus = (1f + DPSWarrChar.StatS.BonusMortalStrikeDamageMultiplier);
             CD = 4.5f; // In Seconds
             RageCost = 20f;
@@ -38,8 +38,8 @@ namespace Rawr.DPSWarr.Skills
             //
             Initialize();
         }
-        public const float DamageMultiplier = 1.50f;
-        public const float DamageMultiplierPTR = 1.75f;
+        public const float DamageMultiplier = 1.75f;
+        //public const float DamageMultiplierPTR = 1.75f;
         public const float DamageBaseBonus = 513f;
         private float _JuggernautBonusCritChance = 0f;
         private float _BonusCritChance = 0f;
@@ -128,7 +128,7 @@ namespace Rawr.DPSWarr.Skills
             RageCost = 5f;
             //Targets += DPSWarrChar.StatS.BonusTargets;
             StanceOkArms = true;
-            DamageBase = DPSWarrChar.CombatFactors.NormalizedMHWeaponDmg * (dpswarrchar.CalcOpts.PtrMode ? DamageMultiplierPTR : DamageMultiplier);
+            DamageBase = DPSWarrChar.CombatFactors.NormalizedMHWeaponDmg * DamageMultiplier;
             DamageBonus = (1f + DPSWarrChar.StatS.BonusOverpowerDamageMultiplier);
             BonusCritChance = 0.20f * DPSWarrChar.Talents.TasteForBlood;
             BonusCritDamage = 1f + DPSWarrChar.Talents.Impale * 0.1f;
@@ -137,8 +137,8 @@ namespace Rawr.DPSWarr.Skills
             Initialize();
         }
 
-        public const float DamageMultiplier = 1.25f;
-        public const float DamageMultiplierPTR = 1.40f;
+        public const float DamageMultiplier = 1.40f;
+        //public const float DamageMultiplierPTR = 1.40f;
 
         public float GetActivates(float attacksThatDodgeOverDur, float sooActs)
         {
@@ -200,7 +200,7 @@ namespace Rawr.DPSWarr.Skills
             CD = 6f;// 5f; // In Seconds
             RageCost = 5f;
             StanceOkArms = true;
-            DamageBase = DPSWarrChar.CombatFactors.NormalizedMHWeaponDmg * (DPSWarrChar.CalcOpts.PtrMode ? DamageMultiplierPTR : DamageMultiplier);
+            DamageBase = DPSWarrChar.CombatFactors.NormalizedMHWeaponDmg * DamageMultiplier;
             DamageBonus = (1f + DPSWarrChar.StatS.BonusOverpowerDamageMultiplier);
             BonusCritChance = 0.20f * DPSWarrChar.Talents.TasteForBlood;
             BonusCritDamage = 1f + DPSWarrChar.Talents.Impale * 0.1f;
@@ -209,8 +209,8 @@ namespace Rawr.DPSWarr.Skills
             Initialize();
         }
 
-        public const float DamageMultiplier = 1.25f;
-        public const float DamageMultiplierPTR = 1.40f;
+        public const float DamageMultiplier = 1.40f;
+        //public const float DamageMultiplierPTR = 1.40f;
 
         protected override float ActivatesOverride
         {
@@ -535,9 +535,9 @@ namespace Rawr.DPSWarr.Skills
             Initialize();
         }
         public static readonly float BaseChance     = 0.16f;
-        public static readonly float BaseChancePTR  = 0.176f;
+        //public static readonly float BaseChancePTR  = 0.176f;
         public static readonly float BonusChance    = 0.02f;
-        public static readonly float BonusChancePTR = 0.022f;
+        //public static readonly float BonusChancePTR = 0.022f;
         public static readonly float DamageModifier = 1.00f;
 
         //private static Dictionary<float, SpecialEffect> _SE_StrikesOfOpportunity = new Dictionary<float,SpecialEffect>();
@@ -547,9 +547,8 @@ namespace Rawr.DPSWarr.Skills
             // This attack doesn't consume GCDs and doesn't affect the swing timer
             //float effectActs = _SE_StrikesOfOpportunity[DPSWarrChar.StatS.MasteryRating].GetAverageProcsPerSecond(
             float effectActs = new SpecialEffect(Trigger.MeleeAttack, null, 0f, 0.5f,
-                            (float)Math.Min((DPSWarrChar.CalcOpts.PtrMode ? Skills.StrikesOfOpportunity.BaseChancePTR : Skills.StrikesOfOpportunity.BaseChance)
-                                + (float)Math.Max(0f,
-                                    (DPSWarrChar.CalcOpts.PtrMode ? Skills.StrikesOfOpportunity.BonusChancePTR : Skills.StrikesOfOpportunity.BonusChance)
+                            (float)Math.Min(Skills.StrikesOfOpportunity.BaseChance
+                                + (float)Math.Max(0f, Skills.StrikesOfOpportunity.BonusChance
                                     * StatConversion.GetMasteryFromRating(DPSWarrChar.StatS.MasteryRating, CharacterClass.Warrior)), 1f)
                     ).GetAverageProcsPerSecond((FightDuration * perc) / meleeAttemptsOverDur, 1f, DPSWarrChar.CombatFactors.CMHItemSpeed, FightDuration * perc);
             effectActs *= FightDuration * perc;
