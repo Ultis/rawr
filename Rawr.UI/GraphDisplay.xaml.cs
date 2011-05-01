@@ -1282,20 +1282,24 @@ namespace Rawr.UI
                 Regex regex = new Regex(searchText);
                 if (source1 != null)  {
                     if (regex.Match(source1.Name).Success) return true;
+                    if (!string.IsNullOrEmpty(source1.Item.SetName) && regex.Match(source1.Item.SetName).Success) return true;
                     if (regex.Match(source1.Id.ToString()).Success) return true;
                     if (regex.Match(source1.Item.GetFullLocationDesc).Success) return true;
                 } else {
                     if (regex.Match(source2.Name).Success) return true;
+                    if (!string.IsNullOrEmpty(source2.Item.SetName) && regex.Match(source2.Item.SetName).Success) return true;
                     if (regex.Match(source2.Item.Id.ToString()).Success) return true;
                     if (regex.Match(source2.Item.GetFullLocationDesc).Success) return true;
                 }
             } else {
                 if (source1 != null)  {
                     if (source1.Name.Contains(searchText)) return true;
+                    if (!string.IsNullOrEmpty(source1.Item.SetName) && source1.Item.SetName.Contains(searchText)) return true;
                     if (source1.Id.ToString().Contains(searchText)) return true;
                     if (source1.Item.GetFullLocationDesc.Contains(searchText)) return true;
                 } else {
                     if (source2.Name.Contains(searchText)) return true;
+                    if (!string.IsNullOrEmpty(source2.Item.SetName) && source2.Item.SetName.Contains(searchText)) return true;
                     if (source2.Item.Id.ToString().Contains(searchText)) return true;
                     if (source2.Item.GetFullLocationDesc.Contains(searchText)) return true;
                 }

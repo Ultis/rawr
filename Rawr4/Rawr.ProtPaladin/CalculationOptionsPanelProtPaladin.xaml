@@ -3,11 +3,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
-    xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
     xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+    xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
+    xmlns:layoutToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Layout.Toolkit"
     xmlns:System="clr-namespace:System;assembly=mscorlib"
-    xmlns:Rawr="clr-namespace:Rawr;assembly=Rawr.Base"
     mc:Ignorable="d"
     d:DesignWidth="330" d:DesignHeight="600"
     xmlns:local="clr-namespace:Rawr.ProtPaladin"
@@ -17,121 +16,173 @@
     <UserControl.Resources>
         <local:CalculationOptionsProtPaladin x:Key="CalculationOptionsProtPaladinDataSource" d:IsDataSource="True"/>
         <local:ThreatValueConverter x:Key="ThreatValueConverter"/>
-        <local:SurvivalSoftCapConverter x:Key="SurvivalSoftCapConverter"/>
     </UserControl.Resources>
 
     <Grid x:Name="LayoutRoot" DataContext="{Binding Source={StaticResource CalculationOptionsProtPaladinDataSource}}">
         <controls:TabControl>
             <controls:TabItem Header="Basics">
-                <StackPanel>
-                    <Border Margin="0 2" Background="Transparent" BorderBrush="Black" BorderThickness="1">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-                            <TextBlock Margin="4,2" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" FontWeight="Bold" Text="Weighting Adjustments" VerticalAlignment="Center" />
-
-                            <TextBlock Margin="4,2" Grid.Row="1" Grid.Column="0" Text="Ranking Mode:" VerticalAlignment="Center" />
-                            <ComboBox Margin="2" x:Name="cboRankingMode" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" SelectedIndex="{Binding Mode=TwoWay, Path=RankingMode}" SelectionChanged="cboRankingMode_SelectionChanged">
-                                <ComboBoxItem>
-                                    <TextBlock Text="Mitigation Scale *" ToolTipService.ToolTip="Customizable scale that allows you to weight mitigation vs. effective health. (Default)" />
-                                </ComboBoxItem>
-                                <ComboBoxItem>
-                                    <TextBlock Text="Burst Time *" ToolTipService.ToolTip="Scale based on the average time an event will occur which has a chance to burst down the player." />
-                                </ComboBoxItem>
-                            </ComboBox>
-
-                            <TextBlock FontSize="10" Grid.ColumnSpan="4" Margin="4,2" Text="The following settings will adjust the overall scores for each type. This does not involve Stat Weights as described by Pawn, SimCraft or other similar utilities. These are meant to describe your general importance to each point." TextWrapping="Wrap" Grid.Row="2" />
-
-                            <TextBlock Margin="4,2" x:Name="LB_Threat" Grid.Row="5" Grid.Column="0" Text="Threat Scale: *" ToolTipService.ToolTip="Threat scaling factor. PageUp/PageDown/Left Arrow/Right Arrow allows more accurate changes" VerticalAlignment="Center" />
-                            <ComboBox Margin="2" Grid.Row="5" Grid.Column="1" SelectedItem="{Binding ThreatScale, Converter={StaticResource ThreatValueConverter}, Mode=TwoWay}">
-                                <System:String>Almost None</System:String>
-                                <System:String>MT</System:String>
-                                <System:String>OT</System:String>
-                                <System:String>Crazy About Threat</System:String>
-                                <System:String>Custom...</System:String>
-                            </ComboBox>
-                            <inputToolkit:NumericUpDown Margin="2" Name="NUD_Threat" Grid.Row="5" Grid.Column="2" Value="{Binding Path=ThreatScale, Mode=TwoWay}" DecimalPlaces="1" MinWidth="50" Maximum="50" Increment="0.1" />
-                            <Button Margin="2" x:Name="btnResetThreatScale" Grid.Row="5" Grid.Column="3" Content="Reset" ToolTipService.ToolTip="Click to reset the threat scale to 1.00." Click="btnResetThreatScale_Click" />
-
-                            <TextBlock Margin="4,2" x:Name="LB_Mitigation" Grid.Row="3" Grid.Column="0" Text="Mitigation Scale: *" ToolTipService.ToolTip="Mitigation scaling factor. PageUp/PageDown/Left Arrow/Right Arrow allows more accurate changes" VerticalAlignment="Center" />
-                            <Slider Margin="2" x:Name="silMitigationScale" Grid.Row="3" Grid.Column="1" Minimum="0" Maximum="0.375" LargeChange="0.0625" SmallChange="0.00125" Value="{Binding Mode=TwoWay, Path=MitigationScale}" />
-                            <inputToolkit:NumericUpDown Margin="2" Name="NUD_Mitigation" Grid.Row="3" Grid.Column="2" Value="{Binding Path=MitigationScale, Mode=TwoWay}" DecimalPlaces="3" MinWidth="50" Minimum="0" Maximum="0.375" Increment="0.0625" />
-                            <Button Margin="2" x:Name="btnResetMitigationScale" Grid.Row="3" Grid.Column="3" Content="Reset" ToolTipService.ToolTip="Click to reset the mitigation scale to 1.00." Click="btnResetMitigationScale_Click" />
-
-                            <TextBlock Margin="4,2" x:Name="LB_HitsToSurvive" Grid.Row="4" Grid.Column="0" Text="Hits to Survive: *" ToolTipService.ToolTip="Affects the Survivability Soft Cap. PageUp/PageDown/Left Arrow/Right Arrow allows more accurate changes" VerticalAlignment="Center" Visibility="Collapsed" />
-                            <Slider Margin="2" Grid.Row="4" Grid.Column="1" Minimum="0" Maximum="10" LargeChange="0.1" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=HitsToSurvive}" Visibility="Collapsed" />
-                            <inputToolkit:NumericUpDown Margin="2" Name="NUD_HitsToSurvive" Grid.Row="4" Grid.Column="2" Value="{Binding Path=HitsToSurvive, Mode=TwoWay}" DecimalPlaces="1" MinWidth="50" Minimum="0" Maximum="10" Increment="0.1" Visibility="Collapsed" />
-                            <Button Margin="2" x:Name="btnResetHitsToSurvive" Grid.Row="4" Grid.Column="3" Content="Reset" ToolTipService.ToolTip="Click to reset the Hits to Survive to 1.00." Click="btnResetHitsToSurvive_Click" Visibility="Collapsed" />
-                        </Grid>
+                    <!-- ========= Weighting Adjustments ========= -->
+                    <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
+                        <TextBlock Margin="4" FontWeight="Bold" Text="Weighting Adjustments" VerticalAlignment="Center" />
                     </Border>
-                    <Border Margin="0 2" Background="Transparent" BorderBrush="Black" BorderThickness="1">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <TextBlock Margin="4,2" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" FontWeight="Bold" Text="Trinket Handling" />
-                            <TextBlock Margin="4,2" Grid.Row="1" Grid.Column="0" Text="On Use - Handling: *" ToolTipService.ToolTip="Sets how On Use trinket effects are handled. Health is never averaged." VerticalAlignment="Center" />
-                            <ComboBox Margin="2" x:Name="cboTrinketOnUseHandling" Grid.Row="1" Grid.Column="1" SelectedItem="{Binding Mode=TwoWay, Path=TrinketOnUseHandling}" />
-                        </Grid>
+                    <!-- Ranking Mode -->
+                    <TextBlock Margin="4,2" Grid.Row="1" Grid.Column="0" Text="Ranking Mode:" VerticalAlignment="Center" />
+                    <ComboBox Margin="2" x:Name="CB_RankingMode" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" SelectedIndex="{Binding Mode=TwoWay, Path=RankingMode}" SelectionChanged="cboRankingMode_SelectionChanged">
+                        <ComboBoxItem>
+                            <TextBlock Text="Mitigation Scale *" ToolTipService.ToolTip="Customizable scale that allows you to weight mitigation vs. effective health. (Default)" />
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <TextBlock Text="Burst Time *" ToolTipService.ToolTip="Scale based on the average time an event will occur which has a chance to burst down the player." />
+                        </ComboBoxItem>
+                    </ComboBox>
+                    <!-- Notice -->
+                    <TextBlock FontSize="10" Grid.Row="2" Grid.ColumnSpan="4" Margin="4,2" TextWrapping="Wrap"
+                               Text="The following settings will adjust the overall scores for each type. This does not involve Stat Weights as described by Pawn, SimCraft or other similar utilities. These are meant to describe your general importance to each point." />
+                    <!-- Hits to Survive -->
+                    <TextBlock Margin="4,2" x:Name="LB_HitsToSurvive" Grid.Row="3" Grid.Column="0" Text="Hits to Survive: *" VerticalAlignment="Center"
+                            ToolTipService.ToolTip="Affects the Survivability Soft Cap. PageUp/PageDown/Left Arrow/Right Arrow allows more accurate changes" />
+                    <Slider Margin="2" x:Name="SL_HitsToSurvive" Grid.Row="3" Grid.Column="1" Minimum="{Binding ElementName=NUD_HitsToSurvive, Path=Minimum}" Maximum="{Binding ElementName=NUD_HitsToSurvive, Path=Maximum}" LargeChange="{Binding ElementName=NUD_HitsToSurvive, Path=Increment}" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=HitsToSurvive}" />
+                    <inputToolkit:NumericUpDown Margin="2" Name="NUD_HitsToSurvive" Grid.Row="3" Grid.Column="2" Value="{Binding Path=HitsToSurvive, Mode=TwoWay}" DecimalPlaces="1" MinWidth="50" Minimum="0" Maximum="10" Increment="0.1" />
+                    <Button Margin="2" x:Name="BT_HitsToSurvive" Grid.Row="3" Grid.Column="3" Content="Reset" Click="btnResetHitsToSurvive_Click"
+                            ToolTipService.ToolTip="Click to reset the Hits to Survive to 3.5" />
+                    <!-- Burst Scale -->
+                    <TextBlock Margin="4,2" x:Name="LB_BurstScale" Grid.Row="4" Grid.Column="0" Text="Burst Scale: *" VerticalAlignment="Center"
+                            ToolTipService.ToolTip="Affects the value of Burst. Set to 0 to ignore On Use effects" Foreground="Gray" />
+                    <Slider Margin="2" x:Name="SL_BurstScale" Grid.Row="4" Grid.Column="1" Minimum="{Binding ElementName=NUD_BurstScale, Path=Minimum}" Maximum="{Binding ElementName=NUD_BurstScale, Path=Maximum}" LargeChange="{Binding ElementName=NUD_BurstScale, Path=Increment}" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=BurstScale}" IsEnabled="False" />
+                    <inputToolkit:NumericUpDown Margin="2" Name="NUD_BurstScale" Grid.Row="4" Grid.Column="2" Value="{Binding Path=BurstScale, Mode=TwoWay}" DecimalPlaces="1" MinWidth="50" Minimum="0" Maximum="10" Increment="0.1" IsEnabled="False" />
+                    <Button Margin="2" x:Name="BT_BurstScale" Grid.Row="4" Grid.Column="3" Content="Reset" Click="btnResetBurstScale_Click"
+                            ToolTipService.ToolTip="Click to reset the Burst Scale to 3.0" IsEnabled="False" />
+                    <!-- Threat Scale -->
+                    <TextBlock Margin="4,2" x:Name="LB_ThreatScale" Grid.Row="5" Grid.Column="0" Text="Threat Scale: *" VerticalAlignment="Center"
+                            ToolTipService.ToolTip="Threat scaling factor. PageUp/PageDown/Left Arrow/Right Arrow allows more accurate changes" />
+                    <ComboBox Margin="2" x:Name="CB_ThreatScale" Grid.Row="5" Grid.Column="1" SelectedItem="{Binding ThreatScale, Converter={StaticResource ThreatValueConverter}, Mode=TwoWay}">
+                        <System:String>Almost None</System:String>
+                        <System:String>MT</System:String>
+                        <System:String>OT</System:String>
+                        <System:String>Crazy About Threat</System:String>
+                        <System:String>Custom...</System:String>
+                    </ComboBox>
+                    <inputToolkit:NumericUpDown Margin="2" Name="NUD_ThreatScale" Grid.Row="5" Grid.Column="2" Value="{Binding Path=ThreatScale, Mode=TwoWay}" DecimalPlaces="1" MinWidth="50" Maximum="50" Increment="0.1" />
+                    <Button Margin="2" x:Name="BT_ResetThreatScale" Grid.Row="5" Grid.Column="3" Content="Reset" Click="btnResetThreatScale_Click" ToolTipService.ToolTip="Click to reset the threat scale to 1.00" />
+                    <!-- ========= Trinket Handling ========= -->
+                    <Border Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="4" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
+                        <TextBlock Margin="4" FontWeight="Bold" Text="Trinket Handling" VerticalAlignment="Center" />
                     </Border>
-                    <Border Margin="0 2" Background="Transparent" BorderBrush="Black" BorderThickness="1">
-                        <StackPanel>
-                            <TextBlock Margin="4,2" FontWeight="Bold" Text="Seal Choice" />
-                            <ComboBox Margin="2" x:Name="cboSealChoice" SelectedItem="{Binding Mode=TwoWay, Path=SealChoice}" />
-                        </StackPanel>
+                    <!-- One Use Handling -->
+                    <TextBlock Margin="4,2" x:Name="LB_TrinketOnUseHandling" Grid.Row="7" Grid.Column="0" Text="On Use Handling: *" VerticalAlignment="Center"
+                        ToolTipService.ToolTip="Sets how On Use trinket effects are handled. Health is never averaged." Grid.ColumnSpan="1" />
+                    <ComboBox Margin="2" x:Name="CB_TrinketOnUseHandling" Grid.Row="7" Grid.Column="1" SelectedItem="{Binding Mode=TwoWay, Path=TrinketOnUseHandling}" Grid.ColumnSpan="3">
+                        <System:String>Ignore</System:String>
+                        <System:String>Averaged Uptime</System:String>
+                        <System:String>Active</System:String>
+                    </ComboBox>
+                    <!-- ========= Seal Choice ========= -->
+                    <Border Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="4" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
+                        <TextBlock Margin="4" FontWeight="Bold" Text="Seal Choice" VerticalAlignment="Center" />
                     </Border>
-                    <Border Margin="0 2" Background="Transparent" BorderBrush="Black" BorderThickness="1">
-                        <StackPanel>
-                            <TextBlock Margin="4,2" FontWeight="Bold" Text="Custom Rotation" />
-                            <TextBlock Margin="4,2" Text="ProtPaladin uses a standard 9-3-9 rotation.  You may customize this rotation using this form." TextWrapping="Wrap" />
-                            <TextBlock Margin="4,2" FontWeight="Bold" Text="A - B - A - C - A - D" TextAlignment="Center" />
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <TextBlock Margin="2" Grid.Row="0" Grid.Column="0" FontWeight="Bold" Text="A" VerticalAlignment="Center" />
-                                <TextBlock Margin="2" Grid.Row="1" Grid.Column="0" FontWeight="Bold" Text="B" VerticalAlignment="Center" />
-                                <TextBlock Margin="2" Grid.Row="2" Grid.Column="0" FontWeight="Bold" Text="C" VerticalAlignment="Center" />
-                                <TextBlock Margin="2" Grid.Row="3" Grid.Column="0" FontWeight="Bold" Text="D" VerticalAlignment="Center" />
-                                <ComboBox Margin="2" x:Name="cboMainAttackChoice" Grid.Row="0" Grid.Column="1" SelectedItem="{Binding Mode=TwoWay, Path=MainAttack}" />
-                                <TextBlock Margin="2" Grid.Row="1" Grid.Column="1" Text="Judgement" />
-                                <ComboBox Margin="2" x:Name="cboPriorityChoice" Grid.Row="2" Grid.Column="1" SelectedItem="{Binding Mode=TwoWay, Path=Priority}" />
-                                <TextBlock Margin="2" Grid.Row="3" Grid.Column="1" Text="Shield of Righteousness" />
-                            </Grid>
-                        </StackPanel>
+                    <!-- Seal Choice -->
+                    <ComboBox Margin="2" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="4" x:Name="CB_SealChoice" SelectedItem="{Binding Mode=TwoWay, Path=SealChoice}">
+                        <System:String>Seal of Truth</System:String>
+                        <System:String>Seal of Righteousness</System:String>
+                    </ComboBox>
+                    <!-- ========= Customize Rotation ========= -->
+                    <Border Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="4" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
+                        <TextBlock Margin="4" FontWeight="Bold" Text="Customize Rotation" VerticalAlignment="Center" />
                     </Border>
-                    <Border Margin="0 2" x:Name="borPTR" Background="Transparent" BorderBrush="Black" BorderThickness="1">
-                        <StackPanel>
-                            <TextBlock Margin="4,2" FontWeight="Bold" Text="PTR Mode" />
-                            <CheckBox Margin="2" Content="Use PTR v4.0.6" IsChecked="{Binding Mode=TwoWay, Path=PTRMode}" />
-                        </StackPanel>
+                    <!-- Customize Rotation -->
+                    <TextBlock Margin="4,2" Grid.Row="11" TextWrapping="Wrap" Text="ProtPaladin uses a standard 9-3-9 rotation.  You may customize this rotation using this form." Grid.ColumnSpan="4" />
+                    <TextBlock Margin="4,2" Grid.Row="12" FontWeight="Bold" Text="A - B - A - C - A - D" TextAlignment="Center" Grid.ColumnSpan="4" />
+                    <Grid Grid.Row="13" Grid.ColumnSpan="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Margin="2" Grid.Row="0" Grid.Column="0" FontWeight="Bold" Text="A" VerticalAlignment="Center" />
+                        <TextBlock Margin="2" Grid.Row="1" Grid.Column="0" FontWeight="Bold" Text="B" VerticalAlignment="Center" />
+                        <TextBlock Margin="2" Grid.Row="2" Grid.Column="0" FontWeight="Bold" Text="C" VerticalAlignment="Center" />
+                        <TextBlock Margin="2" Grid.Row="3" Grid.Column="0" FontWeight="Bold" Text="D" VerticalAlignment="Center" />
+                        <ComboBox Margin="2" x:Name="CB_MainAttackChoice" Grid.Row="0" Grid.Column="1" SelectedItem="{Binding Mode=TwoWay, Path=MainAttack}">
+                            <System:String>Crusader Strike</System:String>
+                            <System:String>Hammer of the Righteous</System:String>
+                        </ComboBox>
+                        <TextBlock Margin="2" Grid.Row="1" Grid.Column="1" Text="Judgement" />
+                        <ComboBox Margin="2" x:Name="CB_PriorityChoice" Grid.Row="2" Grid.Column="1" SelectedItem="{Binding Mode=TwoWay, Path=Priority}">
+                            <System:String>AS > HW</System:String>
+                            <System:String>AS > Con > HW</System:String>
+                            <System:String>AS > Con > HoW > HW</System:String>
+                            <System:String>AS > HoW > HW</System:String>
+                            <System:String>AS > HoW > Con > HW</System:String>
+                            <System:String>HW > AS</System:String>
+                            <System:String>HW > Con > AS</System:String>
+                            <System:String>HW > Con > HoW > AS</System:String>
+                            <System:String>HW > HoW > Con > AS</System:String>
+                            <System:String>HW > HoW > AS</System:String>
+                            <System:String>Con > AS > HW</System:String>
+                            <System:String>Con > AS > HoW > HW</System:String>
+                            <System:String>Con > HW > AS</System:String>
+                            <System:String>Con > HW > HoW > AS</System:String>
+                            <System:String>Con > HoW > AS > HW</System:String>
+                            <System:String>Con > HoW > HW > AS</System:String>
+                            <System:String>HoW > AS > HW</System:String>
+                            <System:String>HoW > AS > Con > HW</System:String>
+                            <System:String>HoW > HW > AS</System:String>
+                            <System:String>HoW > HW > Con > AS</System:String>
+                            <System:String>HoW > Con > AS > HW</System:String>
+                            <System:String>HoW > Con > HW > AS</System:String>
+                        </ComboBox>
+                        <TextBlock Margin="2" Grid.Row="3" Grid.Column="1" Text="Shield of Righteousness" />
+                    </Grid>
+                    <!-- ========= PTR Mode ========= -->
+                    <!-- PTR Mode has been disabled as we just had a patch release -->
+                    <Border Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="4" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1" Visibility="Collapsed">
+                        <TextBlock Margin="4" FontWeight="Bold" Text="PTR Mode" VerticalAlignment="Center" />
                     </Border>
-                </StackPanel>
+                    <!-- PTR Mode -->
+                    <CheckBox Margin="2" x:Name="CK_PtrMode" Grid.Row="15" Content="Use PTR v4.1.0" IsChecked="{Binding Mode=TwoWay, Path=PTRMode}" Grid.ColumnSpan="4" Visibility="Collapsed" />
+                    <!-- ========= Notices ========= -->
+                    <!-- Notices about needing to use the Boss Handler -->
+                    <Border Grid.Row="16" Grid.Column="0" Grid.ColumnSpan="4" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
+                        <TextBlock Margin="4" FontWeight="Bold" Text="Notices" VerticalAlignment="Center" />
+                    </Border>
+                    <TextBlock TextWrapping="Wrap" Grid.Row="17" Margin="2" Grid.ColumnSpan="4" FontSize="10"
+                        Text="Note that many of ProtPaladin's stats are based on Boss Content. Please see the Boss Handler (next to Options in the Tabs above) for additional Fight Related settings you can adjust.&#x0a;&#x0a;A Fresh 85 should use An Easy Boss to start and once some gear has been gathered to appropriately defend against that, move on to The Average Boss. More details on this can be found on the Boss Handler Pane and in the Documentation of Rawr's website."/>
+                </Grid>
             </controls:TabItem>
         </controls:TabControl>
     </Grid>

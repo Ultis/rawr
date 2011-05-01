@@ -6,7 +6,7 @@ namespace Rawr.ProtPaladin {
     public class AbilityModel {
         private Ability Ability;
         private Character Character;
-        private Stats Stats;
+        private Base.StatsPaladin Stats;
         private PaladinTalents Talents;
         private CalculationOptionsProtPaladin CalcOpts;
         private BossOptions BossOpts;
@@ -77,6 +77,7 @@ namespace Rawr.ProtPaladin {
                                 + (1.2f * (Talents.WrathOfTheLightbringer * 0.5f));
 
                     baseDamage *= (1.0f + Stats.BonusPhysicalDamageMultiplier)
+                                * (1.0f + Stats.BonusDamageMultiplierCrusaderStrike)
                                 * (1.0f - ArmorReduction);
 
                     critMultiplier = 1.0f;
@@ -250,7 +251,8 @@ namespace Rawr.ProtPaladin {
             Threat = Damage * 3f;
         }
 
-        public AbilityModel(Character character, Stats stats, Ability ability, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts) {
+        public AbilityModel(Character character, Base.StatsPaladin stats, Ability ability, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts)
+        {
             Character   = character;
             Stats       = stats;
             Ability     = ability;
@@ -272,7 +274,7 @@ namespace Rawr.ProtPaladin {
 
     public class AbilityModelList : Dictionary<Ability, AbilityModel>
     {
-        public void Add(Ability ability, Character character, Stats stats, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts)
+        public void Add(Ability ability, Character character, Base.StatsPaladin stats, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts)
         {
             this.Add(ability, new AbilityModel(character, stats, ability, calcOpts, bossOpts));
         }

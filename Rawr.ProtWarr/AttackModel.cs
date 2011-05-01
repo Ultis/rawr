@@ -180,7 +180,7 @@ namespace Rawr.ProtWarr
             }
 
             // Heroic Strike
-            float heroicStrikePercentage = Math.Max(0.0f, Math.Min(1.0f, Player.Options.HeroicStrikeFrequency));
+            float heroicStrikePercentage = Math.Max(0.0f, Math.Min(1.0f, Player.CalcOpts.HeroicStrikeFrequency));
             float heroicStrikeCount = (modelLength / 3.0f) * heroicStrikePercentage;
 
             modelThreat += Abilities[Ability.HeroicStrike].Threat * heroicStrikeCount;

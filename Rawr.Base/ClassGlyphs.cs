@@ -18,30 +18,6 @@ namespace Rawr
             _description = description;
         }
 
-        /// <summary>This function is Obsolete and should be removed.</summary>
-        [Obsolete]
-        public GlyphDataAttribute(int index, int spellid, string name, GlyphType type, string description)
-        {
-            _index = index;
-            _spellid = spellid;
-            _effectid = -1;
-            _name = name;
-            _type = type;
-            _description = description;
-        }
-
-        /// <summary>This function is Obsolete and should be removed.</summary>
-        [Obsolete]
-        public GlyphDataAttribute(int index, string name, GlyphType type, string description)
-        {
-            _index = index;
-            _spellid = -1;
-            _effectid = -1;
-            _name = name;
-            _type = type;
-            _description = description;
-        }
-
         private readonly int _index;
         private readonly int _spellid;
         private readonly int _effectid;

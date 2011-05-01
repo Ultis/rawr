@@ -24,13 +24,13 @@ namespace Rawr.ProtPaladin
             set { _subPoints = value; }
         }
 
-        public float MitigationPoints
+        public float SurvivabilityPoints
         {
             get { return _subPoints[0]; }
             set { _subPoints[0] = value; }
         }
 
-        public float SurvivabilityPoints
+        public float MitigationPoints
         {
             get { return _subPoints[1]; }
             set { _subPoints[1] = value; }

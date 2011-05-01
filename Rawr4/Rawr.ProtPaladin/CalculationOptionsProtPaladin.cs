@@ -7,10 +7,9 @@ using System.Xml.Serialization;
 
 namespace Rawr.ProtPaladin
 {
+    #region Converters
     public class ThreatValueConverter : IValueConverter
     {
-        #region IValueConverter Members
-
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             float threatValue = (float)value;
@@ -20,7 +19,6 @@ namespace Rawr.ProtPaladin
             if (threatValue == 50f) return "Crazy About Threat";
             else return "Custom...";
         }
-
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             string threatValue = (string)value;
@@ -33,113 +31,85 @@ namespace Rawr.ProtPaladin
             }
             return null;
         }
-
-        #endregion
     }
-    public class SurvivalSoftCapConverter : IValueConverter
-    {
-        #region IValueConverter Members
-
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            int survivalSoftCap = (int)value;
-            if (survivalSoftCap == 50000 * 3 * 1.25) return "Normal Dungeons";
-            if (survivalSoftCap == 80000 * 3 * 1.25) return "Heroic Dungeons";
-            if (survivalSoftCap == 150000 * 3 * 1.25) return "Normal T11 Raids";
-            if (survivalSoftCap == 175000 * 3 * 1.25) return "Heroic T11 Raids";
-            else return "Custom...";
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            string survivalSoftCap = (string)value;
-            switch (survivalSoftCap)
-            {
-                case "Normal Dungeons": return 50000 * 3 * 1.25;
-                case "Heroic Dungeons": return 80000 * 3 * 1.25;
-                case "Normal T11 Raids": return 150000 * 3 * 1.25;
-                case "Heroic T11 Raids": return 175000 * 3 * 1.25;
-            }
-            return null;
-        }
-
-        #endregion
-    }
+    #endregion
 
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class CalculationOptionsProtPaladin : ICalculationOptionBase, INotifyPropertyChanged {
+    public class CalculationOptionsProtPaladin : ICalculationOptionBase, INotifyPropertyChanged
+    {
 
-        private float _MitigationScale = 0.125f;
-        public float MitigationScale
-        {
-            get { return _MitigationScale; }
-            set { _MitigationScale = value; OnPropertyChanged("MitigationScale"); }
-        }
-
-        private double _hitsToSurvive = 3.5d;
-        public double HitsToSurvive
-        {
-            get { return _hitsToSurvive; }
-            set { _hitsToSurvive = value; OnPropertyChanged("HitsToSurvive"); }
-        }
-
-        private float _ThreatScale = 5.0f;
-        public float ThreatScale
-        {
-            get { return _ThreatScale; }
-            set { _ThreatScale = value; OnPropertyChanged("ThreatScale"); }
-        }
-
+        #region Weighting Adjustments
+        /// <summary>
+        /// Change ranking mode between Mitigation Scale (the standard across all tanks) and
+        /// Burst Time which is a scale of how long before you die in a Burst scenario
+        /// </summary>
+        [DefaultValue(0)]
+        public int RankingMode { get { return _RankingMode; } set { _RankingMode = value; OnPropertyChanged("RankingMode"); } }
         private int _RankingMode = 0;
-        public int RankingMode
-        {
-            get { return _RankingMode; }
-            set { _RankingMode = value; OnPropertyChanged("RankingMode"); }
-        }
+        /// <summary>
+        /// The number of Hits to Survive, which determines your soft cap
+        /// </summary>
+        [DefaultValue(3.5d)]
+        public double HitsToSurvive { get { return _hitsToSurvive; } set { _hitsToSurvive = value; OnPropertyChanged("HitsToSurvive"); } }
+        private double _hitsToSurvive = 3.5d;
+        /// <summary>
+        /// The Scale of Burst's value
+        /// </summary>
+        [DefaultValue(3.0f)]
+        public float BurstScale { get { return _burstScale; } set { _burstScale = value; OnPropertyChanged("BurstScale"); } }
+        private float _burstScale = 3.0f;
+        /// <summary>
+        /// Threat Scaling determines how much higher you value threat over base
+        /// </summary>
+        [DefaultValue(5.0f)]
+        public float ThreatScale { get { return _ThreatScale; } set { _ThreatScale = value; OnPropertyChanged("ThreatScale"); } }
+        private float _ThreatScale = 5.0f;
+        #endregion
 
-        private string _SealChoice = "Seal of Truth";
-        public string SealChoice
-        {
-            get { return _SealChoice; }
-            set { _SealChoice = value; OnPropertyChanged("SealChoice"); }
-        }
-
-        private string _MagicDamageType = "None";
-        public string MagicDamageType
-        {
-            get { return _MagicDamageType; }
-            set { _MagicDamageType = value; OnPropertyChanged("MagicDamageType"); }
-        }
-
+        #region Trinket Handling
+        /// <summary>
+        /// How Rawr should calculate On Use effects. This should be obsoleted and replaced with a Burst Scale value
+        /// </summary>
+        [ObsoleteAttribute("This should be replaced with a Burst value calc. The code in place gives you what you need to determine it")]
+        [DefaultValue("Ignore")]
+        public string TrinketOnUseHandling { get { return _TrinketOnUseHandling; } set { _TrinketOnUseHandling = value; OnPropertyChanged("TrinketOnUseHandling"); } }
         private string _TrinketOnUseHandling = "Ignore";
-        public string TrinketOnUseHandling
-        {
-            get { return _TrinketOnUseHandling; }
-            set { _TrinketOnUseHandling = value; OnPropertyChanged("TrinketOnUseHandling"); }
-        }
+        #endregion
+        
+        #region Seal Choice
+        /// <summary>
+        /// The active seal used in a fight
+        /// </summary>
+        [DefaultValue("Seal of Truth")]
+        public string SealChoice { get { return _SealChoice; } set { _SealChoice = value; OnPropertyChanged("SealChoice"); } }
+        private string _SealChoice = "Seal of Truth";
+        #endregion
 
-        private bool _PTRMode = false;
-        public bool PTRMode
-        {
-            get { return _PTRMode; }
-            set { _PTRMode = value; OnPropertyChanged("PTRMode"); }
-        }
-
+        #region Customize Rotation
+        /// <summary>
+        /// The Primary Attack in the 9-3-9 sequence
+        /// </summary>
+        [DefaultValue("Crusader Strike")]
+        public string MainAttack { get { return _mainAttack; } set { _mainAttack = value; OnPropertyChanged("MainAttack"); } }
         private string _mainAttack = "Crusader Strike";
-        public string MainAttack
-        {
-            get { return _mainAttack; }
-            set { _mainAttack = value; OnPropertyChanged("MainAttack"); }
-        }
-
+        /// <summary>
+        /// The Priority order for the 3rd place in the 9-3-9 sequence
+        /// </summary>
+        [DefaultValue("AS > HW")]
+        public string Priority { get { return _priority; } set { _priority = value; OnPropertyChanged("Priority"); } }
         private string _priority = "AS > HW";
-        public string Priority
-        {
-            get { return _priority; }
-            set { _priority = value; OnPropertyChanged("Priority"); }
-        }
+        #endregion
+
+        #region PTR Mode
+        /// <summary>
+        /// When PTR Notes are posted, tie changes occurring in the next patch to this flag for users
+        /// </summary>
+        [DefaultValue(false)]
+        public bool PTRMode { get { return _PTRMode; } set { _PTRMode = value; OnPropertyChanged("PTRMode"); } }
+        private bool _PTRMode = false;
+        #endregion
 
         #region ICalculationOptionBase members
         public string GetXml()
@@ -151,7 +121,6 @@ namespace Rawr.ProtPaladin
             return xml.ToString();
         }
         #endregion
-
         #region INotifyPropertyChanged Members
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string property)

@@ -9,7 +9,7 @@ namespace Rawr.ProtPaladin
         private Character Character;
         private CalculationOptionsProtPaladin CalcOpts;
         private BossOptions BossOpts;
-        private Stats Stats;
+        private Base.StatsPaladin Stats;
 
         public readonly ParryModel ParryModel;
         public readonly DefendTable DefendTable;
@@ -30,7 +30,7 @@ namespace Rawr.ProtPaladin
 
         public void Calculate()
         {
-            float attackSpeed           = BossOpts.DefaultMeleeAttack.AttackSpeed;
+            float attackSpeed           = BossOpts.DefaultMeleeAttack.AttackSpeed / (1f - Stats.BossAttackSpeedReductionMultiplier);
             float armorReduction        = (1.0f - Lookup.ArmorReduction(Stats.Armor, BossOpts.Level));
             float baseDamagePerSecond   = BossOpts.DefaultMeleeAttack.DamagePerHit / BossOpts.DefaultMeleeAttack.AttackSpeed;
             float guaranteedReduction   = (Lookup.DamageReduction(Stats) * armorReduction);
@@ -74,7 +74,7 @@ namespace Rawr.ProtPaladin
             */
         }
 
-        public DefendModel(Character character, Stats stats, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts)
+        public DefendModel(Character character, Base.StatsPaladin stats, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts)
         {
             Character   = character;
             Stats       = stats;

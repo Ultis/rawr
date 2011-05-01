@@ -81,8 +81,8 @@ namespace Rawr.ProtWarr
                     baseDamage = 2779.0f + (Player.Stats.AttackPower * 0.6f);
                     if (Player.Talents.GlyphOfShieldSlam)
                         DamageMultiplier *= 1.1f;
-                    if (Player.Options.UseShieldBlock)
-                        DamageMultiplier *= (1.0f + (0.5f * Player.Talents.HeavyRepercussions * (10.0f / Player.Options.ShieldBlockInterval)));
+                    if (Player.CalcOpts.UseShieldBlock)
+                        DamageMultiplier *= (1.0f + (0.5f * Player.Talents.HeavyRepercussions * (10.0f / Player.CalcOpts.ShieldBlockInterval)));
                     DamageMultiplier *= (1.0f + Player.Stats.BonusShieldSlamDamageMultiplier);
                     break;
                 case Ability.Shockwave:

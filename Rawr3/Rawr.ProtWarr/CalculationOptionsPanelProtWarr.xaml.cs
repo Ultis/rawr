@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using System.Globalization;
 
 namespace Rawr.ProtWarr
 {
@@ -63,10 +64,10 @@ namespace Rawr.ProtWarr
             if (calcOpts.RankingMode == 1)
                 showSliders = true;
 
-            HitsToSurviveLabel.Visibility = (showSliders ? Visibility.Visible : Visibility.Collapsed);
-            HitsToSurvive.Visibility = (showSliders ? Visibility.Visible : Visibility.Collapsed);
-            ThreatLabel.Visibility = (showSliders ? Visibility.Visible : Visibility.Collapsed);
-            ThreatValue.Visibility = (showSliders ? Visibility.Visible : Visibility.Collapsed);
+            LB_HitsToSurvive.Visibility = (showSliders ? Visibility.Visible : Visibility.Collapsed);
+            NUD_HitsToSurvive.Visibility = (showSliders ? Visibility.Visible : Visibility.Collapsed);
+            LB_ThreatScale.Visibility = (showSliders ? Visibility.Visible : Visibility.Collapsed);
+            NUD_ThreatScale.Visibility = (showSliders ? Visibility.Visible : Visibility.Collapsed);
 
             _loadingCalculationOptions = false;
         }
@@ -83,61 +84,81 @@ namespace Rawr.ProtWarr
                     if (calcOpts.RankingMode == 1)
                         showSliders = true;
 
-                    HitsToSurviveLabel.Visibility = (showSliders ? Visibility.Visible : Visibility.Collapsed);
-                    HitsToSurvive.Visibility = (showSliders ? Visibility.Visible : Visibility.Collapsed);
-                    ThreatLabel.Visibility = (showSliders ? Visibility.Visible : Visibility.Collapsed);
-                    ThreatValue.Visibility = (showSliders ? Visibility.Visible : Visibility.Collapsed);
+                    LB_HitsToSurvive.Visibility = (showSliders ? Visibility.Visible : Visibility.Collapsed);
+                    NUD_HitsToSurvive.Visibility = (showSliders ? Visibility.Visible : Visibility.Collapsed);
+                    LB_ThreatScale.Visibility = (showSliders ? Visibility.Visible : Visibility.Collapsed);
+                    NUD_ThreatScale.Visibility = (showSliders ? Visibility.Visible : Visibility.Collapsed);
                     break;
             }
-
+            this.UpdateLayout();
             if (Character != null) { Character.OnCalculationsInvalidated(); }
         }
         #endregion
+        private void btnResetHitsToSurvive_Click(object sender, RoutedEventArgs e) { calcOpts.HitsToSurvive = 3.1f; }
+        private void btnResetBurstScale_Click(object sender, RoutedEventArgs e) { calcOpts.BurstScale = 3.0f; }
+        private void btnResetThreatScale_Click(object sender, RoutedEventArgs e) { calcOpts.ThreatScale = 5f; }
     }
 
+    #region Converters
     public class RankingModeConverter : IValueConverter
     {
-        #region IValueConverter Members
-
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             int rankingMode = (int)value;
             switch (rankingMode)
             {
-                case 3: return "Burst Time";
-                case 4: return "Damage Output";
-                default: return "Default";
+                case 2: return "Burst Time";
+                default: return "Mitigation Scale";
             }
         }
-
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             string rankingMode = (string)value;
             switch (rankingMode)
             {
-                case "Burst Time": return 3;
-                case "Damage Output": return 4;
+                case "Burst Time": return 2;
                 default: return 1;
             }
         }
-
-        #endregion
     }
-
-    public class ThreatScaleConverter : IValueConverter
+    public class ThreatValueConverter : IValueConverter
     {
-        #region IValueConverter Members
-
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            return (double)((float)value / 8.0d);
+            float threatValue = (float)value;
+            if (threatValue == 1f) return "Almost None";
+            if (threatValue == 5f) return "MT";
+            if (threatValue == 25f) return "OT";
+            if (threatValue == 50f) return "Crazy About Threat";
+            else return "Custom...";
         }
-
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            return (float)((double)value * 8.0d);
+            string threatValue = (string)value;
+            switch (threatValue)
+            {
+                case "Almost None": return 1f;
+                case "MT": return 5f;
+                case "OT": return 25f;
+                case "Crazy About Threat": return 50f;
+            }
+            return null;
         }
-
-        #endregion
     }
+    public class PercentConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (targetType == typeof(float)) return System.Convert.ToSingle(value) * 100.0f;
+            if (targetType == typeof(double)) return System.Convert.ToDouble(value) * 100.0d;
+            return System.Convert.ToDouble(value) * 100.0d;
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (targetType == typeof(float)) return System.Convert.ToSingle(value) / 100f;
+            if (targetType == typeof(double)) return System.Convert.ToDouble(value) / 100d;
+            return System.Convert.ToDouble(value) / 100d;
+        }
+    }
+    #endregion
 }

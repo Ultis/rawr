@@ -121,6 +121,7 @@
     <Compile Include="ParryModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <AppDesigner Include="Properties\" />
+    <Compile Include="StatsPaladin.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Rawr.Base\Rawr.Base.WPF.csproj">

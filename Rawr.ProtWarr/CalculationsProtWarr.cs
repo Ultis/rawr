@@ -12,8 +12,8 @@ namespace Rawr.ProtWarr
         public Character Character;
         public Base.StatsWarrior Stats;
         public WarriorTalents Talents;
-        public CalculationOptionsProtWarr Options;
-        public BossOptions Boss;
+        public CalculationOptionsProtWarr CalcOpts;
+        public BossOptions BossOpts;
         public DefendModel DefendModel;
         public AttackModel AttackModel;
 
@@ -22,8 +22,8 @@ namespace Rawr.ProtWarr
             this.Character = character;
             this.Stats = new Base.StatsWarrior();
             this.Talents = this.Character.WarriorTalents;
-            this.Options = this.Character.CalculationOptions as CalculationOptionsProtWarr;
-            this.Boss = this.Character.BossOptions;
+            this.CalcOpts = this.Character.CalculationOptions as CalculationOptionsProtWarr;
+            this.BossOpts = this.Character.BossOptions;
             this.DefendModel = null;
             this.AttackModel = null;
         }
@@ -292,23 +292,23 @@ threat and limited threat scaled by the threat scale.",
 
         public override void SetDefaults(Character character)
         {
-            character.ActiveBuffsAdd(("Battle Shout"));
-            character.ActiveBuffsAdd(("Devotion Aura"));
-            character.ActiveBuffsAdd(("Ancestral Healing"));
-            character.ActiveBuffsAdd(("Trueshot Aura"));
-            character.ActiveBuffsAdd(("Ferocious Inspiration"));
-            character.ActiveBuffsAdd(("Power Word: Fortitude"));
-            character.ActiveBuffsAdd(("Rampage"));
-            character.ActiveBuffsAdd(("Windfury Totem"));
-            character.ActiveBuffsAdd(("Blessing of Kings"));
-            character.ActiveBuffsAdd(("Sunder Armor"));
-            character.ActiveBuffsAdd(("Demoralizing Shout"));
-            character.ActiveBuffsAdd(("Mangle"));
-            character.ActiveBuffsAdd(("Thunder Clap"));
-            character.ActiveBuffsAdd(("Flask of Steelskin"));
+            character.ActiveBuffsAdd("Battle Shout");
+            character.ActiveBuffsAdd("Devotion Aura");
+            character.ActiveBuffsAdd("Ancestral Healing");
+            character.ActiveBuffsAdd("Trueshot Aura");
+            character.ActiveBuffsAdd("Ferocious Inspiration");
+            character.ActiveBuffsAdd("Power Word: Fortitude");
+            character.ActiveBuffsAdd("Rampage");
+            character.ActiveBuffsAdd("Windfury Totem");
+            character.ActiveBuffsAdd("Blessing of Kings");
+            character.ActiveBuffsAdd("Sunder Armor");
+            character.ActiveBuffsAdd("Demoralizing Shout");
+            character.ActiveBuffsAdd("Mangle");
+            character.ActiveBuffsAdd("Thunder Clap");
+            character.ActiveBuffsAdd("Flask of Steelskin");
             if (character.PrimaryProfession == Profession.Alchemy || character.SecondaryProfession == Profession.Alchemy)
-                character.ActiveBuffsAdd(("Flask of Steelskin (Mixology)"));
-            character.ActiveBuffsAdd(("Mastery Food"));
+                character.ActiveBuffsAdd("Flask of Steelskin (Mixology)");
+            character.ActiveBuffsAdd("Mastery Food");
 
             #region Boss Options
             // Never in back of the Boss
@@ -406,11 +406,37 @@ threat and limited threat scaled by the threat scale.",
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
+            #region Setup uniform variables from all models
             CharacterCalculationsProtWarr calculatedStats = new CharacterCalculationsProtWarr();
+            if (character == null) { return calculatedStats; }
+            CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
+            if (calcOpts == null) { return calculatedStats; }
+            BossOptions bossOpts = character.BossOptions;
+            // Make sure there is at least one attack in the list.
+            // If there's not, add a Default Melee Attack for processing
+            if (bossOpts.Attacks.Count < 1) {
+                character.IsLoading = true;
+                bossOpts.DamagingTargs = true;
+                bossOpts.Attacks.Add(BossHandler.ADefaultMeleeAttack);
+                character.IsLoading = false;
+            }
+            // Make sure there is a default melee attack
+            // If the above processed, there will be one so this won't have to process
+            // If the above didn't process and there isn't one, add one now
+            if (bossOpts.DefaultMeleeAttack == null) {
+                character.IsLoading = true;
+                bossOpts.DamagingTargs = true;
+                bossOpts.Attacks.Add(BossHandler.ADefaultMeleeAttack);
+                character.IsLoading = false;
+            }
+            // Since the above forced there to be an attack it's safe to do this without a null check
+            StatsWarrior stats = GetCharacterStats(character, additionalItem) as StatsWarrior;
+            calculatedStats.BasicStats = stats;
+            calculatedStats.TargetLevel = bossOpts.Level;
+            //calculatedStats.CharacterLevel = character.Level;
+            #endregion
 
-            // Error-handling if swapping models
-            if (character == null || character.CalculationOptions == null || !(character.CalculationOptions is CalculationOptionsProtWarr))
-                return calculatedStats;
+            int levelDifference = (bossOpts.Level - character.Level);
 
             Player player = new Player(character);
 
@@ -424,7 +450,7 @@ threat and limited threat scaled by the threat scale.",
                 calculatedStats.CritReduction = Lookup.AvoidanceChance(player, HitResult.Crit);
                 calculatedStats.ArmorReduction = Lookup.ArmorReduction(player);
 
-                calculatedStats.BaseAttackerSpeed = player.Options.BossAttackSpeed;
+                calculatedStats.BaseAttackerSpeed = player.BossOpts.DefaultMeleeAttack.AttackSpeed;
                 calculatedStats.AttackerSpeed = Lookup.TargetWeaponSpeed(player);
                 calculatedStats.DamageTakenPerHit = player.DefendModel.DamagePerHit;
                 calculatedStats.DamageTakenPerBlock = player.DefendModel.DamagePerBlock;
@@ -444,7 +470,7 @@ threat and limited threat scaled by the threat scale.",
                 calculatedStats.WeaponSpeed = Lookup.WeaponSpeed(player);
             }
 
-            calculatedStats.TargetLevel = player.Boss.Level;
+            calculatedStats.TargetLevel = player.BossOpts.Level;
             calculatedStats.Abilities = player.AttackModel.Abilities;
             calculatedStats.BasicStats = player.Stats;
 
@@ -475,31 +501,25 @@ threat and limited threat scaled by the threat scale.",
             calculatedStats.ParriedAttacks = player.AttackModel.Abilities[Ability.None].AttackTable.Parry;
             calculatedStats.MissedAttacks = player.AttackModel.Abilities[Ability.None].AttackTable.Miss;
 
-            calculatedStats.HeroicStrikeFrequency = player.Options.HeroicStrikeFrequency;
+            calculatedStats.HeroicStrikeFrequency = player.CalcOpts.HeroicStrikeFrequency;
             calculatedStats.ThreatPerSecond = player.AttackModel.ThreatPerSecond;
             calculatedStats.ThreatModelName = player.AttackModel.ShortName;
             calculatedStats.ThreatModel = player.AttackModel.Name + "\n" + player.AttackModel.Description;
             calculatedStats.TotalDamagePerSecond = player.AttackModel.DamagePerSecond;
 
             calculatedStats.BurstTime = player.DefendModel.BurstTime;
-            calculatedStats.RankingMode = player.Options.RankingMode;
-            switch (player.Options.RankingMode)
+            calculatedStats.RankingMode = player.CalcOpts.RankingMode;
+            switch (player.CalcOpts.RankingMode)
             {
-                case 3:
+                case 2:
                     // Burst Time Mode
                     calculatedStats.SurvivalPoints      = player.DefendModel.BurstTime * 100.0f;
                     calculatedStats.MitigationPoints    = 0.0f;
                     calculatedStats.ThreatPoints        = 0.0f;
                     break;
-                case 4:
-                    // Damage Output Mode
-                    calculatedStats.SurvivalPoints      = 0.0f;
-                    calculatedStats.MitigationPoints    = 0.0f;
-                    calculatedStats.ThreatPoints        = calculatedStats.TotalDamagePerSecond;
-                    break;
                 default:
                     // Mitigation Scale Mode
-                    double survivalCap = player.Options.HitsToSurvive * player.Options.BossAttackValue / 1000.0d;
+                    double survivalCap = player.CalcOpts.HitsToSurvive * player.BossOpts.DefaultMeleeAttack.DamagePerHit / 1000.0d;
                     double survivalRaw = player.DefendModel.EffectiveHealth / 1000.0d;
 
                     if (survivalRaw <= survivalCap)
@@ -515,7 +535,7 @@ threat and limited threat scaled by the threat scale.",
                     }
 
                     calculatedStats.MitigationPoints    = StatConversion.MitigationScaler / (1.0f - player.DefendModel.Mitigation);
-                    calculatedStats.ThreatPoints        = player.AttackModel.ThreatPerSecond * player.Options.ThreatScale;
+                    calculatedStats.ThreatPoints        = player.AttackModel.ThreatPerSecond * player.CalcOpts.ThreatScale;
                     break;
             }
 
@@ -526,6 +546,26 @@ threat and limited threat scaled by the threat scale.",
         {
             if (character.CalculationOptions == null)
                 character.CalculationOptions = new CalculationOptionsProtWarr();
+
+            // Make sure there is at least one attack in the list.
+            // If there's not, add a Default Melee Attack for processing
+            if (character.BossOptions.Attacks.Count < 1)
+            {
+                character.IsLoading = true;
+                character.BossOptions.DamagingTargs = true;
+                character.BossOptions.Attacks.Add(BossHandler.ADefaultMeleeAttack);
+                character.IsLoading = false;
+            }
+            // Make sure there is a default melee attack
+            // If the above processed, there will be one so this won't have to process
+            // If the above didn't process and there isn't one, add one now
+            if (character.BossOptions.DefaultMeleeAttack == null)
+            {
+                character.IsLoading = true;
+                character.BossOptions.DamagingTargs = true;
+                character.BossOptions.Attacks.Add(BossHandler.ADefaultMeleeAttack);
+                character.IsLoading = false;
+            }
 
             Player player = new Player(character);
             AccumulateCharacterStats(player, additionalItem);
@@ -550,8 +590,7 @@ threat and limited threat scaled by the threat scale.",
             player.Stats.Accumulate(statsRace);
 
             // Talents
-            StatsWarrior statsTalents = new StatsWarrior() 
-            {
+            StatsWarrior statsTalents = new StatsWarrior() {
                 Block = 0.15f, // Sentinel
                 BonusStaminaMultiplier = (1.0f + 0.15f) * (1.0f + (Character.ValidateArmorSpecialization(player.Character, ItemType.Plate) ? 0.05f : 0.0f)) - 1.0f, // Sentinel & Plate Specialization
                 BaseArmorMultiplier = player.Talents.Toughness * 0.03f,
@@ -601,7 +640,7 @@ threat and limited threat scaled by the threat scale.",
             // Final Derived Stats
             player.Stats.Health += StatConversion.GetHealthFromStamina(player.Stats.Stamina, CharacterClass.Warrior) + player.Stats.BattlemasterHealthProc;
             player.Stats.Health = (float)Math.Floor(player.Stats.Health * (1.0f + player.Stats.BonusHealthMultiplier));
-            player.Stats.AttackPower += player.Stats.Strength * 2.0f + (player.Stats.Health * 0.1f * player.Options.AverageVengeance);
+            player.Stats.AttackPower += player.Stats.Strength * 2.0f + (player.Stats.Health * 0.1f * player.CalcOpts.AverageVengeance);
             player.Stats.AttackPower = (float)Math.Floor(player.Stats.AttackPower * (1.0f + player.Stats.BonusAttackPowerMultiplier));
         }
 
@@ -647,8 +686,8 @@ threat and limited threat scaled by the threat scale.",
             player.AttackModel = new AttackModel(player, AttackModelMode.Optimal);
 
             float effectiveMasteryRating        = Lookup.MaxEffectiveMasteryRating(player);
-            float effectiveBuffedMasteryRating  = effectiveMasteryRating * (1.0f - 10.0f / player.Options.ShieldBlockInterval) +
-                                                    Lookup.MaxEffectiveBuffedMasteryRating(player) * (10.0f / player.Options.ShieldBlockInterval);
+            float effectiveBuffedMasteryRating  = effectiveMasteryRating * (1.0f - 10.0f / player.CalcOpts.ShieldBlockInterval) +
+                                                    Lookup.MaxEffectiveBuffedMasteryRating(player) * (10.0f / player.CalcOpts.ShieldBlockInterval);
             
             triggerIntervals[Trigger.Use]                   = 0.0f;
             triggerIntervals[Trigger.MeleeAttack]           = player.AttackModel.WeaponAttacksPerSecond;
@@ -702,16 +741,16 @@ threat and limited threat scaled by the threat scale.",
                         SpecialEffect cappedEffect = new SpecialEffect(effect.Trigger, cappedStats, effect.Duration, effect.Cooldown, effect.LimitedToExecutePhase);
                         
                         if (effect.Trigger == Trigger.ExecuteHit)
-                            cappedEffect.AccumulateAverageStats(statsSpecialEffects, triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], player.AttackModel.WeaponSpeed, player.Boss.BerserkTimer * (float)player.Boss.Under20Perc);
+                            cappedEffect.AccumulateAverageStats(statsSpecialEffects, triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], player.AttackModel.WeaponSpeed, player.BossOpts.BerserkTimer * (float)player.BossOpts.Under20Perc);
                         else
-                            cappedEffect.AccumulateAverageStats(statsSpecialEffects, triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], player.AttackModel.WeaponSpeed, player.Boss.BerserkTimer);
+                            cappedEffect.AccumulateAverageStats(statsSpecialEffects, triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], player.AttackModel.WeaponSpeed, player.BossOpts.BerserkTimer);
                     }
                     else
                     {
                         if (effect.Trigger == Trigger.ExecuteHit)
-                            effect.AccumulateAverageStats(statsSpecialEffects, triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], player.AttackModel.WeaponSpeed, player.Boss.BerserkTimer * (float)player.Boss.Under20Perc);
+                            effect.AccumulateAverageStats(statsSpecialEffects, triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], player.AttackModel.WeaponSpeed, player.BossOpts.BerserkTimer * (float)player.BossOpts.Under20Perc);
                         else
-                            effect.AccumulateAverageStats(statsSpecialEffects, triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], player.AttackModel.WeaponSpeed, player.Boss.BerserkTimer);
+                            effect.AccumulateAverageStats(statsSpecialEffects, triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], player.AttackModel.WeaponSpeed, player.BossOpts.BerserkTimer);
                     }
                 }
             }

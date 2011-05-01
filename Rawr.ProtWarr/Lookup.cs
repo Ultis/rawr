@@ -18,7 +18,7 @@ namespace Rawr.ProtWarr
 
         public static float TargetArmorReduction(Player player)
         {
-            return StatConversion.GetArmorDamageReduction(player.Character.Level, player.Boss.Armor,
+            return StatConversion.GetArmorDamageReduction(player.Character.Level, player.BossOpts.Armor,
                 player.Stats.TargetArmorReduction, 0.0f);
         }
 
@@ -27,15 +27,15 @@ namespace Rawr.ProtWarr
             switch (avoidanceType)
             {
                 case HitResult.Miss:
-                    return StatConversion.WHITE_MISS_CHANCE_CAP[player.Boss.Level - 85];
+                    return StatConversion.WHITE_MISS_CHANCE_CAP[player.BossOpts.Level - 85];
                 case HitResult.Dodge:
-                    return StatConversion.YELLOW_DODGE_CHANCE_CAP[player.Boss.Level - 85];
+                    return StatConversion.YELLOW_DODGE_CHANCE_CAP[player.BossOpts.Level - 85];
                 case HitResult.Parry:
-                    return StatConversion.YELLOW_PARRY_CHANCE_CAP[player.Boss.Level - 85];
+                    return StatConversion.YELLOW_PARRY_CHANCE_CAP[player.BossOpts.Level - 85];
                 case HitResult.Glance:
-                    return 0.06f + ((player.Boss.Level - player.Character.Level) * 0.06f);
+                    return 0.06f + ((player.BossOpts.Level - player.Character.Level) * 0.06f);
                 case HitResult.Crit:
-                    return -StatConversion.NPC_LEVEL_CRIT_MOD[player.Boss.Level - player.Character.Level]; // StatConversion returns as negative
+                    return -StatConversion.NPC_LEVEL_CRIT_MOD[player.BossOpts.Level - player.Character.Level]; // StatConversion returns as negative
                 default:
                     return 0.0f;
             }
@@ -48,7 +48,7 @@ namespace Rawr.ProtWarr
 
         public static float TargetWeaponSpeed(Player player)
         {
-            return player.Options.BossAttackSpeed / (1f - player.Stats.BossAttackSpeedReductionMultiplier);
+            return player.BossOpts.DefaultMeleeAttack.AttackSpeed / (1f - player.Stats.BossAttackSpeedReductionMultiplier);
         }
 
         public static float StanceDamageMultipler(Player player)
@@ -205,13 +205,13 @@ namespace Rawr.ProtWarr
 
         public static float GlancingReduction(Player player)
         {
-            return (Math.Min(0.91f, 1.3f - (0.05f * (player.Boss.Level - player.Character.Level) * 5.0f)) +
-                    Math.Max(0.99f, 1.2f - (0.03f * (player.Boss.Level - player.Character.Level) * 5.0f))) / 2;
+            return (Math.Min(0.91f, 1.3f - (0.05f * (player.BossOpts.Level - player.Character.Level) * 5.0f)) +
+                    Math.Max(0.99f, 1.2f - (0.03f * (player.BossOpts.Level - player.Character.Level) * 5.0f))) / 2;
         }
 
         public static float ArmorReduction(Player player)
         {
-            return StatConversion.GetArmorDamageReduction(player.Boss.Level, player.Stats.Armor, 0f, 0f);
+            return StatConversion.GetArmorDamageReduction(player.BossOpts.Level, player.Stats.Armor, 0f, 0f);
         }
 
         public static float MagicReduction(Player player, DamageType school)
@@ -227,7 +227,7 @@ namespace Rawr.ProtWarr
             }
 
             float damageReduction = Lookup.StanceDamageReduction(player, school);
-            float averageResistance = StatConversion.GetAverageResistance(player.Boss.Level, player.Character.Level, totalResist, 0.0f);
+            float averageResistance = StatConversion.GetAverageResistance(player.BossOpts.Level, player.Character.Level, totalResist, 0.0f);
 
             return Math.Max(0.0f, (1.0f - averageResistance) * (1f - damageReduction));
         }
@@ -237,11 +237,11 @@ namespace Rawr.ProtWarr
             switch (avoidanceType)
             {
                 case HitResult.Crit:
-                    return StatConversion.GetDRAvoidanceChance(player.Character, player.Stats, avoidanceType, player.Boss.Level) + (player.Talents.BastionOfDefense * 0.03f);
+                    return StatConversion.GetDRAvoidanceChance(player.Character, player.Stats, avoidanceType, player.BossOpts.Level) + (player.Talents.BastionOfDefense * 0.03f);
                 case HitResult.CritBlock:
                     return Lookup.BonusMasteryBlockPercentage(player) + player.Stats.CriticalBlock;
                 default:
-                    return Math.Max(0.0f, StatConversion.GetDRAvoidanceChance(player.Character, player.Stats, avoidanceType, player.Boss.Level));
+                    return Math.Max(0.0f, StatConversion.GetDRAvoidanceChance(player.Character, player.Stats, avoidanceType, player.BossOpts.Level));
             }
         }
 

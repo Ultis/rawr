@@ -92,9 +92,9 @@ namespace Rawr.ProtWarr
                 BuffedCriticalBlock = CriticalBlock;
 
                 // Average in Shield Block if Enabled
-                if (Player.Options.UseShieldBlock)
+                if (Player.CalcOpts.UseShieldBlock)
                 {
-                    float shieldBlockUptime = 10.0f / Player.Options.ShieldBlockInterval;
+                    float shieldBlockUptime = 10.0f / Player.CalcOpts.ShieldBlockInterval;
 
                     BuffedBlock         = Math.Min(1.0f - tableSize, Lookup.AvoidanceChance(Player, HitResult.Block) + 0.25f);
                     BuffedCriticalBlock = BuffedBlock * Math.Min(1.0f, Lookup.AvoidanceChance(Player, HitResult.CritBlock) + (0.25f - (BuffedBlock - Block)));

@@ -536,7 +536,7 @@ namespace Rawr.ProtPaladin
             AttackerHitsPerSecond = attackerHits / modelLength;
         }
 
-        public AttackModel(Character character, Stats stats, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts)
+        public AttackModel(Character character, Base.StatsPaladin stats, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts)
         {
             Character        = character;
             CalcOpts         = calcOpts;

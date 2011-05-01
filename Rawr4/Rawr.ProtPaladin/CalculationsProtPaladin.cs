@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Media;
 using System.Xml.Serialization;
+using Rawr.Base;
 
 namespace Rawr.ProtPaladin
 {
@@ -293,8 +294,8 @@ focus on Survival Points.",
             get {
                 if (_subPointNameColors == null) {
                     _subPointNameColors = new Dictionary<string, Color>();
-                    _subPointNameColors.Add("Mitigation", Colors.Red);
                     _subPointNameColors.Add("Survivability", Colors.Blue);
+                    _subPointNameColors.Add("Mitigation", Colors.Red);
                     //_subPointNameColors.Add("Burst", Colors.Purple); // NYI
                     _subPointNameColors.Add("Threat", Colors.Green);
                 }
@@ -341,7 +342,7 @@ focus on Survival Points.",
                 character.IsLoading = false;
             }
 
-            Stats stats = GetCharacterStats(character, additionalItem, calcOpts, bossOpts);
+            Base.StatsPaladin stats = GetCharacterStats(character, additionalItem, calcOpts, bossOpts);
             DefendModel dm = new DefendModel(character, stats, calcOpts, bossOpts);
             AttackModel am = new AttackModel(character, stats, calcOpts, bossOpts);
 
@@ -449,11 +450,11 @@ focus on Survival Points.",
                     //calc.SurvivalPoints = Math.Min(CapSurvival(dm.EffectiveHealth, calcOpts), VALUE_CAP);
                     //calc.MitigationPoints = Math.Min(calcOpts.MitigationScale / dm.DamageTaken, VALUE_CAP);
                     //calc.ThreatPoints = Math.Min(calc.ThreatPoints, VALUE_CAP);
-#if FALSE // JOTHAY TODO NOTE: Switch this over to try the other method
+#if true // JOTHAY TODO NOTE: Switch this over to try the other method
                     calc.SurvivabilityPoints = CapSurvival(dm.EffectiveHealth, calcOpts, bossOpts);
                     calc.MitigationPoints = StatConversion.MitigationScaler / (1f - dm.Mitigation);
 #else
-                    calc.SurvivabilityPoints = Math.Min((dm.EffectiveHealth) / 10.0f, VALUE_CAP);
+                    calc.SurvivabilityPoints = Math.Min(dm.EffectiveHealth / 10.0f, VALUE_CAP);
                     calc.MitigationPoints = Math.Min(dm.Mitigation * bossOpts.DefaultMeleeAttack.DamagePerHit * calcOpts.MitigationScale * 10.0f, VALUE_CAP);
 #endif
                     //calc.MitigationPoints = Math.Min(dm.Mitigation * bossOpts.DefaultMeleeAttack.DamagePerHit /** calcOpts.MitigationScale*/ * 10.0f, VALUE_CAP);
@@ -530,7 +531,7 @@ focus on Survival Points.",
             return GetCharacterStats(character, additionalItem, calcOpts, bossOpts);
         }
 
-        public Stats GetCharacterStats(Character character, Item additionalItem, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts)
+        public StatsPaladin GetCharacterStats(Character character, Item additionalItem, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts)
         {
             PaladinTalents talents = character.PaladinTalents;
 
@@ -548,11 +549,16 @@ focus on Survival Points.",
             Stats statsGearEnchantsBuffs = new Stats();
             statsGearEnchantsBuffs.Accumulate(statsItems);
             statsGearEnchantsBuffs.Accumulate(statsBuffs);
-            Stats statsTotal = new Stats();
+            StatsPaladin statsTotal = new StatsPaladin();
             statsTotal.Accumulate(statsBase);
             statsTotal.Accumulate(statsItems);
             statsTotal.Accumulate(statsBuffs);
             statsTotal.Accumulate(statsTalents);
+
+            int T11count;
+            character.SetBonusCount.TryGetValue("Reinforced Sapphirium Battlearmor", out T11count);
+            if (T11count >= 2) { statsTotal.BonusDamageMultiplierCrusaderStrike = 0.05f; }
+            if (T11count >= 4) { statsTotal.BonusDurationMultiplierGuardianOfAncientKings = 0.50f; }
 
             statsTotal.Intellect = (float)Math.Floor(statsBase.Intellect * (1.0f + statsTalents.BonusIntellectMultiplier));
             statsTotal.Intellect += (float)Math.Floor((statsItems.Intellect + statsBuffs.Intellect) * (1.0f + statsTalents.BonusIntellectMultiplier));
@@ -675,9 +681,9 @@ focus on Survival Points.",
             triggerChances[Trigger.DamageTakenPutsMeBelow35PercHealth] = 0.35f;
         }
 
-        private Stats GetSpecialEffectStats(Character character, Stats stats, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts)
+        private Stats GetSpecialEffectStats(Character character, StatsPaladin stats, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts)
         {
-            Stats statsSpecialEffects = new Stats();
+            StatsPaladin statsSpecialEffects = new StatsPaladin();
 
             float weaponSpeed = 1.0f;
             if (character.MainHand != null)
@@ -715,9 +721,9 @@ focus on Survival Points.",
             return statsSpecialEffects;
         }
         private void GetSpecialEffectsStats_Child(Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances,
-            float weaponSpeed, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts, Stats stats, ref Stats statsSpecialEffects)
+            float weaponSpeed, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts, StatsPaladin stats, ref StatsPaladin statsSpecialEffects)
         {
-            Stats effectsToAdd = new Stats();
+            StatsPaladin effectsToAdd = new StatsPaladin();
             float uptime = 0f;
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
                 switch (effect.Trigger) {
@@ -1207,6 +1213,8 @@ focus on Survival Points.",
                 BonusWhiteDamageMultiplier = stats.BonusWhiteDamageMultiplier,
                 BonusBlockValueMultiplier = stats.BonusBlockValueMultiplier,
                 BossPhysicalDamageDealtReductionMultiplier = stats.BossPhysicalDamageDealtReductionMultiplier,
+                BossAttackSpeedReductionMultiplier = stats.BossAttackSpeedReductionMultiplier,
+                BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
 
                 SnareRootDurReduc = stats.SnareRootDurReduc,
                 FearDurReduc = stats.FearDurReduc,
