@@ -9,37 +9,37 @@ namespace Rawr.Tree {
 
     public class SpellProfile
     {
-private string name;
-//private int fightDuration; // In seconds - currently hardcoded. To be changed to an input.
-private int replenishmentUptime; //Should always either be 100% or 0%.
-private int wildGrowthPerMinute; //Deprecated
-private int innervates; //comes from form - either 1 or 0
+        private string name;
+        //private int fightDuration; // In seconds - currently hardcoded. To be changed to an input.
+        private int replenishmentUptime; //Should always either be 100% or 0%.
+        private int wildGrowthPerMinute; //Deprecated
+        private int innervates; //comes from form - either 1 or 0
 
-private int swiftmendPerMinute; //Deprecated
-private int idleCastTimePercent; // goes from 0 to 100 - we should be getting this from the form
-private int rejuvFrac, regrowthFrac, lifebloomFrac, nourishFrac; //(whole number out of 100, divided by 100 at the second level of assignment)% of the time you use these spells... relates to <name>CF variables elsewhere. These should be inputs.
-private int rejuvAmount, regrowthAmount, lifebloomStackAmount; //(decimal out of 1)%<name>Amount seems to reference the managedCF variables - unknown difference from regualr CF variables. This is NEVER used without the above variables... Are these double-dipping? Key is in simulateHealing.
-private int lifebloomStackType; //Slow, Fast, Slow2, Fast2, Rolling
-private int nourish1, nourish2, nourish3, nourish4; //Nourish with 1-4 HoTs applied.
-private int livingSeedEfficiency; //% Efficiency of Living Seed - Does this belong here?
-//private int revitalizePPM;
+        private int swiftmendPerMinute; //Deprecated
+        private int idleCastTimePercent; // goes from 0 to 100 - we should be getting this from the form
+        private int rejuvFrac, regrowthFrac, lifebloomFrac, nourishFrac; //(whole number out of 100, divided by 100 at the second level of assignment)% of the time you use these spells... relates to <name>CF variables elsewhere. These should be inputs.
+        private int rejuvAmount, regrowthAmount, lifebloomStackAmount; //(decimal out of 1)%<name>Amount seems to reference the managedCF variables - unknown difference from regualr CF variables. This is NEVER used without the above variables... Are these double-dipping? Key is in simulateHealing.
+        private int lifebloomStackType; //Slow, Fast, Slow2, Fast2, Rolling
+        private int nourish1, nourish2, nourish3, nourish4; //Nourish with 1-4 HoTs applied.
+        private int livingSeedEfficiency; //% Efficiency of Living Seed - Does this belong here?
+        //private int revitalizePPM;
 
-private int adjTimeRejuv, adjTimeRegrowth, adjTimeNourish, adjTimeLifebloom; //Not very usefull at the moment... all set to 100% and then applied multiplicitively to the Frac variables...
-private int adjTimeSwiftmend, adjTimeWildGrowth, adjTimeIdle; ////Not very usefull at the moment... all set to 100% and then applied multiplicitively to the Frac variables...
+        private int adjTimeRejuv, adjTimeRegrowth, adjTimeNourish, adjTimeLifebloom; //Not very usefull at the moment... all set to 100% and then applied multiplicitively to the Frac variables...
+        private int adjTimeSwiftmend, adjTimeWildGrowth, adjTimeIdle; ////Not very usefull at the moment... all set to 100% and then applied multiplicitively to the Frac variables...
 
-private int adjTimeManagedRejuv, adjTimeManagedRegrowth,
-adjTimeManagerLifebloomStack; //Not very usefull at the moment... all set to 100% and then applied multiplicitively to the Frac variables...
+        private int adjTimeManagedRejuv, adjTimeManagedRegrowth,
+        adjTimeManagerLifebloomStack; //Not very usefull at the moment... all set to 100% and then applied multiplicitively to the Frac variables...
 
-private int adjTimeRejuvOrder, adjTimeRegrowthOrder, adjTimeNourishOrder, adjTimeLifebloomOrder; // This sets the precedence that these spells are used in the healing simulator.
+        private int adjTimeRejuvOrder, adjTimeRegrowthOrder, adjTimeNourishOrder, adjTimeLifebloomOrder; // This sets the precedence that these spells are used in the healing simulator.
 
-private int adjTimeSwiftmendOrder, adjTimeWildGrowthOrder, adjTimeIdleOrder; // All of the spells are first, then wildgrowth, then swiftmend, then the 'managed' spells... (Idle is last.)
-private int adjTimeManagedRejuvOrder, adjTimeManagedRegrowthOrder, adjTimeManagerLifebloomStackOrder; // These are never used except once, and incorrectly. I'm setting them all to 0 until I decide if I should remove them.
+        private int adjTimeSwiftmendOrder, adjTimeWildGrowthOrder, adjTimeIdleOrder; // All of the spells are first, then wildgrowth, then swiftmend, then the 'managed' spells... (Idle is last.)
+        private int adjTimeManagedRejuvOrder, adjTimeManagedRegrowthOrder, adjTimeManagerLifebloomStackOrder; // These are never used except once, and incorrectly. I'm setting them all to 0 until I decide if I should remove them.
 
-// Adjust for mana
-private int reduceOOMRejuv, reduceOOMRegrowth, reduceOOMLifebloom,
-reduceOOMNourish, reduceOOMWildGrowth; // Unknown... Perhaps the amount you reduce usage by when OOM? Goes through a similar process to ensure the values add to 100%...
+        // Adjust for mana
+        private int reduceOOMRejuv, reduceOOMRegrowth, reduceOOMLifebloom,
+        reduceOOMNourish, reduceOOMWildGrowth; // Unknown... Perhaps the amount you reduce usage by when OOM? Goes through a similar process to ensure the values add to 100%...
 
-private int reduceOOMRejuvOrder, reduceOOMRegrowthOrder, reduceOOMLifebloomOrder, reduceOOMNourishOrder, reduceOOMWildGrowthOrder; // Should be an input. What order you stop using spells in when going OOM. Defaults should be most efficient.
+        private int reduceOOMRejuvOrder, reduceOOMRegrowthOrder, reduceOOMLifebloomOrder, reduceOOMNourishOrder, reduceOOMWildGrowthOrder; // Should be an input. What order you stop using spells in when going OOM. Defaults should be most efficient.
 
         public SpellProfile()
         {

@@ -42,6 +42,8 @@
                     <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
                         <TextBlock Margin="4" FontWeight="Bold" Text="Weighting Adjustments" VerticalAlignment="Center" />
                     </Border>
+                    <TextBlock FontSize="10" Grid.ColumnSpan="4" Margin="4,2"
+                               Text="The following settings will adjust the overall scores for each type. This does not involve Stat Weights as described by Pawn, SimCraft or other similar utilities. These are meant to describe your general importance to each point." TextWrapping="Wrap" Grid.Row="1" />
 
                     <TextBlock Text="Threat Scale: * " VerticalAlignment="Center" Margin="4,2" Grid.Row="3"
                                ToolTipService.ToolTip="Threat Value multiplies the Threat Per Second output by this value.&#x0a;- Increase it when you are having trouble holding mobs.&#x0a;- Decrease it when you find you are having no problems with threat.&#x0a;&#x0a;Adjusting this weight does not involve Stat Weights as described by&#x0a;Pawn, SimCraft or other similar utilities. This is meant to describe your&#x0a;general personal preference of importance in Threat." />
@@ -73,8 +75,6 @@ A Fresh 85 should use An Easy Boss to start and once some gear has been gathered
                     </StackPanel>
                     <Button Content="Reset" Grid.Column="3" Grid.Row="2" Margin="2" Name="BT_ResetHitsToSurvive" />
                     <Button Content="Reset" Grid.Column="3" Grid.Row="3" Margin="2" Name="BT_ResetThreatScale" />
-                    <TextBlock FontSize="10" Grid.ColumnSpan="4" Margin="4,2"
-                               Text="The following settings will adjust the overall scores for each type. This does not involve Stat Weights as described by Pawn, SimCraft or other similar utilities. These are meant to describe your general importance to each point." TextWrapping="Wrap" Grid.Row="1" />
                 </Grid>
             </controls:TabItem>
         </controls:TabControl>

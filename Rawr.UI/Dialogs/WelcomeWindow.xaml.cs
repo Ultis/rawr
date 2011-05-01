@@ -311,7 +311,7 @@ Rawr.Moonkin:
 
 Rawr.Retribution:
 - First draft of new rotation. See Optionpanel
-- More Work on new Rotation 
+- More Work on new Rotation
 - Change to new SetBonus handling
 - 4.1.0 Ready
 
@@ -321,8 +321,8 @@ Rawr.TankDK:
 - Adding Stats Graph to help stat valuation research
 
 Rawr.Tree:
-- Efflorescence changed to 4.1 handling+fixed to now actually consider heals to multiple targets.
-- Lifebloom bloom nerf of 4.1 
+- Efflorescence changed to 4.1 handling+fixed to now actually consider heals to multiple targets
+- Lifebloom bloom nerf of 4.1
 
 Rawr.Warlock: Some work on verifying basic numbers
 - Update BaseStats for warlocks
@@ -330,7 +330,7 @@ Rawr.Warlock: Some work on verifying basic numbers
 - Add a PTR mode checkbox under Options | Debug, tied to relevant values (shadow mastery, shadow bite, haunt)
 - Fix mastery, spell power display to more closely match character sheet
 - Fix bug with talented/inherent multipliers to dot damage
-- Fix bug with Drain Soul damage calculation 
+- Fix bug with Drain Soul damage calculation
 - Update for 4.1; fix some rounding errors
 ");
 #endregion
