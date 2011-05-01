@@ -197,7 +197,7 @@ namespace Rawr
         /// <summary>Increases the damage of your Arcane Barrage spell by 4%.</summary>
         [GlyphData( 0, 45738, 63092, "Glyph of Arcane Barrage", GlyphType.Prime,
             @"Increases the damage of your Arcane Barrage spell by 4%.")]
-        public bool GlyphOfArcaneMissiles { get { return _glyphData[0]; } set { _glyphData[0] = value; } }
+        public bool GlyphOfArcaneBarrage { get { return _glyphData[0]; } set { _glyphData[0] = value; } }
         /// <summary>Increases the damage from your Arcane Blast buff by 3%.</summary>
         [GlyphData( 1, 44955, 62210, "Glyph of Arcane Blast", GlyphType.Prime,
             @"Increases the damage from your Arcane Blast buff by 3%.")]
@@ -205,7 +205,7 @@ namespace Rawr
         /// <summary>Increases the critical strike chance of your Arcane Missiles spell by 5%.</summary>
         [GlyphData( 2, 42735, 56363, "Glyph of Arcane Missiles", GlyphType.Prime,
             @"Increases the critical strike chance of your Arcane Missiles spell by 5%.")]
-        public bool GlyphOfArcaneBarrage { get { return _glyphData[2]; } set { _glyphData[2] = value; } }
+        public bool GlyphOfArcaneMissiles { get { return _glyphData[2]; } set { _glyphData[2] = value; } }
         /// <summary>Increases the damage of your Cone of Cold spell by 25%.</summary>
         [GlyphData( 3, 42753, 56364, "Glyph of Cone of Cold", GlyphType.Prime,
             @"Increases the damage of your Cone of Cold spell by 25%.")]

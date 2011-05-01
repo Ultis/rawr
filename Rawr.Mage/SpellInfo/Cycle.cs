@@ -48,6 +48,8 @@ namespace Rawr.Mage
         AB3AM23MBAM,
         AB3ABar123AM,
         AB4ABar1234AM,
+        AB4ABar34AM,
+        AB4ABar4AM,
         AB4AM234MBAM,
         AB3AM023MBAM,
         AB4AM0234MBAM,

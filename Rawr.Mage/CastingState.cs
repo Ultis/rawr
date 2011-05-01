@@ -807,6 +807,12 @@ namespace Rawr.Mage
                 case CycleId.AB4ABar1234AM:
                     c = AB4ABar1234AM.GetCycle(Solver.NeedsDisplayCalculations, this);
                     break;
+                case CycleId.AB4ABar34AM:
+                    c = AB4ABar34AM.GetCycle(Solver.NeedsDisplayCalculations, this);
+                    break;
+                case CycleId.AB4ABar4AM:
+                    c = AB4ABar4AM.GetCycle(Solver.NeedsDisplayCalculations, this);
+                    break;
                 case CycleId.AB3AMABar2C:
                     c = new AB3AMABar2C(Solver.NeedsDisplayCalculations, this);
                     break;

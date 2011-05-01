@@ -5452,6 +5452,8 @@ namespace Rawr.Mage
                             spellList.Add(CycleId.ABSpam234AM);
                             spellList.Add(CycleId.AB3ABar123AM);
                             spellList.Add(CycleId.AB4ABar1234AM);
+                            spellList.Add(CycleId.AB4ABar34AM);
+                            spellList.Add(CycleId.AB4ABar4AM);
                             spellList.Add(CycleId.AB3ABar023AM);
                             spellList.Add(CycleId.AB23ABar023AM);
                             spellList.Add(CycleId.AB2ABar02AMABABar);

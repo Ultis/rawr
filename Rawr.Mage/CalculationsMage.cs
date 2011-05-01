@@ -160,6 +160,8 @@ namespace Rawr.Mage
                     "Spell Info:ABSpam0234AMABar*Spam AB, AM-ABar on 0, 2, 3 or 4 stack, ABar only if not on cooldown",
                     "Spell Info:AB3ABar123AM*AB-AB-AB-ABar, AM on 1, 2 or 3 stack",
                     "Spell Info:AB4ABar1234AM*AB-AB-AB-AB-ABar, AM on 1, 2, 3 or 4 stack",
+                    "Spell Info:AB4ABar34AM*AB-AB-AB-AB-ABar, AM on 3 or 4 stack",
+                    "Spell Info:AB4ABar4AM*AB-AB-AB-AB-ABar, AM on 4 stack",
                     "Spell Info:ABSpam234AM*Spam AB, AM on 2, 3 or 4 stack",
                     "Spell Info:ABSpam34AM*Spam AB, AM on 3 or 4 stack",
                     "Spell Info:ABSpam4AM*Spam AB, AM on 4 stack",
