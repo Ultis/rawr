@@ -1356,7 +1356,7 @@ namespace Rawr
             {
                 Name = "Flask of Steelskin",
                 Group = "Elixirs and Flasks",
-                Stats = { Stamina = 300 },
+                Stats = { Stamina = 450 },
                 ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" }),
                 Improvements = { new Buff { Name = "Flask of Steelskin (Mixology)",
                     Stats = { Stamina = 120 },
