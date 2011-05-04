@@ -702,6 +702,12 @@ namespace Rawr.Warlock
                 proc.Accumulate(innerStats, upTime);
             }
 
+            // E.g. Sorrowsong
+            if (effect.LimitedToExecutePhase)
+            {
+                proc *= Options.ThirtyFive;
+            }
+
             return proc;
         }
         private float CalcDamageProc(SpecialEffect effect, float damagePerProc, Dictionary<int, float> periods, Dictionary<int, float> chances, SpellModifiers modifiers)

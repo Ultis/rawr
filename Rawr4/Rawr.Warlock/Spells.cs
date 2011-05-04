@@ -723,7 +723,7 @@ namespace Rawr.Warlock
                 0f, // cooldown
                 18f, // recast period
                 WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // base damage per tick
-                (int)((6f / mommy.AvgHaste) + 0.5f), // hasted num ticks
+                (int)((6f * mommy.AvgHaste) + 0.5f), // hasted num ticks
                 COEFF, // tick coefficient
                 mommy.Talents.ImprovedCorruption * .04f, // addedTickMultiplier
                 true, // canTickCrit
@@ -836,7 +836,7 @@ namespace Rawr.Warlock
             // Additional ticks from haste are weak ticks. TODO: this is wrong.
             float baseDamage = WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE * 12f;
             float baseNumTicks = mommy.Talents.GlyphOfBaneOfAgony ? 14f : 12f;
-            NumTicks = (int)((baseNumTicks / mommy.AvgHaste) + 0.5f);
+            NumTicks = (int)((baseNumTicks * mommy.AvgHaste) + 0.5f);
             BaseTickDamage = baseDamage * (1f + (NumTicks - baseNumTicks) * .042f + (mommy.Talents.GlyphOfBaneOfAgony ? .3325f : 0f)) / NumTicks;
         }
     }
@@ -940,7 +940,7 @@ namespace Rawr.Warlock
                 0f, //cooldown
                 0f, //recast period
                 WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, //baseTickDamage
-                (int)((5f / mommy.AvgHaste) + 0.5f), // hasted num ticks
+                (int)((5f * mommy.AvgHaste) + 0.5f), // hasted num ticks
                 COEFF, //tickCoefficient
                 1f, //addedTickMultiplier (assuming this is only used during execute)
                 true, //canTickCrit
@@ -1130,7 +1130,7 @@ namespace Rawr.Warlock
                 DIRECTCOEFF, // directCoefficient,
                 mommy.Talents.ImprovedImmolate * .1f, // addedDirectMultiplier,
                 WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * TICKSCALE, // baseTickDamage,
-                (int)(((5f + (mommy.Talents.Inferno > 0 ? 2f : 0f)) / mommy.AvgHaste) + 0.5f), // numTicks,
+                (int)(((5f + (mommy.Talents.Inferno > 0 ? 2f : 0f)) * mommy.AvgHaste) + 0.5f), // numTicks,
                 TICKCOEFF, // tickCoefficient,
                 (mommy.Talents.GlyphOfImmolate ? .1f : 0f)
                     + mommy.Talents.ImprovedImmolate * .1f, // addedTickMultiplier,
@@ -1176,7 +1176,7 @@ namespace Rawr.Warlock
                 180f, // cooldown,
                 0f, // recastPeriod,
                 251f, // baseTickDamage,
-                (int)((15f / mommy.AvgHaste) + 0.5f), // numTicks,
+                (int)((15f * mommy.AvgHaste) + 0.5f), // numTicks,
                 COEFF, // tickCoefficient,
                 0f, // addedTickMultiplier,
                 true, // canTickCrit,
@@ -1551,7 +1551,7 @@ namespace Rawr.Warlock
                 0f, // cooldown
                 15f, // recast period
                 WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // tick damage
-                (int)((5f / mommy.AvgHaste) + 0.5f), // num ticks
+                (int)((5f * mommy.AvgHaste) + 0.5f), // num ticks
                 COEFF, // tick coefficient
                 0f, // addedTickMultiplier
                 true, // canTickCrit

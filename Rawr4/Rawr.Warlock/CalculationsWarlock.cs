@@ -458,13 +458,9 @@ namespace Rawr.Warlock
         }
         public override bool HasRelevantStats(Stats stats)
         {
-            if (HasIgnoreStats(stats))
-            {
-                return false;
-            }
-
-            // this will allow Tiny Abomination in a Jar (passive Hit), but also Hurricane (melee proc or spell proc)
-            bool isRelevant = HasWarlockStats(stats) || HasCommonStats(stats);
+            // This will allow Tiny Abomination in a Jar (passive Hit), but also Hurricane (melee proc or spell proc)
+            // We also want to allow, e.g. Mighty Stats (15 int, 15 spirit, 15 agility, etc.)
+            bool isRelevant = HasWarlockStats(stats) || (HasCommonStats(stats) && !HasIgnoreStats(stats));
             foreach (SpecialEffect se in stats.SpecialEffects())
             {
                 isRelevant |= RelevantTrinket(se);
