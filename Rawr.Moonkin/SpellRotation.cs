@@ -455,7 +455,7 @@ namespace Rawr.Moonkin
             {
                 foreach (SpecialEffect effect in calcs.BasicStats.SpecialEffects(se => se.Trigger == Trigger.MageNukeCast))
                 {
-                    T122PieceDamage = T122PieceBaseDamage * effect.GetAverageUptime(RotationData.Duration / mainNukeDuration, 1f);
+                    T122PieceDamage = T122PieceBaseDamage * effect.GetAverageUptime(RotationData.Duration / (RotationData.WrathCount + RotationData.StarfireCount), 1f);
                 }
             }
 
