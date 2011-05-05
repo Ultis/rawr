@@ -861,8 +861,10 @@ applied and result is scaled down by 100)",
                 SpellCombatManaRegeneration = talents.Intensity * 0.5f / 3f, //still necessary?
 #endif
                 BonusIntellectMultiplier = (0.02f * talents.HeartOfTheWild ) +
-                                           (Character.ValidateArmorSpecialization(character, ItemType.Leather) ? 0.05f: 0f),  
-                
+                                           (Character.ValidateArmorSpecialization(character, ItemType.Leather) ? 0.05f: 0f),
+
+/*                BonusIntellectMultiplier = (1.0f+(0.02f * talents.HeartOfTheWild)) *
+                                           (Character.ValidateArmorSpecialization(character, ItemType.Leather) ? 1.05f : 1f) - 1f, */
             };
 
 #if !RAWR4
@@ -2128,6 +2130,14 @@ applied and result is scaled down by 100)",
         public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot) {
             if (slot == ItemSlot.OffHand) { return false; }
             return base.EnchantFitsInSlot(enchant, character, slot);
+        }
+
+        public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
+        {
+            if ((slot == CharacterSlot.OffHand) &&
+                ( (item.Type == ItemType.Dagger) || (item.Type == ItemType.OneHandMace) || (item.Type == ItemType.FistWeapon) ) )
+                return false;
+            return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
         }
 
         public override ICalculationOptionBase DeserializeDataObject(string xml)
