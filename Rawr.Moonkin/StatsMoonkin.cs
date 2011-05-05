@@ -16,5 +16,8 @@ namespace Rawr.Moonkin
         public float EclipseBonus { get; set; }
         public float BonusCritChanceInsectSwarm { get; set; }
         public float BonusCritChanceMoonfire { get; set; }
+        public float T122PieceSummonChance { get; set; }
+        public float BonusWrathEnergy { get; set; }
+        public float BonusStarfireEnergy { get; set; }
     }
 }

@@ -61,11 +61,10 @@ namespace Rawr.Moonkin
                 100 * SpellHaste,
                 baseStats.HasteRating,
                 100 * StatConversion.GetSpellHasteFromRating(baseStats.HasteRating)));
-            retVal.Add("Mastery", String.Format("{0:F}*{1:F} Eclipse %, {2} Rating, {3} Rating to breakpoint",
+            retVal.Add("Mastery", String.Format("{0:F}*{1:F} Eclipse %, {2} Rating",
                 Mastery,
                 Math.Floor(Mastery * 2.0f),
-                baseStats.MasteryRating,
-                89.64 - (baseStats.MasteryRating % 89.64)));
+                baseStats.MasteryRating));
             retVal.Add("Mana Regen", String.Format("{0:F0}", ManaRegen * 5.0f));
             retVal.Add("Total Score", String.Format("{0:F2}", OverallPoints));
             retVal.Add("Selected Rotation", String.Format("*{0}", SelectedRotation.Name));

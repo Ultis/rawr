@@ -2744,6 +2744,30 @@ namespace Rawr
             });
             #endregion
             #endregion
+            #region Tier 12 | Placeholder
+            #region Regalia (Balance)
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Druid Balance T12 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = new Stats() { },
+                SetName = "Druid Balance T12",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Druid Balance T12 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = new Stats() { },
+                SetName = "Druid Balance T12",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+            });
+            #endregion
+            #endregion
             #endregion
             #region PvP
             #region Gladiator's Wildhide (Balance)

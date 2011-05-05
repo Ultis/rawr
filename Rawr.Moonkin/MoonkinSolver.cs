@@ -46,7 +46,8 @@ namespace Rawr.Moonkin
                                     TickDamage = 93.0f,
                                     SpellDamageModifierPerTick = 0.18f
                                 },
-                            School = SpellSchool.Arcane
+                            School = SpellSchool.Arcane,
+                            BaseEnergy = 8
                         },
                         new Spell()
                         {
@@ -73,19 +74,19 @@ namespace Rawr.Moonkin
                                 TickDamage = 136.0f,
                                 SpellDamageModifierPerTick = 0.13f
                             },
-                            School = SpellSchool.Nature
+                            School = SpellSchool.Nature,
+                            BaseEnergy = 8
                         },
                         new Spell()
                         {
                             Name = "SS",
-                            BaseDamage = (1272 + 1756) / 2f * 0.8f,
-                            SpellDamageModifier = 1.535f * 0.8f,
+                            BaseDamage = (1018 + 1404) / 2f,
+                            SpellDamageModifier = 1.228f,
                             BaseCastTime = 2.0f,
                             BaseManaCost = (float)(int)(BaseMana * 0.11f),
                             DotEffect = null,
                             School = SpellSchool.Spellstorm,
-                            BaseEnergy = 15,
-                            CriticalDamageModifier = 1.5f
+                            BaseEnergy = 15
                         }
                     };
                 }
@@ -745,49 +746,12 @@ namespace Rawr.Moonkin
             Starsurge.BaseManaCost *= 1.0f - (0.03f * talents.Moonglow);
 
             // Add set bonuses
-            UpdateSpellsFromSetBonuses(character.ActiveBuffs.FindAll(buff => buff.Group == "Set Bonuses"));
             Moonfire.CriticalChanceModifier += stats.BonusCritChanceMoonfire;
             InsectSwarm.CriticalChanceModifier += stats.BonusCritChanceInsectSwarm;
 
             // PTR changes go here
             if (calcs.PtrMode)
             {
-            }
-        }
-
-        /// <summary>
-        /// Handle set bonuses without adding new stats to the base stats class.
-        /// </summary>
-        /// <param name="activeSetBonuses">A list of set bonuses that are active on the character</param>
-        private void UpdateSpellsFromSetBonuses(List<Buff> activeSetBonuses)
-        {
-            foreach (Buff buff in activeSetBonuses)
-            {
-                switch (buff.SetName)
-                {
-                    // Tier 10: Lasherweave
-                    case "Lasherweave Regalia":
-                        switch (buff.SetThreshold)
-                        {
-                            // 4-piece bonus: 7% additional damage from crits
-                            case 4:
-                                Starfire.CriticalDamageModifier += 0.07f;
-                                Wrath.CriticalDamageModifier += 0.07f;
-                                break;
-                        }
-                        break;
-                    // Tier 11: Stormrider's
-                    /*case "Stormrider's Regalia":
-                        switch (buff.SetThreshold)
-                        {
-                            // 2-piece bonus: 5% additional crit chance on dots
-                            case 2:
-                                //Moonfire.CriticalChanceModifier += 0.05f;
-                                //InsectSwarm.CriticalChanceModifier += 0.05f;
-                                break;
-                        }
-                        break;*/
-                }
             }
         }
     }

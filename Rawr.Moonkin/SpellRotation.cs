@@ -268,6 +268,8 @@ namespace Rawr.Moonkin
             starfallBaseDamage *= 1 + (talents.GlyphOfFocus ? 0.1f : 0f);
             float starfallEclipseDamage = starfallBaseDamage * eclipseBonus;
             RotationData.TreantDamage = talents.ForceOfNature == 0 ? 0 : DoTreeCalcs(calcs, spellPower, treantLifespan);
+            // T12 2-piece - currently assumed to be a single treant at half duration, or 1/6 of a full treant cast
+            float T122PieceBaseDamage = DoTreeCalcs(calcs, spellPower, 1f) / 6f;
             float mushroomBaseDamage = RotationData.WildMushroomCastMode == MushroomMode.Unused ? 0 : DoMushroomCalcs(calcs, spellPower, spellHit, spellCrit);
             float mushroomEclipseDamage = mushroomBaseDamage * eclipseBonus;
 
@@ -293,13 +295,17 @@ namespace Rawr.Moonkin
             float starsurgeEnergyRateOnlySSProcs = ss.AverageEnergy * shootingStarsProcFrequency;
 
             float eclipseWAverageEnergy = w.AverageEnergy;
+            // T12 4-piece set bonus
+            w.AverageEnergy += calcs.BasicStats.BonusWrathEnergy;
             float wrathEnergyRate = w.AverageEnergy / w.CastTime;
             float wrathEclipseEnergyRate = eclipseWAverageEnergy / w.CastTime;
             float eclipseSFAverageEnergy = sf.AverageEnergy;
+            // T12 4-piece set bonus
+            sf.AverageEnergy += calcs.BasicStats.BonusStarfireEnergy;
             float starfireEnergyRate = sf.AverageEnergy / sf.CastTime;
             float starfireEclipseEnergyRate = eclipseSFAverageEnergy / sf.CastTime;
 
-            float preLunarCasts = (barHalfSize - eclipseWAverageEnergy / 2 - w.AverageEnergy * talents.Euphoria * 0.12f * 2) * (1 - starsurgeEnergyRate / wrathEnergyRate) / w.BaseEnergy;
+            float preLunarCasts = (barHalfSize - eclipseWAverageEnergy / 2 - w.AverageEnergy * talents.Euphoria * 0.12f * 2) * (1 - starsurgeEnergyRate / wrathEnergyRate) / w.AverageEnergy;
             float lunarCasts = (barHalfSize + eclipseSFAverageEnergy / 2) / eclipseSFAverageEnergy * (1 - starsurgeEnergyRate / starfireEclipseEnergyRate);
             float preSolarCasts = (barHalfSize - eclipseSFAverageEnergy / 2 - sf.AverageEnergy * (1 - (float)Math.Pow(1 - 0.12f * talents.Euphoria, 2))) * (1 - starsurgeEnergyRate / starfireEnergyRate) / sf.AverageEnergy;
             float solarCasts = (barHalfSize + eclipseWAverageEnergy / 2) / eclipseWAverageEnergy * (1 - starsurgeEnergyRate / wrathEclipseEnergyRate);
@@ -430,6 +436,14 @@ namespace Rawr.Moonkin
             float starfallDamage = RotationData.StarfallDamage * RotationData.StarfallCasts;
             float treantDamage = RotationData.TreantDamage * RotationData.TreantCasts;
             float mushroomDamage = RotationData.MushroomDamage * RotationData.MushroomCasts;
+            float T122PieceDamage = 0f;
+            if (calcs.BasicStats.ContainsSpecialEffect(se => se.Trigger == Trigger.MageNukeCast))
+            {
+                foreach (SpecialEffect effect in calcs.BasicStats.SpecialEffects(se => se.Trigger == Trigger.MageNukeCast))
+                {
+                    T122PieceDamage = T122PieceBaseDamage * effect.GetAverageUptime(RotationData.Duration / mainNukeDuration, 1f);
+                }
+            }
 
             // Calculate mana cost per cast.
             // Starfall - 35% of base mana
@@ -463,7 +477,7 @@ namespace Rawr.Moonkin
 
             RotationData.ManaGained = 2 * MoonkinSolver.EUPHORIA_PERCENT * talents.Euphoria * calcs.BasicStats.Mana;
 
-            return preSolarDamage + solarDamage + preLunarDamage + lunarDamage + moonfireDamage + insectSwarmDamage + starSurgeDamage + treantDamage + starfallDamage + mushroomDamage;
+            return preSolarDamage + solarDamage + preLunarDamage + lunarDamage + moonfireDamage + insectSwarmDamage + starSurgeDamage + treantDamage + starfallDamage + mushroomDamage + T122PieceDamage;
         }
 
         /// <summary>

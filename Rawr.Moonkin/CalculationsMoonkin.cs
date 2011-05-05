@@ -21,8 +21,9 @@ namespace Rawr.Moonkin
         private int[] potent = { 52147, 52239, 52239, 52239 };
 
         // Purple
+        private int[] purified = { 52100, 52236, 52236, 52236 };
         private int[] veiled = { 52153, 52217, 52217, 52217 };
-        private int[] timeless = { 52098, 52248, 52248, 52248 };
+        //private int[] timeless = { 52098, 52248, 52248, 52248 };
 
         // Meta
         private int burning = 68780;
@@ -69,20 +70,19 @@ namespace Rawr.Moonkin
             retval.AddRange(new GemmingTemplate[]
                 {
                 CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, brilliant, brilliant, brilliant, meta), // Straight Intellect
-                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, brilliant, brilliant, meta), // Int/Haste
-                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, potent, brilliant, brilliant, meta), // Int/Crit
-                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, brilliant, brilliant, meta), // Int/Mastery
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, brilliant, brilliant, meta), // Int/Haste/Int
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, potent, brilliant, brilliant, meta), // Int/Crit/Int
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, brilliant, brilliant, meta), // Int/Mastery/Int
                 CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, veiled, brilliant, meta), // Int/Haste/Hit
-                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, veiled, brilliant, meta), // Int/Haste/Hit
-                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, veiled, brilliant, meta), // Int/Haste/Spirit
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, purified, brilliant, meta), // Int/Haste/Spirit
                 CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, potent, veiled, brilliant, meta), // Int/Crit/Hit
-                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, potent, veiled, brilliant, meta), // Int/Crit/Spirit
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, potent, purified, brilliant, meta), // Int/Crit/Spirit
                 CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, veiled, brilliant, meta), // Int/Mastery/Hit
-                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, veiled, brilliant, meta), // Int/Mastery/Hit
-                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, veiled, brilliant, meta), // Int/Mastery/Spirit
-                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, timeless, brilliant, meta), // Int/Haste/Stam
-                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, potent, timeless, brilliant, meta), // Int/Crit/Stam
-                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, timeless, brilliant, meta), // Int/Mastery/Stam
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, purified, brilliant, meta), // Int/Mastery/Spirit
+                // Not that these aren't a good thought, but if a moonkin is gemming for stam, he's doing it wrong
+                //CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, timeless, brilliant, meta), // Int/Haste/Stam
+                //CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, potent, timeless, brilliant, meta), // Int/Crit/Stam
+                //CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, timeless, brilliant, meta), // Int/Mastery/Stam
                 });
             return retval;
         }
@@ -961,6 +961,21 @@ namespace Rawr.Moonkin
             }
         }
 
+        // Placeholder special effect for T12 2-piece for easy calculating of uptime
+        // The actual set bonus summons a Treant
+        private static SpecialEffect _se_t122p = null;
+        public static SpecialEffect _SE_T122P
+        {
+            get
+            {
+                if (_se_t122p == null)
+                {
+                    _se_t122p = new SpecialEffect(Trigger.MageNukeCast, new Stats() { }, 15f, 0f, 0.2f, 1);
+                }
+                return _se_t122p;
+            }
+        }
+
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
             CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
@@ -974,8 +989,9 @@ namespace Rawr.Moonkin
             statsTotal.Accumulate(GetBuffsStats(character, calcOpts));
 
             #region Set Bonuses
-            int T11Count;
+            int T11Count, T12Count;
             character.SetBonusCount.TryGetValue("Stormrider's Regalia", out T11Count);
+            character.SetBonusCount.TryGetValue("Druid Balance T12", out T12Count);
             if (T11Count >= 2) {
                 // 2 pieces: Increases the critical strike chance of your Insect Swarm and Moonfire spells by 5%.
                 statsTotal.BonusCritChanceInsectSwarm = 0.05f;
@@ -985,6 +1001,17 @@ namespace Rawr.Moonkin
                 // 4 pieces: Whenever Eclipse triggers, your critical strike chance with spells is increased by 99%
                 //           for 8 sec. Each critical strike you achieve reduces that bonus by 33%.
                 statsTotal.AddSpecialEffect(_SE_T114P);
+            }
+            if (T12Count >= 2)
+            {
+                // 2 piece: You have a (20%) chance to summon a Burning Treant when you cast Wrath or Starfire.
+                statsTotal.AddSpecialEffect(_SE_T122P);
+            }
+            if (T12Count >= 4)
+            {
+                // 4 piece: Your Wrath generates +3 and your Starfire generates +5 energy when not in Eclipse.
+                statsTotal.BonusWrathEnergy = 3f;
+                statsTotal.BonusStarfireEnergy = 5f;
             }
             #endregion
 
