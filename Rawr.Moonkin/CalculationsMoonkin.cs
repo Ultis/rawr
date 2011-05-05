@@ -877,9 +877,10 @@ namespace Rawr.Moonkin
                     calcOpts.PTRMode = !calcOpts.PTRMode;
                     calcOpts.Notify = true;
 
-                    float dpsDelta = calcOpts.PTRMode ? calcsBase.SubPoints[0] - calcsCompare.SubPoints[0] : calcsCompare.SubPoints[0] - calcsBase.SubPoints[0];
+                    float burstDpsDelta = calcOpts.PTRMode ? calcsBase.SubPoints[0] - calcsCompare.SubPoints[0] : calcsCompare.SubPoints[0] - calcsBase.SubPoints[0];
+                    float sustDpsDelta = calcOpts.PTRMode ? calcsBase.SubPoints[1] - calcsCompare.SubPoints[1] : calcsCompare.SubPoints[1] - calcsBase.SubPoints[1];
 
-                    return new ComparisonCalculationMoonkin[] { new ComparisonCalculationMoonkin { Name = "PTR Mode", BurstDamagePoints = dpsDelta, OverallPoints = dpsDelta } };
+                    return new ComparisonCalculationMoonkin[] { new ComparisonCalculationMoonkin { Name = "PTR Mode", BurstDamagePoints = burstDpsDelta, SustainedDamagePoints = sustDpsDelta, OverallPoints = burstDpsDelta + sustDpsDelta } };
             }
             return new ComparisonCalculationBase[0];
         }
