@@ -83,7 +83,7 @@ namespace Rawr.Mage
                 }
 
                 character = value;
-                if (character.CalculationOptions == null) character.CalculationOptions = new CalculationOptionsMage(character);
+                if (character.CalculationOptions == null) { character.CalculationOptions = new CalculationOptionsMage(character); }
                 LayoutRoot.DataContext = Character.CalculationOptions;
 
                 ((CalculationOptionsMage)character.CalculationOptions).PropertyChanged += new PropertyChangedEventHandler(CalculationOptionsPanelMage_PropertyChanged);

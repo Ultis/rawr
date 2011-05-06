@@ -323,7 +323,7 @@ namespace Rawr.Mage
             character.ActiveBuffsAdd("Totemic Wrath");
             character.ActiveBuffsAdd("Elemental Oath");
             character.ActiveBuffsAdd("Vampiric Touch");
-            if (character.MageTalents.FocusMagic == 1) { character.ActiveBuffsAdd("Focus Magic"); }
+            //if (character.MageTalents.FocusMagic == 1) { character.ActiveBuffsAdd("Focus Magic"); }
             character.ActiveBuffsAdd("Wrath of Air Totem");
             character.ActiveBuffsAdd("Blessing of Kings");
             character.ActiveBuffsAdd("Concentration Aura");
