@@ -369,6 +369,7 @@ namespace Rawr.Tree {
     public class Lifebloom : Spell {
         public override string Name { get { return name; } }
         protected float extraCrit = 0f;
+        protected float extraHoTCrit = 0f;
         protected float stackScaling = 1.0f;
         protected float stackSize = 1.0f;
         public override float PeriodicTick { get { return stackScaling * base.PeriodicTick; } }
@@ -454,7 +455,11 @@ namespace Rawr.Tree {
 
             calculateTalents(character.DruidTalents, calcOpts);
 
+            //  (T11) 2 Piece Bonus
+            extraHoTCrit += character.SetBonusCount.ContainsKey("Stormrider's Vestments") && character.SetBonusCount["Stormrider's Vestments"] >= 2 ? 0.05f : 0f;   
+
             applyStats(stats);
+
             omenProcs = PeriodicTicks * character.DruidTalents.MalfurionsGift * 0.02f; 
 
         }
@@ -463,7 +468,7 @@ namespace Rawr.Tree {
             base.applyStats(stats);
             manaCost *= numberOfCasts;
             critRatio += extraCrit;
-            critHoTRatio += extraCrit; 
+            critHoTRatio += extraCrit + extraHoTCrit; 
 
         }
         protected void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts) {
@@ -495,6 +500,9 @@ namespace Rawr.Tree {
             name = "LBS";
 
             base.calculateTalents(character.DruidTalents, calcOpts);
+
+            //  (T11) 2 Piece Bonus
+            extraHoTCrit += character.SetBonusCount.ContainsKey("Stormrider's Vestments") && character.SetBonusCount["Stormrider's Vestments"] >= 2 ? 0.05f : 0f;   
 
             applyStats(stats);
             omenProcs = PeriodicTicks * character.DruidTalents.MalfurionsGift * 0.02f; 

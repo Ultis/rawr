@@ -153,7 +153,7 @@ namespace Rawr.Tree {
                 //_relevantGlyphs.Add("Glyph of Nourish");
                 _relevantGlyphs.Add("Glyph of Rebirth");
                 _relevantGlyphs.Add("Glyph of Regrowth");
-                _relevantGlyphs.Add("Glyph of Rejuvination");
+                _relevantGlyphs.Add("Glyph of Rejuvenation");
                 _relevantGlyphs.Add("Glyph of Swiftmend");
                 _relevantGlyphs.Add("Glyph of Wild Growth");
                 //_relevantGlyphs.Add("Glyph of Rapid Rejuvenation");
@@ -736,6 +736,8 @@ applied and result is scaled down by 100)",
             //float replenish = stats.ManaRestoreFromMaxManaPerSecond >= 0.002f ? 0.002f : 0;
             //stats.ManaRestore += (stats.ManaRestoreFromMaxManaPerSecond - replenish) * stats.Mana;
             //stats.ManaRestoreFromMaxManaPerSecond = replenish;
+
+            stats.Spirit += character.SetBonusCount.ContainsKey("Stormrider's Vestments") && character.SetBonusCount["Stormrider's Vestments"] == 4 ? 540f : 0;
             
             float ExtraHealing = 0f;
             RotationSettings settings = getRotationFromCalculationOptions(stats, calcOpts, calc);
@@ -767,6 +769,8 @@ applied and result is scaled down by 100)",
                 // Create new stats instance with procs
                 stats = GetCharacterStats(character, additionalItem);
                 stats.ManaRestore /= boss.BerserkTimer;  // profile.FightDuration;
+
+                stats.Spirit += character.SetBonusCount.ContainsKey("Stormrider's Vestments") && character.SetBonusCount["Stormrider's Vestments"] == 4 ? 540f : 0;
 
                 hasteRatings.Clear();
                 hasteRatingUptimes.Clear();
@@ -2138,6 +2142,13 @@ applied and result is scaled down by 100)",
                 ( (item.Type == ItemType.Dagger) || (item.Type == ItemType.OneHandMace) || (item.Type == ItemType.FistWeapon) ) )
                 return false;
             return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
+        }
+
+        public override bool IsBuffRelevant(Buff buff, Character character)
+        {
+            if ( (buff == Buff.GetBuffByName("Stormrider's Vestments (T11) 2 Piece Bonus")) || (buff == Buff.GetBuffByName("Stormrider's Vestments (T11) 4 Piece Bonus")) )
+                return true;
+            return base.IsBuffRelevant(buff, character);
         }
 
         public override ICalculationOptionBase DeserializeDataObject(string xml)
