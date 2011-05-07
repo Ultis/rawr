@@ -317,8 +317,8 @@ namespace Rawr.Server.Controllers
             //Professions
             try
             {
-                string profession1 = html.EverythingAfter("<span class=\"profession-details\">").EverythingBetween("<span class=\"name\">", "</span>");
-                string profession2 = html.EverythingAfter("<span class=\"profession-details\">").EverythingAfter("<span class=\"profession-details\">").EverythingBetween("<span class=\"name\">", "</span>");
+                string profession1 = html.EverythingAfter("<a class=\"profession-details\"").EverythingBetween("<span class=\"name\">", "</span>");
+                string profession2 = html.EverythingAfter("<a class=\"profession-details\"").EverythingAfter("<a class=\"profession-details\"").EverythingBetween("<span class=\"name\">", "</span>");
                 character.PrimaryProfession = (Profession)Enum.Parse(typeof(Profession), profession1);
                 character.SecondaryProfession = (Profession)Enum.Parse(typeof(Profession), profession2);
             }
