@@ -23,13 +23,13 @@ namespace Rawr.Enhance
             set { _subPoints = value; }
         }
 
-        public float DPSPoints
+        public float DPS
         {
             get { return _subPoints[0]; }
             set { _subPoints[0] = value; }
         }
 
-        public float SurvivabilityPoints
+        public float Survivability
         {
             get { return _subPoints[1]; }
             set { _subPoints[1] = value; }
@@ -455,8 +455,8 @@ namespace Rawr.Enhance
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
-            dictValues.Add("DPS Points", DPSPoints.ToString("F2", CultureInfo.InvariantCulture));
-            dictValues.Add("Survivability Points", SurvivabilityPoints.ToString("F2", CultureInfo.InvariantCulture));
+            dictValues.Add("DPS Points", DPS.ToString("F2", CultureInfo.InvariantCulture));
+            dictValues.Add("Survivability Points", Survivability.ToString("F2", CultureInfo.InvariantCulture));
             dictValues.Add("Overall Points", OverallPoints.ToString("F2", CultureInfo.InvariantCulture));
 
             dictValues.Add("Health", BasicStats.Health.ToString("F0", CultureInfo.InvariantCulture));
@@ -611,29 +611,29 @@ namespace Rawr.Enhance
             dictValues.Add("Trinket 2 Uptime", Trinket2Uptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
             dictValues.Add("Fire Totem Uptime", FireTotemUptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
 
-            dictValues.Add("White Damage", dpsOutputFormat(SwingDamage, DPSPoints, true));
-            dictValues.Add("Windfury Attack", dpsOutputFormat(WindfuryAttack, DPSPoints, true));
-            dictValues.Add("Flametongue Attack", dpsOutputFormat(FlameTongueAttack, DPSPoints, true));
-            dictValues.Add("Stormstrike", dpsOutputFormat(Stormstrike, DPSPoints, true));
-            dictValues.Add("Lava Lash", dpsOutputFormat(LavaLash, DPSPoints, true));
-            dictValues.Add("Searing/Magma Totem", dpsOutputFormat(SearingMagma, DPSPoints, false));
-            dictValues.Add("Earth Shock", dpsOutputFormat(EarthShock, DPSPoints, false));
-            dictValues.Add("Flame Shock", dpsOutputFormat(FlameShock, DPSPoints, false));
-            dictValues.Add("Lightning Bolt", dpsOutputFormat(LightningBolt, DPSPoints, false));
-            dictValues.Add("Unleash Wind", dpsOutputFormat(UnleashWind, DPSPoints, true));
-            dictValues.Add("Unleash Flame", dpsOutputFormat(UnleashFlame, DPSPoints, false));
-            dictValues.Add("Lightning Shield", dpsOutputFormat(LightningShield, DPSPoints, false));
-            dictValues.Add("Chain Lightning", dpsOutputFormat(ChainLightning, DPSPoints, false));
-            dictValues.Add("Fire Nova", dpsOutputFormat(FireNova, DPSPoints, false));
+            dictValues.Add("White Damage", dpsOutputFormat(SwingDamage, DPS, true));
+            dictValues.Add("Windfury Attack", dpsOutputFormat(WindfuryAttack, DPS, true));
+            dictValues.Add("Flametongue Attack", dpsOutputFormat(FlameTongueAttack, DPS, true));
+            dictValues.Add("Stormstrike", dpsOutputFormat(Stormstrike, DPS, true));
+            dictValues.Add("Lava Lash", dpsOutputFormat(LavaLash, DPS, true));
+            dictValues.Add("Searing/Magma Totem", dpsOutputFormat(SearingMagma, DPS, false));
+            dictValues.Add("Earth Shock", dpsOutputFormat(EarthShock, DPS, false));
+            dictValues.Add("Flame Shock", dpsOutputFormat(FlameShock, DPS, false));
+            dictValues.Add("Lightning Bolt", dpsOutputFormat(LightningBolt, DPS, false));
+            dictValues.Add("Unleash Wind", dpsOutputFormat(UnleashWind, DPS, true));
+            dictValues.Add("Unleash Flame", dpsOutputFormat(UnleashFlame, DPS, false));
+            dictValues.Add("Lightning Shield", dpsOutputFormat(LightningShield, DPS, false));
+            dictValues.Add("Chain Lightning", dpsOutputFormat(ChainLightning, DPS, false));
+            dictValues.Add("Fire Nova", dpsOutputFormat(FireNova, DPS, false));
             dictValues.Add("Fire Elemental", FireElemental.getDPSOutput());
-            dictValues.Add("Spirit Wolf", dpsOutputFormat(SpiritWolf, DPSPoints, true));
-            dictValues.Add("Other", dpsOutputFormat(Other, DPSPoints, false));
-            dictValues.Add("Total DPS", DPSPoints.ToString("F2", CultureInfo.InvariantCulture));
+            dictValues.Add("Spirit Wolf", dpsOutputFormat(SpiritWolf, DPS, true));
+            dictValues.Add("Other", dpsOutputFormat(Other, DPS, false));
+            dictValues.Add("Total DPS", DPS.ToString("F2", CultureInfo.InvariantCulture));
  
-            dictValues.Add("Status", String.Format("Enhance Model : DPS Points {0}, Survivability Points {1}, Overall Points {2}",
-                DPSPoints.ToString("F2", CultureInfo.InvariantCulture),
-                SurvivabilityPoints.ToString("F2", CultureInfo.InvariantCulture),
-                OverallPoints.ToString("F2", CultureInfo.InvariantCulture)));
+            /*dictValues.Add("Status", String.Format("Enhance Model : DPS Points {0}, Survivability Points {1}, Overall Points {2}",
+                DPS.ToString("F2", CultureInfo.InvariantCulture),
+                Survivability.ToString("F2", CultureInfo.InvariantCulture),
+                OverallPoints.ToString("F2", CultureInfo.InvariantCulture)));*/
 
             return dictValues;
         }
@@ -700,7 +700,7 @@ namespace Rawr.Enhance
             switch (calculation)
             {
                 case "Health": return BasicStats.Health;
-                case "DPS Points": return DPSPoints;
+                case "DPS Points": return DPS;
                 case "% Chance to Miss (White)": return (100 - WhiteHit);
                 case "% Chance to Miss (Yellow)": return (100 - YellowHit);
                 case "% Chance to Miss (Spell)": return (100 - SpellHit);

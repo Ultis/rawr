@@ -638,9 +638,9 @@ namespace Rawr.Enhance
             #endregion
 
             #region Set CalculatedStats
-            calc.DPSPoints = dpsMelee + dpsSS + dpsLL + dpsES + dpsFS + dpsLB + dpsCL + dpsWF + dpsLS + dpsFireTotem + dpsFireNova + dpsFT + dpsDogs + dpsFireElemental;
-            calc.SurvivabilityPoints = stats.Health * 0.02f;
-            calc.OverallPoints = calc.DPSPoints + calc.SurvivabilityPoints;
+            calc.DPS = dpsMelee + dpsSS + dpsLL + dpsES + dpsFS + dpsLB + dpsCL + dpsWF + dpsLS + dpsFireTotem + dpsFireNova + dpsFT + dpsDogs + dpsFireElemental;
+            calc.Survivability = stats.Health * 0.02f;
+            calc.OverallPoints = calc.DPS + calc.Survivability;
             calc.DodgedAttacks = cs.AverageDodge * 100f;
             calc.ParriedAttacks = cs.AverageParry * 100f;
             calc.MissedAttacks = (1 - cs.AverageWhiteHitChance) * 100f;
@@ -1078,17 +1078,17 @@ namespace Rawr.Enhance
                     if (currentCalculationsEnhanceWhite != null)
                     {
                         calcMissWhite.SubPoints = new float[2];
-                        calcMissWhite.DPSPoints = 0;
+                        calcMissWhite.DPS = 0;
                         calcMissWhite.OverallPoints = calcMissWhite.SubPoints[1] = 100 - currentCalculationsEnhanceWhite.WhiteHit;
-                        calcDodgeWhite.OverallPoints = calcDodgeWhite.DPSPoints = currentCalculationsEnhanceWhite.DodgedAttacks;
+                        calcDodgeWhite.OverallPoints = calcDodgeWhite.DPS = currentCalculationsEnhanceWhite.DodgedAttacks;
                         calcCritWhite.SubPoints = new float[2];
                         calcCritWhite.SubPoints[1] = currentCalculationsEnhanceWhite.OverMeleeCritCap;
                         calcCritWhite.OverallPoints = currentCalculationsEnhanceWhite.MeleeCrit - 4.8f;
-                        calcCritWhite.DPSPoints = calcCritWhite.OverallPoints - calcCritWhite.SubPoints[1];
-                        calcGlanceWhite.OverallPoints = calcGlanceWhite.DPSPoints = currentCalculationsEnhanceWhite.GlancingBlows;
-                        calcHitWhite.OverallPoints = calcHitWhite.DPSPoints = 100f - calcMissWhite.OverallPoints 
+                        calcCritWhite.DPS = calcCritWhite.OverallPoints - calcCritWhite.SubPoints[1];
+                        calcGlanceWhite.OverallPoints = calcGlanceWhite.DPS = currentCalculationsEnhanceWhite.GlancingBlows;
+                        calcHitWhite.OverallPoints = calcHitWhite.DPS = 100f - calcMissWhite.OverallPoints 
                                                                                    - calcDodgeWhite.OverallPoints 
-                                                                                   - calcCritWhite.DPSPoints 
+                                                                                   - calcCritWhite.DPS 
                                                                                    - calcGlanceWhite.OverallPoints;
                     }
                     return new ComparisonCalculationBase[] { calcMissWhite, calcDodgeWhite, calcCritWhite, calcGlanceWhite, calcHitWhite };
@@ -1101,10 +1101,10 @@ namespace Rawr.Enhance
                     ComparisonCalculationEnhance calcHitYellow = new ComparisonCalculationEnhance() { Name = "Hit" };
                     if (currentCalculationsEnhanceYellow != null)
                     {
-                        calcMissYellow.OverallPoints = calcMissYellow.DPSPoints = 100f - currentCalculationsEnhanceYellow.YellowHit;
-                        calcDodgeYellow.OverallPoints = calcDodgeYellow.DPSPoints = currentCalculationsEnhanceYellow.DodgedAttacks;
-                        calcCritYellow.OverallPoints = calcCritYellow.DPSPoints = currentCalculationsEnhanceYellow.YellowCrit;
-                        calcHitYellow.OverallPoints = calcHitYellow.DPSPoints = (100f - calcMissYellow.OverallPoints -
+                        calcMissYellow.OverallPoints = calcMissYellow.DPS = 100f - currentCalculationsEnhanceYellow.YellowHit;
+                        calcDodgeYellow.OverallPoints = calcDodgeYellow.DPS = currentCalculationsEnhanceYellow.DodgedAttacks;
+                        calcCritYellow.OverallPoints = calcCritYellow.DPS = currentCalculationsEnhanceYellow.YellowCrit;
+                        calcHitYellow.OverallPoints = calcHitYellow.DPS = (100f - calcMissYellow.OverallPoints -
                         calcDodgeYellow.OverallPoints - calcCritYellow.OverallPoints);
                     }
                     return new ComparisonCalculationBase[] { calcMissYellow, calcDodgeYellow, calcCritYellow, calcHitYellow };
@@ -1116,9 +1116,9 @@ namespace Rawr.Enhance
                     ComparisonCalculationEnhance calcHitSpell = new ComparisonCalculationEnhance() { Name = "Hit" };
                     if (currentCalculationsEnhanceSpell != null)
                     {
-                        calcMissSpell.OverallPoints = calcMissSpell.DPSPoints = 100f - currentCalculationsEnhanceSpell.SpellHit;
-                        calcCritSpell.OverallPoints = calcCritSpell.DPSPoints = currentCalculationsEnhanceSpell.SpellCrit;
-                        calcHitSpell.OverallPoints = calcHitSpell.DPSPoints = (100f - calcMissSpell.OverallPoints - calcCritSpell.OverallPoints);
+                        calcMissSpell.OverallPoints = calcMissSpell.DPS = 100f - currentCalculationsEnhanceSpell.SpellHit;
+                        calcCritSpell.OverallPoints = calcCritSpell.DPS = currentCalculationsEnhanceSpell.SpellCrit;
+                        calcHitSpell.OverallPoints = calcHitSpell.DPS = (100f - calcMissSpell.OverallPoints - calcCritSpell.OverallPoints);
                     }
                     return new ComparisonCalculationBase[] { calcMissSpell, calcCritSpell, calcHitSpell };
 
@@ -1137,14 +1137,14 @@ namespace Rawr.Enhance
 
                     return new ComparisonCalculationBase[] { 
                         //new ComparisonCalculationEnhance() { Name = "60 Stamina", OverallPoints = dpsSta, DPSPoints = dpsSta },
-                        new ComparisonCalculationEnhance() { Name = "40 Agility", OverallPoints = dpsAgi, DPSPoints = dpsAgi },
-                        new ComparisonCalculationEnhance() { Name = "40 Strength", OverallPoints = dpsStr, DPSPoints = dpsStr },
-                        new ComparisonCalculationEnhance() { Name = "40 Intellect", OverallPoints = dpsInt, DPSPoints = dpsInt },
-                        new ComparisonCalculationEnhance() { Name = "40 Crit Rating", OverallPoints = dpsCrit, DPSPoints = dpsCrit },
-                        new ComparisonCalculationEnhance() { Name = "40 Expertise Rating", OverallPoints = dpsExp, DPSPoints = dpsExp },
-                        new ComparisonCalculationEnhance() { Name = "40 Haste Rating", OverallPoints = dpsHaste, DPSPoints = dpsHaste },
-                        new ComparisonCalculationEnhance() { Name = "40 Hit Rating", OverallPoints = dpsHit, DPSPoints = dpsHit },
-                        new ComparisonCalculationEnhance() { Name = "40 Mastery Rating", OverallPoints = dpsMast, DPSPoints = dpsMast }
+                        new ComparisonCalculationEnhance() { Name = "40 Agility", OverallPoints = dpsAgi, DPS = dpsAgi },
+                        new ComparisonCalculationEnhance() { Name = "40 Strength", OverallPoints = dpsStr, DPS = dpsStr },
+                        new ComparisonCalculationEnhance() { Name = "40 Intellect", OverallPoints = dpsInt, DPS = dpsInt },
+                        new ComparisonCalculationEnhance() { Name = "40 Crit Rating", OverallPoints = dpsCrit, DPS = dpsCrit },
+                        new ComparisonCalculationEnhance() { Name = "40 Expertise Rating", OverallPoints = dpsExp, DPS = dpsExp },
+                        new ComparisonCalculationEnhance() { Name = "40 Haste Rating", OverallPoints = dpsHaste, DPS = dpsHaste },
+                        new ComparisonCalculationEnhance() { Name = "40 Hit Rating", OverallPoints = dpsHit, DPS = dpsHit },
+                        new ComparisonCalculationEnhance() { Name = "40 Mastery Rating", OverallPoints = dpsMast, DPS = dpsMast }
                     };
 
                 case "MH Weapon Speeds":
