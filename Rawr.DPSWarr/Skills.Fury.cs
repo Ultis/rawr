@@ -231,7 +231,7 @@ namespace Rawr.DPSWarr.Skills
             SwingsOffHand = true;
             BonusCritChance = DPSWarrChar.Talents.GlyphOfRagingBlow ? 0.05f : 0f;
             DamageBonus  = 1f + DPSWarrChar.StatS.BonusRagingBlowDamageMultiplier;
-            DamageBonus *= 1f + (8f*0.056f + 0.0560f * StatConversion.GetMasteryFromRating(DPSWarrChar.StatS.MasteryRating, CharacterClass.Warrior));
+            DamageBonus *= 1f + (2f*0.056f + 0.0560f * StatConversion.GetMasteryFromRating(DPSWarrChar.StatS.MasteryRating, CharacterClass.Warrior));
             //
             Initialize();
         }

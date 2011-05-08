@@ -1700,11 +1700,11 @@ If that is still not working for you, right-click anywhere within the web versio
         private void PerformanceTest(object sender, System.Windows.RoutedEventArgs e)
         {
             DateTime start = DateTime.Now;
-            int count = 20000;
+            int count = 10000;
             for (int i = 0; i < count; i++)
                 Calculations.GetCharacterCalculations(Character);
             TimeSpan ts = DateTime.Now.Subtract(start);
-            Clipboard.SetText(ts.ToString());
+            //Clipboard.SetText(ts.ToString());
             MessageBox.Show(string.Format("This model took {0} seconds to run calculations {1} times.", ts, count),
                 "Performance Test", MessageBoxButton.OK);
         }

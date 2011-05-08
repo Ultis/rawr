@@ -5033,7 +5033,7 @@ namespace Rawr
             #region Warplate (DPS)
             defaultBuffs.Add(new Buff()
             {
-                Name = "Earthen Warplate (T11) 2 Piece Bonus",
+                Name = "Earthen Warplate (T11) 2P",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 //Stats = new Stats() { BonusWarrior_T11_2P_BTMSDmgMult = 0.05f, },
@@ -5045,7 +5045,7 @@ namespace Rawr
             defaultBuffs.Add(buff = new Buff()
             {
                 // Each time you use Overpower or Raging Blow you gain a 1% increase to attack power for 30 sec stacking up to 3 times.
-                Name = "Earthen Warplate (T11) 4 Piece Bonus",
+                Name = "Earthen Warplate (T11) 4P",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 //Stats = new Stats(), // This uses a proc
@@ -5059,7 +5059,7 @@ namespace Rawr
             #region Battleplate (Protection)
             defaultBuffs.Add(new Buff()
             {
-                Name = "Earthen Battleplate (T11) 2 Piece Bonus",
+                Name = "Earthen Battleplate (T11) 2P",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 //Stats = new Stats() { BonusShieldSlamDamage = 0.05f, },
@@ -5070,7 +5070,7 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Earthen Battleplate (T11) 4 Piece Bonus",
+                Name = "Earthen Battleplate (T11) 4P",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 //Stats = new Stats() { BonusWarrior_T11_4P_ShieldWallDurMult = 0.05f, },
@@ -5085,7 +5085,7 @@ namespace Rawr
             #region PvP
             defaultBuffs.Add(new Buff()
             {
-                Name = "Gladiator's Battlegear (PvP) 2 Piece Bonus",
+                Name = "Gladiator's Battlegear (PvP) 2P",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { Resilience = 400, Strength = 70, },
@@ -5095,7 +5095,7 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Gladiator's Battlegear (PvP) 4 Piece Bonus",
+                Name = "Gladiator's Battlegear (PvP) 4P",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { /*BonusWarrior_PvP_4P_InterceptCDReduc = 5,*/ Strength = 90, },
@@ -5113,7 +5113,7 @@ namespace Rawr
                 // Weapon set consists of Claws of Agony and Claws of Torment
                 defaultBuffs.Add(buff = new Buff()
                 {
-                    Name = "Agony and Torment 2 Piece Bonus",
+                    Name = "Agony and Torment 2P",
                     Group = "Set Bonuses",
                     ConflictingBuffs = new List<string>(new string[] { }),
                     Stats = { },

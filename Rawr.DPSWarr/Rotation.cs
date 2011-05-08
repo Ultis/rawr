@@ -7,19 +7,20 @@ using Rawr.DPSWarr.Skills;
 namespace Rawr.DPSWarr {
     public class Rotation
     {
+        /*public static Dictionary<string, int> ConstructionCounts = new Dictionary<string, int>() {
+            { "Rotation Base", 0 },
+            { "Rotation Arms", 0 },
+            { "Rotation Fury", 0 },
+        };*/
+
         // Constructors
         public Rotation()
         {
-            //DPSWarrChar = null;
-            //Char = null;
-            //StatS = null;
-            //Talents = null;
-            //CombatFactors = null;
-            //CalcOpts = null;
-            //DPSWarrChar.BossOpts = null;
-
             AbilityList = new Dictionary<Type,AbilityWrapper>();
             InvalidateCache();
+#if DEBUG
+            //ConstructionCounts["Rotation Base"]++;
+#endif
         }
 
         #region Variables
@@ -92,35 +93,20 @@ namespace Rawr.DPSWarr {
         #region Get/Set
         private DPSWarrCharacter dpswarrchar;
         public DPSWarrCharacter DPSWarrChar { get { return dpswarrchar; } set { dpswarrchar = value; } }
-        //protected Character Char { get; set; }
-        //protected WarriorTalents Talents { get; set; }
-        //protected Stats StatS { get; set; }
-        //protected CombatFactors CombatFactors { get; set; }
-        //public Skills.WhiteAttacks Whiteattacks { get; protected set; }
-        //protected CalculationOptionsDPSWarr CalcOpts { get; set; }
-        //protected BossOptions DPSWarrChar.BossOpts { get; set; }
 
         protected float _cachedLatentGCD = 1.5f;
         public float LatentGCD { get { return _cachedLatentGCD; } }
         
-        /// <summary>
-        /// How many GCDs are in the rotation, based on fight duration and latency, all or if using Exec Spam then just Over 20%
-        /// </summary>
+        /// <summary>How many GCDs are in the rotation, based on fight duration and latency, all or if using Exec Spam then just Over 20%</summary>
         protected float NumGCDsO20 { get { return _cachedNumGCDsO20; } }
         protected float _cachedNumGCDsO20 = 0f;
-        /// <summary>
-        /// How many GCDs are in the rotation, based on fight duration and latency, under 20%
-        /// </summary>
+        /// <summary>How many GCDs are in the rotation, based on fight duration and latency, under 20%</summary>
         protected float NumGCDsU20 { get { return _cachedNumGCDsU20; } }
         protected float _cachedNumGCDsU20 = 0f;
-        /// <summary>
-        /// How many GCDs are in the rotation, based on fight duration and latency, all or if using Exec Spam then just Over 20%
-        /// </summary>
+        /// <summary>How many GCDs are in the rotation, based on fight duration and latency, all or if using Exec Spam then just Over 20%</summary>
         protected float NumGCDsAll { get { return NumGCDsO20 + NumGCDsU20; } }
 
-        /// <summary>
-        /// How many GCDs have been used by the rotation, over 20%
-        /// </summary>
+        /// <summary>How many GCDs have been used by the rotation, over 20%</summary>
         protected float GCDsUsedO20
         {
             get
@@ -133,9 +119,7 @@ namespace Rawr.DPSWarr {
                 return gcds;
             }
         }
-        /// <summary>
-        /// How many GCDs have been used by the rotation, under 20%
-        /// </summary>
+        /// <summary>How many GCDs have been used by the rotation, under 20%</summary>
         protected float GCDsUsedU20
         {
             get
@@ -148,22 +132,13 @@ namespace Rawr.DPSWarr {
                 return gcds;
             }
         }
-        /// <summary>
-        /// How many GCDs have been used by the rotation (all)
-        /// </summary>
+        /// <summary>How many GCDs have been used by the rotation (all)</summary>
         protected float GCDsUsedAll { get { return GCDsUsedO20 + GCDsUsedU20; } }
-
-        /// <summary>
-        /// How many GCDs are still available in the rotation
-        /// </summary>
+        /// <summary>How many GCDs are still available in the rotation</summary>
         protected float GCDsAvailableO20 { get { return Math.Max(0f, NumGCDsO20 - GCDsUsedO20 - TimeLostGCDsO20); } }
-        /// <summary>
-        /// How many GCDs are still available in the rotation sub 20%
-        /// </summary>
+        /// <summary>How many GCDs are still available in the rotation sub 20%</summary>
         protected float GCDsAvailableU20 { get { return Math.Max(0f, NumGCDsU20 - GCDsUsedU20 - TimeLostGCDsU20); } }
-        /// <summary>
-        /// How many GCDs are still available in the rotation sub 20%
-        /// </summary>
+        /// <summary>How many GCDs are still available in the rotation sub 20%</summary>
         protected float GCDsAvailableAll { get { return GCDsAvailableO20 + GCDsAvailableU20; } }
         
         #endregion
@@ -192,65 +167,65 @@ namespace Rawr.DPSWarr {
                 DPSWarrChar.Whiteattacks.InvalidateCache();
                 // Anti-Debuff
                 info = "Anti-Debuff";
-                AddAbility(new AbilityWrapper(new Skills.HeroicFury(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilityWrapper(new Skills.EveryManForHimself(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilityWrapper(new Skills.EscapeArtist(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilityWrapper(new Skills.WillOfTheForsaken(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.HeroicFury(DPSWarrChar)));
+                AddAbility(new AbilityWrapper(new Skills.EveryManForHimself(DPSWarrChar)));
+                AddAbility(new AbilityWrapper(new Skills.EscapeArtist(DPSWarrChar)));
+                AddAbility(new AbilityWrapper(new Skills.WillOfTheForsaken(DPSWarrChar)));
                 // Movement
                 info = "Movement";
-                AddAbility(new AbilityWrapper(new Skills.Charge(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilityWrapper(new Skills.Intercept(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilityWrapper(new Skills.HeroicLeap(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.Charge(DPSWarrChar)));
+                AddAbility(new AbilityWrapper(new Skills.Intercept(DPSWarrChar)));
+                AddAbility(new AbilityWrapper(new Skills.HeroicLeap(DPSWarrChar)));
                 // Rage Generators
                 info = "Rage Generators";
-                AddAbility(new AbilityWrapper(new Skills.SecondWind(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilityWrapper(new Skills.BerserkerRage(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilityWrapper(new Skills.DeadlyCalm(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilityWrapper(new Skills.InnerRage(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.SecondWind(DPSWarrChar)));
+                AddAbility(new AbilityWrapper(new Skills.BerserkerRage(DPSWarrChar)));
+                AddAbility(new AbilityWrapper(new Skills.DeadlyCalm(DPSWarrChar)));
+                AddAbility(new AbilityWrapper(new Skills.InnerRage(DPSWarrChar)));
                 // Maintenance
                 info = "Maintenance";
-                AddAbility(new AbilityWrapper(new Skills.BattleShout(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilityWrapper(new Skills.CommandingShout(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilityWrapper(new Skills.RallyingCry(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilityWrapper(new Skills.DemoralizingShout(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilityWrapper(new Skills.SunderArmor(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilityWrapper(new Skills.Hamstring(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilityWrapper(new Skills.EnragedRegeneration(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.BattleShout(DPSWarrChar)));
+                AddAbility(new AbilityWrapper(new Skills.CommandingShout(DPSWarrChar)));
+                AddAbility(new AbilityWrapper(new Skills.RallyingCry(DPSWarrChar)));
+                AddAbility(new AbilityWrapper(new Skills.DemoralizingShout(DPSWarrChar)));
+                AddAbility(new AbilityWrapper(new Skills.SunderArmor(DPSWarrChar)));
+                AddAbility(new AbilityWrapper(new Skills.Hamstring(DPSWarrChar)));
+                AddAbility(new AbilityWrapper(new Skills.EnragedRegeneration(DPSWarrChar)));
                 // Periodics
                 info = "Periodics";
-                AddAbility(new AbilityWrapper(new Skills.HeroicThrow(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilityWrapper(new Skills.ShatteringThrow(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilityWrapper(new Skills.SweepingStrikes(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilityWrapper(new Skills.DeathWish(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilityWrapper(new Skills.Recklessness(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.HeroicThrow(DPSWarrChar)));
+                AddAbility(new AbilityWrapper(new Skills.ShatteringThrow(DPSWarrChar)));
+                AddAbility(new AbilityWrapper(new Skills.SweepingStrikes(DPSWarrChar)));
+                AddAbility(new AbilityWrapper(new Skills.DeathWish(DPSWarrChar)));
+                AddAbility(new AbilityWrapper(new Skills.Recklessness(DPSWarrChar)));
 
                 // Arms abilities
                 info = "Arms abilities";
-                AddAbility(new AbilityWrapper(new Skills.ColossusSmash(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilityWrapper(new Skills.Bladestorm(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilityWrapper(new Skills.MortalStrike(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilityWrapper(new Skills.Rend(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilityWrapper(new Skills.ThunderClap(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilityWrapper(new Skills.Overpower(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilityWrapper(new Skills.TasteForBlood(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilityWrapper(new Skills.VictoryRush(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilityWrapper(new Skills.Cleave(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilityWrapper(new Skills.HeroicStrike(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilityWrapper(new Skills.Execute(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                Slam SL = new Skills.Slam(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/);
+                AddAbility(new AbilityWrapper(new Skills.ColossusSmash(DPSWarrChar)));
+                AddAbility(new AbilityWrapper(new Skills.Bladestorm(DPSWarrChar)));
+                AddAbility(new AbilityWrapper(new Skills.MortalStrike(DPSWarrChar)));
+                AddAbility(new AbilityWrapper(new Skills.Rend(DPSWarrChar)));
+                AddAbility(new AbilityWrapper(new Skills.ThunderClap(DPSWarrChar)));
+                AddAbility(new AbilityWrapper(new Skills.Overpower(DPSWarrChar)));
+                AddAbility(new AbilityWrapper(new Skills.TasteForBlood(DPSWarrChar)));
+                AddAbility(new AbilityWrapper(new Skills.VictoryRush(DPSWarrChar)));
+                AddAbility(new AbilityWrapper(new Skills.Cleave(DPSWarrChar)));
+                AddAbility(new AbilityWrapper(new Skills.HeroicStrike(DPSWarrChar)));
+                AddAbility(new AbilityWrapper(new Skills.Execute(DPSWarrChar)));
+                Slam SL = new Skills.Slam(DPSWarrChar);
                 AddAbility(new AbilityWrapper(SL)); // Slam used by Bloodsurge, so its shared
-                AddAbility(new AbilityWrapper(new Skills.StrikesOfOpportunity(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.StrikesOfOpportunity(DPSWarrChar)));
 
                 // Fury abilities
                 info = "Fury abilities";
-                Skills.Ability WW = new Skills.Whirlwind(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/);
+                Skills.Ability WW = new Skills.Whirlwind(DPSWarrChar);
                 AddAbility(new AbilityWrapper(WW));
-                Ability BT = new Skills.Bloodthirst(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/);
+                Ability BT = new Skills.Bloodthirst(DPSWarrChar);
                 AddAbility(new AbilityWrapper(BT));
-                AddAbility(new AbilityWrapper(new Skills.BloodSurge(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/, SL/*, WW*/, BT)));
-                AddAbility(new AbilityWrapper(new Skills.RagingBlow(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.BloodSurge(DPSWarrChar, SL/*, WW*/, BT)));
+                AddAbility(new AbilityWrapper(new Skills.RagingBlow(DPSWarrChar)));
 
-                DW = new Skills.DeepWounds(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/);
+                DW = new Skills.DeepWounds(DPSWarrChar);
             } catch (Exception ex) {
                 new Base.ErrorBox()
                 {
@@ -533,37 +508,46 @@ namespace Rawr.DPSWarr {
         }
         #endregion
         #region Rage Calcs
+        static float RageMod = 2.5f / 453.3f;
+        protected float _berserkerUptime = -1f;
+        protected float BerserkerUptime {
+            get {
+                if (_berserkerUptime == -1f) {
+                    _berserkerUptime = TalentsAsSpecialEffects.BerserkerRage.GetAverageUptime(0, 1f, DPSWarrChar.CombatFactors.CMHItemSpeed, (DPSWarrChar.CalcOpts.SE_UseDur ? FightDuration : 0f));
+                }
+                return _berserkerUptime;
+            }
+        }
+        protected float _armorDamageReduction = -1f;
+        protected float ArmorDamageReduction {
+            get {
+                if (_armorDamageReduction == -1f) {
+                    _armorDamageReduction = StatConversion.GetArmorDamageReduction(DPSWarrChar.BossOpts.Level, DPSWarrChar.Char.Level, DPSWarrChar.StatS.Armor, 0, 0);
+                }
+                return _armorDamageReduction;
+            }
+        }
         protected virtual float RageGenOverDurIncDmg {
             get {
-                // Invalidate bad things
-                List<Attack> aoeAtks = DPSWarrChar.BossOpts.GetFilteredAttackList(ATTACK_TYPES.AT_AOE);
-                Attack dynAoE = DPSWarrChar.BossOpts.DynamicCompiler_FilteredAttacks(aoeAtks);
-                if (aoeAtks.Count > 0 || dynAoE.AttackSpeed <= 0 || dynAoE.DamagePerHit <= 0) { return 0f; }
-                float RageMod = 2.5f / 453.3f;
-                float damagePerSec = 0f;
-                float freq = dynAoE.AttackSpeed;
-                float dmg = dynAoE.DamagePerHit * (1f - DPSWarrChar.StatS.DamageTakenReductionMultiplier)
-                          + DPSWarrChar.StatS.BossAttackPower / 14f;
-                float acts = FightDuration / freq;
-                // Add Berserker Rage's
-                float zerkerMOD = 1f;
-                if (DPSWarrChar.CalcOpts.M_BerserkerRage)
-                {
-                    float upTime = TalentsAsSpecialEffects.BerserkerRage.GetAverageUptime(0, 1f, DPSWarrChar.CombatFactors.CMHItemSpeed, (DPSWarrChar.CalcOpts.SE_UseDur ? FightDuration : 0f));
-                    zerkerMOD *= (1f + upTime);
+                float incRage = 0f;
+                List<Attack> atks = DPSWarrChar.BossOpts.Attacks.FindAll(a => a.AffectsRole[PLAYER_ROLES.MeleeDPS]);
+                foreach (Attack a in atks) {
+                    incRage += Math.Min(100, a.DamagePerHit // Raw damage per hit
+                                            * (1f - ArmorDamageReduction) // Drop out damage reduced by armor
+                                            * (1f - DPSWarrChar.StatS.DamageTakenReductionMultiplier) // Drop out damage taken modifier
+                                            * RageMod // The modifier that determines how much rage we get out of it
+                                            * (1f + (DPSWarrChar.CalcOpts.M_BerserkerRage ? BerserkerUptime : 0f))) // Bonus from Berserker Rage
+
+                                            * (FightDuration / a.AttackSpeed) // Number of times to occur in fight, if it were the whole fight
+                                            * a.FightUptimePercent; // The uptime in the fight
                 }
-                float dmgCap = 100f / (RageMod * zerkerMOD); // Can't get any more rage than 100 at any given time
-                damagePerSec = (acts * Math.Min(dmgCap, dmg)) / FightDuration;
-                
-                return (damagePerSec * RageMod * zerkerMOD) * FightDuration;
+                return incRage;
             }
         }
 
         protected virtual float RageGenOverDurAngerO20 { get { return DPSWarrChar.CombatFactors.FuryStance ? 0f : (1.0f / 3.0f) * FightDurationO20; } }
         protected virtual float RageGenOverDurAngerU20 { get { return DPSWarrChar.CombatFactors.FuryStance ? 0f : (1.0f / 3.0f) * FightDurationU20; } }
-        /// <summary>
-        /// Anger Management is an Arms Spec Bonus in Cata, 1 rage every 3 seconds
-        /// </summary>
+        /// <summary>Anger Management is an Arms Spec Bonus in Cata, 1 rage every 3 seconds</summary>
         protected virtual float RageGenOverDurAnger { get { return RageGenOverDurAngerO20 + (DPSWarrChar.CalcOpts.M_ExecuteSpam ? RageGenOverDurAngerU20 : 0f); } }
         
         protected virtual float RageGenOverDurOtherO20 {

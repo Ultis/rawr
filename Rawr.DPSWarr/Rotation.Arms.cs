@@ -15,6 +15,9 @@ namespace Rawr.DPSWarr {
             AbilityWrapper.LatentGCD = _cachedLatentGCD;
             _cachedNumGCDsO20 = FightDurationO20 / LatentGCD;
             _cachedNumGCDsU20 = FightDurationU20 / LatentGCD;
+#if DEBUG
+            //ConstructionCounts["Rotation Arms"]++;
+#endif
         }
 
         #region Charge

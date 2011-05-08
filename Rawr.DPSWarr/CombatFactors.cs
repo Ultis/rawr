@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Rawr.DPSWarr {
     public class CombatFactors {
@@ -15,7 +16,13 @@ namespace Rawr.DPSWarr {
             // Optimizations
             
             //SetCvalues();
+#if DEBUG
+            //ConstructionCounts["CombatFactors"]++;
+#endif
         }
+        /*public static Dictionary<string, int> ConstructionCounts = new Dictionary<string, int>() {
+            { "CombatFactors", 0 },
+        };*/
         private bool? _FuryStance = null;
         public bool FuryStance {
             get {

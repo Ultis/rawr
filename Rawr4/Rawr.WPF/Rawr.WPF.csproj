@@ -134,6 +134,7 @@
     <Compile Include="WindowChild.xaml.cs">
       <DependentUpon>WindowChild.xaml</DependentUpon>
     </Compile>
+    <Content Include="7za.exe" />
     <Resource Include="Resources\RawrIcon.ico" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -148,6 +149,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="App.config" />
+    <None Include="pack.bat" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

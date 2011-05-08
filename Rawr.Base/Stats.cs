@@ -89,7 +89,6 @@ namespace Rawr
         ShadowResistance,
         #endregion
         #region ===== Target Stats =====
-        BossAttackPower,
         SpellCritOnTarget,
         #endregion
         #region ===== Item Proc Stats =====
@@ -1016,13 +1015,6 @@ namespace Rawr
         }
         #endregion
         #region ===== Target Stats =====
-        [DefaultValueAttribute(0f)]
-        [Category("Buffs / Debuffs")]
-        public float BossAttackPower
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BossAttackPower]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BossAttackPower] = value; }
-        }
         [DefaultValueAttribute(0f)]
         [DisplayName("% Spell Crit on target")]
         [Percentage]

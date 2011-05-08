@@ -2548,7 +2548,6 @@ namespace Rawr.Hunter {
             Health2SurvPet += (calc.pet.PetStats.HealthRestore) / 1000f;
             float DmgTakenMods2SurvHunter = (1f - stats.DamageTakenReductionMultiplier) * 100f;
             float DmgTakenMods2SurvPet = (1f - calc.pet.PetStats.DamageTakenReductionMultiplier) * 100f;
-            float BossAttackPower2Surv = stats.BossAttackPower / 14f * -1f;
             float BossAttackSpeedMods2Surv = (1f - stats.BossAttackSpeedReductionMultiplier) * 100f;
             float AvoidanceHunter = stats.Dodge + stats.Parry;
             float AvoidancePet = calc.pet.PetStats.Dodge + calc.pet.PetStats.Parry;// should be pet stats
@@ -2612,7 +2611,6 @@ namespace Rawr.Hunter {
                                                (0 // TotalHPSOnHunter
                                                 + Health2SurvHunter
                                                 + DmgTakenMods2SurvHunter
-                                                + BossAttackPower2Surv
                                                 + BossAttackSpeedMods2Surv
                                                 + AvoidanceHunter * 100f
                                                 + Armor2SurvHunter
@@ -2621,7 +2619,6 @@ namespace Rawr.Hunter {
                                             (0 // TotalHPSOnPet
                                              + Health2SurvPet
                                              + DmgTakenMods2SurvPet
-                                             + BossAttackPower2Surv
                                              + BossAttackSpeedMods2Surv
                                              + AvoidancePet * 100f
                                              + Armor2SurvPet

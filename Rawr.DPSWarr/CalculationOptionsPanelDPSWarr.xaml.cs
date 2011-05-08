@@ -1134,8 +1134,7 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             else if (sender == CK_ExecSpam) tooltip.Setup("<20% Execute Spam", Skills.Execute.SDesc, Skills.Execute.SIcon, "Changes the rotational code for that period of time, increasing DPS due to the extra damage from switching most abilities to Executes.");
             else if (sender == CK_ExecSpamStage2) tooltip.Setup("<20% Execute Spam (Stage 2)", Skills.Execute.SDesc, Skills.Execute.SIcon, "Changes the rotational code for that period of time, increasing DPS due to the extra damage from switching Slams to Executes and enforces that Taste for Blood continues.");
             #endregion
-            //tooltip.Setup();
-            tooltip.Show((UIElement)sender);
+            tooltip.Show((UIElement)sender, 0, 20);
         }
         private void Element_MouseLeave(object sender, MouseEventArgs e) { tooltip.Hide(); }
         // Abilities to Maintain Changes

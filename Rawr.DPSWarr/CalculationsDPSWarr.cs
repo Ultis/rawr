@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Media;
 using System.Xml.Serialization;
+using System.Windows;
 
 namespace Rawr.DPSWarr {
     [Rawr.Calculations.RawrModelInfo("DPSWarr", "Ability_Rogue_Ambush", CharacterClass.Warrior)]
@@ -348,7 +349,7 @@ These numbers to do not include racial bonuses.
 NOTICE: These ratings numbers will be out of date for Cataclysm",
 "Base Stats:Haste",
 "Base Stats:Armor Penetration*Cataclysm no longer has ArP Rating but you can still get ArP % from Talents and Abilities",
-"Base Stats:Mastery*Since this is new, it may be off on how it's implemented for a while",
+"Base Stats:Mastery",
 #endregion
             
 #region Fury
@@ -642,22 +643,18 @@ a GCD's length, you will use this while running back into place",
         public override Stats GetRelevantStats(Stats stats) {
             if (stats == null) { return new Stats(); }
             Stats relevantStats = new Stats() {
+                #region Wanted Stats
                 // Base Stats
-                Stamina = stats.Stamina,
-                Health = stats.Health,
-                Agility = stats.Agility,
                 Strength = stats.Strength,
+                Agility = stats.Agility,
                 AttackPower = stats.AttackPower,
-                Armor = stats.Armor,
                 // Ratings
                 CritRating = stats.CritRating,
                 HitRating = stats.HitRating,
                 HasteRating = stats.HasteRating,
                 ExpertiseRating = stats.ExpertiseRating,
-                Resilience = stats.Resilience,
                 MasteryRating = stats.MasteryRating,
                 // Bonuses
-                BonusArmor = stats.BonusArmor,
                 WeaponDamage = stats.WeaponDamage,
                 ArmorPenetration = stats.ArmorPenetration,
                 TargetArmorReduction = stats.TargetArmorReduction,
@@ -665,13 +662,13 @@ a GCD's length, you will use this while running back into place",
                 PhysicalHaste = stats.PhysicalHaste,
                 PhysicalHit = stats.PhysicalHit,
                 SpellHit = stats.SpellHit,
+                // Boss Handler
                 MovementSpeed = stats.MovementSpeed,
                 StunDurReduc = stats.StunDurReduc,
                 SnareRootDurReduc = stats.SnareRootDurReduc,
                 FearDurReduc = stats.FearDurReduc,
                 DisarmDurReduc = stats.DisarmDurReduc,
                 // Target Debuffs
-                BossAttackPower = stats.BossAttackPower,
                 BossAttackSpeedReductionMultiplier = stats.BossAttackSpeedReductionMultiplier,
                 // Procs
                 DarkmoonCardDeathProc = stats.DarkmoonCardDeathProc,
@@ -693,28 +690,35 @@ a GCD's length, you will use this while running back into place",
                 BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
                 BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
                 // Multipliers
-                BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
-                BonusHealthMultiplier = stats.BonusHealthMultiplier,
                 BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
                 BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
                 BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
                 BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusWhiteDamageMultiplier = stats.BonusWhiteDamageMultiplier,
-                DamageTakenReductionMultiplier = stats.DamageTakenReductionMultiplier,
                 BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
-                BossPhysicalDamageDealtReductionMultiplier = stats.BossPhysicalDamageDealtReductionMultiplier,
                 BonusCritDamageMultiplier = stats.BonusCritDamageMultiplier,
                 BonusCritChance = stats.BonusCritChance,
-                BaseArmorMultiplier = stats.BaseArmorMultiplier,
-                BonusArmorMultiplier = stats.BonusArmorMultiplier,
+                BonusPeriodicDamageMultiplier = stats.BonusPeriodicDamageMultiplier,
                 // Set Bonuses
                 // Special
                 BonusRageGen = stats.BonusRageGen,
+                #endregion
+                #region Survivability Stats
+                Stamina = stats.Stamina,
+                Health = stats.Health,
+                BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
+                BonusHealthMultiplier = stats.BonusHealthMultiplier,
                 HealthRestore = stats.HealthRestore,
                 HealthRestoreFromMaxHealth = stats.HealthRestoreFromMaxHealth,
+                Armor = stats.Armor,
+                BonusArmor = stats.BonusArmor,
+                BaseArmorMultiplier = stats.BaseArmorMultiplier,
+                BonusArmorMultiplier = stats.BonusArmorMultiplier,
+                DamageTakenReductionMultiplier = stats.DamageTakenReductionMultiplier,
+                BossPhysicalDamageDealtReductionMultiplier = stats.BossPhysicalDamageDealtReductionMultiplier,
                 BonusHealingDoneMultiplier = stats.BonusHealingDoneMultiplier, // not really rel but want it if it's available on something else
-                BonusPeriodicDamageMultiplier = stats.BonusPeriodicDamageMultiplier,
+                #endregion
             };
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
                 if (RelevantTriggers.Contains(effect.Trigger) && (HasRelevantStats(effect.Stats) || HasSurvivabilityStats(effect.Stats)))
@@ -730,142 +734,152 @@ a GCD's length, you will use this while running back into place",
         }
 
         private bool HasWantedStats(Stats stats) {
-            bool relevant = (
-                // Base Stats
-                stats.Agility +
-                stats.Strength +
-                stats.AttackPower +
-                // Ratings
-                stats.CritRating +
-                stats.HitRating +
-                stats.HasteRating +
-                stats.ExpertiseRating +
-                stats.Resilience +
-                stats.MasteryRating +
-                // Bonuses
-                stats.WeaponDamage +
-                stats.ArmorPenetration +
-                stats.TargetArmorReduction +
-                stats.PhysicalCrit +
-                stats.PhysicalHaste +
-                stats.PhysicalHit +
-                stats.SpellHit + // used for TClap/Demo Shout maintenance
-                stats.MovementSpeed +
-                stats.StunDurReduc +
-                stats.SnareRootDurReduc +
-                stats.FearDurReduc +
-                stats.DisarmDurReduc +
-                // Target Debuffs
-                stats.BossAttackPower +
-                stats.BossAttackSpeedReductionMultiplier +
-                // Procs
-                stats.DarkmoonCardDeathProc +
-                stats.HighestStat +
-                stats.HighestSecondaryStat +
-                stats.Paragon +
-                stats.ManaorEquivRestore +
-                // Damage Procs
-                stats.ShadowDamage +
-                stats.ArcaneDamage +
-                stats.HolyDamage +
-                stats.NatureDamage +
-                stats.FrostDamage +
-                stats.FireDamage +
-                stats.BonusShadowDamageMultiplier +
-                stats.BonusArcaneDamageMultiplier +
-                stats.BonusHolyDamageMultiplier +
-                stats.BonusNatureDamageMultiplier +
-                stats.BonusFrostDamageMultiplier +
-                stats.BonusFireDamageMultiplier +
-                // Multipliers
-                stats.BonusAgilityMultiplier +
-                stats.BonusStrengthMultiplier +
-                stats.BonusAttackPowerMultiplier +
-                stats.BonusBleedDamageMultiplier +
-                stats.BonusDamageMultiplier +
-                stats.BonusWhiteDamageMultiplier +
-                stats.DamageTakenReductionMultiplier +
-                stats.BonusPhysicalDamageMultiplier +
-                stats.BossPhysicalDamageDealtReductionMultiplier +
-                stats.BonusCritDamageMultiplier +
-                stats.BonusCritChance +
-                // Set Bonuses
-                // Special
-                stats.BonusPeriodicDamageMultiplier
-                ) != 0;
+            // Base Stats
+            if (stats.Strength != 0) { return true; }
+            if (stats.Agility != 0) { return true; }
+            if (stats.AttackPower != 0) { return true; }
+            // Ratings
+            if (stats.CritRating != 0) { return true; }
+            if (stats.HitRating != 0) { return true; }
+            if (stats.HasteRating != 0) { return true; }
+            if (stats.ExpertiseRating != 0) { return true; }
+            if (stats.MasteryRating != 0) { return true; }
+            // Bonuses
+            if (stats.WeaponDamage != 0) { return true; }
+            if (stats.ArmorPenetration != 0) { return true; }
+            if (stats.TargetArmorReduction != 0) { return true; }
+            if (stats.PhysicalCrit != 0) { return true; }
+            if (stats.PhysicalHaste != 0) { return true; }
+            if (stats.PhysicalHit != 0) { return true; }
+            if (stats.SpellHit != 0) { return true; } // used for TClap/Demo Shout maintenance
+            // Boss Handler
+            if (stats.MovementSpeed != 0) { return true; }
+            if (stats.StunDurReduc != 0) { return true; }
+            if (stats.SnareRootDurReduc != 0) { return true; }
+            if (stats.FearDurReduc != 0) { return true; }
+            if (stats.DisarmDurReduc != 0) { return true; }
+            // Target Debuffs
+            if (stats.BossAttackSpeedReductionMultiplier != 0) { return true; }
+            // Procs
+            if (stats.DarkmoonCardDeathProc != 0) { return true; }
+            if (stats.HighestStat != 0) { return true; }
+            if (stats.HighestSecondaryStat != 0) { return true; }
+            if (stats.Paragon != 0) { return true; }
+            if (stats.ManaorEquivRestore != 0) { return true; }
+            // Damage Procs
+            if (stats.ShadowDamage != 0) { return true; }
+            if (stats.ArcaneDamage != 0) { return true; }
+            if (stats.HolyDamage != 0) { return true; }
+            if (stats.NatureDamage != 0) { return true; }
+            if (stats.FrostDamage != 0) { return true; }
+            if (stats.FireDamage != 0) { return true; }
+            if (stats.BonusShadowDamageMultiplier != 0) { return true; }
+            if (stats.BonusArcaneDamageMultiplier != 0) { return true; }
+            if (stats.BonusHolyDamageMultiplier != 0) { return true; }
+            if (stats.BonusNatureDamageMultiplier != 0) { return true; }
+            if (stats.BonusFrostDamageMultiplier != 0) { return true; }
+            if (stats.BonusFireDamageMultiplier != 0) { return true; }
+            // Multipliers
+            if (stats.BonusAgilityMultiplier != 0) { return true; }
+            if (stats.BonusStrengthMultiplier != 0) { return true; }
+            if (stats.BonusAttackPowerMultiplier != 0) { return true; }
+            if (stats.BonusBleedDamageMultiplier != 0) { return true; }
+            if (stats.BonusDamageMultiplier != 0) { return true; }
+            if (stats.BonusWhiteDamageMultiplier != 0) { return true; }
+            if (stats.BonusPhysicalDamageMultiplier != 0) { return true; }
+            if (stats.BonusCritDamageMultiplier != 0) { return true; }
+            if (stats.BonusCritChance != 0) { return true; }
+            if (stats.BonusPeriodicDamageMultiplier != 0) { return true; }
+            // Set Bonuses
+            // Special
+            if (stats.BonusRageGen != 0) { return true; }
+            // Special Effects
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
-                if (RelevantTriggers.Contains(effect.Trigger)) {
-                    relevant |= HasRelevantStats(effect.Stats);
+                if (RelevantTriggers.Contains(effect.Trigger) && HasRelevantStats(effect.Stats)) {
+                    return true;
                 }
-                if (relevant) break;
             }
-            return relevant;
+            return false;
         }
 
         private bool HasSurvivabilityStats(Stats stats) {
-            bool relevant = false;
-            if ((stats.Health
-                + stats.Stamina
-                + stats.BonusHealthMultiplier
-                + stats.BonusStaminaMultiplier
-                + stats.HealthRestore
-                + stats.HealthRestoreFromMaxHealth
-                + stats.Armor
-                + stats.BonusArmor
-                + stats.BaseArmorMultiplier
-                + stats.BonusArmorMultiplier
-                ) > 0) {
-                    relevant = true;
-            }
+            // Health Base
+            if (stats.Stamina != 0) { return true; }
+            if (stats.Health != 0) { return true; }
+            if (stats.BonusStaminaMultiplier != 0) { return true; }
+            if (stats.BonusHealthMultiplier != 0) { return true; }
+            // Health Regen
+            if (stats.HealthRestore != 0) { return true; }
+            if (stats.HealthRestoreFromMaxHealth != 0) { return true; }
+            // Armor
+            if (stats.Armor != 0) { return true; }
+            if (stats.BonusArmor != 0) { return true; }
+            if (stats.BaseArmorMultiplier != 0) { return true; }
+            if (stats.BonusArmorMultiplier != 0) { return true; }
+            // Multipliers
+            if (stats.DamageTakenReductionMultiplier != 0) { return true; }
+            // Target Debuffs
+            if (stats.BossPhysicalDamageDealtReductionMultiplier != 0) { return true; }
+            // Special Effects
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
-                if (RelevantTriggers.Contains(effect.Trigger)) {
-                    relevant |= HasSurvivabilityStats(effect.Stats);
+                if (RelevantTriggers.Contains(effect.Trigger) && HasSurvivabilityStats(effect.Stats)) {
+                    return true;
                 }
-                if (relevant) break;
             }
-            return relevant;
+            return false;
         }
 
         private bool HasIgnoreStats(Stats stats) {
             if (!HidingBadStuff) { return false; }
-            bool retVal = false;
-            retVal = (
-                // Remove Spellcasting Stuff
-                (HidingBadStuff_Spl ? stats.Mp5 + stats.SpellPower + stats.Mana + stats.ManaRestore + stats.Spirit + stats.Intellect
-                                    + stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier
-                                    + stats.SpellPenetration + stats.BonusManaMultiplier
-                                    : 0f)
-                // Remove Defensive Stuff (until we do that special modeling)
-                + (HidingBadStuff_Def ? stats.Dodge + stats.Parry
-                                      + stats.DodgeRating + stats.ParryRating + stats.BlockRating + stats.Block
-                                      + stats.SpellReflectChance
-                                      : 0f)
-                // Remove PvP Items
-                + (HidingBadStuff_PvP ? stats.Resilience : 0f)
-                ) > 0;
-            foreach (SpecialEffect effect in stats.SpecialEffects())
-            {
-                //if (RelevantTriggers.Contains(effect.Trigger)) 
-                    retVal |= !RelevantTriggers.Contains(effect.Trigger);
-                    retVal |= HasIgnoreStats(effect.Stats);
-                    if (retVal) break;
-                //}
-            }
 
-            return retVal;
+            // Remove Spellcasting Stuff
+            if (HidingBadStuff_Spl) {
+                if (stats.Mp5 != 0) { return true; }
+                if (stats.SpellPower != 0) { return true; }
+                if (stats.Mana != 0) { return true; }
+                if (stats.ManaRestore != 0) { return true; }
+                if (stats.Spirit != 0) { return true; }
+                if (stats.Intellect != 0) { return true; }
+                if (stats.BonusSpiritMultiplier != 0) { return true; }
+                if (stats.BonusIntellectMultiplier != 0) { return true; }
+                if (stats.SpellPenetration != 0) { return true; }
+                if (stats.BonusManaMultiplier != 0) { return true; }
+            }
+            // Remove Defensive Stuff
+            if (HidingBadStuff_Def) {
+                if (stats.Dodge != 0) { return true; }
+                if (stats.Parry != 0) { return true; }
+                if (stats.DodgeRating != 0) { return true; }
+                if (stats.ParryRating != 0) { return true; }
+                if (stats.BlockRating != 0) { return true; }
+                if (stats.Block != 0) { return true; }
+                if (stats.SpellReflectChance != 0) { return true; }
+            }
+            // Remove PvP Items
+            if (HidingBadStuff_PvP) {
+                if (stats.Resilience != 0) { return true; }
+            }
+            // Special Effects
+            foreach (SpecialEffect effect in stats.SpecialEffects()) {
+                // The effect doesn't have a relevant trigger
+                if (!RelevantTriggers.Contains(effect.Trigger)) { return true; }
+                // The Effect has Ignore Stats
+                if (HasIgnoreStats(effect.Stats)) { return true; }
+            }
+            return false;
         }
 
         public override bool IsItemRelevant(Item item) {
             if (item == null) { return false; }
-            if ( // Manual override for +X to all Stats gems
-                   item.Name == "Nightmare Tear"
-                || item.Name == "Enchanted Tear"
-                || item.Name == "Enchanted Pearl"
-                || item.Name == "Chromatic Sphere"
+            /*if ( // Manual override for +X to all Stats gems
+                   item.Id == 49110 // Nightmare Tear
+                || item.Id == 42702 // Enchanted Tear
+                || item.Id == 42701 // Enchanted Pearl
+                || item.Id == 34143 // Chromatic Sphere
                 ) {
                 return true;
                 //}else if (item.Type == ItemType.Polearm && 
-            } else {
+            } else*/ {
                 Stats stats = item.Stats;
                 bool wantedStats = HasWantedStats(stats);
                 bool survstats = HasSurvivabilityStats(stats);
@@ -1390,8 +1404,42 @@ a GCD's length, you will use this while running back into place",
 
         #region Character Calcs
 
+#if DEBUG
+        /*public static string GetConstructionCounts() {
+            string retVal = "";
+            //
+            foreach (string c in ConstructionCounts.Keys) {
+                retVal += string.Format("{0:000000}/{1:00000.00}: {2}\n",
+                    ConstructionCounts[c] < 5 ? 0 : ConstructionCounts[c] - 5,
+                    (float)(ConstructionCounts[c] < 5 ? 0 : ConstructionCounts[c] - 5) / (float)(ConstructionCounts["GetCharacterCalculations"] < 5 ? 1 : ConstructionCounts["GetCharacterCalculations"] - 5),
+                    c);
+            }
+            //
+            return retVal + "\n";
+        }
+        public static Dictionary<string, int> ConstructionCounts = new Dictionary<string,int>() {
+            { "GetCharacterCalculations", 0 },
+            { "GetCharacterStats", 0 },
+            { "GetCharacterStats_Inner", 0 },
+            { "GetCharacterStats_Buffed", 0 },
+            { "GetCharacterStats_Override", 0 },
+            { "CalculateTriggers", 0 },
+            { "IterativeSpecialEffectsStats", 0 },
+            { "ApplySpecialEffect", 0 },
+            { "UpdateStatsAndAdd", 0 },
+            { "DoSpecialEffects", 0 },
+            { "Rotation Base", 0 },
+            { "Rotation Arms", 0 },
+            { "Rotation Fury", 0 },
+            { "CombatFactors", 0 },
+        };*/
+#endif
+
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
+#if DEBUG
+            //ConstructionCounts["GetCharacterCalculations"]++;
+#endif
             CharacterCalculationsDPSWarr calc = new CharacterCalculationsDPSWarr();
             try {
                 #region Object Creation
@@ -1507,32 +1555,77 @@ a GCD's length, you will use this while running back into place",
                 #endregion
 
                 #region Survivability
-                if (stats.HealthRestoreFromMaxHealth > 0) {
-                    stats.HealthRestore += stats.HealthRestoreFromMaxHealth * stats.Health * bossOpts.BerserkTimer;
-                }
+                if (calcOpts.SurvScale != 0f) {
+                    List<Attack> Attacks = bossOpts.Attacks.FindAll(a => a.AffectsRole[PLAYER_ROLES.MeleeDPS]);
 
-                float Health2Surv  = (stats.Health) / 100f; 
-                      Health2Surv += (stats.HealthRestore) / 1000f;
-                float DmgTakenMods2Surv = (1f - (1f - stats.DamageTakenReductionMultiplier) * (1f - stats.BossPhysicalDamageDealtReductionMultiplier)) * 100f;
-                float BossAttackPower2Surv = stats.BossAttackPower / 14f * -1f;
-                float BossAttackSpeedMods2Surv = (1f - stats.BossAttackSpeedReductionMultiplier) * 100f;
-                calc.TotalHPS = Rot._HPS_TTL;
-                calc.Survivability = calcOpts.SurvScale * (calc.TotalHPS
-                                                                      + Health2Surv
-                                                                      + DmgTakenMods2Surv
-                                                                      + BossAttackPower2Surv
-                                                                      + BossAttackSpeedMods2Surv
-                                                                      + stats.Resilience / 10);
+                    Dictionary<ItemDamageType, float> countsDmg = new Dictionary<ItemDamageType, float>() {
+                        { ItemDamageType.Physical, 0f },
+                        { ItemDamageType.Arcane, 0f },
+                        { ItemDamageType.Fire, 0f },
+                        { ItemDamageType.Frost, 0f },
+                        { ItemDamageType.Holy, 0f },
+                        { ItemDamageType.Nature, 0f },
+                        { ItemDamageType.Shadow, 0f },
+                    };
+                    Dictionary<ItemDamageType, float> percDmg = new Dictionary<ItemDamageType, float>() {
+                        { ItemDamageType.Physical, 0f },
+                        { ItemDamageType.Arcane, 0f },
+                        { ItemDamageType.Fire, 0f },
+                        { ItemDamageType.Frost, 0f },
+                        { ItemDamageType.Holy, 0f },
+                        { ItemDamageType.Nature, 0f },
+                        { ItemDamageType.Shadow, 0f },
+                    };
+                    Dictionary<ItemDamageType, float> highestDmg = new Dictionary<ItemDamageType, float>() {
+                        { ItemDamageType.Physical, 0f },
+                        { ItemDamageType.Arcane, 0f },
+                        { ItemDamageType.Fire, 0f },
+                        { ItemDamageType.Frost, 0f },
+                        { ItemDamageType.Holy, 0f },
+                        { ItemDamageType.Nature, 0f },
+                        { ItemDamageType.Shadow, 0f },
+                    };
+                    int totalCount = 0;
+                    foreach (Attack a in Attacks) {
+                        countsDmg[a.DamageType] += 1; totalCount++;
+                        if ((a.DamagePerHit + a.DamagePerTick) > highestDmg[a.DamageType]) {
+                            highestDmg[a.DamageType] = (a.DamagePerHit + a.DamagePerTick);
+                        }
+                    }
+                    foreach (ItemDamageType t in countsDmg.Keys) { percDmg[t] = countsDmg[t] / (float)totalCount; }
+                    float TotalConstantDamageReduction = 1f - (1f - StatConversion.GetArmorDamageReduction(bossOpts.Level, character.Level, stats.Armor, 0f, 0f))
+                                                            * (1f - stats.DamageTakenReductionMultiplier)
+                                                            * (1f - stats.BossPhysicalDamageDealtReductionMultiplier);
+                    Dictionary<ItemDamageType, float> SurvivabilityPointsRaw = new Dictionary<ItemDamageType, float>() {
+                        { ItemDamageType.Physical, stats.Health / (1f - TotalConstantDamageReduction) },
+                        { ItemDamageType.Arcane,   stats.Health / ((1f - StatConversion.GetMinimumResistance(bossOpts.Level, character.Level, stats.ArcaneResistance, 0)) * (1f - stats.DamageTakenReductionMultiplier)) },
+                        { ItemDamageType.Fire,     stats.Health / ((1f - StatConversion.GetMinimumResistance(bossOpts.Level, character.Level, stats.FireResistance,   0)) * (1f - stats.DamageTakenReductionMultiplier)) },
+                        { ItemDamageType.Frost,    stats.Health / ((1f - StatConversion.GetMinimumResistance(bossOpts.Level, character.Level, stats.FrostResistance,  0)) * (1f - stats.DamageTakenReductionMultiplier)) },
+                        { ItemDamageType.Holy,     stats.Health / ((1f)                                                                                                   * (1f - stats.DamageTakenReductionMultiplier)) },
+                        { ItemDamageType.Nature,   stats.Health / ((1f - StatConversion.GetMinimumResistance(bossOpts.Level, character.Level, stats.NatureResistance, 0)) * (1f - stats.DamageTakenReductionMultiplier)) },
+                        { ItemDamageType.Shadow,   stats.Health / ((1f - StatConversion.GetMinimumResistance(bossOpts.Level, character.Level, stats.ShadowResistance, 0)) * (1f - stats.DamageTakenReductionMultiplier)) },
+                    };
+                    Dictionary<ItemDamageType, float> SurvivabilityPoints = SoftCapSurvivals(charStruct, highestDmg, SurvivabilityPointsRaw);
+
+                    if (stats.HealthRestoreFromMaxHealth > 0) {
+                        stats.HealthRestore += stats.HealthRestoreFromMaxHealth * stats.Health * bossOpts.BerserkTimer;
+                    }
+
+                    float survs = 0f;
+                    foreach (ItemDamageType t in SurvivabilityPoints.Keys) { survs += SurvivabilityPoints[t] * percDmg[t]; }
+                    float HealthRest2Surv = survs / 100f + Rot._HPS_TTL + stats.HealthRestore / 100f;
+                    calc.TotalHPS = Rot._HPS_TTL;
+                    calc.Survivability = calcOpts.SurvScale * HealthRest2Surv;
+                } else {
+                    // No point in running all those calcs just to zero them out after
+                    calc.TotalHPS = Rot._HPS_TTL;
+                    calc.Survivability = 0f;
+                }
                 #endregion
 
-#if RELEASE
-                if (combatFactors.FuryStance) {
-                    // Fury isn't set up, we don't want any numbers to come out and make users think it works
-                    calc.OverallPoints = calc.TotalDPS = calc.Survivability = 0f;
-                }
-#endif
                 calc.OverallPoints = calc.TotalDPS + calc.Survivability;
 
+                #region Old ArP cap calc, keeping in case another cap has to be implemented
                 //calculatedStats.UnbuffedStats = GetCharacterStats(character, additionalItem, StatType.Unbuffed, calcOpts, bossOpts);
                 /*if (needsDisplayCalculations)
                 {
@@ -1546,10 +1639,23 @@ a GCD's length, you will use this while running back into place",
                     }
                     calc.MaxArmorPenetration = StatConversion.GetArmorPenetrationFromRating(maxArp);
                 }*/
+                #endregion
 
+#if DEBUG
+                /*foreach (string c in Rotation.ConstructionCounts.Keys) {
+                    if (!ConstructionCounts.ContainsKey(c)) { ConstructionCounts.Add(c, 0); }
+                    ConstructionCounts[c] = Rotation.ConstructionCounts[c];
+                }
+                foreach (string c in CombatFactors.ConstructionCounts.Keys) {
+                    if (!ConstructionCounts.ContainsKey(c)) { ConstructionCounts.Add(c, 0); }
+                    ConstructionCounts[c] = CombatFactors.ConstructionCounts[c];
+                }
+                string counts = GetConstructionCounts();
+                Clipboard.SetText(counts);
+                //System.Windows.MessageBox.Show(counts, "DPSWarr Counts", System.Windows.MessageBoxButton.OK);*/
+#endif
             } catch (Exception ex) {
-                new Base.ErrorBox()
-                {
+                new Base.ErrorBox() {
                     Title = "Error in creating Stat Pane Calculations",
                     Function = "GetCharacterCalculations()",
                     TheException = ex,
@@ -1557,8 +1663,42 @@ a GCD's length, you will use this while running back into place",
             }
             return calc;
         }
-        
+
+        static double fourToTheNegativeFourThirds = Math.Pow(4d, -4d / 3d);
+        static double topRight = Math.Pow(fourToTheNegativeFourThirds, 1d / 4d);
+        public float SoftCapSurv(float raw, float damage) {
+            if (damage <= 0f) { return 0f; }
+            double survivalCap = damage * 2.0f / 1000d;
+            double survivalRaw = raw / 1000d;
+
+            //Implement Survival Soft Cap
+            if (survivalRaw <= survivalCap) {
+                return 1000f * (float)survivalRaw;
+            } else {
+                double x = survivalRaw;
+                double cap = survivalCap;
+                double topLeft = Math.Pow(((x - cap) / cap) + fourToTheNegativeFourThirds, 1d / 4d);
+                double fracTop = topLeft - topRight;
+                double fraction = fracTop / 2d;
+                double y = (cap * fraction + cap);
+                return 1000f * (float)y;
+            }
+        }
+
+        public Dictionary<ItemDamageType, float> SoftCapSurvivals(DPSWarrCharacter dpswarchar, Dictionary<ItemDamageType, float> highestDmg, Dictionary<ItemDamageType, float> survivalRaws) {
+            Dictionary<ItemDamageType, float> cappedValues = new Dictionary<ItemDamageType, float>() { };
+            //
+            foreach (ItemDamageType t in highestDmg.Keys) {
+                cappedValues[t] = SoftCapSurv(survivalRaws[t], highestDmg[t]);
+            }
+            //
+            return cappedValues;
+        }
+
         public override Stats GetCharacterStats(Character character, Item additionalItem) {
+#if DEBUG
+            //ConstructionCounts["GetCharacterStats_Override"]++;
+#endif
             if (character == null) { return new Stats(); }
             try {
                 Base.StatsWarrior statsRace = null;
@@ -1576,6 +1716,9 @@ a GCD's length, you will use this while running back into place",
 
         private Base.StatsWarrior GetCharacterStats_Buffed(DPSWarrCharacter dpswarchar, Item additionalItem, bool isBuffed, out Base.StatsWarrior statsRace)
         {
+#if DEBUG
+            //ConstructionCounts["GetCharacterStats_Buffed"]++;
+#endif
             if (dpswarchar.CalcOpts == null) { dpswarchar.CalcOpts = dpswarchar.Char.CalculationOptions as CalculationOptionsDPSWarr; }
             if (dpswarchar.BossOpts == null) { dpswarchar.BossOpts = dpswarchar.Char.BossOptions; }
             if (dpswarchar.CombatFactors == null) { dpswarchar.CombatFactors = new CombatFactors(dpswarchar.Char, new Base.StatsWarrior(), dpswarchar.CalcOpts, dpswarchar.BossOpts); }
@@ -1640,6 +1783,7 @@ a GCD's length, you will use this while running back into place",
                                                 ? talents.BloodFrenzy * 0.15f : 0f),
                 PhysicalCrit = (talents.Rampage > 0 && dpswarchar.CombatFactors.FuryStance && isBuffed ? 0.05f + 0.02f : 0f), // Cata has a new +2% on self (group gets 5%, self gets total 7%)
                 PhysicalHit = (dpswarchar.CombatFactors.FuryStance ? 0.03f : 0f), // Fury Spec has passive 3% Hit
+                BonusWhiteDamageMultiplier = (dpswarchar.CombatFactors.FuryStance ? 0.40f : 0f), // Fury Spec has passive 40% Bonus White Damage Mult
                 // Defensive
                 BaseArmorMultiplier = talents.Toughness * 0.10f / 3f,
                 BonusHealingReceived = talents.FieldDressing * 0.03f,
@@ -1698,16 +1842,22 @@ a GCD's length, you will use this while running back into place",
 
         private Base.StatsWarrior GetCharacterStats(Character character, Item additionalItem, StatType statType, CalculationOptionsDPSWarr calcOpts, BossOptions bossOpts, out Base.StatsWarrior statsRace)
         {
+#if DEBUG
+            //ConstructionCounts["GetCharacterStats"]++;
+#endif
             CombatFactors temp; Skills.WhiteAttacks temp2; Rotation temp3;
             return GetCharacterStats(character, additionalItem, statType, calcOpts, bossOpts, out statsRace, out temp, out temp2, out temp3);
         }
         private Base.StatsWarrior GetCharacterStats(Character character, Item additionalItem, StatType statType, CalculationOptionsDPSWarr calcOpts, BossOptions bossOpts,
             out Base.StatsWarrior statsRace, out CombatFactors combatFactors, out Skills.WhiteAttacks whiteAttacks, out Rotation Rot)
         {
+#if DEBUG
+            //ConstructionCounts["GetCharacterStats_Inner"]++;
+#endif
             DPSWarrCharacter dpswarchar = new DPSWarrCharacter { Char = character, CalcOpts = calcOpts, BossOpts = bossOpts, Talents = character.WarriorTalents, CombatFactors = null, Rot = null };
             Base.StatsWarrior statsTotal = GetCharacterStats_Buffed(dpswarchar, additionalItem, statType != StatType.Unbuffed, out statsRace);
             dpswarchar.StatS = statsTotal;
-            combatFactors = new CombatFactors(character, statsTotal, calcOpts, bossOpts);
+            combatFactors = new CombatFactors(character, statsTotal, calcOpts, bossOpts); // we have to regenerate it here
             dpswarchar.CombatFactors = combatFactors;
             whiteAttacks = new Skills.WhiteAttacks(dpswarchar);
             dpswarchar.Whiteattacks = whiteAttacks;
@@ -1796,6 +1946,9 @@ a GCD's length, you will use this while running back into place",
 
         private void DoSpecialEffects(DPSWarrCharacter charStruct, List<SpecialEffect> bersMainHand, List<SpecialEffect> bersOffHand, Base.StatsWarrior statsTotal)
         {
+#if DEBUG
+            //ConstructionCounts["DoSpecialEffects"]++;
+#endif
             #region Initialize Triggers
             Dictionary<Trigger, float> triggerIntervals = new Dictionary<Trigger, float>();
             Dictionary<Trigger, float> triggerChances = new Dictionary<Trigger, float>();
@@ -1956,6 +2109,9 @@ a GCD's length, you will use this while running back into place",
 
         private static void CalculateTriggers(DPSWarrCharacter charStruct, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances)
         {
+#if DEBUG
+            //ConstructionCounts["CalculateTriggers"]++;
+#endif
             string addInfo = "No Additional Info";
             try
             {
@@ -2126,6 +2282,9 @@ a GCD's length, you will use this while running back into place",
             Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances, float oldFlurryUptime,
             bool iterate, Base.StatsWarrior iterateOld, Base.StatsWarrior originalStats)
         {
+#if DEBUG
+            //ConstructionCounts["IterativeSpecialEffectsStats"]++;
+#endif
             WarriorTalents talents = charStruct.Char.WarriorTalents;
             float fightDuration = charStruct.BossOpts.BerserkTimer;
             Base.StatsWarrior statsProcs = new Base.StatsWarrior();
@@ -2297,6 +2456,9 @@ a GCD's length, you will use this while running back into place",
 
         private float ApplySpecialEffect(SpecialEffect effect, DPSWarrCharacter charStruct, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances, ref Base.StatsWarrior applyTo)
         {
+#if DEBUG
+            //ConstructionCounts["ApplySpecialEffect"]++;
+#endif
             float fightDuration = charStruct.BossOpts.BerserkTimer;
             float fightDuration2Pass = charStruct.CalcOpts.SE_UseDur ? fightDuration : 0;
 
@@ -2349,6 +2511,9 @@ a GCD's length, you will use this while running back into place",
 
         private static Base.StatsWarrior UpdateStatsAndAdd(Base.StatsWarrior statsToAdd, Base.StatsWarrior baseStats, Character character)
         {
+#if DEBUG
+            //ConstructionCounts["UpdateStatsAndAdd"]++;
+#endif
             Base.StatsWarrior retVal;
             float newStaMult = 1f + statsToAdd.BonusStaminaMultiplier;
             float newStrMult = 1f + statsToAdd.BonusStrengthMultiplier;
