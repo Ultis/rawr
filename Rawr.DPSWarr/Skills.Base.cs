@@ -24,7 +24,7 @@ namespace Rawr.DPSWarr.Skills
             //
             SlamActsOverDurO20 = SlamActsOverDurU20 = 0f;
         }
-        private DPSWarrCharacter DPSWarrChar;
+        private DPSWarrCharacter DPSWarrChar { get; set; }
         public AttackTable MHAtkTable { get; private set; }
         public AttackTable OHAtkTable { get; private set; }
         #region Cacheable Values
@@ -241,22 +241,24 @@ namespace Rawr.DPSWarr.Skills
         public float CriticalAtksOverDurOH { get { return (DPSWarrChar.CombatFactors.useOH ? OHActivatesAll * OHAtkTable.Crit : 0f); } }
         #endregion
         // Other
-        private float AvgTargets
-        {
-            get
-            {
-                if (DPSWarrChar.BossOpts.MultiTargs && DPSWarrChar.BossOpts.Targets != null && DPSWarrChar.BossOpts.Targets.Count > 0)
-                {
-                    float value = 0;
-                    foreach (TargetGroup tg in DPSWarrChar.BossOpts.Targets)
-                    {
-                        if (tg.Frequency <= 0 || tg.Chance <= 0) continue; // bad one, skip it
-                        float upTime = (tg.Frequency / DPSWarrChar.BossOpts.BerserkTimer * (tg.Duration / 1000f) * tg.Chance) / DPSWarrChar.BossOpts.BerserkTimer;
-                        value += (Math.Max(10, tg.NumTargs - (tg.NearBoss ? 0 : 1) + DPSWarrChar.StatS.BonusTargets)) * upTime;
-                    }
-                    return 1f + value;
+        private float _avgTargets = -1f;
+        private float AvgTargets {
+            get {
+                if (_avgTargets == -1f) {
+                    if (DPSWarrChar.BossOpts.MultiTargs && DPSWarrChar.BossOpts.Targets != null && DPSWarrChar.BossOpts.Targets.Count > 0) {
+                        float value = 0;
+                        foreach (TargetGroup tg in DPSWarrChar.BossOpts.Targets) {
+                            if (!tg.Validate) { continue; } // Bad one, skip it
+                            if (!tg.AffectsRole[PLAYER_ROLES.MeleeDPS]) { continue; } // Doesn't apply to us
+                            float upTime = ((DPSWarrChar.BossOpts.BerserkTimer / tg.Frequency) * (tg.Duration / 1000f)) / DPSWarrChar.BossOpts.BerserkTimer
+                                   * tg.Chance // Chance it happens to us
+                                   * tg.FightUptimePercent; // The Phase uptime
+                            value += (Math.Min(10 - (tg.NearBoss ? 1 : 0), tg.NumTargs - (tg.NearBoss ? 1 : 0) + DPSWarrChar.StatS.BonusTargets)) * upTime;
+                        }
+                        _avgTargets = 1f + value;
+                    } else { _avgTargets = 1f; }
                 }
-                else { return 1f; }
+                return _avgTargets;
             }
         }
         public float RageSlip(float abilInterval=0, float rageCost=0, float timeMod=1f) {
@@ -479,27 +481,24 @@ Percentage of Total DPS: {15:00.00%}",
         public bool ReqMeleeWeap { get; set; }
         public bool ReqMeleeRange { get; set; }
         protected bool ReqMultiTargs { get; set; }
-        private float _AvgTargets = -1f;
+        private float _avgTargets = -1f;
         public float AvgTargets {
             get {
-                //float extraTargetsHit = Math.Min(DPSWarrChar.CalcOpts.MultipleTargetsMax, TARGETS) - 1f;
-                if (_AvgTargets == -1f && Targets != -1)
-                {
-                    //_AvgTargets = 1f + (BossOpts.MultiTargs ? StatS.BonusTargets + (float)BossOpts.MultiTargsPerc * (Math.Min((float)BossOpts.MaxNumTargets, Targets) - 1f) : 0f);
-                    if (DPSWarrChar.BossOpts.MultiTargs && DPSWarrChar.BossOpts.Targets != null && DPSWarrChar.BossOpts.Targets.Count > 0)
-                    {
+                if (_avgTargets == -1f && Targets != -1) {
+                    if (DPSWarrChar.BossOpts.MultiTargs && DPSWarrChar.BossOpts.Targets != null && DPSWarrChar.BossOpts.Targets.Count > 0) {
                         float value = 0;
-                        foreach (TargetGroup tg in DPSWarrChar.BossOpts.Targets)
-                        {
-                            if (!tg.Validate) continue; // bad one, skip it
-                            //float upTime = (tg.Frequency / BossOpts.BerserkTimer * (tg.Duration / 1000f) * tg.Chance)/* / BossOpts.BerserkTimer*/;
-                            float upTime = (tg.Duration / 1000f) / tg.Frequency;//(tg.Frequency / BossOpts.BerserkTimer *  * tg.Chance)/* / BossOpts.BerserkTimer*/;
-                            value += (Math.Min(10 - (tg.NearBoss ? 1 : 0), Math.Min(Targets - (tg.NearBoss ? 1 : 0), tg.NumTargs - (tg.NearBoss ? 1 : 0))) + DPSWarrChar.StatS.BonusTargets) * upTime;
+                        foreach (TargetGroup tg in DPSWarrChar.BossOpts.Targets) {
+                            if (!tg.Validate) { continue; } // Bad one, skip it
+                            if (!tg.AffectsRole[PLAYER_ROLES.MeleeDPS]) { continue; } // Doesn't apply to us
+                            float upTime = ((DPSWarrChar.BossOpts.BerserkTimer / tg.Frequency) * (tg.Duration / 1000f)) / DPSWarrChar.BossOpts.BerserkTimer
+                                   * tg.Chance // Chance it happens to us
+                                   * tg.FightUptimePercent; // The Phase uptime
+                            value += (Math.Min(10 - (tg.NearBoss ? 1 : 0), Math.Min(Targets - (tg.NearBoss ? 1 : 0), tg.NumTargs - (tg.NearBoss ? 1 : 0) + DPSWarrChar.StatS.BonusTargets))) * upTime;
                         }
-                        _AvgTargets = 1f + value;
-                    } else { _AvgTargets = 1f; }
+                        _avgTargets = 1f + value;
+                    } else { _avgTargets = 1f; }
                 }
-                return _AvgTargets;
+                return _avgTargets;
             }
         }
         public float Targets { get; protected set; }

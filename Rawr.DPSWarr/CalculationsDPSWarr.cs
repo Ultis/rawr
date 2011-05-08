@@ -1526,30 +1526,42 @@ a GCD's length, you will use this while running back into place",
                 Rot.MakeRotationandDoDPS(true, needsDisplayCalculations);
 
                 #region Special Damage Procs, like Bandit's Insignia or Hand-mounted Pyro Rockets
-                Dictionary<Trigger, float> triggerIntervals = new Dictionary<Trigger, float>();
-                Dictionary<Trigger, float> triggerChances = new Dictionary<Trigger, float>();
-                CalculateTriggers(charStruct, triggerIntervals, triggerChances);
-                DamageProcs.SpecialDamageProcs SDP;
                 calc.SpecProcDPS = calc.SpecProcDmgPerHit = calc.SpecProcActs = 0f;
                 if (stats._rawSpecialEffectData != null && character.MainHand != null) {
-                    if (character.Race == CharacterRace.Goblin && statsRace._rawSpecialEffectData.Length > 0) {
-                        // Fix the damage for Goblin Rockets
-                        foreach (SpecialEffect s in stats.SpecialEffects()) {
-                            if (s.Stats != null && s.Stats.FireDamage == (1f + character.Level * 2)) {
-                                s.Stats.FireDamage += stats.AttackPower * 0.25f   // AP Bonus
-                                                    + stats.Intellect * 0.50193f; // Int Bonus
+                    bool runIt = false;
+                    foreach (SpecialEffect s in stats.SpecialEffects()) {
+                        if (s.Stats == null) { continue; }
+                        if (s.Stats.ShadowDamage != 0) { runIt = true; break; }
+                        if (s.Stats.FireDamage   != 0) { runIt = true; break; }
+                        if (s.Stats.HolyDamage   != 0) { runIt = true; break; }
+                        if (s.Stats.FrostDamage  != 0) { runIt = true; break; }
+                        if (s.Stats.NatureDamage != 0) { runIt = true; break; }
+                        if (s.Stats.ArcaneDamage != 0) { runIt = true; break; }
+                    }
+                    if (runIt) {
+                        DamageProcs.SpecialDamageProcs SDP;
+                        Dictionary<Trigger, float> triggerIntervals = new Dictionary<Trigger, float>();
+                        Dictionary<Trigger, float> triggerChances = new Dictionary<Trigger, float>();
+                        CalculateTriggers(charStruct, triggerIntervals, triggerChances);
+                        if (character.Race == CharacterRace.Goblin && statsRace._rawSpecialEffectData.Length > 0) {
+                            // Fix the damage for Goblin Rockets
+                            foreach (SpecialEffect s in stats.SpecialEffects()) {
+                                if (s.Stats != null && s.Stats.FireDamage == (1f + character.Level * 2)) {
+                                    s.Stats.FireDamage += stats.AttackPower * 0.25f   // AP Bonus
+                                                        + stats.Intellect * 0.50193f; // Int Bonus
+                                }
                             }
                         }
-                    }
-                    SDP = new Rawr.DamageProcs.SpecialDamageProcs(character, stats, calc.TargetLevel - character.Level,
-                        new List<SpecialEffect>(stats.SpecialEffects()),
-                        triggerIntervals, triggerChances,
-                        bossOpts.BerserkTimer,
-                        combatFactors.DamageReduction);
+                        SDP = new Rawr.DamageProcs.SpecialDamageProcs(character, stats, calc.TargetLevel - character.Level,
+                            new List<SpecialEffect>(stats.SpecialEffects()),
+                            triggerIntervals, triggerChances,
+                            bossOpts.BerserkTimer,
+                            combatFactors.DamageReduction);
 
-                    calc.SpecProcDPS = SDP.CalculateAll();
-                    calc.SpecProcDmgPerHit = SDP.GetDamagePerHit;
-                    calc.SpecProcActs = SDP.GetTotalNumProcs;
+                        calc.SpecProcDPS = SDP.CalculateAll();
+                        calc.SpecProcDmgPerHit = SDP.GetDamagePerHit;
+                        calc.SpecProcActs = SDP.GetTotalNumProcs;
+                    }
                 }
                 calc.TotalDPS += calc.SpecProcDPS;
                 #endregion
@@ -2111,14 +2123,16 @@ a GCD's length, you will use this while running back into place",
         {
 #if DEBUG
             //ConstructionCounts["CalculateTriggers"]++;
-#endif
             string addInfo = "No Additional Info";
+#endif
             try
             {
                 float fightDuration = charStruct.BossOpts.BerserkTimer;
                 float fightDurationO20 = charStruct.Rot.FightDurationO20;
                 float fightDurationU20 = charStruct.Rot.FightDurationU20;
+#if DEBUG
                 addInfo = "FightDur Passed";
+#endif
                 //float fightDuration2Pass = charStruct.calcOpts.SE_UseDur ? fightDuration : 0;
 
                 float attemptedMH = charStruct.Rot.AttemptedAtksOverDurMH;
@@ -2134,7 +2148,9 @@ a GCD's length, you will use this while running back into place",
                 float avoidedAttacks = charStruct.CombatFactors.StatS.Dodge + charStruct.CombatFactors.StatS.Parry;
 
                 float dwbleed = 0;
+#if DEBUG
                 addInfo += "\r\nBig if started";
+#endif
                 if (charStruct.Char.WarriorTalents.DeepWounds > 0 && crit != 0f)
                 {
                     float dwTicks = 1f;
@@ -2159,7 +2175,9 @@ a GCD's length, you will use this while running back into place",
                     }
                     dwbleed = fightDuration * dwTicks;
                 }
+#if DEBUG
                 addInfo += "\r\nBuncha Floats started";
+#endif
                 float bleed = dwbleed + fightDuration * (charStruct.CombatFactors.FuryStance || !charStruct.CalcOpts.MaintenanceTree[(int)Maintenance.Rend] ? 0f : 1f / 3f);
 
                 float bleedHitInterval = fightDuration / bleed;
@@ -2169,8 +2187,19 @@ a GCD's length, you will use this while running back into place",
                 float attemptedAtksIntervalOH = fightDuration / attemptedOH;
                 //float landedAtksInterval = fightDuration / land;
                 float dmgDoneInterval = fightDuration / (land + bleed);
-                float dmgTakenInterval = fightDuration / charStruct.BossOpts.AoETargsFreq;
+                float dmgTakenInterval = 0f;
+                {
+                    List<Attack> attacks = charStruct.BossOpts.Attacks.FindAll(a => a.AffectsRole[PLAYER_ROLES.MeleeDPS] && a.Validate);
+                    float frequency = 0;
+                    foreach (Attack a in attacks) {
+                        frequency += 1f / a.AttackSpeed;
+                    }
+                    dmgTakenInterval = 1f / frequency;
+                }
+                
+#if DEBUG
                 addInfo += "\r\nAoETargsFreq Passed";
+#endif
                 float hitRate = 1, hitRateMH = 1, hitRateOH = 1, critRate = 1;
                 if (attempted != 0f)
                 {
@@ -2182,7 +2211,9 @@ a GCD's length, you will use this while running back into place",
                 if (attemptedOH != 0f)
                     hitRateOH = landOH / attemptedOH;
 
+#if DEBUG
                 addInfo += "\r\nTriggers started";
+#endif
                 triggerIntervals[Trigger.Use] = 0f;
                 triggerChances[Trigger.Use] = 1f;
 
@@ -2266,13 +2297,16 @@ a GCD's length, you will use this while running back into place",
                 triggerIntervals[Trigger.OPorRBAttack] = (((opActs + rbActs) > 0f) ? (fightDuration / (opActs + rbActs)) : 0f);
                 triggerChances[Trigger.OPorRBAttack]   = 1f;
 
+#if DEBUG
                 addInfo += "\r\nFinished";
+#endif
             } catch (Exception ex) {
-                new Base.ErrorBox()
-                {
+                new Base.ErrorBox() {
                     Title = "Error Calculating Triggers",
                     Function = "CalculateTriggers()",
+#if DEBUG
                     Info = addInfo,
+#endif
                     TheException = ex,
                 }.Show();
             }
@@ -2481,7 +2515,7 @@ a GCD's length, you will use this while running back into place",
                 } else {
                     upTime = effect.GetAverageStackSize(0f, 1f, charStruct.CombatFactors.CMHItemSpeed, fightDuration2Pass); 
                 }
-            } else if (effect.Duration == 0f) {
+            } else if (effect.Duration == 0f && triggerIntervals.ContainsKey(effect.Trigger) && !float.IsInfinity(triggerIntervals[effect.Trigger])) {
                 upTime = effect.GetAverageProcsPerSecond(triggerIntervals[effect.Trigger], 
                                                          triggerChances[effect.Trigger],
                                                          charStruct.CombatFactors.CMHItemSpeed,
@@ -2491,7 +2525,7 @@ a GCD's length, you will use this while running back into place",
                                                          triggerChances[effect.Trigger],
                                                          charStruct.CombatFactors.CMHItemSpeed,
                                                          fightDuration2Pass * (float)charStruct.BossOpts.Under20Perc);
-            } else if (triggerIntervals.ContainsKey(effect.Trigger)) {
+            } else if (triggerIntervals.ContainsKey(effect.Trigger) && !float.IsInfinity(triggerIntervals[effect.Trigger])) {
                 upTime = effect.GetAverageStackSize(triggerIntervals[effect.Trigger], 
                                                          triggerChances[effect.Trigger],
                                                          charStruct.CombatFactors.CMHItemSpeed,

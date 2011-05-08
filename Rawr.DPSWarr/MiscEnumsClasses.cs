@@ -343,7 +343,7 @@ namespace Rawr.DPSWarr
             null,
             new SpecialEffect(Trigger.DamageTaken, new Stats() { HealthRestoreFromMaxHealth = 0.01f * 1f, }, 0f, 0f, 0.10f),
             new SpecialEffect(Trigger.DamageTaken, new Stats() { HealthRestoreFromMaxHealth = 0.01f * 2f, }, 0f, 0f, 0.10f),
-            new SpecialEffect(Trigger.DamageTaken, new Stats() { HealthRestoreFromMaxHealth = 0.02f * 3f, }, 0f, 0f, 0.10f),
+            new SpecialEffect(Trigger.DamageTaken, new Stats() { HealthRestoreFromMaxHealth = 0.01f * 3f, }, 0f, 0f, 0.10f),
         };
         #endregion
         #region Executioner

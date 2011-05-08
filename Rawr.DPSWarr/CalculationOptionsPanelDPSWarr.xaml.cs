@@ -70,7 +70,7 @@ namespace Rawr.DPSWarr {
         }
         public void LoadCalculationOptions()
         {
-            string info = "";
+            //string info = "";
             _loadingCalculationOptions = true;
             try {
                 if (Character != null && Character.CalculationOptions == null)
@@ -94,7 +94,7 @@ namespace Rawr.DPSWarr {
                     Title = "Error in loading the DPSWarr Options Pane",
                     Function = "LoadCalculationOptions()",
                     TheException = ex,
-                    Info = info,
+                    //Info = info,
                 }.Show();
             }
             _loadingCalculationOptions = false;

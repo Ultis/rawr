@@ -20,20 +20,17 @@ namespace Rawr.DPSWarr {
             //ConstructionCounts["CombatFactors"]++;
 #endif
         }
+#if DEBUG
         /*public static Dictionary<string, int> ConstructionCounts = new Dictionary<string, int>() {
             { "CombatFactors", 0 },
         };*/
+#endif
         private bool? _FuryStance = null;
         public bool FuryStance {
             get {
                 if (_FuryStance == null) {
                     if (Talents == null) { return false; } // wait till there is one
-                    int armsCounter = 0, furyCounter = 0;
-                    int[] talentData = Talents.Data;
-                    for (int i =  0; i <= 19; i++) { armsCounter += talentData[i]; }
-                    for (int i = 20; i <= 40; i++) { furyCounter += talentData[i]; }
-                    if (armsCounter >= furyCounter) _FuryStance = false;
-                    else if(armsCounter <  furyCounter) _FuryStance = true;
+                    _FuryStance = Talents.HighestTree == 1;
                 }
                 return (bool)_FuryStance;
             }

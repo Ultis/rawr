@@ -45,15 +45,15 @@
         <TextBox x:Name="TB_Name" Text="" Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="0" Margin="50,2,4,2" VerticalAlignment="Center" />
         <!-- Frequency -->
         <TextBlock x:Name="LB_Freq" Text="Frequency:" TextWrapping="Wrap" d:LayoutOverrides="Height" Grid.Column="2" Margin="4,2" VerticalAlignment="Center" Grid.Row="1" />
-        <inputToolkit:NumericUpDown x:Name="NUD_Freq" Grid.Column="3" Margin="2" Maximum="1200" Minimum="1" Value="60" MinWidth="75" Height="22" Grid.Row="1" />
+        <inputToolkit:NumericUpDown x:Name="NUD_Freq" Grid.Column="3" Margin="2" Maximum="1200" Minimum="1" Value="60" MinWidth="75" Height="22" Grid.Row="1" DecimalPlaces="2" />
         <TextBlock x:Name="LB_Freq2" Text="sec" TextWrapping="Wrap" d:LayoutOverrides="Height" Grid.Column="4" Margin="4,2" Grid.ColumnSpan="2" VerticalAlignment="Center" Grid.Row="1" />
         <!-- Duration -->
         <TextBlock x:Name="LB_Dur" Text="Duration:" TextWrapping="Wrap" d:LayoutOverrides="Height" Grid.Row="2" Grid.Column="2" Margin="4,2" VerticalAlignment="Center"/>
-        <inputToolkit:NumericUpDown x:Name="NUD_Dur" Grid.Column="3" Grid.Row="2" Margin="2" Maximum="20000" Minimum="500" Value="5000" MinWidth="75" Height="22" />
+        <inputToolkit:NumericUpDown x:Name="NUD_Dur" Grid.Column="3" Grid.Row="2" Margin="2" Maximum="22800000" Minimum="500" Value="5000" MinWidth="75" Height="22" />
         <TextBlock x:Name="LB_Dur2" Text="ms" TextWrapping="Wrap" d:LayoutOverrides="Height" Grid.Column="4" Grid.Row="2" Margin="4,2" VerticalAlignment="Center"/>
         <!-- Chance to Affect you -->
         <TextBlock x:Name="LB_Chance" Text="Chance:" TextWrapping="Wrap" d:LayoutOverrides="Height" Grid.Row="3" Grid.Column="2" Margin="4,2" VerticalAlignment="Center"/>
-        <inputToolkit:NumericUpDown x:Name="NUD_Chance" Grid.Column="3" Grid.Row="3" Margin="2" Value="100" MinWidth="75" Height="22" />
+        <inputToolkit:NumericUpDown x:Name="NUD_Chance" Grid.Column="3" Grid.Row="3" Margin="2" Value="100" MinWidth="75" Height="22" DecimalPlaces="2" />
         <TextBlock x:Name="LB_Chance2" Text="%" TextWrapping="Wrap" d:LayoutOverrides="Height" Grid.Column="4" Grid.Row="3" Margin="4,2" VerticalAlignment="Center"/>
         <!-- Level of Targets -->
         <TextBlock x:Name="LB_LevelOfTargets" Text="Level of Targets:" TextWrapping="Wrap" d:LayoutOverrides="Height" Grid.Column="2" Grid.Row="4" Margin="4,2" VerticalAlignment="Center"/>
@@ -65,7 +65,7 @@
         </ComboBox>
         <!-- Number of Targets -->
         <TextBlock x:Name="LB_NumTargs" Text="Number of Targets:" TextWrapping="Wrap" d:LayoutOverrides="Height" Grid.Row="5" Grid.Column="2" Margin="4,2" VerticalAlignment="Center"/>
-        <inputToolkit:NumericUpDown x:Name="NUD_NumTargs" Grid.Column="3" Grid.Row="5" Margin="2" Maximum="10" Minimum="1" Value="2" MinWidth="75" Height="22" />
+        <inputToolkit:NumericUpDown x:Name="NUD_NumTargs" Grid.Column="3" Grid.Row="5" Margin="2" Maximum="10" Minimum="1" Value="2" MinWidth="75" Height="22" DecimalPlaces="2" />
         <!-- Near Boss -->
         <TextBlock x:Name="LB_NearBoss" Text="Near Boss: *" TextWrapping="Wrap" d:LayoutOverrides="Height" Grid.Column="2" Grid.Row="6" Margin="4,2" VerticalAlignment="Center"
                    ToolTipService.ToolTip="Checking this implies that the target group is near enough to the&#x0a;boss that  your melee (or an AoE attack like the Blizzard spell)&#x0a;can hit both the Boss and the Target Group at once." />
@@ -83,10 +83,10 @@
             <WrapPanel>
             <!--ENDIFWPF-->
                 <TextBlock x:Name="LB_PhaseStartTime" Margin="4,2,0,2" Text="Phase Start Time:" VerticalAlignment="Center" />
-                <inputToolkit:NumericUpDown x:Name="NUD_PhaseStartTime" Margin="2" Value="0" Maximum="{Binding ElementName=NUD_PhaseEndTime, Path=Value, Mode=OneWay}" Minimum="0" VerticalAlignment="Center" MinWidth="60" IsEnabled="False" />
+                <inputToolkit:NumericUpDown x:Name="NUD_PhaseStartTime" Margin="2" Value="0" Maximum="{Binding ElementName=NUD_PhaseEndTime, Path=Value, Mode=OneWay}" Minimum="0" VerticalAlignment="Center" MinWidth="60" IsEnabled="False" DecimalPlaces="1" />
                 <TextBlock x:Name="LB_PhaseStartTime2" Margin="0,2,4,2" Text="sec" VerticalAlignment="Center" />
                 <TextBlock x:Name="LB_PhaseEndTime" Margin="4,2,0,2" Text="Phase End Time:" VerticalAlignment="Center" />
-                <inputToolkit:NumericUpDown x:Name="NUD_PhaseEndTime" Margin="2" Value="1200" Maximum="1200" Minimum="{Binding ElementName=NUD_PhaseStartTime, Path=Value, Mode=OneWay}" VerticalAlignment="Center" MinWidth="60" IsEnabled="False" />
+                <inputToolkit:NumericUpDown x:Name="NUD_PhaseEndTime" Margin="2" Value="1200" Maximum="1200" Minimum="{Binding ElementName=NUD_PhaseStartTime, Path=Value, Mode=OneWay}" VerticalAlignment="Center" MinWidth="60" IsEnabled="False" DecimalPlaces="1" />
                 <TextBlock x:Name="LB_PhaseEndTime2" Margin="0,2,4,2" Text="sec" VerticalAlignment="Center" />
                 <!--IFSL
             </toolkitWrap:WrapPanel>

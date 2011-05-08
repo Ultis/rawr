@@ -54,7 +54,7 @@ namespace Rawr.UI
                 Chance = ((float)NUD_Chance.Value) / 100f,
                 NearBoss = (bool)CK_NearBoss.IsChecked,
                 NumTargs = (float)NUD_NumTargs.Value,
-                LevelOfTargets = CB_LevelOfTargets.SelectedIndex,
+                LevelOfTargets = (int)CB_LevelOfTargets.SelectedItem,
                 // Phase Info
                 //PhaseStartTime = (float)NUD_PhaseStartTime.Value,
                 //PhaseEndTime = (float)NUD_PhaseEndTime.Value,
@@ -99,7 +99,7 @@ namespace Rawr.UI
                 NUD_Chance.Value                = selected.Chance * 100f;
                 CK_NearBoss.IsChecked           = selected.NearBoss;
                 NUD_NumTargs.Value              = selected.NumTargs;
-                CB_LevelOfTargets.SelectedIndex = selected.LevelOfTargets;
+                CB_LevelOfTargets.SelectedItem  = selected.LevelOfTargets;
                 // Phase Info
                 //NUD_PhaseStartTime.Value = selected.PhaseStartTime;
                 //NUD_PhaseEndTime.Value = selected.PhaseEndTime;
@@ -122,7 +122,7 @@ namespace Rawr.UI
                 NUD_Chance.Value                = 100f;
                 CK_NearBoss.IsChecked           = false;
                 NUD_NumTargs.Value              = 2;
-                CB_LevelOfTargets.SelectedIndex = 2;
+                CB_LevelOfTargets.SelectedItem  = 87;
                 // Phase Info
                 NUD_PhaseStartTime.Value = 0;
                 NUD_PhaseEndTime.Value = 20 * 60;

@@ -160,30 +160,41 @@ namespace Rawr.DPSWarr {
         }
 
         protected virtual void InitAbilities() {
-            string info = "Before";
-            try {
+#if DEBUG
+            //string info = "Before";
+#endif
+            try
+            {
                 InvalidateAbilityLists();
                 // Whites
                 DPSWarrChar.Whiteattacks.InvalidateCache();
                 // Anti-Debuff
-                info = "Anti-Debuff";
+#if DEBUG
+                //info = "Anti-Debuff";
+#endif
                 AddAbility(new AbilityWrapper(new Skills.HeroicFury(DPSWarrChar)));
                 AddAbility(new AbilityWrapper(new Skills.EveryManForHimself(DPSWarrChar)));
                 AddAbility(new AbilityWrapper(new Skills.EscapeArtist(DPSWarrChar)));
                 AddAbility(new AbilityWrapper(new Skills.WillOfTheForsaken(DPSWarrChar)));
                 // Movement
-                info = "Movement";
+#if DEBUG
+                //info = "Movement";
+#endif
                 AddAbility(new AbilityWrapper(new Skills.Charge(DPSWarrChar)));
                 AddAbility(new AbilityWrapper(new Skills.Intercept(DPSWarrChar)));
                 AddAbility(new AbilityWrapper(new Skills.HeroicLeap(DPSWarrChar)));
                 // Rage Generators
-                info = "Rage Generators";
+#if DEBUG
+                //info = "Rage Generators";
+#endif
                 AddAbility(new AbilityWrapper(new Skills.SecondWind(DPSWarrChar)));
                 AddAbility(new AbilityWrapper(new Skills.BerserkerRage(DPSWarrChar)));
                 AddAbility(new AbilityWrapper(new Skills.DeadlyCalm(DPSWarrChar)));
                 AddAbility(new AbilityWrapper(new Skills.InnerRage(DPSWarrChar)));
                 // Maintenance
-                info = "Maintenance";
+#if DEBUG
+                //info = "Maintenance";
+#endif
                 AddAbility(new AbilityWrapper(new Skills.BattleShout(DPSWarrChar)));
                 AddAbility(new AbilityWrapper(new Skills.CommandingShout(DPSWarrChar)));
                 AddAbility(new AbilityWrapper(new Skills.RallyingCry(DPSWarrChar)));
@@ -192,7 +203,9 @@ namespace Rawr.DPSWarr {
                 AddAbility(new AbilityWrapper(new Skills.Hamstring(DPSWarrChar)));
                 AddAbility(new AbilityWrapper(new Skills.EnragedRegeneration(DPSWarrChar)));
                 // Periodics
-                info = "Periodics";
+#if DEBUG
+                //info = "Periodics";
+#endif
                 AddAbility(new AbilityWrapper(new Skills.HeroicThrow(DPSWarrChar)));
                 AddAbility(new AbilityWrapper(new Skills.ShatteringThrow(DPSWarrChar)));
                 AddAbility(new AbilityWrapper(new Skills.SweepingStrikes(DPSWarrChar)));
@@ -200,7 +213,9 @@ namespace Rawr.DPSWarr {
                 AddAbility(new AbilityWrapper(new Skills.Recklessness(DPSWarrChar)));
 
                 // Arms abilities
-                info = "Arms abilities";
+#if DEBUG
+                //info = "Arms abilities";
+#endif
                 AddAbility(new AbilityWrapper(new Skills.ColossusSmash(DPSWarrChar)));
                 AddAbility(new AbilityWrapper(new Skills.Bladestorm(DPSWarrChar)));
                 AddAbility(new AbilityWrapper(new Skills.MortalStrike(DPSWarrChar)));
@@ -217,7 +232,9 @@ namespace Rawr.DPSWarr {
                 AddAbility(new AbilityWrapper(new Skills.StrikesOfOpportunity(DPSWarrChar)));
 
                 // Fury abilities
-                info = "Fury abilities";
+#if DEBUG
+                //info = "Fury abilities";
+#endif
                 Skills.Ability WW = new Skills.Whirlwind(DPSWarrChar);
                 AddAbility(new AbilityWrapper(WW));
                 Ability BT = new Skills.Bloodthirst(DPSWarrChar);
@@ -227,11 +244,12 @@ namespace Rawr.DPSWarr {
 
                 DW = new Skills.DeepWounds(DPSWarrChar);
             } catch (Exception ex) {
-                new Base.ErrorBox()
-                {
+                new Base.ErrorBox() {
                     Title = "Error Initializing Rotation Abilities",
                     Function = "initAbilities()",
-                    Info = info,
+#if DEBUG
+                    //Info = info,
+#endif
                     TheException = ex,
                 }.Show();
             }
@@ -272,7 +290,31 @@ namespace Rawr.DPSWarr {
 
         public void InvalidateCache()
         {
-            for (int i = 0; i < 5; i++)
+            _atkOverDursO20 = new float[,,] {
+                { { -1, -1, -1 }, { -1, -1, -1 }, { -1, -1, -1 }, },
+                { { -1, -1, -1 }, { -1, -1, -1 }, { -1, -1, -1 }, },
+                { { -1, -1, -1 }, { -1, -1, -1 }, { -1, -1, -1 }, },
+                { { -1, -1, -1 }, { -1, -1, -1 }, { -1, -1, -1 }, },
+                { { -1, -1, -1 }, { -1, -1, -1 }, { -1, -1, -1 }, },
+                { { -1, -1, -1 }, { -1, -1, -1 }, { -1, -1, -1 }, },
+            };
+            _atkOverDursU20 = new float[,,] {
+                { { -1, -1, -1 }, { -1, -1, -1 }, { -1, -1, -1 }, },
+                { { -1, -1, -1 }, { -1, -1, -1 }, { -1, -1, -1 }, },
+                { { -1, -1, -1 }, { -1, -1, -1 }, { -1, -1, -1 }, },
+                { { -1, -1, -1 }, { -1, -1, -1 }, { -1, -1, -1 }, },
+                { { -1, -1, -1 }, { -1, -1, -1 }, { -1, -1, -1 }, },
+                { { -1, -1, -1 }, { -1, -1, -1 }, { -1, -1, -1 }, },
+            };
+            _atkOverDurs = new float[,,] {
+                { { -1, -1, -1 }, { -1, -1, -1 }, { -1, -1, -1 }, },
+                { { -1, -1, -1 }, { -1, -1, -1 }, { -1, -1, -1 }, },
+                { { -1, -1, -1 }, { -1, -1, -1 }, { -1, -1, -1 }, },
+                { { -1, -1, -1 }, { -1, -1, -1 }, { -1, -1, -1 }, },
+                { { -1, -1, -1 }, { -1, -1, -1 }, { -1, -1, -1 }, },
+                { { -1, -1, -1 }, { -1, -1, -1 }, { -1, -1, -1 }, },
+            };
+            /*for (int i = 0; i < 5; i++)
             {
                 for (int j = 0; j < 3; j++)
                 {
@@ -283,7 +325,7 @@ namespace Rawr.DPSWarr {
                         _atkOverDurs[i, j, k] = -1f;
                     }
                 }
-            }
+            }*/
         }
 
         #region Attacks over Duration
@@ -700,14 +742,10 @@ namespace Rawr.DPSWarr {
         #endregion
 
         #region Lost Time due to Combat Factors
-        /// <summary>
-        /// Calculates percentage of time lost due to moving, being rooted, etc
-        /// </summary>
-        /// <param name="MS">Placeholder right now for juggernaut handling.  Fury should pass null</param>
+        /// <summary>Calculates percentage of time lost due to moving, being rooted, etc</summary>
         /// <returns>Percentage of time lost as a float</returns>
         protected float CalculateTimeLost()
         {
-            //_emActs = 0f; //_emRecovery = 0f; _emRecoveryTotal = 0f;
             TimeLostGCDsO20 = TimeLostGCDsU20 = 0;
             RageGainedWhileMoving = 0;
 
@@ -715,19 +753,12 @@ namespace Rawr.DPSWarr {
             try {
                 percTimeInFearRootStunMove = CalculateFearRootStunMove();
             }catch(Exception ex) {
-                new Base.ErrorBox()
-                {
+                new Base.ErrorBox() {
                     Title = "Error Getting Time Lost Calcs",
                     Function = "CalculateTimeLost()",
                     TheException = ex,
                 }.Show();
             }
-            //float percTimeInFear = CalculateFear();
-            //float percTimeInStun = CalculateStun();
-            //float percTimeInRoot = CalculateRoot();
-            //float percTimeInMovement = CalculateMovement();
-            // We should be doing silences too, but since they only affect shouts and thunderclap, it will have to be handled differently
-            //return Math.Min(1f, percTimeInStun + percTimeInMovement + percTimeInFear + percTimeInRoot);
             return Math.Min(1f, percTimeInFearRootStunMove);
         }
         
@@ -749,12 +780,12 @@ namespace Rawr.DPSWarr {
 
             // Generate the master list
             List<ImpedanceWithType> allImps = new List<ImpedanceWithType>();
-            if (DPSWarrChar.BossOpts.FearingTargs && DPSWarrChar.BossOpts.Fears.Count > 0) { foreach (Impedance i in DPSWarrChar.BossOpts.Fears) { allImps.Add(new ImpedanceWithType { imp = i, type = ImpedanceTypes.Fear }); } }
-            if (DPSWarrChar.BossOpts.RootingTargs && DPSWarrChar.BossOpts.Roots.Count > 0) { foreach (Impedance i in DPSWarrChar.BossOpts.Roots) { allImps.Add(new ImpedanceWithType { imp = i, type = ImpedanceTypes.Root }); } }
-            if (DPSWarrChar.BossOpts.StunningTargs && DPSWarrChar.BossOpts.Stuns.Count > 0) { foreach (Impedance i in DPSWarrChar.BossOpts.Stuns) { allImps.Add(new ImpedanceWithType { imp = i, type = ImpedanceTypes.Stun }); } }
-            if (DPSWarrChar.BossOpts.MovingTargs && DPSWarrChar.BossOpts.Moves.Count > 0) { foreach (Impedance i in DPSWarrChar.BossOpts.Moves) { allImps.Add(new ImpedanceWithType { imp = i, type = ImpedanceTypes.Move }); } }
-            //if (DPSWarrChar.BossOpts.SilencingTargs && DPSWarrChar.BossOpts.Silences.Count > 0) { foreach (Impedance i in DPSWarrChar.BossOpts.Silences) { allImps.Add(new ImpedanceWithType { imp = i, type = ImpedanceTypes.Silence }); } }
-            if (DPSWarrChar.BossOpts.DisarmingTargs && DPSWarrChar.BossOpts.Disarms.Count > 0) { foreach (Impedance i in DPSWarrChar.BossOpts.Disarms) { allImps.Add(new ImpedanceWithType { imp = i, type = ImpedanceTypes.Disarm }); } }
+            if (DPSWarrChar.BossOpts.FearingTargs && DPSWarrChar.BossOpts.Fears.Count > 0) { foreach (Impedance i in DPSWarrChar.BossOpts.Fears) { if (i.Validate && i.AffectsRole[PLAYER_ROLES.MeleeDPS]) { allImps.Add(new ImpedanceWithType { imp = i, type = ImpedanceTypes.Fear }); } } }
+            if (DPSWarrChar.BossOpts.RootingTargs && DPSWarrChar.BossOpts.Roots.Count > 0) { foreach (Impedance i in DPSWarrChar.BossOpts.Roots) { if (i.Validate && i.AffectsRole[PLAYER_ROLES.MeleeDPS]) { allImps.Add(new ImpedanceWithType { imp = i, type = ImpedanceTypes.Root }); } } }
+            if (DPSWarrChar.BossOpts.StunningTargs && DPSWarrChar.BossOpts.Stuns.Count > 0) { foreach (Impedance i in DPSWarrChar.BossOpts.Stuns) { if (i.Validate && i.AffectsRole[PLAYER_ROLES.MeleeDPS]) { allImps.Add(new ImpedanceWithType { imp = i, type = ImpedanceTypes.Stun }); } } }
+            if (DPSWarrChar.BossOpts.MovingTargs && DPSWarrChar.BossOpts.Moves.Count > 0) { foreach (Impedance i in DPSWarrChar.BossOpts.Moves) { if (i.Validate && i.AffectsRole[PLAYER_ROLES.MeleeDPS]) { allImps.Add(new ImpedanceWithType { imp = i, type = ImpedanceTypes.Move }); } } }
+            //if (DPSWarrChar.BossOpts.SilencingTargs && DPSWarrChar.BossOpts.Silences.Count > 0) { foreach (Impedance i in DPSWarrChar.BossOpts.Silences) { if (i.Validate && i.AffectsRole[PLAYER_ROLES.MeleeDPS]) { allImps.Add(new ImpedanceWithType { imp = i, type = ImpedanceTypes.Silence }); } } }
+            if (DPSWarrChar.BossOpts.DisarmingTargs && DPSWarrChar.BossOpts.Disarms.Count > 0) { foreach (Impedance i in DPSWarrChar.BossOpts.Disarms) { if (i.Validate && i.AffectsRole[PLAYER_ROLES.MeleeDPS]) { allImps.Add(new ImpedanceWithType { imp = i, type = ImpedanceTypes.Disarm }); } } }
             
             // If the array has count 0 for some reason, don't process
             if (allImps.Count <= 0) { return 0; }
@@ -792,7 +823,8 @@ namespace Rawr.DPSWarr {
                 #region Validation and Variable Setup
                 chanceYouAreAffected = iwt.imp.Chance;
                 if (chanceYouAreAffected <= 0) { continue; } // If it can't affect you, skip it
-                acts = FightDuration / (iwt.imp.Frequency < FightDuration ? iwt.imp.Frequency : FightDuration);
+                iwt.imp.FightDuration = FightDuration;
+                acts = (FightDuration / (iwt.imp.Frequency < FightDuration ? iwt.imp.Frequency : FightDuration)) * iwt.imp.FightUptimePercent;
                 if (acts <= 0f || float.IsNaN(acts) || float.IsInfinity(acts)) { continue; } // If it never activates or is broken, skip it
                 float statReducVal = iwt.type == ImpedanceTypes.Fear ? DPSWarrChar.StatS.FearDurReduc
                                    : iwt.type == ImpedanceTypes.Root ? DPSWarrChar.StatS.SnareRootDurReduc

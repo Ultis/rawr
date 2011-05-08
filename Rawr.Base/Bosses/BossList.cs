@@ -706,7 +706,7 @@ namespace Rawr {
                 toAdd.AffectsRole[pr] = ((float)ARCounts[pr] / (float)imps.Count) > 0.25f; // at least 25% of the affected roles matched
             }
         }
-        private void CalculateAvgAttack(List<Attack> attacks, int maxPlayers, string name, bool defaultmelee, out Attack toAdd)
+        private void CalculateAvgAttack(List<Attack> attacks, float fightDur, int maxPlayers, string name, bool defaultmelee, out Attack toAdd)
         {
             bool isDot = attacks[0].IsDoT;
             float perhit = 0,
@@ -714,7 +714,8 @@ namespace Rawr {
                 duration = 0,
                 tickinterval = 0,
                 numtrg = 0,
-                atkspd = 0f;
+                atkspd = 0f,
+                phaseUptime = 0;
             Dictionary<ATTACK_TYPES, int> ATCounts = new Dictionary<ATTACK_TYPES, int>() {
                 { ATTACK_TYPES.AT_MELEE, 0 },
                 { ATTACK_TYPES.AT_RANGED, 0 },
@@ -749,6 +750,7 @@ namespace Rawr {
                 }
                 numtrg += a.MaxNumTargets;
                 atkspd += a.AttackSpeed;
+                phaseUptime += a.FightUptimePercent;
                 ATCounts[a.AttackType]++;
                 DTCounts[a.DamageType]++;
                 for (int i = 0; i < (int)PLAYER_ROLES.RaidHealer; i++)
@@ -764,6 +766,7 @@ namespace Rawr {
             }
             numtrg /= (float)attacks.Count;
             atkspd /= (float)attacks.Count;
+            phaseUptime /= (float)attacks.Count;
             ATTACK_TYPES at = ATTACK_TYPES.AT_MELEE;
             foreach(ATTACK_TYPES t in ATCounts.Keys){
                 if (ATCounts[t] > ATCounts[at]) { at = t; }
@@ -786,16 +789,19 @@ namespace Rawr {
                 MaxNumTargets = numtrg,
                 AttackSpeed = atkspd,
                 IsTheDefaultMelee = defaultmelee,
+                FightDuration = fightDur,
             };
+            toAdd.PhaseTimes[1] = new float[] { 0f, fightDur * phaseUptime };
             foreach (PLAYER_ROLES pr in ARCounts.Keys) {
                 toAdd.AffectsRole[pr] = ((float)ARCounts[pr] / (float)attacks.Count) > 0.25f; // at least 25% of the affected roles matched
             }
         }
-        private void CalculateAvgTargetGroup(List<TargetGroup> groups, int maxPlayers, string name, out TargetGroup toAdd) {
+        private void CalculateAvgTargetGroup(List<TargetGroup> groups, float fightDur, int maxPlayers, string name, out TargetGroup toAdd) {
             float duration = 0,
                 freq = 0,
                 chance = 0,
-                numtrg = 0;
+                numtrg = 0,
+                phaseUptime = 0;
             Dictionary<bool, int> NBCounts = new Dictionary<bool, int>() {
                 { false, 0 },
                 { true, 0 },
@@ -822,6 +828,7 @@ namespace Rawr {
                 freq += t.Frequency;
                 chance += t.Chance;
                 numtrg += t.NumTargs;
+                phaseUptime += t.FightUptimePercent;
                 NBCounts[t.NearBoss]++;
                 LvlCounts[t.LevelOfTargets]++;
                 for (int i = 0; i < (int)PLAYER_ROLES.RaidHealer; i++) {
@@ -833,6 +840,7 @@ namespace Rawr {
             freq /= (float)groups.Count;
             chance /= (float)groups.Count;
             numtrg /= (float)groups.Count;
+            phaseUptime /= (float)groups.Count;
             //
             bool snb = false;
             foreach(bool nb in NBCounts.Keys){
@@ -852,16 +860,19 @@ namespace Rawr {
                 NumTargs = numtrg,
                 LevelOfTargets = slvl,
                 NearBoss = snb,
+                FightDuration = fightDur,
             };
+            toAdd.PhaseTimes[1] = new float[] { 0f, fightDur * phaseUptime };
             foreach (PLAYER_ROLES pr in ARCounts.Keys) {
                 toAdd.AffectsRole[pr] = ((float)ARCounts[pr] / (float)groups.Count) > 0.25f; // at least 25% of the affected roles matched
             }
         }
-        private void CalculateAvgImpedance(List<Impedance> imps, int maxPlayers, string name, out Impedance toAdd)
+        private void CalculateAvgImpedance(List<Impedance> imps, float fightDur, int maxPlayers, string name, out Impedance toAdd)
         {
             float duration = 0,
                 freq = 0,
-                chance = 0;
+                chance = 0,
+                phaseUptime = 0;
             Dictionary<bool, int> BreakCounts = new Dictionary<bool, int>() {
                 { false, 0 },
                 { true, 0 },
@@ -882,6 +893,7 @@ namespace Rawr {
                 duration += t.Duration;
                 freq += t.Frequency;
                 chance += t.Chance;
+                phaseUptime += t.FightUptimePercent;
                 BreakCounts[t.Breakable]++;
                 for (int i = 0; i < (int)PLAYER_ROLES.RaidHealer; i++)
                 {
@@ -892,6 +904,7 @@ namespace Rawr {
             duration /= (float)imps.Count;
             freq /= (float)imps.Count;
             chance /= (float)imps.Count;
+            phaseUptime /= (float)imps.Count;
             //
             bool snb = false;
             foreach (bool nb in BreakCounts.Keys)
@@ -906,7 +919,9 @@ namespace Rawr {
                 Frequency = freq,
                 Chance = chance,
                 Breakable = snb,
+                FightDuration = fightDur,
             };
+            toAdd.PhaseTimes[1] = new float[] { 0, fightDur * phaseUptime };
             foreach (PLAYER_ROLES pr in ARCounts.Keys)
             {
                 toAdd.AffectsRole[pr] = ((float)ARCounts[pr] / (float)imps.Count) > 0.25f; // at least 25% of the affected roles matched
@@ -1122,7 +1137,7 @@ namespace Rawr {
                 switch (level)
                 {
                     case 1: { CalculateEZImpedance(imps, retboss.Max_Players, "Easy ", out toAdd); break; }
-                    case 2: { CalculateAvgImpedance(imps, retboss.Max_Players, "Avg ", out toAdd); break; }
+                    case 2: { CalculateAvgImpedance(imps, retboss.BerserkTimer, retboss.Max_Players, "Avg ", out toAdd); break; }
                     case 3:
                     default: { CalculateHardImpedance(imps, retboss.Max_Players, "Impossible ", out toAdd); break; }
                 }
@@ -1350,7 +1365,7 @@ namespace Rawr {
                 if (groups.Count > 0)
                 {
                     TargetGroup toAdd;
-                    CalculateAvgTargetGroup(groups, retboss.Max_Players, "Avg Target Groups", out toAdd);
+                    CalculateAvgTargetGroup(groups, retboss.BerserkTimer, retboss.Max_Players, "Avg Target Groups", out toAdd);
                     retboss.Targets.Add(toAdd);
                 }
             }
@@ -1367,7 +1382,8 @@ namespace Rawr {
                     if (attacks.Count > 0)
                     {
                         Attack toAdd;
-                        CalculateAvgAttack(attacks, retboss.Max_Players, "Avg Melee", true, out toAdd);
+                        CalculateAvgAttack(attacks, retboss.BerserkTimer, retboss.Max_Players, "Avg Melee", true, out toAdd);
+                        toAdd.PhaseTimes[1] = new float[] { 0f, retboss.BerserkTimer }; // Since this is the default melee, force it back to 100% uptime
                         retboss.Attacks.Add(toAdd);
                     }
                 }
@@ -1381,7 +1397,7 @@ namespace Rawr {
                     if (attacks.Count > 0)
                     {
                         Attack toAdd;
-                        CalculateAvgAttack(attacks, retboss.Max_Players, "Avg Special Melee", false, out toAdd);
+                        CalculateAvgAttack(attacks, retboss.BerserkTimer, retboss.Max_Players, "Avg Special Melee", false, out toAdd);
                         retboss.Attacks.Add(toAdd);
                     }
                 }
@@ -1395,7 +1411,7 @@ namespace Rawr {
                     if (attacks.Count > 0)
                     {
                         Attack toAdd;
-                        CalculateAvgAttack(attacks, retboss.Max_Players, "Avg Melee from Adds", true, out toAdd);
+                        CalculateAvgAttack(attacks, retboss.BerserkTimer, retboss.Max_Players, "Avg Melee from Adds", true, out toAdd);
                         retboss.Attacks.Add(toAdd);
                     }
                 }
@@ -1409,7 +1425,7 @@ namespace Rawr {
                     if (attacks.Count > 0)
                     {
                         Attack toAdd;
-                        CalculateAvgAttack(attacks, retboss.Max_Players, "Avg Ranged", false, out toAdd);
+                        CalculateAvgAttack(attacks, retboss.BerserkTimer, retboss.Max_Players, "Avg Ranged", false, out toAdd);
                         retboss.Attacks.Add(toAdd);
                     }
                 }
@@ -1423,7 +1439,7 @@ namespace Rawr {
                     if (attacks.Count > 0)
                     {
                         Attack toAdd;
-                        CalculateAvgAttack(attacks, retboss.Max_Players, "Avg AoE", false, out toAdd);
+                        CalculateAvgAttack(attacks, retboss.BerserkTimer, retboss.Max_Players, "Avg AoE", false, out toAdd);
                         retboss.Attacks.Add(toAdd);
                     }
                 }
@@ -1437,7 +1453,7 @@ namespace Rawr {
                     if (attacks.Count > 0)
                     {
                         Attack toAdd;
-                        CalculateAvgAttack(attacks, retboss.Max_Players, "Avg DoT", false, out toAdd);
+                        CalculateAvgAttack(attacks, retboss.BerserkTimer, retboss.Max_Players, "Avg DoT", false, out toAdd);
                         retboss.Attacks.Add(toAdd);
                     }
                 }
