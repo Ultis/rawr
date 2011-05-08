@@ -184,6 +184,14 @@ namespace Rawr
                     _tokenDropMap["67430"] = new TokenDropInfo() { Name = "Gauntlets of the Forlorn Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Magmaw", Heroic = true };
                     _tokenDropMap["67427"] = new TokenDropInfo() { Name = "Leggings of the Forlorn Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Maloriak", Heroic = true };
 
+
+                    // Holiday Satchels are going to be treated as quest rewards
+                    _questRewardMap["69771"] = new QuestItem() { Area = "Dungeon Finder", Quest = "World Event Dungeon - Ahune", MinLevel = 85, Party = 5, Source = ItemSource.Container };
+                    _questRewardMap["49715"] = new QuestItem() { Area = "Dungeon Finder", Quest = "World Event Dungeon - Hummel", MinLevel = 85, Party = 5, Source = ItemSource.Container };
+                    _questRewardMap["50741"] = new QuestItem() { Area = "Dungeon Finder", Quest = "World Event Dungeon - Hummel", MinLevel = 85, Party = 5, Source = ItemSource.Container };
+                    _questRewardMap["49120"] = new QuestItem() { Area = "Dungeon Finder", Quest = "World Event Dungeon - Coren Direbrew", MinLevel = 85, Party = 5, Source = ItemSource.Container };
+                    _questRewardMap["48663"] = new QuestItem() { Area = "Dungeon Finder", Quest = "World Event Dungeon - Coren Direbrew", MinLevel = 85, Party = 5, Source = ItemSource.Container };
+
                     break;
             }
         }
@@ -1696,6 +1704,7 @@ namespace Rawr
         private static Dictionary<string, TokenDropInfo> _tokenDropMap = new Dictionary<string, TokenDropInfo>();
         private static Dictionary<string, string> _pvpTokenMap = new Dictionary<string, string>();
         private static Dictionary<string, string> _vendorTokenMap = new Dictionary<string, string>();
+        private static Dictionary<string, QuestItem> _questRewardMap = new Dictionary<string, QuestItem>();
         private static List<string> _unhandledKeys = new List<string>();
         private static List<string> _unhandledSocketBonus = new List<string>();
         private static bool ProcessKeyValue(Item item, string key, string value)

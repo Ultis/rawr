@@ -6126,7 +6126,7 @@ In addition, the cooldown of your Tranquility is reduced by 5 minutes.",})]
         /// Your Swiftmend spell causes healing flora to sprout beneath the target, restoring health equal to [4 * Pts]% of the amount healed by your Swiftmend to the three most injured targets within 14 yards, every 1 sec for 7 sec.
         /// </summary>
         [TalentData(index: 56, name: "Efflorescence", maxPoints: 3, icon: "inv_misc_herb_talandrasrose",
-         tree: 2, column: 1, row: 5, prerequisite: 49, description: new[] {
+         tree: 2, column: 1, row: 5, prerequisite: -1, description: new[] {
 @"Your Swiftmend spell causes healing flora to sprout beneath the target, restoring health equal to 4% of the amount healed by your Swiftmend to the three most injured targets within 14 yards, every 1 sec for 7 sec.",
 @"Your Swiftmend spell causes healing flora to sprout beneath the target, restoring health equal to 8% of the amount healed by your Swiftmend to the three most injured targets within 14 yards, every 1 sec for 7 sec.",
 @"Your Swiftmend spell causes healing flora to sprout beneath the target, restoring health equal to 12% of the amount healed by your Swiftmend to the three most injured targets within 14 yards, every 1 sec for 7 sec.",})]
