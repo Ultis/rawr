@@ -1095,7 +1095,7 @@ If that is still not working for you, right-click anywhere within the web versio
             if (sfd.ShowDialog().GetValueOrDefault(false))
             {
 #if !SILVERLIGHT
-                sfd.FileName = lastSavedPath;
+                lastSavedPath = sfd.FileName;
 #endif
                 using (Stream s = sfd.OpenFile())
                 {
