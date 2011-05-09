@@ -908,6 +908,18 @@ namespace Rawr.Mage
         [XmlIgnore]
         public DisplayCalculations Calculations; // calculations that are result of the last display in rawr
 
+        // cached cycle solutions
+        //[XmlIgnore]
+        //public float FrBDFFFBIL_KFrB;
+        //[XmlIgnore]
+        //public float FrBDFFFBIL_KFFB;
+        //[XmlIgnore]
+        //public float FrBDFFFBIL_KFFBS;
+        //[XmlIgnore]
+        //public float FrBDFFFBIL_KILS;
+        //[XmlIgnore]
+        //public float FrBDFFFBIL_KDFS;
+
         [XmlIgnore]
         private Character _character;
         [XmlIgnore]

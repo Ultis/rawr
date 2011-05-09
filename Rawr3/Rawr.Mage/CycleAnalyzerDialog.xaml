@@ -17,6 +17,7 @@
             <ComboBoxItem Content="Arcane AOE" />
             <ComboBoxItem Content="Frost" />
             <ComboBoxItem Content="Frost+Deep Freeze" />
+            <ComboBoxItem Content="Frost+Freeze" />
         </ComboBox>
         <TextBox Margin="0,4,0,4" Grid.Row="1" IsReadOnly="True" BorderThickness="0" x:Name="Description" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" />
         <Grid Grid.Row="2">

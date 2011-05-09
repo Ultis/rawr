@@ -138,11 +138,180 @@ namespace Rawr.Mage
 
     public static class FrBDFFFBIL
     {
+        public static void SolveCycle(CastingState castingState, out float KFrB, out float KFFB, out float KFFBS, out float KILS, out float KDFS)
+        {
+            Spell FrB, FFB, FFBS, ILS, DFS;
+            float RFrB = 0, RFFB = 0, RFFBS = 0, RILS = 0, RDFS = 0;
+            int CFrB = 0, CFFB = 0, CFFBS = 0, CILS = 0, CDFS = 0;
+
+            FrB = castingState.GetSpell(SpellId.Frostbolt);
+            FFB = castingState.GetSpell(SpellId.FrostfireBoltBF);
+            FFBS = castingState.FrozenState.GetSpell(SpellId.FrostfireBoltBF);
+            ILS = castingState.FrozenState.GetSpell(SpellId.IceLance);
+            DFS = castingState.FrozenState.GetSpell(SpellId.DeepFreeze);
+
+            // FFB on FOF only, if Freeze is off cooldown only use it if FOF is off
+            // IL on FOF if Freeze is off cooldown, otherwise on FOF2 only
+
+            float bf = 0.05f * castingState.MageTalents.BrainFreeze;
+            float fof = (castingState.MageTalents.FingersOfFrost == 3 ? 0.2f : 0.07f * castingState.MageTalents.FingersOfFrost);
+
+            float dfCooldown = 0;
+            float freezeCooldown = 0;
+            int fofActual = 0;
+            int fofRegistered = 0;
+            bool bfRegistered = false;
+            bool bfActual = false;
+
+            Random rnd = new Random();
+
+            bool stable;
+            float errorMargin = 0.000001f;
+
+            do
+            {
+                for (int c = 0; c < 1000000; c++)
+                {
+                    if (dfCooldown == 0.0f && (fofRegistered > 0 || freezeCooldown == 0))
+                    {
+                        CDFS++;
+                        if (fofRegistered > 0)
+                        {
+                            bfRegistered = bfActual;
+                            fofActual = Math.Max(0, fofActual - 1);
+                            fofRegistered = fofActual;
+                            dfCooldown = Math.Max(0, 30f - DFS.CastTime);
+                            freezeCooldown = Math.Max(0, freezeCooldown - DFS.CastTime);
+                        }
+                        else
+                        {
+                            bfRegistered = bfActual;
+                            fofActual = 1;
+                            fofRegistered = fofActual;
+                            dfCooldown = Math.Max(0, 30f - DFS.CastTime);
+                            freezeCooldown = Math.Max(0, 25f - DFS.CastTime);
+                        }
+                    }
+                    else if (bfRegistered && ((fofRegistered > 0 && freezeCooldown > 0) || (fofRegistered == 0 && freezeCooldown == 0)))
+                    {
+                        CFFBS++;
+                        if (fofRegistered > 0)
+                        {
+                            bool fofProc = rnd.NextDouble() < fof;
+                            bfActual = false;
+                            bfRegistered = false;
+                            fofActual = Math.Max(0, fofActual - 1);
+                            dfCooldown = Math.Max(0, dfCooldown - FFBS.CastTime);
+                            freezeCooldown = Math.Max(0, freezeCooldown - FFBS.CastTime);
+                            if (fofProc)
+                            {
+                                fofActual++;
+                            }
+                            fofRegistered = fofActual;
+                        }
+                        else
+                        {
+                            bool fofProc = rnd.NextDouble() < fof;
+                            bfActual = false;
+                            bfRegistered = false;
+                            fofActual = Math.Max(0, 2 - 1);
+                            dfCooldown = Math.Max(0, dfCooldown - FFBS.CastTime);
+                            freezeCooldown = Math.Max(0, 25.0f - FFBS.CastTime);
+                            if (fofProc)
+                            {
+                                fofActual++;
+                            }
+                            fofRegistered = fofActual;
+                        }
+                    }
+                    else if (fofRegistered == 2 || (fofRegistered == 1 && freezeCooldown < ILS.CastTime))
+                    {
+                        CILS++;
+                        bfRegistered = bfActual;
+                        fofActual = Math.Max(0, fofActual - 1);
+                        fofRegistered = fofActual;
+                        dfCooldown = Math.Max(0, dfCooldown - ILS.CastTime);
+                        freezeCooldown = Math.Max(0, freezeCooldown - ILS.CastTime);
+                    }
+                    else if (fofRegistered == 0 && freezeCooldown == 0)
+                    {
+                        CILS++;
+                        bfRegistered = bfActual;
+                        fofActual = Math.Max(0, 2 - 1);
+                        fofRegistered = fofActual;
+                        dfCooldown = Math.Max(0, dfCooldown - ILS.CastTime);
+                        freezeCooldown = Math.Max(0, 25.0f - ILS.CastTime);
+                    }
+                    else
+                    {
+                        CFrB++;
+                        bool fofProc = rnd.NextDouble() < fof;
+                        bool bfProc = rnd.NextDouble() < bf;
+                        bfRegistered = bfActual;
+                        bfActual = bfProc || bfActual;
+                        fofRegistered = fofActual;
+                        if (fofProc)
+                        {
+                            fofActual = Math.Min(2, fofActual + 1);
+                        }
+                        dfCooldown = Math.Max(0, dfCooldown - FrB.CastTime);
+                        freezeCooldown = Math.Max(0, freezeCooldown - FrB.CastTime);
+                    }
+                }
+
+                float total = CDFS + CFFB + CFFBS + CFrB + CILS;
+                KDFS = CDFS / total;
+                KFFB = CFFB / total;
+                KFFBS = CFFBS / total;
+                KFrB = CFrB / total;
+                KILS = CILS / total;
+                stable = Math.Abs(KDFS - RDFS) < errorMargin &&
+                    Math.Abs(KFFB - RFFB) < errorMargin &&
+                    Math.Abs(KFFBS - RFFBS) < errorMargin &&
+                    Math.Abs(KFrB - RFrB) < errorMargin &&
+                    Math.Abs(KILS - RILS) < errorMargin;
+                RDFS = KDFS;
+                RFFB = KFFB;
+                RFFBS = KFFBS;
+                RFrB = KFrB;
+                RILS = KILS;
+            } while (!stable);
+        }
+
+
+        public static Cycle GetSolvedCycle(bool needsDisplayCalculations, CastingState castingState)
+        {
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
+            Spell FrB, FFB, FFBS, ILS, DFS;
+            //float KFrB, KFFB, KFFBS, KILS, KDFS;
+            cycle.Name = "FrBDFFFBIL";
+
+            FrB = castingState.GetSpell(SpellId.Frostbolt);
+            FFB = castingState.GetSpell(SpellId.FrostfireBoltBF);
+            FFBS = castingState.FrozenState.GetSpell(SpellId.FrostfireBoltBF);
+            ILS = castingState.FrozenState.GetSpell(SpellId.IceLance);
+            DFS = castingState.FrozenState.GetSpell(SpellId.DeepFreeze);
+
+            //KFrB = castingState.Solver.FrBDFFFBIL_KFrB;
+            //KFFB = castingState.Solver.FrBDFFFBIL_KFFB;
+            //KFFBS = castingState.Solver.FrBDFFFBIL_KFFBS;
+            //KILS = castingState.Solver.FrBDFFFBIL_KILS;
+            //KDFS = castingState.Solver.FrBDFFFBIL_KDFS;
+
+            //cycle.AddSpell(needsDisplayCalculations, FrB, KFrB);
+            //cycle.AddSpell(needsDisplayCalculations, FFB, KFFB);
+            //cycle.AddSpell(needsDisplayCalculations, FFBS, KFFBS);
+            //cycle.AddSpell(needsDisplayCalculations, ILS, KILS);
+            //cycle.AddSpell(needsDisplayCalculations, DFS, KDFS);
+            cycle.Calculate();
+            return cycle;
+        }
+
         public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
             Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             Spell FrB, FFB, FFBS, ILS, DFS;
-            float KFrB, KFFB, KFFBS, KILS, KDFS;
+            float KFrB, KFrB2, KFFB, KFFBS, KILS, KDFS;
             cycle.Name = "FrBDFFFBIL";
 
             // S00: FOF00, BF00
@@ -158,8 +327,8 @@ namespace Rawr.Mage
             // -   => S41    Y
 
             // S02: FOF00, BF11
-            // FFB => S20    fof * (1-Y)
-            //        S00    (1-fof) * (1-Y)
+            // FrB => S12    fof * (1-Y)
+            //        S02    (1-fof) * (1-Y)
             // -   => S42    Y
 
             // S10: FOF10, BF00
@@ -175,9 +344,9 @@ namespace Rawr.Mage
             // -   => S41    Y
 
             // S12: FOF10, BF11
-            // FFBS => S00    (1-fof) * (1-Y)
-            //         S02    fof * (1-Y)
-            // -    => S42    Y
+            // FrB => S32    (1-fof) * (1-Y)
+            //        S22    fof * (1-Y)
+            // -   => S42    Y
 
             // S20: FOF11, BF00
             // FrB => S31    fof * bf * (1-X)
@@ -223,40 +392,41 @@ namespace Rawr.Mage
             //         S40   fof*(1-X)
             // DF   => S22   X
 
-            // S00 = (1-fof)*(1-bf) * S00 + S02*(1-fof) + S12*(1-fof) + X * S20 + (1-X)*(1-fof) * S22
-            // S01 = (1-fof) * bf * S00
-            // S02 = (1-fof) * S01 + X * S21 + X * S22
-            // S10 = fof * (1-bf) * S00
-            // S11 = fof * bf * S00
-            // S12 = fof * S01
-            // S20 = (1-fof)*(1-bf) * S10 + (1-fof)*(1-bf) * (1-X) * S20 + X * S30 + (1-X)*(1-fof) * S32 + S40 + (1-fof)*(1-X) * S42 + fof * S02 + fof * S12 + fof*(1-X) * S22
-            // S21 = (1-fof) * bf * S10 + (1-fof) * bf * (1-X) * S20
-            // S22 = (1-fof) * S11 + (1-fof) * (1-X) * S21 + X * S31 + X * S32 + S41 + X * S42
-            // S30 = fof * (1-bf) * S10 + fof * (1-bf) * (1-X) * S20
-            // S31 = fof * bf * S10 + fof * bf * (1-X) * S20
-            // S32 = fof * S11 + fof * (1-X) * S21
-            // S40 = (1-bf) * (1-X) * S30 + fof*(1-X) * S32 + fof*(1-X) * S42
-            // S41 = bf * (1-X) * S30
-            // S42 = (1-X) * S31
+            // S00 = S00 * (1-fof)*(1-bf) * (1-Y) + S20 * X + S22 * (1-fof)*(1-X)
+            // S01 = S00 * (1-fof) * bf * (1-Y)
+            // S02 = S01 * (1-fof) * (1-Y) + S02 * (1-fof) * (1-Y) + S21 * X + S22 * X
+            // S10 = S00 * fof * (1-bf) * (1-Y)
+            // S11 = S00 * fof * bf * (1-Y)
+            // S12 = S01 * fof * (1-Y) + S02 * fof * (1-Y)
+            // S20 = S10 * (1-fof)*(1-bf) * (1-Y) + S20 * (1-fof)*(1-bf) * (1-X) + S22 * fof*(1-X) + S30 * X + S32 * (1-fof)*(1-X) + S40 + S42 * (1-fof)*(1-X)
+            // S21 = S10 * (1-fof) * bf * (1-Y) + S20 * (1-fof) * bf * (1-X)
+            // S22 = S11 * (1-fof) * (1-Y) + S12 * fof * (1-Y) + S21 * (1-fof) * (1-X) + S31 * X + S32 * X + S41 + S42 * X
+            // S30 = S10 * fof * (1-bf) * (1-Y) + S20 * fof * (1-bf) * (1-X)
+            // S31 = S10 * fof * bf * (1-Y) + S20 * fof * bf * (1-X)
+            // S32 = S11 * fof * (1-Y) + S12 * (1-fof) * (1-Y) + S21 * fof * (1-X)
+            // S40 = S00 * Y + S10 * Y + S30 * (1-bf) * (1-X) + S32 * fof*(1-X) + S42 * fof*(1-X)
+            // S41 = S01 * Y + S11 * Y + S30 * bf * (1-X)
+            // S42 = S02 * Y + S12 * Y + S31 * (1-X)
             // S00 + S01 + S02 + S10 + S11 + S12 + S20 + S21 + S22 + S30 + S31 + S32 + S40 + S41 + S42 = 1
 
             // solved symbolically
+            // solve([S00 = S00 * (1-fof)*(1-bf) * (1-Y) + S20 * X + S22 * (1-fof)*(1-X),S01 = S00 * (1-fof) * bf * (1-Y),S02 = S01 * (1-fof) * (1-Y) + S02 * (1-fof) * (1-Y) + S21 * X + S22 * X,S10 = S00 * fof * (1-bf) * (1-Y),S11 = S00 * fof * bf * (1-Y),S12 = S01 * fof * (1-Y) + S02 * fof * (1-Y),S20 = S10 * (1-fof)*(1-bf) * (1-Y) + S20 * (1-fof)*(1-bf) * (1-X) + S22 * fof*(1-X) + S30 * X + S32 * (1-fof)*(1-X) + S40 + S42 * (1-fof)*(1-X),S21 = S10 * (1-fof) * bf * (1-Y) + S20 * (1-fof) * bf * (1-X),S22 = S11 * (1-fof) * (1-Y) + S12 * fof * (1-Y) + S21 * (1-fof) * (1-X) + S31 * X + S32 * X + S41 + S42 * X,S30 = S10 * fof * (1-bf) * (1-Y) + S20 * fof * (1-bf) * (1-X),S31 = S10 * fof * bf * (1-Y) + S20 * fof * bf * (1-X),S32 = S11 * fof * (1-Y) + S12 * (1-fof) * (1-Y) + S21 * fof * (1-X),S40 = S00 * Y + S10 * Y + S30 * (1-bf) * (1-X) + S32 * fof*(1-X) + S42 * fof*(1-X),S41 = S01 * Y + S11 * Y + S30 * bf * (1-X),S42 = S02 * Y + S12 * Y + S31 * (1-X),S00 + S01 + S02 + S10 + S11 + S12 + S20 + S21 + S22 + S30 + S31 + S32 + S40 + S41 + S42 = 1,fof=0.2,bf=0.15], [S00,S01,S02,S10,S11,S12,S20,S21,S22,S30,S31,S32,S40,S41,S42,fof,bf]);
 
-            // S00= -((bf*fof^3-3*bf*fof^2+2*bf*fof)*X^3+(-3*bf*fof^3+(bf^2+8*bf)*fof^2+(-bf^2-5*bf)*fof)*X^2+(3*bf*fof^3+(-2*bf^2-7*bf)*fof^2+(2*bf^2+5*bf)*fof-bf+1)*X-bf*fof^3+(bf^2+2*bf)*fof^2+(-bf^2-2*bf)*fof+bf)
-            // S10 = fof * (1-bf) * S00
-            // S11 = fof * bf * S00
-            // S01 = (1-fof) * bf * S00
-            // S12 = fof * S01
-            // S20 = (((bf^2-bf)*fof^4+(3*bf-3*bf^2)*fof^3+(2*bf^2-2*bf)*fof^2)*X^2+((2*bf-2*bf^2)*fof^4+(bf^3+4*bf^2-6*bf)*fof^3+(-bf^3-2*bf^2+4*bf)*fof^2)*X+(bf^2-bf)*fof^4+(-bf^3-bf^2+3*bf)*fof^3+(bf^3+bf^2-3*bf)*fof^2+(-bf^2+bf-1)*fof)
-            // S21 = (1-fof) * bf * S10 + (1-fof) * bf * (1-X) * S20           
-            // S30 = fof * (1-bf) * S10 + fof * (1-bf) * (1-X) * S20
-            // S31 = fof * bf * S10 + fof * bf * (1-X) * S20
-            // S32 = fof * S11 + fof * (1-X) * S21
-            // S42 = (1-X) * S31
-            // S40 = (1-bf) * (1-X) * S30 + fof*(1-X) * S32 + fof*(1-X) * S42
-            // S41 = bf * (1-X) * S30
-            // S22 = (1-fof) * S11 + (1-fof) * (1-X) * S21 + X * S31 + X * S32 + S41 + X * S42
-            // S02 = (1-fof) * S01 + X * S21 + X * S22
+            // S00=((480000*X^4-6440000*X^3+6440000*X^2-480000*X)*Y^2+(-6240000*X^4+126440000*X^3-33880000*X^2-76600000*X-9720000)*Y-840000*X^4+21950000*X^3+1190000*X^2-19870000*X-2430000)
+            // S02=((57600*X^4-772800*X^3+772800*X^2-57600*X)*Y^3+(1853100*X^4-3543525*X^3+10315725*X^2-10646400*X-1166400)*Y^2+(-8469000*X^4+9007950*X^3+23115150*X^2-861900*X+2332800)*Y-191700*X^4-2629125*X^3+671325*X^2-18621600*X-1166400)
+            // S20=((81600*X^3-163200*X^2+81600*X)*Y^4+(-1224000*X^3-11899600*X^2+22031200*X-8907600)*Y^3+(2060400*X^3+88837500*X^2-27086200*X-63811700)*Y^2+(-775200*X^3+43676600*X^2+2752400*X-45653800)*Y-142800*X^3+4548700*X^2+2221000*X-6626900)
+            // S01 = S00 * (1-fof) * bf * (1-Y)
+            // S10 = S00 * fof * (1-bf) * (1-Y)
+            // S11 = S00 * fof * bf * (1-Y)
+            // S21 = S10 * (1-fof) * bf * (1-Y) + S20 * (1-fof) * bf * (1-X)
+            // S30 = S10 * fof * (1-bf) * (1-Y) + S20 * fof * (1-bf) * (1-X)
+            // S31 = S10 * fof * bf * (1-Y) + S20 * fof * bf * (1-X)
+            // S12 = S01 * fof * (1-Y) + S02 * fof * (1-Y)
+            // S32 = S11 * fof * (1-Y) + S12 * (1-fof) * (1-Y) + S21 * fof * (1-X)
+            // S41 = S01 * Y + S11 * Y + S30 * bf * (1-X)
+            // S42 = S02 * Y + S12 * Y + S31 * (1-X)
+            // S22 = S11 * (1-fof) * (1-Y) + S12 * fof * (1-Y) + S21 * (1-fof) * (1-X) + S31 * X + S32 * X + S41 + S42 * X
+            // S40 = S00 * Y + S10 * Y + S30 * (1-bf) * (1-X) + S32 * fof*(1-X) + S42 * fof*(1-X)
 
             FrB = castingState.GetSpell(SpellId.Frostbolt);
             FFB = castingState.GetSpell(SpellId.FrostfireBoltBF);
@@ -272,72 +442,100 @@ namespace Rawr.Mage
             float bf2 = bf * bf;
             float bf3 = bf2 * bf;
 
-            // shatters until deep freeze ~ Poisson
-            // share of shatters that are deep freeze = sum_i=0..inf Pi / sum_i=0..inf (i+1)*Pi = 1 / (1 + mean)
+            // states are split into S0,S1 (fof not registered) vs S2,S3,S4 (fof registered)
+            // ABBBaaBBBaaBBBaABBBaaBBBaaBBB
+            // A*Y freezes in B*time(B) + A*(1-Y)*time(a)
+            // A*Y <= R / 25 * (B*time(B) + A*(1-Y)*time(a))
+            // A*Y <= R / 25 * B*time(B) + R / 25 * A*time(a) - R / 25 * A*time(a) * Y
+            // A*Y*(1 + R / 25 * time(a)) <= R / 25 * B*time(B) + R / 25 * A*time(a)
 
-            // crude initial guess
-            float X = 1.0f / (1.0f + (DFS.Cooldown - DFS.CastTime) / (FrB.CastTime * (1 / fof + 1) + ILS.CastTime));
+            // Y = R/25 * (B*time(B) + A*time(a)) / (A * (1 + R / 25 * time(a)))
 
-            float S00 = -((bf * fof3 - 3 * bf * fof2 + 2 * bf * fof) * X * X * X + (-3 * bf * fof3 + (bf2 + 8 * bf) * fof2 + (-bf2 - 5 * bf) * fof) * X * X + (3 * bf * fof3 + (-2 * bf2 - 7 * bf) * fof2 + (2 * bf2 + 5 * bf) * fof - bf + 1) * X - bf * fof3 + (bf2 + 2 * bf) * fof2 + (-bf2 - 2 * bf) * fof + bf);
-            float S10 = fof * (1 - bf) * S00;
-            float S11 = fof * bf * S00;
-            float S01 = (1 - fof) * bf * S00;
-            float S12 = fof * S01;
-            float S20 = (((bf2 - bf) * fof4 + (3 * bf - 3 * bf2) * fof3 + (2 * bf2 - 2 * bf) * fof2) * X * X + ((2 * bf - 2 * bf2) * fof4 + (bf3 + 4 * bf2 - 6 * bf) * fof3 + (-bf3 - 2 * bf2 + 4 * bf) * fof2) * X + (bf2 - bf) * fof4 + (-bf3 - bf2 + 3 * bf) * fof3 + (bf3 + bf2 - 3 * bf) * fof2 + (-bf2 + bf - 1) * fof);
-            float S21 = (1 - fof) * bf * S10 + (1 - fof) * bf * (1 - X) * S20;
-            float S30 = fof * (1 - bf) * S10 + fof * (1 - bf) * (1 - X) * S20;
-            float S31 = fof * bf * S10 + fof * bf * (1 - X) * S20;
-            float S32 = fof * S11 + fof * (1 - X) * S21;
-            float S42 = (1 - X) * S31;
-            float S40 = (1 - bf) * (1 - X) * S30 + fof * (1 - X) * S32 + fof * (1 - X) * S42;
-            float S41 = bf * (1 - X) * S30;
-            float S22 = (1 - fof) * S11 + (1 - fof) * (1 - X) * S21 + X * S31 + X * S32 + S41 + X * S42;
-            float S02 = (1 - fof) * S01 + X * S21 + X * S22;
+            // B*X*time(DF)/(B*time(B) + A*(1-Y)*time(a))=K*time(DF)/cool(DF)
+
+            // heruistic tuning parameters
+            float R = 1.05f; // overestimate because we don't have IL to eat down FOF when freeze is coming off cooldown in the model
+            if (castingState.CalculationOptions.FlameOrb == 1)
+            {
+                fof *= 1.8f;
+            }
+            else if (castingState.CalculationOptions.FlameOrb == 2 && castingState.FlameOrb)
+            {
+                fof *= 5;
+            }
+            float K = 0.95f;
+
+            // crude initial guess (fof=0.9,nonfof=0.1)
+            float Y = R / 25f * (0.9f * (0.5f * DFS.CastTime + 0.5f * FrB.CastTime) + 0.1f * FrB.CastTime) / (0.1f * (1 + R / 25f * FrB.CastTime));
+            float X = K * DFS.CastTime / DFS.Cooldown * (0.9f * (0.5f * DFS.CastTime + 0.5f * FrB.CastTime) + 0.1f * (1 - Y) * FrB.CastTime) / (0.9f * DFS.CastTime);
+
+            float S00 = -((480000 * X * X * X * X - 6440000 * X * X * X + 6440000 * X * X - 480000 * X) * Y * Y + (-6240000 * X * X * X * X + 126440000 * X * X * X - 33880000 * X * X - 76600000 * X - 9720000) * Y - 840000 * X * X * X * X + 21950000 * X * X * X + 1190000 * X * X - 19870000 * X - 2430000);
+            float S02 = -((57600 * X * X * X * X - 772800 * X * X * X + 772800 * X * X - 57600 * X) * Y * Y * Y + (1853100 * X * X * X * X - 3543525 * X * X * X + 10315725 * X * X - 10646400 * X - 1166400) * Y * Y + (-8469000 * X * X * X * X + 9007950 * X * X * X + 23115150 * X * X - 861900 * X + 2332800) * Y - 191700 * X * X * X * X - 2629125 * X * X * X + 671325 * X * X - 18621600 * X - 1166400);
+            float S20 = -((81600 * X * X * X - 163200 * X * X + 81600 * X) * Y * Y * Y * Y + (-1224000 * X * X * X - 11899600 * X * X + 22031200 * X - 8907600) * Y * Y * Y + (2060400 * X * X * X + 88837500 * X * X - 27086200 * X - 63811700) * Y * Y + (-775200 * X * X * X + 43676600 * X * X + 2752400 * X - 45653800) * Y - 142800 * X * X * X + 4548700 * X * X + 2221000 * X - 6626900);
+            float S01 = S00 * (1-fof) * bf * (1-Y);
+            float S10 = S00 * fof * (1-bf) * (1-Y);
+            float S11 = S00 * fof * bf * (1-Y);
+            float S21 = S10 * (1-fof) * bf * (1-Y) + S20 * (1-fof) * bf * (1-X);
+            float S30 = S10 * fof * (1-bf) * (1-Y) + S20 * fof * (1-bf) * (1-X);
+            float S31 = S10 * fof * bf * (1-Y) + S20 * fof * bf * (1-X);
+            float S12 = S01 * fof * (1-Y) + S02 * fof * (1-Y);
+            float S32 = S11 * fof * (1-Y) + S12 * (1-fof) * (1-Y) + S21 * fof * (1-X);
+            float S41 = S01 * Y + S11 * Y + S30 * bf * (1-X);
+            float S42 = S02 * Y + S12 * Y + S31 * (1-X);
+            float S22 = S11 * (1-fof) * (1-Y) + S12 * fof * (1-Y) + S21 * (1-fof) * (1-X) + S31 * X + S32 * X + S41 + S42 * X;
+            float S40 = S00 * Y + S10 * Y + S30 * (1-bf) * (1-X) + S32 * fof*(1-X) + S42 * fof*(1-X);
 
             float div = S00 + S01 + S02 + S10 + S11 + S12 + S20 + S21 + S22 + S30 + S31 + S32 + S40 + S41 + S42;
 
-            KFrB = (S00 + S01 + S10 + S11 + (S20 + S21 + S30 + S31) * (1 - X)) / div;
-            KFFB = (S02) / div;
-            KFFBS = (S12 + (S22 + S32 + S42) * (1 - X)) / div;
+            KFrB = ((S00 + S01 + S02 + S10 + S11 + S12) * (1 - Y) + (S20 + S21 + S30 + S31) * (1 - X)) / div;
+            KFrB2 = ((S00 + S01 + S02 + S10 + S11 + S12) + (S20 + S21 + S30 + S31) * (1 - X)) / div;
+            KFFB = 0 / div;
+            KFFBS = ((S22 + S32 + S42) * (1 - X)) / div;
             KILS = (S40 + S41) * (1 - X) / div;
             KDFS = (S20 + S21 + S22 + S30 + S31 + S32 + S40 + S41 + S42) * X / div;
 
-            float T = KFrB * FrB.CastTime + KFFB * FFB.CastTime + KFFBS * FFBS.CastTime + KILS * ILS.CastTime + KDFS * DFS.CastTime;
-            float T0 = (S20 + S21 + S30 + S31) * (1 - X) / div * FrB.CastTime + (S22 + S32 + S42) * (1 - X) / div * FFBS.CastTime + KILS * ILS.CastTime + KDFS * DFS.CastTime;
-
-            if (fof > 0) // nothing new here if we don't have fof
+            for (int i = 0; i < 5; i++)
             {
-                // better estimate for percentage of shatter combos that are deep freeze
-                // TODO better probabilistic model for DF percentage
-                X = 1.0f / (1.0f + (DFS.Cooldown - DFS.CastTime) / (DFS.CastTime * T / T0));
-                // heuristic adjustment based on full markov model including DF cooldown
-                X *= 0.75f;
+                float T = KFrB * FrB.CastTime + KFFB * FFB.CastTime + KFFBS * FFBS.CastTime + KILS * ILS.CastTime + KDFS * DFS.CastTime;
+                float T2 = KFrB2 * FrB.CastTime + KFFB * FFB.CastTime + KFFBS * FFBS.CastTime + KILS * ILS.CastTime + KDFS * DFS.CastTime;
+
+                // better estimate
+                // TODO better probabilistic model
+                Y = R / 25 * T2 / ((S00 + S01 + S02 + S10 + S11 + S12) / div * (1 + R / 25 * FrB.CastTime));
+                X = K / DFS.Cooldown * T / ((S20 + S21 + S22 + S30 + S31 + S32 + S40 + S41 + S42) / div);
 
                 // recalculate shares based on revised estimate
-                S00 = -((bf * fof3 - 3 * bf * fof2 + 2 * bf * fof) * X * X * X + (-3 * bf * fof3 + (bf2 + 8 * bf) * fof2 + (-bf2 - 5 * bf) * fof) * X * X + (3 * bf * fof3 + (-2 * bf2 - 7 * bf) * fof2 + (2 * bf2 + 5 * bf) * fof - bf + 1) * X - bf * fof3 + (bf2 + 2 * bf) * fof2 + (-bf2 - 2 * bf) * fof + bf);
-                S10 = fof * (1 - bf) * S00;
-                S11 = fof * bf * S00;
-                S01 = (1 - fof) * bf * S00;
-                S12 = fof * S01;
-                S20 = (((bf2 - bf) * fof4 + (3 * bf - 3 * bf2) * fof3 + (2 * bf2 - 2 * bf) * fof2) * X * X + ((2 * bf - 2 * bf2) * fof4 + (bf3 + 4 * bf2 - 6 * bf) * fof3 + (-bf3 - 2 * bf2 + 4 * bf) * fof2) * X + (bf2 - bf) * fof4 + (-bf3 - bf2 + 3 * bf) * fof3 + (bf3 + bf2 - 3 * bf) * fof2 + (-bf2 + bf - 1) * fof);
-                S21 = (1 - fof) * bf * S10 + (1 - fof) * bf * (1 - X) * S20;
-                S30 = fof * (1 - bf) * S10 + fof * (1 - bf) * (1 - X) * S20;
-                S31 = fof * bf * S10 + fof * bf * (1 - X) * S20;
-                S32 = fof * S11 + fof * (1 - X) * S21;
-                S42 = (1 - X) * S31;
-                S40 = (1 - bf) * (1 - X) * S30 + fof * (1 - X) * S32 + fof * (1 - X) * S42;
-                S41 = bf * (1 - X) * S30;
-                S22 = (1 - fof) * S11 + (1 - fof) * (1 - X) * S21 + X * S31 + X * S32 + S41 + X * S42;
-                S02 = (1 - fof) * S01 + X * S21 + X * S22;
+                S00 = -((480000 * X * X * X * X - 6440000 * X * X * X + 6440000 * X * X - 480000 * X) * Y * Y + (-6240000 * X * X * X * X + 126440000 * X * X * X - 33880000 * X * X - 76600000 * X - 9720000) * Y - 840000 * X * X * X * X + 21950000 * X * X * X + 1190000 * X * X - 19870000 * X - 2430000);
+                S02 = -((57600 * X * X * X * X - 772800 * X * X * X + 772800 * X * X - 57600 * X) * Y * Y * Y + (1853100 * X * X * X * X - 3543525 * X * X * X + 10315725 * X * X - 10646400 * X - 1166400) * Y * Y + (-8469000 * X * X * X * X + 9007950 * X * X * X + 23115150 * X * X - 861900 * X + 2332800) * Y - 191700 * X * X * X * X - 2629125 * X * X * X + 671325 * X * X - 18621600 * X - 1166400);
+                S20 = -((81600 * X * X * X - 163200 * X * X + 81600 * X) * Y * Y * Y * Y + (-1224000 * X * X * X - 11899600 * X * X + 22031200 * X - 8907600) * Y * Y * Y + (2060400 * X * X * X + 88837500 * X * X - 27086200 * X - 63811700) * Y * Y + (-775200 * X * X * X + 43676600 * X * X + 2752400 * X - 45653800) * Y - 142800 * X * X * X + 4548700 * X * X + 2221000 * X - 6626900);
+                S01 = S00 * (1 - fof) * bf * (1 - Y);
+                S10 = S00 * fof * (1 - bf) * (1 - Y);
+                S11 = S00 * fof * bf * (1 - Y);
+                S21 = S10 * (1 - fof) * bf * (1 - Y) + S20 * (1 - fof) * bf * (1 - X);
+                S30 = S10 * fof * (1 - bf) * (1 - Y) + S20 * fof * (1 - bf) * (1 - X);
+                S31 = S10 * fof * bf * (1 - Y) + S20 * fof * bf * (1 - X);
+                S12 = S01 * fof * (1 - Y) + S02 * fof * (1 - Y);
+                S32 = S11 * fof * (1 - Y) + S12 * (1 - fof) * (1 - Y) + S21 * fof * (1 - X);
+                S41 = S01 * Y + S11 * Y + S30 * bf * (1 - X);
+                S42 = S02 * Y + S12 * Y + S31 * (1 - X);
+                S22 = S11 * (1 - fof) * (1 - Y) + S12 * fof * (1 - Y) + S21 * (1 - fof) * (1 - X) + S31 * X + S32 * X + S41 + S42 * X;
+                S40 = S00 * Y + S10 * Y + S30 * (1 - bf) * (1 - X) + S32 * fof * (1 - X) + S42 * fof * (1 - X);
 
                 div = S00 + S01 + S02 + S10 + S11 + S12 + S20 + S21 + S22 + S30 + S31 + S32 + S40 + S41 + S42;
 
-                KFrB = (S00 + S01 + S10 + S11 + (S20 + S21 + S30 + S31) * (1 - X)) / div;
-                KFFB = (S02) / div;
-                KFFBS = (S12 + (S22 + S32 + S42) * (1 - X)) / div;
+                KFrB = ((S00 + S01 + S02 + S10 + S11 + S12) * (1 - Y) + (S20 + S21 + S30 + S31) * (1 - X)) / div;
+                KFrB2 = ((S00 + S01 + S02 + S10 + S11 + S12) + (S20 + S21 + S30 + S31) * (1 - X)) / div;
+                KFFB = 0 / div;
+                KFFBS = ((S22 + S32 + S42) * (1 - X)) / div;
                 KILS = (S40 + S41) * (1 - X) / div;
                 KDFS = (S20 + S21 + S22 + S30 + S31 + S32 + S40 + S41 + S42) * X / div;
             }
+
+            //div = KFrB + KFFBS + KILS + KDFS;
+            //KFrB /= div;
+            //KFFBS /= div;
+            //KILS /= div;
+            //KDFS /= div;
 
             cycle.AddSpell(needsDisplayCalculations, FrB, KFrB);
             cycle.AddSpell(needsDisplayCalculations, FFB, KFFB);
@@ -1467,6 +1665,7 @@ z = remaining duration on 2T10";
             public int FingersOfFrostRegistered { get; set; }
             public int FingersOfFrostActual { get; set; }
             public float DeepFreezeCooldown { get; set; }
+            public float FreezeCooldown { get; set; }
         }
 
         public Spell FrB, FFB, FFBF, IL, DF;
@@ -1476,11 +1675,15 @@ z = remaining duration on 2T10";
 
         private bool deepFreeze;
         private float deepFreezeCooldown;
+        private bool freeze;
+        private float freezeCooldown;
 
-        public FrostCycleGeneratorBeta(CastingState castingState, bool useDeepFreeze, float deepFreezeCooldown)
+        public FrostCycleGeneratorBeta(CastingState castingState, bool useDeepFreeze, float deepFreezeCooldown, bool useFreeze, float freezeCooldown)
         {
             this.deepFreezeCooldown = deepFreezeCooldown;
             this.deepFreeze = useDeepFreeze;
+            this.freezeCooldown = freezeCooldown;
+            this.freeze = useFreeze;
 
             FrB = castingState.GetSpell(SpellId.Frostbolt);
             FrB.Label = "Frostbolt";
@@ -1501,7 +1704,7 @@ z = remaining duration on 2T10";
 
         protected override CycleState GetInitialState()
         {
-            return GetState(false, false, 0, 0, 0.0f);
+            return GetState(false, false, 0, 0, 0.0f, 0.0f);
         }
 
         protected override List<CycleControlledStateTransition> GetStateTransitions(CycleState state)
@@ -1513,7 +1716,7 @@ z = remaining duration on 2T10";
             Spell FFB = null;
             Spell DF = null;
             FrB = this.FrB;
-            if (s.FingersOfFrostActual > 0)
+            if (s.FingersOfFrostActual > 0 || (s.FreezeCooldown == 0 && freeze))
             {
                 FFB = this.FFBF;
             }
@@ -1521,29 +1724,49 @@ z = remaining duration on 2T10";
             {
                 FFB = this.FFB;
             }
-            if (s.FingersOfFrostRegistered > 0)
+            if (s.FingersOfFrostRegistered > 0 || (s.FreezeCooldown == 0 && freeze))
             {
                 IL = this.IL;
             }
-            if (s.DeepFreezeCooldown == 0.0f && s.FingersOfFrostRegistered > 0)
+            if (s.DeepFreezeCooldown == 0.0f && (s.FingersOfFrostRegistered > 0 || (s.FreezeCooldown == 0 && freeze)))
             {
                 DF = this.DF;
             }
 
             if (DF != null && deepFreeze)
             {
-                list.Add(new CycleControlledStateTransition()
+                if (s.FingersOfFrostRegistered > 0 || !freeze)
                 {
-                    Spell = DF,
-                    TargetState = GetState(
-                        s.BrainFreezeProcced,
-                        s.BrainFreezeProcced,
-                        Math.Max(0, s.FingersOfFrostActual - 1),
-                        Math.Max(0, s.FingersOfFrostActual - 1),
-                        Math.Max(0, deepFreezeCooldown - DF.CastTime)
-                    ),
-                    TransitionProbability = 1
-                });
+                    list.Add(new CycleControlledStateTransition()
+                    {
+                        Spell = DF,
+                        TargetState = GetState(
+                            s.BrainFreezeProcced,
+                            s.BrainFreezeProcced,
+                            Math.Max(0, s.FingersOfFrostActual - 1),
+                            Math.Max(0, s.FingersOfFrostActual - 1),
+                            Math.Max(0, deepFreezeCooldown - DF.CastTime),
+                            Math.Max(0, s.FreezeCooldown - DF.CastTime)
+                        ),
+                        TransitionProbability = 1
+                    });
+                }
+                else
+                {
+                    list.Add(new CycleControlledStateTransition()
+                    {
+                        Spell = DF,
+                        TargetState = GetState(
+                            s.BrainFreezeProcced,
+                            s.BrainFreezeProcced,
+                            Math.Max(0, 1),
+                            Math.Max(0, 1),
+                            Math.Max(0, deepFreezeCooldown - DF.CastTime),
+                            Math.Max(0, freezeCooldown - DF.CastTime)
+                        ),
+                        TransitionProbability = 1
+                    });
+                }
             }
             else
             {
@@ -1557,7 +1780,8 @@ z = remaining duration on 2T10";
                             true,
                             s.FingersOfFrostActual,
                             Math.Min(2, s.FingersOfFrostActual + 1),
-                            Math.Max(0, s.DeepFreezeCooldown - FrB.CastTime)
+                            Math.Max(0, s.DeepFreezeCooldown - FrB.CastTime),
+                            Math.Max(0, s.FreezeCooldown - FrB.CastTime)
                         ),
                         TransitionProbability = FOF * BF
                     });
@@ -1572,7 +1796,8 @@ z = remaining duration on 2T10";
                             s.BrainFreezeProcced,
                             s.FingersOfFrostActual,
                             Math.Min(2, s.FingersOfFrostActual + 1),
-                            Math.Max(0, s.DeepFreezeCooldown - FrB.CastTime)
+                            Math.Max(0, s.DeepFreezeCooldown - FrB.CastTime),
+                            Math.Max(0, s.FreezeCooldown - FrB.CastTime)
                         ),
                         TransitionProbability = FOF * (1 - BF)
                     });
@@ -1587,7 +1812,8 @@ z = remaining duration on 2T10";
                             true,
                             s.FingersOfFrostActual,
                             s.FingersOfFrostActual,
-                            Math.Max(0, s.DeepFreezeCooldown - FrB.CastTime)
+                            Math.Max(0, s.DeepFreezeCooldown - FrB.CastTime),
+                            Math.Max(0, s.FreezeCooldown - FrB.CastTime)
                         ),
                         TransitionProbability = (1 - FOF) * BF
                     });
@@ -1600,54 +1826,112 @@ z = remaining duration on 2T10";
                         s.BrainFreezeProcced,
                         s.FingersOfFrostActual,
                         s.FingersOfFrostActual,
-                        Math.Max(0, s.DeepFreezeCooldown - FrB.CastTime)
+                        Math.Max(0, s.DeepFreezeCooldown - FrB.CastTime),
+                        Math.Max(0, s.FreezeCooldown - FrB.CastTime)
                     ),
                     TransitionProbability = (1 - FOF) * (1 - BF)
                 });
                 if (IL != null)
                 {
-                    list.Add(new CycleControlledStateTransition()
+                    if (s.FingersOfFrostRegistered > 0 || !freeze)
                     {
-                        Spell = IL,
-                        TargetState = GetState(
-                            s.BrainFreezeProcced,
-                            s.BrainFreezeProcced,
-                            Math.Max(0, s.FingersOfFrostActual - 1),
-                            Math.Max(0, s.FingersOfFrostActual - 1),
-                            Math.Max(0, s.DeepFreezeCooldown - IL.CastTime)
-                        ),
-                        TransitionProbability = 1
-                    });
+                        list.Add(new CycleControlledStateTransition()
+                        {
+                            Spell = IL,
+                            TargetState = GetState(
+                                s.BrainFreezeProcced,
+                                s.BrainFreezeProcced,
+                                Math.Max(0, s.FingersOfFrostActual - 1),
+                                Math.Max(0, s.FingersOfFrostActual - 1),
+                                Math.Max(0, s.DeepFreezeCooldown - IL.CastTime),
+                                Math.Max(0, s.FreezeCooldown - IL.CastTime)
+                            ),
+                            TransitionProbability = 1
+                        });
+                    }
+                    else
+                    {
+                        list.Add(new CycleControlledStateTransition()
+                        {
+                            Spell = IL,
+                            TargetState = GetState(
+                                s.BrainFreezeProcced,
+                                s.BrainFreezeProcced,
+                                Math.Max(0, 1),
+                                Math.Max(0, 1),
+                                Math.Max(0, s.DeepFreezeCooldown - IL.CastTime),
+                                Math.Max(0, freezeCooldown - IL.CastTime)
+                            ),
+                            TransitionProbability = 1
+                        });
+                    }
                 }
                 if (s.BrainFreezeRegistered)
                 {
-                    if (FOF > 0)
+                    if (s.FingersOfFrostRegistered > 0 || !freeze)
                     {
+                        if (FOF > 0)
+                        {
+                            list.Add(new CycleControlledStateTransition()
+                            {
+                                Spell = FFB,
+                                TargetState = GetState(
+                                    false,
+                                    false,
+                                    Math.Max(0, s.FingersOfFrostActual - 1) + 1,
+                                    Math.Max(0, s.FingersOfFrostActual - 1) + 1,
+                                    Math.Max(0, s.DeepFreezeCooldown - FFB.CastTime),
+                                    Math.Max(0, s.FreezeCooldown - FFB.CastTime)
+                                ),
+                                TransitionProbability = FOF
+                            });
+                        }
                         list.Add(new CycleControlledStateTransition()
                         {
                             Spell = FFB,
                             TargetState = GetState(
                                 false,
                                 false,
-                                Math.Max(0, s.FingersOfFrostActual - 1) + 1,
-                                Math.Max(0, s.FingersOfFrostActual - 1) + 1,
-                                Math.Max(0, s.DeepFreezeCooldown - FFB.CastTime)
+                                Math.Max(0, s.FingersOfFrostActual - 1),
+                                Math.Max(0, s.FingersOfFrostActual - 1),
+                                Math.Max(0, s.DeepFreezeCooldown - FFB.CastTime),
+                                Math.Max(0, s.FreezeCooldown - FFB.CastTime)
                             ),
-                            TransitionProbability = FOF
+                            TransitionProbability = 1 - FOF
                         });
                     }
-                    list.Add(new CycleControlledStateTransition()
+                    else
                     {
-                        Spell = FFB,
-                        TargetState = GetState(
-                            false,
-                            false,
-                            Math.Max(0, s.FingersOfFrostActual - 1),
-                            Math.Max(0, s.FingersOfFrostActual - 1),
-                            Math.Max(0, s.DeepFreezeCooldown - FFB.CastTime)
-                        ),
-                        TransitionProbability = 1 - FOF
-                    });
+                        if (FOF > 0)
+                        {
+                            list.Add(new CycleControlledStateTransition()
+                            {
+                                Spell = FFB,
+                                TargetState = GetState(
+                                    false,
+                                    false,
+                                    Math.Max(0, 2 - 1) + 1,
+                                    Math.Max(0, 2 - 1) + 1,
+                                    Math.Max(0, s.DeepFreezeCooldown - FFB.CastTime),
+                                    Math.Max(0, freezeCooldown - FFB.CastTime)
+                                ),
+                                TransitionProbability = FOF
+                            });
+                        }
+                        list.Add(new CycleControlledStateTransition()
+                        {
+                            Spell = FFB,
+                            TargetState = GetState(
+                                false,
+                                false,
+                                Math.Max(0, 2 - 1),
+                                Math.Max(0, 2 - 1),
+                                Math.Max(0, s.DeepFreezeCooldown - FFB.CastTime),
+                                Math.Max(0, freezeCooldown - FFB.CastTime)
+                            ),
+                            TransitionProbability = 1 - FOF
+                        });
+                    }
                 }
             }
 
@@ -1656,13 +1940,13 @@ z = remaining duration on 2T10";
 
         private Dictionary<string, State> stateDictionary = new Dictionary<string, State>();
 
-        private State GetState(bool brainFreezeRegistered, bool brainFreezeProcced, int fingersOfFrostRegistered, int fingersOfFrostActual, float deepFreezeCooldown)
+        private State GetState(bool brainFreezeRegistered, bool brainFreezeProcced, int fingersOfFrostRegistered, int fingersOfFrostActual, float deepFreezeCooldown, float freezeCooldown)
         {
-            string name = string.Format("BF{0}{1},FOF{2}({3}),DF{4}", brainFreezeProcced ? "+" : "-", brainFreezeRegistered ? "+" : "-", fingersOfFrostRegistered, fingersOfFrostActual, deepFreezeCooldown);
+            string name = string.Format("BF{0}{1},FOF{2}({3}),DF{4},F{5}", brainFreezeProcced ? "+" : "-", brainFreezeRegistered ? "+" : "-", fingersOfFrostRegistered, fingersOfFrostActual, deepFreezeCooldown, freezeCooldown);
             State state;
             if (!stateDictionary.TryGetValue(name, out state))
             {
-                state = new State() { Name = name, BrainFreezeProcced = brainFreezeProcced, BrainFreezeRegistered = brainFreezeRegistered, FingersOfFrostActual = fingersOfFrostActual, FingersOfFrostRegistered = fingersOfFrostRegistered, DeepFreezeCooldown = deepFreezeCooldown };
+                state = new State() { Name = name, BrainFreezeProcced = brainFreezeProcced, BrainFreezeRegistered = brainFreezeRegistered, FingersOfFrostActual = fingersOfFrostActual, FingersOfFrostRegistered = fingersOfFrostRegistered, DeepFreezeCooldown = deepFreezeCooldown, FreezeCooldown = freezeCooldown };
                 stateDictionary[name] = state;
             }
             return state;
@@ -1675,6 +1959,7 @@ z = remaining duration on 2T10";
             return (
                 a.FingersOfFrostRegistered != b.FingersOfFrostRegistered ||
                 (a.DeepFreezeCooldown == 0 && (a.FingersOfFrostRegistered > 0)) != (b.DeepFreezeCooldown == 0 && (b.FingersOfFrostRegistered > 0)) ||
+                ((a.FreezeCooldown > 0) != (b.FreezeCooldown > 0)) ||
                 a.BrainFreezeRegistered != b.BrainFreezeRegistered);
         }
 

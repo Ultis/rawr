@@ -109,12 +109,21 @@ namespace Rawr.Mage
         private bool useIncrementalOptimizations;
         private bool useGlobalOptimizations;
         public bool NeedsDisplayCalculations { get; private set; }
+        public bool SolveCycles { get; private set; }
         private bool requiresMIP;
         private bool needsSolutionVariables;
         private bool cancellationPending;
         private bool needsQuadratic;
 
         public ArraySet ArraySet { get; set; }
+
+        // initialized in CalculateCycles
+
+        //public float FrBDFFFBIL_KFrB;
+        //public float FrBDFFFBIL_KFFB;
+        //public float FrBDFFFBIL_KFFBS;
+        //public float FrBDFFFBIL_KILS;
+        //public float FrBDFFFBIL_KDFS;
 
         // initialized in Initialize
         public Stats BaseStats { get; set; }
@@ -1077,12 +1086,12 @@ namespace Rawr.Mage
         }
         #endregion
 
-        public Solver(Character character, CalculationOptionsMage calculationOptions, bool segmentCooldowns, bool segmentMana, bool integralMana, int advancedConstraintsLevel, string armor, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables)
+        public Solver(Character character, CalculationOptionsMage calculationOptions, bool segmentCooldowns, bool segmentMana, bool integralMana, int advancedConstraintsLevel, string armor, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables, bool solveCycles)
         {
-            Construct(character, calculationOptions, segmentCooldowns, segmentMana, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables);
+            Construct(character, calculationOptions, segmentCooldowns, segmentMana, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables, solveCycles);
         }
 
-        private void Construct(Character character, CalculationOptionsMage calculationOptions, bool segmentCooldowns, bool segmentMana, bool integralMana, int advancedConstraintsLevel, string armor, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables)
+        private void Construct(Character character, CalculationOptionsMage calculationOptions, bool segmentCooldowns, bool segmentMana, bool integralMana, int advancedConstraintsLevel, string armor, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables, bool solveCycles)
         {
             this.Character = character;
             this.MageTalents = character.MageTalents;
@@ -1095,6 +1104,7 @@ namespace Rawr.Mage
             this.useIncrementalOptimizations = useIncrementalOptimizations;
             this.useGlobalOptimizations = useGlobalOptimizations;
             this.NeedsDisplayCalculations = needsDisplayCalculations;
+            this.SolveCycles = solveCycles;
             this.requiresMIP = segmentCooldowns || integralMana || (segmentMana && advancedConstraintsLevel > 0);
             if (needsDisplayCalculations || requiresMIP) needsSolutionVariables = true;
             this.needsSolutionVariables = needsSolutionVariables;
@@ -1106,22 +1116,22 @@ namespace Rawr.Mage
         [ThreadStatic]
         private static Solver threadSolver;
 
-        public static CharacterCalculationsMage GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, CalculationsMage calculations, string armor, bool segmentCooldowns, bool segmentMana, bool integralMana, int advancedConstraintsLevel, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables)
+        public static CharacterCalculationsMage GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, CalculationsMage calculations, string armor, bool segmentCooldowns, bool segmentMana, bool integralMana, int advancedConstraintsLevel, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables, bool solveCycles)
         {
             if (needsDisplayCalculations)
             {
                 // if we need display calculations then solver data has to remain clean because calls from display calculations
                 // that generate spell/cycle tooltips use that data (for example otherwise mage armor solver gets overwritten with molten armor solver data and we get bad data)
-                var displaySolver = new Solver(character, calculationOptions, segmentCooldowns, segmentMana, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables);
+                var displaySolver = new Solver(character, calculationOptions, segmentCooldowns, segmentMana, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables, solveCycles);
                 return displaySolver.GetCharacterCalculations(additionalItem);
             }
             if (threadSolver == null)
             {
-                threadSolver = new Solver(character, calculationOptions, segmentCooldowns, segmentMana, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables);
+                threadSolver = new Solver(character, calculationOptions, segmentCooldowns, segmentMana, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables, solveCycles);
             }
             else
             {
-                threadSolver.Construct(character, calculationOptions, segmentCooldowns, segmentMana, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables);
+                threadSolver.Construct(character, calculationOptions, segmentCooldowns, segmentMana, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables, solveCycles);
             }
             return threadSolver.GetCharacterCalculations(additionalItem);
         }
@@ -1134,6 +1144,8 @@ namespace Rawr.Mage
 
             GenerateSpellList();
             GenerateStateList();
+
+            CalculateCycles();
 
             ConstructProblem();
 
@@ -1157,6 +1169,22 @@ namespace Rawr.Mage
             ArraySet = null;
 
             return ret;
+        }
+
+        private void CalculateCycles()
+        {
+            //if (SolveCycles)
+            //{
+            //    FrBDFFFBIL.SolveCycle(BaseState, out FrBDFFFBIL_KFrB, out FrBDFFFBIL_KFFB, out FrBDFFFBIL_KFFBS, out FrBDFFFBIL_KILS, out FrBDFFFBIL_KDFS);
+            //}
+            //else
+            //{
+            //    FrBDFFFBIL_KDFS = CalculationOptions.FrBDFFFBIL_KDFS;
+            //    FrBDFFFBIL_KFFB = CalculationOptions.FrBDFFFBIL_KFFB;
+            //    FrBDFFFBIL_KFFBS = CalculationOptions.FrBDFFFBIL_KFFBS;
+            //    FrBDFFFBIL_KFrB = CalculationOptions.FrBDFFFBIL_KFrB;
+            //    FrBDFFFBIL_KILS = CalculationOptions.FrBDFFFBIL_KILS;
+            //}
         }
 
         private void TestScaling()
@@ -5741,6 +5769,12 @@ namespace Rawr.Mage
             displayCalculations.MageArmor = armor;
             displayCalculations.DamageTakenReduction = DamageTakenReduction;
             displayCalculations.Wand = Wand;
+
+            //displayCalculations.FrBDFFFBIL_KDFS = FrBDFFFBIL_KDFS;
+            //displayCalculations.FrBDFFFBIL_KFFB = FrBDFFFBIL_KFFB;
+            //displayCalculations.FrBDFFFBIL_KFFBS = FrBDFFFBIL_KFFBS;
+            //displayCalculations.FrBDFFFBIL_KFrB = FrBDFFFBIL_KFrB;
+            //displayCalculations.FrBDFFFBIL_KILS = FrBDFFFBIL_KILS;
 
             if (!requiresMIP)
             {

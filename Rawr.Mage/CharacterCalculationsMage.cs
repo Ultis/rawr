@@ -150,6 +150,12 @@ namespace Rawr.Mage
         public float EvocationCooldown;
         public float ManaGemEffectDuration;
 
+        //public float FrBDFFFBIL_KFrB;
+        //public float FrBDFFFBIL_KFFB;
+        //public float FrBDFFFBIL_KFFBS;
+        //public float FrBDFFFBIL_KILS;
+        //public float FrBDFFFBIL_KDFS;
+
         public double[] Solution;
         public List<SolutionVariable> SolutionVariable;
         public float Tps;
@@ -948,7 +954,7 @@ namespace Rawr.Mage
                 ret["Spell Cycles"] = "...";
                 ret["By Spell"] = "...";
                 ret["Status"] = "Score: ..., Dps: ..., Survivability: ...";
-                DisplayCalculations.DisplaySolver = new Solver(DisplayCalculations.Character, DisplayCalculations.CalculationOptions, DisplayCalculations.CalculationOptions.DisplaySegmentCooldowns, DisplayCalculations.CalculationOptions.DisplaySegmentMana, DisplayCalculations.CalculationOptions.DisplayIntegralMana, DisplayCalculations.CalculationOptions.DisplayAdvancedConstraintsLevel, DisplayCalculations.MageArmor, false, DisplayCalculations.CalculationOptions.SmartOptimization, true, true);
+                DisplayCalculations.DisplaySolver = new Solver(DisplayCalculations.Character, DisplayCalculations.CalculationOptions, DisplayCalculations.CalculationOptions.DisplaySegmentCooldowns, DisplayCalculations.CalculationOptions.DisplaySegmentMana, DisplayCalculations.CalculationOptions.DisplayIntegralMana, DisplayCalculations.CalculationOptions.DisplayAdvancedConstraintsLevel, DisplayCalculations.MageArmor, false, DisplayCalculations.CalculationOptions.SmartOptimization, true, true, true);
                 CalculationsMage.EnableSolver(DisplayCalculations.DisplaySolver);
                 DisplayCalculations.CalculationOptions.SequenceReconstruction = null;
                 return ret;

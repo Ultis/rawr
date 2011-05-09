@@ -148,7 +148,7 @@ namespace Rawr.Mage
                     //"Spell Info:FrBFBIL*Fireball on Brain Freeze, Ice Lance on shatter combo, use Brain Freeze on shatter combo when available",
                     //"Spell Info:FrBILFB*Fireball on Brain Freeze, always Ice Lance on shatter combo",
                     //"Spell Info:FrBDFFFB*Frostfire Bolt on non-FOF Brain Freeze, on shatter combo Deep Freeze > BF Frostfire Bolt",
-                    "Spell Info:FrBDFFFBIL*Frostfire Bolt on non-FOF Brain Freeze, on FOF Deep Freeze > BF Frostfire Bolt > Ice Lance (IL on 2 charges only)",
+                    "Spell Info:FrBDFFFBIL*Freeze when FOF off, on FOF Deep Freeze > BF Frostfire Bolt > Ice Lance (IL on 2 charges only or if Freeze coming off cooldown)",
                     "Spell Info:ArcaneManaNeutral*Mana neutral mix of arcane cycles",
                     "Spell Info:ABABar1AM*AB-ABar, wait on ABar cooldown if needed, AM on 1 stack",
                     "Spell Info:AB2ABar12AMABABar*AB-AB-ABar, wait on ABar cooldown if needed, AM-AB-ABar on 1 or 2 stack",
@@ -446,6 +446,7 @@ namespace Rawr.Mage
             bool computeIncrementalSet = referenceCalculation && calcOpts.IncrementalOptimizations;
             bool useGlobalOptimizations = calcOpts.SmartOptimization && !significantChange;
             bool useIncrementalOptimizations = calcOpts.IncrementalOptimizations && (!significantChange || calcOpts.ForceIncrementalOptimizations);
+            bool solveCycles = referenceCalculation || significantChange;
             if (useIncrementalOptimizations && calcOpts.IncrementalSetStateIndexes == null) computeIncrementalSet = true;
             if (computeIncrementalSet)
             {
@@ -454,27 +455,40 @@ namespace Rawr.Mage
             }
             if (useIncrementalOptimizations && !character.DisableBuffAutoActivation)
             {
-                return GetCharacterCalculations(character, additionalItem, calcOpts, calcOpts.IncrementalSetArmor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet);
+                return GetCharacterCalculations(character, additionalItem, calcOpts, calcOpts.IncrementalSetArmor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet, solveCycles);
             }
             else if (calcOpts.AutomaticArmor && !character.DisableBuffAutoActivation)
             {
-                CharacterCalculationsBase mage = GetCharacterCalculations(character, additionalItem, calcOpts, "Mage Armor", useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet);
-                CharacterCalculationsBase molten = GetCharacterCalculations(character, additionalItem, calcOpts, "Molten Armor", useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet);
-                CharacterCalculationsBase calc = (mage.OverallPoints > molten.OverallPoints) ? mage : molten;
+                CharacterCalculationsMage mage = GetCharacterCalculations(character, additionalItem, calcOpts, "Mage Armor", useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet, solveCycles);
+                CharacterCalculationsMage molten = GetCharacterCalculations(character, additionalItem, calcOpts, "Molten Armor", useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet, solveCycles);
+                CharacterCalculationsMage calc = (mage.OverallPoints > molten.OverallPoints) ? mage : molten;
                 if (calcOpts.MeleeDps + calcOpts.MeleeDot + calcOpts.PhysicalDps + calcOpts.PhysicalDot + calcOpts.FrostDps + calcOpts.FrostDot > 0)
                 {
-                    CharacterCalculationsBase ice = GetCharacterCalculations(character, additionalItem, calcOpts, "Ice Armor", useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet);
+                    CharacterCalculationsMage ice = GetCharacterCalculations(character, additionalItem, calcOpts, "Ice Armor", useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet, solveCycles);
                     if (ice.OverallPoints > calc.OverallPoints) calc = ice;
                 }
-                if (computeIncrementalSet) StoreIncrementalSet(character, ((CharacterCalculationsMage)calc).DisplayCalculations);
+                if (computeIncrementalSet) StoreIncrementalSet(character, calc.DisplayCalculations);
+                if (referenceCalculation) StoreCycleSolutions(character, calc.DisplayCalculations);
                 return calc;
             }
             else
             {
-                CharacterCalculationsBase calc = GetCharacterCalculations(character, additionalItem, calcOpts, null, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet);
-                if (computeIncrementalSet) StoreIncrementalSet(character, ((CharacterCalculationsMage)calc).DisplayCalculations);
+                CharacterCalculationsMage calc = GetCharacterCalculations(character, additionalItem, calcOpts, null, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet, solveCycles);
+                if (computeIncrementalSet) StoreIncrementalSet(character, calc.DisplayCalculations);
+                if (referenceCalculation) StoreCycleSolutions(character, calc.DisplayCalculations);
                 return calc;
             }
+        }
+
+        private void StoreCycleSolutions(Character character, DisplayCalculations calculations)
+        {
+            //CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
+
+            //calculationOptions.FrBDFFFBIL_KDFS = calculations.FrBDFFFBIL_KDFS;
+            //calculationOptions.FrBDFFFBIL_KFFB = calculations.FrBDFFFBIL_KFFB;
+            //calculationOptions.FrBDFFFBIL_KFFBS = calculations.FrBDFFFBIL_KFFBS;
+            //calculationOptions.FrBDFFFBIL_KFrB = calculations.FrBDFFFBIL_KFrB;
+            //calculationOptions.FrBDFFFBIL_KILS = calculations.FrBDFFFBIL_KILS;
         }
 
         private void StoreIncrementalSet(Character character, DisplayCalculations calculations)
@@ -548,9 +562,9 @@ namespace Rawr.Mage
             calculationOptions.IncrementalSetSortedStates = filteredCooldowns.ToArray();
         }
 
-        public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, string armor, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables)
+        public CharacterCalculationsMage GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, string armor, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables, bool solveCycles)
         {
-            return Solver.GetCharacterCalculations(character, additionalItem, calculationOptions, this, armor, calculationOptions.ComparisonSegmentCooldowns, calculationOptions.ComparisonSegmentMana, calculationOptions.ComparisonIntegralMana, calculationOptions.ComparisonAdvancedConstraintsLevel, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables);
+            return Solver.GetCharacterCalculations(character, additionalItem, calculationOptions, this, armor, calculationOptions.ComparisonSegmentCooldowns, calculationOptions.ComparisonSegmentMana, calculationOptions.ComparisonIntegralMana, calculationOptions.ComparisonAdvancedConstraintsLevel, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables, solveCycles);
         }
 
         //public static readonly Buff CriticalMassBuff = Buff.GetBuffByName("Critical Mass");
