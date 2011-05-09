@@ -766,32 +766,30 @@ If that is still not working for you, right-click anywhere within the web versio
         private void bnetReload_Closed(object sender, EventArgs e)
         {
             BNetLoadDialog ald = sender as BNetLoadDialog;
-            if (((BNetLoadDialog)sender).DialogResult.GetValueOrDefault(false))
+            Character character = ald.Character;
+            if (character == null) { return; } // Couldn't load it
+            #region Recent Settings Update
+            // The removes force it to put those items at the end.
+            // So we can use that for recall later on what was last used
+            if (Rawr.Properties.RecentSettings.Default.RecentChars.Contains(character.Name))
             {
-                Character character = ald.Character;
-                #region Recent Settings Update
-                // The removes force it to put those items at the end.
-                // So we can use that for recall later on what was last used
-                if (Rawr.Properties.RecentSettings.Default.RecentChars.Contains(character.Name))
-                {
-                    Rawr.Properties.RecentSettings.Default.RecentChars.Remove(character.Name);
-                }
-                if (Rawr.Properties.RecentSettings.Default.RecentServers.Contains(character.Realm))
-                {
-                    Rawr.Properties.RecentSettings.Default.RecentServers.Remove(character.Realm);
-                }
-                Rawr.Properties.RecentSettings.Default.RecentChars.Add(character.Name);
-                Rawr.Properties.RecentSettings.Default.RecentServers.Add(character.Realm);
-                Rawr.Properties.RecentSettings.Default.RecentRegion = character.Region.ToString();
-                #endregion
-
-                // Loads the new information into the current character in the form
-                ReloadCharacter(character);
-
-                EnsureItemsLoaded();
-                EnforceAvailability();
-                UpdateLastLoadedSet();
+                Rawr.Properties.RecentSettings.Default.RecentChars.Remove(character.Name);
             }
+            if (Rawr.Properties.RecentSettings.Default.RecentServers.Contains(character.Realm))
+            {
+                Rawr.Properties.RecentSettings.Default.RecentServers.Remove(character.Realm);
+            }
+            Rawr.Properties.RecentSettings.Default.RecentChars.Add(character.Name);
+            Rawr.Properties.RecentSettings.Default.RecentServers.Add(character.Realm);
+            Rawr.Properties.RecentSettings.Default.RecentRegion = character.Region.ToString();
+            #endregion
+
+            // Loads the new information into the current character in the form
+            ReloadCharacter(character);
+
+            EnsureItemsLoaded();
+            EnforceAvailability();
+            UpdateLastLoadedSet();
         }
         // Rawr Addon
         public void LoadFromRawrAddon(object sender, RoutedEventArgs args)

@@ -836,8 +836,11 @@ namespace Rawr.UI
         public Character Character { get; private set; }
         private Rawr.Rawr4ArmoryService _armoryService = new Rawr4ArmoryService();
 
+        private bool isReload = false;
         public void ShowReload()
         {
+            isReload = true;
+            Character = null;
             this.Show();
             OKButton_Click(null, null);
             BT_OK.IsEnabled = false;
@@ -1008,7 +1011,7 @@ namespace Rawr.UI
             ProgressBarStatus.IsIndeterminate = true;
             ProgressBarStatus.Value = ProgressBarStatus.Maximum;
             Character = e.Value;
-            this.DialogResult = true;
+            if (!isReload) { this.DialogResult = true; }
         }
 
         public void Load(string characterName, CharacterRegion region, string realm)
