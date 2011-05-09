@@ -1682,7 +1682,9 @@ If that is still not working for you, right-click anywhere within the web versio
 #if SILVERLIGHT
             new WelcomeWindow().Show();
 #else
-            new WelcomeWindow().ShowDialog();
+            WelcomeWindow w = new WelcomeWindow();
+            w.ShowDialog();
+            w.Activate();
 #endif
         }
 

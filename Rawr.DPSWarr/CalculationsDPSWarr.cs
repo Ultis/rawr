@@ -1567,9 +1567,8 @@ a GCD's length, you will use this while running back into place",
                 #endregion
 
                 #region Survivability
-                if (calcOpts.SurvScale != 0f) {
-                    List<Attack> Attacks = bossOpts.Attacks.FindAll(a => a.AffectsRole[PLAYER_ROLES.MeleeDPS]);
-
+                List<Attack> Attacks;
+                if (calcOpts.SurvScale != 0f && (Attacks = bossOpts.Attacks.FindAll(a => a.AffectsRole[PLAYER_ROLES.MeleeDPS])).Count > 0) {
                     Dictionary<ItemDamageType, float> countsDmg = new Dictionary<ItemDamageType, float>() {
                         { ItemDamageType.Physical, 0f },
                         { ItemDamageType.Arcane, 0f },
@@ -1605,7 +1604,7 @@ a GCD's length, you will use this while running back into place",
                         }
                     }
                     foreach (ItemDamageType t in countsDmg.Keys) { percDmg[t] = countsDmg[t] / (float)totalCount; }
-                    float TotalConstantDamageReduction = 1f - (1f - StatConversion.GetArmorDamageReduction(bossOpts.Level, character.Level, stats.Armor, 0f, 0f))
+                    float TotalConstantDamageReduction = 1f - (1f - (stats.Armor > 0 ? StatConversion.GetArmorDamageReduction(bossOpts.Level, character.Level, stats.Armor, 0f, 0f) : 0))
                                                             * (1f - stats.DamageTakenReductionMultiplier)
                                                             * (1f - stats.BossPhysicalDamageDealtReductionMultiplier);
                     Dictionary<ItemDamageType, float> SurvivabilityPointsRaw = new Dictionary<ItemDamageType, float>() {
