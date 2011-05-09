@@ -24,7 +24,7 @@ namespace Rawr.Healadin
             replenishment = .9f;
             divinePlea = 2f;
             boLUp = 1f;
-            holyShock = .15f;
+            holyShock = .8f;
             burstScale = .4f;
             gHL_Targets = 1f;
             infusionOfLight = true;
@@ -119,7 +119,7 @@ namespace Rawr.Healadin
         }
 
         public string IoLHolyLightText {
-            get { return string.Format("{0:P0} Holy Light, {1:P0} Flash of Light", IoLHolyLight, 1f - IoLHolyLight).Replace(" %", "%"); }
+            get { return string.Format("{0:P0} Holy Light, {1:P0} Divine Light", IoLHolyLight, 1f - IoLHolyLight).Replace(" %", "%"); }
         }
 
         private bool jotP;

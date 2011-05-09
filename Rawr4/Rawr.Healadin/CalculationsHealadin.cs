@@ -218,8 +218,11 @@ namespace Rawr.Healadin
                     "Basic Stats:Mana",
                     "Basic Stats:Stamina",
                     "Basic Stats:Intellect",
+                    "Basic Stats:Spirit",
                     "Basic Stats:Spell Power",
-                    "Basic Stats:Mp5",
+                    "Basic Stats:Mana Regen",
+                    "Basic Stats:Combat Regen",
+                    // "Basic Stats:Mp5",
                     "Basic Stats:Spell Crit",
                     "Basic Stats:Spell Haste",
 
@@ -244,7 +247,9 @@ namespace Rawr.Healadin
                     "Spell Information:Holy Light",
                     "Spell Information:Flash of Light",
                     "Spell Information:Holy Shock",
-
+                    "Spell Information:Divine Light",  
+                    "Spell Information:Word of Glory(3 holy power)",  
+                    "Spell Information:Light of Dawn(3 hp 5 targets)",  
                 };
                 return _characterDisplayCalculationLabels;
             }

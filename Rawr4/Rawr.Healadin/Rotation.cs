@@ -56,16 +56,22 @@ namespace Rawr.Healadin
         private FlashOfLight fol;
         private HolyLight hl;
         private HolyShock hs;
+        private DivineLight dl;  //smm-change*************************************************
+        private WordofGlory wog;  //smm-change*************************************************
+        private LightofDawn lod;  //smm-change*************************************************
         private JudgementsOfThePure jotp;
         private BeaconOfLight bol;
 
         public Rotation(Character character, Stats stats)
         {
             Character = character;
-            FightLength = BossOpts.BerserkTimer * 60f;
+            FightLength = BossOpts.BerserkTimer;
             Stats = stats;
             fol = new FlashOfLight(this);
             hl = new HolyLight(this);
+            dl = new DivineLight(this);  
+            wog = new WordofGlory(this); 
+            lod = new LightofDawn(this); 
             hs = new HolyShock(this);
             jotp = new JudgementsOfThePure(this, CalcOpts.Judgement);
             bol = new BeaconOfLight(this);
@@ -82,14 +88,24 @@ namespace Rawr.Healadin
             calc.ManaMp5 = FightLength * Stats.Mp5 / 5f;
             calc.ManaReplenishment = Stats.ManaRestoreFromMaxManaPerSecond * Stats.Mana * FightLength * CalcOpts.Replenishment;
             calc.ManaOther += Stats.ManaRestore;
+            // add calc.ManaJudgements
+            calc.ManaJudgements = HealadinConstants.basemana * 0.15f * jotp.Casts();
             if (Stats.HighestStat > 0)
             {
                 float greatnessMana = Stats.HighestStat * StatConversion.RATING_PER_MANA;
                 calc.ManaReplenishment += Stats.ManaRestoreFromMaxManaPerSecond * FightLength * greatnessMana * CalcOpts.Replenishment; // Replenishment
                 calc.ManaDivinePlea += DivinePleas * greatnessMana * .1f; // Divine Plea
             }
-            return calc.ManaBase + calc.ManaDivinePlea + calc.ManaMp5 + calc.ManaOther +
-                calc.ManaReplenishment + calc.ManaLayOnHands;
+
+            // check if this is correct regen per 5 seconds..  
+            // combat regen = 50% of spirit regen (from Meditation), plus MP5 from gear, plus 5% base mana per 5 secs.  Base mana = 23422 at 85
+            float spirit_regen = StatConversion.GetSpiritRegenSec(Stats.Spirit, Stats.Intellect) * 5f;
+            calc.CombatRegenRate = spirit_regen * 0.5f + Stats.Mp5 + HealadinConstants.basemana * 0.05f;
+            calc.ManaRegenRate = spirit_regen + Stats.Mp5 + HealadinConstants.basemana * 0.05f;
+            calc.CombatRegenTotal = calc.CombatRegenRate * FightLength / 5f;
+
+            return calc.ManaBase + calc.ManaDivinePlea + calc.CombatRegenTotal + calc.ManaOther +
+                calc.ManaReplenishment + calc.ManaLayOnHands + calc.ManaJudgements;
         }
 
         public static float GetHolyLightCastsPerSec(CharacterCalculationsHealadin calc)
@@ -127,6 +143,9 @@ namespace Rawr.Healadin
             calc.HL = hl;
             calc.FoL = fol;
             calc.HS = hs;
+            calc.DL = dl;  
+            calc.WoG = wog;  
+            calc.LoD = lod;  
             calc.JotP = jotp;
             calc.BoL = bol;
 
@@ -140,6 +159,8 @@ namespace Rawr.Healadin
             calc.HealedHS = hs.Healed();
             calc.UsageHS = hs.Usage();
             #endregion
+
+            calc.SpellPowerTotal = Stats.Intellect + Stats.SpellPower;
 
             #region Divine Favor
             if (Talents.DivineFavor > 0)
@@ -170,10 +191,10 @@ namespace Rawr.Healadin
             float remainingMana = calc.TotalMana = ManaPool(calc);
             remainingMana -= calc.UsageJotP + calc.UsageBoL + calc.UsageHS + calc.UsageHL + calc.UsageFoL;
 
-            // Meditation
-            remainingMana += Stats.Mp5 * 0.5f * (FightLength / 5f);
-
+            // start with amount of time you are active in a fight
             float remainingTime = FightLength * CalcOpts.Activity;
+            // now subtract time for keeping up Judgements of the Pure and Beacon.  Also subtract your Holy Shock casts.  
+            // TODO: why is it subtracting Flash of Light and Holy Light casts?
             remainingTime -= calc.RotationJotP + calc.RotationBoL + calc.RotationHS + calc.RotationFoL + calc.RotationHL;
 
             FoLCasts = 0f;

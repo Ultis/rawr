@@ -84,11 +84,11 @@ namespace Rawr.Healadin
         }
 
         private void btnResetHolyShock_Click(object sender, RoutedEventArgs e) {
-            calcOpts.HolyShock = .15f;
+            calcOpts.HolyShock = .8f;
         }
 
         private void btnResetIoLHolyLight_Click(object sender, RoutedEventArgs e) {
-            calcOpts.IoLHolyLight = .9f;
+            calcOpts.IoLHolyLight = .5f;
         }
 
         private void btnResetReplenishment_Click(object sender, RoutedEventArgs e) {

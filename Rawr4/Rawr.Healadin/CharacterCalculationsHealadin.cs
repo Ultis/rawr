@@ -46,6 +46,12 @@ namespace Rawr.Healadin
         public BeaconOfLight BoL { get; set; }
         public JudgementsOfThePure JotP { get; set; }
 
+        public DivineLight DL { get; set; }    
+        public WordofGlory WoG { get; set; }    
+        public LightofDawn LoD { get; set; }
+
+        public float SpellPowerTotal { get; set; }  // add spellpower from items + int to get this
+
         public float RotationFoL { get; set; }
         public float RotationHL { get; set; }
         public float RotationHS { get; set; }
@@ -72,6 +78,10 @@ namespace Rawr.Healadin
         public float ManaDivinePlea { get; set; }
         public float ManaLayOnHands { get; set; }
         public float ManaOther { get; set; }
+        public float ManaJudgements { get; set; }   // mana generated from casting Judgements (15% base mana per cast)
+        public float ManaRegenRate { get; set; }    // out of combat regen rate
+        public float CombatRegenRate { get; set; }  // in combat total regen rate
+        public float CombatRegenTotal { get; set; }
 
         private Stats _basicStats;
         public Stats BasicStats
@@ -88,13 +98,18 @@ namespace Rawr.Healadin
                 FightPoints.ToString("N0"),
                 BurstPoints.ToString("N0")));
 
+
+
             //Basic Stats
             dictValues["Health"] = BasicStats.Health.ToString("N00");
             dictValues["Stamina"] = BasicStats.Stamina.ToString("N00");
             dictValues["Mana"] = BasicStats.Mana.ToString("N00");
             dictValues["Intellect"] = BasicStats.Intellect.ToString("N00");
-            dictValues["Spell Power"] = BasicStats.SpellPower.ToString("N00");
-            dictValues["Mp5"] = BasicStats.Mp5.ToString("N00");
+            dictValues["Spirit"] = BasicStats.Spirit.ToString("N00");
+            dictValues["Spell Power"] = string.Format("{0}", SpellPowerTotal.ToString("N00"));
+            dictValues["Mana Regen"] = string.Format("{0}", ManaRegenRate.ToString("N00"));
+            dictValues["Combat Regen"] = string.Format("{0}", CombatRegenRate.ToString("N00"));  
+            // dictValues["Mp5"] = BasicStats.Mp5.ToString("N00");
             dictValues["Spell Crit"] = string.Format("{0}%*{1} Crit Rating", (BasicStats.SpellCrit * 100).ToString("N02"), BasicStats.CritRating);
             dictValues["Spell Haste"] = string.Format("{0}%*{1} Haste Rating", (BasicStats.SpellHaste * 100).ToString("N02"), BasicStats.HasteRating);
 
@@ -122,6 +137,9 @@ namespace Rawr.Healadin
             dictValues["Holy Light"] = "*" + HL.ToString();
             dictValues["Flash of Light"] = "*" + FoL.ToString();
             dictValues["Holy Shock"] = "*" + HS.ToString();
+            dictValues["Divine Light"] = "*" + DL.ToString();  
+            dictValues["Word of Glory(3 holy power)"] = "*" + WoG.ToString();  
+            dictValues["Light of Dawn(3 holy power)"] = "*" + LoD.ToString();  
 
             return dictValues;
         }

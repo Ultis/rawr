@@ -4,6 +4,45 @@ using System.Text;
 
 namespace Rawr.Healadin
 {
+
+    public static class HealadinConstants
+    {
+        // Spell coeficients
+        // source:  http://elitistjerks.com/f76/t110847-holy_cataclysm_holy_compendium_4_0_6_a/
+        public static float fol_coef = 0.8632f;
+        public static float fol_mana = 7026.6f;
+        public static float fol_min = 6907f;
+        public static float fol_max = 7749f;
+
+        public static float hl_coef = 0.432f;
+        public static float hl_mana = 2342.2f;
+        public static float hl_min = 4163f;
+        public static float hl_max = 4637f;
+
+        public static float dl_coef = 1.15306f;
+        public static float dl_mana = 7729.3f;
+        public static float dl_min = 11100f;
+        public static float dl_max = 12366f;
+
+        public static float hs_coef = 0.2689f;
+        public static float hs_mana = 1873.8f;
+        public static float hs_min = 2629f;
+        public static float hs_max = 2847f;
+
+        // Stats for 1 holy power.  Scales linearly with more holy power. (so just * by 2 or 3 when needed)
+        public static float wog_coef_sp = 0.209f;  // regular spellpower coef
+        public static float wog_coef_ap = 0.198f;  // Word of Glory also has Attack Power coef
+        public static float wog_min = 2018f;
+        public static float wog_max = 2248f;
+
+        // Stats for 1 holy power, 1 target.  Hits up to 5 targets, 6 glyphed.
+        public static float lod_coef = 0.198f;
+        public static float lod_min = 605f;
+        public static float lod_max = 673f;
+
+        public static float basemana = 23422;
+    }
+
     public abstract class Heal
     {
         private Rotation _rotation;
@@ -31,7 +70,14 @@ namespace Rawr.Healadin
 
         public float HPS() { return AverageHealed() / CastTime(); }
         public float MPS() { return AverageCost() / CastTime(); }
-        public float HPM() { return AverageHealed() / AverageCost(); }
+        public float HPM() 
+        {
+            if (BaseMana == 0)
+                return 0f;
+            else
+                return AverageHealed() / AverageCost(); 
+        }
+
         public float CastTime() { return (float)Math.Max(1f, (BaseCastTime - AbilityCastTimeReduction()) / (1f + Stats.SpellHaste));}
 
         public float AverageCost()
@@ -65,14 +111,15 @@ namespace Rawr.Healadin
             heal *= (1f + Stats.BonusHealingDoneMultiplier);
 
             // Walk in the Light
-            heal *= 0.15f; // TODO: Figure out a way to detect the character's main spec
+            heal *= (1f + 0.1f); // TODO: Figure out a way to detect the character's main spec
 
             return heal;
         }
 
         public float ChanceToCrit()
         {
-            return (float)Math.Max(0f, (float)Math.Min(1f, Stats.SpellCrit + AbilityCritChance() + ExtraCritChance + Talents.DivineFavor * .2f));
+            // TODO: figure out how to add Talents.DivineFavor into crit chance, when do we proc it, which casts are proced, etc.
+            return (float)Math.Max(0f, (float)Math.Min(1f, Stats.SpellCrit + AbilityCritChance() + ExtraCritChance ));
         }
         public float CostReduction() { return Stats.SpellsManaCostReduction + Stats.HolySpellsManaCostReduction + AbilityCostReduction(); }
 
@@ -122,12 +169,12 @@ namespace Rawr.Healadin
         { }
 
         public override float BaseCastTime { get { return 1.5f; } }
-        public override float BaseMana { get { return 6324f; } } // TODO: Determine exact mana cost.  27% of base mana
+        public override float BaseMana { get { return HealadinConstants.fol_mana; } } 
 
         protected override float AbilityHealed()
         {
-            const float fol_coef = 1.5f / 3.5f * 66f / 35f * 1.25f; // TODO: Determine if spell power co-effecient is correct
-            return (4830f + 5418f) / 2f + (Stats.SpellPower * fol_coef);
+            // TODO: calculate real spellpower somewhere in Healadin module, and use that instead of Stats.SpellPower + Stats.Intellect
+            return (HealadinConstants.fol_min + HealadinConstants.fol_max) / 2f + ((Stats.SpellPower + Stats.Intellect) * HealadinConstants.fol_coef);
         }
     }
 
@@ -138,14 +185,14 @@ namespace Rawr.Healadin
         { }
 
         public override float BaseCastTime { get { return 3f - ClarityOfPurpose(Talents.ClarityOfPurpose) - CastTimeReduction; } }
-        public override float BaseMana { get { return 2108f; } } // TODO: Determine exact mana cost.  9% of base mana
+        public override float BaseMana { get { return HealadinConstants.hl_mana; } } 
 
         public float CastTimeReduction { get; set; }
 
         protected override float AbilityHealed()
         {
-            const float hl_coef = 3f / 3.5f * 66f / 35f * 1.25f; // TODO: Determine if spell power co-effecient is correct.  Since Holy Light is now a 3s cast time, I bumped the co-effecient up to 3 from 2.5.
-            return (2911f + 3243f) / 2f + (Stats.SpellPower * hl_coef);
+            // TODO: calculate real spellpower somewhere in Healadin module, and use that instead of Stats.SpellPower + Stats.Intellect
+            return (HealadinConstants.hl_min + HealadinConstants.hl_max) / 2f + ((Stats.SpellPower + Stats.Intellect) * HealadinConstants.hl_coef);
         }
     }
 
@@ -156,11 +203,11 @@ namespace Rawr.Healadin
         { }
 
         public override float BaseCastTime { get { return 3f - ClarityOfPurpose(Talents.ClarityOfPurpose); } }
-        public override float BaseMana { get { return 7027f; } } // TODO: Determine exact mana cast.  30% of base mana
+        public override float BaseMana { get { return HealadinConstants.dl_mana; } } 
 
         protected override float AbilityHealed() {
-            const float dl_coef = 3f / 3.5f * 66f / 35f * 1.25f; // TODO: Determine if spell power co-efficient is correct.
-            return (7762f + 8648f) / 2f + Stats.SpellPower * dl_coef;
+            // TODO: calculate real spellpower somewhere in Healadin module, and use that instead of Stats.SpellPower + Stats.Intellect
+            return (HealadinConstants.dl_min + HealadinConstants.dl_max) / 2f + ((Stats.SpellPower + Stats.Intellect) * HealadinConstants.dl_coef);
         }
     }
 
@@ -171,12 +218,13 @@ namespace Rawr.Healadin
         { }
 
         public override float BaseCastTime { get { return 1.5f; } }
-        public override float BaseMana { get { return 1874f; } } // TODO: Determine exact mana cost.  8% of base mana
+        public override float BaseMana { get { return HealadinConstants.hs_mana; } } 
 
         protected override float AbilityHealed()
         {
-            const float hs_coef = 1.5f / 3.5f * 66f / 35f; // TODO: Determine if spell power co-effecient is correct
-            return ((2758f + 2986f) / 2f + Stats.SpellPower * hs_coef) * (1f + Talents.Crusade * 0.1f);
+            // TODO: calculate real spellpower somewhere in Healadin module, and use that instead of Stats.SpellPower + Stats.Intellect
+            return ((HealadinConstants.hs_min + HealadinConstants.hs_max) / 2f +
+                     ((Stats.SpellPower+ Stats.Intellect) * HealadinConstants.hs_coef) * (1f + Talents.Crusade * 0.1f));
         }
 
         public float Usage()
@@ -209,6 +257,47 @@ namespace Rawr.Healadin
             return 1f + (Talents.GlyphOfHolyShock ? 0.05f : 0f) + (Talents.InfusionOfLight * 0.05f);
         }
 
+    }
+
+    public class WordofGlory : Heal
+    {
+        public WordofGlory(Rotation rotation)
+            : base(rotation)
+        { }
+
+        public override float BaseCastTime { get { return 1.5f; } }
+        public override float BaseMana { get { return 0f; } }
+
+        protected override float AbilityHealed()
+        {
+            float attackpower = Stats.AttackPower + Stats.Strength * 2;
+            attackpower *= (1f + Stats.BonusAttackPowerMultiplier);
+            float holypower = 3f;  // assume 3 holypower for now
+            // TODO: calculate real spellpower somewhere in Healadin module, and use that instead of Stats.SpellPower + Stats.Intellect
+            return holypower * (HealadinConstants.wog_min + HealadinConstants.wog_max) / 2f + 
+                                ((Stats.SpellPower + Stats.Intellect) * HealadinConstants.wog_coef_sp) +
+                                (attackpower * HealadinConstants.wog_coef_ap);
+        }
+    }
+
+    public class LightofDawn : Heal
+    {
+        public LightofDawn(Rotation rotation)
+            : base(rotation)
+        { }
+
+        public override float BaseCastTime { get { return 1.5f; } }
+        public override float BaseMana { get { return 0f; } }
+
+        protected override float AbilityHealed()
+        {
+            //TODO: find if we are glyphed for 6 targets healed
+            float targets_healed = 5f;
+            float holypower = 3f; // assume 3 holy power for now
+            // TODO: calculate real spellpower somewhere in Healadin module, and use that instead of Stats.SpellPower + Stats.Intellect
+            return holypower * targets_healed * ((HealadinConstants.lod_min + HealadinConstants.lod_max) / 2f + 
+                                                 ((Stats.SpellPower + Stats.Intellect) * HealadinConstants.lod_coef));
+        }
     }
 
     public abstract class Spell
@@ -292,7 +381,7 @@ namespace Rawr.Healadin
         {
             Duration = MaintainDebuff ? 20f : 60f;
             Uptime = Rotation.CalcOpts.JotP ? Rotation.FightLength : 0f;
-            BaseCost = 219f;
+            BaseCost = HealadinConstants.basemana * 0.05f;
         }
 
         public override float CastTime()
