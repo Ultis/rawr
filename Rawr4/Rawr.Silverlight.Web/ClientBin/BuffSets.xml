@@ -7,24 +7,24 @@
   <SavedBuffSet>
     <Name>Fully Buffed DPSWarr</Name>
     <SetAsString>
+      <string>Strength of Earth Totem</string>
       <string>Stoneskin Totem</string>
       <string>Ancestral Healing</string>
       <string>Trueshot Aura</string>
       <string>Ferocious Inspiration</string>
       <string>Power Word: Fortitude</string>
+      <string>Leader of the Pack</string>
       <string>Windfury Totem</string>
       <string>Blessing of Kings</string>
+      <string>Faerie Fire</string>
+      <string>Demoralizing Shout</string>
       <string>Master Poisoner</string>
       <string>Flask of Titanic Strength</string>
-      <string>Potion of Speed</string>
+      <string>Golemblood Potion</string>
       <string>Strength Food</string>
-      <string>Leader of the Pack</string>
+      <string>Judgements of the Just</string>
       <string>Mangle</string>
       <string>Blood Frenzy</string>
-      <string>Faerie Fire</string>
-      <string>Judgements of the Just</string>
-      <string>Demoralizing Shout</string>
-      <string>Strength of Earth Totem</string>
     </SetAsString>
   </SavedBuffSet>
   <SavedBuffSet>
@@ -46,7 +46,7 @@
       <string>Mangle</string>
       <string>Judgements of the Just</string>
       <string>Flask of Steelskin</string>
-      <string>Indestructible Potion</string>
+      <string>Earthen Potion</string>
       <string>Agility Food</string>
     </SetAsString>
   </SavedBuffSet>
@@ -184,6 +184,26 @@
       <string>Flask of the Winds</string>
       <string>Potion of the Tol'vir</string>
       <string>Agility Food</string>
+    </SetAsString>
+  </SavedBuffSet>
+  <SavedBuffSet>
+    <Name>Fully Buffed ShadowPriest</Name>
+    <SetAsString>
+      <string>Stoneskin Totem</string>
+      <string>Ferocious Inspiration</string>
+      <string>Arcane Brilliance (Mana)</string>
+      <string>Arcane Brilliance (SP%)</string>
+      <string>Leader of the Pack</string>
+      <string>Communion</string>
+      <string>Mana Tide Totem</string>
+      <string>Wrath of Air Totem</string>
+      <string>Blessing of Kings</string>
+      <string>Resistance Aura</string>
+      <string>Aspect of the Wild</string>
+      <string>Critical Mass</string>
+      <string>Master Poisoner</string>
+      <string>Flask of the Draconic Mind</string>
+      <string>Intellect Food</string>
     </SetAsString>
   </SavedBuffSet>
 </ArrayOfSavedBuffSet>

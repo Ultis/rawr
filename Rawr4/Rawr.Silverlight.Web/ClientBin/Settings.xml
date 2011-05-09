@@ -1,11 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-16"?>
-<Settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<Settings xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Cache>
     <RelativeItemImageCache>Data/images</RelativeItemImageCache>
     <RelativeTalentImageCache>Data/talent_images</RelativeTalentImageCache>
   </Cache>
   <General>
-    <LastVersionRun>4.1.0.0</LastVersionRun>
+    <LastVersionRun>4.1.4.0</LastVersionRun>
+    <HasSeenHelpWindow>true</HasSeenHelpWindow>
     <CountGemmingsShown>3</CountGemmingsShown>
     <UseMultithreading>true</UseMultithreading>
     <Locale>en</Locale>
@@ -23,8 +24,8 @@
     <ItemNameWidthSetting>0</ItemNameWidthSetting>
     <WelcomeScreenSeen>true</WelcomeScreenSeen>
     <PTRMode>false</PTRMode>
-    <UseLargeViewItemBrowser>true</UseLargeViewItemBrowser>
-    <UseRegexInItemBrowser>true</UseRegexInItemBrowser>
+    <UseLargeViewItemBrowser>false</UseLargeViewItemBrowser>
+    <UseRegexInItemBrowser>false</UseRegexInItemBrowser>
     <FilterSideBarWidth>200</FilterSideBarWidth>
     <ShowRelativeToEquipped>false</ShowRelativeToEquipped>
   </General>

@@ -160,6 +160,94 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes()
         {
+#region Rawr 4.1.05 (May 08, 2011) [r60625]
+VNStuff.Add("Rawr 4.1.05 (May 08, 2011) [r60625]",
+@"Cataclysm Release
+
+Aligned CalcOpts panes for all Tank models
+
+Rawr.Base:
+- Removed BossAttackPower stat as it no longer exists in game (Demo shout and others were changed to a % dmg mult)
+- Efflorescence Talent no longer requires Living Seed Talent as a pre-req
+
+Rawr.BossHandler:
+- Avg Attack/TargetGroup and Impedance calcs now calc in the PhaseUptime to reduce oversizing
+- Attack editor fixed for standard usability scenarios
+
+Rawr.Buffs:
+- Updated 4.1's Steelskin's flask bonus from 300 stam to 450 stam
+
+Rawr.Items:
+- Updated 4.1 sources with correct locations
+- Fixed Shard of Woes' Mana reduction not showing
+- Updated Mastery stat to 356 ilvl version of Manacles of the Sleeping Beast
+- Initial working for automating Holiday item being treated as quest rewards (Holiday daily satchels; which the holiday items drop from; are considered quest rewards). Needs further work
+
+Rawr.Optimizer:
+- Fixed a bug with the Mixology checkbox
+
+Rawr.Server:
+- A change in battle.net caused professions to not get parsed correctly
+
+Rawr.DPSWarr:
+- Removed a bad reference from the CalcOpts xaml
+- Fixed the positioning of the Advanced Tooltips on CalcOpts so they don't flicker
+- Cleaned up GetRelevantStats, ensured it wasn't missing anything that HasRelevantStats had
+- Changed HasRelevantStats (and similar overrides) to use the != 0 return true method for performance
+- Survivability Score now functions like a Tank's would but divided by 1000. This means uses the same calc method and is soft-capped. Gets values from the Attacks that would affect a MeleeDPS role (mostly just Raid AoE). Also splits the score down for different types of damage like Fire vs Physical
+- Fury's Precision now properly applies the 40% Bonnus White damage
+- Removed some dead code
+- Updated the Rage from Incoming Damage calculations to iterate through boss attacks using damage and uptime values. Still using the Cataclysm modifier of 2.5/453.3 though, need to determine the new modifier. This is a very small amount of change on the rage levels so it's not going to seriously throw off calculations for being wrong
+- Fix for issue 20619: Fury Mastery value off. The Mastery value wasn't properly updated in last release, sorry :/
+- Removed some unnecessary string actions that were hitting performance for no reason
+- Special Damage Procs no longer attempts to process when you don't have a proc of that type. Saves performance
+- Changed the Damage Taken Interval handling to new boss handler attacks with affects role filtering instead of just aoe attacks, regardless of target
+- Special Effects handling now looks for intervals of Infinity and ignores them as 'intervals which dont actually occur'
+- Determination of Fury stance which read talent counts in trees before now just uses the Talents class's new count methods which are more generic and automated for updates
+- Fix for BloodCraze 3/3 health value
+- Changed Rotation.InvalidateCache function to just provide the 3dim array's values at once instead of iterating through them to set them all to -1. Saves performance
+- All Impedances now filter based on the new Roles check
+- All Impedances are now affected by the new Phase Uptime methods
+- Updated the AverageTargets calc for White Damage to new methods (Phase Uptime, caching the value, Roles filtering)
+
+Rawr.Healadin:
+- Applied Two Patches
+
+Rawr.Mage:
+- Fix for glyphs, Glyph of Arcane Missiles and Glyph of Arcane Barrage were swapped
+- Fix for Issue 20682: Focus Magic on buff list by default when importing from battle.net - Removed the application of the buff in Mage's SetDefaults
+- Updated frost cycle, I don't like it, but it's probably better than it was before
+
+Rawr.Moonkin:
+- PTR changes, round 1:
+* Initial cut of T12 2-piece and 4-piece set bonuses
+* Bugfix for duplicate/missing gem templates
+* Bugfix for old mastery breakpoint tooltip still being displayed
+- 4.2 PTR, round 2:
+* A tentative implementation of DoT spells generating Eclipse energy
+- Show true mastery percentage, rather than the floored percentage from pre-4.1
+
+Rawr.ProtWarr:
+- Fix for Issue 20600: Loading a character with the Avalanche enchant would crash - Needed to use a RelevantTriggers statement to filter out effects that it's not set up for
+- Replaced Mitigation Scale with Survival Soft Cap/Hits to Survive scaler, similar to Bear
+- Properly average the value of temporary Mastery effects (e.g. Trinkets) to cap out their effective value while active, rather than averaging as if the entire value was effective
+- More accuratly calculate the special effect trigger chance of Block/Parry triggers by adding base Parry from Strength and Block from Mastery prior to calculating special effects
+- Removed Resilience display/relevance as it does nothing in PvE now
+- Fixed tooltip regarding Heroic Strike frequency
+- Increased Devastate base damage from 336 to 854
+
+Rawr.Tree:
+- Removed Dead Code from CalcOpts
+- Excludes weapons from off-hand
+- Support for T11 Set bonuses
+- Fixed Glyph of Rejuvenation not showing up
+
+Rawr.Warlock:
+- Fix calculation of hasted number of DOT ticks
+- Fix Sorrowsong calculation
+- Use consistent handling for trinket and non-trinket relevance (fixes, e.g. chest stats enchants)
+");
+#endregion
 #region Rawr 4.1.04 (Apr 29, 2011) [r60390]
 VNStuff.Add("Rawr 4.1.04 (Apr 29, 2011) [r60390]",
 @"Cataclysm Release

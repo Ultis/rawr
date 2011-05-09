@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-16"?>
-<ArrayOfItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<ArrayOfItem xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Item>
     <ItemLevel>1</ItemLevel>
     <DisplayId>33310</DisplayId>
@@ -132523,10 +132523,6 @@
     <Faction>Neutral</Faction>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
       <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
     <Name>[Downloading from Wowhead]</Name>
