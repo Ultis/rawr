@@ -710,6 +710,16 @@ namespace Rawr
             return Reforging.GetReforgingOptions(baseItem, randomSuffixId, GetStatsToReforgeFrom(), GetStatsToReforgeTo());
         }
 
+        public virtual List<Enchant> GetEnchantingOptions(Item baseItem, Character character)
+        {
+            return Enchant.GetEnchantingOptions(baseItem, character);
+        }
+
+        public virtual List<Tinkering> GetTinkeringOptions(Item baseItem, Character character)
+        {
+            return Tinkering.GetTinkeringOptions(baseItem, character);
+        }
+
         public virtual void ClearCache()
         {
             _cachedCharacterStatsWithSlotEmpty = null;
@@ -722,6 +732,8 @@ namespace Rawr
 
         public virtual ComparisonCalculationBase GetItemCalculations(ItemInstance item, Character character, CharacterSlot slot)
         {
+            // Check if the last iteration has the same character and is in the same slot.
+            // If it is, we'll use the same characterWithSlotEmpty to save processing time
             bool useCache = character == _cachedCharacter && slot == _cachedSlot;
             Character characterWithSlotEmpty = null;
 
@@ -732,6 +744,8 @@ namespace Rawr
             if (slot != CharacterSlot.Metas && slot != CharacterSlot.Gems
                 && slot != CharacterSlot.Cogwheels && slot != CharacterSlot.Hydraulics)
             {
+                // Show Relative to Equipped makes the Base version character with the original item value 0
+                // and every other calc relative to that
                 if (!useCache) characterWithSlotEmpty[slot] = (Properties.GeneralSettings.Default.ShowRelativeToEquipped && character[slot] != null ? character[slot].Clone() : null);
                 characterWithNewItem[slot] = item;
             }

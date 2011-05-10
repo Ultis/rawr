@@ -1422,15 +1422,7 @@ namespace Rawr
         /// -id represents enchants
         /// </summary>
         [XmlIgnore]
-        public List<string> AvailableItems
-        {
-            get { return _availableItems; }
-            set
-            {
-                _availableItems = value;
-                OnAvailableItemsChanged();
-            }
-        }
+        public List<string> AvailableItems { get { return _availableItems; } set { _availableItems = value; OnAvailableItemsChanged("All", ItemAvailability.NotAvailable); } }
         #region Getting/Setting Item Availability
         public ItemAvailability GetItemAvailability(Item item)
         {
@@ -1470,41 +1462,41 @@ namespace Rawr
         {
             string id = itemId.ToString();
             string anyGem = id + ".*.*.*";
+            ItemAvailability newItemAvailability = ItemAvailability.NotAvailable;
 
             if (id.StartsWith("-", StringComparison.Ordinal) || regemmingAllowed)
             {
                 // all enabled toggle
-                if (_availableItems.Contains(id) || _availableItems.FindIndex(x => x.StartsWith(anyGem, StringComparison.Ordinal)) >= 0)
-                {
+                if (_availableItems.Contains(id) || _availableItems.FindIndex(x => x.StartsWith(anyGem, StringComparison.Ordinal)) >= 0) {
                     _availableItems.Remove(id);
                     _availableItems.RemoveAll(x => x.StartsWith(anyGem, StringComparison.Ordinal));
-                }
-                else
-                {
+                    newItemAvailability = ItemAvailability.NotAvailable;
+                } else {
                     _availableItems.Add(id);
+                    newItemAvailability = ItemAvailability.RegemmingAllowed;
                 }
             }
-            OnAvailableItemsChanged();
+            OnAvailableItemsChanged(id, newItemAvailability);
         }
         public void ToggleItemAvailability(Item item, bool regemmingAllowed)
         {
             string id = item.Id.ToString();
             string anyGem = id + ".*.*.*";
+            ItemAvailability newItemAvailability = ItemAvailability.NotAvailable;
 
             if (id.StartsWith("-", StringComparison.Ordinal) || regemmingAllowed || item.IsGem)
             {
                 // all enabled toggle
-                if (_availableItems.Contains(id) || _availableItems.FindIndex(x => x.StartsWith(anyGem, StringComparison.Ordinal)) >= 0)
-                {
+                if (_availableItems.Contains(id) || _availableItems.FindIndex(x => x.StartsWith(anyGem, StringComparison.Ordinal)) >= 0) {
                     _availableItems.Remove(id);
                     _availableItems.RemoveAll(x => x.StartsWith(anyGem, StringComparison.Ordinal));
-                }
-                else
-                {
+                    newItemAvailability = ItemAvailability.NotAvailable;
+                } else {
                     _availableItems.Add(id);
+                    newItemAvailability = ItemAvailability.RegemmingAllowed;
                 }
             }
-            OnAvailableItemsChanged();
+            OnAvailableItemsChanged(id, newItemAvailability);
         }
         public void ToggleItemAvailability(ItemInstance item, bool regemmingAllowed)
         {
@@ -1513,6 +1505,7 @@ namespace Rawr
             {
                 id += "." + item.RandomSuffixId;
             }
+            ItemAvailability newItemAvailability = ItemAvailability.NotAvailable;
 
             if (id.StartsWith("-", StringComparison.Ordinal) || regemmingAllowed)
             {
@@ -1520,10 +1513,12 @@ namespace Rawr
                 if (_availableItems.Contains(id))
                 {
                     _availableItems.Remove(id);
+                    newItemAvailability = ItemAvailability.NotAvailable;
                 }
                 else
                 {
                     _availableItems.Add(id);
+                    newItemAvailability = ItemAvailability.RegemmingAllowed;
                 }
             }
             else
@@ -1536,43 +1531,52 @@ namespace Rawr
                 if (_availableItems.FindIndex(p) >= 0)
                 {
                     _availableItems.RemoveAll(p);
+                    newItemAvailability = ItemAvailability.NotAvailable;
                 }
                 else
                 {
                     _availableItems.Add(item.GemmedId);
+                    newItemAvailability = ItemAvailability.Available;
                 }
             }
-            OnAvailableItemsChanged();
+            OnAvailableItemsChanged(id, newItemAvailability);
         }
         public void ToggleItemAvailability(Enchant enchant)
         {
             string id = (-1 * (enchant.Id + ((int)AvailableItemIDModifiers.Enchants * (int)enchant.Slot))).ToString();
+            ItemAvailability newItemAvailability = ItemAvailability.NotAvailable;
             // all enabled toggle
             if (_availableItems.Contains(id)) {
                 while (_availableItems.Contains(id)) { _availableItems.Remove(id); }
+                newItemAvailability = ItemAvailability.NotAvailable;
             } else {
                 _availableItems.Add(id);
+                newItemAvailability = ItemAvailability.Available;
             }
-            OnAvailableItemsChanged();
+            OnAvailableItemsChanged(id, newItemAvailability);
         }
         public void ToggleItemAvailability(Tinkering tinkering)
         {
             string id = (-1 * (tinkering.Id + ((int)AvailableItemIDModifiers.Tinkerings * (int)tinkering.Slot))).ToString();
+            ItemAvailability newItemAvailability = ItemAvailability.NotAvailable;
             // all enabled toggle
             if (_availableItems.Contains(id)) {
                 while (_availableItems.Contains(id)) { _availableItems.Remove(id); }
+                newItemAvailability = ItemAvailability.NotAvailable;
             } else {
                 _availableItems.Add(id);
+                newItemAvailability = ItemAvailability.Available;
             }
-            OnAvailableItemsChanged();
+            OnAvailableItemsChanged(id, newItemAvailability);
         }
         // deprecated
-        public void ToggleAvailableItemEnchantRestriction(ItemInstance item, Enchant enchant)
+        /*public void ToggleAvailableItemEnchantRestriction(ItemInstance item, Enchant enchant)
         {
             string id = item.Id.ToString();
             string anyGem = id + ".*.*.*";
             string gemId = string.Format("{0}.{1}.{2}.{3}", item.Id, item.Gem1Id, item.Gem2Id, item.Gem3Id);
             ItemAvailability availability = GetItemAvailability(item);
+            ItemAvailability newItemAvailability = availability;
             switch (availability)
             {
                 case ItemAvailability.Available:
@@ -1654,8 +1658,8 @@ namespace Rawr
                     }
                     break;
             }
-            OnAvailableItemsChanged();
-        }
+            OnAvailableItemsChanged(id, newItemAvailability);
+        }*/
         /*public void ToggleAvailableItemTinkeringRestriction(ItemInstance item, Tinkering tinkering)
         {
             string id = item.Id.ToString();
@@ -1746,11 +1750,34 @@ namespace Rawr
             OnAvailableItemsChanged();
         }*/
         #endregion
-        public event EventHandler AvailableItemsChanged;
-        public void OnAvailableItemsChanged()
+        public delegate void AvailableItemsChangedEventHandler(object sender, AvailItemsChangedEventArgs fe);
+        public event AvailableItemsChangedEventHandler AvailableItemsChanged;
+        public void OnAvailableItemsChanged(string thingChanging, ItemAvailability newAvailability)
         {
+            if (thingChanging.StartsWith("-")) {
+                ItemSlot slot = ItemSlot.None;
+                // Enchants
+                if      (thingChanging.Length == ("-1"  +           "1000").Length) { slot = (ItemSlot)int.Parse(thingChanging.Substring(1, 1)); }
+                else if (thingChanging.Length == ("-10" +           "1000").Length) { slot = (ItemSlot)int.Parse(thingChanging.Substring(1, 2)); }
+                // Reforges, the availabiility on these never change
+                //else if(thingChanging.Length== ("-1"  +   "000" + "1000").Length) { slot = (ItemSlot)int.Parse(thingChanging.Substring(1, 1)); }
+                //else if(thingChanging.Length== ("-10" +   "000" + "1000").Length) { slot = (ItemSlot)int.Parse(thingChanging.Substring(1, 2)); }
+                // Tinkerings
+                else if (thingChanging.Length == ("-1"  + "00000" + "1000").Length) { slot = (ItemSlot)int.Parse(thingChanging.Substring(1, 1)); }
+                else if (thingChanging.Length == ("-10" + "00000" + "1000").Length) { slot = (ItemSlot)int.Parse(thingChanging.Substring(1, 2)); }
+                // Wipe out the stored relevants list for this slot
+                _relevantItemInstances.Remove(GetCharacterSlotByItemSlot(slot));
+            }
             if (AvailableItemsChanged != null)
-                AvailableItemsChanged(this, EventArgs.Empty);
+                AvailableItemsChanged(this, new AvailItemsChangedEventArgs(thingChanging, newAvailability));
+        }
+        public class AvailItemsChangedEventArgs : EventArgs {
+            public AvailItemsChangedEventArgs(string thingChanging, ItemAvailability newAvailability) {
+                ThingChanging = thingChanging;
+                NewAvailability = newAvailability;
+            }
+            public string ThingChanging;
+            public ItemAvailability NewAvailability;
         }
         #endregion
         [XmlIgnore]
@@ -2075,36 +2102,43 @@ namespace Rawr
                     {
                         itemChecked[item.Id] = true;
                         List<int> suffixList;
-                        if (item.AllowedRandomSuffixes == null || item.AllowedRandomSuffixes.Count == 0)
-                        {
+                        if (item.AllowedRandomSuffixes == null || item.AllowedRandomSuffixes.Count == 0) {
                             suffixList = zeroSuffixList;
-                        }
-                        else
-                        {
+                        } else {
                             suffixList = item.AllowedRandomSuffixes;
                         }
                         foreach (int randomSuffix in suffixList)
                         {
                             foreach (Reforging reforging in CurrentCalculations.GetReforgingOptions(item, randomSuffix))
                             {
-                                List<ItemInstance> itemInstances = new List<ItemInstance>();
-                                foreach (GemmingTemplate template in CurrentGemmingTemplates)
+                                List<Tinkering> t = CurrentCalculations.GetTinkeringOptions(item, this);
+                                foreach (Tinkering tinkering in t)
                                 {
-                                    if (template.Enabled)
+                                    List<Enchant> e = CurrentCalculations.GetEnchantingOptions(item, this);
+                                    foreach (Enchant enchant in e)
                                     {
-                                        ItemInstance instance = template.GetItemInstance(item, randomSuffix, GetEnchantBySlot(slot), reforging, GetTinkeringBySlot(slot), blacksmithingSocket);
-                                        if (!itemInstances.Contains(instance)) itemInstances.Add(instance);
+                                        List<ItemInstance> itemInstances = new List<ItemInstance>();
+                                        // Built in Gemming Templates
+                                        foreach (GemmingTemplate template in CurrentGemmingTemplates)
+                                        {
+                                            if (template.Enabled)
+                                            {
+                                                ItemInstance instance = template.GetItemInstance(item, randomSuffix, enchant/*GetEnchantBySlot(slot)*/, reforging, tinkering/*GetTinkeringBySlot(slot)*/, blacksmithingSocket);
+                                                if (!itemInstances.Contains(instance)) itemInstances.Add(instance);
+                                            }
+                                        }
+                                        // Gemming Templates the User added
+                                        foreach (GemmingTemplate template in CustomGemmingTemplates)
+                                        {
+                                            if (template.Enabled && template.Model == CurrentModel)
+                                            {
+                                                ItemInstance instance = template.GetItemInstance(item, randomSuffix, enchant/*GetEnchantBySlot(slot)*/, reforging, tinkering/*GetTinkeringBySlot(slot)*/, blacksmithingSocket);
+                                                if (!itemInstances.Contains(instance)) itemInstances.Add(instance);
+                                            }
+                                        }
+                                        items.AddRange(itemInstances);
                                     }
                                 }
-                                foreach (GemmingTemplate template in CustomGemmingTemplates)
-                                {
-                                    if (template.Enabled && template.Model == CurrentModel)
-                                    {
-                                        ItemInstance instance = template.GetItemInstance(item, randomSuffix, GetEnchantBySlot(slot), reforging, GetTinkeringBySlot(slot), blacksmithingSocket);
-                                        if (!itemInstances.Contains(instance)) itemInstances.Add(instance);
-                                    }
-                                }
-                                items.AddRange(itemInstances);
                             }
                         }
                     }

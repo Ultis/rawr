@@ -45,10 +45,12 @@ namespace Rawr.UI
                 if (_character != null)
                 {
                     _character.CalculationsInvalidated -= new EventHandler(character_CalculationsInvalidated);
+                    _character.AvailableItemsChanged -= new Character.AvailableItemsChangedEventHandler(_character_AvailableItemsChanged);
                     //_character.ClassChanged -= new EventHandler(character_ModelChanged);
                 }
                 _character = value;
                 _character.CalculationsInvalidated += new EventHandler(character_CalculationsInvalidated);
+                _character.AvailableItemsChanged += new Character.AvailableItemsChangedEventHandler(_character_AvailableItemsChanged);
                 // we don't need model changed as Character will be reset from main page when model changes
                 // if we try to handle this event we'll attempt to calculate graphs while the character is
                 // in the middle of changing, it's not set to calculation options yet and there's no reference calculation
@@ -59,6 +61,15 @@ namespace Rawr.UI
                 SetCustomSubpoints(Character.CurrentCalculations.SubPointNameColors.Keys.ToArray());
                 UpdateBoxes();
                 UpdateGraph();
+            }
+        }
+
+        void _character_AvailableItemsChanged(object sender, Character.AvailItemsChangedEventArgs e)
+        {
+            if (e.ThingChanging.StartsWith("-"))
+            {
+                // We just changed enchants or tinkerings so we need to reset the item calculations when we next come back to that chart
+                _itemCalculations = null;
             }
         }
         //#endregion

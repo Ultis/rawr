@@ -463,8 +463,7 @@ namespace Rawr.UI
 
             if (ItemInstance != null)
             {
-                if (ItemInstance.EnchantId > 0 && ItemInstance.Enchant != null)
-                {
+                if (ItemInstance.EnchantId > 0 && ItemInstance.Enchant != null) {
                     EnchantLabel.Text = /*ItemInstance.Enchant.Name + ": "
                         + */Calculations.GetRelevantStats(ItemInstance.Enchant.Stats).ToString();
                     EnchantLabel.Visibility = Visibility.Visible;

@@ -501,6 +501,11 @@ Percentage of Total DPS: {15:00.00%}",
                 return _avgTargets;
             }
         }
+        /// <summary>
+        /// The maximum number of targets this ability would normally hit without any other bonues like Sweeping Strikes.<br/>
+        /// Eg- Mortal Strike would normally only hit one target, Whirlwind would hit four.
+        /// Sweeping Strikes would increase these numbers but that should not be included here.
+        /// </summary>
         public float Targets { get; protected set; }
         public bool CanBeDodged { get; protected set; }
         public bool CanBeParried { get; protected set; }

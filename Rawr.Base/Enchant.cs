@@ -132,6 +132,29 @@ namespace Rawr
             })) ?? AllEnchants[0];
         }
 
+        private static List<Enchant> _cachedEnchantingOptions = null;
+        private static ItemSlot _cachedEnchantingOptions_slot = ItemSlot.None;
+        private static List<string> _cachedEnchantingOptions_avail = null;
+        public static List<Enchant> GetEnchantingOptions(Item baseItem, Character character)
+        {
+            // Try to use caching to save us time
+            List<Enchant> options;
+            if (_cachedEnchantingOptions_slot == baseItem.Slot
+                && _cachedEnchantingOptions_avail == character.AvailableItems)
+            {
+                options = _cachedEnchantingOptions;
+            } else {
+                options = FindEnchants(baseItem.Slot, character);
+                // Look for Enchants marked available (automatically includes "No Enchant")
+                if (options.Count > 1) { options = options.FindAll(e => (character.GetItemAvailability(e) != ItemAvailability.NotAvailable || e.Id == 0)); }
+                _cachedEnchantingOptions_slot = baseItem.Slot;
+                _cachedEnchantingOptions_avail = new List<string>(character.AvailableItems.ToArray());
+                _cachedEnchantingOptions = options;
+            }
+            //
+            return options;
+        }
+
         public static List<Enchant> FindEnchants(ItemSlot slot, Character character)
         {
             return FindEnchants(slot, character, Calculations.Instance);

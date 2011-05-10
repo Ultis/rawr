@@ -130,6 +130,29 @@ namespace Rawr
             })) ?? AllTinkerings[0];
         }
 
+        private static List<Tinkering> _cachedTinkeringOptions = null;
+        private static ItemSlot _cachedTinkeringOptions_slot = ItemSlot.None;
+        private static List<string> _cachedTinkeringOptions_avail = null;
+        public static List<Tinkering> GetTinkeringOptions(Item baseItem, Character character)
+        {
+            // Try to use caching to save us time
+            List<Tinkering> options;
+            if (_cachedTinkeringOptions_slot == baseItem.Slot
+                && _cachedTinkeringOptions_avail == character.AvailableItems)
+            {
+                options = _cachedTinkeringOptions;
+            } else {
+                options = FindTinkerings(baseItem.Slot, character);
+                // Look for Enchants marked available (automatically includes "No Enchant")
+                if (options.Count > 1) { options = options.FindAll(e => (character.GetItemAvailability(e) != ItemAvailability.NotAvailable || e.Id == 0)); }
+                _cachedTinkeringOptions_slot = baseItem.Slot;
+                _cachedTinkeringOptions_avail = new List<string>(character.AvailableItems.ToArray());
+                _cachedTinkeringOptions = options;
+            }
+            //
+            return options;
+        }
+
         public static List<Tinkering> FindTinkerings(ItemSlot slot, Character character)
         {
             return FindTinkerings(slot, character, Calculations.Instance);

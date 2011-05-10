@@ -73,12 +73,12 @@ namespace Rawr.UI
             set
             {
                 if (character != null)
-                    character.AvailableItemsChanged -= new EventHandler(character_AvailableItemsChanged);
+                    character.AvailableItemsChanged -= new Character.AvailableItemsChangedEventHandler(character_AvailableItemsChanged);
                 
                 character = value;
 
                 if (character != null)
-                    character.AvailableItemsChanged += new EventHandler(character_AvailableItemsChanged);
+                    character.AvailableItemsChanged += new Character.AvailableItemsChangedEventHandler(character_AvailableItemsChanged);
                 
                 character_AvailableItemsChanged(this, EventArgs.Empty);
             }

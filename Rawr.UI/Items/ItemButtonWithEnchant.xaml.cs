@@ -57,7 +57,7 @@ namespace Rawr.UI
             get { return character; }
             set
             {
-                if (character != null) character.AvailableItemsChanged -= new EventHandler(character_CalculationsInvalidated);
+                if (character != null) character.AvailableItemsChanged -= new Character.AvailableItemsChangedEventHandler(character_CalculationsInvalidated);
                 character = value;
                 DataContext = character;
                 ComparisonItemList.Character = character;

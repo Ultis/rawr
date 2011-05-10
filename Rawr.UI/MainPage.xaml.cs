@@ -121,7 +121,7 @@ namespace Rawr.UI
                     if (character != null)
                     {
                         character.CalculationsInvalidated -= new EventHandler(character_CalculationsInvalidated);
-                        character.AvailableItemsChanged -= new EventHandler(character_AvailableItemsChanged);
+                        character.AvailableItemsChanged -= new Character.AvailableItemsChangedEventHandler(character_AvailableItemsChanged);
                         character.ClassChanged -= new EventHandler(character_ClassChanged);
                     }
 
@@ -164,7 +164,7 @@ namespace Rawr.UI
 
                     character.CalculationsInvalidated += new EventHandler(character_CalculationsInvalidated);
                     character.ClassChanged += new EventHandler(character_ClassChanged);
-                    character.AvailableItemsChanged += new EventHandler(character_AvailableItemsChanged);
+                    character.AvailableItemsChanged += new Character.AvailableItemsChangedEventHandler(character_AvailableItemsChanged);
 
                     character_ClassChanged(this, EventArgs.Empty);
 
