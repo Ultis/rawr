@@ -517,7 +517,7 @@ namespace Rawr
 
     public partial class PaladinTalents
     {
-        private bool[] _glyphData = new bool[33];
+        private bool[] _glyphData = new bool[35];
         public override bool[] GlyphData { get { return _glyphData; } }
 
         #region Prime
@@ -626,48 +626,48 @@ namespace Rawr
             @"Reduces the mana cost of Rebuke by 100%.")]
         public bool GlyphOfRebuke { get { return _glyphData[24]; } set { _glyphData[24] = value; } }
         /// <summary>Hand of Salvation no longer permanently reduces threat over time but instead reduces all threat as long as Hand of Salvation lasts.</summary>
-        [GlyphData(23, 45747, 63225, "Glyph of Salvation", GlyphType.Major,
+        [GlyphData(25, 45747, 63225, "Glyph of Salvation", GlyphType.Major,
             @"Hand of Salvation no longer permanently reduces threat over time but instead reduces all threat as long as Hand of Salvation lasts.")]
-        public bool GlyphOfSalvation { get { return _glyphData[23]; } set { _glyphData[23] = value; } }
+        public bool GlyphOfSalvation { get { return _glyphData[25]; } set { _glyphData[25] = value; } }
         /// <summary>Reduces the mana cost of your Crusader Strike by 30%.</summary>
-        [GlyphData(24, 41107, 54938, "Glyph of the Ascetic Crusader", GlyphType.Major,
+        [GlyphData(26, 41107, 54938, "Glyph of the Ascetic Crusader", GlyphType.Major,
             @"Reduces the mana cost of your Crusader Strike by 30%.")]
-        public bool GlyphOfAsceticCrusader { get { return _glyphData[24]; } set { _glyphData[24] = value; } }
+        public bool GlyphOfAsceticCrusader { get { return _glyphData[26]; } set { _glyphData[26] = value; } }
         /// <summary>Your Word of Glory heals for 50% less up front, but provides an additional 50% healing over 6 sec.</summary>
-        [GlyphData(25, 66918, 63466, "Glyph of the Long Word", GlyphType.Major,
+        [GlyphData(27, 66918, 63466, "Glyph of the Long Word", GlyphType.Major,
             @"Your Word of Glory heals for 50% less up front, but provides an additional 50% healing over 6 sec.")]
-        public bool GlyphOfTheLongWord { get { return _glyphData[25]; } set { _glyphData[25] = value; } }
+        public bool GlyphOfTheLongWord { get { return _glyphData[27]; } set { _glyphData[27] = value; } }
         /// <summary>Reduces the casting time of your Turn Evil spell by 100%, but increases the cooldown by 8 sec.</summary>
-        [GlyphData(26, 41102, 54931, "Glyph of Turn Evil", GlyphType.Major,
+        [GlyphData(28, 41102, 54931, "Glyph of Turn Evil", GlyphType.Major,
             @"Reduces the casting time of your Turn Evil spell by 100%, but increases the cooldown by 8 sec.")]
-        public bool GlyphOfTurnEvil { get { return _glyphData[26]; } set { _glyphData[26] = value; } }
+        public bool GlyphOfTurnEvil { get { return _glyphData[28]; } set { _glyphData[28] = value; } }
         #endregion
         #region Minor
-        public override int GlyphTreeStartingIndexes_2 { get { return 27; } }
+        public override int GlyphTreeStartingIndexes_2 { get { return 29; } }
         /// <summary>Reduces the mana cost of Blessing of Kings by 50%.</summary>
-        [GlyphData(27, 43365, 57937, "Glyph of Blessing of Kings", GlyphType.Minor,
+        [GlyphData(29, 43365, 57937, "Glyph of Blessing of Kings", GlyphType.Minor,
             @"Reduces the mana cost of Blessing of Kings by 50%.")]
-        public bool GlyphOfBlessingOfKings { get { return _glyphData[27]; } set { _glyphData[27] = value; } }
+        public bool GlyphOfBlessingOfKings { get { return _glyphData[29]; } set { _glyphData[29] = value; } }
         /// <summary>Reduces the mana cost of your Blessing of Might by 50%.</summary>
-        [GlyphData(28, 43340, 57958, "Glyph of Blessing of Might", GlyphType.Minor,
+        [GlyphData(30, 43340, 57958, "Glyph of Blessing of Might", GlyphType.Minor,
             @"Reduces the mana cost of your Blessing of Might by 50%.")]
-        public bool GlyphOfBlessingOfMight { get { return _glyphData[28]; } set { _glyphData[28] = value; } }
+        public bool GlyphOfBlessingOfMight { get { return _glyphData[30]; } set { _glyphData[30] = value; } }
         /// <summary>Reduces the mana cost of Seal of Insight by 50%.</summary>
-        [GlyphData(29, 43366, 57979, "Glyph of Insight", GlyphType.Minor,
+        [GlyphData(31, 43366, 57979, "Glyph of Insight", GlyphType.Minor,
             @"Reduces the mana cost of Seal of Insight by 50%.")]
-        public bool GlyphOfInsight { get { return _glyphData[29]; } set { _glyphData[29] = value; } }
+        public bool GlyphOfInsight { get { return _glyphData[31]; } set { _glyphData[31] = value; } }
         /// <summary>Reduces the mana cost of Seal of Justice by 50%.</summary>
-        [GlyphData(30, 43369, 57954, "Glyph of Justice", GlyphType.Minor,
+        [GlyphData(32, 43369, 57954, "Glyph of Justice", GlyphType.Minor,
             @"Reduces the mana cost of Seal of Justice by 50%.")]
-        public bool GlyphOfJustice { get { return _glyphData[30]; } set { _glyphData[30] = value; } }
+        public bool GlyphOfJustice { get { return _glyphData[32]; } set { _glyphData[32] = value; } }
         /// <summary>Reduces the mana cost of Seal of Righteousness by 50%.</summary>
-        [GlyphData(31, 41100, 89401, "Glyph of Righteousness", GlyphType.Minor,
+        [GlyphData(33, 41100, 89401, "Glyph of Righteousness", GlyphType.Minor,
             @"Reduces the mana cost of Seal of Righteousness by 50%.")]
-        public bool GlyphOfRighteousness { get { return _glyphData[31]; } set { _glyphData[31] = value; } }
+        public bool GlyphOfRighteousness { get { return _glyphData[33]; } set { _glyphData[33] = value; } }
         /// <summary>Reduces the mana cost of Seal of Truth by 50%.</summary>
-        [GlyphData(32, 43368, 57947, "Glyph of Truth", GlyphType.Minor,
+        [GlyphData(34, 43368, 57947, "Glyph of Truth", GlyphType.Minor,
             @"Reduces the mana cost of Seal of Truth by 50%.")]
-        public bool GlyphOfTruth { get { return _glyphData[32]; } set { _glyphData[32] = value; } }
+        public bool GlyphOfTruth { get { return _glyphData[34]; } set { _glyphData[34] = value; } }
         #endregion
     }
 
