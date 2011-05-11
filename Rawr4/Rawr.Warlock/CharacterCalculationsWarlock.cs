@@ -911,12 +911,12 @@ namespace Rawr.Warlock
             modifiers.AddMultiplicativeMultiplier(Demonology ? .15f : 0f);
             if (Affliction)
             {
-                modifiers.AddMultiplicativeTickMultiplier(.1304f + (CalcMastery() - 8f) * .0163f);
+                modifiers.AddAdditiveTickMultiplier(.1304f + (CalcMastery() - 8f) * .0163f);
             }
             if (Options.GetActiveRotation().Contains("Shadow Bolt") || (Options.GetActiveRotation().Contains("Haunt") && Talents.Haunt > 0))
             {
                 float[] talentEffects = { 0f, .03f, .04f, .05f };
-                modifiers.AddMultiplicativeTickMultiplier(talentEffects[Talents.ShadowEmbrace] * 3f);
+                modifiers.AddMultiplicativeTickMultiplier(talentEffects[Talents.ShadowEmbrace]);
             }
             if (CastSpells.ContainsKey("Haunt"))
             {

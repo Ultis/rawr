@@ -725,11 +725,13 @@ namespace Rawr.Warlock
                 WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // base damage per tick
                 (int)((6f * mommy.AvgHaste) + 0.5f), // hasted num ticks
                 COEFF, // tick coefficient
-                mommy.Talents.ImprovedCorruption * .04f, // addedTickMultiplier
+                0f, // addedTickMultiplier
                 true, // canTickCrit
                 mommy.Talents.EverlastingAffliction * .05f, // bonus crit chance
                 1f) // bonus crit multiplier
-        { 
+        {
+            SpellModifiers.AddAdditiveTickMultiplier(mommy.Talents.ImprovedCorruption * .04f);
+            
             WarlockTalents talents = Mommy.Talents;
 
             // Malficus solved the average duration of a rolling Corruption, see
@@ -868,6 +870,19 @@ namespace Rawr.Warlock
 
             //UNMODELED: 20% chance to summon Ebon Imp with each tick (+ Impending Doom * 10%)
             //Ebon Imp does avg X damage over Y seconds; Z cooldown
+        }
+
+        // Bane of Doom is not affected by Haunt or Shadow Embrace, so we have to override this.
+        public override void FinalizeSpellModifiers()
+        {
+            SpellModifiers.Accumulate(Mommy.SpellModifiers);
+            SpellModifiers.AddMultiplicativeMultiplier(Mommy.Stats.BonusShadowDamageMultiplier);
+            SpellModifiers.AddMultiplicativeMultiplier(Mommy.Affliction ? .3f : 0f); // Shadow Mastery
+            SpellModifiers.AddMultiplicativeMultiplier(Mommy.Demonology ? .15f : 0f);
+            if (Mommy.Affliction)
+            {
+                SpellModifiers.AddAdditiveTickMultiplier(.1304f + (Mommy.CalcMastery() - 8f) * .0163f);
+            }
         }
     }
 
