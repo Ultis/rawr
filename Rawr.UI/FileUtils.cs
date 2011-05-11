@@ -83,7 +83,6 @@ namespace Rawr.UI
 
                 UpdateProgress(0, "Downloading default data files...");
 #endif
-
             }
         }
 

@@ -4,14 +4,7 @@ using System.IO;
 using System.IO.IsolatedStorage;
 using System.Reflection;
 using System.Text;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
 
 namespace Rawr.UI
 {
@@ -51,18 +44,14 @@ namespace Rawr.UI
             LoadFiles();
         }
 
-        public static void SaveFiles()
-        {
-            foreach (KeyValuePair<string, Type> kvp in Classes)
-            {
+        public static void SaveFiles() {
+            foreach (KeyValuePair<string, Type> kvp in Classes) {
                 MethodInfo info = kvp.Value.GetMethod("Save");
-                if (info != null)
-                {
+                if (info != null) {
                     StringWriter sw = new StringWriter();
                     info.Invoke(null, new object[] { sw });
 
-                    try
-                    {
+                    try {
                         Stream stream = FileUtils.GetFileStream(kvp.Key, true);
                         StreamWriter writer = new StreamWriter(stream, Encoding.UTF8);
                         writer.Write(sw.ToString());
@@ -82,17 +71,13 @@ namespace Rawr.UI
             }
         }
 
-        private void LoadFiles()
-        {
-            try
-            {
-                if (!FileUtils.HasQuota(131072))
-                {
+        private void LoadFiles() {
+            try {
+                if (!FileUtils.HasQuota(131072)) {
                     IncreaseQuota iq = new IncreaseQuota(131072);
                     iq.Closed += new EventHandler(iq_Closed);
                     iq.Show();
-                }
-                else iq_Closed(this, EventArgs.Empty);
+                } else iq_Closed(this, EventArgs.Empty);
             } catch (IsolatedStorageException) {
                 new Base.ErrorBox("Issue Checking Storage Quota",
                     "Rawr does not have permission to create a Storage Cache which is necessary to run the program.",
