@@ -832,13 +832,20 @@ namespace Rawr.Mage
         {
             // v = 1 at incoming, 0 at all other nonbasic, -w at basic
             // expand v
+            // only entries up to cols are used, ignore the rest
             Zero(vd, cols);
             for (int i = 0; i < rows; i++)
             {
                 int col = B[i];
-                vd[col] = - direction * w[i];
+                if (col < cols)
+                {
+                    vd[col] = -direction * w[i];
+                }
             }
-            vd[V[incoming]] = direction;
+            if (V[incoming] < cols)
+            {
+                vd[V[incoming]] = direction;
+            }
             int sortj = 0;
             double xm = 0.0;
             for (int j = 0; j < cols; j++)
