@@ -795,7 +795,7 @@ namespace Rawr.Mage
             int lastnz = size - 1;
             for (; lastnz >= 0; lastnz--)
             {
-                if (Math.Abs(a[lastnz]) > 0.000001) break;
+                if (Math.Abs(a[lastnz]) > 0.0000001) break;
             }
 
             if (lastnz < col)
@@ -916,7 +916,7 @@ namespace Rawr.Mage
                 U[lastnz * size + j] = c[j];
             }
             pivot = c[lastnz] / ujj;
-            if (Math.Abs(U[lastnz * size + lastnz]) < 0.000001)
+            if (Math.Abs(U[lastnz * size + lastnz]) < 0.0000001)
             {
                 Singular = true;
             }
