@@ -45,8 +45,8 @@
         <Button x:Name="BT_SmallView" Content="Small View" Click="BT_SmallView_Click" Width="75" HorizontalAlignment="Right" Grid.Row="3" Margin="0,4,81,4" d:LayoutOverrides="Height, VerticalMargin" Visibility="Collapsed" />
         <Button x:Name="DoneButton" Content="Done" Click="DoneButton_Click" Width="75" HorizontalAlignment="Right" Grid.Row="3" Margin="0,4,4,4" d:LayoutOverrides="Height, VerticalMargin" />
         <data:DataGrid x:Name="ItemGrid" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="2" Margin="4,4,4,4"
-            CanUserResizeColumns="True" CanUserSortColumns="True" CanUserReorderColumns="True" AutoGenerateColumns="False" RowDetailsVisibilityMode="VisibleWhenSelected"
-            SelectionChanged="ItemGrid_SelectionChanged" GridLinesVisibility="Horizontal" AreRowDetailsFrozen="True" IsReadOnly="True" RowDetailsTemplate="{StaticResource DataTemplateItemGridRowDetails}">
+        CanUserResizeColumns="True" CanUserSortColumns="True" CanUserReorderColumns="True" AutoGenerateColumns="False" RowDetailsVisibilityMode="VisibleWhenSelected"
+        SelectionChanged="ItemGrid_SelectionChanged" GridLinesVisibility="Horizontal" AreRowDetailsFrozen="True" IsReadOnly="True" RowDetailsTemplate="{StaticResource DataTemplateItemGridRowDetails}">
             <data:DataGrid.Columns>
                 <data:DataGridTemplateColumn Header="Name" CellTemplate="{StaticResource DataTemplateItemGridCellName}" SortMemberPath="Name" />
                 <data:DataGridTextColumn Header="Item ID" Binding="{Binding Id}" IsReadOnly="True" />

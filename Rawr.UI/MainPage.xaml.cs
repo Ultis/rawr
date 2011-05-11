@@ -232,7 +232,7 @@ namespace Rawr.UI
                 case "DPSWarr"  : { retVal    = string.Format(format, maint[3]+"/"+maint[1], funct[3]+"/"+funct[2], "Jothay"); break; }
                 case "ProtWarr" : { retVal    = string.Format(format, maint[2], funct[2], "EvanM"); break; }
                 // Warlocks
-                case "Warlock"  : { retVal    = string.Format(format, maint[1], funct[1], "Erstyx"); break; }
+                case "Warlock"  : { retVal    = string.Format(format, maint[3], string.Format("Affl:{0}/Demo:{1}/Destro:{2}", funct[2],funct[1],funct[1]), "Erstyx"); break; }
                 default: { break; }
             }
 
