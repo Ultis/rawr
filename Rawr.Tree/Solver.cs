@@ -124,6 +124,14 @@ namespace Rawr.Tree
                            eff.CastFraction = sm.CastFraction;
                            spells.Add(eff);
                        }
+
+                       if (sequence > 104)
+                       {
+                           Tranquility tranq = new Tranquility(character, stats);
+                           tranq.CastFraction = tranq.MaxCastFraction;
+                           spells.Add(tranq);
+                       }
+
                    }
                }
 

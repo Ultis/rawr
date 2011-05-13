@@ -268,22 +268,6 @@ applied and result is scaled down by 100)",
                         "Model:Wild Growth casts per minute",
                         "Model:Revitalize procs per minute",
 
-                        "Rejuvenation:RJ Heal per tick",
-                        "Rejuvenation:RJ Tick time",
-                        "Rejuvenation:RJ HPS",
-                        "Rejuvenation:RJ HPM",
-                        "Rejuvenation:RJ HPCT",
-
-                        "Regrowth:RG Heal",
-                        "Regrowth:RG Tick",
-                        "Regrowth:RG HPS",
-                        "Regrowth:RG HPS (HoT only)",
-                        "Regrowth:RG HPM",
-                        "Regrowth:RG HPCT",
-                        "Regrowth:RG Heal (spam)",
-                        "Regrowth:RG HPS (spam)",
-                        "Regrowth:RG HPM (spam)",
-                        "Regrowth:RG HPCT (spam)",
 
                         "Lifebloom:LB Tick",
                         "Lifebloom:LB Bloom Heal",
@@ -317,13 +301,7 @@ applied and result is scaled down by 100)",
                         "Healing Touch:HT HPS",
                         "Healing Touch:HT HPM",
                         "Healing Touch:HT HPCT",
-
-                        "Wild Growth:WG first Tick",
-                        "Wild Growth:WG HPS(single target)",
-                        "Wild Growth:WG HPM(single target)",
-                        "Wild Growth:WG HPS(max)",
-                        "Wild Growth:WG HPM(max)",
-
+                       
                         "Nourish:N Heal",
                         "Nourish:N HPM",
                         "Nourish:N HPS",
@@ -345,10 +323,39 @@ applied and result is scaled down by 100)",
                         //"Nourish:N (4 HoTs) HPS",
                         //"Nourish:N (4 HoTs) HPCT",
 
+                        "Rejuvenation:RJ Heal per tick",
+                        "Rejuvenation:RJ Tick time",
+                        "Rejuvenation:RJ HPS",
+                        "Rejuvenation:RJ HPM",
+                        "Rejuvenation:RJ HPCT",
+
+                        "Regrowth:RG Heal",
+                        "Regrowth:RG Tick",
+                        "Regrowth:RG HPS",
+                        "Regrowth:RG HPS (HoT only)",
+                        "Regrowth:RG HPM",
+                        "Regrowth:RG HPCT",
+                        "Regrowth:RG Heal (spam)",
+                        "Regrowth:RG HPS (spam)",
+                        "Regrowth:RG HPM (spam)",
+                        "Regrowth:RG HPCT (spam)",
+
                         "Swiftmend:SM Heal",
                         "Swiftmend:SM HPM",
                         "Swiftmend:SM Rejuv Lost Ticks",
                         "Swiftmend:Efflorescence Heal",
+
+                        "Wild Growth:WG first Tick",
+                        "Wild Growth:WG HPS(single target)",
+                        "Wild Growth:WG HPM(single target)",
+                        "Wild Growth:WG HPS(max)",
+                        "Wild Growth:WG HPM(max)",
+
+                        "Tranquility:T Heal",
+                        "Tranquility:T Tick",
+                        "Tranquility:T HPM",
+                        "Tranquility:T HPS",
+                        "Tranquility:T HPCT",
                     };
                 }
                 return _characterDisplayCalculationLabels;
@@ -404,7 +411,7 @@ applied and result is scaled down by 100)",
                 if (_relevantItemTypes == null) {
                     _relevantItemTypes = new List<ItemType>(new ItemType[]{
                         ItemType.None,
-                        ItemType.Cloth,
+//                        ItemType.Cloth,   // Exclude cloth since Leather Int Bonus >> typical single item value
                         ItemType.Leather,
                         ItemType.Dagger,
                         ItemType.FistWeapon,
@@ -829,7 +836,7 @@ applied and result is scaled down by 100)",
             calc.SustainedPoints = DiminishingReturns.CapWithMaximum2(calc.SustainedHPS, calcOpts.SustainedTarget);
 
             // --- Replacement code from here
-            Rotation rotionNew = new Rotation(104, character, calc.CombatStats, boss);
+            Rotation rotionNew = new Rotation(105, character, calc.CombatStats, boss);
             calc.SustainedPoints = rotionNew.HPS;
 
             calc.OverallPoints = calc.SingleTargetPoints + calc.SustainedPoints + calc.SurvivalPoints;
@@ -924,7 +931,7 @@ applied and result is scaled down by 100)",
             DruidTalents talents = character.DruidTalents;
             CharacterCalculationsTree calculationResult = GetCharacterCalculations(character) as CharacterCalculationsTree;
 
-            int customRotationsMax = 105;
+            int customRotationsMax = 106;
 
             switch (chartName)
             {

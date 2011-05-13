@@ -4,7 +4,7 @@ namespace Rawr.Tree {
 
     public abstract class Spell {
         public string name = "Unknown";
-        public virtual string Name { get { return name + (lbTarget ? " Tank" : alreadyHottedTarget? " HoT'd" : " Raid"); } }
+        public virtual string Name { get { return name + (lbTarget ? " Tnk" : alreadyHottedTarget? " HoT'd" : " Raid"); } }
         protected DruidTalents druidTalents;
         protected CalculationOptionsTree calcOpts;
         protected float minHeal             = 0f;
@@ -199,7 +199,12 @@ namespace Rawr.Tree {
 
         public string HPSToString()
         {
-            return "" + Math.Round(HPS, 2) + "*" + Math.Round(TotalAverageHealing, 0) + " healed\n" + Math.Round(CastTime, 2) + " seconds cast time\n" + Math.Round(Duration, 2) + " seconds\n";
+            return "" + Math.Round(HPS, 2) + "*" + Math.Round(TotalAverageHealing, 0) + " healed\n" + Math.Round(Math.Max(CastTime + cooldown, Duration), 2) + " seconds averaging time\n" + Math.Round(CastTime, 2) + " seconds cast time\n" + Math.Round(Duration, 2) + " seconds\n";
+        }
+
+        public string HPCTToString()
+        {
+            return "" + Math.Round(HPCT, 2) + "*" + Math.Round(TotalAverageHealing, 0) + " healed\n" + Math.Round(CastTime, 2) + " seconds cast time";
         }
 
         public Spell(Character character, Stats calculatedStats)
@@ -777,6 +782,62 @@ namespace Rawr.Tree {
             critHoTRatio = 0f;
 
         }
+    }
+
+    public class Tranquility : Spell
+    {
+        protected float stackHeight = 3f;         // Assume all stacks on the same person: 1+2+3+3+3+3 = 15, is 5 ticks at 3 stacks
+        protected float numDHs = 4f;
+        public Tranquility(Character character, Stats stats)
+            : base(character, stats)
+        {
+            name = "T";
+
+            #region Base Values
+            castTimeBeforeHaste = 8f;
+            coefDH = numDHs * 0.398f;
+            coefHoT = stackHeight * 0.068f;
+
+            minHeal = numDHs * 3882f;
+            maxHeal = numDHs * 3882f;
+            periodicTick = stackHeight * 343f;
+            periodicTicksBeforeHaste = 5f;     // Assume all stacks on the same person: 1+2+3+3+3+3 = 15, is 5 ticks at 3 stacks
+            periodicTickTimeBeforeHaste = 2f;
+            manaCost = 0.32f * TreeConstants.BaseMana;
+
+            maxTargets = 5;
+            cooldown = 480f; 
+            #endregion
+
+            // Seems to apply before talents
+
+            calculateTalents(character.DruidTalents, calcOpts);
+
+            applyStats(stats);
+
+        }
+
+        public override void applyStats(Stats stats)
+        {
+            base.applyStats(stats);
+
+         }
+        private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts)
+        {
+            cooldown -= 150f * druidTalents.MalfurionsGift;
+
+        }
+
+        public override string ToString()
+        {
+            return "" + Math.Round(AverageHealingwithCrit, 0) + "*4 heals @\n" + Math.Round(MinHeal / numDHs, 0) + " - " + Math.Round(MaxHeal / numDHs, 0) + " normal\n" + Math.Round(MinHeal * CritModifier / numDHs, 0) + " - " + Math.Round(MaxHeal * CritModifier / numDHs, 0) + " crit\n" + Math.Round(CritRatio * 100.0f, 2) + "% crit chance\n";
+        }
+
+        public string TickToString()
+        {
+            return "" + Math.Round(PeriodicTickwithCrit, 0) + "*" + Math.Round(PeriodicTick, 0) + " normal\n" + Math.Round(PeriodicTick * CritModifier, 0) + " crit\n" + Math.Round(CritHoTRatio * 100.0f, 2) + "% crit chance\n" + Math.Round(PeriodicTicks, 0) + " ticks every " + Math.Round(PeriodicTickTime, 2) + " s.\n Approximated as 3 stack ticks.";
+        }
+
     }
 }
 

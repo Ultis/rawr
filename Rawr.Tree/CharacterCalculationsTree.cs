@@ -236,6 +236,14 @@ namespace Rawr.Tree {
             dictValues.Add("SM Rejuv Lost Ticks", Math.Round(swift.rejuvTicksLost, 2).ToString());
             Efflorescence efflorescence = new Efflorescence(LocalCharacter, BasicStats, new Rejuvenation(LocalCharacter, CombatStats));
             dictValues.Add("Efflorescence Heal", efflorescence.TickToString());
+
+            Tranquility tranq = new Tranquility(LocalCharacter, CombatStats);
+            dictValues.Add("T Heal", tranq.ToString());
+            dictValues.Add("T Tick", tranq.TickToString());
+            dictValues.Add("T HPM", tranq.HPMToString());
+            dictValues.Add("T HPS", tranq.HPSToString());
+            dictValues.Add("T HPCT", tranq.HPCTToString());
+   
             
             return dictValues;
         }
