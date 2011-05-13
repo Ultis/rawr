@@ -109,13 +109,13 @@ namespace Rawr
         ObliterateHit,
         DeathStrikeHit,
         ScourgeStrikeHit,
-        BloodStrikeOrHeartStrikeHit, // Deprecated.
         PlagueStrikeHit,
         IcyTouchHit,
         RuneStrikeHit,
         /// <summary>When FrostFever is Applied - not when it TICKs</summary>
         FrostFeverHit,
         DeathRuneGained,
+        KillingMachine,
         #endregion
         #region Added by Druid
         InsectSwarmCast,
@@ -1682,18 +1682,30 @@ namespace Rawr
                         return "on Shock Hit";
                     case Trigger.ShamanStormStrike:
                         return "on Stormstrike Hit";
+                #region DeathKnight Triggers
                     case Trigger.BloodStrikeHit:
                         return "on Blood Strike";
                     case Trigger.HeartStrikeHit:
                         return "on Heart Strike";
-                    case Trigger.BloodStrikeOrHeartStrikeHit:
-                        return "on Blood Strike or Heart Strike";
-                    case Trigger.IcyTouchHit:
-                        return "on Icy Touch";
+                    case Trigger.ObliterateHit:
+                        return "on Obliterate";
+                    case Trigger.DeathStrikeHit:
+                        return "on Death Strike";
+                    case Trigger.ScourgeStrikeHit:
+                        return "on Scourge Strike";
                     case Trigger.PlagueStrikeHit:
                         return "on Plague Strike";
+                    case Trigger.IcyTouchHit:
+                        return "on Icy Touch";
                     case Trigger.RuneStrikeHit:
                         return "on Rune Strike";
+                    case Trigger.FrostFeverHit:
+                        return "when Frost Fever is applied";
+                    case Trigger.DeathRuneGained:
+                        return "on Death Rune Gain";
+                    case Trigger.KillingMachine:
+                        return "on Killing Machine proc";
+                #endregion
                     default:
                         return Trigger.ToString();
                 }

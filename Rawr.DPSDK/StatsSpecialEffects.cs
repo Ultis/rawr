@@ -134,6 +134,11 @@ namespace Rawr.DPSDK
                             trigger = m_Rot.CurRotationDuration / (m_Rot.m_DeathRunes);
                         chance *= 1f;
                         break;
+                    case Trigger.KillingMachine:
+                        trigger = (1f / ((m_Rot.getMeleeSpecialsPerSecond() * (combatTable.DW ? 2f : 1f)) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f)));
+                        chance = -5 * (combatTable.m_CState.m_Talents.KillingMachine / 3);
+                        unhastedAttackSpeed = (combatTable.MH != null ? combatTable.MH.baseSpeed : 2.0f);
+                        break;
                     case Trigger.DoTTick:
                         // TODO: check the tick rate from the specific FF & BP instances in Rot.
 //                        trigger = m_Rot.NumDisease;

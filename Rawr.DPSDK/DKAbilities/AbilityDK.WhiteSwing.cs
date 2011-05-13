@@ -4,8 +4,11 @@ using System.Text;
 
 namespace Rawr.DK 
 {
+    // Changed this from average between MH and OH, to each swing for each weapon.
     class AbilityDK_WhiteSwing : AbilityDK_Base
     {
+        public bool m_bIsOffHand = false;
+
         public AbilityDK_WhiteSwing(CombatState CS)
         {
             this.CState = CS;
@@ -20,9 +23,23 @@ namespace Rawr.DK
         public override void UpdateCombatState(CombatState CS)
         {
             base.UpdateCombatState(CS);
-            this.RunicPower = (int)((10f * CS.m_Talents.MightOfTheFrozenWastes * .15f) + ((CS.m_Talents.ScentOfBlood * .15f) * (CS.m_Stats.Parry + CS.m_Stats.Dodge))); // Should be 1.5 per point.
+            this.RunicPower = -1 * ((int)((10f * CS.m_Talents.MightOfTheFrozenWastes * .15f) + ((CS.m_Talents.ScentOfBlood * .15f) * (CS.m_Stats.Parry + CS.m_Stats.Dodge)))); // Should be 1.5 per point.
             this.wMH = CS.MH;
-            this.wOH = CS.OH;
+            this.wOH = null;
+        }
+
+        public void UpdateCombatState(CombatState CS, bool IsOffHand)
+        {
+            base.UpdateCombatState(CS);
+            this.RunicPower = -1 * ((int)((10f * CS.m_Talents.MightOfTheFrozenWastes * .15f) + ((CS.m_Talents.ScentOfBlood * .15f) * (CS.m_Stats.Parry + CS.m_Stats.Dodge)))); // Should be 1.5 per point.
+            m_bIsOffHand = IsOffHand;
+            if (m_bIsOffHand)
+            {
+                this.wMH = CS.OH;
+                this.wOH = null;
+                this.AbilityIndex = (int)DKability.WhiteOH;
+                this.szName += " OH";
+            }
         }
 
         public override float DamageMultiplierModifer
@@ -42,7 +59,7 @@ namespace Rawr.DK
 
         override public float GetTotalDamage()
         {
-            if (null == this.wMH && null == this.wOH)
+            if (null == this.wMH)
             {
                 return 0;
             }
@@ -52,7 +69,7 @@ namespace Rawr.DK
             // Factor in max value for Crit, Hit, Glancing
             float glancechance = .24f;
             float misschance = 1 - HitChance;
-            iDamage = (float)iDamage * (1f + (float)Math.Min(CritChance, 1f - (glancechance + misschance))) * (float)Math.Min(1f, HitChance) * (0.94f)/* Glancing */;
+            iDamage = (float)iDamage * (1f + (float)Math.Min(CritChance, 1f - (glancechance + misschance))) * (float)Math.Min(1f, HitChance) * (0.88f)/* Glancing */;
             if (wMH.twohander)
                 iDamage *= (1f + .04f * CState.m_Talents.MightOfTheFrozenWastes);
             return iDamage;
@@ -67,11 +84,6 @@ namespace Rawr.DK
                 if (null != this.wMH)
                 {
                     WDam = (uint)(this.wMH.damage * this.fWeaponDamageModifier);
-                }
-                if (null != this.wOH)
-                {
-                    WDam += (uint)(this.wOH.damage * this.fWeaponDamageModifier);
-                    WDam /= 2; // Average out the damage between the 2 weapons.
                 }
                 return (uint)WDam;
             }
@@ -106,12 +118,6 @@ namespace Rawr.DK
                 float fParryChanceForTarget = wMH.chanceParried;
                 // Determine Miss Chance
                 float fMissChance = wMH.chanceMissed;
-                if (wOH != null)
-                {
-                    fDodgeChanceForTarget = (fDodgeChanceForTarget + wOH.chanceDodged) / 2;
-                    fParryChanceForTarget = (fParryChanceForTarget + wOH.chanceParried)/2;
-                    fMissChance = (fMissChance + wOH.chanceMissed)/2;
-                }
                 ChanceToHit -= Math.Max(0, fMissChance);
                 ChanceToHit -= Math.Max(0, fDodgeChanceForTarget);
                 if (CState != null && !CState.m_bAttackingFromBehind)
@@ -126,12 +132,7 @@ namespace Rawr.DK
             {
                 if (wMH != null)
                 {
-                    if (wOH != null)
-                    {
-                        return 1 / ((1 / wMH.hastedSpeed) + (1 / wOH.hastedSpeed));
-                    }
-                    else
-                        return wMH.hastedSpeed;
+                    return wMH.hastedSpeed;
                 }
                 else
                     // Just throw in some default bare-hand weapon time as the default.

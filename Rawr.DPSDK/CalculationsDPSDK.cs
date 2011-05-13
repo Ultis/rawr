@@ -306,12 +306,12 @@ namespace Rawr.DPSDK
                         "DPS Breakdown:Death Strike",
                         "DPS Breakdown:Blood Strike",
                         "DPS Breakdown:Heart Strike",
-                        "DPS Breakdown:Gargoyle",
                         "DPS Breakdown:Wandering Plague",
+                        "DPS Breakdown:Gargoyle",
                         "DPS Breakdown:Blood Parasite",
-                        "DPS Breakdown:Other",
- 
+                        "DPS Breakdown:Army",
                         "DPS Breakdown:Ghoul",
+                        "DPS Breakdown:Other",
                         "DPS Breakdown:Total DPS",
                         
                         "Rotation Data:Rotation Duration*Duration of the total rotation cycle",
@@ -433,14 +433,15 @@ namespace Rawr.DPSDK
             int targetLevel = hBossOptions.Level;
 
             stats = GetCharacterStats(character, additionalItem) as StatsDK;
-            calc.BasicStats = stats.Clone() as StatsDK; 
+            calc.BasicStats = stats.Clone() as StatsDK;
+            ApplyRatings(calc.BasicStats);
 
-            DKCombatTable combatTable = new DKCombatTable(character, stats, calc, calcOpts, hBossOptions);
+            DKCombatTable combatTable = new DKCombatTable(character, calc.BasicStats, calc, calcOpts, hBossOptions);
             if (needsDisplayCalculations) combatTable.PostAbilitiesSingleUse(false);
             Rotation rot = new Rotation(combatTable);
             Rotation.Type RotT = rot.GetRotationType(character.DeathKnightTalents);
 
-            // TODO: Fix this so we're not using pre-set rotations.
+            // TODO: Fix this so we're not using pre-set rotations/priorities.
             if (RotT == Rotation.Type.Frost)
                 rot.PRE_Frost();
             else if (RotT == Rotation.Type.Unholy)
@@ -646,13 +647,74 @@ namespace Rawr.DPSDK
             #endregion
 
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs, character.SetBonusCount);
-//            foreach (Buff b in character.ActiveBuffs)
-//            {
-//                if (b.Name == "Magma Plated Battlegear (T11) 2 Piece Bonus")
-//                    statsTotal.b2T11_DPS = true;
-//                if (b.Name == "Magma Plated Battlegear (T11) 4 Piece Bonus")
-//                    statsTotal.b2T11_DPS = true;
-//            }
+            #region Tank
+            #region T11
+            int t11count;
+            if (character.SetBonusCount.TryGetValue("Magma Plated Battlearmor", out t11count))
+            {
+                if (t11count > 2) { statsTotal.b2T11_Tank = true; }
+                if (t11count > 4) { statsTotal.b4T11_Tank = true; }
+            }
+            if (statsTotal.b4T11_Tank)
+                statsTotal.AddSpecialEffect(_SE_IBF[1]);
+            else
+                statsTotal.AddSpecialEffect(_SE_IBF[0]);
+            #endregion
+            #region T12
+            // No Set names yet.
+            if (statsTotal.b2T12_Tank)
+            {
+                // Your melee attacks cause Burning Blood on your target, 
+                // which deals 800 Fire damage every 2 for 6 sec and 
+                // causes your abilities to behave as if you had 2 diseases 
+                // present on the target.
+            }
+            if (statsTotal.b4T12_Tank)
+            {
+                // Your Dancing Rune Weapon grants 15% additional parry chance.
+            }
+            #endregion
+            #endregion
+
+            #region DPS
+            #region T11
+            if (character.SetBonusCount.TryGetValue("Magma Plated Battlegear", out t11count))
+            {
+                if (t11count > 2) { statsTotal.b2T11_DPS = true; }
+                if (t11count > 4) { statsTotal.b4T11_DPS = true; }
+                if (statsTotal.b2T11_DPS)
+                {
+                    statsTotal.BonusCritChanceDeathCoil += .05f;
+                    statsTotal.BonusCritChanceFrostStrike += .05f;
+                }
+                if (statsTotal.b4T11_DPS)
+                {
+                    statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.DeathRuneGained,
+                        new Stats() { BonusAttackPowerMultiplier = 0.01f, },
+                        30, 0, 1f, 3));
+                    statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.KillingMachine,
+                        new Stats() { BonusAttackPowerMultiplier = 0.01f, },
+                        30, 0, 1f, 3));
+                }
+            }
+            #endregion
+            #region T12
+            // No Set names yet.
+            if (statsTotal.b2T12_DPS)
+            {
+                // Horn of Winter also grats 3 RPp5
+                statsTotal.RPp5 += 3;
+            }
+            if (statsTotal.b4T12_DPS)
+            {
+                // Melee Crits grant additional +15% damage as fire.
+                statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.MeleeCrit,
+                    new Stats() { FireDamage = 0.15f, },
+                    30, 0, 1f, 3));
+            }
+            #endregion
+            #endregion
+
             statsTotal.Accumulate(statsBaseGear);
             statsTotal.Accumulate(statsBuffs);
             statsTotal.Accumulate(statsRace);
@@ -833,6 +895,7 @@ namespace Rawr.DPSDK
         {
             Stats newStats = new Stats();
             FullCharacterStats.Mastery += StatConversion.GetMasteryFromRating(FullCharacterStats.MasteryRating);
+            // Runic Focus:
             FullCharacterStats.SpellHit += 0.09f;
 
             // Which talent tree focus?
@@ -867,7 +930,7 @@ namespace Rawr.DPSDK
                         // Melee Attack speed +20%
                         FullCharacterStats.PhysicalHaste += .2f;
                         // Blood of the North
-                        // Whenever you hit with Blood Strike or Pest, your blood rune will become a death rune.
+                        // Blood runes are death runes.
                         // Mastery: Frozen Heart
                         // Increases all frost damage by 16%.  
                         // Each point of mastery increases frost damage by an additional 2.0%
@@ -1047,13 +1110,13 @@ namespace Rawr.DPSDK
                 }
 
                 // Dancing Rune Weapon
-                // TODO: since this costs RP, need to factor that into Rotation.
                 if (character.DeathKnightTalents.DancingRuneWeapon > 0)
                 {
+                    uint u4T12 = FullCharacterStats.b4T12_Tank ? 1u : 0u;
                     if (character.DeathKnightTalents.GlyphofDancingRuneWeapon)
-                        FullCharacterStats.AddSpecialEffect(_SE_DRW[1]);
+                        FullCharacterStats.AddSpecialEffect(_SE_DRW[u4T12][1]);
                     else
-                        FullCharacterStats.AddSpecialEffect(_SE_DRW[0]);
+                        FullCharacterStats.AddSpecialEffect(_SE_DRW[u4T12][0]);
                 }
             }
             #endregion
@@ -1337,6 +1400,10 @@ namespace Rawr.DPSDK
                     _customChartNames = new string[] 
                         { 
                             "Stats Graph", 
+                            "Scaling vs Strength",
+                            "Scaling vs Crit Rating",
+                            "Scaling vs Haste Rating",
+                            "Scaling vs Mastery Rating",
                             "Presences",
                         };
                 }
@@ -1411,6 +1478,10 @@ namespace Rawr.DPSDK
             switch (chartName)
             {
                 case "Stats Graph":
+                case "Scaling vs Strength":
+                case "Scaling vs Crit Rating":
+                case "Scaling vs Haste Rating":
+                case "Scaling vs Mastery Rating":
                     return Graph.Instance;
                 default:
                     return null;
@@ -1433,15 +1504,16 @@ namespace Rawr.DPSDK
             List<float> X = new List<float>();
             List<ComparisonCalculationBase[]> Y = new List<ComparisonCalculationBase[]>();
 
+            float fMultiplier = 1;
             Stats[] statsList = new Stats[] {
-                        new Stats() { Strength = 10 },
-                        new Stats() { Agility = 10 },
-                        new Stats() { AttackPower = 10 },
-                        new Stats() { CritRating = 10 },
-                        new Stats() { HitRating = 10 },
-                        new Stats() { ExpertiseRating = 10 },
-                        new Stats() { HasteRating = 10 },
-                        new Stats() { MasteryRating = 10 },
+                        new Stats() { Strength = fMultiplier },
+                        new Stats() { Agility = fMultiplier },
+                        new Stats() { AttackPower = fMultiplier },
+                        new Stats() { CritRating = fMultiplier },
+                        new Stats() { HitRating = fMultiplier },
+                        new Stats() { ExpertiseRating = fMultiplier },
+                        new Stats() { HasteRating = fMultiplier },
+                        new Stats() { MasteryRating = fMultiplier },
                     };
 
             switch (chartName)
@@ -1449,9 +1521,18 @@ namespace Rawr.DPSDK
                 case "Stats Graph":
                     Graph.Instance.UpdateStatsGraph(character, statsList, statColors, 200, "", null);
                     break;
-                //                case "Scaling vs Parry Rating":
-                //                    Graph.Instance.UpdateScalingGraph(character, statsList, new Stats() { ParryRating = 5 }, true, statColors, 100, "", null);
-                //                    break;
+                case "Scaling vs Strength":
+                    Graph.Instance.UpdateScalingGraph(character, statsList, new Stats() { Strength = fMultiplier * 5 }, true, statColors, 100, "", null);
+                    break;
+                case "Scaling vs Crit Rating":
+                    Graph.Instance.UpdateScalingGraph(character, statsList, new Stats() { CritRating = fMultiplier * 5 }, true, statColors, 100, "", null);
+                    break;
+                case "Scaling vs Haste Rating":
+                    Graph.Instance.UpdateScalingGraph(character, statsList, new Stats() { HasteRating = fMultiplier * 5 }, true, statColors, 100, "", null);
+                    break;
+                case "Scaling vs Mastery Rating":
+                    Graph.Instance.UpdateScalingGraph(character, statsList, new Stats() { MasteryRating = fMultiplier * 5 }, true, statColors, 100, "", null);
+                    break;
             }
         }
 
@@ -1573,7 +1654,6 @@ namespace Rawr.DPSDK
                         effect.Trigger == Trigger.PhysicalAttack ||
                         effect.Trigger == Trigger.BloodStrikeHit ||
                         effect.Trigger == Trigger.HeartStrikeHit ||
-                        effect.Trigger == Trigger.BloodStrikeOrHeartStrikeHit ||
                         effect.Trigger == Trigger.ScourgeStrikeHit ||
                         effect.Trigger == Trigger.ObliterateHit ||
                         effect.Trigger == Trigger.DeathStrikeHit ||
@@ -1797,6 +1877,10 @@ namespace Rawr.DPSDK
         // Enchant: Rune of Fallen Crusader
         public static readonly SpecialEffect _SE_FC1 = new SpecialEffect(Trigger.DamageDone, new Stats() { BonusStrengthMultiplier = .15f }, 15f, 0f, -2f, 1, false);
         public static readonly SpecialEffect _SE_FC2 = new SpecialEffect(Trigger.DamageDone, new Stats() { HealthRestoreFromMaxHealth = .03f }, 0, 0f, -2f, 1, false);
+        private static readonly SpecialEffect[] _SE_IBF = new SpecialEffect[] {
+            new SpecialEffect(Trigger.Use, new Stats() { StunDurReduc = 1f, DamageTakenReductionMultiplier = 0.20f }, 12 * 1.0f, 3 * 60  ), // Default IBF
+            new SpecialEffect(Trigger.Use, new Stats() { StunDurReduc = 1f, DamageTakenReductionMultiplier = 0.20f }, 12 * 1.5f, 3 * 60  ), // IBF w/ 4T11
+        };
         public static readonly SpecialEffect[] _SE_VampiricBlood = new SpecialEffect[] {
             new SpecialEffect(Trigger.Use, new Stats() {HealingReceivedMultiplier = .25f, BonusHealthMultiplier = .15f}, 10, 60f), // No Glyph
             new SpecialEffect(Trigger.Use, new Stats() {HealingReceivedMultiplier = .25f + .15f}, 10, 60f) // Glyphed
@@ -1835,9 +1919,15 @@ namespace Rawr.DPSDK
         public static readonly SpecialEffect _SE_AntiMagicZone = new SpecialEffect(Trigger.Use, new Stats() { SpellDamageTakenReductionMultiplier = 0.75f }, 10f, 2f * 60f);
 
         public static readonly SpecialEffect _SE_PillarOfFrost = new SpecialEffect(Trigger.Use, new Stats() { BonusStrengthMultiplier = .2f }, 20f, 60);
-        public static readonly SpecialEffect[] _SE_DRW = {
-            new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.5f, Parry = .20f }, 12f, 1.5f * 60f), // Normal
-            new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.5f, Parry = .20f, ThreatIncreaseMultiplier = 0.50f }, 12f, 1.5f * 60f), // Glyphed
+        public static readonly SpecialEffect[][] _SE_DRW = new SpecialEffect[][] {
+            new SpecialEffect[] { // No 4T12 Bonus
+                new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.5f, Parry = .20f }, 12f, 1.5f * 60f), // Normal
+                new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.5f, Parry = .20f, ThreatIncreaseMultiplier = 0.50f }, 12f, 1.5f * 60f), // Glyphed
+            },
+            new SpecialEffect[] { // 4T12 Bonus
+                new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.5f, Parry = .20f + .15f }, 12f, 1.5f * 60f), // Normal
+                new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.5f, Parry = .20f + .15f , ThreatIncreaseMultiplier = 0.50f }, 12f, 1.5f * 60f), // Glyphed
+            }
         };
         #endregion
     }

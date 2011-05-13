@@ -16,6 +16,7 @@ namespace Rawr.DK
     {
         // Basic
         White,
+        WhiteOH,
         // Melee abilities
         BloodStrike,
         DeathStrike,
@@ -117,7 +118,7 @@ namespace Rawr.DK
             m_CState.m_NumberOfTargets = m_BO.MultiTargs ? m_BO.DynamicCompiler_MultiTargs.GetAverageTargetGroupSize(m_BO.BerserkTimer) : 1f;
             //
             m_CState.m_bAttackingFromBehind = m_BO.InBack;
-
+            m_CState.fBossArmor = m_BO.Armor;
             SetupExpertise(c);
         }
 
@@ -175,7 +176,7 @@ namespace Rawr.DK
 
             if (c.MainHand != null && c.MainHand.Item.Type != ItemType.None)
             {
-                m_CState.MH = new Weapon(c.MainHand.Item, m_CState.m_Stats, m_Opts, m_BO, m_CState.m_Talents, MHExpertise);
+                m_CState.MH = new Weapon(c.MainHand.Item, m_CState.m_Stats, m_Opts, m_BO, m_CState.m_Talents, MHExpertise, CharacterSlot.MainHand);
                 m_CState.OH = null;
                 m_Calcs.MHExpertise = m_CState.MH.effectiveExpertise;
                 m_Calcs.MHWeaponDamage = m_CState.MH.damage;
@@ -185,9 +186,9 @@ namespace Rawr.DK
                     if (c.OffHand != null && c.OffHand.Item.Type != ItemType.None)
                     {
                         DW = true;
-                        m_CState.OH = new Weapon(c.OffHand.Item, m_CState.m_Stats, m_Opts, m_BO, m_CState.m_Talents, OHExpertise);
+                        m_CState.OH = new Weapon(c.OffHand.Item, m_CState.m_Stats, m_Opts, m_BO, m_CState.m_Talents, OHExpertise, CharacterSlot.OffHand);
                         m_Calcs.OHExpertise = m_CState.OH.effectiveExpertise;
-                        m_Calcs.OHWeaponDamage = (m_CState.OH.damage / 2f) * (1f + (m_CState.m_Talents.NervesOfColdSteel * .25f / 3f));
+                        m_Calcs.OHWeaponDamage = m_CState.OH.damage;
                         m_Calcs.OHAttackSpeed = m_CState.OH.hastedSpeed;
                     }
                 }

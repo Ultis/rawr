@@ -41,8 +41,14 @@ namespace Rawr.DK
         public float BonusMaxRunicPower { get; set; }
         
         public bool b2T11_Tank { get; set; }
-        public bool b4T11_Tank { get; set ;}
-        //public bool b2T11_DPS { get; set; }
-        public bool b4T11_DPS { get; set; } // TODO: Still need to implement this.
+        public bool b4T11_Tank { get; set; }
+        public bool b2T11_DPS { get; set; }
+        public bool b4T11_DPS { get; set; }
+
+        public bool b2T12_Tank { get; set; }
+        public bool b4T12_Tank { get; set; }
+        public bool b2T12_DPS { get; set; }
+        public bool b4T12_DPS { get; set; } 
+
     }
 }

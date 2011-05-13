@@ -34,8 +34,7 @@ namespace Rawr.DPSDK
 
         public float WhiteDPS
         {
-            get { return dpsSub[(int)DKability.White]; }
-            set { dpsSub[(int)DKability.White] = value; }
+            get { return dpsSub[(int)DKability.White] + dpsSub[(int)DKability.WhiteOH]; }
         }
 
         private float _NecrosisDPS;
@@ -315,13 +314,12 @@ namespace Rawr.DPSDK
         {
             float critRating = BasicStats.CritRating;
             float hitRating = BasicStats.HitRating;
-            float attackPower = BasicStats.AttackPower;
 
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
             dictValues.Add("Health",            BasicStats.Health.ToString("N0"));
             dictValues.Add("Strength",          BasicStats.Strength.ToString("N0"));
             dictValues.Add("Agility",           string.Format("{0:0}*Provides {1:P} crit chance", BasicStats.Agility, StatConversion.GetCritFromAgility(BasicStats.Agility, CharacterClass.DeathKnight)));
-            dictValues.Add("Attack Power",      attackPower.ToString("N0"));
+            dictValues.Add("Attack Power",      BasicStats.AttackPower.ToString("N0"));
             dictValues.Add("Crit Rating",       string.Format("{0:0}*Provides {1:P} crit chance", critRating, StatConversion.GetCritFromRating(critRating, CharacterClass.DeathKnight)));
             dictValues.Add("Hit Rating",        string.Format("{0:0}*Negates {1:P} melee miss / {2:P} spell miss", hitRating, StatConversion.GetPhysicalHitFromRating(hitRating, CharacterClass.DeathKnight), StatConversion.GetSpellHitFromRating(hitRating,CharacterClass.DeathKnight)));
             dictValues.Add("Expertise",         string.Format("{0:0.00} / {1:0.00}*Negates {2:P} / {3:P} dodge chance", MHExpertise, OHExpertise, StatConversion.GetDodgeParryReducFromExpertise(MHExpertise), StatConversion.GetDodgeParryReducFromExpertise(OHExpertise)));

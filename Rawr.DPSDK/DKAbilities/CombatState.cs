@@ -21,6 +21,7 @@ namespace Rawr.DK
         public bool m_bAttackingFromBehind;
         public Rotation.Type m_Spec;
         public Presence m_Presence;
+        public float fBossArmor;
 
         public void ResetCombatState()
         {

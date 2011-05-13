@@ -174,7 +174,12 @@ namespace Rawr.DK
         { 
             get
             { 
-                return (int)((15000 / 2) * (1f + m_CT.m_CState.m_Stats.PhysicalHaste + m_CT.m_CState.m_Stats.BonusRuneRegeneration));
+                // According to EJ, Frost Spec haste doesn't help rune regen.
+                // This is HACKY by the way.
+                float fHasteMod = 0;
+                if (GetRotationType(m_CT.m_CState.m_Talents) == Rotation.Type.Frost)
+                    fHasteMod = -.2f;
+                return (int)((15000 / 2) * (1f + (m_CT.m_CState.m_Stats.PhysicalHaste + fHasteMod) + m_CT.m_CState.m_Stats.BonusRuneRegeneration));
             }
         }
         public int m_FrostRunes { get; set; }
@@ -699,7 +704,7 @@ namespace Rawr.DK
             foreach (AbilityDK_Base ab in ml_Rot)
                 m_RunicPower += ab.RunicPower;
             m_RunicPower = (int)((float)m_RunicPower);
-            if (m_CT.m_CState.m_Talents.Butchery > 0)
+            if (m_CT.m_CState.m_Stats.RPp5 > 0)
                 m_RunicPower -= (int)((CurRotationDuration / 5) * m_CT.m_CState.m_Stats.RPp5);
 
             // Burn what we can.
@@ -817,7 +822,7 @@ namespace Rawr.DK
                 GCDdur = MIN_GCD_MS_UH;
 
             subrotDuration = (FF.uDuration);
-            if (m_CT.m_CState.m_Talents.Butchery > 0)
+            if (m_CT.m_CState.m_Stats.RPp5 > 0)
                 curRP -= (int)((subrotDuration / 5000) * m_CT.m_CState.m_Stats.RPp5);
             uint diseaseGCDs = 0;
             for (int count = (int)(Dark.Cooldown / subrotDuration); count > 0; count--)
@@ -980,18 +985,40 @@ namespace Rawr.DK
             if (m_TotalRuneCD > 0)
                 RCperc = (RCRegenDur / m_TotalRuneCD) * RCHaste;
             m_TotalRuneCD = (int)(m_TotalRuneCD / (1 + RCperc));
-
             // Add White damage
-            int iWhiteCount = (int)(CurRotationDuration / m_CT.combinedSwingTime);
-            uint iCurrentWS = Count(DKability.White);
-            AbilityDK_WhiteSwing WS = new AbilityDK_WhiteSwing(m_CT.m_CState);
-            if (iWhiteCount > iCurrentWS)
+            int iWhiteCount = 0;
+            if (null != m_CT.MH)
             {
-                for (int i = 0; i < (iWhiteCount - iCurrentWS); i++)
+                iWhiteCount = (int)(CurRotationDuration / m_CT.MH.hastedSpeed);
+                uint iCurrentWS = Count(DKability.White);
+                AbilityDK_WhiteSwing MHWS = new AbilityDK_WhiteSwing(m_CT.m_CState);
+                MHWS.UpdateCombatState(m_CT.m_CState);
+
+                if (iWhiteCount > iCurrentWS)
                 {
-                    ml_Rot.Add(WS);
-                    TotalDamage += WS.TotalDamage;
-                    TotalThreat += WS.TotalThreat;
+                    for (int i = 0; i < (iWhiteCount - iCurrentWS); i++)
+                    {
+                        ml_Rot.Add(MHWS);
+                        TotalDamage += MHWS.TotalDamage;
+                        TotalThreat += MHWS.TotalThreat;
+                    }
+                }
+            }
+            if (null != m_CT.OH)
+            {
+                iWhiteCount = (int)(CurRotationDuration / m_CT.OH.hastedSpeed);
+                uint iCurrentWSOH = Count(DKability.WhiteOH);
+                AbilityDK_WhiteSwing OHWS = new AbilityDK_WhiteSwing(m_CT.m_CState);
+                OHWS.UpdateCombatState(m_CT.m_CState, true);
+
+                if (iWhiteCount > iCurrentWSOH)
+                {
+                    for (int i = 0; i < (iWhiteCount - iCurrentWSOH); i++)
+                    {
+                        ml_Rot.Add(OHWS);
+                        TotalDamage += OHWS.TotalDamage;
+                        TotalThreat += OHWS.TotalThreat;
+                    }
                 }
             }
         }

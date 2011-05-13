@@ -398,7 +398,10 @@ Points individually may be important.",
             get
             {
                 if (_customChartNames == null)
-                    _customChartNames = new string[] { "Stats Graph"};
+                    _customChartNames = new string[] { 
+                        "Stats Graph",
+                        "Scaling vs Parry Rating"
+                    };
                 return _customChartNames;
             }
         }
@@ -421,7 +424,7 @@ Points individually may be important.",
             {
                 case "Stats Graph":
 //                case "Scaling vs Dodge Rating":
-//                case "Scaling vs Parry Rating":
+                case "Scaling vs Parry Rating":
 //                case "Scaling vs Mastery Rating":
                     return Graph.Instance;
                 default:
@@ -446,14 +449,16 @@ Points individually may be important.",
             List<float> X = new List<float>();
             List<ComparisonCalculationBase[]> Y = new List<ComparisonCalculationBase[]>();
 
+            float fMultiplier = 1;
+
             Stats[] statsList = new Stats[] {
-                        new Stats() { ParryRating = 10 },
-                        new Stats() { DodgeRating = 10 },
-                        new Stats() { MasteryRating = 10 },
-                        new Stats() { Stamina = 10 },
-                        new Stats() { Agility = 10 },
-                        new Stats() { Armor = 10 },
-                        new Stats() { HasteRating = 10 },
+                        new Stats() { ParryRating = fMultiplier },
+                        new Stats() { DodgeRating = fMultiplier },
+                        new Stats() { MasteryRating = fMultiplier },
+                        new Stats() { Stamina = fMultiplier },
+                        new Stats() { Agility = fMultiplier },
+                        new Stats() { Armor = fMultiplier },
+                        new Stats() { HasteRating = fMultiplier },
                     };
 
             switch (chartName)
@@ -461,9 +466,9 @@ Points individually may be important.",
                 case "Stats Graph":
                     Graph.Instance.UpdateStatsGraph(character, statsList, statColors, 200, "", null);
                     break;
-//                case "Scaling vs Parry Rating":
-//                    Graph.Instance.UpdateScalingGraph(character, statsList, new Stats() { ParryRating = 5 }, true, statColors, 100, "", null);
-//                    break;
+                case "Scaling vs Parry Rating":
+                    Graph.Instance.UpdateScalingGraph(character, statsList, new Stats() { ParryRating = fMultiplier * 5 }, true, statColors, 100, "", null);
+                    break;
             }
         }
 
@@ -1433,15 +1438,30 @@ Points individually may be important.",
 
             #region T11
             int t11count;
-            character.SetBonusCount.TryGetValue("Magma Plated Battlearmor", out t11count);
-            if (t11count > 2) { statsTotal.b2T11_Tank = true; }
-            if (t11count > 4) { statsTotal.b4T11_Tank = true; }
-            if (statsTotal.b2T11_Tank)
+            if (character.SetBonusCount.TryGetValue("Magma Plated Battlearmor", out t11count))
+            {
+                if (t11count > 2) { statsTotal.b2T11_Tank = true; }
+                if (t11count > 4) { statsTotal.b4T11_Tank = true; }
+            }
+            if (statsTotal.b4T11_Tank)
                 statsTotal.AddSpecialEffect(_SE_IBF[1]);
             else
                 statsTotal.AddSpecialEffect(_SE_IBF[0]);
             #endregion
-
+            #region T12
+            // No Set names yet.
+            if (statsTotal.b2T12_Tank)
+            {
+                // Your melee attacks cause Burning Blood on your target, 
+                // which deals 800 Fire damage every 2 for 6 sec and 
+                // causes your abilities to behave as if you had 2 diseases 
+                // present on the target.
+            }
+            if (statsTotal.b4T12_Tank)
+            {
+                // Your Dancing Rune Weapon grants 15% additional parry chance.
+            }
+            #endregion
             #region Filter out the duplicate Fallen Crusader Runes:
             if (character.OffHand != null
                 && character.OffHandEnchant != null
@@ -1613,29 +1633,6 @@ Points individually may be important.",
             return (statsTotal);
         }
 
-        public StatsDK GetBuffsStats(Character character, CalculationOptionsTankDK calcOpts)
-        {
-            List<Buff> removedBuffs = new List<Buff>();
-            List<Buff> addedBuffs = new List<Buff>();
-
-            StatsDK statsBuffs = GetBuffsStats(character.ActiveBuffs, character.SetBonusCount) as StatsDK;
-
-            foreach (Buff b in removedBuffs)
-            {
-                character.ActiveBuffsAdd(b);
-            }
-            foreach (Buff b in addedBuffs)
-            {
-                character.ActiveBuffs.Remove(b);
-            }
-
-            foreach (Buff b in character.ActiveBuffs)
-            {
-//                statsBuffs.b2T11_Tank;
-//                statsBuffs.b4T11_Tank;
-            }
-            return statsBuffs;
-        }
 
         /// <summary>
         /// Process the Stat modifier values 

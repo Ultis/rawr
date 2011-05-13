@@ -478,6 +478,7 @@ namespace Rawr.DK
                             break;
                         case ItemDamageType.Physical:
                             DMM += CState.m_Stats.BonusPhysicalDamageMultiplier;
+                            DMM -= Math.Max(0f, StatConversion.GetArmorDamageReduction(85, CState.fBossArmor,0,0));
                             break;
                         case ItemDamageType.Shadow:
                             DMM += CState.m_Stats.BonusShadowDamageMultiplier;
