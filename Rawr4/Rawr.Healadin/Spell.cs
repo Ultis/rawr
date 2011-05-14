@@ -29,6 +29,12 @@ namespace Rawr.Healadin
         public static float hs_min = 2629f;
         public static float hs_max = 2847f;
 
+        // Holy Radiance.  Testing in game showed cf = 0.08653
+        public static float hr_coef = 0.08653f;
+        public static float hr_mana = 9368.8f; 
+        public static float hr_min = 538f;  
+        public static float hr_max = 538f;
+
         // Stats for 1 holy power.  Scales linearly with more holy power. (so just * by 2 or 3 when needed)
         public static float wog_coef_sp = 0.209f;  // regular spellpower coef
         public static float wog_coef_ap = 0.198f;  // Word of Glory also has Attack Power coef
@@ -291,12 +297,31 @@ namespace Rawr.Healadin
 
         protected override float AbilityHealed()
         {
-            //TODO: find if we are glyphed for 6 targets healed
-            float targets_healed = 5f;
+            //TODO: find if we are glyphed for 6 targets healed. 
+            float targets_healed = 5f + (Talents.GlyphOfLightOfDawn ? 1f : 0f);
             float holypower = 3f; // assume 3 holy power for now
             // TODO: calculate real spellpower somewhere in Healadin module, and use that instead of Stats.SpellPower + Stats.Intellect
             return holypower * targets_healed * ((HealadinConstants.lod_min + HealadinConstants.lod_max) / 2f + 
                                                  ((Stats.SpellPower + Stats.Intellect) * HealadinConstants.lod_coef));
+        }
+    }
+
+    public class HolyRadiance : Heal
+    {
+        public HolyRadiance(Rotation rotation)
+            : base(rotation)
+        { }
+
+        public override float BaseCastTime { get { return 1.5f; } }
+        public override float BaseMana { get { return HealadinConstants.hr_mana; } }
+
+        protected override float AbilityHealed()
+        {
+            float targets_healed = 6f;
+            float ticks = 12f; // TODO, calculate # of ticks from haste.  11 assumes 5-15% haste.
+            // TODO: calculate real spellpower somewhere in Healadin module, and use that instead of Stats.SpellPower + Stats.Intellect
+            return ticks * targets_healed * ((HealadinConstants.hr_min + HealadinConstants.hr_max) / 2f +
+                                                 ((Stats.SpellPower + Stats.Intellect) * HealadinConstants.hr_coef));
         }
     }
 
@@ -376,11 +401,11 @@ namespace Rawr.Healadin
 
     public class JudgementsOfThePure : Spell
     {
-        public JudgementsOfThePure(Rotation rotation, bool MaintainDebuff)
+        public JudgementsOfThePure(Rotation rotation, float JudgementCasts)
             : base(rotation)
         {
-            Duration = MaintainDebuff ? 20f : 60f;
-            Uptime = Rotation.CalcOpts.JotP ? Rotation.FightLength : 0f;
+            Duration = 60f / 7.5f / JudgementCasts;
+            Uptime = Rotation.CalcOpts.Activity * Rotation.FightLength;
             BaseCost = HealadinConstants.basemana * 0.05f;
         }
 

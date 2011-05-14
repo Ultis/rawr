@@ -16,7 +16,7 @@ namespace Rawr.Healadin
     public partial class CalculationOptionsPanelHealadin : UserControl, ICalculationOptionsPanel
 
     {
-        public CalculationOptionsPanelHealadin()
+        public CalculationOptionsPanelHealadin()  
         {
             InitializeComponent();
         }
@@ -87,8 +87,19 @@ namespace Rawr.Healadin
             calcOpts.HolyShock = .8f;
         }
 
-        private void btnResetIoLHolyLight_Click(object sender, RoutedEventArgs e) {
-            calcOpts.IoLHolyLight = .5f;
+        private void btnResetHolyPoints_Click(object sender, RoutedEventArgs e)
+        {
+            calcOpts.HolyPoints = .7f;
+        }
+
+        private void btnResetLoDTargets_Click(object sender, RoutedEventArgs e)
+        {
+            calcOpts.LoDTargets = .5f;
+        }
+
+        private void btnResetJudgementCasts_Click(object sender, RoutedEventArgs e)
+        {
+            calcOpts.JudgementCasts = .8f;
         }
 
         private void btnResetReplenishment_Click(object sender, RoutedEventArgs e) {
@@ -97,6 +108,16 @@ namespace Rawr.Healadin
 
         private void btnResetBoLUp_Click(object sender, RoutedEventArgs e) {
             calcOpts.BoLUp = 1f;
+        }
+
+        private void btnResetHRCasts_Click(object sender, RoutedEventArgs e)
+        {
+            calcOpts.HRCasts = .5f;
+        }
+
+        private void btnResetHREff_Click(object sender, RoutedEventArgs e)
+        {
+            calcOpts.HREff = .4f;
         }
     }
 }

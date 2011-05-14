@@ -25,13 +25,18 @@ namespace Rawr.Healadin
             divinePlea = 2f;
             boLUp = 1f;
             holyShock = .8f;
+            holyPoints = 0.7f;
+            lodtargets = 0.5f;
+            judgementcasts = 0.8f;
+            hrCasts = 0.5f;
+            hrEff = 0.4f;
             burstScale = .4f;
-            gHL_Targets = 1f;
-            infusionOfLight = true;
+            gHL_Targets = 1f;  // removing button for this
+            infusionOfLight = true; // removing button for this
             ioLHolyLight = .9f;
-            jotP = true;
+            jotP = true; // removing button for this
             judgement = true;
-            loHSelf = false;
+            loHSelf = false;  // removing button for this
             hitIrrelevant = true;
         }
 
@@ -77,6 +82,47 @@ namespace Rawr.Healadin
             set { holyShock = value; OnPropertyChanged("HolyShock"); }
         }
 
+        private float holyPoints;
+        public float HolyPoints
+        {
+            get { return holyPoints; }
+            set { holyPoints = value; OnPropertyChanged("HolyPoints"); OnPropertyChanged("HolyPointsText"); }
+        }
+
+        public string HolyPointsText
+        {
+            get { return string.Format("{0:P0} LoD, {1:P0} WoG", HolyPoints, 1f - HolyPoints).Replace(" %", "%"); }
+        }
+
+        private float lodtargets;
+        public float LoDTargets
+        {
+            get { return lodtargets; }
+            set { lodtargets = value; OnPropertyChanged("LoDTargets"); }
+        }
+
+        private float judgementcasts;
+        public float JudgementCasts
+        {
+            get { return judgementcasts; }
+            set { judgementcasts = value; OnPropertyChanged("JudgementCasts"); }
+        }
+
+
+        private float hrEff;
+        public float HREff
+        {
+            get { return hrEff; }
+            set { hrEff = value; OnPropertyChanged("HREff"); }
+        }
+
+        private float hrCasts;
+        public float HRCasts
+        {
+            get { return hrCasts; }
+            set { hrCasts = value; OnPropertyChanged("HRCasts"); }
+        }
+
         private float burstScale;
         public float BurstScale
         {
@@ -116,10 +162,6 @@ namespace Rawr.Healadin
                 OnPropertyChanged("IoLHolyLight");
                 OnPropertyChanged("IoLHolyLightText");
             }
-        }
-
-        public string IoLHolyLightText {
-            get { return string.Format("{0:P0} Holy Light, {1:P0} Divine Light", IoLHolyLight, 1f - IoLHolyLight).Replace(" %", "%"); }
         }
 
         private bool jotP;

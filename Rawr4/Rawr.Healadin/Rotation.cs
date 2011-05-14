@@ -56,9 +56,10 @@ namespace Rawr.Healadin
         private FlashOfLight fol;
         private HolyLight hl;
         private HolyShock hs;
-        private DivineLight dl;  //smm-change*************************************************
-        private WordofGlory wog;  //smm-change*************************************************
-        private LightofDawn lod;  //smm-change*************************************************
+        private DivineLight dl;  
+        private WordofGlory wog;  
+        private LightofDawn lod;
+        private HolyRadiance hr;    
         private JudgementsOfThePure jotp;
         private BeaconOfLight bol;
 
@@ -71,9 +72,10 @@ namespace Rawr.Healadin
             hl = new HolyLight(this);
             dl = new DivineLight(this);  
             wog = new WordofGlory(this); 
-            lod = new LightofDawn(this); 
+            lod = new LightofDawn(this);
+            hr = new HolyRadiance(this);
             hs = new HolyShock(this);
-            jotp = new JudgementsOfThePure(this, CalcOpts.Judgement);
+            jotp = new JudgementsOfThePure(this, CalcOpts.JudgementCasts);
             bol = new BeaconOfLight(this);
         }
 
@@ -86,7 +88,9 @@ namespace Rawr.Healadin
             calc.ManaArcaneTorrent = (Character.Race == CharacterRace.BloodElf ? Stats.Mana * .06f * (float)Math.Ceiling(FightLength / 120f - .25f) : 0);
             calc.ManaDivinePlea = Stats.Mana * 0.1f * DivinePleas;
             calc.ManaMp5 = FightLength * Stats.Mp5 / 5f;
-            calc.ManaReplenishment = Stats.ManaRestoreFromMaxManaPerSecond * Stats.Mana * FightLength * CalcOpts.Replenishment;
+            // this Stats.ManaRestoreFromMaxManaPerSecond is 0 is is messing up the replenishment calculation!
+            //calc.ManaReplenishment = Stats.ManaRestoreFromMaxManaPerSecond * Stats.Mana * FightLength * CalcOpts.Replenishment;
+            calc.ManaReplenishment = 0.001f * Stats.Mana * FightLength * CalcOpts.Replenishment;
             calc.ManaOther += Stats.ManaRestore;
             // add calc.ManaJudgements
             calc.ManaJudgements = HealadinConstants.basemana * 0.15f * jotp.Casts();
@@ -124,7 +128,7 @@ namespace Rawr.Healadin
         {
             return GetHealingCastsPerSec(calc)
                 + (calc.RotationBoL / calc.BoL.CastTime()
-                + calc.RotationJotP / calc.JotP.CastTime()) / calc.FightLength;
+                + calc.RotationJudge / calc.JotP.CastTime()) / calc.FightLength;
         }
 
         public static float GetSpellCritsPerSec(CharacterCalculationsHealadin calc) { return GetHealingCritsPerSec(calc); }
@@ -145,12 +149,13 @@ namespace Rawr.Healadin
             calc.HS = hs;
             calc.DL = dl;  
             calc.WoG = wog;  
-            calc.LoD = lod;  
+            calc.LoD = lod;
+            calc.HR = hr; 
             calc.JotP = jotp;
             calc.BoL = bol;
 
-            calc.RotationJotP = jotp.Time();
-            calc.UsageJotP = jotp.Usage();
+            calc.RotationJudge = jotp.Time();
+            calc.UsageJudge = jotp.Usage();
 
             calc.RotationBoL = bol.Time();
             calc.UsageBoL = bol.Usage();
@@ -172,8 +177,9 @@ namespace Rawr.Healadin
             }
             #endregion
 
+            // This infusion of Light should be dead code now
             #region Infusion of Light
-
+            /*
             float iol_hlcasts = 0;
             if (CalcOpts.InfusionOfLight)
             {
@@ -184,18 +190,36 @@ namespace Rawr.Healadin
                 calc.UsageHL += iol_hlcasts * hl_iol.AverageCost();
                 calc.RotationHL += iol_hlcasts * hl_iol.CastTime();
                 calc.HealedHL += iol_hlcasts * hl_iol.AverageHealed();
-            }
+            }*/
 
             #endregion
 
             float remainingMana = calc.TotalMana = ManaPool(calc);
-            remainingMana -= calc.UsageJotP + calc.UsageBoL + calc.UsageHS + calc.UsageHL + calc.UsageFoL;
+            remainingMana -= calc.UsageJudge + calc.UsageBoL + calc.UsageHS + calc.UsageHL + calc.UsageFoL;
 
             // start with amount of time you are active in a fight
             float remainingTime = FightLength * CalcOpts.Activity;
             // now subtract time for keeping up Judgements of the Pure and Beacon.  Also subtract your Holy Shock casts.  
             // TODO: why is it subtracting Flash of Light and Holy Light casts?
-            remainingTime -= calc.RotationJotP + calc.RotationBoL + calc.RotationHS + calc.RotationFoL + calc.RotationHL;
+            remainingTime -= calc.RotationJudge + calc.RotationBoL + calc.RotationHS + calc.RotationFoL + calc.RotationHL;
+
+            calc.HolyPowerCasts = hs.Casts() / 3f;
+            float LoDCasts = (float)Math.Floor(calc.HolyPowerCasts * CalcOpts.HolyPoints);
+            float WoGCasts = (float)Math.Floor(calc.HolyPowerCasts * (1f - CalcOpts.HolyPoints));
+            calc.RotationWoG = WoGCasts * wog.CastTime();
+            calc.UsageWoG    = WoGCasts * wog.BaseMana;
+            calc.HealedWoG   = WoGCasts * wog.AverageHealed();
+            calc.RotationLoD = LoDCasts * lod.CastTime();
+            calc.UsageLoD    = LoDCasts * lod.BaseMana;
+            calc.HealedLoD   = LoDCasts * lod.AverageHealed() * CalcOpts.LoDTargets;
+
+            float HRCasts = (float)Math.Floor(FightLength / 30f * CalcOpts.HRCasts);
+            calc.RotationHR = HRCasts * hr.CastTime();
+            calc.UsageHR = HRCasts * hr.BaseMana;
+            calc.HealedHR = HRCasts * hr.AverageHealed() * CalcOpts.HREff;
+            
+            remainingTime -= calc.RotationWoG + calc.RotationLoD + calc.RotationHR;
+            remainingMana -= calc.UsageHR;
 
             FoLCasts = 0f;
             if (remainingMana > 0)
@@ -227,12 +251,14 @@ namespace Rawr.Healadin
                 calc.HealedFoL += fol.HPS() * fol_time;
             }
 
-            calc.TotalHealed = calc.HealedFoL + calc.HealedHL + calc.HealedHS;
+            calc.TotalHealed = calc.HealedFoL + calc.HealedHL + calc.HealedHS + calc.HealedWoG + calc.HealedLoD;
 
             if (Talents.BeaconOfLight > 0)
             {
                 calc.TotalHealed += calc.HealedBoL = bol.HealingDone(calc.TotalHealed);
             }
+
+            calc.TotalHealed += calc.HealedHR;  // adding Holy Radiance after BoL calculation, as it does not count towards BoL heals
 
             calc.HealedOther = Stats.Healed;
             calc.HealedOther += calc.TotalHealed * Stats.ShieldFromHealedProc;

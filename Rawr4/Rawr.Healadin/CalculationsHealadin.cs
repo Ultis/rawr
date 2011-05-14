@@ -234,12 +234,18 @@ namespace Rawr.Healadin
                     "Rotation Info:Holy Light Time",
                     "Rotation Info:Flash of Light Time",
                     "Rotation Info:Holy Shock Time",
+                    "Rotation Info:Word of Glory Time",
+                    "Rotation Info:Light of Dawn Time",
+                    "Rotation Info:Holy Radiance Time",
                     "Rotation Info:Beacon of Light Time",
                     "Rotation Info:Judgement Time",
 
                     "Healing Breakdown:Holy Light Healed",
                     "Healing Breakdown:Flash of Light Healed",
                     "Healing Breakdown:Holy Shock Healed",
+                    "Healing Breakdown:Word of Glory Healed",
+                    "Healing Breakdown:Light of Dawn Healed",
+                    "Healing Breakdown:Holy Radiance Healed",
                     "Healing Breakdown:Beacon of Light Healed",
                     "Healing Breakdown:Glyph of HL Healed",
                     "Healing Breakdown:Other Healed*From trinket procs",
@@ -248,8 +254,9 @@ namespace Rawr.Healadin
                     "Spell Information:Flash of Light",
                     "Spell Information:Holy Shock",
                     "Spell Information:Divine Light",  
-                    "Spell Information:Word of Glory(3 holy power)",  
-                    "Spell Information:Light of Dawn(3 hp 5 targets)",  
+                    "Spell Information:Word of Glory(3 holy power)",   
+                    "Spell Information:LoD(3 hp, max targets)",  
+                    "Spell Information:Holy Radiance (6 targets)",  
                 };
                 return _characterDisplayCalculationLabels;
             }
@@ -487,7 +494,7 @@ namespace Rawr.Healadin
                 FoL.OverallPoints = FoL.ThroughputPoints = calc.UsageFoL;
                 HL.OverallPoints = HL.ThroughputPoints = calc.UsageHL;
                 HS.OverallPoints = HS.ThroughputPoints = calc.UsageHS;
-                JotP.OverallPoints = JotP.ThroughputPoints = calc.UsageJotP;
+                JotP.OverallPoints = JotP.ThroughputPoints = calc.UsageJudge;
                 BoL.OverallPoints = BoL.ThroughputPoints = calc.UsageBoL;
 
                 return new ComparisonCalculationBase[] { FoL, HL, HS, JotP, BoL };
@@ -525,7 +532,7 @@ namespace Rawr.Healadin
                 FoL.OverallPoints = FoL.ThroughputPoints = calc.RotationFoL;
                 HL.OverallPoints = HL.ThroughputPoints = calc.RotationHL;
                 HS.OverallPoints = HS.ThroughputPoints = calc.RotationHS;
-                JotP.OverallPoints = JotP.ThroughputPoints = calc.RotationJotP;
+                JotP.OverallPoints = JotP.ThroughputPoints = calc.RotationJudge;
                 BoL.OverallPoints = BoL.ThroughputPoints = calc.RotationBoL;
 
                 return new ComparisonCalculationBase[] { FoL, HL, HS, JotP, BoL };
@@ -583,6 +590,7 @@ namespace Rawr.Healadin
                 relevantGlyphs.Add("Glyph of Divinity");
                 relevantGlyphs.Add("Glyph of Salvation");
                 relevantGlyphs.Add("Glyph of Long Word");
+                relevantGlyphs.Add("Glyph of Light of Dawn");
                 //Minor
                 relevantGlyphs.Add("Glyph of Insight");
                 relevantGlyphs.Add("Glyph of Blessing of Might");
@@ -684,8 +692,10 @@ namespace Rawr.Healadin
         {
             if (useIrrelevancy)
             {
-                if (isHitIrrelevant && stats.HitRating > 0) return false;
+                if (isHitIrrelevant && stats.HitRating > 0 ) return false;
             }
+
+            if (stats.Strength > 0 || stats.Agility > 0) return false;
 
             bool relevant = (
                 stats.Intellect +
