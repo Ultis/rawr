@@ -1461,7 +1461,8 @@ namespace Rawr
             }
             if (triggerInterval == 0.0f) {
                 // this is a special case, meaning that it basically auto triggers on cooldown
-                return (1.0f + (float)Math.Floor(fightDuration / Cooldown)) / fightDuration;
+                // subtract 1 ms from fightDuration to prevent counting proc happening just after fight ends
+                return (1.0f + (float)Math.Floor( (fightDuration - 0.001f) / Cooldown)) / fightDuration;
             }
 
             bool needsBeta = fightDuration < Cooldown * 10;
