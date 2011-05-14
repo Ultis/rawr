@@ -225,6 +225,9 @@ function Rawr:OnInitialize()
 		self.db.char.App = {}
 	end
 	local version = GetAddOnMetadata("Rawr","Version")
+	if (REVISION == nil) then
+	  REVISION = "Unknown"
+	end
 	self.version = ("Rawr v%s (r%s)"):format(version, REVISION)
 	self:Print(self.version..L[" Loaded."])
 	self.xml = {}

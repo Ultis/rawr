@@ -1,4 +1,4 @@
-## Interface: 40000
+## Interface: 40100
 ## Title: Rawr
 ## Version: 0.65
 ## Author: Levva of EU Khadgar
