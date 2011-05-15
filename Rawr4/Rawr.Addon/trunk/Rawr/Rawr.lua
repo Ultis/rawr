@@ -150,6 +150,9 @@ Version 0.64
 Version 0.65
 	Fixed Suffix Id exporting
 
+Version 0.66
+	Update for 4.1.0 issues
+
 	
 --]]
 
@@ -243,9 +246,9 @@ function Rawr:OnInitialize()
 end
 
 function Rawr:OnDisable()
-    -- Called when the addon is disabled
-  	self:UnregisterEvent("BANKFRAME_OPENED")
- 	self:UnregisterEvent("BANKFRAME_CLOSED")
+	-- Called when the addon is disabled
+	self:UnregisterEvent("BANKFRAME_OPENED")
+	self:UnregisterEvent("BANKFRAME_CLOSED")
 	self:UnregisterEvent("UNIT_INVENTORY_CHANGED")
 	self:UnregisterEvent("LOOT_OPENED")
 	self:UnregisterEvent("START_LOOT_ROLL")
@@ -258,8 +261,8 @@ function Rawr:OnDisable()
 end
 
 function Rawr:OnEnable()
-  	self:RegisterEvent("BANKFRAME_OPENED")
- 	self:RegisterEvent("BANKFRAME_CLOSED")
+	self:RegisterEvent("BANKFRAME_OPENED")
+	self:RegisterEvent("BANKFRAME_CLOSED")
 	self:RegisterEvent("UNIT_INVENTORY_CHANGED")
 	self:RegisterEvent("LOOT_OPENED")
 	self:RegisterEvent("START_LOOT_ROLL")

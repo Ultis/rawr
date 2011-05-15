@@ -398,6 +398,6 @@ function Rawr:WriteAvailableItem(indent, slotLink)
 			self:AddLine(indent, "<AvailableItem>"..itemID.."."..suffixId.."</AvailableItem>")
 		else
 			self:AddLine(indent, "<AvailableItem>"..itemID.."</AvailableItem>")
-		end		
+		end
 	end
 end

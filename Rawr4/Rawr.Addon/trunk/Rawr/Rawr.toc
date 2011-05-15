@@ -1,13 +1,13 @@
 ## Interface: 40100
 ## Title: Rawr
-## Version: 0.65
-## Author: Levva of EU Khadgar
+## Version: 0.66
+## Author: Levva of EU Khadgar, Jothay of US Stormrage
 ## Notes: Allows import and export of character data to Rawr, the character optimising program
 ## X-Category: Data Export
 ## SavedVariablesPerCharacter: RawrDBPC
 ## Revision: $Id$
 ## OptionalDeps: LibStub, CallbackHandler-1.0, AceAddon-3.0, AceLocale-3.0, AceConsole-3.0, AceGUI-3.0, AceConfig-3.0, LibSharedMedia-3.0, LibAboutPanel
-## X-Curse-Packaged-Version: r43
+## X-Curse-Packaged-Version: r44
 ## X-Curse-Project-Name: Rawr (Official)
 ## X-Curse-Project-ID: rawr-official
 ## X-Curse-Repository-ID: wow/rawr-official/mainline
