@@ -2909,6 +2909,7 @@ namespace Rawr.Mage
                         cycle.Note = string.Format("Mix {0:F}% {1} and {2:F}% {3}", 100 * (1 - k), cycles[i].Name, 100 * k, cycles[maxj].Name);
                         cycle.AddCycle(needsDisplayCalculations, cycles[i], (1 - k) / cycles[i].CastTime);
                         cycle.AddCycle(needsDisplayCalculations, cycles[maxj], k / cycles[maxj].CastTime);
+                        cycle.DpmConversion = maxDpm;
                         cycle.Calculate();
                         return cycle;
                     }

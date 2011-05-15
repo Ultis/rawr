@@ -10,6 +10,8 @@ namespace Rawr.Mage
     public unsafe class LP
 #endif
     {
+        public int maxRedecompose;
+
         internal SparseMatrix A;
         private int[] extraConstraintsUsed;
         private int numExtraConstraints;
@@ -546,15 +548,16 @@ namespace Rawr.Mage
             }
         }
 
-        public LP(int baseRows, int maxCols, ArraySet arraySet)
+        public LP(int baseRows, int maxCols, ArraySet arraySet, int maxRedecompose)
         {
-            Initialize(baseRows, maxCols, arraySet);
+            Initialize(baseRows, maxCols, arraySet, maxRedecompose);
         }
 
-        public void Initialize(int baseRows, int maxCols, ArraySet arraySet)
+        public void Initialize(int baseRows, int maxCols, ArraySet arraySet, int maxRedecompose)
         {
             this.baseRows = baseRows;
             this.arraySet = arraySet;
+            this.maxRedecompose = maxRedecompose;
             if (baseRows + 10 > arraySet.maxRows || maxCols + 10 > arraySet.maxCols)
             {
                 arraySet.maxRows = Math.Max(baseRows + 10, arraySet.maxRows);
@@ -3816,7 +3819,7 @@ namespace Rawr.Mage
             bool feasible = false;
             int round = 0;
             int redecompose = 0;
-            const int maxRedecompose = 50;
+            //const int maxRedecompose = 50;
             int verificationAttempts = 0;
             double eps = highPrecision ? epsPrimal : epsPrimalLow;
             double lowestInfeasibility = double.PositiveInfinity;
@@ -4100,7 +4103,7 @@ namespace Rawr.Mage
             bool feasible = false;
             int round = 0;
             int redecompose = 0;
-            const int maxRedecompose = 50;
+            //const int maxRedecompose = 50;
             double eps = epsPrimal;
             double lowestInfeasibility = double.PositiveInfinity;
             int lastFeasible = 0;
@@ -5591,7 +5594,6 @@ namespace Rawr.Mage
             int numericCycling = 0;
             int disabledRetry = 0;
             int maxj, mini;
-            const int maxRedecompose = 50;
             bool changeBasis;
             double direction;
             bool checkTermination;
@@ -5606,6 +5608,7 @@ namespace Rawr.Mage
             double lowestInfeasibility = double.PositiveInfinity;
 
             double eps = epsPrimal;
+            double epsFeasible = epsPrimal;
 
             if (disabledDirty)
             {
@@ -5659,7 +5662,7 @@ namespace Rawr.Mage
                     {
                         ComputePrimalSolution(false);
                         UpdateMB();
-                        feasible = IsPrimalQFeasible(eps, out recalculate);
+                        feasible = IsPrimalQFeasible(epsFeasible, out recalculate);
                     } while (recalculate);
                     updateCount = 0;
                 }
@@ -5675,19 +5678,19 @@ namespace Rawr.Mage
                     }
 
                     double infeasibility;
-                    ComputePhaseIQReducedCosts(out infeasibility, eps);
+                    ComputePhaseIQReducedCosts(out infeasibility, epsFeasible);
                     if (infeasibility < lowestInfeasibility)
                     {
                         lowestInfeasibility = infeasibility;
                         numericCycling = 0;
                     }
-                    else if (infeasibility > lowestInfeasibility + eps || numericCycling > 10)
+                    else if (numericCycling > 20)
                     {
                         // we're not using a shifting strategy for primal so the only way to combat
                         // numerical cycling is to lower the tolerances
-                        if (eps < 1.0)
+                        if (epsFeasible < 0.1)
                         {
-                            eps *= 10.0;
+                            epsFeasible *= 10.0;
                             lowestInfeasibility = double.PositiveInfinity;
                             numericCycling = 0;
                         }
@@ -5702,7 +5705,7 @@ namespace Rawr.Mage
                         numericCycling++;
                     }
                     // for establishing feasibility we don't need quadratic part, just do a simplex step
-                    PhaseIQStep(out maxj, eps, out mini, out bound, out changeBasis);
+                    PhaseIQStep(out maxj, epsFeasible, out mini, out bound, out changeBasis);
                     updateCount++;
 
                     if (maxj == -1)
@@ -5750,7 +5753,7 @@ namespace Rawr.Mage
                     if (ComputeCGStep(eps, out alpha, false, out needsReducedGradientStep))
                     {
 
-                        if (!SelectCGOutgoing(eps, ref col, ref alpha, ref bound))
+                        if (!SelectCGOutgoing(epsFeasible, ref col, ref alpha, ref bound))
                         {
                             // we lost feasibility, go to phase I
                             feasible = false;
@@ -5847,7 +5850,7 @@ namespace Rawr.Mage
                         }
 
                         updateCount++;
-                        if (!ReducedGradientStep(maxj, direction, eps, out mini, out bound, out changeBasis, out checkTermination/*, out stall*/))
+                        if (!ReducedGradientStep(maxj, direction, eps, epsFeasible, out mini, out bound, out changeBasis, out checkTermination/*, out stall*/))
                         {
                             // we lost feasibility, go to phase I
                             feasible = false;
@@ -5880,7 +5883,7 @@ namespace Rawr.Mage
                                 goto TERMINATION;
                             }
                             updateCount++;
-                            if (!ReducedGradientStep(maxj, direction, eps, out mini, out bound, out changeBasis, out checkTermination/*, out stall*/))
+                            if (!ReducedGradientStep(maxj, direction, eps, epsFeasible, out mini, out bound, out changeBasis, out checkTermination/*, out stall*/))
                             {
                                 // we lost feasibility, go to phase I
                                 feasible = false;
@@ -6143,7 +6146,7 @@ namespace Rawr.Mage
                 }
 
                 updateCount++;
-                if (!ReducedGradientStep(maxj, direction, eps, out mini, out bound, out changeBasis, out checkTermination/*, out stall*/))
+                if (!ReducedGradientStep(maxj, direction, eps, epsFeasible, out mini, out bound, out changeBasis, out checkTermination/*, out stall*/))
                 {
                     // we lost feasibility, go to phase I
                     feasible = false;
@@ -6182,7 +6185,7 @@ namespace Rawr.Mage
                         goto TERMINATION;
                     }
                     updateCount++;
-                    if (!ReducedGradientStep(maxj, direction, eps, out mini, out bound, out changeBasis, out checkTermination/*, out stall*/))
+                    if (!ReducedGradientStep(maxj, direction, eps, epsFeasible, out mini, out bound, out changeBasis, out checkTermination/*, out stall*/))
                     {
                         // we lost feasibility, go to phase I
                         feasible = false;
@@ -6219,7 +6222,11 @@ namespace Rawr.Mage
             UPDATE:
 
                 redecompose--;
-                if (redecompose > 0)
+                // VERY IMPORTANT!!!
+                // we should try update even if we know we'll redecompose, otherwise we'll blindly perform
+                // the basis change which can result in singular basis and patching that will cost a ton
+                // to fix all the unfeasibilities, basically if we get singular we've lost all progress
+                //if (redecompose > 0)
                 {
                     double pivot;
                     lu.Update(ww, mini, out pivot);
@@ -6310,7 +6317,7 @@ namespace Rawr.Mage
             int updateCount = 0;
             int redecompose = 0;
             int maxj, mini;
-            const int maxRedecompose = 50;
+            //const int maxRedecompose = 50;
             bool changeBasis;
             double direction;
             osbDirty = true;
@@ -6621,7 +6628,7 @@ namespace Rawr.Mage
 
                         updateCount++;
                         bool checkTermination;
-                        if (!ReducedGradientStep(maxj, direction, eps, out mini, out bound, out changeBasis, out checkTermination/*, out stall*/))
+                        if (!ReducedGradientStep(maxj, direction, eps, eps, out mini, out bound, out changeBasis, out checkTermination/*, out stall*/))
                         {
                             // we lost feasibility, go to phase I
                             feasible = false;
@@ -6639,7 +6646,7 @@ namespace Rawr.Mage
                                 goto TERMINATION;
                             }
                             updateCount++;
-                            if (!ReducedGradientStep(maxj, direction, eps, out mini, out bound, out changeBasis, out checkTermination/*, out stall*/))
+                            if (!ReducedGradientStep(maxj, direction, eps, eps, out mini, out bound, out changeBasis, out checkTermination/*, out stall*/))
                             {
                                 // we lost feasibility, go to phase I
                                 feasible = false;
@@ -6885,7 +6892,7 @@ namespace Rawr.Mage
                 }
 
                 updateCount++;
-                if (!ReducedGradientStep(maxj, direction, eps, out mini, out bound, out changeBasis))
+                if (!ReducedGradientStep(maxj, direction, eps, eps, out mini, out bound, out changeBasis))
                 {
                     // we lost feasibility, go to phase I
                     feasible = false;
@@ -7013,7 +7020,7 @@ namespace Rawr.Mage
             int updateCount = 0;
             int redecompose = 0;
             int maxj, mini;
-            const int maxRedecompose = 50;
+            //const int maxRedecompose = 50;
             bool changeBasis;
             double direction;
             osbDirty = true;
@@ -7377,7 +7384,7 @@ namespace Rawr.Mage
                             }
 
                             updateCount++;
-                            if (!ReducedGradientStep(maxj, direction, eps, out mini, out bound, out changeBasis))
+                            if (!ReducedGradientStep(maxj, direction, eps, eps, out mini, out bound, out changeBasis))
                             {
                                 // we lost feasibility, go to phase I
                                 feasible = false;
@@ -7405,7 +7412,7 @@ namespace Rawr.Mage
                 }
 
                 updateCount++;
-                if (!ReducedGradientStep(maxj, direction, eps, out mini, out bound, out changeBasis))
+                if (!ReducedGradientStep(maxj, direction, eps, eps, out mini, out bound, out changeBasis))
                 {
                     // we lost feasibility, go to phase I
                     feasible = false;
@@ -7593,14 +7600,14 @@ namespace Rawr.Mage
             }*/
         }
 
-        private bool ReducedGradientStep(int maxj, double direction, double eps, out int mini, out int bound, out bool changeBasis)
+        private bool ReducedGradientStep(int maxj, double direction, double eps, double epsFeasible, out int mini, out int bound, out bool changeBasis)
         {
             bool checkTermination;
             //bool stall;
-            return ReducedGradientStep(maxj, direction, eps, out mini, out bound, out changeBasis, out checkTermination/*, out stall*/);
+            return ReducedGradientStep(maxj, direction, eps, epsFeasible, out mini, out bound, out changeBasis, out checkTermination/*, out stall*/);
         }
 
-        private bool ReducedGradientStep(int maxj, double direction, double eps, out int mini, out int bound, out bool changeBasis, out bool checkTermination/*, out bool stall*/)
+        private bool ReducedGradientStep(int maxj, double direction, double eps, double epsFeasible, out int mini, out int bound, out bool changeBasis, out bool checkTermination/*, out bool stall*/)
         {
             ComputeBasisStep(maxj);
 
@@ -7611,7 +7618,7 @@ namespace Rawr.Mage
             checkTermination = false;
             //stall = false;
 
-            if (!SelectReducedGradientOutgoing(direction, eps, ref mini, ref minr, ref bound))
+            if (!SelectReducedGradientOutgoing(direction, epsFeasible, ref mini, ref minr, ref bound))
             {
                 return false;
             }
@@ -8050,7 +8057,7 @@ namespace Rawr.Mage
             int round = 0;
             bool needsRecalc = true;
             int redecompose = 0;
-            const int maxRedecompose = 50;
+            //const int maxRedecompose = 50;
             dualUnbounded = false;
 
             if (disabledDirty)

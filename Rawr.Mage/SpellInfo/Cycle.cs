@@ -143,6 +143,7 @@ namespace Rawr.Mage
     {
         public string Name;
         public string Note;
+        public float DpmConversion; // used by mana neutral cycle to improve numerical stability of solver
         public CycleId CycleId;
 
         public override string ToString()
@@ -309,6 +310,7 @@ namespace Rawr.Mage
         public void Initialize(CastingState castingState)
         {
             Note = null;
+            DpmConversion = 0;
 
             CastingState = castingState;
             calculated = false;
@@ -366,6 +368,15 @@ namespace Rawr.Mage
                 CalculateEffects();
                 return damagePerSecond + effectDamagePerSecond;
             }
+        }
+
+        public void FixManaNeutral()
+        {
+            // costPerSecond + x - manaRegenPerSecond = 0
+            CalculateEffects();
+            float x = manaRegenPerSecond - costPerSecond;
+            costPerSecond += x;
+            damagePerSecond += x * DpmConversion;
         }
 
         public float GetDamagePerSecond(float manaAdeptBonus)

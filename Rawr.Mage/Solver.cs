@@ -3010,6 +3010,10 @@ namespace Rawr.Mage
                                     if (mult > 0)
                                     {
                                         Cycle c = state.GetCycle(CalculationOptions.IncrementalSetSpells[index]);
+                                        if (c.CycleId == CycleId.ArcaneManaNeutral)
+                                        {
+                                            c.FixManaNeutral();
+                                        }
                                         int seg = CalculationOptions.IncrementalSetSegments[index];
                                         int manaSegment = CalculationOptions.IncrementalSetManaSegment[index];
                                         column = lp.AddColumnUnsafe();
@@ -3069,6 +3073,10 @@ namespace Rawr.Mage
                                     if (!segmentNonCooldowns && state == BaseState && seg != 0) continue;
                                     if (segmentCooldowns && CalculationOptions.HeroismControl == 3 && state.Heroism && seg < firstHeroismSegment) continue;
                                     Cycle c = state.GetCycle(spellList[spell]);
+                                    if (c.CycleId == CycleId.ArcaneManaNeutral)
+                                    {
+                                        c.FixManaNeutral();
+                                    }
                                     bool skip = false;
                                     foreach (Cycle s2 in placed)
                                     {
@@ -4312,47 +4320,18 @@ namespace Rawr.Mage
                         ticks.Add(restriction.TimeEnd);
                     }
                 }
-                if (CalculationOptions.EncounterEnabled && CalculationOptions.Encounter != null)
+                if (CalculationOptions.BossHandler)
                 {
-                    foreach (DamageMultiplier multiplier in CalculationOptions.Encounter.GlobalMultipliers)
+                    // we have to go through phases of the encounter and place markers where phases change
+                    foreach (var buffState in Character.BossOptions.BuffStates)
                     {
-                        if (multiplier.RelativeTime)
+                        // for now only handle deterministic damage multipliers and average over the whole state
+                        if (buffState.Chance > 0 && buffState.Stats.BonusDamageMultiplier > 0)
                         {
-                            ticks.Add(multiplier.StartTime * CalculationOptions.FightDuration);
-                            ticks.Add(multiplier.EndTime * CalculationOptions.FightDuration);
-                        }
-                        else
-                        {
-                            ticks.Add(multiplier.StartTime);
-                            ticks.Add(multiplier.EndTime);
-                        }
-                    }
-                    foreach (TargetGroup group in CalculationOptions.Encounter.TargetGroups)
-                    {
-                        float startTime, endTime;
-                        if (group.RelativeTime)
-                        {
-                            startTime = group.EntranceTime * CalculationOptions.FightDuration;
-                            endTime = group.ExitTime * CalculationOptions.FightDuration;
-                        }
-                        else
-                        {
-                            startTime = group.EntranceTime;
-                            endTime = group.ExitTime;
-                        }
-                        ticks.Add(startTime);
-                        ticks.Add(endTime);
-                        foreach (DamageMultiplier multiplier in group.Multipliers)
-                        {
-                            if (multiplier.RelativeTime)
+                            foreach (var phase in buffState.PhaseTimes)
                             {
-                                ticks.Add(startTime + multiplier.StartTime * (endTime - startTime));
-                                ticks.Add(startTime + multiplier.EndTime * (endTime - startTime));
-                            }
-                            else
-                            {
-                                ticks.Add(startTime + multiplier.StartTime);
-                                ticks.Add(startTime + multiplier.EndTime);
+                                ticks.Add(phase.Value[0]);
+                                ticks.Add(phase.Value[1]);
                             }
                         }
                     }

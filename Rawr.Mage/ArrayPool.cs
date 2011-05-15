@@ -372,7 +372,7 @@ namespace Rawr.Mage
 
         public void RecreateSolverArrays()
         {
-            rowScale = new double[maxSolverRows];
+            rowScale = new double[maxSolverRows + 1]; // one extra for price scaling
             columnScale = new double[maxSolverCols];
         }
 

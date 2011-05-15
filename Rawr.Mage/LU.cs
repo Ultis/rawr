@@ -14,6 +14,8 @@ namespace Rawr.Mage
         public int etaSize;
         private ArraySet arraySet;
 
+        private const double singularityTest = 0.0000001;
+
         // Ln...L0 B = P U Q
         // B = (Ln...L0)inv P U Q
 
@@ -614,7 +616,7 @@ namespace Rawr.Mage
 
                 if (etaSize >= arraySet.LUetaMax) throw new InvalidOperationException();
 
-                if (!Singular && Math.Abs(max) < 0.000001)
+                if (!Singular && Math.Abs(max) < singularityTest)
                 {
                     Singular = true;
                     Rank = j;
@@ -916,7 +918,7 @@ namespace Rawr.Mage
                 U[lastnz * size + j] = c[j];
             }
             pivot = c[lastnz] / ujj;
-            if (Math.Abs(U[lastnz * size + lastnz]) < 0.0000001)
+            if (Math.Abs(U[lastnz * size + lastnz]) < singularityTest)
             {
                 Singular = true;
             }

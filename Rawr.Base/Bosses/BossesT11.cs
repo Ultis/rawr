@@ -527,18 +527,21 @@ namespace Rawr.Bosses
                     AddAPhase(NotBurnExposedHeadNormal, i);
                 } else if (i == 2 || i == 3) {
                     // Heroic has a Phase 3 which replace the normal phase 1 at 30% HP, start it at 600-180=420
-                    // 10 minute Berserk Timer 90+30=120 600/120=5. At most 10 phases (5 each), swap last Ph1 with a Ph3
+                    // Kavan: exposed head starts about 100-115 seconds into the fight, then it comes about every 90-100 seconds
+                    // 10 minute Berserk Timer 500/95=5.3. At most 12 phases (6 each), swap last two Ph1 with a Ph3
                     ClearPhase1Values(ref NotBurnExposedHeadHeroicUnder30);
-                    ApplyAPhasesValues(ref NotBurnExposedHeadHeroicAbove30, i, 1, phaseStartTime, 90, this[i].BerserkTimer); phaseStartTime += 90; // 90
-                    ApplyAPhasesValues(ref BurnExposedHead,                 i, 2, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30; //120
-                    ApplyAPhasesValues(ref NotBurnExposedHeadHeroicAbove30, i, 3, phaseStartTime, 90, this[i].BerserkTimer); phaseStartTime += 90; //210
-                    ApplyAPhasesValues(ref BurnExposedHead,                 i, 4, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30; //240
-                    ApplyAPhasesValues(ref NotBurnExposedHeadHeroicAbove30, i, 5, phaseStartTime, 90, this[i].BerserkTimer); phaseStartTime += 90; //330
-                    ApplyAPhasesValues(ref BurnExposedHead,                 i, 6, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30; //360
-                    ApplyAPhasesValues(ref NotBurnExposedHeadHeroicAbove30, i, 7, phaseStartTime, 90, this[i].BerserkTimer); phaseStartTime += 90; //450
-                    ApplyAPhasesValues(ref BurnExposedHead,                 i, 8, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30; //480
-                    ApplyAPhasesValues(ref NotBurnExposedHeadHeroicUnder30, i, 9, phaseStartTime, 90, this[i].BerserkTimer); phaseStartTime += 90; //570
-                    ApplyAPhasesValues(ref BurnExposedHead,                 i,10, phaseStartTime, 30, this[i].BerserkTimer);
+                    ApplyAPhasesValues(ref NotBurnExposedHeadHeroicAbove30, i, 1, phaseStartTime, 100, this[i].BerserkTimer); phaseStartTime += 100; // 100
+                    ApplyAPhasesValues(ref BurnExposedHead,                 i, 2, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30; //130
+                    ApplyAPhasesValues(ref NotBurnExposedHeadHeroicAbove30, i, 3, phaseStartTime, 65, this[i].BerserkTimer); phaseStartTime += 65; //195
+                    ApplyAPhasesValues(ref BurnExposedHead,                 i, 4, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30; //225
+                    ApplyAPhasesValues(ref NotBurnExposedHeadHeroicAbove30, i, 5, phaseStartTime, 65, this[i].BerserkTimer); phaseStartTime += 65; //290
+                    ApplyAPhasesValues(ref BurnExposedHead,                 i, 6, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30; //320
+                    ApplyAPhasesValues(ref NotBurnExposedHeadHeroicAbove30, i, 7, phaseStartTime, 65, this[i].BerserkTimer); phaseStartTime += 65; //385
+                    ApplyAPhasesValues(ref BurnExposedHead,                 i, 8, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30; //415
+                    ApplyAPhasesValues(ref NotBurnExposedHeadHeroicUnder30, i, 9, phaseStartTime, 65, this[i].BerserkTimer); phaseStartTime += 65; //480
+                    ApplyAPhasesValues(ref BurnExposedHead,                 i, 10, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30; //510
+                    ApplyAPhasesValues(ref NotBurnExposedHeadHeroicUnder30, i, 11, phaseStartTime, 65, this[i].BerserkTimer); phaseStartTime += 65; //575
+                    ApplyAPhasesValues(ref BurnExposedHead,                 i, 12, phaseStartTime, 25, this[i].BerserkTimer); phaseStartTime += 25; //600
                     AddAPhase(NotBurnExposedHeadHeroicAbove30, i);
                     AddAPhase(NotBurnExposedHeadHeroicUnder30, i);
                 }

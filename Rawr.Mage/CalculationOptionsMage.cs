@@ -1082,14 +1082,14 @@ namespace Rawr.Mage
             set { _AdvancedHasteProcs = value; OnPropertyChanged("AdvancedHasteProcs"); }
         }
 
-        private bool _EncounterEnabled;
+        /*private bool _EncounterEnabled;
         public bool EncounterEnabled
         {
             get { return _EncounterEnabled; }
             set { _EncounterEnabled = value; OnPropertyChanged("EncounterEnabled"); }
         }
 
-        public Encounter Encounter { get; set; }
+        public Encounter Encounter { get; set; }*/
 
         [XmlIgnore]
         public List<CooldownRestriction> CooldownRestrictionList;
@@ -1106,71 +1106,37 @@ namespace Rawr.Mage
             return true;
         }
 
+        public float GetDamageMultiplier(SequenceReconstruction.SequenceItem variable)
+        {
+            return GetDamageMultiplier(variable.Timestamp, variable.Timestamp + variable.Duration);
+        }
+
         public float GetDamageMultiplier(Segment segment)
         {
+            return GetDamageMultiplier(segment.TimeStart, segment.TimeEnd);
+        }
+
+        public float GetDamageMultiplier(double timeStart, double timeEnd)
+        {
             float mult = 1.0f;
-            if (Encounter != null && EncounterEnabled)
+            if (BossHandler)
             {
-                // very naive for now, assume that exactly one target can apply
-                foreach (DamageMultiplier multiplier in Encounter.GlobalMultipliers)
+                // we can assume that the phase boundaries coincide with segment boundaries
+                // that is, a phase is composed of a number of whole segments
+                // check if this segment belongs to any damage multiplier phases
+                foreach (var buffState in Character.BossOptions.BuffStates)
                 {
-                    float startTime, endTime;
-                    if (multiplier.RelativeTime)
+                    if (buffState.Chance > 0 && buffState.Stats.BonusDamageMultiplier > 0)
                     {
-                        startTime = multiplier.StartTime * FightDuration;
-                        endTime = multiplier.EndTime * FightDuration;
-                    }
-                    else
-                    {
-                        startTime = multiplier.StartTime;
-                        endTime = multiplier.EndTime;
-                    }
-                    if (segment.TimeStart >= startTime && segment.TimeEnd <= endTime)
-                    {
-                        mult *= multiplier.Multiplier;
-                    }
-                }
-                bool foundTarget = false;
-                foreach (TargetGroup group in Encounter.TargetGroups)
-                {
-                    float startTime, endTime;
-                    if (group.RelativeTime)
-                    {
-                        startTime = group.EntranceTime * FightDuration;
-                        endTime = group.ExitTime * FightDuration;
-                    }
-                    else
-                    {
-                        startTime = group.EntranceTime;
-                        endTime = group.ExitTime;
-                    }
-                    if (segment.TimeStart >= startTime && segment.TimeEnd <= endTime)
-                    {
-                        foundTarget = true;
-                        foreach (DamageMultiplier multiplier in group.Multipliers)
+                        foreach (var phase in buffState.PhaseTimes)
                         {
-                            float t1, t2;
-                            if (multiplier.RelativeTime)
+                            if (timeStart >= phase.Value[0] && timeEnd <= phase.Value[1])
                             {
-                                t1 = startTime + multiplier.StartTime * (endTime - startTime);
-                                t2 = startTime + multiplier.EndTime * (endTime - startTime);
-                            }
-                            else
-                            {
-                                t1 = startTime + multiplier.StartTime;
-                                t2 = startTime + multiplier.EndTime;
-                            }
-                            if (segment.TimeStart >= t1 && segment.TimeEnd <= t2)
-                            {
-                                mult *= multiplier.Multiplier;
+                                // weight by state frequency (duration is in milliseconds)
+                                mult *= (1 + buffState.Stats.BonusDamageMultiplier) * buffState.Duration / buffState.Frequency / 1000.0f;
                             }
                         }
-                        break;
                     }
-                }
-                if (!foundTarget)
-                {
-                    mult = 0.0f;
                 }
             }
             return mult;
@@ -1427,6 +1393,13 @@ namespace Rawr.Mage
         {
             get { return _GlobalRestarts; }
             set { _GlobalRestarts = value; OnPropertyChanged("GlobalRestarts"); }
+        }
+
+        private int _MaxRedecompose;
+        public int MaxRedecompose
+        {
+            get { return _MaxRedecompose; }
+            set { _MaxRedecompose = value; OnPropertyChanged("MaxRedecompose"); }
         }
 
         private bool _CustomSpellMixOnly;
@@ -1871,7 +1844,7 @@ namespace Rawr.Mage
             IncludeManaNeutralCycleMix = true;
             IgniteMunching = 0.35f;
             ArcaneLight = true;
-            Encounter = new Encounter();
+            MaxRedecompose = 50;
         }
 
         public CalculationOptionsMage(Character character)

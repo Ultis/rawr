@@ -200,7 +200,7 @@ namespace Rawr.Mage
 
 
             // mana gem/pot/evo positioning
-            if (Specialization != Specialization.Arcane && CalculationOptions.CooldownRestrictionList == null && !CalculationOptions.EncounterEnabled)
+            if (Specialization != Specialization.Arcane && CalculationOptions.CooldownRestrictionList == null && !CalculationOptions.BossHandler)
             {
                 sequence.RepositionManaConsumption();
             }

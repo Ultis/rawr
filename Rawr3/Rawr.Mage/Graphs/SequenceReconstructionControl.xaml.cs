@@ -426,6 +426,40 @@ namespace Rawr.Mage.Graphs
                     }
                 }
 
+                if (calculationOptions.DisplaySegmentCooldowns && calculationOptions.BossHandler)
+                {
+                    foreach (var buffState in calculationOptions.Character.BossOptions.BuffStates)
+                    {
+                        if (buffState.Chance > 0 && buffState.Stats.BonusDamageMultiplier > 0)
+                        {
+                            List<TimeIntervalData> data = new List<TimeIntervalData>();
+
+                            foreach (var phase in buffState.PhaseTimes)
+                            {
+                                data.Add(new TimeIntervalData() { Start = baseTime + TimeSpan.FromSeconds(phase.Value[0]), End = baseTime + TimeSpan.FromSeconds(phase.Value[1]), Category = buffState.Name });
+                            }
+                            if (data.Count > 0)
+                            {
+                                barCount++;
+                                Style timeIntervalStyle = new Style(typeof(TimeIntervalDataPoint));
+                                timeIntervalStyle.Setters.Add(new Setter(TimeIntervalDataPoint.BackgroundProperty, new SolidColorBrush(Color.FromRgb(0, 0, 0))));
+                                Chart.Series.Add(new TimeIntervalSeries()
+                                {
+                                    Title = buffState.Name,
+                                    ItemsSource = data,
+                                    IndependentValuePath = "Category",
+                                    DependentValuePath = "End",
+                                    StartTimePath = "Start",
+                                    EndTimePath = "End",
+                                    DataPointStyle = timeIntervalStyle,
+                                    DependentRangeAxis = timeAxis,
+                                    IndependentAxis = categoryAxis
+                                });
+                            }
+                        }
+                    }
+                }
+
                 Style hiddenNumericLabelStyle = new Style(typeof(NumericAxisLabel));
                 hiddenNumericLabelStyle.Setters.Add(new Setter(NumericAxisLabel.VisibilityProperty, Visibility.Collapsed));
 
@@ -477,6 +511,11 @@ namespace Rawr.Mage.Graphs
                                 if (cycle != null)
                                 {
                                     dps = cycle.GetDamagePerSecond((float)(calculations.ManaAdeptBonus * GetManaAtTime(manaList, timet) / maxMana));
+                                }
+                                // apply state multipliers
+                                if (calculationOptions.DisplaySegmentCooldowns)
+                                {
+                                    dps *= calculationOptions.GetDamageMultiplier(sequence[i]);
                                 }
                                 list.Add(new TimeData() { Time = timet, Value = dps });
                             }

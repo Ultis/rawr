@@ -127,11 +127,11 @@ namespace Rawr.Mage
 
             if (lp == null)
             {
-                lp = new LP(cRows, maximumColumns, arraySet);
+                lp = new LP(cRows, maximumColumns, arraySet, solver.CalculationOptions.MaxRedecompose);
             }
             else
             {
-                lp.Initialize(cRows, maximumColumns, arraySet);
+                lp.Initialize(cRows, maximumColumns, arraySet, solver.CalculationOptions.MaxRedecompose);
             }
 
             compactSolution = null;
