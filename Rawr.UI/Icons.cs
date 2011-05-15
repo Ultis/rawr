@@ -159,18 +159,20 @@ namespace Rawr
         {
             // this thing is throwing InvalidDeploymentException in WPF when you're catching handled exceptions
             // there's nothing wrong actually, it works when run normally
+            try {
 #if SILVERLIGHT
-            return new BitmapImage(uri);
+                return new BitmapImage(uri);
 #else
-            BitmapImage ret = new BitmapImage();
-            ret.BeginInit();
-            ret.CreateOptions = BitmapCreateOptions.IgnoreColorProfile;
-            ret.UriSource = uri;
-            // EndInit throws an exception about application identiy not being set, find a way to catch this beforehad
-            //if (Application.Current. ApplicationIdentity == null) { }
-            try { ret.EndInit(); } catch { }
-            return ret;
+                BitmapImage ret = new BitmapImage();
+                ret.BeginInit();
+                ret.CreateOptions = BitmapCreateOptions.IgnoreColorProfile;
+                ret.UriSource = uri;
+                // EndInit throws an exception about application identiy not being set, find a way to catch this beforehad
+                //if (Application.Current. ApplicationIdentity == null) { }
+                try { ret.EndInit(); } catch { }
+                return ret;
 #endif
+            } catch (Exception) { return null; }
         }
     }
 }
