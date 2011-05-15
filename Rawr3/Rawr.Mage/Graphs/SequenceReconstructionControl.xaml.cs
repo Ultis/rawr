@@ -515,13 +515,18 @@ namespace Rawr.Mage.Graphs
                                 // apply state multipliers
                                 if (calculationOptions.DisplaySegmentCooldowns)
                                 {
-                                    dps *= calculationOptions.GetDamageMultiplier(sequence[i]);
+                                    dps *= calculationOptions.GetDamageMultiplier(time, time + duration);
                                 }
                                 list.Add(new TimeData() { Time = timet, Value = dps });
                             }
                         }
                         else
                         {
+                            // apply state multipliers
+                            if (calculationOptions.DisplaySegmentCooldowns)
+                            {
+                                dps *= calculationOptions.GetDamageMultiplier(time, time + duration);
+                            }
                             list.Add(new TimeData() { Time = baseTime + TimeSpan.FromSeconds(time + 0.1f * duration), Value = dps });
                             list.Add(new TimeData() { Time = baseTime + TimeSpan.FromSeconds(time + 0.9f * duration), Value = dps });
                         }
