@@ -187,7 +187,7 @@ namespace Rawr.Tree {
             return ""+Math.Round(AverageHealingwithCrit, 0) + "*" + Math.Round(MinHeal, 0) + " - " + Math.Round(MaxHeal, 0) + " normal\n" + Math.Round(MinHeal * CritModifier, 0) + " - " + Math.Round(MaxHeal * CritModifier, 0) + " crit\n" + Math.Round(CritRatio*100.0f, 2) + "% crit chance\n" + (PeriodicTick>0?Math.Round(PeriodicTick, 0)+" every "+Math.Round(PeriodicTickTime, 2)+" s.":"");
         }
 
-        public string TickToString()
+        public virtual string TickToString()
         {
             return "" + Math.Round(PeriodicTickwithCrit, 0) + "*" + Math.Round(PeriodicTick, 0) + " normal\n" + Math.Round(PeriodicTick * CritModifier, 0) + " crit\n" + Math.Round(CritHoTRatio * 100.0f, 2) + "% crit chance\n" + Math.Round(PeriodicTicks, 0) + " ticks every " + Math.Round(PeriodicTickTime, 2) + " s." ;
         }
@@ -833,13 +833,10 @@ namespace Rawr.Tree {
             return "" + Math.Round(AverageHealingwithCrit, 0) + "*4 heals @\n" + Math.Round(MinHeal / numDHs, 0) + " - " + Math.Round(MaxHeal / numDHs, 0) + " normal\n" + Math.Round(MinHeal * CritModifier / numDHs, 0) + " - " + Math.Round(MaxHeal * CritModifier / numDHs, 0) + " crit\n" + Math.Round(CritRatio * 100.0f, 2) + "% crit chance\n";
         }
 
-        public string TickToString()
+        public override string TickToString()
         {
             return "" + Math.Round(PeriodicTickwithCrit, 0) + "*" + Math.Round(PeriodicTick, 0) + " normal\n" + Math.Round(PeriodicTick * CritModifier, 0) + " crit\n" + Math.Round(CritHoTRatio * 100.0f, 2) + "% crit chance\n" + Math.Round(PeriodicTicks, 0) + " ticks every " + Math.Round(PeriodicTickTime, 2) + " s.\n Approximated as 3 stack ticks.";
         }
 
     }
 }
-
-
-
