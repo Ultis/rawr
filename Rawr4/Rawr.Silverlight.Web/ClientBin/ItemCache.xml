@@ -136121,4 +136121,124 @@
     <Id>69887</Id>
     <Slot>Head</Slot>
   </Item>
+  <Item>
+    <ItemLevel>318</ItemLevel>
+    <DisplayId>76064</DisplayId>
+    <DisplaySlot>9</DisplaySlot>
+    <IconPath>inv_bracer_cloth_cataclysm_b_02</IconPath>
+    <Stats>
+      <Stamina>195</Stamina>
+      <Intellect>130</Intellect>
+      <HitRating>76</HitRating>
+      <HasteRating>93</HasteRating>
+      <Armor>493</Armor>
+    </Stats>
+    <Quality>Uncommon</Quality>
+    <Type>Cloth</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="QuestItem">
+        <Area>Twilight Highlands</Area>
+        <Quest>Dragonmaw Takedown</Quest>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Trophy-Taker Bracers</Name>
+    <Id>63826</Id>
+    <Slot>Wrist</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>318</ItemLevel>
+    <DisplayId>75901</DisplayId>
+    <DisplaySlot>3</DisplaySlot>
+    <IconPath>inv_shoulder_151</IconPath>
+    <Stats>
+      <Stamina>260</Stamina>
+      <Intellect>173</Intellect>
+      <Spirit>128</Spirit>
+      <CritRating>93</CritRating>
+      <Armor>1587</Armor>
+    </Stats>
+    <Quality>Uncommon</Quality>
+    <Type>Mail</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="QuestItem">
+        <Area>Twilight Highlands</Area>
+        <Quest>Crushing the Wildhammer</Quest>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Dead-Dwarf Shoulderpads</Name>
+    <Id>63821</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>318</ItemLevel>
+    <DisplayId>76064</DisplayId>
+    <DisplaySlot>9</DisplaySlot>
+    <IconPath>inv_bracer_cloth_cataclysm_b_02</IconPath>
+    <Stats>
+      <Stamina>195</Stamina>
+      <Intellect>130</Intellect>
+      <HitRating>76</HitRating>
+      <HasteRating>93</HasteRating>
+      <Armor>493</Armor>
+    </Stats>
+    <Quality>Uncommon</Quality>
+    <Type>Cloth</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="QuestItem">
+        <Area>Twilight Highlands</Area>
+        <Quest>Crushing the Wildhammer</Quest>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Hammered Bracers</Name>
+    <Id>63823</Id>
+    <Slot>Wrist</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>318</ItemLevel>
+    <DisplayId>76070</DisplayId>
+    <DisplaySlot>10</DisplaySlot>
+    <IconPath>inv_gauntlets_cloth_cataclysm_b_02</IconPath>
+    <Stats>
+      <Stamina>260</Stamina>
+      <Intellect>173</Intellect>
+      <HitRating>98</HitRating>
+      <CritRating>125</CritRating>
+      <Armor>705</Armor>
+    </Stats>
+    <Quality>Uncommon</Quality>
+    <Type>Cloth</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="QuestItem">
+        <Area>Twilight Highlands</Area>
+        <Quest>Paint it Black</Quest>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Diamond Clutching Gloves</Name>
+    <Id>63811</Id>
+    <Slot>Hands</Slot>
+  </Item>
 </ArrayOfItem>
