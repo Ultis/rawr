@@ -14,6 +14,7 @@ using System.Reflection;
 using System.Diagnostics;
 using System.Text;
 using System.Configuration;
+using System.Text.RegularExpressions;
 
 namespace Rawr.Server.Controllers
 {
@@ -381,14 +382,50 @@ namespace Rawr.Server.Controllers
         private string ParseItemHtml(string html)
         {
             if (html.EverythingBefore(" class=\"sockets\"").Contains("class=\"empty\"")) return null;
-            string itemId = html.EverythingBetween("data-item=\"i=", "&").EverythingBefore("\"");
-            string enchantId = html.Contains("&amp;e=") ? html.EverythingBetween("&amp;e=", "&").EverythingBefore("\"") : null;
-            string reforgeId = html.Contains("&amp;re=") ? (int.Parse(html.EverythingBetween("&amp;re=", "&").EverythingBefore("\"")) - 56).ToString() : null;
-            string tinkeringId = html.Contains("&amp;ee=") ? (int.Parse(html.EverythingBetween("&amp;ee=", "&").EverythingBefore("\""))).ToString() : null;
-            string suffixId = html.Contains("&amp;r=-") ? html.EverythingBetween("&amp;r=-", "&").EverythingBefore("\"") : null;
+
+            Regex regex = new Regex(@"/wow/en/item/(?<itemId>\d+)"
+                                  + @" class=item data-item="
+                                  + @"((&amp;)?(i=(?<itemId2>\d+)))?"
+                                  + @"((&amp;)?(e=(?<enchantId>\d+)))?"
+                                  + @"((&amp;)?(g0=(?<gem1Id>\d+)))?"
+                                  + @"((&amp;)?(g1=(?<gem2Id>\d+)))?"
+                                  + @"((&amp;)?(g2=(?<gem3Id>\d+)))?"
+                                  + @"((&amp;)?(ee=(?<tinkeringId>\d+)))?"
+                                  + @"((&amp;)?(re=(?<reforgeId>\d+)))?"
+                                  + @"((&amp;)?(r=-(?<suffixId>\d+)))?");
+            Match match = regex.Match(html.Replace("\"", ""));
+
+            string itemId = null;
+            string enchantId = null;
+            string reforgeId = null;
+            string tinkeringId = null;
+            string suffixId = null;
             string gem1Id = null;
             string gem2Id = null;
             string gem3Id = null;
+
+            if (match.Success)
+            {
+                itemId = !string.IsNullOrEmpty(match.Groups["itemId"].Value) ? match.Groups["itemId"].Value : null;
+                enchantId = !string.IsNullOrEmpty(match.Groups["enchantId"].Value) ? match.Groups["enchantId"].Value : null;
+                reforgeId = !string.IsNullOrEmpty(match.Groups["reforgeId"].Value) ? match.Groups["reforgeId"].Value : null;
+                tinkeringId = !string.IsNullOrEmpty(match.Groups["tinkeringId"].Value) ? match.Groups["tinkeringId"].Value : null;
+                suffixId = !string.IsNullOrEmpty(match.Groups["suffixId"].Value) ? match.Groups["suffixId"].Value : null;
+                //gem1Id = !string.IsNullOrEmpty(match.Groups["gem1Id"].Value) ? match.Groups["gem1Id"].Value : null;
+                //gem2Id = !string.IsNullOrEmpty(match.Groups["gem2Id"].Value) ? match.Groups["gem2Id"].Value : null;
+                //gem3Id = !string.IsNullOrEmpty(match.Groups["gem3Id"].Value) ? match.Groups["gem3Id"].Value : null;
+            }
+            else
+            {
+                itemId = html.EverythingBetween("/wow/en/item/", "\"").EverythingBefore("\"");
+                enchantId = html.Contains("\"e=") ? html.EverythingBetween("\"e=", "&").EverythingBefore("\"") : null;
+                reforgeId = html.Contains("&amp;re=") ? (int.Parse(html.EverythingBetween("&amp;re=", "&").EverythingBefore("\"")) - 56).ToString() : null;
+                tinkeringId = html.Contains("&amp;ee=") ? (int.Parse(html.EverythingBetween("&amp;ee=", "&").EverythingBefore("\""))).ToString() : null;
+                suffixId = html.Contains("&amp;r=-") ? html.EverythingBetween("&amp;r=-", "&").EverythingBefore("\"") : null;
+                //gem1Id = null;
+                //gem2Id = null;
+                //gem3Id = null;
+            }
 
             if (html.Contains("<span class=\"sockets\">"))
             {
@@ -402,7 +439,7 @@ namespace Rawr.Server.Controllers
                 }
             }
 
-            return string.Format("{0}.{1}.{2}.{3}.{4}.{5}.{6}.{7}",
+            string retVal = string.Format("{0}.{1}.{2}.{3}.{4}.{5}.{6}.{7}",
                 itemId,
                 suffixId ?? "0",
                 gem1Id ?? "0",
@@ -411,6 +448,7 @@ namespace Rawr.Server.Controllers
                 enchantId ?? "0",
                 reforgeId ?? "0",
                 tinkeringId ?? "0");
+            return retVal;
         }
 
         private string ConvertCharacterToXml(Character character)
