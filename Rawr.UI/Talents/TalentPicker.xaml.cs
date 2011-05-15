@@ -412,5 +412,15 @@ namespace Rawr.UI
             }
             return null;
         }
+
+        private void SavedCombo_DropDownOpened(object sender, EventArgs e)
+        {
+            TheTabControl.IsEnabled = false;
+        }
+
+        private void SavedCombo_DropDownClosed(object sender, EventArgs e)
+        {
+            TheTabControl.IsEnabled = true;
+        }
     }
 }
