@@ -646,74 +646,7 @@ namespace Rawr.DPSDK
             }
             #endregion
 
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs, character.SetBonusCount);
-            #region Tank
-            #region T11
-            int t11count;
-            if (character.SetBonusCount.TryGetValue("Magma Plated Battlearmor", out t11count))
-            {
-                if (t11count > 2) { statsTotal.b2T11_Tank = true; }
-                if (t11count > 4) { statsTotal.b4T11_Tank = true; }
-            }
-            if (statsTotal.b4T11_Tank)
-                statsTotal.AddSpecialEffect(_SE_IBF[1]);
-            else
-                statsTotal.AddSpecialEffect(_SE_IBF[0]);
-            #endregion
-            #region T12
-            // No Set names yet.
-            if (statsTotal.b2T12_Tank)
-            {
-                // Your melee attacks cause Burning Blood on your target, 
-                // which deals 800 Fire damage every 2 for 6 sec and 
-                // causes your abilities to behave as if you had 2 diseases 
-                // present on the target.
-            }
-            if (statsTotal.b4T12_Tank)
-            {
-                // Your Dancing Rune Weapon grants 15% additional parry chance.
-            }
-            #endregion
-            #endregion
-
-            #region DPS
-            #region T11
-            if (character.SetBonusCount.TryGetValue("Magma Plated Battlegear", out t11count))
-            {
-                if (t11count > 2) { statsTotal.b2T11_DPS = true; }
-                if (t11count > 4) { statsTotal.b4T11_DPS = true; }
-                if (statsTotal.b2T11_DPS)
-                {
-                    statsTotal.BonusCritChanceDeathCoil += .05f;
-                    statsTotal.BonusCritChanceFrostStrike += .05f;
-                }
-                if (statsTotal.b4T11_DPS)
-                {
-                    statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.DeathRuneGained,
-                        new Stats() { BonusAttackPowerMultiplier = 0.01f, },
-                        30, 0, 1f, 3));
-                    statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.KillingMachine,
-                        new Stats() { BonusAttackPowerMultiplier = 0.01f, },
-                        30, 0, 1f, 3));
-                }
-            }
-            #endregion
-            #region T12
-            // No Set names yet.
-            if (statsTotal.b2T12_DPS)
-            {
-                // Horn of Winter also grats 3 RPp5
-                statsTotal.RPp5 += 3;
-            }
-            if (statsTotal.b4T12_DPS)
-            {
-                // Melee Crits grant additional +15% damage as fire.
-                statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.MeleeCrit,
-                    new Stats() { FireDamage = 0.15f, },
-                    30, 0, 1f, 3));
-            }
-            #endregion
-            #endregion
+            StatsDK statsBuffs = GetBuffsStats(character);
 
             statsTotal.Accumulate(statsBaseGear);
             statsTotal.Accumulate(statsBuffs);
@@ -723,6 +656,108 @@ namespace Rawr.DPSDK
             AccumulatePresenceStats(statsTotal, calcOpts.presence, talents);
 
             return (statsTotal);
+        }
+        public StatsDK GetBuffsStats(Character character)
+        {
+            List<Buff> removedBuffs = new List<Buff>();
+            List<Buff> addedBuffs = new List<Buff>();
+
+            List<Buff> buffGroup = new List<Buff>();
+            #region Passive Ability Auto-Fixing
+            if (character.DeathKnightTalents.BrittleBones > 0)
+            {
+                buffGroup.Clear();
+                buffGroup.Add(Buff.GetBuffByName("Blood Frenzy"));
+                buffGroup.Add(Buff.GetBuffByName("Savage Combat"));
+                buffGroup.Add(Buff.GetBuffByName("Brittle Bones"));
+                buffGroup.Add(Buff.GetBuffByName("Ravage"));
+                buffGroup.Add(Buff.GetBuffByName("Acid Spit"));
+                MaintBuffHelper(buffGroup, character, removedBuffs);
+            }
+            #endregion
+
+            StatsDK statsBuffs = new StatsDK();
+            statsBuffs.Accumulate(GetBuffsStats(character.ActiveBuffs));
+            AccumulateSetBonusStats(statsBuffs, character.SetBonusCount);
+
+            foreach (Buff b in removedBuffs) { character.ActiveBuffsAdd(b); }
+            foreach (Buff b in addedBuffs) { character.ActiveBuffs.Remove(b); }
+
+            #region Tank
+            #region T11
+            int t11count;
+            if (character.SetBonusCount.TryGetValue("Magma Plated Battlearmor", out t11count))
+            {
+                if (t11count >= 2) { statsBuffs.b2T11_Tank = true; }
+                if (t11count >= 4) { statsBuffs.b4T11_Tank = true; }
+            }
+            if (statsBuffs.b4T11_Tank)
+                statsBuffs.AddSpecialEffect(_SE_IBF[1]);
+            else
+                statsBuffs.AddSpecialEffect(_SE_IBF[0]);
+            #endregion
+            #region T12
+            // No Set names yet.
+            if (statsBuffs.b2T12_Tank)
+            {
+                // Your melee attacks cause Burning Blood on your target, 
+                // which deals 800 Fire damage every 2 for 6 sec and 
+                // causes your abilities to behave as if you had 2 diseases 
+                // present on the target.
+            }
+            if (statsBuffs.b4T12_Tank)
+            {
+                // Your Dancing Rune Weapon grants 15% additional parry chance.
+            }
+            #endregion
+            #endregion
+            #region DPS
+            #region T11
+            if (character.SetBonusCount.TryGetValue("Magma Plated Battlegear", out t11count))
+            {
+                if (t11count >= 2) { statsBuffs.b2T11_DPS = true; }
+                if (t11count >= 4) { statsBuffs.b4T11_DPS = true; }
+                if (statsBuffs.b2T11_DPS)
+                {
+                    statsBuffs.BonusCritChanceDeathCoil += .05f;
+                    statsBuffs.BonusCritChanceFrostStrike += .05f;
+                }
+                if (statsBuffs.b4T11_DPS)
+                {
+                    statsBuffs.AddSpecialEffect(new SpecialEffect(Trigger.DeathRuneGained,
+                        new Stats() { BonusAttackPowerMultiplier = 0.01f, },
+                        30, 0, 1f, 3));
+                    statsBuffs.AddSpecialEffect(new SpecialEffect(Trigger.KillingMachine,
+                        new Stats() { BonusAttackPowerMultiplier = 0.01f, },
+                        30, 0, 1f, 3));
+                }
+            }
+            #endregion
+            #region T12
+            // No Set names yet.
+            if (statsBuffs.b2T12_DPS)
+            {
+                // Horn of Winter also grats 3 RPp5
+                statsBuffs.RPp5 += 3;
+            }
+            if (statsBuffs.b4T12_DPS)
+            {
+                // Melee Crits grant additional +15% damage as fire.
+                statsBuffs.AddSpecialEffect(new SpecialEffect(Trigger.MeleeCrit,
+                    new Stats() { FireDamage = 0.15f, },
+                    30, 0, 1f, 3));
+            }
+            #endregion
+            #endregion
+
+            return statsBuffs;
+        }
+        private static void MaintBuffHelper(List<Buff> buffGroup, Character character, List<Buff> removedBuffs)
+        {
+            foreach (Buff b in buffGroup)
+            {
+                if (character.ActiveBuffs.Remove(b)) { removedBuffs.Add(b); }
+            }
         }
 
         private void ApplyRatings(StatsDK statsTotal)
