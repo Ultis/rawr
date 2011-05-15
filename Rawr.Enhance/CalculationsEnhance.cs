@@ -303,8 +303,9 @@ namespace Rawr.Enhance
             float dualWieldSpecialization = .06f; //Hit portion of Dual Wield
             //float AP_SP_Ratio = (spellPower - 274f - 211f) / attackPower;  //CATA where do these values come from (274, 211)? 211 Flametongue sp? 274 Flametongue damage?
             float bonusPhysicalDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusPhysicalDamageMultiplier);
-            float bonusFireDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusFireDamageMultiplier);
-            float bonusNatureDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier);
+            //float bonusFrostDamage    = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusFrostDamageMultiplier ) * (1f + character.ShamanTalents.ElementalPrecision * 0.01f);
+            float bonusFireDamage     = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusFireDamageMultiplier  ) * (1f + character.ShamanTalents.ElementalPrecision * 0.01f);
+            float bonusNatureDamage   = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier) * (1f + character.ShamanTalents.ElementalPrecision * 0.01f);
             #endregion
 
             #region Individual DPS

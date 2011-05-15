@@ -226,6 +226,7 @@ namespace Rawr.Enhance
         }
         #endregion
 
+        static Stats baseStats = null;
         public void UpdateCalcs(bool firstPass)
         {
             // talents
@@ -277,12 +278,12 @@ namespace Rawr.Enhance
 
             // Spells
             ftBonusCrit = 0f;
-            if (_calcOpts.MainhandImbue == "Flametongue")
-                ftBonusCrit += _talents.GlyphofFlametongueWeapon ? .02f : 0f;
-            if (_calcOpts.OffhandImbue == "Flametongue")
-                ftBonusCrit += _talents.GlyphofFlametongueWeapon ? .02f : 0f;
+            if (_calcOpts.MainhandImbue == "Flametongue") ftBonusCrit += _talents.GlyphofFlametongueWeapon ? .02f : 0f;
+            if (_calcOpts.OffhandImbue == "Flametongue") ftBonusCrit += _talents.GlyphofFlametongueWeapon ? .02f : 0f;
 
-            elemPrecMod = (_stats.Spirit - BaseStats.GetBaseStats(_character).Spirit) * (_talents.ElementalPrecision * 1f / 3f);
+            if (baseStats == null) { baseStats = BaseStats.GetBaseStats(_character); }
+
+            elemPrecMod = _talents.ElementalPrecision > 0 ? (_stats.Spirit - baseStats.Spirit) * (_talents.ElementalPrecision / 3f) : 0f;
             float hitBonusSpell = _stats.SpellHit + StatConversion.GetSpellHitFromRating(_stats.HitRating + elemPrecMod);
             chanceSpellMiss = Math.Max(0f, SpellMissRate - hitBonusSpell);
             overSpellHitCap = Math.Max(0f, hitBonusSpell - SpellMissRate);
