@@ -110,8 +110,11 @@ namespace Rawr.ProtPaladin
         public float TotalDamagePerSecond { get; set; }
 
         public float ThreatPerSecond { get; set; }
-        //public float UnlimitedThreat { get; set; }		
+        //public float UnlimitedThreat { get; set; }
         public string ThreatModel { get; set; }
+
+        public float AverageVengeanceAP { get; set; }
+        public float CappedCritReduction { get; set; }
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {

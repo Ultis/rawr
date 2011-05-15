@@ -342,6 +342,8 @@ focus on Survival Points.",
                 character.IsLoading = false;
             }
 
+            Attack bossAttack = bossOpts.DefaultMeleeAttack;
+
             Base.StatsPaladin stats = GetCharacterStats(character, additionalItem, calcOpts, bossOpts);
             DefendModel dm = new DefendModel(character, stats, calcOpts, bossOpts);
             AttackModel am = new AttackModel(character, stats, calcOpts, bossOpts);
@@ -354,6 +356,10 @@ focus on Survival Points.",
             calc.EffectiveTargetArmor = Lookup.GetEffectiveTargetArmor(calc.TargetArmor, stats.ArmorPenetration);
             calc.TargetArmorDamageReduction = Lookup.TargetArmorReduction(character.Level, stats.ArmorPenetration, calc.TargetArmor);
             calc.EffectiveTargetArmorDamageReduction = Lookup.EffectiveTargetArmorReduction(stats.ArmorPenetration, calc.TargetArmor, calc.TargetLevel);
+            int levelDifference = bossOpts.Level - character.Level;
+            if (levelDifference > 3) { levelDifference = 3; }
+            else if (levelDifference < 0) { levelDifference = 0; }
+            float levelDifferenceAvoidance = levelDifference * 0.002f;
             
             calc.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
             calc.Abilities = am.Abilities;
@@ -379,6 +385,44 @@ focus on Survival Points.",
             calc.DamageTakenPerHit = dm.DamagePerHit;
             calc.DamageTakenPerBlock = dm.DamagePerBlock;
             calc.DamageTakenPerCrit = dm.DamagePerCrit;
+            calc.CappedCritReduction = Math.Min(0.05f + levelDifferenceAvoidance, calc.CritReduction);
+
+            #region Vengeance
+            { // Vengeance Calc from Bear
+                // == Evaluate damage taken once ahead of time for vengeance ==
+                //Out of 100 attacks, you'll take...
+                float critsVeng = Math.Min(Math.Max(0f, 1f - dm.DefendTable.AnyMiss /*calc.AvoidancePostDR*/), (0.05f + levelDifferenceAvoidance) - calc.CappedCritReduction);
+                //float crushes = targetLevel == 73 ? Math.Max(0f, Math.Min(15f, 100f - (crits + calculatedStats.AvoidancePreDR)) - stats.CritChanceReduction) : 0f;
+                float hitsVeng = Math.Max(0f, 1f - (critsVeng + dm.DefendTable.AnyMiss /*calc.AvoidancePostDR*/));
+                //Apply armor and multipliers for each attack type...
+                critsVeng *= (1f - calc.GuaranteedReduction) * 2f;
+                //crushes *= (100f - calculatedStats.Mitigation) * .015f;
+                hitsVeng *= (1f - calc.GuaranteedReduction);
+                float damageTakenPercent = (hitsVeng + critsVeng) * (1f - stats.BossAttackSpeedReductionMultiplier);
+                float damageTakenPerHit = bossAttack.DamagePerHit * damageTakenPercent - stats.DamageAbsorbed;
+                float damageTakenPerSecond = damageTakenPerHit / bossAttack.AttackSpeed;
+                float damageTakenPerVengeanceTick = damageTakenPerSecond * 2f;
+                float vengeanceCap = stats.Stamina + BaseStats.GetBaseStats(character).Health * 0.1f;
+                float vengeanceAPPreAvoidance = Math.Min(vengeanceCap, damageTakenPerVengeanceTick);
+
+                double chanceHit = 1f - dm.DefendTable.AnyMiss /*calc.AvoidancePostDR*/;
+                double vengeanceMultiplierFromAvoidance = //Best-fit of results from simulation of avoidance effects on vengeance
+                    -46.288470839554d * Math.Pow(chanceHit, 6)
+                    + 143.12528411194400d * Math.Pow(chanceHit, 5)
+                    - 159.9833254324610000d * Math.Pow(chanceHit, 4)
+                    + 74.0451030489808d * Math.Pow(chanceHit, 3)
+                    - 10.8422088672455d * Math.Pow(chanceHit, 2)
+                    + 0.935157126508557d * chanceHit;
+
+                float vengeanceMultiplierFromSwingSpeed = bossAttack.AttackSpeed <= 2f ? 1f :
+                    (1f - 0.1f * (1f - 2f / bossAttack.AttackSpeed)); //A percentage of the ticks will be guaranteed decays for attack speeds longer than 2sec, due to no swings occuring between the current and last tick
+
+                float vengeanceAP = (float)(vengeanceAPPreAvoidance * vengeanceMultiplierFromAvoidance * vengeanceMultiplierFromSwingSpeed);
+
+                stats.AttackPower += vengeanceAP * (1f + stats.BonusAttackPowerMultiplier);
+                calc.AverageVengeanceAP = vengeanceAP;
+            }//*/
+            #endregion
 
             calc.ResistanceTable = StatConversion.GetResistanceTable(calc.TargetLevel, character.Level, stats.FrostResistance, 0.0f);
             calc.ArcaneReduction = (1.0f - Lookup.MagicReduction(stats, DamageType.Arcane, calc.TargetLevel));
@@ -450,13 +494,8 @@ focus on Survival Points.",
                     //calc.SurvivalPoints = Math.Min(CapSurvival(dm.EffectiveHealth, calcOpts), VALUE_CAP);
                     //calc.MitigationPoints = Math.Min(calcOpts.MitigationScale / dm.DamageTaken, VALUE_CAP);
                     //calc.ThreatPoints = Math.Min(calc.ThreatPoints, VALUE_CAP);
-#if true // JOTHAY TODO NOTE: Switch this over to try the other method
                     calc.SurvivabilityPoints = CapSurvival(dm.EffectiveHealth, calcOpts, bossOpts);
                     calc.MitigationPoints = StatConversion.MitigationScaler / (1f - dm.Mitigation);
-#else
-                    calc.SurvivabilityPoints = Math.Min(dm.EffectiveHealth / 10.0f, VALUE_CAP);
-                    calc.MitigationPoints = Math.Min(dm.Mitigation * bossOpts.DefaultMeleeAttack.DamagePerHit * calcOpts.MitigationScale * 10.0f, VALUE_CAP);
-#endif
                     //calc.MitigationPoints = Math.Min(dm.Mitigation * bossOpts.DefaultMeleeAttack.DamagePerHit /** calcOpts.MitigationScale*/ * 10.0f, VALUE_CAP);
                     calc.ThreatPoints = Math.Min(calc.ThreatPoints / 10.0f, VALUE_CAP);
                     calc.OverallPoints = calc.MitigationPoints + calc.SurvivabilityPoints + calc.ThreatPoints;
