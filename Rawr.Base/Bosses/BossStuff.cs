@@ -27,6 +27,9 @@ namespace Rawr {
         }
         /// <summary>The Name of the Attack</summary>
         public string Name = "Unnamed";
+        /// <summary>The Spell ID of the attack</summary>
+        [DefaultValue(0)]
+        public float SpellID = 0;
         /// <summary>The type of damage done, use the ItemDamageType enumerator to select</summary>
         [DefaultValue(ItemDamageType.Physical)]
         public ItemDamageType DamageType = ItemDamageType.Physical;
@@ -575,6 +578,9 @@ namespace Rawr {
         #region Variables
         /// <summary>The Name of the Attack</summary>
         public string Name = "Unnamed";
+        /// <summary>Target mobs IDs</summary>
+        [DefaultValue(0)]
+        public float TargetID = 0;
         /// <summary>In Seconds<para>Defaults to -1 as an 'invalid' flag</para></summary>
         public float Frequency = -1;
         /// <summary>In MilliSeconds (1/1000 of a second)<para>Defaults to 20 seconds</para></summary>

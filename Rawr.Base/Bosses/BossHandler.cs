@@ -413,13 +413,21 @@ namespace Rawr {
             "Tier 11 25N",
             "Tier 11 10H",
             "Tier 11 25H",
+//            "Tier 12 10N",
+//            "Tier 12 25N",
+//            "Tier 12 10H",
+//            "Tier 12 25H",
         };
-        public enum TierLevels : int { T11_10 = 0, T11_25, T11_10H, T11_25H, }
+        public enum TierLevels : int { T11_10 = 0, T11_25, T11_10H, T11_25H, T12_10, T12_25, T12_10H, T12_25H }
         public static readonly float[] StandardMeleePerHit = new float[] {
             140000f, // T11_10,  //     Tested and verified, Used a Magmaw Kill from April, 2011
             175000f, // T11_25,  //     Tested and verified, Used a Magmaw Kill from April, 2011
             200000f, // T11_10H, // Not tested and verified, assumed based on other values
             225000f, // T11_25H, //     Tested and verified, Used a Magmaw Kill from April, 2011
+            230000f, // T12_10,  // Not Tested and verified, initial numbers
+            255000f, // T12_25,  // Not Tested and verified, initial numbers
+            300000f, // T12_10H, // Not Tested and verified, initial numbers
+            325000f, // T12_25H, // Not Tested and verified, initial numbers
         };
         #endregion
         #region ==== Info ====

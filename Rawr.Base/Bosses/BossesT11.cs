@@ -78,6 +78,7 @@ namespace Rawr.Bosses
                 // TODO: Add Fire taken damage debuff
                 EntireFight.Attacks.Add(new Attack {
                     Name = "Meteor Slash [Group 1]",
+                    SpellID = new float[] { 88942, 95172, 0, 0 }[i],
                     DamageType = ItemDamageType.Fire,
                     AttackType = ATTACK_TYPES.AT_AOE,
                     // Half the raid is getting hit with about 40k damage per attack.
@@ -95,6 +96,7 @@ namespace Rawr.Bosses
 
                 EntireFight.Attacks.Add(new Attack {
                     Name = "Meteor Slash [Group 2]",
+                    SpellID = new float[] { 88942, 95172, 0, 0 }[i],
                     DamageType = ItemDamageType.Fire,
                     AttackType = ATTACK_TYPES.AT_AOE,
                     // Half the raid is getting hit with about 40k damage per attack.
@@ -122,6 +124,7 @@ namespace Rawr.Bosses
                 EntireFight.Attacks.Add(new Attack
                 {
                     Name = "Consuming Darkness",
+                    SpellID = new float[] { 88954, 95173, 0, 0 }[i],
                     IsDoT = true,
                     AttackType = ATTACK_TYPES.AT_RANGED,
                     DamageType = ItemDamageType.Shadow,
@@ -157,6 +160,7 @@ namespace Rawr.Bosses
                 FelFirestorm.Attacks.Add(new Attack
                 {
                     Name = "Fel Firestorm",
+                    SpellID = new float[] { 89000, 95177, 0, 0 }[i],
                     IsDoT = true,
                     DamageType = ItemDamageType.Fire,
                     AttackType = ATTACK_TYPES.AT_AOE,
