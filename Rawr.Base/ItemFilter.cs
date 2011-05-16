@@ -31,7 +31,7 @@ namespace Rawr
                 foreach (ItemFilterRegex filter in this) filter.Parent = parent;
             }
         }
-        private ItemFilterOther other;
+        internal ItemFilterOther other;
 
         [XmlIgnore]
         public ObservableCollection<ItemFilter> FilterList { get; private set; }
@@ -91,7 +91,10 @@ namespace Rawr
         {
             if (e.PropertyName == "Enabled" && parent != null)
             {
-                parent.UpdateEnabled(null);
+                if (!ItemFilter.IsLoading)
+                {
+                    parent.UpdateEnabled(null);
+                }
             }
         }
 
@@ -224,8 +227,15 @@ namespace Rawr
             get { return enabled; }
             set
             {
-                enabled = value.GetValueOrDefault(false);
-                RegexList.UpdateStates();
+                if (ItemFilter.IsLoading)
+                {
+                    enabled = value;
+                }
+                else
+                {
+                    enabled = value.GetValueOrDefault(false);
+                    RegexList.UpdateStates();
+                }
                 OnEnabledChanged(true);
             }
         }
@@ -253,7 +263,22 @@ namespace Rawr
             }
         }
 
-        public bool OtherRegexEnabled;
+        private bool otherRegexEnabled;
+        public bool OtherRegexEnabled
+        {
+            get
+            {
+                return otherRegexEnabled;
+            }
+            set
+            {
+                otherRegexEnabled = value;
+                if (regexList != null && regexList.other != null)
+                {
+                    regexList.other.OnEnabledChanged(true);
+                }
+            }
+        }
 
         [XmlIgnore]
         private Regex _regex;
@@ -397,6 +422,10 @@ namespace Rawr
             set
             {
                 data.OtherRegexEnabled = value;
+                if (data.RegexList != null && data.RegexList.other != null)
+                {
+                    data.RegexList.other.OnEnabledChanged(true);
+                }
             }
         }
 
