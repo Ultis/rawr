@@ -101,7 +101,7 @@
                     </StackPanel>
                 </local:GroupBox.Content>
             </local:GroupBox>
-            <!-- IFWPF -->
+            <!--IFWPF-->
             <local:GroupBox Margin="4">
                 <local:GroupBox.Header>
                     <TextBlock FontWeight="Bold">Release Alerts Settings</TextBlock>
