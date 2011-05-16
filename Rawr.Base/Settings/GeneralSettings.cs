@@ -48,6 +48,8 @@ namespace Rawr.Properties
 
             _default.HasSeenHelpWindow = false;
 
+            _default.AlertMeToBetaReleases = true;
+
             _default.FilterSideBarWidth = 200;
 
             _default.LastVersionRun = getCurrentVersion;
@@ -130,6 +132,8 @@ namespace Rawr.Properties
         #endregion
 
         public bool HasSeenHelpWindow { get; set; }
+
+        public bool AlertMeToBetaReleases { get; set; }
 
         public int CountGemmingsShown { get; set; }
         public bool UseMultithreading { get; set; }

@@ -151,17 +151,20 @@ namespace Rawr
                 }
 
                 Match match;
-                if ((match = new Regex(@".*\{(?:C|c)urrent\s+(?:V|v)ersion:\s+(?<current>\d+\.\d+\.\d+)\}\s+\{(?:B|b)eta (?:V|v)ersion:\s+(?<current>\d+\.\d+\.\d+)\}.*").Match(hdoc)).Success)
+                if (this.GetVersionCompleted != null && (match = new Regex(@".*\{(?:C|c)urrent\s+(?:V|v)ersion:\s+(?<current>\d+\.\d+\.\d+(\.\d+)?)\}"
+                                                                         + @"\s+\{(?:B|b)eta (?:V|v)ersion:\s+(?<beta>\d+\.\d+\.\d+(\.\d+)?)\}.*").Match(hdoc)).Success)
                 {
                     string current = match.Groups["current"].Value;
-                    if (this.GetVersionCompleted != null)
-                    {
-                        this.GetVersionCompleted(this, new EventArgs<string>(current));
-                    }
+                    string beta = match.Groups["beta"].Value;
+#if SILVERLIGHT
+                    this.GetVersionCompleted(this, new EventArgs<string>(current));
+#else
+                    this.GetVersionCompleted(this, new EventArgs<string>(current + "|" + beta));
+#endif
                 }
             } catch (Exception ex) {
                 new Base.ErrorBox() {
-                    Title = "Problem Getting Current Release's Version Number",
+                    Title = "Problem Getting Current Releases' Version Number",
                     TheException = ex,
                 }.Show();
             }

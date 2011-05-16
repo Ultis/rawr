@@ -1,11 +1,11 @@
-﻿<basics2:ChildWindow
+<basics2:ChildWindow
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:basics="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
     xmlns:basics2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
-    xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"
+    xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
     xmlns:local="clr-namespace:Rawr.UI"
     mc:Ignorable="d"
     x:Class="Rawr.UI.OptionsDialog"
@@ -101,6 +101,18 @@
                     </StackPanel>
                 </local:GroupBox.Content>
             </local:GroupBox>
+            <!--IFWPF
+            <local:GroupBox Margin="4">
+                <local:GroupBox.Header>
+                    <TextBlock FontWeight="Bold">Release Alerts Settings</TextBlock>
+                </local:GroupBox.Header>
+                <local:GroupBox.Content>
+                    <StackPanel>
+                        <CheckBox x:Name="BetaAlertsCheck" Content="Alert me to Beta Releases" Margin="4,4,4,2"/>
+                    </StackPanel>
+                </local:GroupBox.Content>
+            </local:GroupBox>
+            ENDIFWPF-->
         </toolkit:WrapPanel>
 
         <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right">

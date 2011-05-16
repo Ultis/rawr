@@ -154,25 +154,25 @@ You will now be taken to this window to become familiar with it.",
                 int valueBuildC = 0; int valueBuildO = 0;
                 int valueRevsnC = 0; int valueRevsnO = 0;
 
-                if (currentMatch.Groups["major"].Value != "" && otherMatch.Groups["major"].Value != "")
-                {
-                    valueMajorC = int.Parse(currentMatch.Groups["major"].Value) * 100 * 100 * 100;
-                    valueMajorO = int.Parse(otherMatch.Groups["major"].Value) * 100 * 100 * 100;
+                if (currentMatch.Groups["major"].Value != "" && otherMatch.Groups["major"].Value != "") {
+                    valueMajorC = int.Parse(currentMatch.Groups["major"].Value) * 100000 * 100000 * 100000;
+                    valueMajorO = int.Parse(otherMatch.Groups["major"].Value)   * 100000 * 100000 * 100000;
+                    NewRelAvail |= valueMajorO > valueMajorC;
                 }
-                if (currentMatch.Groups["minor"].Value != "" && otherMatch.Groups["minor"].Value != "")
-                {
-                    valueMinorC = int.Parse(currentMatch.Groups["minor"].Value) * 100 * 100;
-                    valueMinorO = int.Parse(otherMatch.Groups["minor"].Value) * 100 * 100;
+                if (!NewRelAvail && currentMatch.Groups["minor"].Value != "" && otherMatch.Groups["minor"].Value != "") {
+                    valueMinorC = int.Parse(currentMatch.Groups["minor"].Value) * 100000 * 100000;
+                    valueMinorO = int.Parse(otherMatch.Groups["minor"].Value)   * 100000 * 100000;
+                    NewRelAvail |= valueMinorO > valueMinorC;
                 }
-                if (currentMatch.Groups["build"].Value != "" && otherMatch.Groups["build"].Value != "")
-                {
-                    valueBuildC = int.Parse(currentMatch.Groups["build"].Value) * 100;
-                    valueBuildO = int.Parse(otherMatch.Groups["build"].Value) * 100;
+                if (!NewRelAvail && currentMatch.Groups["build"].Value != "" && otherMatch.Groups["build"].Value != "") {
+                    valueBuildC = int.Parse(currentMatch.Groups["build"].Value) * 100000;
+                    valueBuildO = int.Parse(otherMatch.Groups["build"].Value)   * 100000;
+                    NewRelAvail |= valueBuildO > valueBuildC;
                 }
-                if (currentMatch.Groups["revsn"].Value != "" && otherMatch.Groups["revsn"].Value != "")
-                {
+                if (!NewRelAvail && currentMatch.Groups["revsn"].Value != "" && otherMatch.Groups["revsn"].Value != "") {
                     valueRevsnC = int.Parse(currentMatch.Groups["revsn"].Value);
                     valueRevsnO = int.Parse(otherMatch.Groups["revsn"].Value);
+                    NewRelAvail |= valueRevsnO > valueRevsnC;
                 }
 
                 int valueCurrent = valueMajorC + valueMinorC + valueBuildC + valueRevsnC;

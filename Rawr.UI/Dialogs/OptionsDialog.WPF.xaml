@@ -101,6 +101,18 @@
                     </StackPanel>
                 </local:GroupBox.Content>
             </local:GroupBox>
+            <!-- IFWPF -->
+            <local:GroupBox Margin="4">
+                <local:GroupBox.Header>
+                    <TextBlock FontWeight="Bold">Release Alerts Settings</TextBlock>
+                </local:GroupBox.Header>
+                <local:GroupBox.Content>
+                    <StackPanel>
+                        <CheckBox x:Name="BetaAlertsCheck" Content="Alert me to Beta Releases" Margin="4,4,4,2"/>
+                    </StackPanel>
+                </local:GroupBox.Content>
+            </local:GroupBox>
+            <!--ENDIFWPF-->
         </toolkit:WrapPanel>
 
         <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right">

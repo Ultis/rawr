@@ -47,6 +47,9 @@ namespace Rawr.UI
             ProcEffectModeCombo.SelectedIndex               = GeneralSettings.Default.ProcEffectMode;
             EffectCombinationsCalculationMode.SelectedIndex = GeneralSettings.Default.CombinationEffectMode;
             CB_ItemNameWidthSetting.SelectedIndex           = GeneralSettings.Default.ItemNameWidthSetting;
+#if !SILVERLIGHT
+            BetaAlertsCheck.IsChecked                       = GeneralSettings.Default.AlertMeToBetaReleases;
+#endif
         }
 
         private void OKButton_Click(object sender, RoutedEventArgs e)
@@ -68,9 +71,12 @@ namespace Rawr.UI
             GeneralSettings.Default.ItemNameWidthSetting          = CB_ItemNameWidthSetting.SelectedIndex;
             GeneralSettings.Default.PTRMode                       = CK_PTRModeCheck.IsChecked.GetValueOrDefault(false);
             OptimizerSettings.Default.OptimizationMethod          = (OptimizationMethod)OptimizationMethodCombo.SelectedIndex;
-            OptimizerSettings.Default.GreedyOptimizationMethod = (GreedyOptimizationMethod)GreedyMethodCombo.SelectedIndex;
+            OptimizerSettings.Default.GreedyOptimizationMethod    = (GreedyOptimizationMethod)GreedyMethodCombo.SelectedIndex;
             GeneralSettings.Default.ProcEffectMode                = ProcEffectModeCombo.SelectedIndex;
             GeneralSettings.Default.CombinationEffectMode         = EffectCombinationsCalculationMode.SelectedIndex;
+#if !SILVERLIGHT
+            GeneralSettings.Default.AlertMeToBetaReleases         = BetaAlertsCheck.IsChecked.GetValueOrDefault(false);
+#endif
             OnDisplayBuffChanged();
             OnHideProfessionsChanged();
             SpecialEffect.UpdateCalculationMode();

@@ -38,25 +38,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Rawr.Base, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\Rawr.Base\Bin\Debug\Rawr.Base.dll</HintPath>
-    </Reference>
-    <Reference Include="Rawr.DPSDK, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\Rawr.DPSDK\Bin\Debug\Rawr.DPSDK.dll</HintPath>
-    </Reference>
-    <Reference Include="Rawr.TankDK, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\Rawr.TankDK\Bin\Debug\Rawr.TankDK.dll</HintPath>
-    </Reference>
     <Reference Include="SplitButton">
       <HintPath>..\binaries\SplitButton.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Windows.Controls, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Rawr.Base\Bin\Debug\System.Windows.Controls.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Controls.Input">
       <HintPath>..\binaries\System.Windows.Controls.Input.dll</HintPath>
