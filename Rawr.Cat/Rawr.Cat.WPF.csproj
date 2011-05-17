@@ -68,19 +68,19 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Controls, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\binaries\System.Windows.Controls.dll</HintPath>
+      <HintPath>..\Rawr4\binaries\System.Windows.Controls.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Controls.DataVisualization.Toolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Windows.Controls.Input">
-      <HintPath>..\binaries\System.Windows.Controls.Input.dll</HintPath>
+      <HintPath>..\Rawr4\binaries\System.Windows.Controls.Input.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Controls.Input.WPFToolkit, Version=2.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\binaries\System.Windows.Controls.Input.WPFToolkit.dll</HintPath>
+      <HintPath>..\Rawr4\binaries\System.Windows.Controls.Input.WPFToolkit.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Controls.Layout.Toolkit, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\binaries\System.Windows.Controls.Layout.Toolkit.dll</HintPath>
+      <HintPath>..\Rawr4\binaries\System.Windows.Controls.Layout.Toolkit.dll</HintPath>
     </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq">
@@ -105,40 +105,26 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Rawr.Cat\CalculationOptionsCat.cs">
-      <Link>CalculationOptionsCat.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Cat\CalculationsCat.cs">
-      <Link>CalculationsCat.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Cat\CatAbilityStats.cs">
-      <Link>CatAbilityStats.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Cat\CatRotationCalculator.cs">
-      <Link>CatRotationCalculator.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Cat\CharacterCalculationsCat.cs">
-      <Link>CharacterCalculationsCat.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Cat\StatsCat.cs">
-      <Link>StatsCat.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Cat\CalculationOptionsPanelCat.xaml.cs">
-      <Link>CalculationOptionsPanelCat.xaml.cs</Link>
+    <AppDesigner Include="Properties\" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="CalculationOptionsCat.cs" />
+    <Compile Include="CalculationsCat.cs" />
+    <Compile Include="CatAbilityStats.cs" />
+    <Compile Include="CatRotationCalculator.cs" />
+    <Compile Include="CharacterCalculationsCat.cs" />
+    <Compile Include="StatsCat.cs" />
+    <Compile Include="CalculationOptionsPanelCat.xaml.cs">
       <DependentUpon>CalculationOptionsPanelCat.WPF.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Rawr.Base\Rawr.Base.WPF.csproj">
+    <ProjectReference Include="..\Rawr.Base\Rawr.Base.WPF.csproj">
       <Project>{542537D3-F86B-4022-A161-B2FC6F0218B7}</Project>
       <Name>Rawr.Base.WPF</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="..\..\Rawr3\Rawr.Cat\CalculationOptionsPanelCat.WPF.xaml">
-      <Link>CalculationOptionsPanelCat.WPF.xaml</Link>
+    <Page Include="CalculationOptionsPanelCat.WPF.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

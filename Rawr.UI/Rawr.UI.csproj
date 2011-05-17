@@ -673,11 +673,11 @@
       <Project>{6E5BC92F-AAA0-4C14-B25A-1A39196291E4}</Project>
       <Name>Rawr.ShadowPriest</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rawr4\Rawr.Bear\Rawr.Bear.csproj">
+    <ProjectReference Include="..\Rawr.Bear\Rawr.Bear.csproj">
       <Project>{81DB6449-FD88-44F8-BFF0-2FB5C196AD69}</Project>
       <Name>Rawr.Bear</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rawr4\Rawr.Cat\Rawr.Cat.csproj">
+    <ProjectReference Include="..\Rawr.Cat\Rawr.Cat.csproj">
       <Project>{0B8DE63B-6430-4A31-8504-40EEB7FDB81D}</Project>
       <Name>Rawr.Cat</Name>
     </ProjectReference>
@@ -693,7 +693,7 @@
       <Project>{2D00FCEA-E624-4E4F-92AE-C4B4BD1D6E46}</Project>
       <Name>Rawr.Elemental</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rawr4\Rawr.Healadin\Rawr.Healadin.csproj">
+    <ProjectReference Include="..\Rawr.Healadin\Rawr.Healadin.csproj">
       <Project>{92719321-9235-4886-BDD6-010723C3EFFA}</Project>
       <Name>Rawr.Healadin</Name>
     </ProjectReference>

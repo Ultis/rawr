@@ -356,11 +356,11 @@
       <Project>{5895FA29-3131-4C64-9C81-93F1EA139F6A}</Project>
       <Name>Rawr.ShadowPriest.WPF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rawr4\Rawr.Bear\Rawr.Bear.WPF.csproj">
+    <ProjectReference Include="..\Rawr.Bear\Rawr.Bear.WPF.csproj">
       <Project>{E0A8CF5D-FB5B-49EB-8666-44255E87AF27}</Project>
       <Name>Rawr.Bear.WPF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rawr4\Rawr.Cat\Rawr.Cat.WPF.csproj">
+    <ProjectReference Include="..\Rawr.Cat\Rawr.Cat.WPF.csproj">
       <Project>{E91F260E-4B5E-482B-91C8-7E69B3E4B463}</Project>
       <Name>Rawr.Cat.WPF</Name>
     </ProjectReference>
@@ -372,7 +372,7 @@
       <Project>{5B112624-1FEA-4E39-8295-325F8374A285}</Project>
       <Name>Rawr.Elemental.WPF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rawr4\Rawr.Healadin\Rawr.Healadin.WPF.csproj">
+    <ProjectReference Include="..\Rawr.Healadin\Rawr.Healadin.WPF.csproj">
       <Project>{9ED4A022-7BC2-4518-9CBD-42FFC8F32411}</Project>
       <Name>Rawr.Healadin.WPF</Name>
     </ProjectReference>

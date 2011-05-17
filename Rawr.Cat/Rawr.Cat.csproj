@@ -83,32 +83,19 @@
     <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Rawr.Cat\CalculationOptionsCat.cs">
-      <Link>CalculationOptionsCat.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Cat\CalculationsCat.cs">
-      <Link>CalculationsCat.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Cat\CatAbilityStats.cs">
-      <Link>CatAbilityStats.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Cat\CatRotationCalculator.cs">
-      <Link>CatRotationCalculator.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Cat\CharacterCalculationsCat.cs">
-      <Link>CharacterCalculationsCat.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Cat\StatsCat.cs">
-      <Link>StatsCat.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Cat\CalculationOptionsPanelCat.xaml.cs">
-      <Link>CalculationOptionsPanelCat.xaml.cs</Link>
+    <Compile Include="CalculationOptionsCat.cs" />
+    <Compile Include="CalculationsCat.cs" />
+    <Compile Include="CatAbilityStats.cs" />
+    <Compile Include="CatRotationCalculator.cs" />
+    <Compile Include="CharacterCalculationsCat.cs" />
+    <Compile Include="StatsCat.cs" />
+    <Compile Include="CalculationOptionsPanelCat.xaml.cs">
       <DependentUpon>CalculationOptionsPanelCat.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Rawr.Base\Rawr.Base.csproj">
+    <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">
       <Project>{48170BE2-2CF6-4068-B36C-189072D49093}</Project>
       <Name>Rawr.Base</Name>
     </ProjectReference>
@@ -131,8 +118,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="..\..\Rawr3\Rawr.Cat\CalculationOptionsPanelCat.xaml">
-      <Link>CalculationOptionsPanelCat.xaml</Link>
+    <Page Include="CalculationOptionsPanelCat.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -13,13 +13,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Base", "..\Rawr.Base\R
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Retribution", "..\Rawr.Retribution\Rawr.Retribution.csproj", "{F515017D-CBC1-40E8-9E73-33AF171D697E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Healadin", "Rawr.Healadin\Rawr.Healadin.csproj", "{92719321-9235-4886-BDD6-010723C3EFFA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Healadin", "..\Rawr.Healadin\Rawr.Healadin.csproj", "{92719321-9235-4886-BDD6-010723C3EFFA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Mage", "Rawr.Mage\Rawr.Mage.csproj", "{F0F978C4-0F75-4487-B29C-C9C1AE726EC5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Cat", "Rawr.Cat\Rawr.Cat.csproj", "{0B8DE63B-6430-4A31-8504-40EEB7FDB81D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Cat", "..\Rawr.Cat\Rawr.Cat.csproj", "{0B8DE63B-6430-4A31-8504-40EEB7FDB81D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Bear", "Rawr.Bear\Rawr.Bear.csproj", "{81DB6449-FD88-44F8-BFF0-2FB5C196AD69}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Bear", "..\Rawr.Bear\Rawr.Bear.csproj", "{81DB6449-FD88-44F8-BFF0-2FB5C196AD69}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Rogue", "Rawr.Rogue\Rawr.Rogue.csproj", "{37A81CEA-4E34-4982-BE93-67D0F4BB98A9}"
 EndProject
@@ -78,21 +78,21 @@ Global
 		SccProjectUniqueName2 = ..\\Rawr.Base\\Rawr.Base.csproj
 		SccProjectName2 = ../Rawr.Base
 		SccLocalPath2 = ..\\Rawr.Base
-		SccProjectUniqueName3 = Rawr.Bear\\Rawr.Bear.csproj
-		SccProjectName3 = Rawr.Bear
-		SccLocalPath3 = Rawr.Bear
-		SccProjectUniqueName4 = Rawr.Cat\\Rawr.Cat.csproj
-		SccProjectName4 = Rawr.Cat
-		SccLocalPath4 = Rawr.Cat
+		SccProjectUniqueName3 = ..\\Rawr.Bear\\Rawr.Bear.csproj
+		SccProjectName3 = ../Rawr.Bear
+		SccLocalPath3 = ..\\Rawr.Bear
+		SccProjectUniqueName4 = ..\\Rawr.Cat\\Rawr.Cat.csproj
+		SccProjectName4 = ../Rawr.Cat
+		SccLocalPath4 = ..\\Rawr.Cat
 		SccProjectUniqueName5 = ..\\Rawr.DPSDK\\Rawr.DPSDK.csproj
 		SccProjectName5 = ../Rawr.DPSDK
 		SccLocalPath5 = ..\\Rawr.DPSDK
 		SccProjectUniqueName6 = Rawr.Elemental\\Rawr.Elemental.csproj
 		SccProjectName6 = Rawr.Elemental
 		SccLocalPath6 = Rawr.Elemental
-		SccProjectUniqueName7 = Rawr.Healadin\\Rawr.Healadin.csproj
-		SccProjectName7 = Rawr.Healadin
-		SccLocalPath7 = Rawr.Healadin
+		SccProjectUniqueName7 = ..\\Rawr.Healadin\\Rawr.Healadin.csproj
+		SccProjectName7 = ../Rawr.Healadin
+		SccLocalPath7 = ..\\Rawr.Healadin
 		SccProjectUniqueName8 = Rawr.HealPriest\\Rawr.HealPriest.csproj
 		SccProjectName8 = Rawr.HealPriest
 		SccLocalPath8 = Rawr.HealPriest

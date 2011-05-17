@@ -9,9 +9,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.UI.WPF", "..\Rawr.UI\R
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Mage.WPF", "Rawr.Mage\Rawr.Mage.WPF.csproj", "{C61A1D1A-21F8-4234-9085-5ECD33978DEF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Bear.WPF", "Rawr.Bear\Rawr.Bear.WPF.csproj", "{E0A8CF5D-FB5B-49EB-8666-44255E87AF27}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Bear.WPF", "..\Rawr.Bear\Rawr.Bear.WPF.csproj", "{E0A8CF5D-FB5B-49EB-8666-44255E87AF27}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Cat.WPF", "Rawr.Cat\Rawr.Cat.WPF.csproj", "{E91F260E-4B5E-482B-91C8-7E69B3E4B463}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Cat.WPF", "..\Rawr.Cat\Rawr.Cat.WPF.csproj", "{E91F260E-4B5E-482B-91C8-7E69B3E4B463}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.DPSDK.WPF", "..\Rawr.DPSDK\Rawr.DPSDK.WPF.csproj", "{F39559FE-191D-47AA-B1CB-FBECD11E0C20}"
 EndProject
@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.DPSWarr.WPF", "..\Rawr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Elemental.WPF", "Rawr.Elemental\Rawr.Elemental.WPF.csproj", "{5B112624-1FEA-4E39-8295-325F8374A285}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Healadin.WPF", "Rawr.Healadin\Rawr.Healadin.WPF.csproj", "{9ED4A022-7BC2-4518-9CBD-42FFC8F32411}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Healadin.WPF", "..\Rawr.Healadin\Rawr.Healadin.WPF.csproj", "{9ED4A022-7BC2-4518-9CBD-42FFC8F32411}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.HealPriest.WPF", "Rawr.HealPriest\Rawr.HealPriest.WPF.csproj", "{30589E43-A2D3-45B1-9128-4EC04B922597}"
 EndProject
@@ -72,21 +72,21 @@ Global
 		SccProjectUniqueName4 = Rawr.Mage\\Rawr.Mage.WPF.csproj
 		SccProjectName4 = Rawr.Mage
 		SccLocalPath4 = Rawr.Mage
-		SccProjectUniqueName5 = Rawr.Bear\\Rawr.Bear.WPF.csproj
-		SccProjectName5 = Rawr.Bear
-		SccLocalPath5 = Rawr.Bear
-		SccProjectUniqueName6 = Rawr.Cat\\Rawr.Cat.WPF.csproj
-		SccProjectName6 = Rawr.Cat
-		SccLocalPath6 = Rawr.Cat
+		SccProjectUniqueName5 = ..\\Rawr.Bear\\Rawr.Bear.WPF.csproj
+		SccProjectName5 = ../Rawr.Bear
+		SccLocalPath5 = ..\\Rawr.Bear
+		SccProjectUniqueName6 = ..\\Rawr.Cat\\Rawr.Cat.WPF.csproj
+		SccProjectName6 = ../Rawr.Cat
+		SccLocalPath6 = ..\\Rawr.Cat
 		SccProjectUniqueName7 = ..\\Rawr.DPSDK\\Rawr.DPSDK.WPF.csproj
 		SccProjectName7 = ../Rawr.DPSDK
 		SccLocalPath7 = ..\\Rawr.DPSDK
 		SccProjectUniqueName8 = Rawr.Elemental\\Rawr.Elemental.WPF.csproj
 		SccProjectName8 = Rawr.Elemental
 		SccLocalPath8 = Rawr.Elemental
-		SccProjectUniqueName9 = Rawr.Healadin\\Rawr.Healadin.WPF.csproj
-		SccProjectName9 = Rawr.Healadin
-		SccLocalPath9 = Rawr.Healadin
+		SccProjectUniqueName9 = ..\\Rawr.Healadin\\Rawr.Healadin.WPF.csproj
+		SccProjectName9 = ../Rawr.Healadin
+		SccLocalPath9 = ..\\Rawr.Healadin
 		SccProjectUniqueName10 = Rawr.HealPriest\\Rawr.HealPriest.WPF.csproj
 		SccProjectName10 = Rawr.HealPriest
 		SccLocalPath10 = Rawr.HealPriest
