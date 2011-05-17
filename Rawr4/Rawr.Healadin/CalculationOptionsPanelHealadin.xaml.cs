@@ -76,7 +76,7 @@ namespace Rawr.Healadin
         #endregion
 
         private void btnResetBurstScale_Click(object sender, RoutedEventArgs e) {
-            calcOpts.BurstScale = .4f;
+            calcOpts.BurstScale = .25f;
         }
 
         private void btnResetActivity_Click(object sender, RoutedEventArgs e) {
@@ -118,6 +118,11 @@ namespace Rawr.Healadin
         private void btnResetHREff_Click(object sender, RoutedEventArgs e)
         {
             calcOpts.HREff = .4f;
+        }
+
+        private void btnResetIHEff_Click(object sender, RoutedEventArgs e)
+        {
+            calcOpts.IHEff = .4f;
         }
     }
 }

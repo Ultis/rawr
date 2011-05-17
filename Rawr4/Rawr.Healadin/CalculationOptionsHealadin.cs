@@ -30,7 +30,8 @@ namespace Rawr.Healadin
             judgementcasts = 0.8f;
             hrCasts = 0.5f;
             hrEff = 0.4f;
-            burstScale = .4f;
+            ihEff = 0.4f;
+            burstScale = .25f;
             gHL_Targets = 1f;  // removing button for this
             infusionOfLight = true; // removing button for this
             ioLHolyLight = .9f;
@@ -79,7 +80,12 @@ namespace Rawr.Healadin
         public float HolyShock
         {
             get { return holyShock; }
-            set { holyShock = value; OnPropertyChanged("HolyShock"); }
+            set { holyShock = value; OnPropertyChanged("HolyShock"); OnPropertyChanged("HolyShockText"); }
+        }
+
+        public string HolyShockText
+        {
+            get { return string.Format("Cast HS every {0} seconds", (6f / HolyShock).ToString("N01")); }
         }
 
         private float holyPoints;
@@ -105,9 +111,13 @@ namespace Rawr.Healadin
         public float JudgementCasts
         {
             get { return judgementcasts; }
-            set { judgementcasts = value; OnPropertyChanged("JudgementCasts"); }
+            set { judgementcasts = value; OnPropertyChanged("JudgementCasts"); OnPropertyChanged("JudgementCastsText"); }
         }
 
+        public string JudgementCastsText
+        {
+            get { return string.Format("Cast Judgement every {0} seconds", (8f / JudgementCasts).ToString("N01")); }
+        }
 
         private float hrEff;
         public float HREff
@@ -120,7 +130,19 @@ namespace Rawr.Healadin
         public float HRCasts
         {
             get { return hrCasts; }
-            set { hrCasts = value; OnPropertyChanged("HRCasts"); }
+            set { hrCasts = value; OnPropertyChanged("HRCasts"); OnPropertyChanged("HRCastsText"); }
+        }
+
+        public string HRCastsText
+        {
+            get { return string.Format("Cast HR every {0} seconds", (30f / HRCasts).ToString("N01")); }
+        }
+
+        private float ihEff;
+        public float IHEff
+        {
+            get { return ihEff; }
+            set { ihEff = value; OnPropertyChanged("IHEff"); }
         }
 
         private float burstScale;

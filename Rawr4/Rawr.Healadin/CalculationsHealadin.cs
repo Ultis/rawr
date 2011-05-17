@@ -219,6 +219,7 @@ namespace Rawr.Healadin
                     "Basic Stats:Stamina",
                     "Basic Stats:Intellect",
                     "Basic Stats:Spirit",
+                    "Basic Stats:Mastery Rating",
                     "Basic Stats:Spell Power",
                     "Basic Stats:Mana Regen",
                     "Basic Stats:Combat Regen",
@@ -230,24 +231,21 @@ namespace Rawr.Healadin
                     "Cycle Stats:Total Mana",
                     "Cycle Stats:Average Healing per sec",
                     "Cycle Stats:Average Healing per mana",
-
-                    "Rotation Info:Holy Light Time",
-                    "Rotation Info:Flash of Light Time",
-                    "Rotation Info:Holy Shock Time",
-                    "Rotation Info:Word of Glory Time",
-                    "Rotation Info:Light of Dawn Time",
-                    "Rotation Info:Holy Radiance Time",
-                    "Rotation Info:Beacon of Light Time",
-                    "Rotation Info:Judgement Time",
-
+                    "Cycle Stats:Fight Length",
+                   
                     "Healing Breakdown:Holy Light Healed",
+                    "Healing Breakdown:Divine Light Healed",
                     "Healing Breakdown:Flash of Light Healed",
                     "Healing Breakdown:Holy Shock Healed",
                     "Healing Breakdown:Word of Glory Healed",
                     "Healing Breakdown:Light of Dawn Healed",
                     "Healing Breakdown:Holy Radiance Healed",
                     "Healing Breakdown:Beacon of Light Healed",
-                    "Healing Breakdown:Glyph of HL Healed",
+                    "Healing Breakdown:Lay on Hands Healed",
+                    "Healing Breakdown:Protector of the Innocent ",
+                    "Healing Breakdown:Enlightened Judgements ",
+                    "Healing Breakdown:Illuminated Healing",
+                    // "Healing Breakdown:Glyph of HL Healed", take this out, seems like this glyph no longer exists
                     "Healing Breakdown:Other Healed*From trinket procs",
 
                     "Spell Information:Holy Light",
@@ -256,7 +254,10 @@ namespace Rawr.Healadin
                     "Spell Information:Divine Light",  
                     "Spell Information:Word of Glory(3 holy power)",   
                     "Spell Information:LoD(3 hp, max targets)",  
-                    "Spell Information:Holy Radiance (6 targets)",  
+                    "Spell Information:Holy Radiance (max)",  
+                    "Spell Information:Lay on Hands",  
+                    "Spell Information:Protector of the Innocent",
+                    "Spell Information:Enlightened Judgements",
                 };
                 return _characterDisplayCalculationLabels;
             }
@@ -578,10 +579,10 @@ namespace Rawr.Healadin
             if (relevantGlyphs == null)
             {
                 relevantGlyphs = new List<string>();
-                //Prime
-                relevantGlyphs.Add("Glyph of Word of Glory");
-                relevantGlyphs.Add("Glyph of Seal of Insight");
-                relevantGlyphs.Add("Glyph of Holy Shock");
+                //Prime                                            
+                relevantGlyphs.Add("Glyph of Word of Glory");    
+                relevantGlyphs.Add("Glyph of Seal of Insight");  
+                relevantGlyphs.Add("Glyph of Holy Shock");       
                 relevantGlyphs.Add("Glyph of Divine Favor");
                 //Major
                 relevantGlyphs.Add("Glyph of Beacon of Light");
@@ -589,8 +590,9 @@ namespace Rawr.Healadin
                 relevantGlyphs.Add("Glyph of Cleansing");
                 relevantGlyphs.Add("Glyph of Divinity");
                 relevantGlyphs.Add("Glyph of Salvation");
-                relevantGlyphs.Add("Glyph of Long Word");
+                relevantGlyphs.Add("Glyph of Long Word"); 
                 relevantGlyphs.Add("Glyph of Light of Dawn");
+                relevantGlyphs.Add("Glyph of Lay on Hands");  
                 //Minor
                 relevantGlyphs.Add("Glyph of Insight");
                 relevantGlyphs.Add("Glyph of Blessing of Might");
@@ -645,6 +647,7 @@ namespace Rawr.Healadin
                 SpellPower = stats.SpellPower,
                 CritRating = stats.CritRating,
                 HasteRating = stats.HasteRating,
+                MasteryRating = stats.MasteryRating,
                 Mana = stats.Mana,
                 ManaRestore = stats.ManaRestore,
                 BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
@@ -703,6 +706,7 @@ namespace Rawr.Healadin
                 stats.SpellPower +
                 stats.CritRating +
                 stats.HasteRating +
+                stats.MasteryRating +
                 stats.Mana +
                 stats.ManaRestore +
                 stats.BonusIntellectMultiplier +

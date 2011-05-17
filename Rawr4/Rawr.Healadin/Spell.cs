@@ -2,6 +2,58 @@
 using System.Collections.Generic;
 using System.Text;
 
+/* Molotok's notes on stuff implimented
+ * 
+ *TO DO:
+ * Divine Plea: causes 50% heals.  Also, does it take a GCD?  if so account for it.
+ * Illuminated Healing - Your direct healing spells also place an absorb shield on your target for 12% of the amount healed lasting 15 sec. 
+ *                       Each point of Mastery increases the absorb amount by an additional 1.50%.
+ * 
+ * 
+ *Talents:
+ *DONE(assumes Holy Spec always) Walk in the Light (for selecting Holy specialization)- 10% heal bonus
+ *DONE Protector of the Innocent(0-3) - additional self heal when casting a targeted heal not on yourself
+ * Judgement of the Pure(0-3) - increases haste 3% per point
+ *DONE Clarity of Purpose(0-3) - reduce cast time of HL and DL by .15 per point
+ * Last Word(0-2) - 30% extra WoG crit per point, when target below 35% health
+ * Divine Favor(0-1) - increase haste/crit 20% for 20 secs.  3 min CD
+ *DONE Infusion of Light(0-2) - 5% holy shock crit per point
+ *                        - HS crit = -0.75 sec per point from next DL/HL
+ * Daybreak(0-2) - FoL, DL, HL have 10% chance per point to make next HS not trigger its 6 sec CD.
+ * Enlightened Judgements(0-2) - gives +50% spirit to hit per point
+ *DONE                             - Judgement self heal
+ *DONE Beacon of Light(0-1) - 50% of heals to beacon target
+ * Speed of Light(0-3) - 1% haste per point
+ *                     - reduce HR CD by 10 sec per point
+ * Conviction(0-3) - 1% heal bonus per point, for 15 secs after a crit from non-periodic spell.  (or weapon swing)
+ * Tower of Radiance(0-3) - healing beacon target with FoL or DL has 33% chance per point of giving a Holy Power
+ * Blessed Life(0-2) - 50% chance to gain holy power when taking direct damage.  8 sec CD.
+ *DONE Light of Dawn(0-1) - gives the spell.
+ * 
+ *
+ *DONE Divinity(0-3) - 2% healing increase per point
+ *DONE Crusade(0-3) - 10% per point increase HS heals
+ *              - after killing something, next HL heals for 100% extra per point, for 15 sec.
+ * 
+ * 
+ *Glyphs
+ *Prime                                            
+ *DONE Glyph of Word of Glory
+ *DONE Glyph of Seal of Insight  
+ *DONE Glyph of Holy Shock      
+ * Glyph of Divine Favor
+ *Major
+ * Glyph of Beacon of Light
+ *DONE Glyph of Divine Plea
+ * Glyph of Cleansing
+ *DONE Glyph of Divinity - 10% mana when casting LoH
+ * Glyph of Salvation
+ * Glyph of Long Word 
+ *DONE Glyph of Light of Dawn  
+ *DONE Glyph of Lay on Hands - reduced CD by 3 min.  (from 10 to 7)
+ * 
+ */
+
 namespace Rawr.Healadin
 {
 
@@ -29,11 +81,11 @@ namespace Rawr.Healadin
         public static float hs_min = 2629f;
         public static float hs_max = 2847f;
 
-        // Holy Radiance.  Testing in game showed cf = 0.08653
-        public static float hr_coef = 0.08653f;
+        // Holy Radiance.  
+        public static float hr_coef = 0.06695f;
         public static float hr_mana = 9368.8f; 
-        public static float hr_min = 538f;  
-        public static float hr_max = 538f;
+        public static float hr_min = 684f;  
+        public static float hr_max = 684f;
 
         // Stats for 1 holy power.  Scales linearly with more holy power. (so just * by 2 or 3 when needed)
         public static float wog_coef_sp = 0.209f;  // regular spellpower coef
@@ -45,6 +97,17 @@ namespace Rawr.Healadin
         public static float lod_coef = 0.198f;
         public static float lod_min = 605f;
         public static float lod_max = 673f;
+
+        // Protector of the Innocent, talent.  0-3 points.  These stats assume 3 points.
+        public static float poti_coef = 0.039233f; 
+        public static float poti_min = 2481f;
+        public static float poti_max = 2853f;
+
+        //Judgement self heals from Enlightened Judgements talent (0-2 points, these stats assume 2 points)
+        public static float ej_coef = 0.20206f;  
+        public static float ej_min = 2605f;
+        public static float ej_max = 2997f;
+
 
         public static float basemana = 23422;
     }
@@ -224,7 +287,12 @@ namespace Rawr.Healadin
         { }
 
         public override float BaseCastTime { get { return 1.5f; } }
-        public override float BaseMana { get { return HealadinConstants.hs_mana; } } 
+        public override float BaseMana { get { return HealadinConstants.hs_mana; } }
+        protected override float AbilityCritChance()
+        {
+            return ((Talents.GlyphOfHolyShock ? 0.05f : 0f) + 0.05f * Talents.InfusionOfLight);
+        }
+
 
         protected override float AbilityHealed()
         {
@@ -240,7 +308,7 @@ namespace Rawr.Healadin
 
         public float Casts()
         {
-            return Rotation.FightLength * Rotation.CalcOpts.HolyShock / Cooldown();
+            return Rotation.ActiveTime * Rotation.CalcOpts.HolyShock / Cooldown();
         }
 
         public float Time()
@@ -258,10 +326,11 @@ namespace Rawr.Healadin
             return 6f; // TODO: Account for talent Daybreak
         }
 
+        /* this must have been for an outdated version of IoL talent.  It no longer effects crit multiplier. (patch 4.1)
         protected override float AbilityCritMultiplier()
         {
             return 1f + (Talents.GlyphOfHolyShock ? 0.05f : 0f) + (Talents.InfusionOfLight * 0.05f);
-        }
+        }*/
 
     }
 
@@ -273,14 +342,17 @@ namespace Rawr.Healadin
 
         public override float BaseCastTime { get { return 1.5f; } }
         public override float BaseMana { get { return 0f; } }
+        /* public override float ExtraCritChance { get { return (Talents.LastWord * 0.3f); } } how do I figure if the target is below 35% health? */ 
+    
 
         protected override float AbilityHealed()
         {
             float attackpower = Stats.AttackPower + Stats.Strength * 2;
             attackpower *= (1f + Stats.BonusAttackPowerMultiplier);
             float holypower = 3f;  // assume 3 holypower for now
+            float glyph_multiplier = 1f + (Talents.GlyphOfWordOfGlory ? 0.1f : 0f);
             // TODO: calculate real spellpower somewhere in Healadin module, and use that instead of Stats.SpellPower + Stats.Intellect
-            return holypower * (HealadinConstants.wog_min + HealadinConstants.wog_max) / 2f + 
+            return holypower * glyph_multiplier * (HealadinConstants.wog_min + HealadinConstants.wog_max) / 2f + 
                                 ((Stats.SpellPower + Stats.Intellect) * HealadinConstants.wog_coef_sp) +
                                 (attackpower * HealadinConstants.wog_coef_ap);
         }
@@ -318,12 +390,75 @@ namespace Rawr.Healadin
         protected override float AbilityHealed()
         {
             float targets_healed = 6f;
-            float ticks = 12f; // TODO, calculate # of ticks from haste.  11 assumes 5-15% haste.
+            float ticks = 12f; // TODO, calculate # of ticks from haste.  11 assumes 5-15% haste. 12 = 15-25%
             // TODO: calculate real spellpower somewhere in Healadin module, and use that instead of Stats.SpellPower + Stats.Intellect
             return ticks * targets_healed * ((HealadinConstants.hr_min + HealadinConstants.hr_max) / 2f +
                                                  ((Stats.SpellPower + Stats.Intellect) * HealadinConstants.hr_coef));
         }
     }
+
+    public class LayonHands : Heal
+    {
+        public LayonHands(Rotation rotation)
+            : base(rotation)
+        { }
+
+        public override float BaseCastTime { get { return 1.5f; } }
+        public override float BaseMana { get { return 0f; } }
+
+        protected override float AbilityHealed()
+        {
+            return Stats.Health;
+        }
+
+        public float Cooldown()
+        {
+            return (Talents.GlyphOfLayOnHands ? 420f : 600f);
+        }
+
+        public float Casts()
+        {
+            return (1f + (float)Math.Floor(Rotation.ActiveTime / Cooldown()));
+        }
+
+    }
+
+    public class ProtectoroftheInnocent : Heal
+    {
+        public ProtectoroftheInnocent(Rotation rotation)
+            : base(rotation)
+        { }
+
+        public override float BaseCastTime { get { return 1.5f; } } // not cast really, but dont want to cause div by 0 errors(potential HPS calculations), so leaving this for now
+        public override float BaseMana { get { return 0f; } }
+
+        protected override float AbilityHealed()
+        {
+            // TODO: calculate real spellpower somewhere in Healadin module, and use that instead of Stats.SpellPower + Stats.Intellect
+            return (((HealadinConstants.poti_min + HealadinConstants.poti_max) / 2f +
+                    ((Stats.SpellPower + Stats.Intellect) * HealadinConstants.poti_coef)) *
+                      (Talents.ProtectorOfTheInnocent / 3));
+        }
+    }
+
+    public class EnlightenedJudgements : Heal
+    {
+        public EnlightenedJudgements(Rotation rotation)
+            : base(rotation)
+        { }
+
+        public override float BaseCastTime { get { return 1.5f; } } // not cast really, but dont want to cause div by 0 errors(potential HPS calculations), so leaving this for now
+        public override float BaseMana { get { return 0f; } }
+
+        protected override float AbilityHealed()
+        {
+            // TODO: calculate real spellpower somewhere in Healadin module, and use that instead of Stats.SpellPower + Stats.Intellect
+            return (((HealadinConstants.ej_min + HealadinConstants.ej_max) / 2f +
+                    ((Stats.SpellPower + Stats.Intellect) * HealadinConstants.ej_coef)) *
+                      (Talents.EnlightenedJudgements / 2));
+        }
+    }
+
 
     public abstract class Spell
     {
