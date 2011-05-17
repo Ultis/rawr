@@ -91,6 +91,7 @@
     <Compile Include="Algorithms\StateSpace.cs" />
     <Compile Include="Bosses\BossesT10.cs" />
     <Compile Include="Bosses\BossesT11.cs" />
+    <Compile Include="Bosses\BossesT12.cs" />
     <Compile Include="Bosses\BossesT7.cs" />
     <Compile Include="Bosses\BossesT8.cs" />
     <Compile Include="Bosses\BossesT9.cs" />

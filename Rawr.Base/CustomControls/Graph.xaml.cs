@@ -26,18 +26,19 @@ namespace Rawr
         {
             Chart.Title = "Graph of " + calculation;
             Color[] colors = new Color[] {
-                Color.FromArgb(255,202,180,96), 
+                Color.FromArgb(255,202,180,096),
                 Color.FromArgb(255,101,225,240),
-                Color.FromArgb(255,0,4,3), 
-                Color.FromArgb(255,238,238,30),
-                Color.FromArgb(255,45,112,63), 
-                Color.FromArgb(255,121,72,210), 
-                Color.FromArgb(255,217,100,54), 
-                Color.FromArgb(255,210,72,195), 
-                Color.FromArgb(255,206,189,191), 
-                Color.FromArgb(255,255,0,0), 
-                Color.FromArgb(255,0,255,0), 
-                Color.FromArgb(255,0,0,255), 
+                Color.FromArgb(255,000,004,003),
+                Color.FromArgb(255,238,238,030),
+                Color.FromArgb(255,045,112,063),
+                Color.FromArgb(255,121,072,210),
+                Color.FromArgb(255,217,100,054),
+                Color.FromArgb(255,210,072,195),
+                Color.FromArgb(255,206,189,191),
+                Color.FromArgb(255,255,000,000),
+                Color.FromArgb(255,000,255,000),
+                Color.FromArgb(255,000,000,255),
+                Color.FromArgb(255,000,000,175),
             };
             UpdateStatsGraph(character, statsList, colors, scale, explanatoryText, calculation);            
         }

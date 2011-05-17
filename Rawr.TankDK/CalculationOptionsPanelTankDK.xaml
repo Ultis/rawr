@@ -34,7 +34,17 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -104,6 +114,55 @@
                     </Border>
                     <TextBlock TextWrapping="Wrap" Grid.Row="10" Margin="2" Grid.ColumnSpan="4" FontSize="10"
                                Text="Note that many of TankDK's stats are based on Boss Content. Please see the Boss Handler (next to Options in the Tabs above) for additional Fight Related settings you can adjust.&#x0a;&#x0a;A Fresh 85 should use An Easy Boss to start and once some gear has been gathered to appropriately defend against that, move on to The Average Boss. More details on this can be found on the Boss Handler Pane and in the Documentation of Rawr's website."/>
+
+                    <Border Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="4" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
+                        <TextBlock Margin="4" FontWeight="Bold" Text="Stat Graph Options" VerticalAlignment="Center" />
+                    </Border>
+                    <Grid Grid.Row="12" Grid.ColumnSpan="4">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Stat Graph -->
+                        <CheckBox x:Name="CK_Stats_0" Grid.Row="0" Grid.Column="0" Margin="4,2" Content="Strength" IsChecked="{Binding SG_Str, Mode=TwoWay}" />
+                        <CheckBox x:Name="CK_Stats_1" Grid.Row="1" Grid.Column="0" Margin="4,2" Content="Agility" IsChecked="{Binding SG_Agi, Mode=TwoWay}" />
+                        <CheckBox x:Name="CK_Stats_2" Grid.Row="2" Grid.Column="0" Margin="4,2" Content="Attack Power" IsChecked="{Binding SG_AP, Mode=TwoWay}" />
+                        <CheckBox x:Name="CK_Stats_3" Grid.Row="3" Grid.Column="0" Margin="4,2" Content="Crit Rating" IsChecked="{Binding SG_Crit, Mode=TwoWay}" />
+                        <CheckBox x:Name="CK_Stats_4" Grid.Row="0" Grid.Column="2" Margin="4,2" Content="Hit Rating" IsChecked="{Binding SG_Hit, Mode=TwoWay}" />
+                        <CheckBox x:Name="CK_Stats_5" Grid.Row="1" Grid.Column="2" Margin="4,2" Content="Expertise Rating" IsChecked="{Binding SG_Exp, Mode=TwoWay}" />
+                        <CheckBox x:Name="CK_Stats_6" Grid.Row="2" Grid.Column="2" Margin="4,2" Content="Haste Rating" IsChecked="{Binding SG_Haste, Mode=TwoWay}" />
+                        <CheckBox x:Name="CK_Stats_7" Grid.Row="3" Grid.Column="2" Margin="4,2" Content="Mastery Rating" IsChecked="{Binding SG_Mstr, Mode=TwoWay}" />
+                        <CheckBox x:Name="CK_Stats_8" Grid.Row="0" Grid.Column="1" Margin="4,2" Content="Dodge Rating" IsChecked="{Binding SG_Dodge, Mode=TwoWay}" />
+                        <CheckBox x:Name="CK_Stats_9" Grid.Row="1" Grid.Column="1" Margin="4,2" Content="Parry Rating" IsChecked="{Binding SG_Parry, Mode=TwoWay}" />
+                        <CheckBox x:Name="CK_Stats_10" Grid.Row="2" Grid.Column="1" Margin="4,2" Content="Armor" IsChecked="{Binding SG_Armor, Mode=TwoWay}" />
+                        <CheckBox x:Name="CK_Stats_11" Grid.Row="3" Grid.Column="1" Margin="4,2" Content="Bonus Armor" IsChecked="{Binding SG_BArmor, Mode=TwoWay}" />
+                        <CheckBox x:Name="CK_Stats_12" Grid.Row="6" Grid.Column="0" Margin="4,2" Content="Stamina" IsChecked="{Binding SG_Stam, Mode=TwoWay}" />
+                        <TextBlock Grid.Row="6" Grid.Column="1" Margin="4,2" Text="Rating to Graph:" VerticalAlignment="Center" />
+                        <ComboBox x:Name="CB_CalculationToGraph" Grid.Row="6" Grid.Column="2" Margin="4,2" SelectedItem="{Binding CalculationToGraph, Mode=TwoWay}" SelectionChanged="CB_CalculationToGraph_SelectionChanged">
+                            <System:String>Overall Rating</System:String>
+                            <System:String>Survivability Rating</System:String>
+                            <System:String>Mitigation Rating</System:String>
+                            <System:String>Burst Rating</System:String>
+                            <System:String>Threat Rating</System:String>
+                        </ComboBox>
+                        <TextBlock Grid.Row="8" Grid.Column="0" Margin="4,2" Text="Increment:" />
+                        <inputToolkit:NumericUpDown Grid.Row="8" Grid.Column="1" Margin="4,2" Height="20" Value="{Binding StatsIncrement, Mode=TwoWay}" Maximum="5000" />
+                        <Button Grid.Row="8" Grid.Column="2" Grid.ColumnSpan="1" Margin="4,2" Content="Display Stat Graph" Click="BT_StatsGraph_Click" />
+                    </Grid>
                 </Grid>
             </controls:TabItem>
             <controls:TabItem Header="Rotation Report">

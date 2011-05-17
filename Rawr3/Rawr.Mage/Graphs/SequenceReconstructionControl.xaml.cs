@@ -442,7 +442,7 @@ namespace Rawr.Mage.Graphs
                             {
                                 barCount++;
                                 Style timeIntervalStyle = new Style(typeof(TimeIntervalDataPoint));
-                                timeIntervalStyle.Setters.Add(new Setter(TimeIntervalDataPoint.BackgroundProperty, new SolidColorBrush(Color.FromRgb(0, 0, 0))));
+                                timeIntervalStyle.Setters.Add(new Setter(TimeIntervalDataPoint.BackgroundProperty, new SolidColorBrush(Color.FromArgb(255, 0, 0, 0))));
                                 Chart.Series.Add(new TimeIntervalSeries()
                                 {
                                     Title = buffState.Name,

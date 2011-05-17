@@ -45,6 +45,44 @@ namespace Rawr.TankDK
         private bool _m_bExperimental = false;
         #endregion
 
+        #region Stat Graph
+        [DefaultValue(new bool[] { true, true, true, true, true, true, true, true, true, true, true, true, true })]
+        public bool[] StatsList { get { return _statsList; } set { _statsList = value; OnPropertyChanged("StatsList"); } }
+        private bool[] _statsList = new bool[] { true, true, true, true, true, true, true, true, true, true, true, true, true };
+        [DefaultValue(100)]
+        public int StatsIncrement { get { return _StatsIncrement; } set { _StatsIncrement = value; OnPropertyChanged("StatsIncrement"); } }
+        private int _StatsIncrement = 100;
+        [DefaultValue("Overall Rating")]
+        public string CalculationToGraph { get { return _calculationToGraph; } set { _calculationToGraph = value; OnPropertyChanged("CalculationToGraph"); } }
+        private string _calculationToGraph = "Overall Rating";
+        [XmlIgnore]
+        public bool SG_Str { get { return StatsList[0]; } set { StatsList[0] = value; OnPropertyChanged("SG_STR"); } }
+        [XmlIgnore]
+        public bool SG_Agi { get { return StatsList[1]; } set { StatsList[1] = value; OnPropertyChanged("SG_AGI"); } }
+        [XmlIgnore]
+        public bool SG_AP { get { return StatsList[2]; } set { StatsList[2] = value; OnPropertyChanged("SG_AP"); } }
+        [XmlIgnore]
+        public bool SG_Crit { get { return StatsList[3]; } set { StatsList[3] = value; OnPropertyChanged("SG_Crit"); } }
+        [XmlIgnore]
+        public bool SG_Hit { get { return StatsList[4]; } set { StatsList[4] = value; OnPropertyChanged("SG_Hit"); } }
+        [XmlIgnore]
+        public bool SG_Exp { get { return StatsList[5]; } set { StatsList[5] = value; OnPropertyChanged("SG_Exp"); } }
+        [XmlIgnore]
+        public bool SG_Haste { get { return StatsList[6]; } set { StatsList[6] = value; OnPropertyChanged("SG_Haste"); } }
+        [XmlIgnore]
+        public bool SG_Mstr { get { return StatsList[7]; } set { StatsList[7] = value; OnPropertyChanged("SG_Mstr"); } }
+        [XmlIgnore]
+        public bool SG_Dodge { get { return StatsList[8]; } set { StatsList[8] = value; OnPropertyChanged("SG_Dodge"); } }
+        [XmlIgnore]
+        public bool SG_Parry { get { return StatsList[9]; } set { StatsList[9] = value; OnPropertyChanged("SG_Parry"); } }
+        [XmlIgnore]
+        public bool SG_Armor { get { return StatsList[10]; } set { StatsList[10] = value; OnPropertyChanged("SG_Armor"); } }
+        [XmlIgnore]
+        public bool SG_BArmor { get { return StatsList[11]; } set { StatsList[11] = value; OnPropertyChanged("SG_BArmor"); } }
+        [XmlIgnore]
+        public bool SG_Stam { get { return StatsList[12]; } set { StatsList[12] = value; OnPropertyChanged("SG_Stam"); } }
+        #endregion
+
         [XmlIgnore]
         public string szRotReport { get { return _szRotReport; } set { _szRotReport = value.Replace("Dancing Rune Weapon", "Dancing Rune Wp"); OnPropertyChanged("szRotReport"); } }
         private string _szRotReport = "";
