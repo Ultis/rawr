@@ -46,8 +46,7 @@ namespace Rawr.Moonkin
                                     TickDamage = 93.0f,
                                     SpellDamageModifierPerTick = 0.18f
                                 },
-                            School = SpellSchool.Arcane,
-                            BaseEnergy = 8
+                            School = SpellSchool.Arcane
                         },
                         new Spell()
                         {
@@ -74,8 +73,7 @@ namespace Rawr.Moonkin
                                 TickDamage = 136.0f,
                                 SpellDamageModifierPerTick = 0.13f
                             },
-                            School = SpellSchool.Nature,
-                            BaseEnergy = 8
+                            School = SpellSchool.Nature
                         },
                         new Spell()
                         {

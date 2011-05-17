@@ -305,24 +305,11 @@ namespace Rawr.Moonkin
             sf.AverageEnergy += calcs.BasicStats.BonusStarfireEnergy;
             float starfireEnergyRate = sf.AverageEnergy / sf.CastTime;
             float starfireEclipseEnergyRate = eclipseSFAverageEnergy / sf.CastTime;
-            // 4.2: DoT spells now generate 8 of their respective energy per cast
-            // TODO: Does not account for Glyph of Starfire
-            float insectSwarmEnergyRate = 0f;
-            float insectSwarmEnergy = 0f;
-            float moonfireEnergyRate = 0f;
-            float moonfireEnergy = 0f;
-            if (calcs.PtrMode)
-            {
-                insectSwarmEnergyRate = RotationData.InsectSwarmRefreshMode == DotMode.Always ? iSw.AverageEnergy / iSw.DotEffect.Duration : 0f;
-                moonfireEnergyRate = RotationData.MoonfireRefreshMode == DotMode.Always ? mf.AverageEnergy / mf.DotEffect.Duration : 0f;
-                insectSwarmEnergy = RotationData.InsectSwarmRefreshMode == DotMode.Twice ? iSw.AverageEnergy : 0f;
-                moonfireEnergy = RotationData.MoonfireRefreshMode == DotMode.Twice ? mf.AverageEnergy : 0f;
-            }
 
-            float preLunarCasts = (barHalfSize - eclipseWAverageEnergy / 2 - w.AverageEnergy * talents.Euphoria * 0.12f * 2) * (1 - (starsurgeEnergyRate + insectSwarmEnergyRate) / wrathEnergyRate) / w.AverageEnergy;
-            float lunarCasts = (barHalfSize + eclipseSFAverageEnergy / 2 - moonfireEnergy) / eclipseSFAverageEnergy * (1 - (starsurgeEnergyRate + moonfireEnergyRate) / starfireEclipseEnergyRate);
-            float preSolarCasts = (barHalfSize - eclipseSFAverageEnergy / 2 - sf.AverageEnergy * (1 - (float)Math.Pow(1 - 0.12f * talents.Euphoria, 2))) * (1 - (starsurgeEnergyRate + moonfireEnergyRate) / starfireEnergyRate) / sf.AverageEnergy;
-            float solarCasts = (barHalfSize + eclipseWAverageEnergy / 2 - insectSwarmEnergy - (talents.Sunfire > 0 ? moonfireEnergy : 0f)) / eclipseWAverageEnergy * (1 - (starsurgeEnergyRate + insectSwarmEnergyRate + (talents.Sunfire > 0 ? moonfireEnergyRate : 0)) / wrathEclipseEnergyRate);
+            float preLunarCasts = (barHalfSize - eclipseWAverageEnergy / 2 - w.AverageEnergy * talents.Euphoria * 0.12f * 2) * (1 - (starsurgeEnergyRate) / wrathEnergyRate) / w.AverageEnergy;
+            float lunarCasts = (barHalfSize + eclipseSFAverageEnergy / 2) / eclipseSFAverageEnergy * (1 - (starsurgeEnergyRate) / starfireEclipseEnergyRate);
+            float preSolarCasts = (barHalfSize - eclipseSFAverageEnergy / 2 - sf.AverageEnergy * (1 - (float)Math.Pow(1 - 0.12f * talents.Euphoria, 2))) * (1 - (starsurgeEnergyRate) / starfireEnergyRate) / sf.AverageEnergy;
+            float solarCasts = (barHalfSize + eclipseWAverageEnergy / 2) / eclipseWAverageEnergy * (1 - (starsurgeEnergyRate) / wrathEclipseEnergyRate);
 
             float preLunarTime = preLunarCasts * w.CastTime;
             float lunarTime = lunarCasts * sf.CastTime;
