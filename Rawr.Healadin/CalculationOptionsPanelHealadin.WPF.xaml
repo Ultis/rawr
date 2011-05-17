@@ -56,7 +56,7 @@
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" Grid.Column="0" Margin="2" Text="Overall Scale: *" ToolTipService.ToolTip="Fight Healing is your overall HPS.  Burst Healing is your best possible Flash of Light HPS.  This scale weighs the two appropriately when calculating your overall score." />
                 <Slider Margin="2" Grid.Row="0" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=BurstScale}" />
-                <Button Margin="2 2 2 10" x:Name="btnResetBurstScale" Grid.Row="1" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset the overall scale to 40% Burst, 60% Fight." Click="btnResetBurstScale_Click" />
+                <Button Margin="2 2 2 10" x:Name="btnResetBurstScale" Grid.Row="1" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset the overall scale to 25% Burst, 75% Fight." Click="btnResetBurstScale_Click" />
                 <TextBlock Margin="2 2 2 10" Grid.Row="1" Grid.Column="1" Text="{Binding Mode=OneWay, Path=BurstScaleText}" />
 
                 <TextBlock Grid.Row="2" Grid.Column="0" Margin="2" Text="Activity: *" ToolTipService.ToolTip="The percent of time you are actively casting spells." />
@@ -66,8 +66,8 @@
                 
                 <TextBlock Grid.Row="4" Grid.Column="0" Margin="2" Text="Holy Shock: *" ToolTipService.ToolTip="With a 6 second cooldown, you can cast Holy Shock up to 10 times per minute.  How often do you cast Holy Shock as a percentage of that?" />
                 <Slider Margin="2" Grid.Row="4" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=HolyShock}" />
-                <Button Margin="2 2 2 10" x:Name="btnResetHolyShock" Grid.Row="5" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset holy shock usage to 80%." Click="btnResetHolyShock_Click" />
-                <TextBlock Margin="2 2 2 10" Grid.Row="5" Grid.Column="1" Text="{Binding Mode=OneWay, Path=HolyShock, StringFormat='\{0:P0\}', ConverterCulture=en-ZA}" />
+                <Button Margin="2 2 2 10" x:Name="btnResetHolyShock" Grid.Row="5" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset holy shock usage to 80%. (cast every 7.5 seconds)" Click="btnResetHolyShock_Click" />
+                <TextBlock Margin="2 2 2 10" Grid.Row="5" Grid.Column="1" Text="{Binding Mode=OneWay, Path=HolyShockText}" />
 
                 <TextBlock Grid.Row="6" Grid.Column="0" Margin="2" Text="Holy Points: *" ToolTipService.ToolTip="Spend Holy Points on LoD or WoG?.  Use this slider to indicate how often you cast LoD as a percentage." />
                 <Slider Margin="2" Grid.Row="6" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=HolyPoints}" />
@@ -81,8 +81,8 @@
 
                 <TextBlock Grid.Row="11" Grid.Column="0" Margin="2" Text="Judgements: *" ToolTipService.ToolTip="With an 8 sec cooldown, you can cast Judgement up to 7.5 times per minute.  How often do you cast Judgement as a percentage of that?  14% min so that Judgement of the Pure is maintained(1 judgement cast per minute)" />
                 <Slider Margin="2" Grid.Row="11" Grid.Column="1" Minimum="0.14" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=JudgementCasts}" IsEnabled="{Binding Mode=TwoWay, Path=InfusionOfLight}" />
-                <Button Margin="2 2 2 10" x:Name="btnResetJudgementCasts" Grid.Row="12" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset Judgement casts to 80%" Click="btnResetJudgementCasts_Click" />
-                <TextBlock Margin="2 2 2 10" Grid.Row="12" Grid.Column="1" Text="{Binding Mode=OneWay, Path=JudgementCasts, StringFormat='\{0:P0\}', ConverterCulture=en-ZA}" />
+                <Button Margin="2 2 2 10" x:Name="btnResetJudgementCasts" Grid.Row="12" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset Judgement casts to 80% (Cast every 10 seconds)" Click="btnResetJudgementCasts_Click" />
+                <TextBlock Margin="2 2 2 10" Grid.Row="12" Grid.Column="1" Text="{Binding Mode=OneWay, Path=JudgementCastsText}" />
                 
                 <TextBlock Grid.Row="13" Grid.Column="0" Margin="2" Text="Replenishment: *" ToolTipService.ToolTip="The percent of time you expect Replenishment to be active on you." />
                 <Slider Margin="2" Grid.Row="13" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=Replenishment}" />
@@ -96,14 +96,18 @@
 
                 <TextBlock Grid.Row="17" Grid.Column="0" Margin="2" Text="Holy Radiance casts: *" ToolTipService.ToolTip="How often do we cast Holy Radiance? Maximum is once per 30 secs" />
                 <Slider Margin="2" Grid.Row="17" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=HRCasts}" />
-                <Button Margin="2 2 2 10" x:Name="btnResetHRCasts" Grid.Row="18" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset HR usage to 50%." Click="btnResetHRCasts_Click" />
-                <TextBlock Margin="2 2 2 10" Grid.Row="18" Grid.Column="1" Text="{Binding Mode=OneWay, Path=HRCasts, StringFormat='\{0:P0\}', ConverterCulture=en-ZA}" />
+                <Button Margin="2 2 2 10" x:Name="btnResetHRCasts" Grid.Row="18" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset HR usage to 50% (cast every 60 seconds)" Click="btnResetHRCasts_Click" />
+                <TextBlock Margin="2 2 2 10" Grid.Row="18" Grid.Column="1" Text="{Binding Mode=OneWay, Path=HRCastsText}" />
 
                 <TextBlock Grid.Row="19" Grid.Column="0" Margin="2" Text="HR efficiency: *" ToolTipService.ToolTip="Holy Radiance efficiency depends on tight raid stacking.  What % of the max heals actually happens?" />
                 <Slider Margin="2" Grid.Row="19" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=HREff}" />
                 <Button Margin="2 2 2 10" x:Name="btnResetHREff" Grid.Row="20" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset HR efficiency to 40%." Click="btnResetHREff_Click" />
                 <TextBlock Margin="2 2 2 10" Grid.Row="20" Grid.Column="1" Text="{Binding Mode=OneWay, Path=HREff, StringFormat='\{0:P0\}', ConverterCulture=en-ZA}" />
 
+                <TextBlock Grid.Row="21" Grid.Column="0" Margin="2" Text="IH efficiency: *" ToolTipService.ToolTip="Illuminated Healing often expires or is refreshed.  What % of the shields actually absorb damage?" />
+                <Slider Margin="2" Grid.Row="21" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=IHEff}" />
+                <Button Margin="2 2 2 10" x:Name="btnResetIHEff" Grid.Row="22" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset IH efficiency to 40%." Click="btnResetIHEff_Click" />
+                <TextBlock Margin="2 2 2 10" Grid.Row="22" Grid.Column="1" Text="{Binding Mode=OneWay, Path=IHEff, StringFormat='\{0:P0\}', ConverterCulture=en-ZA}" />
             </Grid>
         </StackPanel>
         <StackPanel Grid.Row="1">
