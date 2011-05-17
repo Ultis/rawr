@@ -84,98 +84,43 @@
     <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Rawr.Elemental\CalculationOptionsElemental.cs">
-      <Link>CalculationOptionsElemental.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Elemental\CalculationsElemental.cs">
-      <Link>CalculationsElemental.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Elemental\CombatFactors.cs">
-      <Link>CombatFactors.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Elemental\Estimation.cs">
-      <Link>Estimation.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Elemental\Rotation.cs">
-      <Link>Rotation.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Elemental\IRotationOptions.cs">
-      <Link>IRotationOptions.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Elemental\RotationOptions.cs">
-      <Link>RotationOptions.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Elemental\Spells\ChainLightning.cs">
-      <Link>Spells\ChainLightning.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Elemental\Spells\EarthShock.cs">
-      <Link>Spells\EarthShock.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Elemental\Spells\ElementalMastery.cs">
-      <Link>Spells\ElementalMastery.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Elemental\Spells\FireElemental.cs">
-      <Link>Spells\FireElemental.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Elemental\Spells\FlameShock.cs">
-      <Link>Spells\FlameShock.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Elemental\Spells\FrostShock.cs">
-      <Link>Spells\FrostShock.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Elemental\Spells\ILightningOverload.cs">
-      <Link>Spells\ILightningOverload.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Elemental\Spells\ISpellArgs.cs">
-      <Link>Spells\ISpellArgs.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Elemental\Spells\LavaBurst.cs">
-      <Link>Spells\LavaBurst.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Elemental\Spells\LightningBolt.cs">
-      <Link>Spells\LightningBolt.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Elemental\Spells\Shock.cs">
-      <Link>Spells\Shock.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Elemental\Spells\Spell.cs">
-      <Link>Spells\Spell.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Elemental\Spells\SpellBox.cs">
-      <Link>Spells\SpellBox.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Elemental\Spells\Thunderstorm.cs">
-      <Link>Spells\Thunderstorm.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Elemental\Spells\Wait.cs">
-      <Link>Spells\Wait.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Elemental\Spells\FireNova.cs">
-      <Link>Spells\FireNova.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Elemental\Spells\Totem.cs">
-      <Link>Spells\Totem.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Elemental\Spells\SearingTotem.cs">
-      <Link>Spells\SearingTotem.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Elemental\Spells\MagmaTotem.cs">
-      <Link>Spells\MagmaTotem.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Elemental\CalculationOptionsPanelElemental.xaml.cs">
-      <Link>CalculationOptionsPanelElemental.xaml.cs</Link>
-      <DependentUpon>CalculationOptionsPanelElemental.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Elemental\ElementalConverters.cs">
-      <Link>ElementalConverters.cs</Link>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Spells\ChainLightning.cs" />
+    <Compile Include="Spells\EarthShock.cs" />
+    <Compile Include="Spells\ElementalMastery.cs" />
+    <Compile Include="Spells\FireElemental.cs" />
+    <Compile Include="Spells\FlameShock.cs" />
+    <Compile Include="Spells\FrostShock.cs" />
+    <Compile Include="Spells\ILightningOverload.cs" />
+    <Compile Include="Spells\ISpellArgs.cs" />
+    <Compile Include="Spells\LavaBurst.cs" />
+    <Compile Include="Spells\LightningBolt.cs" />
+    <Compile Include="Spells\Shock.cs" />
+    <Compile Include="Spells\Spell.cs" />
+    <Compile Include="Spells\SpellBox.cs" />
+    <Compile Include="Spells\Thunderstorm.cs" />
+    <Compile Include="Spells\Wait.cs" />
+    <Compile Include="Spells\FireNova.cs" />
+    <Compile Include="Spells\Totem.cs" />
+    <Compile Include="Spells\SearingTotem.cs" />
+    <Compile Include="Spells\MagmaTotem.cs" />
     <Compile Include="Spells\Earthquake.cs" />
     <Compile Include="Spells\Fulmination.cs" />
     <Compile Include="Spells\UnleashElements.cs" />
+    <Compile Include="CalculationOptionsElemental.cs" />
+    <Compile Include="CalculationsElemental.cs" />
+    <Compile Include="CombatFactors.cs" />
+    <Compile Include="Estimation.cs" />
+    <Compile Include="Rotation.cs" />
+    <Compile Include="IRotationOptions.cs" />
+    <Compile Include="RotationOptions.cs" />
+    <Compile Include="ElementalConverters.cs" />
+    <Compile Include="CalculationOptionsPanelElemental.xaml.cs">
+      <DependentUpon>CalculationOptionsPanelElemental.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Rawr.Base\Rawr.Base.csproj">
+    <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">
       <Project>{48170BE2-2CF6-4068-B36C-189072D49093}</Project>
       <Name>Rawr.Base</Name>
     </ProjectReference>
@@ -198,8 +143,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="..\..\Rawr3\Rawr.Elemental\CalculationOptionsPanelElemental.xaml">
-      <Link>CalculationOptionsPanelElemental.xaml</Link>
+    <Page Include="CalculationOptionsPanelElemental.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

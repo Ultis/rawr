@@ -3,29 +3,29 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.WPF", "Rawr.WPF\Rawr.WPF.csproj", "{B1714458-28F2-47CB-BA37-6153380AB2F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Base.WPF", "..\Rawr.Base\Rawr.Base.WPF.csproj", "{542537D3-F86B-4022-A161-B2FC6F0218B7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Base.WPF", "Rawr.Base\Rawr.Base.WPF.csproj", "{542537D3-F86B-4022-A161-B2FC6F0218B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.UI.WPF", "..\Rawr.UI\Rawr.UI.WPF.csproj", "{5FD09748-1430-4CEF-A09A-492962A7D010}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.UI.WPF", "Rawr.UI\Rawr.UI.WPF.csproj", "{5FD09748-1430-4CEF-A09A-492962A7D010}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Mage.WPF", "Rawr.Mage\Rawr.Mage.WPF.csproj", "{C61A1D1A-21F8-4234-9085-5ECD33978DEF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Bear.WPF", "..\Rawr.Bear\Rawr.Bear.WPF.csproj", "{E0A8CF5D-FB5B-49EB-8666-44255E87AF27}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Bear.WPF", "Rawr.Bear\Rawr.Bear.WPF.csproj", "{E0A8CF5D-FB5B-49EB-8666-44255E87AF27}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Cat.WPF", "..\Rawr.Cat\Rawr.Cat.WPF.csproj", "{E91F260E-4B5E-482B-91C8-7E69B3E4B463}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Cat.WPF", "Rawr.Cat\Rawr.Cat.WPF.csproj", "{E91F260E-4B5E-482B-91C8-7E69B3E4B463}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.DPSDK.WPF", "..\Rawr.DPSDK\Rawr.DPSDK.WPF.csproj", "{F39559FE-191D-47AA-B1CB-FBECD11E0C20}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.DPSDK.WPF", "Rawr.DPSDK\Rawr.DPSDK.WPF.csproj", "{F39559FE-191D-47AA-B1CB-FBECD11E0C20}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.DPSWarr.WPF", "..\Rawr.DPSWarr\Rawr.DPSWarr.WPF.csproj", "{5DB213F4-2B0A-46DC-ABF3-4868E73D99EE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.DPSWarr.WPF", "Rawr.DPSWarr\Rawr.DPSWarr.WPF.csproj", "{5DB213F4-2B0A-46DC-ABF3-4868E73D99EE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Elemental.WPF", "Rawr.Elemental\Rawr.Elemental.WPF.csproj", "{5B112624-1FEA-4E39-8295-325F8374A285}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Healadin.WPF", "..\Rawr.Healadin\Rawr.Healadin.WPF.csproj", "{9ED4A022-7BC2-4518-9CBD-42FFC8F32411}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Healadin.WPF", "Rawr.Healadin\Rawr.Healadin.WPF.csproj", "{9ED4A022-7BC2-4518-9CBD-42FFC8F32411}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.HealPriest.WPF", "Rawr.HealPriest\Rawr.HealPriest.WPF.csproj", "{30589E43-A2D3-45B1-9128-4EC04B922597}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Hunter.WPF", "Rawr.Hunter\Rawr.Hunter.WPF.csproj", "{1575AB11-89C8-4587-806B-92032E0C5472}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Moonkin.WPF", "..\Rawr.Moonkin\Rawr.Moonkin.WPF.csproj", "{29946D37-91C4-4D46-9625-D11C8CEE8AFC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Moonkin.WPF", "Rawr.Moonkin\Rawr.Moonkin.WPF.csproj", "{29946D37-91C4-4D46-9625-D11C8CEE8AFC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.ProtPaladin.WPF", "Rawr.ProtPaladin\Rawr.ProtPaladin.WPF.csproj", "{086E2C96-2540-414A-8E35-82D286147593}"
 EndProject
@@ -33,23 +33,23 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.ProtWarr.WPF", "Rawr.P
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.RestoSham.WPF", "Rawr.RestoSham\Rawr.RestoSham.WPF.csproj", "{0AD5FD48-77A8-4220-B27C-282A79E6C534}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Retribution.WPF", "..\Rawr.Retribution\Rawr.Retribution.WPF.csproj", "{6D64814C-3944-41C1-BB89-3FEC1B139D74}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Retribution.WPF", "Rawr.Retribution\Rawr.Retribution.WPF.csproj", "{6D64814C-3944-41C1-BB89-3FEC1B139D74}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Rogue.WPF", "Rawr.Rogue\Rawr.Rogue.WPF.csproj", "{78370B5B-0DF9-43D2-8F67-CA4D319EA000}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.ShadowPriest.WPF", "..\Rawr.ShadowPriest\Rawr.ShadowPriest.WPF.csproj", "{5895FA29-3131-4C64-9C81-93F1EA139F6A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.ShadowPriest.WPF", "Rawr.ShadowPriest\Rawr.ShadowPriest.WPF.csproj", "{5895FA29-3131-4C64-9C81-93F1EA139F6A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.TankDK.WPF", "..\Rawr.TankDK\Rawr.TankDK.WPF.csproj", "{5C7D2251-55E7-4A90-8A97-B5DCC9D35807}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.TankDK.WPF", "Rawr.TankDK\Rawr.TankDK.WPF.csproj", "{5C7D2251-55E7-4A90-8A97-B5DCC9D35807}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Tree.WPF", "Rawr.Tree\Rawr.Tree.WPF.csproj", "{1B85DA42-90D5-46FA-99AC-9E21785B3AC8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Warlock.WPF", "Rawr.Warlock\Rawr.Warlock.WPF.csproj", "{320CAEFB-813C-487C-8EA0-2B3D347865FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Enhance.WPF", "..\Rawr.Enhance\Rawr.Enhance.WPF.csproj", "{09E75950-51AB-4248-A4F7-FE928959BFC8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Enhance.WPF", "Rawr.Enhance\Rawr.Enhance.WPF.csproj", "{09E75950-51AB-4248-A4F7-FE928959BFC8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.ShadowPriest.Tests", "..\Rawr.ShadowPriest.Tests\Rawr.ShadowPriest.Tests.csproj", "{E25AC8F1-A9C6-49B7-B7EE-D1FE8C362585}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.ShadowPriest.Tests", "Rawr.ShadowPriest.Tests\Rawr.ShadowPriest.Tests.csproj", "{E25AC8F1-A9C6-49B7-B7EE-D1FE8C362585}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Addon", "Rawr.Addon\Rawr.Addon.csproj", "{0368C1A5-BC0E-4E9E-88F9-98147812CAF4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Addon", "Child Projects\Rawr.Addon\Rawr.Addon.csproj", "{0368C1A5-BC0E-4E9E-88F9-98147812CAF4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4CFFA2E3-296D-47A8-A649-641DFBD7FE00}"
 EndProject
@@ -63,39 +63,39 @@ Global
 		SccProjectUniqueName1 = Rawr.WPF\\Rawr.WPF.csproj
 		SccProjectName1 = Rawr.WPF
 		SccLocalPath1 = Rawr.WPF
-		SccProjectUniqueName2 = ..\\Rawr.Base\\Rawr.Base.WPF.csproj
-		SccProjectName2 = ../Rawr.Base
-		SccLocalPath2 = ..\\Rawr.Base
-		SccProjectUniqueName3 = ..\\Rawr.UI\\Rawr.UI.WPF.csproj
-		SccProjectName3 = ../Rawr.UI
-		SccLocalPath3 = ..\\Rawr.UI
+		SccProjectUniqueName2 = Rawr.Base\\Rawr.Base.WPF.csproj
+		SccProjectName2 = Rawr.Base
+		SccLocalPath2 = Rawr.Base
+		SccProjectUniqueName3 = Rawr.UI\\Rawr.UI.WPF.csproj
+		SccProjectName3 = Rawr.UI
+		SccLocalPath3 = Rawr.UI
 		SccProjectUniqueName4 = Rawr.Mage\\Rawr.Mage.WPF.csproj
 		SccProjectName4 = Rawr.Mage
 		SccLocalPath4 = Rawr.Mage
-		SccProjectUniqueName5 = ..\\Rawr.Bear\\Rawr.Bear.WPF.csproj
-		SccProjectName5 = ../Rawr.Bear
-		SccLocalPath5 = ..\\Rawr.Bear
-		SccProjectUniqueName6 = ..\\Rawr.Cat\\Rawr.Cat.WPF.csproj
-		SccProjectName6 = ../Rawr.Cat
-		SccLocalPath6 = ..\\Rawr.Cat
-		SccProjectUniqueName7 = ..\\Rawr.DPSDK\\Rawr.DPSDK.WPF.csproj
-		SccProjectName7 = ../Rawr.DPSDK
-		SccLocalPath7 = ..\\Rawr.DPSDK
+		SccProjectUniqueName5 = Rawr.Bear\\Rawr.Bear.WPF.csproj
+		SccProjectName5 = Rawr.Bear
+		SccLocalPath5 = Rawr.Bear
+		SccProjectUniqueName6 = Rawr.Cat\\Rawr.Cat.WPF.csproj
+		SccProjectName6 = Rawr.Cat
+		SccLocalPath6 = Rawr.Cat
+		SccProjectUniqueName7 = Rawr.DPSDK\\Rawr.DPSDK.WPF.csproj
+		SccProjectName7 = Rawr.DPSDK
+		SccLocalPath7 = Rawr.DPSDK
 		SccProjectUniqueName8 = Rawr.Elemental\\Rawr.Elemental.WPF.csproj
 		SccProjectName8 = Rawr.Elemental
 		SccLocalPath8 = Rawr.Elemental
-		SccProjectUniqueName9 = ..\\Rawr.Healadin\\Rawr.Healadin.WPF.csproj
-		SccProjectName9 = ../Rawr.Healadin
-		SccLocalPath9 = ..\\Rawr.Healadin
+		SccProjectUniqueName9 = Rawr.Healadin\\Rawr.Healadin.WPF.csproj
+		SccProjectName9 = Rawr.Healadin
+		SccLocalPath9 = Rawr.Healadin
 		SccProjectUniqueName10 = Rawr.HealPriest\\Rawr.HealPriest.WPF.csproj
 		SccProjectName10 = Rawr.HealPriest
 		SccLocalPath10 = Rawr.HealPriest
 		SccProjectUniqueName11 = Rawr.Hunter\\Rawr.Hunter.WPF.csproj
 		SccProjectName11 = Rawr.Hunter
 		SccLocalPath11 = Rawr.Hunter
-		SccProjectUniqueName12 = ..\\Rawr.Moonkin\\Rawr.Moonkin.WPF.csproj
-		SccProjectName12 = ../Rawr.Moonkin
-		SccLocalPath12 = ..\\Rawr.Moonkin
+		SccProjectUniqueName12 = Rawr.Moonkin\\Rawr.Moonkin.WPF.csproj
+		SccProjectName12 = Rawr.Moonkin
+		SccLocalPath12 = Rawr.Moonkin
 		SccProjectUniqueName13 = Rawr.ProtPaladin\\Rawr.ProtPaladin.WPF.csproj
 		SccProjectName13 = Rawr.ProtPaladin
 		SccLocalPath13 = Rawr.ProtPaladin
@@ -105,34 +105,34 @@ Global
 		SccProjectUniqueName15 = Rawr.RestoSham\\Rawr.RestoSham.WPF.csproj
 		SccProjectName15 = Rawr.RestoSham
 		SccLocalPath15 = Rawr.RestoSham
-		SccProjectUniqueName16 = ..\\Rawr.Retribution\\Rawr.Retribution.WPF.csproj
-		SccProjectName16 = ../Rawr.Retribution
-		SccLocalPath16 = ..\\Rawr.Retribution
+		SccProjectUniqueName16 = Rawr.Retribution\\Rawr.Retribution.WPF.csproj
+		SccProjectName16 = Rawr.Retribution
+		SccLocalPath16 = Rawr.Retribution
 		SccProjectUniqueName17 = Rawr.Rogue\\Rawr.Rogue.WPF.csproj
 		SccProjectName17 = Rawr.Rogue
 		SccLocalPath17 = Rawr.Rogue
-		SccProjectUniqueName18 = ..\\Rawr.ShadowPriest\\Rawr.ShadowPriest.WPF.csproj
-		SccProjectName18 = ../Rawr.ShadowPriest
-		SccLocalPath18 = ..\\Rawr.ShadowPriest
-		SccProjectUniqueName19 = ..\\Rawr.TankDK\\Rawr.TankDK.WPF.csproj
-		SccProjectName19 = ../Rawr.TankDK
-		SccLocalPath19 = ..\\Rawr.TankDK
+		SccProjectUniqueName18 = Rawr.ShadowPriest\\Rawr.ShadowPriest.WPF.csproj
+		SccProjectName18 = Rawr.ShadowPriest
+		SccLocalPath18 = Rawr.ShadowPriest
+		SccProjectUniqueName19 = Rawr.TankDK\\Rawr.TankDK.WPF.csproj
+		SccProjectName19 = Rawr.TankDK
+		SccLocalPath19 = Rawr.TankDK
 		SccProjectUniqueName20 = Rawr.Tree\\Rawr.Tree.WPF.csproj
 		SccProjectName20 = Rawr.Tree
 		SccLocalPath20 = Rawr.Tree
 		SccProjectUniqueName21 = Rawr.Warlock\\Rawr.Warlock.WPF.csproj
 		SccProjectName21 = Rawr.Warlock
 		SccLocalPath21 = Rawr.Warlock
-		SccProjectUniqueName22 = ..\\Rawr.DPSWarr\\Rawr.DPSWarr.WPF.csproj
-		SccProjectName22 = ../Rawr.DPSWarr
-		SccLocalPath22 = ..\\Rawr.DPSWarr
-		SccProjectUniqueName23 = ..\\Rawr.Enhance\\Rawr.Enhance.WPF.csproj
-		SccProjectName23 = ../Rawr.Enhance
-		SccLocalPath23 = ..\\Rawr.Enhance
-		SccProjectUniqueName24 = ..\\Rawr.ShadowPriest.Tests\\Rawr.ShadowPriest.Tests.csproj
-		SccProjectName24 = ../Rawr.ShadowPriest.Tests
-		SccLocalPath24 = ..\\Rawr.ShadowPriest.Tests
-		SccProjectUniqueName25 = Rawr.Addon\\Rawr.Addon.csproj
+		SccProjectUniqueName22 = Rawr.DPSWarr\\Rawr.DPSWarr.WPF.csproj
+		SccProjectName22 = Rawr.DPSWarr
+		SccLocalPath22 = Rawr.DPSWarr
+		SccProjectUniqueName23 = Rawr.Enhance\\Rawr.Enhance.WPF.csproj
+		SccProjectName23 = Rawr.Enhance
+		SccLocalPath23 = Rawr.Enhance
+		SccProjectUniqueName24 = Rawr.ShadowPriest.Tests\\Rawr.ShadowPriest.Tests.csproj
+		SccProjectName24 = Rawr.ShadowPriest.Tests
+		SccLocalPath24 = Rawr.ShadowPriest.Tests
+		SccProjectUniqueName25 = Child Projects\\Rawr.Addon\\Rawr.Addon.csproj
 		SccProjectName25 = Rawr.Addon
 		SccLocalPath25 = Rawr.Addon
 	EndGlobalSection

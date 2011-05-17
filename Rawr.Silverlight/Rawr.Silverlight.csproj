@@ -111,27 +111,27 @@
     <None Include="Properties\AppManifest.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Rawr.Base\Rawr.Base.csproj">
+    <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">
       <Project>{48170BE2-2CF6-4068-B36C-189072D49093}</Project>
       <Name>Rawr.Base</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Rawr.ShadowPriest\Rawr.ShadowPriest.csproj">
+    <ProjectReference Include="..\Rawr.ShadowPriest\Rawr.ShadowPriest.csproj">
       <Project>{6E5BC92F-AAA0-4C14-B25A-1A39196291E4}</Project>
       <Name>Rawr.ShadowPriest</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Rawr.Bear\Rawr.Bear.csproj">
+    <ProjectReference Include="..\Rawr.Bear\Rawr.Bear.csproj">
       <Project>{81DB6449-FD88-44F8-BFF0-2FB5C196AD69}</Project>
       <Name>Rawr.Bear</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Rawr.Cat\Rawr.Cat.csproj">
+    <ProjectReference Include="..\Rawr.Cat\Rawr.Cat.csproj">
       <Project>{0B8DE63B-6430-4A31-8504-40EEB7FDB81D}</Project>
       <Name>Rawr.Cat</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Rawr.DPSDK\Rawr.DPSDK.csproj">
+    <ProjectReference Include="..\Rawr.DPSDK\Rawr.DPSDK.csproj">
       <Project>{513A87FD-FA64-49FD-9C34-50B8D52FBB5F}</Project>
       <Name>Rawr.DPSDK</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Rawr.DPSWarr\Rawr.DPSWarr.csproj">
+    <ProjectReference Include="..\Rawr.DPSWarr\Rawr.DPSWarr.csproj">
       <Project>{FB0E8A91-FE4B-425B-8773-792AB0232245}</Project>
       <Name>Rawr.DPSWarr</Name>
     </ProjectReference>
@@ -139,11 +139,11 @@
       <Project>{2D00FCEA-E624-4E4F-92AE-C4B4BD1D6E46}</Project>
       <Name>Rawr.Elemental</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Rawr.Enhance\Rawr.Enhance.csproj">
+    <ProjectReference Include="..\Rawr.Enhance\Rawr.Enhance.csproj">
       <Project>{3D73B646-5271-4E55-9089-CCBD3E26EECD}</Project>
       <Name>Rawr.Enhance</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Rawr.Healadin\Rawr.Healadin.csproj">
+    <ProjectReference Include="..\Rawr.Healadin\Rawr.Healadin.csproj">
       <Project>{92719321-9235-4886-BDD6-010723C3EFFA}</Project>
       <Name>Rawr.Healadin</Name>
     </ProjectReference>
@@ -159,7 +159,7 @@
       <Project>{F0F978C4-0F75-4487-B29C-C9C1AE726EC5}</Project>
       <Name>Rawr.Mage</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Rawr.Moonkin\Rawr.Moonkin.csproj">
+    <ProjectReference Include="..\Rawr.Moonkin\Rawr.Moonkin.csproj">
       <Project>{7C127814-1ABF-4A8A-A644-577769226EA5}</Project>
       <Name>Rawr.Moonkin</Name>
     </ProjectReference>
@@ -175,7 +175,7 @@
       <Project>{0BA33BAA-1BFD-4F41-8DAE-134FE9C357E7}</Project>
       <Name>Rawr.RestoSham</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Rawr.Retribution\Rawr.Retribution.csproj">
+    <ProjectReference Include="..\Rawr.Retribution\Rawr.Retribution.csproj">
       <Project>{F515017D-CBC1-40E8-9E73-33AF171D697E}</Project>
       <Name>Rawr.Retribution</Name>
     </ProjectReference>
@@ -183,11 +183,11 @@
       <Project>{37A81CEA-4E34-4982-BE93-67D0F4BB98A9}</Project>
       <Name>Rawr.Rogue</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Rawr.TankDK\Rawr.TankDK.csproj">
+    <ProjectReference Include="..\Rawr.TankDK\Rawr.TankDK.csproj">
       <Project>{85C9EEA7-735C-465B-A5AD-6D9C0EF88601}</Project>
       <Name>Rawr.TankDK</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Rawr.UI\Rawr.UI.csproj">
+    <ProjectReference Include="..\Rawr.UI\Rawr.UI.csproj">
       <Project>{E5177B6E-4D62-4506-BD70-E657540A9C4D}</Project>
       <Name>Rawr.UI</Name>
     </ProjectReference>

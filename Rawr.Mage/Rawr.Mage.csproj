@@ -87,167 +87,88 @@
     <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Rawr.Mage\ArrayPool.cs">
-      <Link>ArrayPool.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Mage\CalculationOptionsMage.cs">
-      <Link>CalculationOptionsMage.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Mage\CalculationsMage.cs">
-      <Link>CalculationsMage.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Mage\CastingState.cs">
-      <Link>CastingState.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Mage\CharacterCalculationsMage.cs">
-      <Link>CharacterCalculationsMage.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Mage\ComparisonCalculationMage.cs">
-      <Link>ComparisonCalculationMage.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Mage\FSRCalc.cs">
-      <Link>FSRCalc.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Mage\Heap.cs">
-      <Link>Heap.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Mage\ListUtils.cs">
-      <Link>ListUtils.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Mage\LP.cs">
-      <Link>LP.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Mage\LU.cs">
-      <Link>LU.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Mage\Sequence.cs">
-      <Link>Sequence.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Mage\SequenceGroup.cs">
-      <Link>SequenceGroup.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Mage\SequenceItem.cs">
-      <Link>SequenceItem.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Mage\Solver.cs">
-      <Link>Solver.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Mage\Solver.MIP.cs">
-      <Link>Solver.MIP.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Mage\SolverLP.cs">
-      <Link>SolverLP.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Mage\SparseMatrix.cs">
-      <Link>SparseMatrix.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Mage\SpellInfo\Cycle.cs">
-      <Link>SpellInfo\Cycle.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Mage\SpellInfo\CycleDataArcane.cs">
-      <Link>SpellInfo\CycleDataArcane.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Mage\SpellInfo\CycleDataDeprecated.cs">
-      <Link>SpellInfo\CycleDataDeprecated.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Mage\SpellInfo\CycleDataFire.cs">
-      <Link>SpellInfo\CycleDataFire.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Mage\SpellInfo\CycleDataFrost.cs">
-      <Link>SpellInfo\CycleDataFrost.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Mage\SpellInfo\Spell.cs">
-      <Link>SpellInfo\Spell.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Mage\SpellInfo\SpellData.cs">
-      <Link>SpellInfo\SpellData.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Mage\SpellInfo\SpellTemplate.cs">
-      <Link>SpellInfo\SpellTemplate.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Mage\StateDescriptionParser.cs">
-      <Link>StateDescriptionParser.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Mage\StateDescriptionParseTree.cs">
-      <Link>StateDescriptionParseTree.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Mage\StateDescriptionScanner.cs">
-      <Link>StateDescriptionScanner.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Mage\CalculationOptionsPanelMage.xaml.cs">
-      <Link>CalculationOptionsPanelMage.xaml.cs</Link>
+    <Compile Include="ArrayPool.cs" />
+    <Compile Include="CalculationOptionsMage.cs" />
+    <Compile Include="CalculationsMage.cs" />
+    <Compile Include="CastingState.cs" />
+    <Compile Include="CharacterCalculationsMage.cs" />
+    <Compile Include="ComparisonCalculationMage.cs" />
+    <Compile Include="FSRCalc.cs" />
+    <Compile Include="Heap.cs" />
+    <Compile Include="ListUtils.cs" />
+    <Compile Include="LP.cs" />
+    <Compile Include="LU.cs" />
+    <Compile Include="Sequence.cs" />
+    <Compile Include="SequenceGroup.cs" />
+    <Compile Include="SequenceItem.cs" />
+    <Compile Include="Solver.cs" />
+    <Compile Include="Solver.MIP.cs" />
+    <Compile Include="SolverLP.cs" />
+    <Compile Include="SparseMatrix.cs" />
+    <Compile Include="SpellInfo\Cycle.cs" />
+    <Compile Include="SpellInfo\CycleDataArcane.cs" />
+    <Compile Include="SpellInfo\CycleDataDeprecated.cs" />
+    <Compile Include="SpellInfo\CycleDataFire.cs" />
+    <Compile Include="SpellInfo\CycleDataFrost.cs" />
+    <Compile Include="SpellInfo\Spell.cs" />
+    <Compile Include="SpellInfo\SpellData.cs" />
+    <Compile Include="SpellInfo\SpellTemplate.cs" />
+    <Compile Include="StateDescriptionParser.cs" />
+    <Compile Include="StateDescriptionParseTree.cs" />
+    <Compile Include="StateDescriptionScanner.cs" />
+    <Compile Include="CalculationOptionsPanelMage.xaml.cs">
       <DependentUpon>CalculationOptionsPanelMage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Mage\CustomSpellMixDialog.xaml.cs">
-      <Link>CustomSpellMixDialog.xaml.cs</Link>
+    <Compile Include="CustomSpellMixDialog.xaml.cs">
       <DependentUpon>CustomSpellMixDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Mage\CycleAnalyzerDialog.xaml.cs">
-      <Link>CycleAnalyzerDialog.xaml.cs</Link>
+    <Compile Include="CycleAnalyzerDialog.xaml.cs">
       <DependentUpon>CycleAnalyzerDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Mage\Graphs\ChartWithText.cs">
-      <Link>Graphs\ChartWithText.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Mage\Graphs\EnumerableFunctions.cs">
-      <Link>Graphs\EnumerableFunctions.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Mage\Graphs\ProcUptimeControl.xaml.cs">
-      <Link>Graphs\ProcUptimeControl.xaml.cs</Link>
+    <Compile Include="Graphs\ChartWithText.cs" />
+    <Compile Include="Graphs\EnumerableFunctions.cs" />
+    <Compile Include="Graphs\ProcUptimeControl.xaml.cs">
       <DependentUpon>ProcUptimeControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Mage\Graphs\SequenceReconstructionControl.xaml.cs">
-      <Link>Graphs\SequenceReconstructionControl.xaml.cs</Link>
+    <Compile Include="Graphs\SequenceReconstructionControl.xaml.cs">
       <DependentUpon>SequenceReconstructionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Mage\Graphs\TimeIntervalDataPoint.cs">
-      <Link>Graphs\TimeIntervalDataPoint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Mage\Graphs\TimeIntervalSeries.cs">
-      <Link>Graphs\TimeIntervalSeries.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Mage\Graphs\ValueHelper.cs">
-      <Link>Graphs\ValueHelper.cs</Link>
-    </Compile>
+    <Compile Include="Graphs\TimeIntervalDataPoint.cs" />
+    <Compile Include="Graphs\TimeIntervalSeries.cs" />
+    <Compile Include="Graphs\ValueHelper.cs" />
     <Compile Include="CooldownRestrictionsDialog.xaml.cs">
       <DependentUpon>CooldownRestrictionsDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Rawr.Base\Rawr.Base.csproj">
+    <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">
       <Project>{48170BE2-2CF6-4068-B36C-189072D49093}</Project>
       <Name>Rawr.Base</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="..\..\Rawr3\Rawr.Mage\CalculationOptionsPanelMage.xaml">
-      <Link>CalculationOptionsPanelMage.xaml</Link>
+    <Page Include="CalculationOptionsPanelMage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\..\Rawr3\Rawr.Mage\CustomSpellMixDialog.xaml">
-      <Link>CustomSpellMixDialog.xaml</Link>
+    <Page Include="CustomSpellMixDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\..\Rawr3\Rawr.Mage\CycleAnalyzerDialog.xaml">
-      <Link>CycleAnalyzerDialog.xaml</Link>
+    <Page Include="CycleAnalyzerDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\..\Rawr3\Rawr.Mage\Graphs\ProcUptimeControl.xaml">
-      <Link>Graphs\ProcUptimeControl.xaml</Link>
+    <Page Include="Graphs\ProcUptimeControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\..\Rawr3\Rawr.Mage\Graphs\SequenceReconstructionControl.xaml">
-      <Link>Graphs\SequenceReconstructionControl.xaml</Link>
+    <Page Include="Graphs\SequenceReconstructionControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\..\Rawr3\Rawr.Mage\Themes\Generic.xaml">
-      <Link>Themes\Generic.xaml</Link>
+    <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

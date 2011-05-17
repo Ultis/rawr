@@ -85,17 +85,13 @@
     <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Rawr3\Rawr.Warlock\CalculationOptionsPanelWarlock.xaml.cs">
-      <Link>CalculationOptionsPanelWarlock.xaml.cs</Link>
+    <Compile Include="CalculationOptionsPanelWarlock.xaml.cs">
       <DependentUpon>CalculationOptionsPanelWarlock.xaml</DependentUpon>
     </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Warlock\TextInputDialog.xaml.cs">
-      <Link>TextInputDialog.xaml.cs</Link>
+    <Compile Include="TextInputDialog.xaml.cs">
       <DependentUpon>TextInputDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Warlock\WarlockConverters.cs">
-      <Link>WarlockConverters.cs</Link>
-    </Compile>
+    <Compile Include="WarlockConverters.cs" />
     <Compile Include="CalculationOptionsWarlock.cs" />
     <Compile Include="CalculationsWarlock.cs" />
     <Compile Include="CastingState.cs" />
@@ -108,7 +104,7 @@
     <Compile Include="StatUtils.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Rawr.Base\Rawr.Base.csproj">
+    <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">
       <Project>{48170BE2-2CF6-4068-B36C-189072D49093}</Project>
       <Name>Rawr.Base</Name>
     </ProjectReference>
@@ -131,13 +127,11 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="..\..\Rawr3\Rawr.Warlock\CalculationOptionsPanelWarlock.xaml">
-      <Link>CalculationOptionsPanelWarlock.xaml</Link>
+    <Page Include="CalculationOptionsPanelWarlock.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\..\Rawr3\Rawr.Warlock\TextInputDialog.xaml">
-      <Link>TextInputDialog.xaml</Link>
+    <Page Include="TextInputDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

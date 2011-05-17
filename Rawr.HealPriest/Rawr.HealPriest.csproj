@@ -84,33 +84,22 @@
     <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Rawr.HealPriest\CalculationOptionsHealPriest.cs">
-      <Link>CalculationOptionsHealPriest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.HealPriest\CalculationsHealPriest.cs">
-      <Link>CalculationsHealPriest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.HealPriest\CharacterCalculationsHealPriest.cs">
-      <Link>CharacterCalculationsHealPriest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.HealPriest\ComparisonCalculationHealPriest.cs">
-      <Link>ComparisonCalculationHealPriest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.HealPriest\CalculationOptionsPanelHealPriest.xaml.cs">
-      <Link>CalculationOptionsPanelHealPriest.xaml.cs</Link>
-      <DependentUpon>CalculationOptionsPanelHealPriest.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.HealPriest\HealPriestConverters.cs">
-      <Link>HealPriestConverters.cs</Link>
-    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="CalculationOptionsHealPriest.cs" />
+    <Compile Include="CalculationsHealPriest.cs" />
+    <Compile Include="CharacterCalculationsHealPriest.cs" />
+    <Compile Include="ComparisonCalculationHealPriest.cs" />
+    <Compile Include="HealPriestConverters.cs" />
     <Compile Include="PriestSolver.cs" />
     <Compile Include="PriestInformation.cs" />
     <Compile Include="SpellCata.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StatsPriest.cs" />
+    <Compile Include="CalculationOptionsPanelHealPriest.xaml.cs">
+      <DependentUpon>CalculationOptionsPanelHealPriest.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Rawr.Base\Rawr.Base.csproj">
+    <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">
       <Project>{48170BE2-2CF6-4068-B36C-189072D49093}</Project>
       <Name>Rawr.Base</Name>
     </ProjectReference>
@@ -133,8 +122,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="..\..\Rawr3\Rawr.HealPriest\CalculationOptionsPanelHealPriest.xaml">
-      <Link>CalculationOptionsPanelHealPriest.xaml</Link>
+    <Page Include="CalculationOptionsPanelHealPriest.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
