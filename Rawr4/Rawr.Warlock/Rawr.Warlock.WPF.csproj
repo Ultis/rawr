@@ -105,10 +105,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Rawr3\Rawr.Warlock\CalculationOptionsPanelWarlock.xaml.cs">
-      <Link>CalculationOptionsPanelWarlock.xaml.cs</Link>
-      <DependentUpon>CalculationOptionsPanelWarlock.WPF.xaml</DependentUpon>
-    </Compile>
     <Compile Include="..\..\Rawr3\Rawr.Warlock\TextInputDialog.xaml.cs">
       <Link>TextInputDialog.xaml.cs</Link>
       <DependentUpon>TextInputDialog.WPF.xaml</DependentUpon>
@@ -135,7 +131,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="..\..\Rawr3\Rawr.Warlock\CalculationOptionsPanelWarlock.WPF.xaml">
+    <Page Include="..\..\Rawr.Warlock\CalculationOptionsPanelWarlock.WPF.xaml">
       <Link>CalculationOptionsPanelWarlock.WPF.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -117,10 +117,6 @@
     </Compile>
     <Compile Include="RogueRotationCalculator.cs" />
     <Compile Include="RogueRotationCalculatorAss.cs" />
-    <Compile Include="..\..\Rawr3\Rawr.Rogue\CalculationOptionsPanelRogue.xaml.cs">
-      <Link>CalculationOptionsPanelRogue.xaml.cs</Link>
-      <DependentUpon>CalculationOptionsPanelRogue.WPF.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <AppDesigner Include="Properties\" />
     <Compile Include="RogueRotationCalculatorCombat.cs" />
@@ -132,13 +128,6 @@
       <Project>{542537D3-F86B-4022-A161-B2FC6F0218B7}</Project>
       <Name>Rawr.Base.WPF</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="..\..\Rawr3\Rawr.Rogue\CalculationOptionsPanelRogue.WPF.xaml">
-      <Link>CalculationOptionsPanelRogue.WPF.xaml</Link>
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -156,6 +145,13 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="..\..\Rawr.Rogue\CalculationOptionsPanelRogue.WPF.xaml">
+      <Link>CalculationOptionsPanelRogue.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
