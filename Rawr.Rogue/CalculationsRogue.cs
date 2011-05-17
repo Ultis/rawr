@@ -45,11 +45,11 @@ namespace Rawr.Rogue
                 for (int tier = 0; tier < 2; tier++)
                 {
                     list.AddRange(new GemmingTemplate[]
-						{
-							CreateRogueGemmingTemplate(tier, delicate, delicate, delicate, delicate, agile), 
-							CreateRogueGemmingTemplate(tier, delicate,    adept, glinting, delicate, agile),
+                        {
+                            CreateRogueGemmingTemplate(tier, delicate, delicate, delicate, delicate, agile), 
+                            CreateRogueGemmingTemplate(tier, delicate,    adept, glinting, delicate, agile),
                             CreateRogueGemmingTemplate(tier, delicate,     deft, glinting, delicate, agile),    
-						});
+                        });
                 }
                 return list;
             }
@@ -72,13 +72,7 @@ namespace Rawr.Rogue
         }
 
         private CalculationOptionsPanelRogue _calculationOptionsPanel = null;
-        public override ICalculationOptionsPanel CalculationOptionsPanel
-        {
-            get {
-                if (_calculationOptionsPanel == null) { _calculationOptionsPanel = new CalculationOptionsPanelRogue(); }
-                return _calculationOptionsPanel;
-            }
-        }
+        public override ICalculationOptionsPanel CalculationOptionsPanel { get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelRogue()); } }
 
         private string[] _characterDisplayCalculationLabels = null;
         public override string[] CharacterDisplayCalculationLabels

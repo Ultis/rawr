@@ -44,7 +44,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;RAWR3;RAWR4</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;RAWR4</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -54,7 +54,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;RAWR3;RAWR4</DefineConstants>
+    <DefineConstants>TRACE;RAWR4</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -105,58 +105,34 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Rawr.ProtWarr\AbilityModel.cs">
-      <Link>AbilityModel.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.ProtWarr\AttackModel.cs">
-      <Link>AttackModel.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.ProtWarr\CalculationOptionsProtWarr.cs">
-      <Link>CalculationOptionsProtWarr.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.ProtWarr\CalculationsProtWarr.cs">
-      <Link>CalculationsProtWarr.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.ProtWarr\CharacterCalculationsProtWarr.cs">
-      <Link>CharacterCalculationsProtWarr.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.ProtWarr\CombatTable.cs">
-      <Link>CombatTable.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.ProtWarr\ComparisonCalculationsProtWarr.cs">
-      <Link>ComparisonCalculationsProtWarr.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.ProtWarr\DefendModel.cs">
-      <Link>DefendModel.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.ProtWarr\Enum.cs">
-      <Link>Enum.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.ProtWarr\Lookup.cs">
-      <Link>Lookup.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.ProtWarr\ParryModel.cs">
-      <Link>ParryModel.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.ProtWarr\CalculationOptionsPanelProtWarr.xaml.cs">
-      <Link>CalculationOptionsPanelProtWarr.xaml.cs</Link>
+    <AppDesigner Include="Properties\" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="AbilityModel.cs" />
+    <Compile Include="AttackModel.cs" />
+    <Compile Include="CalculationOptionsProtWarr.cs" />
+    <Compile Include="CalculationsProtWarr.cs" />
+    <Compile Include="CharacterCalculationsProtWarr.cs" />
+    <Compile Include="CombatTable.cs" />
+    <Compile Include="ComparisonCalculationsProtWarr.cs" />
+    <Compile Include="DefendModel.cs" />
+    <Compile Include="Enum.cs" />
+    <Compile Include="Lookup.cs" />
+    <Compile Include="ParryModel.cs" />
+    <Compile Include="CalculationOptionsPanelProtWarr.xaml.cs">
       <DependentUpon>CalculationOptionsPanelProtWarr.WPF.xaml</DependentUpon>
     </Compile>
-    <Compile Include="..\..\Rawr.DPSWarr\StatsWarrior.cs">
+    <Compile Include="..\Rawr.DPSWarr\StatsWarrior.cs">
       <Link>StatsWarrior.cs</Link>
     </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <AppDesigner Include="Properties\" />
-  </ItemGroup>
+    </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Rawr.Base\Rawr.Base.WPF.csproj">
+    <ProjectReference Include="..\Rawr.Base\Rawr.Base.WPF.csproj">
       <Project>{542537D3-F86B-4022-A161-B2FC6F0218B7}</Project>
       <Name>Rawr.Base.WPF</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="..\..\Rawr3\Rawr.ProtWarr\CalculationOptionsPanelProtWarr.WPF.xaml">
-      <Link>CalculationOptionsPanelProtWarr.WPF.xaml</Link>
+    <Page Include="CalculationOptionsPanelProtWarr.WPF.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

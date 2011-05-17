@@ -44,7 +44,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;RAWR3;RAWR4</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;RAWR4</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -53,17 +53,17 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;RAWR3;RAWR4</DefineConstants>
+    <DefineConstants>TRACE;RAWR4</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>..\Rawr4\binaries\ICSharpCode.SharpZipLib.dll</HintPath>
+      <HintPath>..\binaries\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="SplitButtonWpf">
-      <HintPath>..\Rawr4\binaries\SplitButtonWpf.dll</HintPath>
+      <HintPath>..\binaries\SplitButtonWpf.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -80,18 +80,18 @@
     </Reference>
     <Reference Include="System.Windows.Controls, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Rawr4\binaries\System.Windows.Controls.dll</HintPath>
+      <HintPath>..\binaries\System.Windows.Controls.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Controls.Input">
-      <HintPath>..\Rawr4\binaries\System.Windows.Controls.Input.dll</HintPath>
+      <HintPath>..\binaries\System.Windows.Controls.Input.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Controls.Input.Toolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Windows.Controls.Input.WPFToolkit, Version=2.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\Rawr4\binaries\System.Windows.Controls.Input.WPFToolkit.dll</HintPath>
+      <HintPath>..\binaries\System.Windows.Controls.Input.WPFToolkit.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Controls.Layout.Toolkit, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Rawr4\binaries\System.Windows.Controls.Layout.Toolkit.dll</HintPath>
+      <HintPath>..\binaries\System.Windows.Controls.Layout.Toolkit.dll</HintPath>
     </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq">
@@ -368,7 +368,7 @@
       <Project>{F39559FE-191D-47AA-B1CB-FBECD11E0C20}</Project>
       <Name>Rawr.DPSDK.WPF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rawr4\Rawr.Elemental\Rawr.Elemental.WPF.csproj">
+    <ProjectReference Include="..\Rawr.Elemental\Rawr.Elemental.WPF.csproj">
       <Project>{5B112624-1FEA-4E39-8295-325F8374A285}</Project>
       <Name>Rawr.Elemental.WPF</Name>
     </ProjectReference>
@@ -376,15 +376,15 @@
       <Project>{9ED4A022-7BC2-4518-9CBD-42FFC8F32411}</Project>
       <Name>Rawr.Healadin.WPF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rawr4\Rawr.HealPriest\Rawr.HealPriest.WPF.csproj">
+    <ProjectReference Include="..\Rawr.HealPriest\Rawr.HealPriest.WPF.csproj">
       <Project>{30589E43-A2D3-45B1-9128-4EC04B922597}</Project>
       <Name>Rawr.HealPriest.WPF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rawr4\Rawr.Hunter\Rawr.Hunter.WPF.csproj">
+    <ProjectReference Include="..\Rawr.Hunter\Rawr.Hunter.WPF.csproj">
       <Project>{1575AB11-89C8-4587-806B-92032E0C5472}</Project>
       <Name>Rawr.Hunter.WPF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rawr4\Rawr.Mage\Rawr.Mage.WPF.csproj">
+    <ProjectReference Include="..\Rawr.Mage\Rawr.Mage.WPF.csproj">
       <Project>{C61A1D1A-21F8-4234-9085-5ECD33978DEF}</Project>
       <Name>Rawr.Mage.WPF</Name>
     </ProjectReference>
@@ -392,15 +392,15 @@
       <Project>{29946D37-91C4-4D46-9625-D11C8CEE8AFC}</Project>
       <Name>Rawr.Moonkin.WPF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rawr4\Rawr.ProtPaladin\Rawr.ProtPaladin.WPF.csproj">
+    <ProjectReference Include="..\Rawr.ProtPaladin\Rawr.ProtPaladin.WPF.csproj">
       <Project>{086E2C96-2540-414A-8E35-82D286147593}</Project>
       <Name>Rawr.ProtPaladin.WPF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rawr4\Rawr.ProtWarr\Rawr.ProtWarr.WPF.csproj">
+    <ProjectReference Include="..\Rawr.ProtWarr\Rawr.ProtWarr.WPF.csproj">
       <Project>{62FFF04E-DE66-4953-AAD2-0F71988D5F6E}</Project>
       <Name>Rawr.ProtWarr.WPF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rawr4\Rawr.RestoSham\Rawr.RestoSham.WPF.csproj">
+    <ProjectReference Include="..\Rawr.RestoSham\Rawr.RestoSham.WPF.csproj">
       <Project>{0AD5FD48-77A8-4220-B27C-282A79E6C534}</Project>
       <Name>Rawr.RestoSham.WPF</Name>
     </ProjectReference>
@@ -408,7 +408,7 @@
       <Project>{6D64814C-3944-41C1-BB89-3FEC1B139D74}</Project>
       <Name>Rawr.Retribution.WPF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rawr4\Rawr.Rogue\Rawr.Rogue.WPF.csproj">
+    <ProjectReference Include="..\Rawr.Rogue\Rawr.Rogue.WPF.csproj">
       <Project>{78370B5B-0DF9-43D2-8F67-CA4D319EA000}</Project>
       <Name>Rawr.Rogue.WPF</Name>
     </ProjectReference>
@@ -416,11 +416,11 @@
       <Project>{5C7D2251-55E7-4A90-8A97-B5DCC9D35807}</Project>
       <Name>Rawr.TankDK.WPF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rawr4\Rawr.Tree\Rawr.Tree.WPF.csproj">
+    <ProjectReference Include="..\Rawr.Tree\Rawr.Tree.WPF.csproj">
       <Project>{1B85DA42-90D5-46FA-99AC-9E21785B3AC8}</Project>
       <Name>Rawr.Tree.WPF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rawr4\Rawr.Warlock\Rawr.Warlock.WPF.csproj">
+    <ProjectReference Include="..\Rawr.Warlock\Rawr.Warlock.WPF.csproj">
       <Project>{320CAEFB-813C-487C-8EA0-2B3D347865FC}</Project>
       <Name>Rawr.Warlock.WPF</Name>
     </ProjectReference>

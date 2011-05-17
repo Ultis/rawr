@@ -44,7 +44,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;RAWR3;RAWR4</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;RAWR4</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -54,7 +54,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;RAWR3;RAWR4</DefineConstants>
+    <DefineConstants>TRACE;RAWR4</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -105,225 +105,173 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Rawr.Hunter\CalculationOptionsHunter.cs">
-      <Link>CalculationOptionsHunter.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Hunter\CalculationsHunter.cs">
-      <Link>CalculationsHunter.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Hunter\CharacterCalculationsHunter.cs">
-      <Link>CharacterCalculationsHunter.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Hunter\CombatFactors.cs">
-      <Link>CombatFactors.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Hunter\CombatTable.cs">
-      <Link>CombatTable.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Hunter\ComparisonCalculationHunter.cs">
-      <Link>ComparisonCalculationHunter.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Hunter\HunterEnums.cs">
-      <Link>HunterEnums.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Hunter\Pet\PetCalculations.cs">
-      <Link>Pet\PetCalculations.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Hunter\Pet\PetSkill.cs">
-      <Link>Pet\PetSkill.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Hunter\Pet\PetTalents.cs">
-      <Link>Pet\PetTalents.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Hunter\Pet\SavedPetTalentSpec.cs">
-      <Link>Pet\SavedPetTalentSpec.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Hunter\Rotation.cs">
-      <Link>Rotation.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Hunter\RotationTest.cs">
-      <Link>RotationTest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Hunter\ShotData.cs">
-      <Link>ShotData.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Hunter\ShotPriority.cs">
-      <Link>ShotPriority.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Hunter\Skills.Base.cs">
-      <Link>Skills.Base.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Hunter\Skills.Shots.cs">
-      <Link>Skills.Shots.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Hunter\CalculationOptionsPanelHunter.xaml.cs">
-      <Link>CalculationOptionsPanelHunter.xaml.cs</Link>
+    <AppDesigner Include="Properties\" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Pet\PetCalculations.cs" />
+    <Compile Include="Pet\PetSkill.cs" />
+    <Compile Include="Pet\PetTalents.cs" />
+    <Compile Include="Pet\SavedPetTalentSpec.cs" />
+    <Compile Include="CalculationOptionsHunter.cs" />
+    <Compile Include="CalculationsHunter.cs" />
+    <Compile Include="CharacterCalculationsHunter.cs" />
+    <Compile Include="CombatFactors.cs" />
+    <Compile Include="CombatTable.cs" />
+    <Compile Include="ComparisonCalculationHunter.cs" />
+    <Compile Include="HunterEnums.cs" />
+    <Compile Include="Rotation.cs" />
+    <Compile Include="RotationTest.cs" />
+    <Compile Include="ShotData.cs" />
+    <Compile Include="ShotPriority.cs" />
+    <Compile Include="Skills.Base.cs" />
+    <Compile Include="Skills.Shots.cs" />
+    <Compile Include="HunterConverters.cs" />
+    <Compile Include="CalculationOptionsPanelHunter.xaml.cs">
       <DependentUpon>CalculationOptionsPanelHunter.WPF.xaml</DependentUpon>
     </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Hunter\HunterConverters.cs">
-      <Link>HunterConverters.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Hunter\Pet\FormSavePetTalentSpec.xaml.cs">
-      <Link>Pet\FormSavePetTalentSpec.xaml.cs</Link>
+    <Compile Include="Pet\FormSavePetTalentSpec.xaml.cs">
       <DependentUpon>FormSavePetTalentSpec.WPF.xaml</DependentUpon>
     </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Hunter\Pet\PetTalentItem.xaml.cs">
-      <Link>Pet\PetTalentItem.xaml.cs</Link>
+    <Compile Include="Pet\PetTalentItem.xaml.cs">
       <DependentUpon>PetTalentItem.WPF.xaml</DependentUpon>
     </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Hunter\Pet\PetTalentPicker.xaml.cs">
-      <Link>Pet\PetTalentPicker.xaml.cs</Link>
+    <Compile Include="Pet\PetTalentPicker.xaml.cs">
       <DependentUpon>PetTalentPicker.WPF.xaml</DependentUpon>
     </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Hunter\Pet\PetTalentTree.xaml.cs">
-      <Link>Pet\PetTalentTree.xaml.cs</Link>
+    <Compile Include="Pet\PetTalentTree.xaml.cs">
       <DependentUpon>PetTalentTree.WPF.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Rawr.Base\Rawr.Base.WPF.csproj">
+    <ProjectReference Include="..\Rawr.Base\Rawr.Base.WPF.csproj">
       <Project>{542537D3-F86B-4022-A161-B2FC6F0218B7}</Project>
       <Name>Rawr.Base.WPF</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="..\..\Rawr3\Rawr.Hunter\CalculationOptionsPanelHunter.WPF.xaml">
-      <Link>CalculationOptionsPanelHunter.WPF.xaml</Link>
+    <Page Include="CalculationOptionsPanelHunter.WPF.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\..\Rawr3\Rawr.Hunter\Pet\FormSavePetTalentSpec.WPF.xaml">
-      <Link>Pet\FormSavePetTalentSpec.WPF.xaml</Link>
+    <Page Include="Pet\FormSavePetTalentSpec.WPF.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\..\Rawr3\Rawr.Hunter\Pet\PetTalentItem.WPF.xaml">
-      <Link>Pet\PetTalentItem.WPF.xaml</Link>
+    <Page Include="Pet\PetTalentItem.WPF.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\..\Rawr3\Rawr.Hunter\Pet\PetTalentPicker.WPF.xaml">
-      <Link>Pet\PetTalentPicker.WPF.xaml</Link>
+    <Page Include="Pet\PetTalentPicker.WPF.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\..\Rawr3\Rawr.Hunter\Pet\PetTalentTree.WPF.xaml">
-      <Link>Pet\PetTalentTree.WPF.xaml</Link>
+    <Page Include="Pet\PetTalentTree.WPF.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="..\..\Rawr.Hunter\Resources\bgCunning.jpg">
-      <Link>Resources\bgCunning.jpg</Link>
-    </Resource>
-    <Resource Include="..\..\Rawr.Hunter\Resources\bgFerocity.jpg">
-      <Link>Resources\bgFerocity.jpg</Link>
-    </Resource>
-    <Resource Include="..\..\Rawr.Hunter\Resources\bgTenacity.jpg">
-      <Link>Resources\bgTenacity.jpg</Link>
-    </Resource>
+    <Resource Include="Resources\bgCunning.jpg" />
+    <Resource Include="Resources\bgFerocity.jpg" />
+    <Resource Include="Resources\bgTenacity.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="..\..\Rawr.UI\Images\icon-over-green.png">
+    <Resource Include="..\Rawr.UI\Images\icon-over-green.png">
       <Link>Resources\icon-over-green.png</Link>
     </Resource>
-    <Resource Include="..\..\Rawr.UI\Images\icon-over-grey.png">
+    <Resource Include="..\Rawr.UI\Images\icon-over-grey.png">
       <Link>Resources\icon-over-grey.png</Link>
     </Resource>
-    <Resource Include="..\..\Rawr.UI\Images\icon-over-yellow.png">
+    <Resource Include="..\Rawr.UI\Images\icon-over-yellow.png">
       <Link>Resources\icon-over-yellow.png</Link>
     </Resource>
-    <Resource Include="..\..\Rawr.UI\Images\across-left-green.png">
+    <Resource Include="..\Rawr.UI\Images\across-left-green.png">
       <Link>Resources\across-left-green.png</Link>
     </Resource>
-    <Resource Include="..\..\Rawr.UI\Images\across-left-grey.png">
+    <Resource Include="..\Rawr.UI\Images\across-left-grey.png">
       <Link>Resources\across-left-grey.png</Link>
     </Resource>
-    <Resource Include="..\..\Rawr.UI\Images\across-left-yellow.png">
+    <Resource Include="..\Rawr.UI\Images\across-left-yellow.png">
       <Link>Resources\across-left-yellow.png</Link>
     </Resource>
-    <Resource Include="..\..\Rawr.UI\Images\across-right-green.png">
+    <Resource Include="..\Rawr.UI\Images\across-right-green.png">
       <Link>Resources\across-right-green.png</Link>
     </Resource>
-    <Resource Include="..\..\Rawr.UI\Images\across-right-grey.png">
+    <Resource Include="..\Rawr.UI\Images\across-right-grey.png">
       <Link>Resources\across-right-grey.png</Link>
     </Resource>
-    <Resource Include="..\..\Rawr.UI\Images\across-right-yellow.png">
+    <Resource Include="..\Rawr.UI\Images\across-right-yellow.png">
       <Link>Resources\across-right-yellow.png</Link>
     </Resource>
-    <Resource Include="..\..\Rawr.UI\Images\down-1-green.png">
+    <Resource Include="..\Rawr.UI\Images\down-1-green.png">
       <Link>Resources\down-1-green.png</Link>
     </Resource>
-    <Resource Include="..\..\Rawr.UI\Images\down-1-grey.png">
+    <Resource Include="..\Rawr.UI\Images\down-1-grey.png">
       <Link>Resources\down-1-grey.png</Link>
     </Resource>
-    <Resource Include="..\..\Rawr.UI\Images\down-1-yellow.png">
+    <Resource Include="..\Rawr.UI\Images\down-1-yellow.png">
       <Link>Resources\down-1-yellow.png</Link>
     </Resource>
-    <Resource Include="..\..\Rawr.UI\Images\down-2-green.png">
+    <Resource Include="..\Rawr.UI\Images\down-2-green.png">
       <Link>Resources\down-2-green.png</Link>
     </Resource>
-    <Resource Include="..\..\Rawr.UI\Images\down-2-grey.png">
+    <Resource Include="..\Rawr.UI\Images\down-2-grey.png">
       <Link>Resources\down-2-grey.png</Link>
     </Resource>
-    <Resource Include="..\..\Rawr.UI\Images\down-2-left-green.png">
+    <Resource Include="..\Rawr.UI\Images\down-2-left-green.png">
       <Link>Resources\down-2-left-green.png</Link>
     </Resource>
-    <Resource Include="..\..\Rawr.UI\Images\down-2-left-grey.png">
+    <Resource Include="..\Rawr.UI\Images\down-2-left-grey.png">
       <Link>Resources\down-2-left-grey.png</Link>
     </Resource>
-    <Resource Include="..\..\Rawr.UI\Images\down-2-left-yellow.png">
+    <Resource Include="..\Rawr.UI\Images\down-2-left-yellow.png">
       <Link>Resources\down-2-left-yellow.png</Link>
     </Resource>
-    <Resource Include="..\..\Rawr.UI\Images\down-2-right-green.png">
+    <Resource Include="..\Rawr.UI\Images\down-2-right-green.png">
       <Link>Resources\down-2-right-green.png</Link>
     </Resource>
-    <Resource Include="..\..\Rawr.UI\Images\down-2-right-grey.png">
+    <Resource Include="..\Rawr.UI\Images\down-2-right-grey.png">
       <Link>Resources\down-2-right-grey.png</Link>
     </Resource>
-    <Resource Include="..\..\Rawr.UI\Images\down-2-right-yellow.png">
+    <Resource Include="..\Rawr.UI\Images\down-2-right-yellow.png">
       <Link>Resources\down-2-right-yellow.png</Link>
     </Resource>
-    <Resource Include="..\..\Rawr.UI\Images\down-2-yellow.png">
+    <Resource Include="..\Rawr.UI\Images\down-2-yellow.png">
       <Link>Resources\down-2-yellow.png</Link>
     </Resource>
-    <Resource Include="..\..\Rawr.UI\Images\down-3-green.png">
+    <Resource Include="..\Rawr.UI\Images\down-3-green.png">
       <Link>Resources\down-3-green.png</Link>
     </Resource>
-    <Resource Include="..\..\Rawr.UI\Images\down-3-grey.png">
+    <Resource Include="..\Rawr.UI\Images\down-3-grey.png">
       <Link>Resources\down-3-grey.png</Link>
     </Resource>
-    <Resource Include="..\..\Rawr.UI\Images\down-3-yellow.png">
+    <Resource Include="..\Rawr.UI\Images\down-3-yellow.png">
       <Link>Resources\down-3-yellow.png</Link>
     </Resource>
-    <Resource Include="..\..\Rawr.UI\Images\down-4-green.png">
+    <Resource Include="..\Rawr.UI\Images\down-4-green.png">
       <Link>Resources\down-4-green.png</Link>
     </Resource>
-    <Resource Include="..\..\Rawr.UI\Images\down-4-grey.png">
+    <Resource Include="..\Rawr.UI\Images\down-4-grey.png">
       <Link>Resources\down-4-grey.png</Link>
     </Resource>
-    <Resource Include="..\..\Rawr.UI\Images\down-4-yellow.png">
+    <Resource Include="..\Rawr.UI\Images\down-4-yellow.png">
       <Link>Resources\down-4-yellow.png</Link>
     </Resource>
-    <Resource Include="..\..\Rawr.UI\Images\down-left-green.png">
+    <Resource Include="..\Rawr.UI\Images\down-left-green.png">
       <Link>Resources\down-left-green.png</Link>
     </Resource>
-    <Resource Include="..\..\Rawr.UI\Images\down-left-grey.png">
+    <Resource Include="..\Rawr.UI\Images\down-left-grey.png">
       <Link>Resources\down-left-grey.png</Link>
     </Resource>
-    <Resource Include="..\..\Rawr.UI\Images\down-left-yellow.png">
+    <Resource Include="..\Rawr.UI\Images\down-left-yellow.png">
       <Link>Resources\down-left-yellow.png</Link>
     </Resource>
-    <Resource Include="..\..\Rawr.UI\Images\down-right-green.png">
+    <Resource Include="..\Rawr.UI\Images\down-right-green.png">
       <Link>Resources\down-right-green.png</Link>
     </Resource>
-    <Resource Include="..\..\Rawr.UI\Images\down-right-grey.png">
+    <Resource Include="..\Rawr.UI\Images\down-right-grey.png">
       <Link>Resources\down-right-grey.png</Link>
     </Resource>
-    <Resource Include="..\..\Rawr.UI\Images\down-right-yellow.png">
+    <Resource Include="..\Rawr.UI\Images\down-right-yellow.png">
       <Link>Resources\down-right-yellow.png</Link>
     </Resource>
   </ItemGroup>
@@ -346,7 +294,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>..\..\..\..\sgen4.exe $(TargetFileName)</PostBuildEvent>
+    <PostBuildEvent>..\..\..\sgen4.exe $(TargetFileName)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
