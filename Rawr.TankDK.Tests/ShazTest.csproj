@@ -67,8 +67,8 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DKTank.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DKTank.cs" />
     <Compile Include="DKDPS.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
