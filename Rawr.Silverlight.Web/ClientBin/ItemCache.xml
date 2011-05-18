@@ -34965,10 +34965,20 @@
     <Faction>Neutral</Faction>
     <Bind>BoE</Bind>
     <SocketBonus />
+    <AllowedRandomSuffix>5</AllowedRandomSuffix>
+    <AllowedRandomSuffix>40</AllowedRandomSuffix>
+    <AllowedRandomSuffix>91</AllowedRandomSuffix>
+    <AllowedRandomSuffix>131</AllowedRandomSuffix>
+    <AllowedRandomSuffix>132</AllowedRandomSuffix>
+    <AllowedRandomSuffix>133</AllowedRandomSuffix>
+    <AllowedRandomSuffix>134</AllowedRandomSuffix>
+    <AllowedRandomSuffix>135</AllowedRandomSuffix>
+    <AllowedRandomSuffix>136</AllowedRandomSuffix>
+    <AllowedRandomSuffix>137</AllowedRandomSuffix>
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Leatherworking</Skill>
-        <Level>0</Level>
+        <Level>490</Level>
         <Bind>BoE</Bind>
         <SpellName>Tsunami Chestguard</SpellName>
       </ItemLocation>
@@ -72763,8 +72773,8 @@
         <Area>Vashj'ir: Abyssal Depths</Area>
         <Heroic>false</Heroic>
         <Boss>Mobus</Boss>
-        <Count>5</Count>
-        <OutOf>5</OutOf>
+        <Count>42</Count>
+        <OutOf>42</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Mobus's Vile Halberd</Name>
@@ -90720,7 +90730,6 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
     <Name>[Downloading from Wowhead]</Name>
     <Id>0</Id>
@@ -94397,5 +94406,329 @@
     <Name>Diamond Clutching Gloves</Name>
     <Id>63811</Id>
     <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>308</ItemLevel>
+    <DisplayId>72620</DisplayId>
+    <DisplaySlot>3</DisplaySlot>
+    <IconPath>inv_shoulder_leather_cataclysm_b_01</IconPath>
+    <Stats>
+      <Armor>1536</Armor>
+    </Stats>
+    <Quality>Rare</Quality>
+    <SetName>The Big Wave</SetName>
+    <Type>Mail</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <AllowedRandomSuffix>5</AllowedRandomSuffix>
+    <AllowedRandomSuffix>40</AllowedRandomSuffix>
+    <AllowedRandomSuffix>91</AllowedRandomSuffix>
+    <AllowedRandomSuffix>131</AllowedRandomSuffix>
+    <AllowedRandomSuffix>132</AllowedRandomSuffix>
+    <AllowedRandomSuffix>133</AllowedRandomSuffix>
+    <AllowedRandomSuffix>134</AllowedRandomSuffix>
+    <AllowedRandomSuffix>135</AllowedRandomSuffix>
+    <AllowedRandomSuffix>136</AllowedRandomSuffix>
+    <AllowedRandomSuffix>137</AllowedRandomSuffix>
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Leatherworking</Skill>
+        <Level>455</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Tsunami Shoulders</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Tsunami Shoulders</Name>
+    <Id>56498</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>306</ItemLevel>
+    <DisplayId>72619</DisplayId>
+    <DisplaySlot>1</DisplaySlot>
+    <IconPath>inv_helmet_leather_cataclysm_b_01</IconPath>
+    <Stats>
+      <Armor>1652</Armor>
+    </Stats>
+    <Quality>Uncommon</Quality>
+    <SetName>The Big Wave</SetName>
+    <Type>Mail</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <AllowedRandomSuffix>5</AllowedRandomSuffix>
+    <AllowedRandomSuffix>40</AllowedRandomSuffix>
+    <AllowedRandomSuffix>91</AllowedRandomSuffix>
+    <AllowedRandomSuffix>131</AllowedRandomSuffix>
+    <AllowedRandomSuffix>132</AllowedRandomSuffix>
+    <AllowedRandomSuffix>133</AllowedRandomSuffix>
+    <AllowedRandomSuffix>134</AllowedRandomSuffix>
+    <AllowedRandomSuffix>135</AllowedRandomSuffix>
+    <AllowedRandomSuffix>136</AllowedRandomSuffix>
+    <AllowedRandomSuffix>137</AllowedRandomSuffix>
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Leatherworking</Skill>
+        <Level>485</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Tsunami Helm</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Tsunami Helm</Name>
+    <Id>56512</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>300</ItemLevel>
+    <DisplayId>72624</DisplayId>
+    <DisplaySlot>10</DisplaySlot>
+    <IconPath>inv_gauntlets_leather_cataclysm_b_01</IconPath>
+    <Stats>
+      <Armor>1246</Armor>
+    </Stats>
+    <Quality>Uncommon</Quality>
+    <SetName>The Big Wave</SetName>
+    <Type>Mail</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <AllowedRandomSuffix>5</AllowedRandomSuffix>
+    <AllowedRandomSuffix>40</AllowedRandomSuffix>
+    <AllowedRandomSuffix>91</AllowedRandomSuffix>
+    <AllowedRandomSuffix>131</AllowedRandomSuffix>
+    <AllowedRandomSuffix>132</AllowedRandomSuffix>
+    <AllowedRandomSuffix>133</AllowedRandomSuffix>
+    <AllowedRandomSuffix>134</AllowedRandomSuffix>
+    <AllowedRandomSuffix>135</AllowedRandomSuffix>
+    <AllowedRandomSuffix>136</AllowedRandomSuffix>
+    <AllowedRandomSuffix>137</AllowedRandomSuffix>
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Leatherworking</Skill>
+        <Level>475</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Tsunami Gloves</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Tsunami Gloves</Name>
+    <Id>56490</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>300</ItemLevel>
+    <DisplayId>72625</DisplayId>
+    <DisplaySlot>7</DisplaySlot>
+    <IconPath>inv_pants_leather_cataclysm_b_01</IconPath>
+    <Stats>
+      <Armor>1745</Armor>
+    </Stats>
+    <Quality>Uncommon</Quality>
+    <SetName>The Big Wave</SetName>
+    <Type>Mail</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <AllowedRandomSuffix>5</AllowedRandomSuffix>
+    <AllowedRandomSuffix>40</AllowedRandomSuffix>
+    <AllowedRandomSuffix>91</AllowedRandomSuffix>
+    <AllowedRandomSuffix>131</AllowedRandomSuffix>
+    <AllowedRandomSuffix>132</AllowedRandomSuffix>
+    <AllowedRandomSuffix>133</AllowedRandomSuffix>
+    <AllowedRandomSuffix>134</AllowedRandomSuffix>
+    <AllowedRandomSuffix>135</AllowedRandomSuffix>
+    <AllowedRandomSuffix>136</AllowedRandomSuffix>
+    <AllowedRandomSuffix>137</AllowedRandomSuffix>
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Leatherworking</Skill>
+        <Level>480</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Tsunami Leggings</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Tsunami Leggings</Name>
+    <Id>56508</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>333</ItemLevel>
+    <DisplayId>72640</DisplayId>
+    <DisplaySlot>7</DisplaySlot>
+    <IconPath>inv_pants_leather_cataclysm_b_01</IconPath>
+    <Stats>
+      <Armor>1336</Armor>
+    </Stats>
+    <Quality>Rare</Quality>
+    <SetName>The Dark Brand</SetName>
+    <Type>Leather</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <AllowedRandomSuffix>5</AllowedRandomSuffix>
+    <AllowedRandomSuffix>40</AllowedRandomSuffix>
+    <AllowedRandomSuffix>91</AllowedRandomSuffix>
+    <AllowedRandomSuffix>131</AllowedRandomSuffix>
+    <AllowedRandomSuffix>132</AllowedRandomSuffix>
+    <AllowedRandomSuffix>133</AllowedRandomSuffix>
+    <AllowedRandomSuffix>134</AllowedRandomSuffix>
+    <AllowedRandomSuffix>135</AllowedRandomSuffix>
+    <AllowedRandomSuffix>136</AllowedRandomSuffix>
+    <AllowedRandomSuffix>137</AllowedRandomSuffix>
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Leatherworking</Skill>
+        <Level>485</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Darkbrand Leggings</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Darkbrand Leggings</Name>
+    <Id>56513</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>316</ItemLevel>
+    <DisplayId>72639</DisplayId>
+    <DisplaySlot>10</DisplaySlot>
+    <IconPath>inv_gauntlets_leather_cataclysm_b_01</IconPath>
+    <Stats>
+      <Armor>920</Armor>
+    </Stats>
+    <Quality>Rare</Quality>
+    <SetName>The Dark Brand</SetName>
+    <Type>Leather</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <AllowedRandomSuffix>5</AllowedRandomSuffix>
+    <AllowedRandomSuffix>40</AllowedRandomSuffix>
+    <AllowedRandomSuffix>91</AllowedRandomSuffix>
+    <AllowedRandomSuffix>131</AllowedRandomSuffix>
+    <AllowedRandomSuffix>132</AllowedRandomSuffix>
+    <AllowedRandomSuffix>133</AllowedRandomSuffix>
+    <AllowedRandomSuffix>134</AllowedRandomSuffix>
+    <AllowedRandomSuffix>135</AllowedRandomSuffix>
+    <AllowedRandomSuffix>136</AllowedRandomSuffix>
+    <AllowedRandomSuffix>137</AllowedRandomSuffix>
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Leatherworking</Skill>
+        <Level>465</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Darkbrand Gloves</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Darkbrand Gloves</Name>
+    <Id>56484</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>306</ItemLevel>
+    <DisplayId>72642</DisplayId>
+    <DisplaySlot>1</DisplaySlot>
+    <IconPath>inv_helmet_leather_cataclysm_b_01</IconPath>
+    <Stats>
+      <Armor>1171</Armor>
+    </Stats>
+    <Quality>Uncommon</Quality>
+    <SetName>The Dark Brand</SetName>
+    <Type>Leather</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <AllowedRandomSuffix>5</AllowedRandomSuffix>
+    <AllowedRandomSuffix>40</AllowedRandomSuffix>
+    <AllowedRandomSuffix>91</AllowedRandomSuffix>
+    <AllowedRandomSuffix>131</AllowedRandomSuffix>
+    <AllowedRandomSuffix>132</AllowedRandomSuffix>
+    <AllowedRandomSuffix>133</AllowedRandomSuffix>
+    <AllowedRandomSuffix>134</AllowedRandomSuffix>
+    <AllowedRandomSuffix>135</AllowedRandomSuffix>
+    <AllowedRandomSuffix>136</AllowedRandomSuffix>
+    <AllowedRandomSuffix>137</AllowedRandomSuffix>
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Leatherworking</Skill>
+        <Level>490</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Darkbrand Helm</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Darkbrand Helm</Name>
+    <Id>56505</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>300</ItemLevel>
+    <DisplayId>72637</DisplayId>
+    <DisplaySlot>5</DisplaySlot>
+    <IconPath>inv_chest_leather_cataclysm_b_01</IconPath>
+    <Stats>
+      <Armor>1422</Armor>
+    </Stats>
+    <Quality>Uncommon</Quality>
+    <SetName>The Dark Brand</SetName>
+    <Type>Leather</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <AllowedRandomSuffix>5</AllowedRandomSuffix>
+    <AllowedRandomSuffix>40</AllowedRandomSuffix>
+    <AllowedRandomSuffix>91</AllowedRandomSuffix>
+    <AllowedRandomSuffix>131</AllowedRandomSuffix>
+    <AllowedRandomSuffix>132</AllowedRandomSuffix>
+    <AllowedRandomSuffix>133</AllowedRandomSuffix>
+    <AllowedRandomSuffix>134</AllowedRandomSuffix>
+    <AllowedRandomSuffix>135</AllowedRandomSuffix>
+    <AllowedRandomSuffix>136</AllowedRandomSuffix>
+    <AllowedRandomSuffix>137</AllowedRandomSuffix>
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Leatherworking</Skill>
+        <Level>480</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Darkbrand Chestguard</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Darkbrand Chestguard</Name>
+    <Id>56509</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>300</ItemLevel>
+    <DisplayId>72643</DisplayId>
+    <DisplaySlot>3</DisplaySlot>
+    <IconPath>inv_shoulder_leather_cataclysm_b_01</IconPath>
+    <Stats>
+      <Armor>1067</Armor>
+    </Stats>
+    <Quality>Uncommon</Quality>
+    <SetName>The Dark Brand</SetName>
+    <Type>Leather</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <AllowedRandomSuffix>5</AllowedRandomSuffix>
+    <AllowedRandomSuffix>40</AllowedRandomSuffix>
+    <AllowedRandomSuffix>91</AllowedRandomSuffix>
+    <AllowedRandomSuffix>131</AllowedRandomSuffix>
+    <AllowedRandomSuffix>132</AllowedRandomSuffix>
+    <AllowedRandomSuffix>133</AllowedRandomSuffix>
+    <AllowedRandomSuffix>134</AllowedRandomSuffix>
+    <AllowedRandomSuffix>135</AllowedRandomSuffix>
+    <AllowedRandomSuffix>136</AllowedRandomSuffix>
+    <AllowedRandomSuffix>137</AllowedRandomSuffix>
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Leatherworking</Skill>
+        <Level>475</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Darkbrand Shoulders</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Darkbrand Shoulders</Name>
+    <Id>56495</Id>
+    <Slot>Shoulders</Slot>
   </Item>
 </ArrayOfItem>
