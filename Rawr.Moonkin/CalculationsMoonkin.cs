@@ -239,9 +239,11 @@ namespace Rawr.Moonkin
             List<Reforging> retval = base.GetReforgingOptions(baseItem, randomSuffixId);
 
             // If the item has spirit, do not allow reforging spirit -> hit
-            if (baseItem.Stats.Spirit > 0 && !_enableSpiritToHit)
+            if (baseItem.Stats.Spirit > 0)
             {
-                retval.RemoveAll(rf => rf != null && rf.ReforgeFrom == AdditiveStat.Spirit && rf.ReforgeTo == AdditiveStat.HitRating);
+                // I put this in a sub-if because putting it above messes with the if-else/if-else code flow
+                if (!_enableSpiritToHit)
+                    retval.RemoveAll(rf => rf != null && rf.ReforgeFrom == AdditiveStat.Spirit && rf.ReforgeTo == AdditiveStat.HitRating);
             }
             // If it has hit, do not allow reforging hit -> spirit
             else if (baseItem.Stats.HitRating > 0)
