@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rawr;
 using Rawr.DPSDK;
 
-namespace ShazTest
+namespace Rawr.UnitTests.DK
 {
     /// <summary>
     /// Summary description for UnitTest1
@@ -29,14 +29,14 @@ namespace ShazTest
                 weap, weap, ItemSlot.None, ItemSlot.None, ItemSlot.None, 100, 200, ItemDamageType.Physical, 3.8f, "Death Knight");
 
             m_char = new Character();
-            string szXML = System.IO.File.ReadAllText("..\\..\\..\\..\\..\\Rawr\\Rawr.UnitTests\\testdata\\~Test_Rawr4_Unholy2h.xml");
+            string szXML = System.IO.File.ReadAllText("..\\..\\..\\..\\Rawr\\Rawr.UnitTests\\testdata\\~Test_Rawr4_Unholy2h.xml");
             m_char = Character.LoadFromXml(szXML);
             if (m_char.Class == CharacterClass.Druid)
             {
                 // This means it didn't load properly.
                 m_char.Class = CharacterClass.DeathKnight;
                 // So a weapon, so we have values in weapon specific abilities.
-                m_char.MainHand = new ItemInstance(weapon, null, null, null, new Enchant(), new Reforging(), new Tinkering());
+                m_char.MainHand = new ItemInstance(weapon, 0, null, null, null, new Enchant(), new Reforging(), new Tinkering());
                 // Unholy DK
                 m_char.DeathKnightTalents = new DeathKnightTalents("00300000000000000000320200000000000000000332032023031021231.10000000101110000010000001110");
             }
@@ -85,7 +85,7 @@ namespace ShazTest
         #endregion
 
         [TestMethod]
-        public void TestMethod_DPSDK_BuildAcceptance()
+        public void DPSDK_BuildAcceptance()
         {
             Rawr.DPSDK.CalculationsDPSDK CalcDPSDK = new Rawr.DPSDK.CalculationsDPSDK();
 
@@ -100,7 +100,7 @@ namespace ShazTest
 
 
         [TestMethod]
-        public void TestMethod_DPSDK_DPSMisMatch()
+        public void DPSDK_DPSMisMatch()
         {
             Rawr.DPSDK.CalculationsDPSDK CalcDPSDK = new Rawr.DPSDK.CalculationsDPSDK();
 
@@ -119,13 +119,13 @@ namespace ShazTest
         }
 
         [TestMethod]
-        public void TestMethod_Rotation()
+        public void DPSDK_Rotation()
         {
             Rawr.DPSDK.CharacterCalculationsDPSDK CalcDPSDK = new Rawr.DPSDK.CharacterCalculationsDPSDK();
             CalculationOptionsDPSDK calcOpts = new CalculationOptionsDPSDK();
             Rawr.DK.StatsDK TotalStats = new Rawr.DK.StatsDK();
 
-            Rawr.DK.DKCombatTable ct = new Rawr.DK.DKCombatTable(m_char, TotalStats, CalcDPSDK, calcOpts);
+            Rawr.DK.DKCombatTable ct = new Rawr.DK.DKCombatTable(m_char, TotalStats, CalcDPSDK, calcOpts, m_char.BossOptions);
             Rawr.DK.Rotation rot = new Rawr.DK.Rotation(ct, false);
             rot.PRE_OneEachRot();
             rot.ReportRotation();
@@ -136,9 +136,6 @@ namespace ShazTest
             rot.PRE_Unholy();
             rot.ReportRotation();
             Assert.IsTrue(rot.m_DPS > 0, "rotation Unholy produces 0 DPS");
-            rot.PRE_BloodDiseaseless();
-            rot.ReportRotation();
-            Assert.IsTrue(rot.m_DPS > 0, "rotation BloodDiseaseless produces 0 DPS");
             rot.PRE_BloodDiseased();
             rot.ReportRotation();
             Assert.IsTrue(rot.m_DPS > 0, "rotation BloodDiseased produces 0 DPS");
@@ -149,14 +146,14 @@ namespace ShazTest
         }
 
         [TestMethod]
-        public void TestMethod_TrinketHang()
+        public void DPSDK_TrinketHang()
         {
             Stats StatTrink = new Stats();
             StatTrink.AddSpecialEffect(new SpecialEffect(Trigger.MainHandHit, new Stats() { Strength = 300 }, 10, 0, .1f, 5));
             StatTrink.MasteryRating = 500;
             Item Trinket = new Item("testTrink", ItemQuality.Epic, ItemType.None, 10102, "icon.bmp", ItemSlot.Trinket, "", false,
                 StatTrink, StatTrink, ItemSlot.None, ItemSlot.None, ItemSlot.None, 0, 0, ItemDamageType.Physical, 0, "");
-            m_char.Trinket1 = new ItemInstance(Trinket, null, null, null, new Enchant(), new Reforging(), new Tinkering());
+            m_char.Trinket1 = new ItemInstance(Trinket, 0, null, null, null, new Enchant(), new Reforging(), new Tinkering());
 
             // This bug was due to non-valid swing times.
             m_char.MainHand = null;

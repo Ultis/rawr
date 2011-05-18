@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rawr;
 using Rawr.TankDK;
 
-namespace ShazTest
+namespace Rawr.UnitTests.DK
 {
     /// <summary>
     /// Summary description for UnitTest1
@@ -27,14 +27,14 @@ namespace ShazTest
                 weap, weap, ItemSlot.None, ItemSlot.None, ItemSlot.None, 100, 200, ItemDamageType.Physical, 3.8f, "Death Knight");
 
             m_char = new Character();
-            string szXML = System.IO.File.ReadAllText("..\\..\\..\\..\\..\\Rawr\\Rawr.UnitTests\\testdata\\~Test_Rawr4_Blood2h.xml");
+            string szXML = System.IO.File.ReadAllText("..\\..\\..\\..\\Rawr\\Rawr.UnitTests\\testdata\\~Test_Rawr4_Blood2h.xml");
             m_char = Character.LoadFromXml(szXML);
             if (m_char.Class == CharacterClass.Druid)
             {
                 // This means it didn't load properly.
                 m_char.Class = CharacterClass.DeathKnight;
                 // So a weapon, so we have values in weapon specific abilities.
-                m_char.MainHand = new ItemInstance(weapon, null, null, null, new Enchant(), new Reforging(), new Tinkering());
+                m_char.MainHand = new ItemInstance(weapon, 0, null, null, null, new Enchant(), new Reforging(), new Tinkering());
                 // Some talents.
                 // Blood Talents.
                 m_char.DeathKnightTalents = new DeathKnightTalents("03322203130022011321000000000000000000000000000000000000000.00000000000000000000000000000");
@@ -92,7 +92,7 @@ namespace ShazTest
         #endregion
 
         [TestMethod]
-        public void TestMethod_TankDK_BuildAcceptance()
+        public void TankDK_BuildAcceptance()
         {
             Rawr.TankDK.CalculationsTankDK CalcTankDK = new Rawr.TankDK.CalculationsTankDK();
 
@@ -105,7 +105,7 @@ namespace ShazTest
         }
 
         [TestMethod]
-        public void TestMethod_TankDK_Rotation()
+        public void TankDK_Rotation()
         {
             Rawr.TankDK.CharacterCalculationsTankDK CalcTankDK = new Rawr.TankDK.CharacterCalculationsTankDK();
             CalculationOptionsTankDK calcOpts = new CalculationOptionsTankDK();
@@ -114,16 +114,14 @@ namespace ShazTest
             Rawr.DPSDK.CharacterCalculationsDPSDK DPSCalcs = new Rawr.DPSDK.CharacterCalculationsDPSDK();
             Rawr.DPSDK.CalculationOptionsDPSDK DPSopts = new Rawr.DPSDK.CalculationOptionsDPSDK();
 
-            Rawr.DK.DKCombatTable ct = new Rawr.DK.DKCombatTable(m_char, TotalStats, DPSCalcs, DPSopts);
+            Rawr.DK.DKCombatTable ct = new Rawr.DK.DKCombatTable(m_char, TotalStats, DPSCalcs, DPSopts, m_char.BossOptions);
             Rawr.DK.Rotation rot = new Rawr.DK.Rotation(ct, false);
-            rot.PRE_BloodDiseaseless();
-            Assert.IsTrue(rot.m_TPS > 0, "rotation BloodDiseaseless produces 0 DPS");
             rot.PRE_BloodDiseased();
             Assert.IsTrue(rot.m_TPS > 0, "rotation BloodDiseased produces 0 DPS");
         }
 
         [TestMethod]
-        public void TestMethod_TankDK_OverallCheck()
+        public void TankDK_OverallCheck()
         {
             Rawr.TankDK.CalculationsTankDK CalcTankDK = new Rawr.TankDK.CalculationsTankDK();
             CalculationOptionsTankDK calcOpts = new CalculationOptionsTankDK();

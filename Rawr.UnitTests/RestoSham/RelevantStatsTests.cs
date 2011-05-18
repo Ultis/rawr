@@ -23,26 +23,9 @@ namespace Rawr.UnitTests.RestoSham
             {
                 Stats s = new Stats()
                 {
-                    Mage2T10 = 1
-                };
-                Assert.IsFalse(calc.HasRelevantStats(s));
-            }
-            {
-                Stats s = new Stats()
-                {
-                    Mage2T10 = 1,
-                    Mana = 1
-                };
-                Assert.IsTrue(calc.HasRelevantStats(s));
-            }
-            {
-                Stats s = new Stats()
-                {
-                    Mage2T10 = 1,
                     Mana = 1,
                     AttackPower = 10000,
                     Mp5 = 100,
-                    TotemCHBaseCost = 1,
                     ThreatIncreaseMultiplier = 0
                 };
                 Assert.IsTrue(calc.HasRelevantStats(s));
@@ -61,18 +44,9 @@ namespace Rawr.UnitTests.RestoSham
                 Assert.AreEqual<Stats>(s, calc.GetRelevantStats(s));
             }
             {
-                Stats s = new Stats()
-                {
-                    Mage2T10 = 1
-                };
-                Assert.AreNotEqual<Stats>(s, calc.GetRelevantStats(s));
-                Stats correct = new Stats();
-                Assert.AreEqual<Stats>(correct, calc.GetRelevantStats(s));
-            }
-            {
                 Stats full = new Stats()
                 {
-                    Mage2T10 = 1,
+//                    Mage2T10 = 1,
                     Mana = 1
                 };
                 Stats wanted = new Stats()
@@ -85,18 +59,18 @@ namespace Rawr.UnitTests.RestoSham
             {
                 Stats full = new Stats()
                 {
-                    Mage2T10 = 1,
+  //                  Mage2T10 = 1,
                     Mana = 1,
                     AttackPower = 10000,
                     Mp5 = 100,
-                    TotemCHBaseCost = 1,
+//                    TotemCHBaseCost = 1,
                     ThreatIncreaseMultiplier = 0
                 };
                 Stats wanted = new Stats()
                 {
                     Mana = 1,
                     Mp5 = 100,
-                    TotemCHBaseCost = 1
+//                    TotemCHBaseCost = 1
                 };
                 Assert.AreNotEqual<Stats>(full, calc.GetRelevantStats(full));
                 Assert.AreEqual<Stats>(wanted, calc.GetRelevantStats(full));
