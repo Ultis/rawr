@@ -47,11 +47,15 @@ namespace Rawr.Moonkin
             retVal.Add("Intellect", baseStats.Intellect.ToString());
             retVal.Add("Spirit", baseStats.Spirit.ToString());
             retVal.Add("Spell Power", SpellPower.ToString());
-            retVal.Add("Spell Hit", String.Format("{0:F}%*{1} Hit Rating, {2:F}% Hit From Gear, {3} Rating To Cap",
+
+            float totalHitDelta = StatConversion.GetSpellMiss(PlayerLevel - TargetLevel, false) - SpellHit;
+
+            retVal.Add("Spell Hit", String.Format("{0:F}%*{1} Hit Rating, {2:F}% Hit From Gear" + (totalHitDelta != 0 ? ", {3} Rating {4}" : ""),
                 100 * SpellHit,
                 baseStats.HitRating,
                 100 * StatConversion.GetSpellHitFromRating(baseStats.HitRating),
-                StatConversion.GetRatingFromHit(Math.Max(0, StatConversion.GetSpellMiss(PlayerLevel - TargetLevel, false) - SpellHit))));
+                StatConversion.GetRatingFromHit(Math.Abs(totalHitDelta)),
+                totalHitDelta > 0 ? "To Cap" : "Over Cap"));
             retVal.Add("Spell Crit", String.Format("{0:F}%*{1} Crit Rating, {2:F}% Crit From Gear, {3:F}% Crit From Intellect",
                 100 * SpellCrit,
                 baseStats.CritRating,
