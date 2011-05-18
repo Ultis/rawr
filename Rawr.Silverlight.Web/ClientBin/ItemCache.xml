@@ -90720,6 +90720,7 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
     <Name>[Downloading from Wowhead]</Name>
     <Id>0</Id>
@@ -91246,7 +91247,7 @@
     </LocationInfo>
     <Name>Voodoo Hexblade</Name>
     <Id>69591</Id>
-    <Slot>OneHand</Slot>
+    <Slot>MainHand</Slot>
   </Item>
   <Item>
     <ItemLevel>353</ItemLevel>
@@ -94183,7 +94184,7 @@
     </LocationInfo>
     <Name>Amani Scepter of Rites</Name>
     <Id>69581</Id>
-    <Slot>OneHand</Slot>
+    <Slot>MainHand</Slot>
   </Item>
   <Item>
     <ItemLevel>353</ItemLevel>
