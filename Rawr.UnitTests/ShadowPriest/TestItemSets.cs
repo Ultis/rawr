@@ -1,6 +1,6 @@
 ﻿using Rawr;
 
-namespace Tests.Rawr.ShadowPriest
+namespace Rawr.UnitTests.ShadowPriest
 {
     public class TestItemSets
     {

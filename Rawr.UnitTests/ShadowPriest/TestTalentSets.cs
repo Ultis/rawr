@@ -1,7 +1,7 @@
 ﻿using System;
 using Rawr;
 
-namespace Tests.Rawr.ShadowPriest
+namespace Rawr.UnitTests.ShadowPriest
 {
     /// <summary>
     /// Test talent settings.

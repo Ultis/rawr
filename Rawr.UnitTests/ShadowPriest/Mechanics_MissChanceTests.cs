@@ -1,14 +1,14 @@
-﻿using NUnit.Framework;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rawr.ShadowPriest;
 
-namespace Tests.Rawr.ShadowPriest
+namespace Rawr.UnitTests.ShadowPriest
 {
-    [TestFixture]
+    [TestClass]
     public class Mechanics_MissChanceTests
     {
         private const float TOLERANCE = .00005f;
 
-        [Test]
+        [TestMethod]
         public void SpellMiss_PVE_AboveTargetBy4()
         {
             float expected = 0.00f;
@@ -17,10 +17,10 @@ namespace Tests.Rawr.ShadowPriest
 
             var miss = Mechanics.GetSpellMiss(levelsAboveTarget);
 
-            Assert.That(miss, Is.EqualTo(expected).Within(TOLERANCE));
+            Assert.AreEqual(expected, miss, TOLERANCE);
         }
 
-        [Test]
+        [TestMethod]
         public void SpellMiss_PVE_AboveTargetBy3()
         {
             float expected = 0.01f;
@@ -29,10 +29,10 @@ namespace Tests.Rawr.ShadowPriest
 
             var miss = Mechanics.GetSpellMiss(levelsAboveTarget);
 
-            Assert.That(miss, Is.EqualTo(expected).Within(TOLERANCE));
+            Assert.AreEqual(expected, miss, TOLERANCE);
         }
 
-        [Test]
+        [TestMethod]
         public void SpellMiss_PVE_AboveTargetBy2()
         {
             float expected = 0.02f;
@@ -41,10 +41,10 @@ namespace Tests.Rawr.ShadowPriest
 
             var miss = Mechanics.GetSpellMiss(levelsAboveTarget);
 
-            Assert.That(miss, Is.EqualTo(expected).Within(TOLERANCE));
+            Assert.AreEqual(expected, miss, TOLERANCE);
         }
 
-        [Test]
+        [TestMethod]
         public void SpellMiss_PVE_AboveTargetBy1()
         {
             float expected = 0.03f;
@@ -53,10 +53,10 @@ namespace Tests.Rawr.ShadowPriest
 
             var miss = Mechanics.GetSpellMiss(levelsAboveTarget);
 
-            Assert.That(miss, Is.EqualTo(expected).Within(TOLERANCE));
+            Assert.AreEqual(expected, miss, TOLERANCE);
         }
 
-        [Test]
+        [TestMethod]
         public void SpellMiss_PVE_SameLevel()
         {
             float expected = 0.04f;
@@ -65,10 +65,10 @@ namespace Tests.Rawr.ShadowPriest
 
             var miss = Mechanics.GetSpellMiss(levelsBelowTarget);
 
-            Assert.That(miss, Is.EqualTo(expected).Within(TOLERANCE));
+            Assert.AreEqual(expected, miss, TOLERANCE);
         }
 
-        [Test]
+        [TestMethod]
         public void SpellMiss_PVE_BelowTargetBy1()
         {
             float expected = 0.05f;
@@ -77,10 +77,10 @@ namespace Tests.Rawr.ShadowPriest
 
             var miss = Mechanics.GetSpellMiss(-levelsBelowTarget);
 
-            Assert.That(miss, Is.EqualTo(expected).Within(TOLERANCE));
+            Assert.AreEqual(expected, miss, TOLERANCE);
         }
 
-        [Test]
+        [TestMethod]
         public void SpellMiss_PVE_BelowTargetBy2()
         {
             float expected = 0.06f;
@@ -89,10 +89,10 @@ namespace Tests.Rawr.ShadowPriest
 
             var miss = Mechanics.GetSpellMiss(-levelsBelowTarget);
 
-            Assert.That(miss, Is.EqualTo(expected).Within(TOLERANCE));
+            Assert.AreEqual(expected, miss, TOLERANCE);
         }
 
-        [Test]
+        [TestMethod]
         public void SpellMiss_PVE_BelowTargetBy3()
         {
             float expected = 0.17f;
@@ -101,10 +101,10 @@ namespace Tests.Rawr.ShadowPriest
 
             var miss = Mechanics.GetSpellMiss(-levelsBelowTarget);
 
-            Assert.That(miss, Is.EqualTo(expected).Within(TOLERANCE));
+            Assert.AreEqual(expected, miss, TOLERANCE);
         }
 
-        [Test]
+        [TestMethod]
         public void SpellMiss_PVE_BelowTargetBy4()
         {
             float expected = 0.28f;
@@ -113,10 +113,10 @@ namespace Tests.Rawr.ShadowPriest
 
             var miss = Mechanics.GetSpellMiss(-levelsBelowTarget);
 
-            Assert.That(miss, Is.EqualTo(expected).Within(TOLERANCE));
+            Assert.AreEqual(expected, miss, TOLERANCE);
         }
 
-        [Test]
+        [TestMethod]
         public void SpellMiss_PVE_BelowTargetBy5()
         {
             float expected = 0.39f;
@@ -125,7 +125,7 @@ namespace Tests.Rawr.ShadowPriest
 
             var miss = Mechanics.GetSpellMiss(-levelsBelowTarget);
 
-            Assert.That(miss, Is.EqualTo(expected).Within(TOLERANCE));
+            Assert.AreEqual(expected, miss, TOLERANCE);
         }
     }
 }
