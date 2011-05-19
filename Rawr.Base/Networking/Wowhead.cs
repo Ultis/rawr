@@ -186,12 +186,29 @@ namespace Rawr
 
 
                     // Holiday Satchels are going to be treated as quest rewards
-                    _questRewardMap["69771"] = new QuestItem() { Area = "Dungeon Finder", Quest = "World Event Dungeon - Ahune", MinLevel = 85, Party = 5, Source = ItemSource.Container };
-                    _questRewardMap["49715"] = new QuestItem() { Area = "Dungeon Finder", Quest = "World Event Dungeon - Hummel", MinLevel = 85, Party = 5, Source = ItemSource.Container };
-                    _questRewardMap["50741"] = new QuestItem() { Area = "Dungeon Finder", Quest = "World Event Dungeon - Hummel", MinLevel = 85, Party = 5, Source = ItemSource.Container };
-                    _questRewardMap["49120"] = new QuestItem() { Area = "Dungeon Finder", Quest = "World Event Dungeon - Coren Direbrew", MinLevel = 85, Party = 5, Source = ItemSource.Container };
-                    _questRewardMap["48663"] = new QuestItem() { Area = "Dungeon Finder", Quest = "World Event Dungeon - Coren Direbrew", MinLevel = 85, Party = 5, Source = ItemSource.Container };
+                    // Valentines Day -  Reward is a Heart-Shaped Box http://www.wowhead.com/item=54537
+                    _questRewardMap["49715"] = new QuestItem() { Area = "Dungeon Finder", Quest = "World Event Dungeon - Hummel", MinLevel = 80, Party = 5, Source = ItemSource.Container }; // Forever-Lovely Rose
+                    _questRewardMap["50741"] = new QuestItem() { Area = "Dungeon Finder", Quest = "World Event Dungeon - Hummel", MinLevel = 80, Party = 5, Source = ItemSource.Container }; // Vile Furnigator's Mask
 
+                    // Midsummer Fire Festival - Reward is a Satchel of Chilled Goods http://www.wowhead.com/item=54536
+                    // The cloaks do not drop from the daily loot, instead drops from the Ice Chest that Ahune reveals after killing him http://www.wowhead.com/object=187892
+                    _questRewardMap["54806"] = new QuestItem() { Area = "Dungeon Finder", Quest = "World Event Dungeon - Ahune", MinLevel = 80, Party = 5, Source = ItemSource.Container }; // 232 ilvl Frostscythe of Lord Ahune
+                    _questRewardMap["69771"] = new QuestItem() { Area = "Dungeon Finder", Quest = "World Event Dungeon - Ahune", MinLevel = 80, Party = 5, Source = ItemSource.Container }; // 353 ilvl Frostscythe of Lord Ahune
+
+                    // Brewfest - Reward is a Keg-Shaped Treasure Chest http://ptr.wowhead.com/item=54535
+                    // The trinkets drop from Coren Direbrew himself http://www.wowhead.com/npc=23872
+                    _questRewardMap["49120"] = new QuestItem() { Area = "Dungeon Finder", Quest = "World Event Dungeon - Coren Direbrew", MinLevel = 80, Party = 5, Source = ItemSource.Container }; // 200 ilvl Direbrew's Bloody Shanker
+                    _questRewardMap["48663"] = new QuestItem() { Area = "Dungeon Finder", Quest = "World Event Dungeon - Coren Direbrew", MinLevel = 80, Party = 5, Source = ItemSource.Container }; // 226 ilvl Tankard O' Terror
+                    _questRewardMap["71331"] = new QuestItem() { Area = "Dungeon Finder", Quest = "World Event Dungeon - Coren Direbrew", MinLevel = 85, Party = 5, Source = ItemSource.Container }; // 365 ilvl Direbrew's Bloodied Shanker
+                    _questRewardMap["71332"] = new QuestItem() { Area = "Dungeon Finder", Quest = "World Event Dungeon - Coren Direbrew", MinLevel = 85, Party = 5, Source = ItemSource.Container }; // 365 ilvl Tremendous Tankard O' Terror
+
+                    // Headless Horseman - Reward is Loot-Filled Pumpkin http://ptr.wowhead.com/item=54516
+                    // Rings drop directly from the Headless Horseman http://www.wowhead.com/npc=23682
+                    _questRewardMap["33292"] = new QuestItem() { Area = "Dungeon Finder", Quest = "World Event Dungeon - Headless Horseman", MinLevel = 80, Party = 5, Source = ItemSource.Container }; // Hallowed Helm
+                    _questRewardMap["49128"] = new QuestItem() { Area = "Dungeon Finder", Quest = "World Event Dungeon - Headless Horseman", MinLevel = 80, Party = 5, Source = ItemSource.Container }; // 200 ilvl The Horseman's Baleful Blade
+                    _questRewardMap["49126"] = new QuestItem() { Area = "Dungeon Finder", Quest = "World Event Dungeon - Headless Horseman", MinLevel = 80, Party = 5, Source = ItemSource.Container }; // 200 ilvl The Horseman's Horrific Helm
+                    _questRewardMap["71325"] = new QuestItem() { Area = "Dungeon Finder", Quest = "World Event Dungeon - Headless Horseman", MinLevel = 85, Party = 5, Source = ItemSource.Container }; // 365 ilvl The Horseman's Sinister Saber
+                    _questRewardMap["71326"] = new QuestItem() { Area = "Dungeon Finder", Quest = "World Event Dungeon - Headless Horseman", MinLevel = 85, Party = 5, Source = ItemSource.Container }; // 365 ilvl The Horseman's Horrific Helmet
                     break;
             }
         }
