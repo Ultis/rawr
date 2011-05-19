@@ -11,8 +11,8 @@ namespace Rawr.UnitTests
     [TestClass()]
     public class SpecialEffectsTest
     {
-        public static string[] m_TestLineArray = new string[13];
-        public static Stats[] m_ExpectedArray = new Stats[13];
+        public static string[] m_TestLineArray = new string[6];
+        public static Stats[] m_ExpectedArray = new Stats[6];
 
         private TestContext testContextInstance;
 
@@ -157,15 +157,18 @@ namespace Rawr.UnitTests
         [TestMethod()]
         public void ProcessEquipLineTest()
         {
-            for(int m_i = 0; m_i < 13; m_i++)
+            for (int m_i = 0; m_i < m_TestLineArray.Length; m_i++)
             {
                 string line = m_TestLineArray[m_i];
                 Stats stats = new Stats();
                 bool isArmory = false;
-                SpecialEffects.ProcessEquipLine(line, stats, isArmory, 0, 0);
-                string szExpected = m_ExpectedArray[m_i].ToString();
-                string szStats = stats.ToString();
-                Assert.AreEqual(szExpected, szStats, line);
+                if (null != line)
+                {
+                    SpecialEffects.ProcessEquipLine(line, stats, isArmory, 0, 0);
+                    string szExpected = m_ExpectedArray[m_i].ToString();
+                    string szStats = stats.ToString();
+                    Assert.AreEqual(szExpected, szStats, line);
+                }
             }
         }
     }

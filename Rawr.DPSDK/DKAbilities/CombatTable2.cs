@@ -35,6 +35,7 @@ namespace Rawr.DK
         HowlingBlast,
         IcyTouch,
         // Others
+        Army,
         BloodParasite,
         BloodPlague,
         DRW,

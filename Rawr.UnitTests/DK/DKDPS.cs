@@ -38,7 +38,7 @@ namespace Rawr.UnitTests.DK
                 // So a weapon, so we have values in weapon specific abilities.
                 m_char.MainHand = new ItemInstance(weapon, 0, null, null, null, new Enchant(), new Reforging(), new Tinkering());
                 // Unholy DK
-                m_char.DeathKnightTalents = new DeathKnightTalents("00300000000000000000320200000000000000000332032023031021231.10000000101110000010000001110");
+                m_char.DeathKnightTalents = new DeathKnightTalents("203200000000000000002000000000000000000003310321231031021231.010000001010100000010010000111");
             }
             m_char.CurrentModel = "DPSDK";
 

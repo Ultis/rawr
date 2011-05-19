@@ -46,7 +46,7 @@ namespace Rawr.UnitTests.RestoSham
             {
                 Stats full = new Stats()
                 {
-//                    Mage2T10 = 1,
+                    Strength = 1,
                     Mana = 1
                 };
                 Stats wanted = new Stats()

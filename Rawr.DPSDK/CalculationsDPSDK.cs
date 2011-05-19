@@ -497,9 +497,11 @@ namespace Rawr.DPSDK
                 Pet Gar = new Gargoyle(stats, talents, hBossOptions, calcOpts.presence);
                 float garuptime = .5f/3f;
                 calc.dpsSub[(int)DKability.Gargoyle] = Gar.DPS * garuptime;
+                calc.damSub[(int)DKability.Gargoyle] = Gar.DPS * 30f; // Duration 30 seconds.
             }
             Pet ghoul = new Ghoul(stats, talents, hBossOptions, calcOpts.presence);
             calc.dpsSub[(int)DKability.Ghoul] = ghoul.DPS * ghouluptime;
+            calc.damSub[(int)DKability.Ghoul] = ghoul.DPS * 60f; // Duration 1 min.
 
             #endregion
 
@@ -515,7 +517,7 @@ namespace Rawr.DPSDK
 
             calc.OverallPoints = calc.DPSPoints = rot.m_DPS + calc.dpsSub[(int)DKability.Ghoul] + calc.dpsSub[(int)DKability.Gargoyle];
             float[] PetDPS = new float[(int)EnumHelper.GetCount(typeof(DKability))];
-            //PetDPS[(int)DKability.Army] = calc.dpsSub[(int)DKability.Army];
+            PetDPS[(int)DKability.Army] = calc.dpsSub[(int)DKability.Army];
             PetDPS[(int)DKability.BloodParasite] = calc.dpsSub[(int)DKability.BloodParasite];
             PetDPS[(int)DKability.Gargoyle] = calc.dpsSub[(int)DKability.Gargoyle];
             PetDPS[(int)DKability.Ghoul] = calc.dpsSub[(int)DKability.Ghoul];
