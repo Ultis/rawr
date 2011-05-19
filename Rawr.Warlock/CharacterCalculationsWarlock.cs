@@ -142,7 +142,7 @@ namespace Rawr.Warlock
             dictValues.Add("Health", string.Format("{0:0}*{1:0} stamina", CalcHealth(), CalcStamina()));
             dictValues.Add("Mana", string.Format("{0:0}*{1:0} intellect", CalcMana(), CalcIntellect()));
 
-            dictValues.Add("Bonus Damage", string.Format("{0:0.0}*{1:0.0}\tBefore Procs", CalcSpellPower(), StatUtils.CalcSpellPower(PreProcStats, BaseIntellect, Options.PlayerLevel)));
+            dictValues.Add("Spell Power", string.Format("{0:0.0}*{1:0.0}\tBefore Procs", CalcSpellPower(), StatUtils.CalcSpellPower(PreProcStats, BaseIntellect, Options.PlayerLevel)));
 
             #region Hit Rating
             float onePercentOfHitRating = (1 / StatUtils.GetSpellHitFromRating(1, Options.PlayerLevel));
@@ -187,18 +187,60 @@ namespace Rawr.Warlock
                     (AvgHaste - StatUtils.CalcSpellHaste(PreProcStats, Options.PlayerLevel)) * 100f,
                     Math.Max(1.0f, 1.5f / AvgHaste)));
             dictValues.Add("Mastery", string.Format("{0:0.0}*from {1:0.0} Mastery Rating", CalcMastery(), Stats.MasteryRating));
-            
+
             if (Pet == null)
             {
-                dictValues.Add("Pet Stamina", "-");
-                dictValues.Add("Pet Intellect", "-");
-                dictValues.Add("Pet Health", "-");
+                dictValues.Add("Pet Mana", "-");
+                dictValues.Add("Basic Melee Damage", "-");
+                dictValues.Add("Basic Melee DPS", "-");
+                dictValues.Add("Attack Power", "-");
+                dictValues.Add("Basic Melee Speed", "-");
+                dictValues.Add("Spell Damage", "-");
             }
             else
             {
-                dictValues.Add("Pet Stamina", string.Format("{0:0.0}", Pet.CalcStamina()));
-                dictValues.Add("Pet Intellect", string.Format("{0:0.0}", Pet.CalcIntellect()));
-                dictValues.Add("Pet Health", string.Format("{0:0.0}", Pet.CalcHealth()));
+                dictValues.Add("Pet Mana", string.Format("{0:0.0}", Pet.CalcMana()));
+                dictValues.Add("Basic Melee Damage", string.Format("{0:0.0}", Pet.CalcMeleeDamage()));
+                dictValues.Add("Basic Melee DPS", string.Format("{0:0.0}", Pet.CalcMeleeDps()));
+                dictValues.Add("Attack Power", string.Format("{0:0.0}", Pet.CalcAttackPower()));
+                dictValues.Add("Basic Melee Speed", string.Format("{0:0.0}", Pet.CalcMeleeSpeed()));
+                dictValues.Add("Spell Damage", string.Format("{0:0.0}", Pet.CalcSpellPower()));
+            }
+
+            if (Pet is Felhunter)
+            {
+                dictValues.Add("Shadow Bite (Fel Hunter)", string.Format("{0:0.0}", Pet.GetSpecialDamage()));
+            }
+            else
+            {
+                dictValues.Add("Shadow Bite (Fel Hunter)", "-");
+            }
+
+            if (Pet is Imp)
+            {
+                dictValues.Add("Fire Bolt (Imp)", string.Format("{0:0.0}", Pet.GetSpecialDamage()));
+            }
+            else
+            {
+                dictValues.Add("Fire Bolt (Imp)", "-");
+            }
+
+            if (Pet is Succubus)
+            {
+                dictValues.Add("Lash of Pain (Succubus)", string.Format("{0:0.0}", Pet.GetSpecialDamage()));
+            }
+            else
+            {
+                dictValues.Add("Lash of Pain (Succubus)", "-");
+            }
+
+            if (Pet is Felguard)
+            {
+                dictValues.Add("Legion Strike (Felguard)", string.Format("{0:0.0}", Pet.GetSpecialDamage()));
+            }
+            else
+            {
+                dictValues.Add("Legion Strike (Felguard)", "-");
             }
 
             // Spell Stats
@@ -915,8 +957,9 @@ namespace Rawr.Warlock
             }
             if (Options.GetActiveRotation().Contains("Shadow Bolt") || (Options.GetActiveRotation().Contains("Haunt") && Talents.Haunt > 0))
             {
+                // we assume a steady state of 3 stacks
                 float[] talentEffects = { 0f, .03f, .04f, .05f };
-                modifiers.AddMultiplicativeTickMultiplier(talentEffects[Talents.ShadowEmbrace]);
+                modifiers.AddMultiplicativeTickMultiplier(talentEffects[Talents.ShadowEmbrace] * 3f);
             }
             if (CastSpells.ContainsKey("Haunt"))
             {

@@ -49,14 +49,21 @@ namespace Rawr.Warlock
                         "Simulation:Total DPS",
                         "Basic Stats:Health",
                         "Basic Stats:Mana",
-                        "Basic Stats:Bonus Damage",
+                        "Basic Stats:Spell Power",
                         "Basic Stats:Hit Rating",
                         "Basic Stats:Crit Chance",
                         "Basic Stats:Average Haste",
                         "Basic Stats:Mastery",
-                        "Pet Stats:Pet Stamina",
-                        "Pet Stats:Pet Intellect",
-                        "Pet Stats:Pet Health",
+                        "Pet Stats:Pet Mana",
+                        "Pet Stats:Basic Melee Damage",
+                        "Pet Stats:Basic Melee DPS",
+                        "Pet Stats:Attack Power",
+                        "Pet Stats:Basic Melee Speed",
+                        "Pet Stats:Spell Damage",
+                        "Pet Stats:Shadow Bite (Fel Hunter)",
+                        "Pet Stats:Fire Bolt (Imp)",
+                        "Pet Stats:Lash of Pain (Succubus)",
+                        "Pet Stats:Legion Strike (Felguard)",
                         "Affliction:Corruption",
                         "Affliction:Bane Of Agony",
                         "Affliction:Bane Of Doom",
@@ -452,7 +459,9 @@ namespace Rawr.Warlock
                 || effect.Trigger == Trigger.DamageDone
                 || effect.Trigger == Trigger.DamageOrHealingDone)
             {
-                return _HasRelevantStats(effect.Stats);
+                // This properly handles the case where the effect.Stats itself has a SpecialEffect with relevant stats
+                // e.g. Heart of Ignacious
+                return HasRelevantStats(effect.Stats);
             }
             return false;
         }
@@ -482,6 +491,7 @@ namespace Rawr.Warlock
             if (stats.BonusShadowDamageMultiplier != 0) { return true; }
             if (stats.SpellFireDamageRating       != 0) { return true; }
             if (stats.BonusFireDamageMultiplier   != 0) { return true; }
+
             return false;
         }
         protected bool HasCommonStats(Stats stats)
@@ -513,10 +523,6 @@ namespace Rawr.Warlock
                   + stats.Dodge + stats.DodgeRating
                   + stats.Parry + stats.ParryRating
              > 0);
-        }
-        protected bool _HasRelevantStats(Stats stats)
-        {
-            return HasWarlockStats(stats) || (!HasIgnoreStats(stats) && HasCommonStats(stats));
         }
         public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot)
         {

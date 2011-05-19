@@ -69,21 +69,8 @@ namespace Rawr.Warlock
             MeleeModifiers = new SpellModifiers();
             SpecialModifiers = new SpellModifiers();
 
-            BaseStamina = 353f;
-            StaminaCoef = .6496f;
-            HealthPerStamina = healthPerStamina;
-            BaseHealth = baseHealth;
-
-            BaseIntellect = 159f;
-            ManaPerIntellect = 7.96875f;
             BaseMana = 1343f;
-            BaseSpellCrit = .03333f;
-
-            BaseSpellPower = 0f;
-            SpellPowerCoef = .15f;
-
-            BaseAttackPower = 453f;
-            AttackPowerCoef = .57f;
+            BaseAttackPower = 886f;
 
             Stats = new Stats();
         }
@@ -91,12 +78,10 @@ namespace Rawr.Warlock
         {
             WarlockTalents talents = Mommy.Talents;
 
-            Stats.Stamina = BaseStamina + StaminaCoef * Mommy.CalcStamina();
-            Stats.Intellect = BaseIntellect;
-            Stats.Strength = 453f;
-            Stats.Agility = 883f;
-            Stats.SpellPower = BaseSpellPower;
-            Stats.AttackPower = BaseAttackPower;
+            //Stats.Strength = 453f;
+            //Stats.Agility = 883f;
+            Stats.SpellPower = CalcSpellPower();
+            Stats.AttackPower = CalcAttackPower();
             Stats.PhysicalCrit = .0328f;
             Stats.Accumulate(Mommy.PetBuffs);
 
@@ -124,8 +109,8 @@ namespace Rawr.Warlock
         }
         public void CalcStats2()
         {
-            Stats.SpellPower += SpellPowerCoef * Mommy.CalcSpellPower();
-            Stats.AttackPower += AttackPowerCoef * Mommy.CalcSpellPower();
+            Stats.SpellPower = CalcSpellPower();
+            Stats.AttackPower = CalcAttackPower();
         }
         protected virtual void FinalizeModifiers()
         {
@@ -133,50 +118,37 @@ namespace Rawr.Warlock
             MeleeModifiers.AddMultiplicativeMultiplier(Stats.BonusPhysicalDamageMultiplier);
             if (Mommy.Character.Race == CharacterRace.Orc)
             {
-                TotalModifiers.AddAdditiveMultiplier(.05f);
+                TotalModifiers.AddMultiplicativeMultiplier(.05f);
             }
         }
 
         //stats
-        public float CalcStamina()
+        public float CalcMana()
         {
-            return StatUtils.CalcStamina(Stats);
-        }
-        public float CalcIntellect()
-        {
-            return StatUtils.CalcIntellect(Stats, Mommy.BaseIntellect, Mommy.Options.PlayerLevel);
-        }
-        public float CalcHealth()
-        {
-            // sadly, pets do not have the same stamina->health conversion as
-            // players, so have to write our own CalcHealth method.
-            return (Stats.Health + HealthPerStamina * CalcStamina()) * (1 + Stats.BonusHealthMultiplier);
+            // not clear how accurate this is; factor of 13 was reportedly 7.5 in wrath
+            return BaseMana + (Mommy.CalcIntellect() - Mommy.BaseIntellect) * (Mommy.Options.PlayerLevel / 80) * 13f;
         }
         public float CalcSpellPower()
         {
-            return StatUtils.CalcSpellPower(Stats, Mommy.BaseIntellect, Mommy.Options.PlayerLevel);
+            return Mommy.CalcSpellPower() * (Mommy.Options.PlayerLevel / 80) * 0.5f;
         }
         public float CalcSpellCrit()
         {
-            return StatUtils.CalcSpellCrit(Stats, Mommy.BaseIntellect, Mommy.Options.PlayerLevel);
+            return Mommy.CalcSpellCrit();
         }
         public float CalcAttackPower()
         {
-            return StatUtils.CalcAttackPower(Stats, 1f, 0f);
+            return BaseAttackPower + Stats.Strength * 2f + Mommy.CalcSpellPower() * (Mommy.Options.PlayerLevel / 80);
         }
         public float CalcMeleeCrit()
         {
-            return StatUtils.CalcPhysicalCrit(Stats, .00019f, Mommy.Options.TargetLevel - Mommy.Options.PlayerLevel);
-        }
-        public float CalcMeleeHaste()
-        {
-            return 1f + Stats.PhysicalHaste;
+            return Mommy.CalcSpellCrit();
         }
                 
         //dps
         public float CalcMeleeSpeed()
         {
-            return 2f / CalcMeleeHaste();
+            return 2f / Mommy.AvgHaste;
         }
         public float CalcMeleeHitChance()
         {
@@ -287,11 +259,12 @@ namespace Rawr.Warlock
                 9.5f) // healthPerStamina
         { 
             BaseMeleeDamage = 926.3f;
-            DamagePerAttackPower = .12f;
+            DamagePerAttackPower = .086786f; //not sure why
+            // 19072 base mana
 
             //spellid 54049, effectid 46748-9
             SpecialBaseDamage = WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * 0.126f;
-            SpecialDamagePerSpellPower = .5f * 1.228f;
+            SpecialDamagePerSpellPower = 1.228f;
             SpecialCooldown = 6f;
         }
 
@@ -301,28 +274,36 @@ namespace Rawr.Warlock
 
             // multipliers go into SpecialModifiers
             SpecialModifiers.AddMultiplicativeMultiplier(Stats.BonusShadowDamageMultiplier);
-            // TODO: Bane of Doom, Drain Life, Drain Soul, Haunted, Shadow Embrace also count
             if (Mommy.CastSpells.ContainsKey("Corruption"))
             {
-                SpecialModifiers.AddAdditiveMultiplier(.15f);
+                SpecialModifiers.AddAdditiveMultiplier(.3f);
             }
             if (Mommy.CastSpells.ContainsKey("Bane Of Agony"))
             {
-                SpecialModifiers.AddAdditiveMultiplier(.15f);
+                SpecialModifiers.AddAdditiveMultiplier(.3f);
             }
             if (Mommy.CastSpells.ContainsKey("Immolate"))
             {
-                SpecialModifiers.AddAdditiveMultiplier(.15f);
+                SpecialModifiers.AddAdditiveMultiplier(.3f);
             }
             if (Mommy.CastSpells.ContainsKey("Unstable Affliction"))
             {
-                SpecialModifiers.AddAdditiveMultiplier(.15f);
+                SpecialModifiers.AddAdditiveMultiplier(.3f);
             }
-            if (Mommy.CastSpells.ContainsKey("Curse Of The Elements"))
+            if (Mommy.CastSpells.ContainsKey("Bane Of Doom"))
             {
-                SpecialModifiers.AddAdditiveMultiplier(.15f);
+                SpecialModifiers.AddAdditiveMultiplier(.3f);
+            }
+            if (Mommy.CastSpells.ContainsKey("Drain Soul"))
+            {
+                SpecialModifiers.AddAdditiveMultiplier(.3f);
+            }
+            if (Mommy.CastSpells.ContainsKey("Drain Life"))
+            {
+                SpecialModifiers.AddAdditiveMultiplier(.3f);
             }
             SpecialModifiers.AddMultiplicativeMultiplier(.05f * Mommy.Talents.DarkArts);
+            SpecialModifiers.AddCritBonusMultiplier(1.0f); // 199.5% crit effect
         }
     }
 
