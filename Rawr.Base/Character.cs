@@ -745,14 +745,18 @@ namespace Rawr
         private struct RangeValue { public int Min; public int Max; }
         private struct PercRangeValue { public float Min; public float Max; }
         private readonly static RangeValue[] RangeValues = new RangeValue[] {
-            new RangeValue { Min = 000, Max = 001 },
-            new RangeValue { Min = 002, Max = 199 },
-            new RangeValue { Min = 200, Max = 284 },
-            new RangeValue { Min = 285, Max = 333 },
-            new RangeValue { Min = 334, Max = 358 },
-            new RangeValue { Min = 359, Max = 371 },
-            new RangeValue { Min = 372, Max = 378 },
-            new RangeValue { Min = 379, Max = 500 },
+            new RangeValue { Min = 000, Max = 001 }, // 0
+            new RangeValue { Min = 002, Max = 199 }, // 1
+            new RangeValue { Min = 200, Max = 284 }, // 2
+            new RangeValue { Min = 285, Max = 333 }, // 3
+            new RangeValue { Min = 334, Max = 358 }, // 4
+            new RangeValue { Min = 359, Max = 371 }, // 5
+//            new RangeValue { Min = 372, Max = 377 }, // 6
+            new RangeValue { Min = 372, Max = 378 }, // 6
+//            new RangeValue { Min = 378, Max = 390 }, // 7
+//            new RangeValue { Min = 391, Max = 397 }, // 8
+            new RangeValue { Min = 379, Max = 500 }, // 7
+//            new RangeValue { Min = 398, Max = 500 }, // 9
         };
         private readonly static PercRangeValue[] DropRangeValues = new PercRangeValue[] {
             new PercRangeValue { Min = 0.00f, Max = 0.01f },
@@ -820,8 +824,12 @@ namespace Rawr
             true, // 3 285-333 (Cata Dungeons)
             true, // 4 334-358 (Cata Heroics)
             true, // 5 359-371 (Tier 11.0)
+//            true, // 6 372 - 377 (Tier 11.5)
             true, // 6 372-378 (Tier 11.5)
+//            true, // 7 378 - 390 (Tier 12.0)
+//            true, // 8 391 - 397 (Tier 12.5)
             true, // 7 379+    (Tier 12.0)
+//            true, // 9 398+    (Tier 13.0)
         };
         [XmlIgnore]
         public bool[] iLvl {
@@ -834,8 +842,12 @@ namespace Rawr
                         true, // 3 285-333 (Cata Dungeons)
                         true, // 4 334-358 (Cata Heroics)
                         true, // 5 359-371 (Tier 11.0)
+//                        true, // 6 372 - 377 (Tier 11.5)
                         true, // 6 372-378 (Tier 11.5)
+//                        true, // 7 378 - 390 (Tier 12.0)
+//                        true, // 8 391 - 397 (Tier 12.5)
                         true, // 7 379+    (Tier 12.0)
+//                        true, // 9 398+    (Tier 13.0)
                     };
                 }
                 return _iLvl;
@@ -849,8 +861,12 @@ namespace Rawr
                         true, // 3 285-333 (Cata Dungeons)
                         true, // 4 334-358 (Cata Heroics)
                         true, // 5 359-371 (Tier 11.0)
+//                        true, // 6 372 - 377 (Tier 11.5)
                         true, // 6 372-378 (Tier 11.5)
+//                        true, // 7 378 - 390 (Tier 12.0)
+//                        true, // 8 391 - 397 (Tier 12.5)
                         true, // 7 379+    (Tier 12.0)
+//                        true, // 9 398+    (Tier 13.0)
                     };
                 } else {
                     _iLvl = value;
@@ -874,6 +890,10 @@ namespace Rawr
         public bool ilvlF_6 { get { return _iLvl[6]; } set { _iLvl[6] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersSettings_7")][DefaultValue(true)]
         public bool ilvlF_7 { get { return _iLvl[7]; } set { _iLvl[7] = value; OnFiltersChanged(); } }
+//        [XmlElement("ItemFiltersSettings_7")][DefaultValue(true)]
+//        public bool ilvlF_8 { get { return _iLvl[8]; } set { _iLvl[8] = value; OnFiltersChanged(); } }
+//        [XmlElement("ItemFiltersSettings_7")][DefaultValue(true)]
+//        public bool ilvlF_9 { get { return _iLvl[9]; } set { _iLvl[9] = value; OnFiltersChanged(); } }
 
         [XmlIgnore]
         private double _ilvlF_SLMin = 285;

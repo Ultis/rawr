@@ -412,8 +412,9 @@ namespace Rawr
             if (item.Unique && (item.Slot == ItemSlot.Trinket || item.Slot == ItemSlot.Finger || item.Slot == ItemSlot.OneHand)) // all items that have UniqueId rules are marked as Unique
             {
                 // find all items in item cache with same name
-                Item item251 = null, item258 = null, item264 = null, item271 = null, item277 = null, item279 = null, item284 = null, 
-                    item316 = null, item333 = null, item346 = null, item359 = null, item372 = null, item378 = null, item391 = null;
+                Item item251 = null, item258 = null, item264 = null, item271 = null, item277 = null, item284 = null, item308 = null, 
+                    item316 = null, item333 = null, item346 = null, item359 = null, item372 = null, item378 = null, item391 = null,
+                    item384 = null, item397 = null;
 
                 lock (Items)
                 {
@@ -437,15 +438,17 @@ namespace Rawr
                             else if (i.ItemLevel == 264) { item264 = i; }
                             else if (i.ItemLevel == 271) { item271 = i; }
                             else if (i.ItemLevel == 277) { item277 = i; }
-                            else if (i.ItemLevel == 279) { item279 = i; }
                             else if (i.ItemLevel == 284) { item284 = i; }
+                            else if (i.ItemLevel == 308) { item308 = i; }
                             else if (i.ItemLevel == 316) { item316 = i; }
                             else if (i.ItemLevel == 333) { item333 = i; }
                             else if (i.ItemLevel == 346) { item346 = i; }
                             else if (i.ItemLevel == 359) { item359 = i; }
                             else if (i.ItemLevel == 372) { item372 = i; }
-                            else if (i.ItemLevel == 378) { item372 = i; }
-                            else if (i.ItemLevel == 391) { item372 = i; }
+                            else if (i.ItemLevel == 378) { item378 = i; }
+                            else if (i.ItemLevel == 384) { item384 = i; }
+                            else if (i.ItemLevel == 391) { item391 = i; }
+                            else if (i.ItemLevel == 397) { item397 = i; }
                         }
                     }
                 }
@@ -479,10 +482,10 @@ namespace Rawr
                 }
 
                 // normal/heroic pair Throne of the Tides & Blackrock Caverns with same name
-                if ((object)item279 != null && (object)item346 != null)
+                if ((object)item308 != null && (object)item346 != null)
                 {
-                    item279.UniqueId = new List<int>() { item279.Id, item346.Id };
-                    item346.UniqueId = new List<int>() { item279.Id, item346.Id };
+                    item308.UniqueId = new List<int>() { item308.Id, item346.Id };
+                    item346.UniqueId = new List<int>() { item308.Id, item346.Id };
                 }
 
                 // normal/heroic pair The Stonecore & The Vortex Pinnacle with same name
@@ -506,11 +509,18 @@ namespace Rawr
                     item372.UniqueId = new List<int>() { item359.Id, item372.Id };
                 }
 
-                // normal/heroic pair Tier 12 with same name
+                // normal/heroic pair Firelands with same name
                 if ((object)item378 != null && (object)item391 != null)
                 {
                     item378.UniqueId = new List<int>() { item378.Id, item391.Id };
                     item391.UniqueId = new List<int>() { item378.Id, item391.Id };
+                }
+
+                // normal/heroic pair Ragnaros weapons with same name
+                if ((object)item384 != null && (object)item397 != null)
+                {
+                    item384.UniqueId = new List<int>() { item384.Id, item397.Id };
+                    item397.UniqueId = new List<int>() { item384.Id, item397.Id };
                 }
 
                 // special rules for Ashen Verdict Rings
