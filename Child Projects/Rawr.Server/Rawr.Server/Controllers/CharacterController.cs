@@ -387,6 +387,7 @@ namespace Rawr.Server.Controllers
                                   + @" class=item data-item="
                                   + @"((&amp;)?(i=(?<itemId2>\d+)))?"
                                   + @"((&amp;)?(e=(?<enchantId>\d+)))?"
+                                  + @"((&amp;)?(es=(\d+)))?"
                                   + @"((&amp;)?(g0=(?<gem1Id>\d+)))?"
                                   + @"((&amp;)?(g1=(?<gem2Id>\d+)))?"
                                   + @"((&amp;)?(g2=(?<gem3Id>\d+)))?"
