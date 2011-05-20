@@ -107,6 +107,7 @@
     <Compile Include="StateSpaceGeneratorTest.cs" />
     <Compile Include="StatsTest.cs" />
     <Compile Include="Stats_SpecialEffectEnumeratorTest.cs" />
+    <Compile Include="BasicCharacterTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Shadow Include="Test References\Rawr.Base.accessor" />
@@ -218,6 +219,49 @@
       <Project>{320CAEFB-813C-487C-8EA0-2B3D347865FC}</Project>
       <Name>Rawr.Warlock.WPF</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="testdata\Alathas.xml" />
+    <Content Include="testdata\BatchTools-Unshiz.xml" />
+    <Content Include="testdata\kona.xml" />
+    <Content Include="testdata\Opus_FromRawrAddon.xml" />
+    <Content Include="testdata\Opus_RawrAddon.txt" />
+    <Content Include="testdata\Opus_standalone_saved_chr.xml" />
+    <Content Include="testdata\Professional-Tank.xml" />
+    <Content Include="testdata\Shizu-shadow.xml" />
+    <Content Include="testdata\unshiz-DPSDK_FrostDW - Copy.xml" />
+    <Content Include="testdata\unshiz-DPSDK_FrostDW.xml" />
+    <Content Include="testdata\unshiz-DPSDK_FrostDW_filtered.xml" />
+    <Content Include="testdata\unshiz-DPSDK_FrostDW_Rawr4.xml" />
+    <Content Include="testdata\unshiz-tankDK - Copy.xml" />
+    <Content Include="testdata\unshiz-tankDK 2011-3-26 8-2.xml" />
+    <Content Include="testdata\unshiz-tankDK.xml" />
+    <Content Include="testdata\unshiz-TankDK_Armory.xml" />
+    <Content Include="testdata\unshiz-TankDK_Rawr4.xml" />
+    <Content Include="testdata\~Test_EmptyBear.xml" />
+    <Content Include="testdata\~Test_EmptyCat.xml" />
+    <Content Include="testdata\~Test_EmptyDPSDK.xml" />
+    <Content Include="testdata\~Test_EmptyDPSWarr.xml" />
+    <Content Include="testdata\~Test_EmptyElemental.xml" />
+    <Content Include="testdata\~Test_EmptyEnhance.xml" />
+    <Content Include="testdata\~Test_EmptyHealadin.xml" />
+    <Content Include="testdata\~Test_EmptyHealPriest.xml" />
+    <Content Include="testdata\~Test_EmptyHunter.xml" />
+    <Content Include="testdata\~Test_EmptyMage.xml" />
+    <Content Include="testdata\~Test_EmptyMoonkin.xml" />
+    <Content Include="testdata\~Test_EmptyProtPaladin.xml" />
+    <Content Include="testdata\~Test_EmptyProtWarr.xml" />
+    <Content Include="testdata\~Test_EmptyRestoSham.xml" />
+    <Content Include="testdata\~Test_EmptyRetribution.xml" />
+    <Content Include="testdata\~Test_EmptyRogue.xml" />
+    <Content Include="testdata\~Test_EmptyShadowPriest.xml" />
+    <Content Include="testdata\~Test_EmptyTankDK.xml" />
+    <Content Include="testdata\~Test_EmptyTree.xml" />
+    <Content Include="testdata\~Test_EmptyWarlock.xml" />
+    <Content Include="testdata\~Test_Rawr4_Blood2h.xml" />
+    <Content Include="testdata\~Test_Rawr4_Blood2h_2.xml" />
+    <Content Include="testdata\~Test_Rawr4_Unholy2h.xml" />
+    <Content Include="testdata\~Test_TankDK.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

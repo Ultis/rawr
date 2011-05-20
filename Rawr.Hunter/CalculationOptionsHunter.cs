@@ -640,7 +640,7 @@ namespace Rawr.Hunter
         #region ICalculationOptionBase Members
         public string GetXml()
         {
-            _petActiveBuffsXml = new List<string>(_petActiveBuffs.ConvertAll(buff => buff.Name));
+            _petActiveBuffsXml = new List<string>(petActiveBuffs.ConvertAll(buff => buff.Name));
 
             XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsHunter));
             StringBuilder xml = new StringBuilder();

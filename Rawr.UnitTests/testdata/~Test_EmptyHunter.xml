@@ -1,0 +1,784 @@
+<?xml version="1.0"?>
+<Character xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <CurrentModel>Hunter</CurrentModel>
+  <CalculationOptions>
+    <item>
+      <key>
+        <string>Hunter</string>
+      </key>
+      <value>
+        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;CalculationOptionsHunter xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;_BossHPPerc&gt;1&lt;/_BossHPPerc&gt;
+  &lt;_CDCutoff&gt;0&lt;/_CDCutoff&gt;
+  &lt;_AspectUsage&gt;None&lt;/_AspectUsage&gt;
+  &lt;_UseBeastDuringBestialWrath&gt;true&lt;/_UseBeastDuringBestialWrath&gt;
+  &lt;_UseRotationTest&gt;true&lt;/_UseRotationTest&gt;
+  &lt;_RandomizeProcs&gt;false&lt;/_RandomizeProcs&gt;
+  &lt;_PriorityIndex1&gt;0&lt;/_PriorityIndex1&gt;
+  &lt;_PriorityIndex2&gt;0&lt;/_PriorityIndex2&gt;
+  &lt;_PriorityIndex3&gt;0&lt;/_PriorityIndex3&gt;
+  &lt;_PriorityIndex4&gt;0&lt;/_PriorityIndex4&gt;
+  &lt;_PriorityIndex5&gt;0&lt;/_PriorityIndex5&gt;
+  &lt;_PriorityIndex6&gt;0&lt;/_PriorityIndex6&gt;
+  &lt;_PriorityIndex7&gt;0&lt;/_PriorityIndex7&gt;
+  &lt;_PriorityIndex8&gt;0&lt;/_PriorityIndex8&gt;
+  &lt;_PriorityIndex9&gt;0&lt;/_PriorityIndex9&gt;
+  &lt;_PriorityIndex10&gt;0&lt;/_PriorityIndex10&gt;
+  &lt;_PetPriority1&gt;Growl&lt;/_PetPriority1&gt;
+  &lt;_PetPriority2&gt;Bite&lt;/_PetPriority2&gt;
+  &lt;_PetPriority3&gt;None&lt;/_PetPriority3&gt;
+  &lt;_PetPriority4&gt;None&lt;/_PetPriority4&gt;
+  &lt;_PetPriority5&gt;None&lt;/_PetPriority5&gt;
+  &lt;_PetPriority6&gt;None&lt;/_PetPriority6&gt;
+  &lt;_PetPriority7&gt;None&lt;/_PetPriority7&gt;
+  &lt;waitForCooldown&gt;0.8&lt;/waitForCooldown&gt;
+  &lt;interleaveLAL&gt;false&lt;/interleaveLAL&gt;
+  &lt;prioritiseArcAimedOverSteady&gt;true&lt;/prioritiseArcAimedOverSteady&gt;
+  &lt;debugShotRotation&gt;false&lt;/debugShotRotation&gt;
+  &lt;Lag&gt;150&lt;/Lag&gt;
+  &lt;React&gt;200&lt;/React&gt;
+  &lt;BossHPPerc&gt;1&lt;/BossHPPerc&gt;
+  &lt;CDCutoff&gt;0&lt;/CDCutoff&gt;
+  &lt;SelectedAspect&gt;Hawk&lt;/SelectedAspect&gt;
+  &lt;AspectUsage&gt;None&lt;/AspectUsage&gt;
+  &lt;UseBeastDuringBestialWrath&gt;true&lt;/UseBeastDuringBestialWrath&gt;
+  &lt;UseRotationTest&gt;true&lt;/UseRotationTest&gt;
+  &lt;RandomizeProcs&gt;false&lt;/RandomizeProcs&gt;
+  &lt;PriorityIndex1&gt;0&lt;/PriorityIndex1&gt;
+  &lt;PriorityIndex2&gt;0&lt;/PriorityIndex2&gt;
+  &lt;PriorityIndex3&gt;0&lt;/PriorityIndex3&gt;
+  &lt;PriorityIndex4&gt;0&lt;/PriorityIndex4&gt;
+  &lt;PriorityIndex5&gt;0&lt;/PriorityIndex5&gt;
+  &lt;PriorityIndex6&gt;0&lt;/PriorityIndex6&gt;
+  &lt;PriorityIndex7&gt;0&lt;/PriorityIndex7&gt;
+  &lt;PriorityIndex8&gt;0&lt;/PriorityIndex8&gt;
+  &lt;PriorityIndex9&gt;0&lt;/PriorityIndex9&gt;
+  &lt;PriorityIndex10&gt;0&lt;/PriorityIndex10&gt;
+  &lt;PetLevel&gt;85&lt;/PetLevel&gt;
+  &lt;SelectedArmoryPet&gt;0&lt;/SelectedArmoryPet&gt;
+  &lt;PetHappinessLevel&gt;Happy&lt;/PetHappinessLevel&gt;
+  &lt;PetTalents&gt;
+    &lt;SerpentSwiftness&gt;0&lt;/SerpentSwiftness&gt;
+    &lt;DiveDash&gt;0&lt;/DiveDash&gt;
+    &lt;GreatStamina&gt;0&lt;/GreatStamina&gt;
+    &lt;NaturalArmor&gt;0&lt;/NaturalArmor&gt;
+    &lt;ChargeSwoop&gt;0&lt;/ChargeSwoop&gt;
+    &lt;BoarsSpeed&gt;0&lt;/BoarsSpeed&gt;
+    &lt;Mobility&gt;0&lt;/Mobility&gt;
+    &lt;OwlsFocus&gt;0&lt;/OwlsFocus&gt;
+    &lt;SpikedCollar&gt;0&lt;/SpikedCollar&gt;
+    &lt;ImprovedCower&gt;0&lt;/ImprovedCower&gt;
+    &lt;Bloodthirsty&gt;0&lt;/Bloodthirsty&gt;
+    &lt;BloodOfTheRhino&gt;0&lt;/BloodOfTheRhino&gt;
+    &lt;PetBarding&gt;0&lt;/PetBarding&gt;
+    &lt;CullingTheHerd&gt;0&lt;/CullingTheHerd&gt;
+    &lt;Lionhearted&gt;0&lt;/Lionhearted&gt;
+    &lt;CarrionFeeder&gt;0&lt;/CarrionFeeder&gt;
+    &lt;GuardDog&gt;0&lt;/GuardDog&gt;
+    &lt;Thunderstomp&gt;0&lt;/Thunderstomp&gt;
+    &lt;GreatResistance&gt;0&lt;/GreatResistance&gt;
+    &lt;Cornered&gt;0&lt;/Cornered&gt;
+    &lt;FeedingFrenzy&gt;0&lt;/FeedingFrenzy&gt;
+    &lt;HeartOfThePhoenix&gt;0&lt;/HeartOfThePhoenix&gt;
+    &lt;SpidersBite&gt;0&lt;/SpidersBite&gt;
+    &lt;GraceOfTheMantis&gt;0&lt;/GraceOfTheMantis&gt;
+    &lt;WolverineBite&gt;0&lt;/WolverineBite&gt;
+    &lt;RoarOfRecovery&gt;0&lt;/RoarOfRecovery&gt;
+    &lt;Bullheaded&gt;0&lt;/Bullheaded&gt;
+    &lt;Rabid&gt;0&lt;/Rabid&gt;
+    &lt;LickYourWounds&gt;0&lt;/LickYourWounds&gt;
+    &lt;CallOfTheWild&gt;0&lt;/CallOfTheWild&gt;
+    &lt;LastStand&gt;0&lt;/LastStand&gt;
+    &lt;Taunt&gt;0&lt;/Taunt&gt;
+    &lt;RoarOfSacrifice&gt;0&lt;/RoarOfSacrifice&gt;
+    &lt;Intervene&gt;0&lt;/Intervene&gt;
+    &lt;WildHunt&gt;0&lt;/WildHunt&gt;
+    &lt;SharkAttack&gt;0&lt;/SharkAttack&gt;
+    &lt;Silverback&gt;0&lt;/Silverback&gt;
+  &lt;/PetTalents&gt;
+  &lt;petTalents&gt;00000000000000000000000000000000000000&lt;/petTalents&gt;
+  &lt;PetFamily&gt;Cat&lt;/PetFamily&gt;
+  &lt;PetPriority1&gt;Growl&lt;/PetPriority1&gt;
+  &lt;PetPriority2&gt;Bite&lt;/PetPriority2&gt;
+  &lt;PetPriority3&gt;None&lt;/PetPriority3&gt;
+  &lt;PetPriority4&gt;None&lt;/PetPriority4&gt;
+  &lt;PetPriority5&gt;None&lt;/PetPriority5&gt;
+  &lt;PetPriority6&gt;None&lt;/PetPriority6&gt;
+  &lt;PetPriority7&gt;None&lt;/PetPriority7&gt;
+  &lt;HideBadItems_Spl&gt;true&lt;/HideBadItems_Spl&gt;
+  &lt;HideBadItems_PvP&gt;true&lt;/HideBadItems_PvP&gt;
+  &lt;PTRMode&gt;false&lt;/PTRMode&gt;
+  &lt;SurvScale&gt;1&lt;/SurvScale&gt;
+  &lt;SE_UseDur&gt;true&lt;/SE_UseDur&gt;
+  &lt;StatsList&gt;
+    &lt;boolean&gt;true&lt;/boolean&gt;
+    &lt;boolean&gt;true&lt;/boolean&gt;
+    &lt;boolean&gt;true&lt;/boolean&gt;
+    &lt;boolean&gt;true&lt;/boolean&gt;
+    &lt;boolean&gt;true&lt;/boolean&gt;
+    &lt;boolean&gt;true&lt;/boolean&gt;
+  &lt;/StatsList&gt;
+  &lt;StatsIncrement&gt;100&lt;/StatsIncrement&gt;
+  &lt;CalculationToGraph&gt;Overall Rating&lt;/CalculationToGraph&gt;
+  &lt;useKillCommand&gt;true&lt;/useKillCommand&gt;
+  &lt;gcdsToLayImmoTrap&gt;2&lt;/gcdsToLayImmoTrap&gt;
+  &lt;gcdsToLayExploTrap&gt;2&lt;/gcdsToLayExploTrap&gt;
+  &lt;gcdsToVolley&gt;4&lt;/gcdsToVolley&gt;
+  &lt;LALShotToUse&gt;ExplosiveShot&lt;/LALShotToUse&gt;
+  &lt;LALShotsReplaced&gt;2&lt;/LALShotsReplaced&gt;
+  &lt;LALProcChance&gt;2&lt;/LALProcChance&gt;
+&lt;/CalculationOptionsHunter&gt;</string>
+      </value>
+    </item>
+  </CalculationOptions>
+  <Name>EmptyHunter</Name>
+  <Class>Hunter</Class>
+  <Boss>
+    <Targets />
+    <BuffStates />
+    <Moves />
+    <Stuns />
+    <Fears />
+    <Roots />
+    <Silences />
+    <Disarms />
+    <Attacks>
+      <Attack>
+        <Name>Generated Default Melee Attack</Name>
+        <IsTheDefaultMelee>true</IsTheDefaultMelee>
+        <DamagePerHit>175000</DamagePerHit>
+        <PhaseTimes>
+          <item>
+            <key>
+              <int>1</int>
+            </key>
+            <value>
+              <ArrayOfFloat>
+                <float>0</float>
+                <float>1200</float>
+              </ArrayOfFloat>
+            </value>
+          </item>
+        </PhaseTimes>
+        <AffectsRole>
+          <item>
+            <key>
+              <PLAYER_ROLES>MainTank</PLAYER_ROLES>
+            </key>
+            <value>
+              <boolean>true</boolean>
+            </value>
+          </item>
+          <item>
+            <key>
+              <PLAYER_ROLES>OffTank</PLAYER_ROLES>
+            </key>
+            <value>
+              <boolean>true</boolean>
+            </value>
+          </item>
+          <item>
+            <key>
+              <PLAYER_ROLES>TertiaryTank</PLAYER_ROLES>
+            </key>
+            <value>
+              <boolean>true</boolean>
+            </value>
+          </item>
+          <item>
+            <key>
+              <PLAYER_ROLES>MeleeDPS</PLAYER_ROLES>
+            </key>
+            <value>
+              <boolean>false</boolean>
+            </value>
+          </item>
+          <item>
+            <key>
+              <PLAYER_ROLES>RangedDPS</PLAYER_ROLES>
+            </key>
+            <value>
+              <boolean>false</boolean>
+            </value>
+          </item>
+          <item>
+            <key>
+              <PLAYER_ROLES>MainTankHealer</PLAYER_ROLES>
+            </key>
+            <value>
+              <boolean>false</boolean>
+            </value>
+          </item>
+          <item>
+            <key>
+              <PLAYER_ROLES>OffAndTertTankHealer</PLAYER_ROLES>
+            </key>
+            <value>
+              <boolean>false</boolean>
+            </value>
+          </item>
+          <item>
+            <key>
+              <PLAYER_ROLES>RaidHealer</PLAYER_ROLES>
+            </key>
+            <value>
+              <boolean>false</boolean>
+            </value>
+          </item>
+        </AffectsRole>
+      </Attack>
+    </Attacks>
+  </Boss>
+  <ItemFilterEnabledOverride>
+    <ItemFilterEnabledOverride>
+      <Name>Dungeons</Name>
+      <Enabled>true</Enabled>
+      <SubFilterOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Blackrock Caverns</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Grim Batol</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Halls of Origination</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Lost City of the Tol'vir</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>The Stonecore</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Throne of the Tides</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Vortex Pinnacle</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Other</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+      </SubFilterOverride>
+    </ItemFilterEnabledOverride>
+    <ItemFilterEnabledOverride>
+      <Name>Dungeons (Heroic)</Name>
+      <Enabled>true</Enabled>
+      <SubFilterOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Blackrock Caverns</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Grim Batol</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Halls of Origination</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Lost City of the Tol'vir</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Shadowfang Keep</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>The Deadmines</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>The Stonecore</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Throne of the Tides</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Vortex Pinnacle</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Zul'Aman</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Zul'Gurub</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Other</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+      </SubFilterOverride>
+    </ItemFilterEnabledOverride>
+    <ItemFilterEnabledOverride>
+      <Name>Tier 11 Raids BD/BoT/Tot4W</Name>
+      <Enabled>true</Enabled>
+      <SubFilterOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Blackwing Descent</Name>
+          <Enabled>true</Enabled>
+          <SubFilterOverride>
+            <ItemFilterEnabledOverride>
+              <Name>Normal</Name>
+              <Enabled>true</Enabled>
+              <SubFilterOverride>
+                <ItemFilterEnabledOverride>
+                  <Name>Magmaw</Name>
+                  <Enabled>true</Enabled>
+                </ItemFilterEnabledOverride>
+                <ItemFilterEnabledOverride>
+                  <Name>Omnitron Defense System</Name>
+                  <Enabled>true</Enabled>
+                </ItemFilterEnabledOverride>
+                <ItemFilterEnabledOverride>
+                  <Name>Chimaeron</Name>
+                  <Enabled>true</Enabled>
+                </ItemFilterEnabledOverride>
+                <ItemFilterEnabledOverride>
+                  <Name>Atramedes</Name>
+                  <Enabled>true</Enabled>
+                </ItemFilterEnabledOverride>
+                <ItemFilterEnabledOverride>
+                  <Name>Maloriak</Name>
+                  <Enabled>true</Enabled>
+                </ItemFilterEnabledOverride>
+                <ItemFilterEnabledOverride>
+                  <Name>Nefarian</Name>
+                  <Enabled>true</Enabled>
+                </ItemFilterEnabledOverride>
+                <ItemFilterEnabledOverride>
+                  <Name>Trash drop</Name>
+                  <Enabled>true</Enabled>
+                </ItemFilterEnabledOverride>
+                <ItemFilterEnabledOverride>
+                  <Name>Other</Name>
+                  <Enabled>true</Enabled>
+                </ItemFilterEnabledOverride>
+              </SubFilterOverride>
+            </ItemFilterEnabledOverride>
+            <ItemFilterEnabledOverride>
+              <Name>Heroic</Name>
+              <Enabled>true</Enabled>
+              <SubFilterOverride>
+                <ItemFilterEnabledOverride>
+                  <Name>Magmaw</Name>
+                  <Enabled>true</Enabled>
+                </ItemFilterEnabledOverride>
+                <ItemFilterEnabledOverride>
+                  <Name>Omnitron Defense System</Name>
+                  <Enabled>true</Enabled>
+                </ItemFilterEnabledOverride>
+                <ItemFilterEnabledOverride>
+                  <Name>Chimaeron</Name>
+                  <Enabled>true</Enabled>
+                </ItemFilterEnabledOverride>
+                <ItemFilterEnabledOverride>
+                  <Name>Atramedes</Name>
+                  <Enabled>true</Enabled>
+                </ItemFilterEnabledOverride>
+                <ItemFilterEnabledOverride>
+                  <Name>Maloriak</Name>
+                  <Enabled>true</Enabled>
+                </ItemFilterEnabledOverride>
+                <ItemFilterEnabledOverride>
+                  <Name>Nefarian</Name>
+                  <Enabled>true</Enabled>
+                </ItemFilterEnabledOverride>
+                <ItemFilterEnabledOverride>
+                  <Name>Other</Name>
+                  <Enabled>true</Enabled>
+                </ItemFilterEnabledOverride>
+              </SubFilterOverride>
+            </ItemFilterEnabledOverride>
+            <ItemFilterEnabledOverride>
+              <Name>Other</Name>
+              <Enabled>true</Enabled>
+            </ItemFilterEnabledOverride>
+          </SubFilterOverride>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>The Bastion of Twilight</Name>
+          <Enabled>true</Enabled>
+          <SubFilterOverride>
+            <ItemFilterEnabledOverride>
+              <Name>Normal</Name>
+              <Enabled>true</Enabled>
+              <SubFilterOverride>
+                <ItemFilterEnabledOverride>
+                  <Name>Halfus Wyrmbreaker</Name>
+                  <Enabled>true</Enabled>
+                </ItemFilterEnabledOverride>
+                <ItemFilterEnabledOverride>
+                  <Name>Valiona &amp; Theralion</Name>
+                  <Enabled>true</Enabled>
+                </ItemFilterEnabledOverride>
+                <ItemFilterEnabledOverride>
+                  <Name>Twilight Ascendant Council</Name>
+                  <Enabled>true</Enabled>
+                </ItemFilterEnabledOverride>
+                <ItemFilterEnabledOverride>
+                  <Name>Cho'gall</Name>
+                  <Enabled>true</Enabled>
+                </ItemFilterEnabledOverride>
+                <ItemFilterEnabledOverride>
+                  <Name>Trash drop</Name>
+                  <Enabled>true</Enabled>
+                </ItemFilterEnabledOverride>
+                <ItemFilterEnabledOverride>
+                  <Name>Other</Name>
+                  <Enabled>true</Enabled>
+                </ItemFilterEnabledOverride>
+              </SubFilterOverride>
+            </ItemFilterEnabledOverride>
+            <ItemFilterEnabledOverride>
+              <Name>Heroic</Name>
+              <Enabled>true</Enabled>
+              <SubFilterOverride>
+                <ItemFilterEnabledOverride>
+                  <Name>Halfus Wyrmbreaker</Name>
+                  <Enabled>true</Enabled>
+                </ItemFilterEnabledOverride>
+                <ItemFilterEnabledOverride>
+                  <Name>Valiona &amp; Theralion</Name>
+                  <Enabled>true</Enabled>
+                </ItemFilterEnabledOverride>
+                <ItemFilterEnabledOverride>
+                  <Name>Twilight Ascendant Council</Name>
+                  <Enabled>true</Enabled>
+                </ItemFilterEnabledOverride>
+                <ItemFilterEnabledOverride>
+                  <Name>Cho'gall</Name>
+                  <Enabled>true</Enabled>
+                </ItemFilterEnabledOverride>
+                <ItemFilterEnabledOverride>
+                  <Name>Sinestra</Name>
+                  <Enabled>true</Enabled>
+                </ItemFilterEnabledOverride>
+                <ItemFilterEnabledOverride>
+                  <Name>Other</Name>
+                  <Enabled>true</Enabled>
+                </ItemFilterEnabledOverride>
+              </SubFilterOverride>
+            </ItemFilterEnabledOverride>
+            <ItemFilterEnabledOverride>
+              <Name>Other</Name>
+              <Enabled>true</Enabled>
+            </ItemFilterEnabledOverride>
+          </SubFilterOverride>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Throne of the Four Winds</Name>
+          <Enabled>true</Enabled>
+          <SubFilterOverride>
+            <ItemFilterEnabledOverride>
+              <Name>Normal</Name>
+              <Enabled>true</Enabled>
+              <SubFilterOverride>
+                <ItemFilterEnabledOverride>
+                  <Name>Conclave of Wind</Name>
+                  <Enabled>true</Enabled>
+                </ItemFilterEnabledOverride>
+                <ItemFilterEnabledOverride>
+                  <Name>Al'Akir</Name>
+                  <Enabled>true</Enabled>
+                </ItemFilterEnabledOverride>
+                <ItemFilterEnabledOverride>
+                  <Name>Other</Name>
+                  <Enabled>true</Enabled>
+                </ItemFilterEnabledOverride>
+              </SubFilterOverride>
+            </ItemFilterEnabledOverride>
+            <ItemFilterEnabledOverride>
+              <Name>Heroic</Name>
+              <Enabled>true</Enabled>
+              <SubFilterOverride>
+                <ItemFilterEnabledOverride>
+                  <Name>Conclave of Wind</Name>
+                  <Enabled>true</Enabled>
+                </ItemFilterEnabledOverride>
+                <ItemFilterEnabledOverride>
+                  <Name>Al'Akir</Name>
+                  <Enabled>true</Enabled>
+                </ItemFilterEnabledOverride>
+                <ItemFilterEnabledOverride>
+                  <Name>Other</Name>
+                  <Enabled>true</Enabled>
+                </ItemFilterEnabledOverride>
+              </SubFilterOverride>
+            </ItemFilterEnabledOverride>
+            <ItemFilterEnabledOverride>
+              <Name>Other</Name>
+              <Enabled>true</Enabled>
+            </ItemFilterEnabledOverride>
+          </SubFilterOverride>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Other</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+      </SubFilterOverride>
+    </ItemFilterEnabledOverride>
+    <ItemFilterEnabledOverride>
+      <Name>Baradin Hold</Name>
+      <Enabled>true</Enabled>
+      <SubFilterOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Pit Lord Argaloth</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Other</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+      </SubFilterOverride>
+    </ItemFilterEnabledOverride>
+    <ItemFilterEnabledOverride>
+      <Name>Special Currency (Points, Tokens, etc.)</Name>
+      <Enabled>true</Enabled>
+      <SubFilterOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Tol Borad Commendation</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Valor Points</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Justice Points</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Armor Tokens</Name>
+          <Enabled>true</Enabled>
+          <SubFilterOverride>
+            <ItemFilterEnabledOverride>
+              <Name>Tier 11</Name>
+              <Enabled>true</Enabled>
+            </ItemFilterEnabledOverride>
+            <ItemFilterEnabledOverride>
+              <Name>Tier 10-</Name>
+              <Enabled>true</Enabled>
+            </ItemFilterEnabledOverride>
+            <ItemFilterEnabledOverride>
+              <Name>Other</Name>
+              <Enabled>true</Enabled>
+            </ItemFilterEnabledOverride>
+          </SubFilterOverride>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Stone Keeper's Shard</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Champion's Seal</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Kirin Tor Rings</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Other</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+      </SubFilterOverride>
+    </ItemFilterEnabledOverride>
+    <ItemFilterEnabledOverride>
+      <Name>Crafted/Profession</Name>
+      <Enabled>true</Enabled>
+      <SubFilterOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Alchemy</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Archaeology</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Blacksmithing</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Engineer</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Inscription</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Jewelcrafting (non-gem)</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Leatherworking</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Tailoring</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Other</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+      </SubFilterOverride>
+    </ItemFilterEnabledOverride>
+    <ItemFilterEnabledOverride>
+      <Name>Faction/Guild Reputation</Name>
+      <Enabled>true</Enabled>
+      <SubFilterOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Guardians of Hyjal</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Ramkahen</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Therazane</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Earthen Ring</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Wildhammer Clan/Dragonmaw Clan</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Baradin's Wardens/Hellscream's Reach</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Guild Reputation</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Other</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+      </SubFilterOverride>
+    </ItemFilterEnabledOverride>
+    <ItemFilterEnabledOverride>
+      <Name>Rare Elite</Name>
+      <Enabled>true</Enabled>
+    </ItemFilterEnabledOverride>
+    <ItemFilterEnabledOverride>
+      <Name>PvP</Name>
+      <Enabled>true</Enabled>
+      <SubFilterOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Requires Arena Rating</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Conquest Points</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Honor Points</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>? (Refresh from wowhead)</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Other</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+      </SubFilterOverride>
+    </ItemFilterEnabledOverride>
+    <ItemFilterEnabledOverride>
+      <Name>Quest Rewards</Name>
+      <Enabled>true</Enabled>
+    </ItemFilterEnabledOverride>
+    <ItemFilterEnabledOverride>
+      <Name>World Drop</Name>
+      <Enabled>true</Enabled>
+    </ItemFilterEnabledOverride>
+    <ItemFilterEnabledOverride>
+      <Name>Wrath of the Lich King</Name>
+      <Enabled>true</Enabled>
+    </ItemFilterEnabledOverride>
+    <ItemFilterEnabledOverride>
+      <Name>Burning Crusade</Name>
+      <Enabled>true</Enabled>
+    </ItemFilterEnabledOverride>
+    <ItemFilterEnabledOverride>
+      <Name>Classic</Name>
+      <Enabled>true</Enabled>
+    </ItemFilterEnabledOverride>
+    <ItemFilterEnabledOverride>
+      <Name>Seasonal</Name>
+      <Enabled>true</Enabled>
+    </ItemFilterEnabledOverride>
+    <ItemFilterEnabledOverride>
+      <Name>Unknown/Not found on wowhead</Name>
+      <Enabled>true</Enabled>
+    </ItemFilterEnabledOverride>
+    <ItemFilterEnabledOverride>
+      <Name>Gems</Name>
+      <Enabled>true</Enabled>
+      <SubFilterOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Jewelcrafter BoP</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Crafted (Non-BoP)</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>PvP</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>World Drop</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Quest Rewards</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Unknown/Not found on wowhead</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+        <ItemFilterEnabledOverride>
+          <Name>Other</Name>
+          <Enabled>true</Enabled>
+        </ItemFilterEnabledOverride>
+      </SubFilterOverride>
+    </ItemFilterEnabledOverride>
+    <ItemFilterEnabledOverride>
+      <Name>BOE Items (possible AH)</Name>
+      <Enabled>true</Enabled>
+    </ItemFilterEnabledOverride>
+    <ItemFilterEnabledOverride>
+      <Name>Other</Name>
+      <Enabled>true</Enabled>
+    </ItemFilterEnabledOverride>
+  </ItemFilterEnabledOverride>
+  <CustomGemmingTemplates />
+  <GemmingTemplateOverrides />
+  <CustomItemInstances />
+</Character>
