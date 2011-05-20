@@ -56,6 +56,8 @@ namespace Rawr.Healadin
         public EnlightenedJudgements EJ { get; set; }
 
         public float SpellPowerTotal { get; set; }  // add spellpower from items + int to get this
+        public float HasteJotP { get; set; } // Haste from Judgement of the Pure talent (just used to print on stats screen)
+        public float HasteSoL { get; set; }  // Haste from Speed of Light talent (just used to print on stats screen)
 
         // These track total cast time for each spell
         public float RotationFoL { get; set; }  
@@ -69,6 +71,8 @@ namespace Rawr.Healadin
         public float RotationLoD { get; set; }
         public float RotationHR { get; set; }
         public float RotationLoH { get; set; }
+        public float RotationCleanse { get; set; }
+        public float RotationMelee { get; set; }  // Time spend melee, NOT during instant casts. Just doing melee for mana.
         public float RotationTotal { get; set; }
         public float HolyPowerCasts { get; set; }
 
@@ -99,6 +103,7 @@ namespace Rawr.Healadin
         public float UsageLoD { get; set; }
         public float UsageHR { get; set; }
         public float UsageLoH { get; set; }
+        public float UsageCleanse { get; set; }
         public float UsageTotal { get; set; }
 
         // number of casts in fight
@@ -113,6 +118,9 @@ namespace Rawr.Healadin
         public float JudgeCasts { get; set; }
         public float PotICasts { get; set; }
         public float LoHCasts { get; set; }
+        public float CleanseCasts { get; set; }
+        public float MeleeSwings { get; set; }
+        public float MeleeProcs { get; set; }
 
         public float ManaBase { get; set; }
         public float ManaMp5 { get; set; }
@@ -124,6 +132,7 @@ namespace Rawr.Healadin
         public float ManaJudgements { get; set; }   // mana generated from casting Judgements (15% base mana per cast)
         public float ManaRegenRate { get; set; }    // out of combat regen rate
         public float CombatRegenRate { get; set; }  // in combat total regen rate
+        public float ManaMelee { get; set; }
         public float CombatRegenTotal { get; set; }
 
         private Stats _basicStats;
@@ -149,21 +158,24 @@ namespace Rawr.Healadin
             dictValues["Mana"] = BasicStats.Mana.ToString("N00");
             dictValues["Intellect"] = BasicStats.Intellect.ToString("N00");
             dictValues["Spirit"] = BasicStats.Spirit.ToString("N00");
-            dictValues["Mastery Rating"] = string.Format("{0}%*{1} Mastery Rating", 
+            dictValues["Mastery Rating"] = string.Format("{0}*{1} Mastery Rating", 
                                    (8 + BasicStats.MasteryRating / 179.28f).ToString("N02"), BasicStats.MasteryRating);
             dictValues["Spell Power"] = string.Format("{0}", SpellPowerTotal.ToString("N00"));
             dictValues["Mana Regen"] = string.Format("{0}", ManaRegenRate.ToString("N00"));
             dictValues["Combat Regen"] = string.Format("{0}", CombatRegenRate.ToString("N00"));  
             // dictValues["Mp5"] = BasicStats.Mp5.ToString("N00");
             dictValues["Spell Crit"] = string.Format("{0}%*{1} Crit Rating", (BasicStats.SpellCrit * 100).ToString("N02"), BasicStats.CritRating);
-            dictValues["Spell Haste"] = string.Format("{0}%*{1} Haste Rating", (BasicStats.SpellHaste * 100).ToString("N02"), BasicStats.HasteRating);
+            dictValues["Spell Haste"] = string.Format("{0}%*Haste breakdown:\nHaste Rating {1} gives {2} haste.\nTalent haste multipliers:\nSpeed of Light: {3}\nJudgements of the Pure: {4}\nOther Haste: {5} (probably from buffs)",
+                                      (BasicStats.SpellHaste * 100).ToString("N02"), BasicStats.HasteRating,
+                                      (BasicStats.RangedHaste * 100).ToString("N02"), HasteSoL.ToString("N02"), HasteJotP.ToString("N02"), 
+                                      (((1f + BasicStats.SpellHaste) / (1f + BasicStats.PhysicalHaste) -1f) * 100f).ToString("N02"));
 
             // Cycle Stats
             dictValues["Total Healed"] = string.Format("{0} healing", TotalHealed.ToString("N00"));
-            dictValues["Total Mana"] = string.Format("{0} mana *Mana Sources:\nBase Mana: {1} \nCombat Regen: {2}\nJudgements: {3}\nReplenishment: {4}\nDivine Plea: {5}\nArcane Torrent: {6}\nLay on Hands: {7}\nMP5: {8}\nOther: {9}", 
+            dictValues["Total Mana"] = string.Format("{0} mana *Mana Sources:\nBase Mana: {1} \nCombat Regen: {2}\nJudgements: {3}\nReplenishment: {4}\nDivine Plea: {5}\nArcane Torrent: {6}\nLay on Hands: {7}\nMP5: {8}\nMelee: {9}\nOther: {10}", 
                                    TotalMana.ToString("N00"), ManaBase.ToString("N00"), CombatRegenTotal.ToString("N00"), ManaJudgements.ToString("N00"),
                                    ManaReplenishment.ToString("N00"), ManaDivinePlea.ToString("N00"), ManaArcaneTorrent.ToString("N00"), 
-                                   ManaLayOnHands.ToString("N00"), ManaMp5.ToString("N00"), ManaOther.ToString("N00"));
+                                   ManaLayOnHands.ToString("N00"), ManaMp5.ToString("N00"), ManaMelee.ToString("N00"), ManaOther.ToString("N00"));
 
             dictValues["Average Healing per sec"] = string.Format("{0} hps", AvgHPS.ToString("N00"));
             dictValues["Average Healing per mana"] = string.Format("{0} hpm", AvgHPM.ToString("N02"));
@@ -200,6 +212,8 @@ namespace Rawr.Healadin
                                                             HealedJudge.ToString("N00"), JudgeCasts.ToString("N00"));
             dictValues["Illuminated Healing"] = string.Format("{0} *These are from the absorb shields, and increase with Master stat.\nThe shields often expire or are overwritten.\nSee options tab to set effective %.",
                                                             HealedIH.ToString("N00"));
+            dictValues["Cleanse casting"] = string.Format("*Based on the settings from the options tab, you cast Cleanse {0} times, using up {1} mana.",
+                                                            CleanseCasts.ToString("N00"), UsageCleanse.ToString("N00"));
             dictValues["Other Healed"] = string.Format("{0} ", HealedOther.ToString("N00"));
 
             //Spell Details

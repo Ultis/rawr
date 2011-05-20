@@ -2,56 +2,92 @@
 using System.Collections.Generic;
 using System.Text;
 
-/* Molotok's notes on stuff implimented
+/* Molotok's notes on stuff implemented for 4.1
  * 
- *TO DO:
- * Divine Plea: causes 50% heals.  Also, does it take a GCD?  if so account for it.
- * Illuminated Healing - Your direct healing spells also place an absorb shield on your target for 12% of the amount healed lasting 15 sec. 
- *                       Each point of Mastery increases the absorb amount by an additional 1.50%.
+ *Left to do:
+ *  investigate issue with trinkets, etc that proc for a heal or mana regen. They are currently counting for too much.
+ *  Last Word(0-2) - 30% extra WoG crit per point, when target below 35% health
+ *  Divine Favor(0-1) - increase haste/crit 20% for 20 secs.  3 min CD
+ *  Infusion of Light  - 2nd part - HS crit = -0.75 sec per point from next DL/HL
+ *  Daybreak(0-2) - FoL, DL, HL have 10% chance per point to make next HS not trigger its 6 sec CD.
+ *  Conviction(0-3) - 1% heal bonus per point, for 15 secs after a crit from non-periodic spell.  (or weapon swing)
+ *  Tower of Radiance(0-3) - healing beacon target with FoL or DL has 33% chance per point of giving a Holy Power
+ *  Blessed Life(0-2) - 50% chance to gain holy power when taking direct damage.  8 sec CD.
+ *  Crusade (0-3) - 2nd part - after killing something, next HL heals for 100% extra per point, for 15 sec.
+ *  Gemming template - Jewelcrafting gems
+ *  Glyph of Divine Favor
+ *  Avenging Wrath
+ *  Guardian of Ancient Kings
+ *  T11 set bonuses
+ *  T12 set bonuses
+ *  Divine Plea: causes 50% heals.  Also, does it take a GCD? (yes)  if so account for it.
+ *  Haste talents - additive or multiplicative?  Assume mult for now. (Judgement of the Pure, Speed of Light)
+ 
  * 
+ *Done with assumptions (which can't be changed in the options tab):
+ *  Speed of Light - assumes 3 points for Holy Radiance CD reduction.
+ *  Assumes you are holy spec, so you get:
+ *   - Illuminated Healing (shield on heals, Mastery ability)
+ *   - Meditation (50% spirit regen in combat)
+ *   - Walk in the light (+10% to all heals)
+ *  Seal of Insight is always up
+ * 
+ *Not done, but no current plans to do:
+ *  figure hit into melee / Judgement mana regen - leaning towards not bothering to do this... *  
+ *  Enlightened Judgements(0-2) - 1st part - gives +50% spirit to hit per point 
+ * 
+ * 
+ *DONE  Gemming template (except jewelcrafting gems)
+ *DONE  add cleansing to options tab, make default 10 casts.  Then model it in rotation and do Glyph of Cleansing
+ *DONE  add melee based mana regen.  add something in options tab for how much melee is done.  Available time to melee will = total instant cast "cast time".
+ *
+ *DONE Illuminated Healing - Your direct healing spells also place an absorb shield on your target for 12% of the amount healed lasting 15 sec. 
+ *DONE                       Each point of Mastery increases the absorb amount by an additional 1.50%.
  * 
  *Talents:
  *DONE(assumes Holy Spec always) Walk in the Light (for selecting Holy specialization)- 10% heal bonus
  *DONE Protector of the Innocent(0-3) - additional self heal when casting a targeted heal not on yourself
- * Judgement of the Pure(0-3) - increases haste 3% per point
+ *DONE Judgement of the Pure(0-3) - increases haste 3% per point
  *DONE Clarity of Purpose(0-3) - reduce cast time of HL and DL by .15 per point
- * Last Word(0-2) - 30% extra WoG crit per point, when target below 35% health
- * Divine Favor(0-1) - increase haste/crit 20% for 20 secs.  3 min CD
+ *  Last Word(0-2) - 30% extra WoG crit per point, when target below 35% health
+ *  Divine Favor(0-1) - increase haste/crit 20% for 20 secs.  3 min CD
  *DONE Infusion of Light(0-2) - 5% holy shock crit per point
  *                        - HS crit = -0.75 sec per point from next DL/HL
- * Daybreak(0-2) - FoL, DL, HL have 10% chance per point to make next HS not trigger its 6 sec CD.
- * Enlightened Judgements(0-2) - gives +50% spirit to hit per point
+ *  Daybreak(0-2) - FoL, DL, HL have 10% chance per point to make next HS not trigger its 6 sec CD.
+ *  Enlightened Judgements(0-2) - gives +50% spirit to hit per point
  *DONE                             - Judgement self heal
  *DONE Beacon of Light(0-1) - 50% of heals to beacon target
- * Speed of Light(0-3) - 1% haste per point
- *                     - reduce HR CD by 10 sec per point
- * Conviction(0-3) - 1% heal bonus per point, for 15 secs after a crit from non-periodic spell.  (or weapon swing)
- * Tower of Radiance(0-3) - healing beacon target with FoL or DL has 33% chance per point of giving a Holy Power
- * Blessed Life(0-2) - 50% chance to gain holy power when taking direct damage.  8 sec CD.
+ *DONE Speed of Light(0-3) - 1% haste per point
+ *Currently assuming 3 points for HR CD reduction. - reduce HR CD by 10 sec per point
+ *  Conviction(0-3) - 1% heal bonus per point, for 15 secs after a crit from non-periodic spell.  (or weapon swing)
+ *  Tower of Radiance(0-3) - healing beacon target with FoL or DL has 33% chance per point of giving a Holy Power
+ *  Blessed Life(0-2) - 50% chance to gain holy power when taking direct damage.  8 sec CD.
  *DONE Light of Dawn(0-1) - gives the spell.
  * 
- *
  *DONE Divinity(0-3) - 2% healing increase per point
  *DONE Crusade(0-3) - 10% per point increase HS heals
  *              - after killing something, next HL heals for 100% extra per point, for 15 sec.
- * 
  * 
  *Glyphs
  *Prime                                            
  *DONE Glyph of Word of Glory
  *DONE Glyph of Seal of Insight  
  *DONE Glyph of Holy Shock      
- * Glyph of Divine Favor
+ *  Glyph of Divine Favor
  *Major
- * Glyph of Beacon of Light
+ *DONE  Glyph of Beacon of Light - 0 mana cost for casting
  *DONE Glyph of Divine Plea
- * Glyph of Cleansing
+ *DONE  Glyph of Cleansing
  *DONE Glyph of Divinity - 10% mana when casting LoH
- * Glyph of Salvation
- * Glyph of Long Word 
+ *DONE-not going to model.  Glyph of Salvation - thread reducing mechanic, don't bother modeling
+ *DONE-not going to model.  Glyph of Long Word - changes half WoG heals to HoT.
  *DONE Glyph of Light of Dawn  
  *DONE Glyph of Lay on Hands - reduced CD by 3 min.  (from 10 to 7)
  * 
+ *Other CDs:
+ *  Avenging Wrath
+ *  Guardian of Ancient Kings
+ *  
  */
 
 namespace Rawr.Healadin
@@ -81,12 +117,6 @@ namespace Rawr.Healadin
         public static float hs_min = 2629f;
         public static float hs_max = 2847f;
 
-        // Holy Radiance.  
-        public static float hr_coef = 0.06695f;
-        public static float hr_mana = 9368.8f; 
-        public static float hr_min = 684f;  
-        public static float hr_max = 684f;
-
         // Stats for 1 holy power.  Scales linearly with more holy power. (so just * by 2 or 3 when needed)
         public static float wog_coef_sp = 0.209f;  // regular spellpower coef
         public static float wog_coef_ap = 0.198f;  // Word of Glory also has Attack Power coef
@@ -98,6 +128,16 @@ namespace Rawr.Healadin
         public static float lod_min = 605f;
         public static float lod_max = 673f;
 
+        public static float basemana = 23422;
+
+        //the following spells were not listed on elitistjerks.com, I did my own testing to get them
+
+        // Holy Radiance.  
+        public static float hr_coef = 0.06695f;
+        public static float hr_mana = 9368.8f;
+        public static float hr_min = 684f;
+        public static float hr_max = 684f;
+
         // Protector of the Innocent, talent.  0-3 points.  These stats assume 3 points.
         public static float poti_coef = 0.039233f; 
         public static float poti_min = 2481f;
@@ -108,8 +148,6 @@ namespace Rawr.Healadin
         public static float ej_min = 2605f;
         public static float ej_max = 2997f;
 
-
-        public static float basemana = 23422;
     }
 
     public abstract class Heal
@@ -263,6 +301,11 @@ namespace Rawr.Healadin
             // TODO: calculate real spellpower somewhere in Healadin module, and use that instead of Stats.SpellPower + Stats.Intellect
             return (HealadinConstants.hl_min + HealadinConstants.hl_max) / 2f + ((Stats.SpellPower + Stats.Intellect) * HealadinConstants.hl_coef);
         }
+
+        protected override float AbilityCritChance()
+        {
+            return ((Talents.GlyphOfHolyShock ? 0.05f : 0f));
+        }
     }
 
     public class DivineLight : Heal
@@ -390,7 +433,20 @@ namespace Rawr.Healadin
         protected override float AbilityHealed()
         {
             float targets_healed = 6f;
-            float ticks = 12f; // TODO, calculate # of ticks from haste.  11 assumes 5-15% haste. 12 = 15-25%
+            float ticks;
+            if (Stats.SpellHaste > 0.55f)
+                ticks = 16f;
+            else if (Stats.SpellHaste > 0.45f)
+                ticks = 15f;
+            else if (Stats.SpellHaste > 0.35f)
+                ticks = 14f;
+            else if (Stats.SpellHaste > 0.25f)
+                ticks = 13f;
+            else if (Stats.SpellHaste > 0.15f)
+                ticks = 12f;
+            else if (Stats.SpellHaste > 0.05f)
+                ticks = 11f;
+            else ticks = 10f;
             // TODO: calculate real spellpower somewhere in Healadin module, and use that instead of Stats.SpellPower + Stats.Intellect
             return ticks * targets_healed * ((HealadinConstants.hr_min + HealadinConstants.hr_max) / 2f +
                                                  ((Stats.SpellPower + Stats.Intellect) * HealadinConstants.hr_coef));
@@ -459,6 +515,21 @@ namespace Rawr.Healadin
         }
     }
 
+    public class Cleanse : Heal
+    {
+        public Cleanse(Rotation rotation)
+            : base(rotation)
+        { }
+
+        public override float BaseCastTime { get { return 1.5f; } }
+        public override float BaseMana { get { return ( HealadinConstants.basemana * 0.14f * (Talents.GlyphOfCleansing ? 0.8f : 1f)); } }
+
+        protected override float AbilityHealed()
+        {
+            return (0f);
+        }
+    }
+
 
     public abstract class Spell
     {
@@ -522,14 +593,14 @@ namespace Rawr.Healadin
         public BeaconOfLight(Rotation rotation)
             : base(rotation)
         {
-            Duration = 60f + (Talents.GlyphOfBeaconOfLight ? 30f : 0f);
+            Duration = 300f;
             Uptime = Rotation.FightLength * Rotation.CalcOpts.BoLUp;
-            BaseCost = 1405f; // TODO: Determine exact mana cost.  6% of base mana
+            BaseCost = 0.06f * HealadinConstants.basemana * (Talents.GlyphOfBeaconOfLight ? 0f : 1f); 
         }
 
         public float HealingDone(float procableHealing)
         {
-            return procableHealing * Rotation.CalcOpts.BoLUp * 0.5f;
+            return procableHealing * Rotation.CalcOpts.BoLUp * 0.5f * Talents.BeaconOfLight;
         }
 
     }

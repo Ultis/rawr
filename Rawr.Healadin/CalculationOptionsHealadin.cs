@@ -23,10 +23,12 @@ namespace Rawr.Healadin
             activity = .85f;
             replenishment = .9f;
             divinePlea = 2f;
+            cleanse = 10f;
+            melee = 0.25f;
             boLUp = 1f;
             holyShock = .8f;
-            holyPoints = 0.7f;
-            lodtargets = 0.5f;
+            holyPoints = 0.75f;
+            lodtargets = 0.6f;
             judgementcasts = 0.8f;
             hrCasts = 0.5f;
             hrEff = 0.4f;
@@ -39,6 +41,7 @@ namespace Rawr.Healadin
             judgement = true;
             loHSelf = false;  // removing button for this
             hitIrrelevant = true;
+            meleevsHL = false;
         }
 
         private float length;
@@ -67,6 +70,20 @@ namespace Rawr.Healadin
         {
             get { return divinePlea; }
             set { divinePlea = value; OnPropertyChanged("DivinePlea"); }
+        }
+
+        private float melee;
+        public float Melee
+        {
+            get { return melee; }
+            set { melee = value; OnPropertyChanged("Melee"); }
+        }
+
+        private float cleanse;
+        public float Cleanse
+        {
+            get { return cleanse; }
+            set { cleanse = value; OnPropertyChanged("Cleanse"); }
         }
 
         private float boLUp;
@@ -212,6 +229,13 @@ namespace Rawr.Healadin
         {
             get { return hitIrrelevant; }
             set { hitIrrelevant = value; OnPropertyChanged("HitIrrelevant"); }
+        }
+
+        private bool meleevsHL;
+        public bool MeleevsHL
+        {
+            get { return meleevsHL; }
+            set { meleevsHL = value; OnPropertyChanged("MeleevsHL"); }
         }
 
         #region INotifyPropertyChanged Members

@@ -12,6 +12,39 @@ namespace Rawr.Healadin
             get {
                 // Relevant Gem IDs for Healadin
                 // Red
+                int[] brilliant = { 52084, 52207, 52207, 52257 };   // Intellect
+
+                // Purple
+                int[] purified = { 52100, 52236, 52236, 52236 };       // Intellect + Spirit
+
+                // Blue
+                int[] lustrous = { 52087, 52244, 52244, 52262 };    // Spirit
+
+                // Green
+                int[] dazzling = { 39984, 40094, 40175, 40175 };    // Intellect + MP5
+                int[] energized = { 39989, 40105, 40179, 40179 };   // Haste + MP5
+                int[] sundered = { 39985, 40096, 40176, 40176 };    // 
+
+                // Yellow
+                int[] quick = { 52093, 52232, 52232, 52268 };       // Haste
+                int[] smooth = { 39914, 40013, 40124, 42149 };      // Crit
+
+                // Orange
+                int[] luminous = { 39946, 40047, 40151, 40151 };    // Spell Power + Intellect
+                int[] potent = { 39956, 40048, 40152, 40152 };      // Spell Power + Crit
+                int[] reckless = { 39959, 52208, 52208, 52208 };    // Intellect + Haste
+
+                // Prismatic
+                int[] allStats = { 42701, 42702, 49110, 49110 };    // All Stats
+
+                // Meta
+                int insightful = 41401;
+                int revitalizing = 52297;
+                int ember = 52296;
+
+/*              // Commenting out in 4.1 to update to Cata gems
+                // Relevant Gem IDs for Healadin
+                // Red
                 int[] runed = { 39911, 39998, 40113, 42144 };       // Spell Power
 
                 // Purple
@@ -41,48 +74,40 @@ namespace Rawr.Healadin
                 // Meta
                 int insightful = 41401;
                 int revitalizing = 41376;
-
+*/
                 string[] qualityGroupNames = new string[] { "Uncommon", "Rare", "Epic", "Jeweler" };
-                string[] typeGroupNames = new string[] { "MP5", "Spell Power", "Intellect", "Haste", "Critical" };
+                string[] typeGroupNames = new string[] { "Intellect" };
 
-                int[] metaTemplates = new int[] { insightful, revitalizing };
+                int[] metaTemplates = new int[] { insightful, revitalizing, ember };
 
                 //    Red           Yellow      Blue        Prismatic
-                int[,][] mp5Templates = new int[,][]
-                { // MP5
+ /*               int[,][] SpiritTemplates = new int[,][]
+                { // Spirit
                     { lustrous,     lustrous,   lustrous,   lustrous },
                     { royal,        dazzling,   lustrous,   lustrous },
                 };
-
-                int[,][] spellPowerTemplates = new int[,][]
-                { // Spell Power
-                    { runed,        runed,      runed,      runed },
-                    { runed,        luminous,   royal,      runed },
-                };
-
+ */
                 int[,][] intellectTemplates = new int[,][]
                 { // Intellect
                     { brilliant,    brilliant,  brilliant,  brilliant },
-                    { allStats,     brilliant,  brilliant,  brilliant },
-                    { brilliant,    allStats,   brilliant,  brilliant },
-                    { brilliant,    brilliant,  allStats,   brilliant },
-                    { brilliant,    brilliant,  brilliant,  allStats, },
-                    { luminous,     brilliant,  dazzling,   brilliant },
+                    { brilliant,    reckless,   brilliant,  brilliant },
+                    { brilliant,    brilliant,  purified,   brilliant },
+                    { brilliant,    reckless,   purified,   brilliant },
                 };
 
-                int[,][] hasteTemplates = new int[,][]
+  /*              int[,][] hasteTemplates = new int[,][]
                 { // Haste
                     { quick,        quick,      quick,      quick },
                     { reckless,     quick,      energized,  quick },
                 };
 
-                int[,][] critTemplates = new int[,][]
+               int[,][] critTemplates = new int[,][]
                 { // Crit
                     { smooth,       smooth,     smooth,     smooth },
                     { potent,       smooth,     sundered,   smooth },
                 };
-
-                int[][,][] gemmingTemplates = new int[][,][] { mp5Templates, spellPowerTemplates, intellectTemplates, hasteTemplates, critTemplates };
+  */
+                int[][,][] gemmingTemplates = new int[][,][] { intellectTemplates };
 
                 // Generate List of Gemming Templates
                 List<GemmingTemplate> gemmingTemplate = new List<GemmingTemplate>();
@@ -109,6 +134,7 @@ namespace Rawr.Healadin
             }
         }
         
+        // This was commented out already when Molotok updated Healadin for 4.1
         //public override List<GemmingTemplate> DefaultGemmingTemplates
         //{
         //    get
@@ -245,6 +271,7 @@ namespace Rawr.Healadin
                     "Healing Breakdown:Protector of the Innocent ",
                     "Healing Breakdown:Enlightened Judgements ",
                     "Healing Breakdown:Illuminated Healing",
+                    "Healing Breakdown:Cleanse casting",
                     // "Healing Breakdown:Glyph of HL Healed", take this out, seems like this glyph no longer exists
                     "Healing Breakdown:Other Healed*From trinket procs",
 
@@ -430,15 +457,27 @@ namespace Rawr.Healadin
             stats.Intellect *= (1f + stats.BonusIntellectMultiplier);
             stats.HighestStat *= (1f + stats.BonusIntellectMultiplier);
 
-            stats.SpellCrit = stats.SpellCrit + 
+            stats.SpellCrit = stats.SpellCrit +
                 StatConversion.GetSpellCritFromIntellect(
-                    stats.Intellect + stats.HighestStat, 
-                    CharacterClass.Paladin) + 
-                StatConversion.GetSpellCritFromRating(stats.CritRating, CharacterClass.Paladin) + 
-                talents.SanctityOfBattle * .01f + 
-                talents.Conviction * .01f;
+                    stats.Intellect + stats.HighestStat,
+                    CharacterClass.Paladin) +
+                StatConversion.GetSpellCritFromRating(stats.CritRating, CharacterClass.Paladin); 
+            
+            // I want to track haste before talent seperately, going to use RangedHaste for that.
+            // I plan to use this on the "Stats" page so I can report sources of haste seperatly
+            stats.RangedHaste = (1f + stats.SpellHaste) *
+                (1f + StatConversion.GetSpellHasteFromRating(stats.HasteRating, CharacterClass.Paladin))
+                - 1f;
 
-            stats.SpellHaste = (1f + talents.JudgementsOfThePure * (calcOpts.JotP ? .03f : 0f)) * 
+            // calculating physical haste for use in melee attacks, which will generate mana
+            // can also divide spellhaste / physicalhaste to get orignal value of spellhaste, which is from buffs as far as I can tell
+            stats.PhysicalHaste = (1f + talents.JudgementsOfThePure * 0.03f) *
+                (1f + talents.SpeedOfLight * 0.01f) *
+                (1f + StatConversion.GetSpellHasteFromRating(stats.HasteRating, CharacterClass.Paladin))
+                - 1f;
+
+            stats.SpellHaste = (1f + talents.JudgementsOfThePure * 0.03f) *
+                (1f + talents.SpeedOfLight * 0.01f) *
                 (1f + stats.SpellHaste) *
                 (1f + StatConversion.GetSpellHasteFromRating(stats.HasteRating, CharacterClass.Paladin))
                 - 1f;
@@ -454,6 +493,24 @@ namespace Rawr.Healadin
                 CharacterClass.Paladin);
         }
         #endregion
+
+        #region Set Bonuses
+      /*      int T11Count;
+            //character.SetBonusCount.TryGetValue("Reinforced Sapphirium Regalia", out T11Count);
+            if (T11Count >= 2) {
+                // stuff fron cat model
+                //statsTotal.BonusDamageMultiplierRakeTick = (1f + statsTotal.BonusDamageMultiplierRakeTick) * (1f + 0.10f) - 1f;
+                //statsTotal.BonusDamageMultiplierLacerate = (1f + statsTotal.BonusDamageMultiplierLacerate) * (1f + 0.10f) - 1f;
+                // add 5% crit to HL
+            }
+            if (T11Count >= 4) {
+                // stuff from cat model
+                //statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.MangleCatAttack,
+                //    new Stats() { BonusAttackPowerMultiplier = 0.01f, }, 30, 0, 1f, 3));
+                // 540 spirit buff for 6 secs after HS cast
+            } */
+       #endregion Set Bonuses
+
 
         #region Custom Charts
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)

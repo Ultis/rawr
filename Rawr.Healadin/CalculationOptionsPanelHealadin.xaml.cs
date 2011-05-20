@@ -89,12 +89,12 @@ namespace Rawr.Healadin
 
         private void btnResetHolyPoints_Click(object sender, RoutedEventArgs e)
         {
-            calcOpts.HolyPoints = .7f;
+            calcOpts.HolyPoints = .75f;
         }
 
         private void btnResetLoDTargets_Click(object sender, RoutedEventArgs e)
         {
-            calcOpts.LoDTargets = .5f;
+            calcOpts.LoDTargets = .6f;
         }
 
         private void btnResetJudgementCasts_Click(object sender, RoutedEventArgs e)
@@ -123,6 +123,11 @@ namespace Rawr.Healadin
         private void btnResetIHEff_Click(object sender, RoutedEventArgs e)
         {
             calcOpts.IHEff = .4f;
+        }
+
+        private void btnResetMelee_Click(object sender, RoutedEventArgs e)
+        {
+            calcOpts.Melee = .25f;
         }
     }
 }
