@@ -99,13 +99,6 @@ namespace Rawr.DPSDK
             set { dpsSub[(int)DKability.BloodParasite] = value; }
         }
 
-        // TODO: Fix this.
-        public float OtherDPS
-        {
-            get { return dpsSub[(int)DKability.OtherArcane]; }
-            set { dpsSub[(int)DKability.OtherArcane] = value; }
-        }
-
         public float FrostStrikeDPS
         {
             get { return dpsSub[(int)DKability.FrostStrike]; }
@@ -142,11 +135,10 @@ namespace Rawr.DPSDK
             set { dpsSub[(int)DKability.HeartStrike] = value; }
         }
 
-        private float _GargoyleDPS;
         public float GargoyleDPS
         {
-            get { return _GargoyleDPS; }
-            set { _GargoyleDPS = value; }
+            get { return dpsSub[(int)DKability.Gargoyle]; }
+            set { dpsSub[(int)DKability.Gargoyle] = value; }
         }
 
         private float _WanderingPlagueDPS;
@@ -154,6 +146,19 @@ namespace Rawr.DPSDK
         {
             get { return _WanderingPlagueDPS; }
             set { _WanderingPlagueDPS = value; }
+        }
+
+        public float GhoulDPS
+        {
+            get { return dpsSub[(int)DKability.Ghoul]; }
+            set { dpsSub[(int)DKability.Ghoul] = value; }
+        }
+
+        // TODO: Fix this.
+        public float OtherDPS
+        {
+            get { return dpsSub[(int)DKability.OtherArcane]; }
+            set { dpsSub[(int)DKability.OtherArcane] = value; }
         }
 
         private int _targetLevel;
@@ -252,11 +257,7 @@ namespace Rawr.DPSDK
             set { _OHExpertise = value; }
         }
 
-        public float GhoulDPS
-        {
-            get { return dpsSub[(int)DKability.Ghoul]; }
-            set { dpsSub[(int)DKability.Ghoul] = value; }
-        }
+
 
         private String _DRWStats;
         public String DRWStats
@@ -271,6 +272,8 @@ namespace Rawr.DPSDK
             get { return _basicStats; }
             set { _basicStats = value; }
         }
+
+        public float m_RuneCD {get; set; }
 
         public void DPSBreakdown(Rotation rot, float[] petDPS)
         {
@@ -324,6 +327,7 @@ namespace Rawr.DPSDK
             dictValues.Add("Hit Rating",        string.Format("{0:0}*Negates {1:P} melee miss / {2:P} spell miss", hitRating, StatConversion.GetPhysicalHitFromRating(hitRating, CharacterClass.DeathKnight), StatConversion.GetSpellHitFromRating(hitRating,CharacterClass.DeathKnight)));
             dictValues.Add("Expertise",         string.Format("{0:0.00} / {1:0.00}*Negates {2:P} / {3:P} dodge chance", MHExpertise, OHExpertise, StatConversion.GetDodgeParryReducFromExpertise(MHExpertise), StatConversion.GetDodgeParryReducFromExpertise(OHExpertise)));
             dictValues.Add("Haste Rating",      string.Format("{0:0}*Increases attack speed by {1:P}", BasicStats.HasteRating, StatConversion.GetHasteFromRating(BasicStats.HasteRating, CharacterClass.DeathKnight)));
+
             dictValues.Add("Armor",             BasicStats.Armor.ToString("N0"));
             dictValues.Add("Resilience",        BasicStats.Resilience.ToString("F0"));
             dictValues.Add("Mastery",           string.Format("{0:N0}*Rating: {1:N0}", BasicStats.Mastery, BasicStats.MasteryRating));
@@ -371,6 +375,7 @@ namespace Rawr.DPSDK
             dictValues.Add("Death", Death.ToString() );
             dictValues.Add("Runic Power", Death.ToString() );
             dictValues.Add("RE Runes", FreeRERunes.ToString("N2"));
+            dictValues.Add("Rune Cooldown", m_RuneCD.ToString("N2"));
 
             PopulateSingleUseValues(dictValues, "BB", DKability.BloodBoil);
             PopulateSingleUseValues(dictValues, "BP", DKability.BloodPlague);

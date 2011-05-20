@@ -67,6 +67,8 @@ namespace Rawr.DK
             get { return _ghoulFrenzy; }
             set { _ghoulFrenzy = value; }
         }
+
+        string m_szRotationName = "Rotation by Solver";
         #endregion
 
         /// <summary>
@@ -179,7 +181,7 @@ namespace Rawr.DK
                 float fHasteMod = 0;
                 if (GetRotationType(m_CT.m_CState.m_Talents) == Rotation.Type.Frost)
                     fHasteMod = -.2f;
-                return (int)((15000 / 2) * (1f + (m_CT.m_CState.m_Stats.PhysicalHaste + fHasteMod) + m_CT.m_CState.m_Stats.BonusRuneRegeneration));
+                return (int)(20000 / (2 * 1f + (m_CT.m_CState.m_Stats.PhysicalHaste + fHasteMod) + m_CT.m_CState.m_Stats.BonusRuneRegeneration));
             }
         }
         public int m_FrostRunes { get; set; }
@@ -486,7 +488,7 @@ namespace Rawr.DK
 
             BuildCosts();
 
-            ReportRotation(l_Openning);
+            ReportRotation(l_Openning, "Rotation by Solver.");
         }
 
         #region Preset Rotation
@@ -495,6 +497,7 @@ namespace Rawr.DK
         /// </summary>
         public void PRE_OneEachRot()
         {
+            m_szRotationName = "One Each Rotation";
             ResetRotation();
             // Setup an instance of each ability.
             // No runes:
@@ -550,6 +553,8 @@ namespace Rawr.DK
         /// </summary>
         public void PRE_BloodDiseased()
         {
+            m_szRotationName = "Blood Diseased Rotation";
+
             ResetRotation();
             // This will only happen while tanking...
             //m_CT.m_Opts.presence = Presence.Blood;
@@ -643,6 +648,8 @@ namespace Rawr.DK
         /// </summary>
         public void PRE_Frost()
         {
+            m_szRotationName = "Frost Rotation";
+
             ResetRotation();
             // Setup an instance of each ability.
             // No runes:
@@ -776,6 +783,8 @@ namespace Rawr.DK
         /// </summary>
         public void PRE_Unholy()
         {
+            m_szRotationName = "Unholy Rotation";
+
             ResetRotation();
             // Setup an instance of each ability.
             // No runes:
@@ -1023,28 +1032,30 @@ namespace Rawr.DK
             }
         }
 
-        public string ReportRotation(List<AbilityDK_Base> l_Openning)
+        public static string ReportRotation(List<AbilityDK_Base> l_Openning, string szReportName = "")
         {
-            string szReport = "";
+            string szReport = szReportName + "\n";
             float DurationDuration = 0;
             string szFormat = "{0,-15}|{1,7}|{2,7:0.0}|{3,7:0}|{4,7:0.0}\n";
+            int GCDs = 0;
 
             szReport += string.Format(szFormat, "Name", "Damage", "DPS", "Threat", "TPS");
             foreach (AbilityDK_Base ability in l_Openning)
             {
                 DurationDuration += (float)ability.uDuration;
                 szReport += string.Format(szFormat, ability.szName, ability.GetTotalDamage(), ability.GetDPS(), ability.GetTotalThreat(), ability.GetTPS());
+                if (ability.bTriggersGCD) GCDs++;
             }
 
-            szReport += string.Format("Duration(sec): {0,6:0.0}\n", CurRotationDuration);
-            szReport += string.Format("GCDs:          {0,6}\n", m_GCDs);
+            szReport += string.Format("Duration(sec): {0,6:0.0}\n", DurationDuration);
+            szReport += string.Format("GCDs:          {0,6}\n", GCDs);
 
             return szReport;
         }
 
         public string ReportRotation()
         {
-            string szReport = "";
+            string szReport = m_szRotationName + "\n";
             string szFormat = "{0,-15}|{1,7}|{2,7:0.0}|{3,7:0}|{4,7:0.0}\n";
 
             szReport += string.Format(szFormat, "Name", "Damage", "DPS", "Threat", "TPS");
