@@ -122,7 +122,7 @@ namespace Rawr.Server.Controllers
                 }
             }
 
-            Response.Write(charXml ?? "Error");
+            Response.Write(charXml ?? "<Error>There was an error resulting in null charXml</Error>");
             return View();
         }
 

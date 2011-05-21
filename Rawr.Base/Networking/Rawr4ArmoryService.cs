@@ -105,7 +105,7 @@ namespace Rawr
                         + "\r\nThank you for your patience!"
                         + "\r\nThe Rawr team suggests using the Rawr Addon instead to load your character for now.");
                     return;
-                }else if (e.Result != null && e.Result.ToLower().Contains("server is down for maintenance")) {
+                } else if (e.Result != null && e.Result.ToLower().Contains("server is down for maintenance")) {
                     new Base.ErrorBox("Problem Getting Character from Battle.Net Armory",
                         "The server is down for Maintenance",
                         "The Rawr team suggests using the Rawr Addon instead to load your character for now.");
@@ -114,9 +114,16 @@ namespace Rawr
                 #endregion
 
                 XDocument xdoc;
-                using (StringReader sr = new StringReader(e.Result)) { xdoc = XDocument.Load(sr); }
+                using (StringReader sr = new StringReader(e.Result)) {
+                    xdoc = XDocument.Load(sr);
+                }
 
-                if (xdoc.Root.Name == "Character") {
+                if (xdoc.Root.Name == "Error") {
+                    new Base.ErrorBox("Problem Getting Character from Battle.Net Armory",
+                        xdoc.Root.Value,
+                        "The Rawr team suggests using the Rawr Addon instead to load your character for now.");
+                    return;
+                } else  if (xdoc.Root.Name == "Character") {
                     Progress = "Parsing Character Data...";
                     Character character = Character.LoadFromXml(xdoc.Document.ToString());
                     character.Realm = character.Realm.Replace("-", " ");
@@ -132,8 +139,7 @@ namespace Rawr
                         "This could be due to a change on Battle.Net as these are happening often right now and can easily break the parsing."
                         + " You do not need to create a new Issue for this as we have a monitoring system in place which alerts us to Armories that don't parse.").Show();
                 } else {
-                    new Base.ErrorBox()
-                    {
+                    new Base.ErrorBox() {
                         Title = "Problem Getting Character from Battle.Net Armory",
                         TheException = ex,
                     }.Show();
