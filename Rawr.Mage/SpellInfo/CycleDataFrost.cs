@@ -138,7 +138,97 @@ namespace Rawr.Mage
 
     public static class FrBDFFFBIL
     {
-        public static void SolveCycle(CastingState castingState, out float KFrB, out float KFFB, out float KFFBS, out float KILS, out float KDFS)
+        // interpolation on haste, nodes every 5% haste
+        private static float[,] CastDistribution = new float[21, 5]
+        {{0.7157861f,	0f,	0.085539f,	    0.1399948f,	    0.058680058f},
+        {0.721539557f,	0f,	0.08603663f,	0.136260092f,	0.056163713f},
+        {0.72453934f,	0f,	0.08594114f,	0.135948941f,	0.05357056f},
+        {0.7301836f,	0f,	0.0863862f,	    0.132187933f,	0.051242285f},
+        {0.7330192f,	0f,	0.086870365f,	0.130937025f,	0.049173456f},
+        {0.7371909f,	0f,	0.08679625f,	0.128678024f,	0.047334842f},
+        {0.740539551f,	0f,	0.08730111f,	0.126491666f,	0.04566765f},
+        {0.7440289f,	0f,	0.087509655f,	0.124477684f,	0.043983698f},
+        {0.746264637f,	0f,	0.08748013f,	0.123845078f,	0.042410113f},
+        {0.7486419f,	0f,	0.087904334f,	0.122434862f,	0.041018877f},
+        {0.7515504f,	0f,	0.08799671f,	0.12071982f,	0.039733145f},
+        {0.7537658f,	0f,	0.08803718f,	0.119323894f,	0.038873088f},
+        {0.7553765f,	0f,	0.08810475f,	0.118425064f,	0.038093668f},
+        {0.7571395f,	0f,	0.08822203f,	0.117465571f,	0.037172858f},
+        {0.7580866f,	0f,	0.08829209f,	0.117605865f,	0.036015358f},
+        {0.760549247f,	0f,	0.088211365f,	0.1157174f,	    0.035521943f},
+        {0.760740936f,	0f,	0.088395126f,	0.1162385f,	    0.034625463f},
+        {0.7634897f,	0f,	0.08835807f,	0.114246659f,	0.033905577f},
+        {0.763518453f,	0f,	0.088534616f,	0.114513695f,	0.033433206f},
+        {0.76615274f,	0f,	0.08868719f,	0.112837039f,	0.03232302f},
+        {0.766139865f,	0f,	0.08863693f,	0.112900153f,	0.03232304f}};
+        private static float[,] CastDistributionFFO = new float[21, 5]
+        {{0.491966039f,	0f,	0.226755485f,	0.22519511f,	0.056083325f},
+        {0.5040986f,	0f,	0.222027585f,	0.220168188f,	0.053705636f},
+        {0.513947368f,	0f,	0.218099445f,	0.2164993f,	    0.051453874f},
+        {0.5250243f,	0f,	0.2140254f,	    0.2115933f,	    0.049357045f},
+        {0.533787966f,	0f,	0.21004355f,	0.208755672f,	0.04741281f},
+        {0.543759763f,	0f,	0.206295818f,	0.204271153f,	0.04567321f},
+        {0.5522804f,	0f,	0.202769175f,	0.200873256f,	0.04407718f},
+        {0.55993855f,	0f,	0.199471f,	    0.1980493f,	    0.042541146f},
+        {0.5681519f,	0f,	0.196498647f,	0.194225475f,	0.041123964f},
+        {0.5749693f,	0f,	0.193494767f,	0.19174777f,	0.03978816f},
+        {0.5822501f,	0f,	0.190802053f,	0.188389063f,	0.03855871f},
+        {0.5867951f,	0f,	0.189169884f,	0.186088681f,	0.03794636f},
+        {0.590621531f,	0f,	0.18746084f,	0.184543952f,	0.03737368f},
+        {0.594657362f,	0f,	0.1860552f,	    0.182732135f,	0.0365553f},
+        {0.5982177f,	0f,	0.184560671f,	0.1812985f,	    0.0359231f},
+        {0.6013578f,	0f,	0.183169439f,	0.180305526f,	0.03516726f},
+        {0.605428159f,	0f,	0.181768268f,	0.17795822f,	0.03484537f},
+        {0.6080714f,	0f,	0.180478483f,	0.177521229f,	0.0339289f},
+        {0.611364245f,	0f,	0.179141417f,	0.175587669f,	0.03390669f},
+        {0.614726543f,	0f,	0.17822212f,	0.1742635f,	    0.03278781f},
+        {0.616703749f,	0f,	0.176965117f,	0.173551589f,	0.032779545f}};
+        private static float[,] CastDistributionT11 = new float[21, 5]
+        {{0.7240437f,	0f,	0.08583403f,	0.136183023f,	0.05393924f},
+        {0.7287668f,	0f,	0.08668169f,	0.133173227f,	0.0513783f},
+        {0.7330106f,	0f,	0.08683309f,	0.13096118f,	0.049195185f},
+        {0.7364949f,	0f,	0.086648904f,	0.129529446f,	0.04732675f},
+        {0.7412851f,	0f,	0.08698201f,	0.126115486f,	0.04561743f},
+        {0.7440329f,	0f,	0.08755244f,	0.124534026f,	0.04388061f},
+        {0.7464007f,	0f,	0.08747157f,	0.124046348f,	0.04208137f},
+        {0.750229061f,	0f,	0.08759505f,	0.121547796f,	0.040628064f},
+        {0.752744853f,	0f,	0.08808802f,	0.119869545f,	0.039297573f},
+        {0.7544785f,	0f,	0.08802639f,	0.119419083f,	0.038075987f},
+        {0.7574128f,	0f,	0.08808565f,	0.117576338f,	0.036925215f},
+        {0.7597843f,	0f,	0.08846713f,	0.115840048f,	0.03590857f},
+        {0.7605631f,	0f,	0.08835957f,	0.116190083f,	0.034887254f},
+        {0.7632261f,	0f,	0.088433415f,	0.113767356f,	0.03457312f},
+        {0.763483942f,	0f,	0.08849296f,	0.114589363f,	0.03343375f},
+        {0.766129851f,	0f,	0.08867436f,	0.112817913f,	0.032377873f},
+        {0.7661175f,	0f,	0.08868439f,	0.112874158f,	0.03232393f},
+        {0.7661879f,	0f,	0.08866255f,	0.112831093f,	0.032318477f},
+        {0.766159534f,	0f,	0.08868681f,	0.112832136f,	0.032321516f},
+        {0.7661285f,	0f,	0.088667646f,	0.112881459f,	0.03232237f},
+        {0.766159832f,	0f,	0.08864395f,	0.112875558f,	0.032320663f}};
+        private static float[,] CastDistributionT11FFO = new float[21, 5]
+        {{0.5064794f,	0f,	0.220768452f,	0.219918534f,	0.05283361f},
+        {0.51713f,	    0f,	0.2165683f,	    0.215657309f,	0.050644346f},
+        {0.528974533f,	0f,	0.212381348f,	0.210019439f,	0.048624653f},
+        {0.539946854f,	0f,	0.208183646f,	0.205216676f,	0.04665284f},
+        {0.549020648f,	0f,	0.204062611f,	0.202194184f,	0.044722535f},
+        {0.5578711f,	0f,	0.20053108f,	0.198691845f,	0.04290594f},
+        {0.566934347f,	0f,	0.197269052f,	0.194501281f,	0.04129531f},
+        {0.574531734f,	0f,	0.193768f,	    0.191471115f,	0.040229175f},
+        {0.5816688f,	0f,	0.190866753f,	0.1885619f,	    0.03890256f},
+        {0.5890516f,	0f,	0.188143045f,	0.185174316f,	0.037631024f},
+        {0.595508635f,	0f,	0.185440764f,	0.182656482f,	0.036394123f},
+        {0.599441946f,	0f,	0.183949351f,	0.180975065f,	0.035633653f},
+        {0.603909254f,	0f,	0.182379887f,	0.178606138f,	0.035104755f},
+        {0.6073667f,	0f,	0.180913448f,	0.177589417f,	0.034130435f},
+        {0.609929562f,	0f,	0.179504737f,	0.176650032f,	0.033915684f},
+        {0.614497f,	    0f,	0.178361878f,	0.174352f,	    0.032789104f},
+        {0.6166332f,	0f,	0.176984042f,	0.1736029f,	    0.03277989f},
+        {0.616728246f,	0f,	0.1768961f,	    0.173595279f,	0.03278041f},
+        {0.6166569f,	0f,	0.176937014f,	0.173626512f,	0.032779574f},
+        {0.6166615f,	0f,	0.176908925f,	0.173647508f,	0.03278206f},
+        {0.61670357f,	0f,	0.176935852f,	0.1735808f,	    0.032779768f}};
+
+        public static void SolveCycle(CastingState castingState, bool useFFO, out float KFrB, out float KFFB, out float KFFBS, out float KILS, out float KDFS)
         {
             Spell FrB, FFB, FFBS, ILS, DFS;
             float RFrB = 0, RFFB = 0, RFFBS = 0, RILS = 0, RDFS = 0;
@@ -156,12 +246,17 @@ namespace Rawr.Mage
             float bf = 0.05f * castingState.MageTalents.BrainFreeze;
             float fof = (castingState.MageTalents.FingersOfFrost == 3 ? 0.2f : 0.07f * castingState.MageTalents.FingersOfFrost);
 
+            // override this so we don't have to store so many variations (means talent graphs won't show value for this talent)
+            bf = 0.15f;
+            fof = 0.2f;
+
             float dfCooldown = 0;
             float freezeCooldown = 0;
             int fofActual = 0;
             int fofRegistered = 0;
             bool bfRegistered = false;
             bool bfActual = false;
+            float ffo = 1;
 
             Random rnd = new Random();
 
@@ -190,6 +285,21 @@ namespace Rawr.Mage
                             fofRegistered = fofActual;
                             dfCooldown = Math.Max(0, 30f - DFS.CastTime);
                             freezeCooldown = Math.Max(0, 25f - DFS.CastTime);
+                        }
+                        while (useFFO && ffo < DFS.CastTime)
+                        {
+                            bool fofProc = rnd.NextDouble() < fof;
+                            bool bfProc = rnd.NextDouble() < bf;
+                            bfActual = bfProc || bfActual;
+                            if (fofProc)
+                            {
+                                fofActual = Math.Min(2, fofActual + 1);
+                            }
+                            ffo += 1;
+                        }
+                        if (useFFO)
+                        {
+                            ffo -= DFS.CastTime;
                         }
                     }
                     else if (bfRegistered && ((fofRegistered > 0 && freezeCooldown > 0) || (fofRegistered == 0 && freezeCooldown == 0)))
@@ -223,6 +333,21 @@ namespace Rawr.Mage
                             }
                             fofRegistered = fofActual;
                         }
+                        while (useFFO && ffo < FFBS.CastTime)
+                        {
+                            bool fofProc = rnd.NextDouble() < fof;
+                            bool bfProc = rnd.NextDouble() < bf;
+                            bfActual = bfProc || bfActual;
+                            if (fofProc)
+                            {
+                                fofActual = Math.Min(2, fofActual + 1);
+                            }
+                            ffo += 1;
+                        }
+                        if (useFFO)
+                        {
+                            ffo -= FFBS.CastTime;
+                        }
                     }
                     else if (fofRegistered == 2 || (fofRegistered == 1 && freezeCooldown < ILS.CastTime))
                     {
@@ -232,6 +357,21 @@ namespace Rawr.Mage
                         fofRegistered = fofActual;
                         dfCooldown = Math.Max(0, dfCooldown - ILS.CastTime);
                         freezeCooldown = Math.Max(0, freezeCooldown - ILS.CastTime);
+                        while (useFFO && ffo < ILS.CastTime)
+                        {
+                            bool fofProc = rnd.NextDouble() < fof;
+                            bool bfProc = rnd.NextDouble() < bf;
+                            bfActual = bfProc || bfActual;
+                            if (fofProc)
+                            {
+                                fofActual = Math.Min(2, fofActual + 1);
+                            }
+                            ffo += 1;
+                        }
+                        if (useFFO)
+                        {
+                            ffo -= ILS.CastTime;
+                        }
                     }
                     else if (fofRegistered == 0 && freezeCooldown == 0)
                     {
@@ -241,9 +381,39 @@ namespace Rawr.Mage
                         fofRegistered = fofActual;
                         dfCooldown = Math.Max(0, dfCooldown - ILS.CastTime);
                         freezeCooldown = Math.Max(0, 25.0f - ILS.CastTime);
+                        while (useFFO && ffo < ILS.CastTime)
+                        {
+                            bool fofProc = rnd.NextDouble() < fof;
+                            bool bfProc = rnd.NextDouble() < bf;
+                            bfActual = bfProc || bfActual;
+                            if (fofProc)
+                            {
+                                fofActual = Math.Min(2, fofActual + 1);
+                            }
+                            ffo += 1;
+                        }
+                        if (useFFO)
+                        {
+                            ffo -= ILS.CastTime;
+                        }
                     }
                     else
                     {
+                        while (useFFO && ffo < FrB.CastTime)
+                        {
+                            bool fofProcffo = rnd.NextDouble() < fof;
+                            bool bfProcffo = rnd.NextDouble() < bf;
+                            bfActual = bfProcffo || bfActual;
+                            if (fofProcffo)
+                            {
+                                fofActual = Math.Min(2, fofActual + 1);
+                            }
+                            ffo += 1;
+                        }
+                        if (useFFO)
+                        {
+                            ffo -= FrB.CastTime;
+                        }
                         CFrB++;
                         bool fofProc = rnd.NextDouble() < fof;
                         bool bfProc = rnd.NextDouble() < bf;
@@ -283,7 +453,7 @@ namespace Rawr.Mage
         {
             Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             Spell FrB, FFB, FFBS, ILS, DFS;
-            //float KFrB, KFFB, KFFBS, KILS, KDFS;
+            float KFrB, KFFB, KFFBS, KILS, KDFS;
             cycle.Name = "FrBDFFFBIL";
 
             FrB = castingState.GetSpell(SpellId.Frostbolt);
@@ -292,17 +462,115 @@ namespace Rawr.Mage
             ILS = castingState.FrozenState.GetSpell(SpellId.IceLance);
             DFS = castingState.FrozenState.GetSpell(SpellId.DeepFreeze);
 
-            //KFrB = castingState.Solver.FrBDFFFBIL_KFrB;
-            //KFFB = castingState.Solver.FrBDFFFBIL_KFFB;
-            //KFFBS = castingState.Solver.FrBDFFFBIL_KFFBS;
-            //KILS = castingState.Solver.FrBDFFFBIL_KILS;
-            //KDFS = castingState.Solver.FrBDFFFBIL_KDFS;
+            // get the right distribution bank
+            float[,] castDistribution;
+            float[,] castDistributionFFO;
+            if (castingState.Solver.Mage4T11)
+            {
+                castDistribution = CastDistributionT11;
+                castDistributionFFO = CastDistributionT11FFO;
+            }
+            else
+            {
+                castDistribution = CastDistribution;
+                castDistributionFFO = CastDistributionFFO;
+            }
 
-            //cycle.AddSpell(needsDisplayCalculations, FrB, KFrB);
-            //cycle.AddSpell(needsDisplayCalculations, FFB, KFFB);
-            //cycle.AddSpell(needsDisplayCalculations, FFBS, KFFBS);
-            //cycle.AddSpell(needsDisplayCalculations, ILS, KILS);
-            //cycle.AddSpell(needsDisplayCalculations, DFS, KDFS);
+            // check if we have interpolation nodes ready
+            float r = (castingState.CastingSpeed - 1) / 0.05f;
+            int i = (int)r;
+            r -= i;
+
+            // if we're out of bounds just use the edge
+            if (i + 1 >= 21)
+            {
+                i = 19;
+                r = 1;
+            }
+
+            /*if (castDistribution[i, 0] == 0)
+            {
+                lock (castDistribution)
+                {
+                    if (castDistribution[i, 0] == 0)
+                    {
+                        CastingState state = castingState.Clone();
+                        state.CastingSpeed = 1 + i * 0.05f;
+                        state.ReferenceCastingState = castingState;
+                        SolveCycle(state, false, out castDistribution[i, 0], out castDistribution[i, 1], out castDistribution[i, 2], out castDistribution[i, 3], out castDistribution[i, 4]);
+                    }
+                }
+            }
+            if (castDistribution[i + 1, 0] == 0)
+            {
+                lock (castDistribution)
+                {
+                    if (castDistribution[i + 1, 0] == 0)
+                    {
+                        CastingState state = castingState.Clone();
+                        state.CastingSpeed = 1 + (i + 1) * 0.05f;
+                        state.ReferenceCastingState = castingState;
+                        SolveCycle(state, false, out castDistribution[i + 1, 0], out castDistribution[i + 1, 1], out castDistribution[i + 1, 2], out castDistribution[i + 1, 3], out castDistribution[i + 1, 4]);
+                    }
+                }
+            }
+            if (castDistributionFFO[i, 0] == 0)
+            {
+                lock (castDistributionFFO)
+                {
+                    if (castDistributionFFO[i, 0] == 0)
+                    {
+                        CastingState state = castingState.Clone();
+                        state.CastingSpeed = 1 + i * 0.05f;
+                        state.ReferenceCastingState = castingState;
+                        SolveCycle(state, true, out castDistributionFFO[i, 0], out castDistributionFFO[i, 1], out castDistributionFFO[i, 2], out castDistributionFFO[i, 3], out castDistributionFFO[i, 4]);
+                    }
+                }
+            }
+            if (castDistributionFFO[i + 1, 0] == 0)
+            {
+                lock (castDistributionFFO)
+                {
+                    if (castDistributionFFO[i + 1, 0] == 0)
+                    {
+                        CastingState state = castingState.Clone();
+                        state.CastingSpeed = 1 + (i + 1) * 0.05f;
+                        state.ReferenceCastingState = castingState;
+                        SolveCycle(state, false, out castDistributionFFO[i + 1, 0], out castDistributionFFO[i + 1, 1], out castDistributionFFO[i + 1, 2], out castDistributionFFO[i + 1, 3], out castDistributionFFO[i + 1, 4]);
+                    }
+                }
+            }*/
+
+            if (castingState.CalculationOptions.FlameOrb == 0 || (castingState.CalculationOptions.FlameOrb == 2 && !castingState.FlameOrb))
+            {
+                KFrB = castDistribution[i, 0] + r * (castDistribution[i + 1, 0] - castDistribution[i, 0]);
+                KFFB = castDistribution[i, 1] + r * (castDistribution[i + 1, 1] - castDistribution[i, 1]);
+                KFFBS = castDistribution[i, 2] + r * (castDistribution[i + 1, 2] - castDistribution[i, 2]);
+                KILS = castDistribution[i, 3] + r * (castDistribution[i + 1, 3] - castDistribution[i, 3]);
+                KDFS = castDistribution[i, 4] + r * (castDistribution[i + 1, 4] - castDistribution[i, 4]);
+            }
+            else if (castingState.CalculationOptions.FlameOrb == 1)
+            {
+                KFrB = 0.75f * (castDistribution[i, 0] + r * (castDistribution[i + 1, 0] - castDistribution[i, 0])) + 0.25f * (castDistributionFFO[i, 0] + r * (castDistributionFFO[i + 1, 0] - castDistributionFFO[i, 0]));
+                KFFB = 0.75f * (castDistribution[i, 1] + r * (castDistribution[i + 1, 1] - castDistribution[i, 1])) + 0.25f * (castDistributionFFO[i, 1] + r * (castDistributionFFO[i + 1, 1] - castDistributionFFO[i, 1]));
+                KFFBS = 0.75f * (castDistribution[i, 2] + r * (castDistribution[i + 1, 2] - castDistribution[i, 2])) + 0.25f * (castDistributionFFO[i, 2] + r * (castDistributionFFO[i + 1, 2] - castDistributionFFO[i, 2]));
+                KILS = 0.75f * (castDistribution[i, 3] + r * (castDistribution[i + 1, 3] - castDistribution[i, 3])) + 0.25f * (castDistributionFFO[i, 3] + r * (castDistributionFFO[i + 1, 3] - castDistributionFFO[i, 3]));
+                KDFS = 0.75f * (castDistribution[i, 4] + r * (castDistribution[i + 1, 4] - castDistribution[i, 4])) + 0.25f * (castDistributionFFO[i, 4] + r * (castDistributionFFO[i + 1, 4] - castDistributionFFO[i, 4]));
+            }
+            else //if (castingState.CalculationOptions.FlameOrb == 2 && castingState.FlameOrb)
+            {
+                KFrB = castDistributionFFO[i, 0] + r * (castDistributionFFO[i + 1, 0] - castDistributionFFO[i, 0]);
+                KFFB = castDistributionFFO[i, 1] + r * (castDistributionFFO[i + 1, 1] - castDistributionFFO[i, 1]);
+                KFFBS = castDistributionFFO[i, 2] + r * (castDistributionFFO[i + 1, 2] - castDistributionFFO[i, 2]);
+                KILS = castDistributionFFO[i, 3] + r * (castDistributionFFO[i + 1, 3] - castDistributionFFO[i, 3]);
+                KDFS = castDistributionFFO[i, 4] + r * (castDistributionFFO[i + 1, 4] - castDistributionFFO[i, 4]);
+            }
+
+            cycle.AddSpell(needsDisplayCalculations, FrB, KFrB);
+            cycle.AddSpell(needsDisplayCalculations, FFB, KFFB);
+            cycle.AddSpell(needsDisplayCalculations, FFBS, KFFBS);
+            cycle.AddSpell(needsDisplayCalculations, ILS, KILS);
+            cycle.AddSpell(needsDisplayCalculations, DFS, KDFS);
             cycle.Calculate();
             return cycle;
         }

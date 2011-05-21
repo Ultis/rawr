@@ -913,7 +913,7 @@ namespace Rawr.Mage
                     c = FrBDFFBIL.GetCycle(Solver.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.FrBDFFFBIL:
-                    c = FrBDFFFBIL.GetCycle(Solver.NeedsDisplayCalculations, this);
+                    c = FrBDFFFBIL.GetSolvedCycle(Solver.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.FrBDFFFB:
                     c = FrBDFFFB.GetCycle(Solver.NeedsDisplayCalculations, this);
