@@ -19,6 +19,7 @@ namespace Rawr.DK
         WhiteOH,
         // Melee abilities
         BloodStrike,
+        BloodPlague,
         DeathStrike,
         FesteringStrike,
         FrostStrike,
@@ -34,16 +35,14 @@ namespace Rawr.DK
         DeathNDecay,
         HowlingBlast,
         IcyTouch,
-        // Others
+        FrostFever,
+        // Pets
         Army,
         BloodParasite,
-        BloodPlague,
-        DRW,
-        FrostFever,
         Gargoyle,
         Ghoul,
-        UnholyBlight,
-        WanderingPlague,
+        // Others
+        DRW,
         OtherPhysical,
         OtherHoly,
         OtherArcane,
@@ -295,10 +294,10 @@ namespace Rawr.DK
         private void PostData(AbilityDK_Base ability)
         {
             int i = ability.AbilityIndex;
-            m_Calcs.damSub[i] = ability.GetTotalDamage();
-            m_Calcs.threatSub[i] = ability.GetTotalThreat();
-            m_Calcs.dpsSub[i] = ability.GetDPS();
-            m_Calcs.tpsSub[i] = ability.GetTPS();
+            m_Calcs.DPUdamSub[i] = ability.GetTotalDamage();
+            m_Calcs.DPUthreatSub[i] = ability.GetTotalThreat();
+            m_Calcs.DPUdpsSub[i] = ability.GetDPS();
+            m_Calcs.DPUtpsSub[i] = ability.GetTPS();
         }
 
     }
