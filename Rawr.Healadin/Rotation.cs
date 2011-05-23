@@ -101,8 +101,6 @@ namespace Rawr.Healadin
             //calc.ManaReplenishment = Stats.ManaRestoreFromMaxManaPerSecond * Stats.Mana * FightLength * CalcOpts.Replenishment;
             calc.ManaReplenishment = 0.001f * Stats.Mana * FightLength * CalcOpts.Replenishment;
             calc.ManaOther += Stats.ManaRestore;
-            if (calc.ManaOther > 100000)
-                calc.ManaOther = 100000; // I'm calling BS if some trink returns more than 100K mana
             // add calc.ManaJudgements
             calc.ManaJudgements = HealadinConstants.basemana * 0.15f * jotp.Casts();
             if (Stats.HighestStat > 0)

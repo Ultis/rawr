@@ -379,7 +379,7 @@ namespace Rawr.Healadin
             BossOptions bossOpts = character.BossOptions;
             PaladinTalents talents = character.PaladinTalents;
             
-            float fightLength = bossOpts.BerserkTimer * 60f;
+            float fightLength = bossOpts.BerserkTimer;
 
             Stats statsRace = BaseStats.GetBaseStats(character.Level, CharacterClass.Paladin, character.Race);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
