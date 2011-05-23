@@ -5,16 +5,13 @@ using System.Text;
 /* Molotok's notes on stuff implemented for 4.1
  * 
  *Left to do:
- *  investigate issue with trinkets, etc that proc for a heal or mana regen. They are currently counting for too much.
  *  Last Word(0-2) - 30% extra WoG crit per point, when target below 35% health
  *  Divine Favor(0-1) - increase haste/crit 20% for 20 secs.  3 min CD
- *  Infusion of Light  - 2nd part - HS crit = -0.75 sec per point from next DL/HL
  *  Daybreak(0-2) - FoL, DL, HL have 10% chance per point to make next HS not trigger its 6 sec CD.
  *  Conviction(0-3) - 1% heal bonus per point, for 15 secs after a crit from non-periodic spell.  (or weapon swing)
  *  Tower of Radiance(0-3) - healing beacon target with FoL or DL has 33% chance per point of giving a Holy Power
  *  Blessed Life(0-2) - 50% chance to gain holy power when taking direct damage.  8 sec CD.
  *  Crusade (0-3) - 2nd part - after killing something, next HL heals for 100% extra per point, for 15 sec.
- *  Gemming template - Jewelcrafting gems
  *  Glyph of Divine Favor
  *  Avenging Wrath
  *  Guardian of Ancient Kings
@@ -31,6 +28,7 @@ using System.Text;
  *   - Meditation (50% spirit regen in combat)
  *   - Walk in the light (+10% to all heals)
  *  Seal of Insight is always up
+ *  Infusion of Light -0.75 cast time reduction is applied after haste
  * 
  *Not done, but no current plans to do:
  *  figure hit into melee / Judgement mana regen - leaning towards not bothering to do this... *  
@@ -52,7 +50,7 @@ using System.Text;
  *  Last Word(0-2) - 30% extra WoG crit per point, when target below 35% health
  *  Divine Favor(0-1) - increase haste/crit 20% for 20 secs.  3 min CD
  *DONE Infusion of Light(0-2) - 5% holy shock crit per point
- *                        - HS crit = -0.75 sec per point from next DL/HL
+ *DONE                        - HS crit = -0.75 sec per point from next DL/HL
  *  Daybreak(0-2) - FoL, DL, HL have 10% chance per point to make next HS not trigger its 6 sec CD.
  *  Enlightened Judgements(0-2) - gives +50% spirit to hit per point
  *DONE                             - Judgement self heal

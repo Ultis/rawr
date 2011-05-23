@@ -203,23 +203,6 @@ namespace Rawr.Healadin
             }
             #endregion
 
-            // This infusion of Light should be dead code now
-            #region Infusion of Light
-            /*
-            float iol_hlcasts = 0;
-            if (CalcOpts.InfusionOfLight)
-            {
-                iol_hlcasts = hs.Casts() * hs.ChanceToCrit();
-
-                HolyLight hl_iol = new HolyLight(this) { CastTimeReduction = 0.75f * Talents.InfusionOfLight };
-
-                calc.UsageHL += iol_hlcasts * hl_iol.AverageCost();
-                calc.RotationHL += iol_hlcasts * hl_iol.CastTime();
-                calc.HealedHL += iol_hlcasts * hl_iol.AverageHealed();
-            }*/
-
-            #endregion
-
             float remainingMana = calc.TotalMana = ManaPool(calc);
             remainingMana -= calc.UsageJudge + calc.UsageBoL + calc.UsageHS + calc.UsageHR + calc.UsageCleanse;
 
@@ -230,6 +213,7 @@ namespace Rawr.Healadin
             remainingTime -= calc.RotationJudge + calc.RotationBoL + calc.RotationHS + calc.RotationLoH + calc.RotationHR + calc.RotationCleanse;
 
             #region HS and holy power
+            
             calc.HolyPowerCasts = hs.Casts() / 3f;
             if (Talents.LightOfDawn != 0)
             {
@@ -277,6 +261,8 @@ namespace Rawr.Healadin
             // we will use Holy Light to fill in the time.  If we still have mana left, we will replace Holy Light casts with Divine Light, until we run out of mana.
             // Note, when I kept the filler casts to whole numbers, Haste was not valued.  Trying the other way to see how haste is valued then.
             // DL and HL have the same casttime, so lets just figure max number of casts with time remaining
+            float IoLprocs = hs.Casts() * Talents.InfusionOfLight * hs.ChanceToCrit();  // Infusion of Light procs - -0.75 sec to next HL or DL casttime per point
+            remainingTime += IoLprocs * 0.75f;  // assuming we will be casting at least a few HL or DL, and can cast them when IoL procs, before next HS cast
             float fill_casts = /*(float)Math.Floor*/(remainingTime / hl.CastTime());
             calc.HLCasts = 0; // Holy Light
             calc.DLCasts = 0; // Divine Light
@@ -304,12 +290,15 @@ namespace Rawr.Healadin
             }
             else                                                // my God, you have a crapton of mana, start casting Flash of Light
             {
+                calc.DLCasts = (IoLprocs * 0.75f) / dl.CastTime();
+                remainingTime -= IoLprocs * 0.75f;
+                remainingMana -= calc.DLCasts * dl.BaseMana;
                 remainingMana -= fill_casts * dl.BaseMana;       // how much mana do we have to spare if we casts all Divine Lights
                 calc.FoLCasts = /*(float)Math.Floor*/((remainingMana / (fol.MPS() - dl.MPS()) / fol.CastTime()));
                 if (calc.FoLCasts > (remainingTime / fol.CastTime()))
                     calc.FoLCasts = remainingTime / fol.CastTime();
                 remainingTime -= calc.FoLCasts * fol.CastTime();
-                calc.DLCasts = /*(float)Math.Floor*/(remainingTime / dl.CastTime());
+                calc.DLCasts += /*(float)Math.Floor*/(remainingTime / dl.CastTime());
             }
 
             calc.RotationHL = calc.HLCasts * hl.CastTime();
@@ -321,6 +310,10 @@ namespace Rawr.Healadin
             calc.RotationFoL = calc.FoLCasts * fol.CastTime();
             calc.UsageFoL = calc.FoLCasts * fol.BaseMana;
             calc.HealedFoL = calc.FoLCasts * fol.AverageHealed();
+            if (calc.RotationHL > (IoLprocs * 0.75f))
+                calc.RotationHL -= IoLprocs * 0.75f;
+            else if (calc.RotationDL > (IoLprocs * 0.75f))
+                calc.RotationDL -= IoLprocs * 0.75f;
             #endregion Filler Casts
 
             // Enlightened Judgement talent heals
