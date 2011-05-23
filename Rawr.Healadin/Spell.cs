@@ -28,7 +28,8 @@ using System.Text;
  *   - Meditation (50% spirit regen in combat)
  *   - Walk in the light (+10% to all heals)
  *  Seal of Insight is always up
- *  Infusion of Light -0.75 cast time reduction is applied after haste
+ *  Infusion of Light -0.75 cast time reduction is applied after haste.  Also a HL or DL can be cast before this procs again.
+ *  
  * 
  *Not done, but no current plans to do:
  *  figure hit into melee / Judgement mana regen - leaning towards not bothering to do this... *  
@@ -302,7 +303,8 @@ namespace Rawr.Healadin
 
         protected override float AbilityCritChance()
         {
-            return ((Talents.GlyphOfHolyShock ? 0.05f : 0f));
+            return ((Talents.GlyphOfHolyShock ? 0.05f : 0f) + 
+                    Stats.BonusCritChanceDeathCoil);  // used this temporarily for 2pT11 bonus
         }
     }
 
@@ -338,8 +340,8 @@ namespace Rawr.Healadin
         protected override float AbilityHealed()
         {
             // TODO: calculate real spellpower somewhere in Healadin module, and use that instead of Stats.SpellPower + Stats.Intellect
-            return ((HealadinConstants.hs_min + HealadinConstants.hs_max) / 2f +
-                     ((Stats.SpellPower+ Stats.Intellect) * HealadinConstants.hs_coef) * (1f + Talents.Crusade * 0.1f));
+            return (((HealadinConstants.hs_min + HealadinConstants.hs_max) / 2f +
+                     ((Stats.SpellPower+ Stats.Intellect) * HealadinConstants.hs_coef)) * (1f + Talents.Crusade * 0.1f));
         }
 
         public float Usage()
