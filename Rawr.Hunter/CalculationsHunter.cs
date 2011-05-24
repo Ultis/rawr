@@ -2593,7 +2593,7 @@ namespace Rawr.Hunter {
             // TODO: Things that would break this stuff, other than Human's Every Man for Himself
             float LatentGCD = 1.5f + calcOpts.FullLatency;
             float EM4HSRec = character.Race == CharacterRace.Human ? LatentGCD : 0f;
-            float TotalBossHandlerMOD = Impedance.GetTotalImpedancePercs(bossOpts,
+            float TotalBossHandlerMOD = Impedance.GetTotalImpedancePercs(bossOpts, PLAYER_ROLES.RangedDPS,
                                             stats.MovementSpeed, stats.FearDurReduc, stats.StunDurReduc, stats.SnareRootDurReduc,
                                             0f, EM4HSRec, EM4HSRec, EM4HSRec,
                                             calcOpts.React);
