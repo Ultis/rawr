@@ -14,10 +14,11 @@ namespace Rawr.Retribution
             DamageType = damageType;
 
             HasGCD = hasGCD;
+            _normGCD = 1.5f + Latency;
             if (hasGCD)
-                _GCD = (AbilityType == AbilityType.Spell ? 1.5f / (1 + Stats.SpellHaste) : 1.5f) + Latency;
+                GCD = (AbilityType == AbilityType.Spell ? 1.5f / (1 + Stats.SpellHaste) : 1.5f) + Latency;
             else
-                _GCD = 0f;
+                GCD = 0f;
         }
 
         #region Base
@@ -27,7 +28,6 @@ namespace Rawr.Retribution
         public T Talents { get { return (T)_talents; } }
         protected Stats _stats;
         public Stats Stats { get { return _stats; } }
-        public float Latency = .1f;
 
         public virtual BaseCombatTable CT { get; protected set; }
 
@@ -73,6 +73,7 @@ namespace Rawr.Retribution
         #endregion
 
         #region CD
+        public float Latency = .1f;
         protected float _Cooldown = 1f;
         public float Cooldown { get { return _Cooldown; }
                                 set { _Cooldown = value; } }
@@ -80,7 +81,11 @@ namespace Rawr.Retribution
 
         public bool HasGCD;
         protected float _GCD;
-        public virtual float GCD { get { return _GCD; } }
+        public virtual float GCD { get { return _GCD; } set { _GCDPerc = value / _normGCD; 
+                                                              _GCD = value;  } }
+        protected float _normGCD;
+        protected double _GCDPerc;
+        public virtual double GCDPercentage { get { return _GCDPerc; } }
 
         public float GetMaxNumberOfActivates(float fighttime)
         {

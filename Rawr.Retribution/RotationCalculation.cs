@@ -298,16 +298,17 @@ namespace Rawr.Retribution
         #endregion
 
         #region New Rotation
-        public void CalcNewRotation()
+        private void DoRotation(double fightlength, float normGCD, bool below20, bool zeal)
         {
-            float normGCD = (1.5f + .1f);
-            float numOfGCD = fightlength / normGCD;
             float old_holyPower = 0f;
+            holyPower = 0f;
+            float holyPowerDP = 0f;
+            double numOfGCD = fightlength / normGCD;
 
             int iterator = 0;
             while (iterator < 10)
             {
-                float remainingNumOfGCD = numOfGCD;
+                double remainingNumOfGCD = numOfGCD;
                 old_holyPower = holyPower;
                 holyPower = 0f;
 
@@ -319,15 +320,15 @@ namespace Rawr.Retribution
                               * dpChance;
 
                 float addHPWrapUpTime = CalcOpts.HPperInq * CS.CooldownWithLatency;
-                float dpProcWrapUpTime = fightlength / holyPowerDP;
+                float dpProcWrapUpTime = (float) fightlength / holyPowerDP;
 
                 addHPWrapUpTime = dpProcWrapUpTime / (1f + dpProcWrapUpTime / addHPWrapUpTime);
 
                 //Inq has the highest priority
                 if (old_holyPower > 0f)
                 {
-                    casts[DamageAbility.Inquisition] = fightlength / (skills[DamageAbility.Inquisition].CooldownWithLatency - CalcOpts.InqRefresh + addHPWrapUpTime);
-                    remainingNumOfGCD -= skills[DamageAbility.Inquisition].GCD / normGCD * casts[DamageAbility.Inquisition];
+                    casts[DamageAbility.Inquisition] = (float)fightlength / (skills[DamageAbility.Inquisition].CooldownWithLatency - CalcOpts.InqRefresh + addHPWrapUpTime);
+                    remainingNumOfGCD -= skills[DamageAbility.Inquisition].GCDPercentage * casts[DamageAbility.Inquisition];
                     holyPower -= casts[DamageAbility.Inquisition] * CalcOpts.HPperInq;
                 }
 
@@ -335,47 +336,76 @@ namespace Rawr.Retribution
                 if (old_holyPower > 0f)
                 {
                     casts[DamageAbility.TemplarsVerdict] = (old_holyPower / 3f);
-                    remainingNumOfGCD -= skills[DamageAbility.TemplarsVerdict].GCD / normGCD * casts[DamageAbility.TemplarsVerdict];
+                    remainingNumOfGCD -= skills[DamageAbility.TemplarsVerdict].GCDPercentage * casts[DamageAbility.TemplarsVerdict];
                 }
 
                 //Do CS
-                casts[DamageAbility.CrusaderStrike] = fightlength / skills[DamageAbility.CrusaderStrike].CooldownWithLatency;
-                remainingNumOfGCD -= skills[DamageAbility.CrusaderStrike].GCD / normGCD * casts[DamageAbility.CrusaderStrike];
+                casts[DamageAbility.CrusaderStrike] = (float)fightlength / skills[DamageAbility.CrusaderStrike].CooldownWithLatency;
+                remainingNumOfGCD -= skills[DamageAbility.CrusaderStrike].GCDPercentage * casts[DamageAbility.CrusaderStrike];
                 holyPower += casts[DamageAbility.CrusaderStrike] * skills[DamageAbility.CrusaderStrike].CT.ChanceToLand;
+
+                //Do HoW
+                if (below20)
+                {
+                    casts[DamageAbility.HammerOfWrath] = (float)fightlength / skills[DamageAbility.HammerOfWrath].CooldownWithLatency;
+                    remainingNumOfGCD -= skills[DamageAbility.HammerOfWrath].GCDPercentage * casts[DamageAbility.HammerOfWrath];
+                }
 
                 //Do DP TV
                 if (holyPowerDP > 0f)
                 {
                     casts[DamageAbility.TemplarsVerdict] += holyPowerDP;
-                    remainingNumOfGCD -= skills[DamageAbility.TemplarsVerdict].GCD / normGCD * holyPowerDP;
+                    remainingNumOfGCD -= skills[DamageAbility.TemplarsVerdict].GCDPercentage * holyPowerDP;
                 }
-                
+
                 //Do Exo
-                casts[DamageAbility.Exorcism] = fightlength / skills[DamageAbility.Exorcism].CooldownWithLatency;
-                remainingNumOfGCD -= skills[DamageAbility.Exorcism].GCD / normGCD * casts[DamageAbility.Exorcism];
+                casts[DamageAbility.Exorcism] = (float)fightlength / skills[DamageAbility.Exorcism].CooldownWithLatency;
+                remainingNumOfGCD -= skills[DamageAbility.Exorcism].GCDPercentage * casts[DamageAbility.Exorcism];
 
                 //Do Judge
                 if (remainingNumOfGCD > 0f)
                 {
-                    casts[DamageAbility.Judgement] = Math.Min(remainingNumOfGCD, fightlength / skills[DamageAbility.Judgement].CooldownWithLatency);
-                    remainingNumOfGCD -= skills[DamageAbility.Judgement].GCD / normGCD * casts[DamageAbility.Judgement];
+                    casts[DamageAbility.Judgement] = (float)Math.Min(remainingNumOfGCD, fightlength / skills[DamageAbility.Judgement].CooldownWithLatency);
+                    remainingNumOfGCD -= skills[DamageAbility.Judgement].GCDPercentage * casts[DamageAbility.Judgement];
                 }
 
                 //Do HW
                 if (remainingNumOfGCD > 0f)
                 {
-                    casts[DamageAbility.HolyWrath] = Math.Min(remainingNumOfGCD, fightlength / skills[DamageAbility.HolyWrath].CooldownWithLatency);
-                    remainingNumOfGCD -= skills[DamageAbility.HolyWrath].GCD / normGCD * casts[DamageAbility.HolyWrath];
+                    casts[DamageAbility.HolyWrath] = (float)Math.Min(remainingNumOfGCD, fightlength / skills[DamageAbility.HolyWrath].CooldownWithLatency);
+                    remainingNumOfGCD -= skills[DamageAbility.HolyWrath].GCDPercentage * casts[DamageAbility.HolyWrath];
                 }
                 iterator++;
             }
+        }
+
+        public void CalcNewRotation()
+        {
+            float normGCD = (1.5f + .1f);
+            float lostTime = Impedance.GetTotalImpedancePercs(Character.BossOptions, PLAYER_ROLES.MeleeDPS,
+                                                              Stats.MovementSpeed, Stats.FearDurReduc, Stats.StunDurReduc, Stats.SnareRootDurReduc, 0f,
+                                                              0f, 0f, 0f, normGCD);
+            float fightLengthAttacking = fightlength * lostTime;
+
+            DoRotation(fightLengthAttacking * (1d - Character.BossOptions.Under20Perc), normGCD, false, false);
+            Dictionary<DamageAbility, float> tmpCasts = new Dictionary<DamageAbility,float>();
+            foreach (DamageAbility abil in allAb)
+            {
+                tmpCasts.Add(abil, casts[abil]);
+                casts[abil] = 0f;
+            }
+
+            DoRotation(fightLengthAttacking * Character.BossOptions.Under20Perc, normGCD, true, false);
+            foreach (KeyValuePair<DamageAbility, float> kvp in tmpCasts) {
+                casts[kvp.Key] += kvp.Value;
+            }
+
             casts[DamageAbility.HandOfLightCS] = casts[DamageAbility.CrusaderStrike];
             casts[DamageAbility.HandOfLightTV] = casts[DamageAbility.TemplarsVerdict];
-            casts[DamageAbility.White] = fightlength / AbilityHelper.WeaponSpeed(Character, Stats.PhysicalHaste);
+            casts[DamageAbility.White] = fightLengthAttacking / AbilityHelper.WeaponSpeed(Character, Stats.PhysicalHaste);
             casts[DamageAbility.SoC] = casts[DamageAbility.Seal] = (float)(fightlength * SealProcsPerSec(Seal));
             casts[DamageAbility.SealDot] = (float)(fightlength * SealDotProcPerSec(Seal));
             
-            //Inq only last until end of fight not longer => prevent > 100% uptime
             inquptime = (casts[DamageAbility.Inquisition] * skills[DamageAbility.Inquisition].Cooldown) / fightlength;
 
             //UsagePerSecCalc
