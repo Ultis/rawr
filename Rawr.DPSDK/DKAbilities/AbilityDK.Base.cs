@@ -361,7 +361,7 @@ namespace Rawr.DK
         /// Get the single instance damage of this ability.
         /// </summary>
         /// <returns>Float that represents a fully buffed single instance of this ability.</returns>
-        public float GetTickDamage()
+        virtual public float GetTickDamage()
         {
             if (_tickDamage == -1f)
             {

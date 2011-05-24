@@ -44,6 +44,7 @@ namespace Rawr.DK
         DarkTransformation,
         // Others
         DRW,
+        Outbreak,
         OtherPhysical,
         OtherHoly,
         OtherArcane,

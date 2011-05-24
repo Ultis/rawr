@@ -20,6 +20,7 @@ namespace Rawr.DK
             this.Cooldown = 60 * 1000; // 1 min CD.
             this.ml_TriggeredAbility = new AbilityDK_Base[2];
             UpdateCombatState(CS);
+            AbilityIndex = (int)DKability.Outbreak;
         }
 
         public override void UpdateCombatState(CombatState CS)

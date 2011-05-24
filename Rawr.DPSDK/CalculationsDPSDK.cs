@@ -789,11 +789,11 @@ namespace Rawr.DPSDK
             statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1 + statsTotal.BonusAgilityMultiplier));
             statsTotal.Strength = (float)Math.Floor(statsTotal.Strength * (1 + statsTotal.BonusStrengthMultiplier));
             statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1 + statsTotal.BonusStaminaMultiplier));
-            statsTotal.Health = StatConversion.GetHealthFromStamina(statsTotal.Stamina);
+            statsTotal.Health += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
             statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower + statsTotal.Strength * 2);
-            statsTotal.Armor = (float)Math.Floor(//StatConversion.GetArmorFromAgility(statsTotal.Agility) +
-                                StatConversion.ApplyMultiplier(statsTotal.Armor, statsTotal.BaseArmorMultiplier) +
+            statsTotal.Armor = (float)Math.Floor(StatConversion.ApplyMultiplier(statsTotal.Armor, statsTotal.BaseArmorMultiplier) +
                                 StatConversion.ApplyMultiplier(statsTotal.BonusArmor, statsTotal.BonusArmorMultiplier));
+            statsTotal.AttackPower *= 1f + statsTotal.BonusAttackPowerMultiplier;
 
             float HighestSecondaryStatValue = statsTotal.HighestSecondaryStat; // how much HighestSecondaryStat to add
             statsTotal.HighestSecondaryStat = 0f; // remove HighestSecondaryStat stat, since it's not needed
@@ -805,8 +805,6 @@ namespace Rawr.DPSDK
                 statsTotal.MasteryRating += HighestSecondaryStatValue;
             }
 
-            statsTotal.AttackPower *= 1f + statsTotal.BonusAttackPowerMultiplier;
-
             statsTotal.PhysicalHit += StatConversion.GetPhysicalHitFromRating(statsTotal.HitRating);
             statsTotal.PhysicalCrit += StatConversion.GetPhysicalCritFromRating(statsTotal.CritRating);
             statsTotal.PhysicalCrit += StatConversion.GetPhysicalCritFromAgility(statsTotal.Agility, CharacterClass.DeathKnight);
@@ -817,7 +815,6 @@ namespace Rawr.DPSDK
             statsTotal.SpellCrit += StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect);
             statsTotal.SpellCrit += statsTotal.SpellCritOnTarget;
             statsTotal.SpellHaste += StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating, CharacterClass.DeathKnight);
-
         }
 
         private void AccumulateSpecialEffectStats(StatsDK s, Character c, CalculationOptionsDPSDK calcOpts, DKCombatTable t, Rotation rot)

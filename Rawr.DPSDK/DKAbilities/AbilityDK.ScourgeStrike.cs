@@ -37,7 +37,6 @@ namespace Rawr.DK
             {
                 float DMM = base.DamageMultiplierModifer;
                 DMM += (.15f * CState.m_Talents.RageOfRivendare); // 4.1 raised to 15% per level
-                DMM += CState.m_uDiseaseCount * .18f + (CState.m_Talents.GlyphofScourgeStrike ? .3f : 0);
                 return DMM;
             }
             set
@@ -52,6 +51,14 @@ namespace Rawr.DK
                 return base.GetTotalDamage();
             else
                 return 0;
+        }
+
+        public override float GetTickDamage()
+        {
+            float baseTickDamage = base.GetTickDamage();
+            float ShadowTickDamage = baseTickDamage * (CState.m_uDiseaseCount * .18f + (CState.m_Talents.GlyphofScourgeStrike ? .3f : 0));
+            ShadowTickDamage *= 1 + CState.m_Stats.BonusShadowDamageMultiplier;
+            return baseTickDamage + ShadowTickDamage;
         }
     }
 }

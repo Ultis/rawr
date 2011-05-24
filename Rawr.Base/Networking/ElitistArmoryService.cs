@@ -263,7 +263,7 @@ namespace Rawr
                                 break;
                             case CharacterClass.DeathKnight:
                                 character.DeathKnightTalents = new DeathKnightTalents(talentCode);
-                                if (character.DeathKnightTalents.VampiricBlood > 0) character.CurrentModel = "TankDK";
+                                if (character.DeathKnightTalents.HighestTree == 0) character.CurrentModel = "TankDK";
                                 else character.CurrentModel = "DPSDK";
                                 break;
                             default:
