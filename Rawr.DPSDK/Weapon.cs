@@ -55,6 +55,8 @@ namespace Rawr.DK {
             #region Miss
             {
                 chanceMissed = StatConversion.WHITE_MISS_CHANCE_CAP[bossOpts.Level - 85];
+                if (!twohander)
+                    chanceMissed = StatConversion.WHITE_MISS_CHANCE_CAP_DW[bossOpts.Level - 85];
                 chanceMissed -= stats.PhysicalHit;
                 chanceMissed = Math.Max(chanceMissed, 0f);
             }

@@ -195,6 +195,20 @@ namespace Rawr.DPSDK
             set { _OHattackSpeed = value; }
         }
 
+        private float _MHweaponDPS;
+        public float MHWeaponDPS
+        {
+            get { return _MHweaponDPS; }
+            set { _MHweaponDPS = value; }
+        }
+
+        private float _OHWeaponDPS;
+        public float OHWeaponDPS
+        {
+            get { return _OHWeaponDPS; }
+            set { _OHWeaponDPS = value; }
+        }
+
         private float _avoidedAttacks;
         public float AvoidedAttacks
         {
@@ -324,7 +338,7 @@ namespace Rawr.DPSDK
 
             dictValues.Add("Weapon Damage",     MHWeaponDamage.ToString("N2") + " / " + OHWeaponDamage.ToString("N2"));
             dictValues.Add("Attack Speed",      MHAttackSpeed.ToString("N2") + " / " + OHAttackSpeed.ToString("N2"));
-            dictValues.Add("Crit Chance",       string.Format("{0:P}", BasicStats.PhysicalCrit));
+            dictValues.Add("Crit Chance", string.Format("{0:P}", BasicStats.PhysicalCrit));
             dictValues.Add("Avoided Attacks",   string.Format("{0:P}*{1:P} Dodged, {2:P} Missed", AvoidedAttacks, DodgedAttacks, MissedAttacks));
             dictValues.Add("Enemy Mitigation",  string.Format("{0:P}*{1:0} effective enemy armor", EnemyMitigation, EffectiveArmor));
 

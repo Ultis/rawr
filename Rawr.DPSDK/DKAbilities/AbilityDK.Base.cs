@@ -332,10 +332,9 @@ namespace Rawr.DK
         {
             get
             {
-
                 if (this.bWeaponRequired)
                 {
-                    float ChanceToHit = 1;
+                    float ChanceToHit = 1 - CritChance;
                     // Determine Dodge chance
                     float fDodgeChanceForTarget = 0;
                     fDodgeChanceForTarget = StatConversion.YELLOW_DODGE_CHANCE_CAP[3] - StatConversion.GetDodgeParryReducFromExpertise(CState.m_Stats.Expertise);

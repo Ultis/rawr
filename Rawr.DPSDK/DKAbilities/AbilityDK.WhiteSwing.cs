@@ -7,6 +7,7 @@ namespace Rawr.DK
     // Changed this from average between MH and OH, to each swing for each weapon.
     class AbilityDK_WhiteSwing : AbilityDK_Base
     {
+        public static float glancechance = .23f;
         public bool m_bIsOffHand = false;
 
         public AbilityDK_WhiteSwing(CombatState CS)
@@ -48,7 +49,7 @@ namespace Rawr.DK
             {
                 float BCBChance = (CState.m_Talents.BloodCakedBlade * .1f);
                 float BCBDamMult = .25f + (.125f * CState.m_uDiseaseCount);
-                float DMM = ((1 + BCBChance) * (1 + BCBDamMult) * (1 + CState.m_Stats.BonusWhiteDamageMultiplier) * (1 + CState.m_Stats.BonusFrostWeaponDamage)  - 1);
+                float DMM = ((1 + BCBChance * BCBDamMult) * (1 + CState.m_Stats.BonusWhiteDamageMultiplier) * (1 + CState.m_Stats.BonusFrostWeaponDamage)  - 1);
                 return base.DamageMultiplierModifer + DMM;
             }
             set
@@ -67,9 +68,10 @@ namespace Rawr.DK
             float iDamage = this.GetTickDamage();
 
             // Factor in max value for Crit, Hit, Glancing
-            float glancechance = .24f;
-            float misschance = 1 - HitChance;
-            iDamage = (float)iDamage * (1f + (float)Math.Min(CritChance, 1f - (glancechance + misschance))) * (float)Math.Min(1f, HitChance) * (0.88f)/* Glancing */;
+            float glancedamage = iDamage * .5f * glancechance;
+            float critdamage = iDamage * (float)Math.Min(CritChance, 1f - (glancechance + 1-HitChance)) * 2;
+            float hitdamage = iDamage * HitChance;
+            iDamage = critdamage + hitdamage + glancedamage;
             if (wMH.twohander)
                 iDamage *= (1f + .04f * CState.m_Talents.MightOfTheFrozenWastes);
             return iDamage;
@@ -111,7 +113,7 @@ namespace Rawr.DK
         {
             get
             {
-                float ChanceToHit = 1;
+                float ChanceToHit = 1 - (glancechance + CritChance);
                 // Determine Dodge chance
                 float fDodgeChanceForTarget = wMH.chanceDodged;
                 // Determine Parry Chance  (Only for Tank... Since only they should be in front of the target.)

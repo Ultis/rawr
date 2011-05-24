@@ -41,6 +41,7 @@ namespace Rawr.DK
         BloodParasite,
         Gargoyle,
         Ghoul,
+        DarkTransformation,
         // Others
         DRW,
         OtherPhysical,
@@ -179,8 +180,8 @@ namespace Rawr.DK
                 m_CState.MH = new Weapon(c.MainHand.Item, m_CState.m_Stats, m_Opts, m_BO, m_CState.m_Talents, MHExpertise, CharacterSlot.MainHand);
                 m_CState.OH = null;
                 m_Calcs.MHExpertise = m_CState.MH.effectiveExpertise;
-                m_Calcs.MHWeaponDamage = m_CState.MH.damage;
-                m_Calcs.MHAttackSpeed = m_CState.MH.hastedSpeed;
+                //m_Calcs.MHWeaponDamage = m_CState.MH.damage;
+                //m_Calcs.MHAttackSpeed = m_CState.MH.hastedSpeed;
                 if (c.MainHand.Slot != ItemSlot.TwoHand)
                 {
                     if (c.OffHand != null && c.OffHand.Item.Type != ItemType.None)
@@ -188,8 +189,8 @@ namespace Rawr.DK
                         DW = true;
                         m_CState.OH = new Weapon(c.OffHand.Item, m_CState.m_Stats, m_Opts, m_BO, m_CState.m_Talents, OHExpertise, CharacterSlot.OffHand);
                         m_Calcs.OHExpertise = m_CState.OH.effectiveExpertise;
-                        m_Calcs.OHWeaponDamage = m_CState.OH.damage;
-                        m_Calcs.OHAttackSpeed = m_CState.OH.hastedSpeed;
+                        //m_Calcs.OHWeaponDamage = m_CState.OH.damage;
+                        //m_Calcs.OHAttackSpeed = m_CState.OH.hastedSpeed;
                     }
                 }
             }

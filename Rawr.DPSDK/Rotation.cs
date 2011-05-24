@@ -181,7 +181,7 @@ namespace Rawr.DK
                 float fHasteMod = 0;
                 if (GetRotationType(m_CT.m_CState.m_Talents) == Rotation.Type.Frost)
                     fHasteMod = -.2f;
-                return (int)(20000 / (2 * 1f + (m_CT.m_CState.m_Stats.PhysicalHaste + fHasteMod) + m_CT.m_CState.m_Stats.BonusRuneRegeneration));
+                return (int)(10000 / (1f + m_CT.m_CState.m_Stats.PhysicalHaste + fHasteMod + m_CT.m_CState.m_Stats.BonusRuneRegeneration));
             }
         }
         public int m_FrostRunes { get; set; }

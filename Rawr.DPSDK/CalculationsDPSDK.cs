@@ -530,6 +530,15 @@ namespace Rawr.DPSDK
             PetDPS[(int)DKability.Ghoul] = calc.dpsSub[(int)DKability.Ghoul];
             if (needsDisplayCalculations)
             {
+                calc.MHWeaponDPS = rot.GetAbilityOfType(DKability.White).DPS;
+                calc.MHWeaponDamage = rot.GetAbilityOfType(DKability.White).TotalDamage;
+                calc.MHAttackSpeed = combatTable.MH.hastedSpeed;
+                if (null != combatTable.OH)
+                {
+                    calc.OHWeaponDPS = rot.GetAbilityOfType(DKability.WhiteOH).DPS;
+                    calc.OHWeaponDamage = rot.GetAbilityOfType(DKability.WhiteOH).TotalDamage;
+                    calc.OHAttackSpeed = combatTable.OH.hastedSpeed;
+                }
                 calcOpts.szRotReport = rot.ReportRotation();
                 calc.m_RuneCD = (float)rot.m_SingleRuneCD / 1000;
                 calc.DPSBreakdown(rot, PetDPS);
@@ -587,9 +596,9 @@ namespace Rawr.DPSDK
                     else if (t.ImprovedFrostPresence > 0)
                         PresenceStats.BonusRPMultiplier += .02f * t.ImprovedFrostPresence;
                     else if (t.ImprovedUnholyPresence > 0)
-                        PresenceStats.PhysicalHaste += .02f * t.ImprovedUnholyPresence;
+                        PresenceStats.PhysicalHaste += .025f * t.ImprovedUnholyPresence;
                     PresenceStats.PhysicalHaste += .1f;
-                    PresenceStats.BonusRuneRegeneration += .1f;
+                    //PresenceStats.BonusRuneRegeneration += .1f;
                     PresenceStats.MovementSpeed += .15f;
                     PresenceStats.ThreatReductionMultiplier += .20f; // Wowhead has this as effect #3
                     break;
@@ -801,7 +810,7 @@ namespace Rawr.DPSDK
             statsTotal.PhysicalHit += StatConversion.GetPhysicalHitFromRating(statsTotal.HitRating);
             statsTotal.PhysicalCrit += StatConversion.GetPhysicalCritFromRating(statsTotal.CritRating);
             statsTotal.PhysicalCrit += StatConversion.GetPhysicalCritFromAgility(statsTotal.Agility, CharacterClass.DeathKnight);
-            statsTotal.PhysicalHaste += StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.DeathKnight);
+            statsTotal.PhysicalHaste = AddStatMultiplierStat((float)Math.Round(statsTotal.PhysicalHaste, 4), StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.DeathKnight));
 
             statsTotal.SpellHit += StatConversion.GetSpellHitFromRating(statsTotal.HitRating);
             statsTotal.SpellCrit += StatConversion.GetSpellCritFromRating(statsTotal.CritRating);

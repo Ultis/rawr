@@ -216,6 +216,7 @@ namespace Rawr.DK
             this.bTriggersGCD = true;
             this.AbilityCost[(int)DKCostTypes.CooldownTime] = 3 * 60 * 1000; // 3 min.
             UpdateCombatState(CS);
+            this.AbilityIndex = (int)DKability.DarkTransformation;
         }
     }
 
