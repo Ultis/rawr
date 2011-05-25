@@ -790,7 +790,7 @@ namespace Rawr.DK
         /// <summary>
         /// This a basic rotation
         /// </summary>
-        public void PRE_Unholy()
+        public void PRE_Unholy_dynamic() // Expensive
         {
             /*
             if (_RotCacheType == Type.Unholy
@@ -859,11 +859,11 @@ namespace Rawr.DK
                 GCDdur = MIN_GCD_MS_UH;
 
             subrotDuration = Outbreak.Cooldown;
-            if (m_CT.m_CState.m_Stats.RPp5 > 0)
-                AvailableResources[(int)DKCostTypes.RunicPower] -= (int)((subrotDuration / 5000) * m_CT.m_CState.m_Stats.RPp5);
             uint diseaseGCDs = 0;
             for (int count = (int)(Dark.Cooldown / subrotDuration); count > 0; count--)
             {
+                if (m_CT.m_CState.m_Stats.RPp5 > 0)
+                    AvailableResources[(int)DKCostTypes.RunicPower] += (int)((subrotDuration / 5000) * m_CT.m_CState.m_Stats.RPp5);
                 // TODO: This still assumes that we're filling every GCD w/ an ability. 
                 // We know that's not the case in most situations.
                 ml_Rot.Add(Outbreak); // 60 sec CD.
@@ -895,23 +895,14 @@ namespace Rawr.DK
                                 ab.UpdateCombatState(m_CT.m_CState);
                             }
                             l_Abilities.Sort(AbilityDK_Base.CompareDPSByRunes);
-                            AbilityDK_Base DoThis = l_Abilities[0];
-                            if (DoThis.AbilityIndex == (int)DKability.BloodStrike ||
-                                DoThis.AbilityIndex == (int)DKability.IcyTouch)
+                            if (l_Abilities[0].AbilityIndex == (int)DKability.BloodStrike ||
+                                l_Abilities[0].AbilityIndex == (int)DKability.IcyTouch)
                             {
-                                /*
-                                try
-                                {
-                                    float ITBS = GetAbilityOfType(l_Abilities, DKability.IcyTouch).DPS + GetAbilityOfType(l_Abilities, DKability.BloodStrike).DPS;
-                                    if (ITBS < GetAbilityOfType(l_Abilities, DKability.FesteringStrike).DPS)
-                                        DoThis = GetAbilityOfType(l_Abilities, DKability.FesteringStrike);
-                                }
-                                catch { }
-                                 * */
-                                DoThis = GetAbilityOfType(l_Abilities, DKability.FesteringStrike);
+                                l_Abilities[0] = GetAbilityOfType(l_Abilities, DKability.FesteringStrike);
                             }
-                            ml_Rot.Add(DoThis);
-                            ProcessRunningRunes(AvailableResources, DoThis.AbilityCost);
+                            ProcessRunningRunes(AvailableResources, l_Abilities[0].AbilityCost);
+                            ml_Rot.Add(l_Abilities[0]);
+
                         }
                         else
                         {
@@ -946,6 +937,89 @@ namespace Rawr.DK
             _RotCacheType = Type.Unholy;
             _RotCache = ml_Rot;
              * */
+        }
+
+        /// <summary>
+        /// This a basic rotation
+        /// </summary>
+        public void PRE_Unholy() // Expensive
+        {
+            // Because, really, Unholy should be in Unholy Presence. 
+            m_CT.m_Opts.presence = Presence.Unholy;
+            m_szRotationName = "Unholy Rotation";
+
+            ResetRotation();
+            // Setup an instance of each ability.
+            // No runes:
+            AbilityDK_Outbreak Outbreak = new AbilityDK_Outbreak(m_CT.m_CState);
+            // Single Runes:
+            //            AbilityDK_IcyTouch IT = new AbilityDK_IcyTouch(m_CT.m_CState);
+            AbilityDK_FrostFever FF = new AbilityDK_FrostFever(m_CT.m_CState);
+            //            AbilityDK_PlagueStrike PS = new AbilityDK_PlagueStrike(m_CT.m_CState);
+            AbilityDK_BloodPlague BP = new AbilityDK_BloodPlague(m_CT.m_CState);
+            // AbilityDK_BloodStrike BS = new AbilityDK_BloodStrike(m_CT.m_CState);
+            AbilityDK_ScourgeStrike SS = new AbilityDK_ScourgeStrike(m_CT.m_CState);
+            AbilityDK_FesteringStrike Fest = new AbilityDK_FesteringStrike(m_CT.m_CState);
+            AbilityDK_DeathCoil DC = new AbilityDK_DeathCoil(m_CT.m_CState);
+            DarkTranformation Dark = new DarkTranformation(m_CT.m_CState);
+
+            // Simple outbreak, Festx2 SSx6 & Fill w/ DCs
+            int[] AvailableResources = new int[EnumHelper.GetCount(typeof(DKCostTypes))];
+            if (m_CT.m_CState.m_Talents.DarkTransformation > 0)
+            {
+                // this won't be there if they're not spec'd for it.
+                ml_Rot.Add(Dark); // Dark Transformation.
+                ProcessRunningRunes(AvailableResources, Dark.AbilityCost);
+            }
+            uint subrotDuration = 0;
+            uint GCDdur = MIN_GCD_MS;
+            // Fill the 3 mins duration 
+            if (m_CT.m_Opts.presence == Presence.Unholy)
+                GCDdur = MIN_GCD_MS_UH;
+
+            subrotDuration = Outbreak.Cooldown;
+            uint diseaseGCDs = Outbreak.Cooldown / GCDdur;
+            for (int count = (int)(Dark.Cooldown / subrotDuration); count > 0; count--)
+            {
+                if (m_CT.m_CState.m_Stats.RPp5 > 0)
+                    AvailableResources[(int)DKCostTypes.RunicPower] += (int)((subrotDuration / 5000) * m_CT.m_CState.m_Stats.RPp5);
+                // TODO: This still assumes that we're filling every GCD w/ an ability. 
+                // We know that's not the case in most situations.
+                ml_Rot.Add(Outbreak); // 60 sec CD.
+                ProcessRunningRunes(AvailableResources, Outbreak.AbilityCost);
+                ml_Rot.Add(FF);
+                ml_Rot.Add(BP);
+                // 1 GCDs
+
+                // Fill the disease.
+                float MaxRP = 100 + m_CT.m_CState.m_Stats.BonusMaxRunicPower;
+
+                ml_Rot.Add(SS); diseaseGCDs--;
+                ProcessRunningRunes(AvailableResources, SS.AbilityCost);
+                ml_Rot.Add(SS); diseaseGCDs--;
+                ProcessRunningRunes(AvailableResources, SS.AbilityCost);
+                ml_Rot.Add(Fest); diseaseGCDs--;
+                ProcessRunningRunes(AvailableResources, Fest.AbilityCost);
+                ml_Rot.Add(Fest); diseaseGCDs--;
+                ProcessRunningRunes(AvailableResources, Fest.AbilityCost);
+                ml_Rot.Add(SS); diseaseGCDs--;
+                ProcessRunningRunes(AvailableResources, SS.AbilityCost);
+                ml_Rot.Add(SS); diseaseGCDs--;
+                ProcessRunningRunes(AvailableResources, SS.AbilityCost);
+                ml_Rot.Add(SS); diseaseGCDs--;
+                ProcessRunningRunes(AvailableResources, SS.AbilityCost);
+                ml_Rot.Add(SS); diseaseGCDs--;
+                ProcessRunningRunes(AvailableResources, SS.AbilityCost);
+                while (AvailableResources[(int)DKCostTypes.RunicPower] > DC.RunicPower
+                    && diseaseGCDs > 0)
+                {
+                    ml_Rot.Add(DC); diseaseGCDs--;
+                    ProcessRunningRunes(AvailableResources, DC.AbilityCost);
+                }
+            }
+
+            m_RunicPower = -1 * AvailableResources[(int)DKCostTypes.RunicPower];
+            BuildCosts();
         }
 
         #endregion

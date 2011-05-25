@@ -387,21 +387,24 @@ namespace Rawr.DK
                 return 0;
             }
             // Start w/ getting the base damage values.
-            float iDamage = this.GetTickDamage();
+            float fDamage = this.GetTickDamage();
             // Assuming full duration, or standard impact.
             // But I want this in whole numbers.
             // Also need to decide if I want this to be whole ticks, or if partial ticks will be allowed.
             float fDamageCount = (float)(this.uDuration / Math.Max(1, this.uTickRate));
-
-            iDamage = (int)((float)iDamage * fDamageCount * (1 + CritChance) * Math.Min(1, HitChance));
             if (bAOE == true)
             {
                 // Need to ensure this value is reasonable for all abilities.
-                iDamage = (int)((float)iDamage * Math.Max(1, this.CState.m_NumberOfTargets));
+                fDamageCount *= Math.Max(1, this.CState.m_NumberOfTargets);
             }
+
+            fDamage *= fDamageCount;
+            float fCritDamage = 2 * fDamage * CritChance;
+            fDamage = (fDamage * (Math.Min(1, HitChance) - CritChance)) + fCritDamage;
+
             if (bWeaponRequired && wMH.twohander && CState != null)
-                iDamage = (int)(iDamage * (1 + .04f * CState.m_Talents.MightOfTheFrozenWastes));
-            return iDamage;
+                fDamage = (fDamage * (1 + .04f * CState.m_Talents.MightOfTheFrozenWastes));
+            return fDamage;
         }
 
         public float DPS { get { return GetDPS(); } }

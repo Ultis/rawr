@@ -73,24 +73,24 @@ namespace Rawr.DPSDK
                 int[] cog_ddg = { 59477, 59477, 59477, 59477 }; fixArray(cog_ddg);
                 int[] cog_spr = { 59496, 59496, 59496, 59496 }; fixArray(cog_spr);
 
-                const int chaotic = 52291; // Meta
+                const int Reverberating = 68779; // Meta
 
                 string group; bool enabled;
                 List<GemmingTemplate> templates = new List<GemmingTemplate>()
                     {
-                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_hit[0], MetaId = chaotic, },
-                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_mst[0], MetaId = chaotic, },
-                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_crt[0], MetaId = chaotic, },
-                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_has[0], MetaId = chaotic, },
+                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_hit[0], MetaId = Reverberating, },
+                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_mst[0], MetaId = Reverberating, },
+                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_crt[0], MetaId = Reverberating, },
+                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_has[0], MetaId = Reverberating, },
 
-                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_mst[0], MetaId = chaotic, },
-                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_crt[0], MetaId = chaotic, },
-                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_has[0], MetaId = chaotic, },
+                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_mst[0], MetaId = Reverberating, },
+                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_crt[0], MetaId = Reverberating, },
+                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_has[0], MetaId = Reverberating, },
 
-                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_crt[0], MetaId = chaotic, },
-                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_has[0], MetaId = chaotic, },
+                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_crt[0], MetaId = Reverberating, },
+                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_has[0], MetaId = Reverberating, },
 
-                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_crt[0], Cogwheel2Id = cog_has[0], MetaId = chaotic, },
+                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_crt[0], Cogwheel2Id = cog_has[0], MetaId = Reverberating, },
                     };
 
                 #region Strength
@@ -155,7 +155,7 @@ namespace Rawr.DPSDK
 
                 #region Crit
                 group = "Crit";
-                enabled = false;
+                enabled = true;
                 // Straight
                 AddTemplates(templates,
                     ylw_crt, ylw_crt, ylw_crt,
@@ -170,7 +170,7 @@ namespace Rawr.DPSDK
 
                 #region Haste
                 group = "Haste";
-                enabled = false;
+                enabled = true;
                 // Straight
                 AddTemplates(templates,
                     ylw_has, ylw_has, ylw_has,
@@ -182,7 +182,6 @@ namespace Rawr.DPSDK
                     org_has, ppl_has, grn_has,
                     red_has, cog_has, group, enabled);
                 #endregion
-
 
                 return templates;
             }

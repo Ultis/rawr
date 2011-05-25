@@ -16,7 +16,12 @@ namespace Rawr.DK
         public DeathKnightTalents m_Talents;
         public Weapon MH, OH;
         public float m_NumberOfTargets;
-        public uint m_uDiseaseCount;
+        private uint _uDiseaseCount;
+        public uint m_uDiseaseCount
+        {
+            get { return Math.Min(2, _uDiseaseCount); } 
+            set{_uDiseaseCount = value;}
+        }
         public int m_CurrentRP;
         public bool m_bAttackingFromBehind;
         public Rotation.Type m_Spec;

@@ -56,8 +56,8 @@ namespace Rawr.DK
         public override float GetTickDamage()
         {
             float baseTickDamage = base.GetTickDamage();
-            float ShadowTickDamage = baseTickDamage * (CState.m_uDiseaseCount * .18f + (CState.m_Talents.GlyphofScourgeStrike ? .3f : 0));
-            ShadowTickDamage *= 1 + CState.m_Stats.BonusShadowDamageMultiplier;
+            float ShadowTickDamage = baseTickDamage * (Math.Min(2, CState.m_uDiseaseCount) * .18f + (CState.m_Talents.GlyphofScourgeStrike ? .3f : 0));
+            ShadowTickDamage *= 1 + CState.m_Stats.BonusShadowDamageMultiplier - CState.m_Stats.PhysicalCrit; // Shadow aspect doesn't crit... So let's pull crit chance value out of this part.
             return baseTickDamage + ShadowTickDamage;
         }
     }
