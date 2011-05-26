@@ -471,14 +471,13 @@ namespace Rawr {
         /// Generates the time lost to this Impedance type.
         /// </summary>
         /// <param name="bossOpts">Pass character.BossOptions</param>
-        /// <param name="Role">The role of the character</param>
-        /// <param name="type">The Type to check:<para>0: Moves</para><para>1: Fears</para><para>2: Stuns</para><para>3: Roots</para></param>
-        /// <param name="breakingMOD">The modifier for this type, eg- Type is Moves, pass stats.MovementSpeed</param>
-        /// <param name="react">How much time in milliseconds it takes you to react to the Occurrence of the Impedance</param>
-        /// <param name="recovery">How much time in milliseconds the recovery method consumes. eg- Every Man for Himself still consumes a GCD</param>
+        /// <param name="role">The role of the character</param>
+        /// <param name="type">The Type to check:<para>0: Moves</para><para>1: Fears</para><para>2: Stuns</para><para>3: Roots</para><para>4: Silence</para></param>
+        /// <param name="breakingMOD">% reduction of duration</param>
+        /// <param name="breakingCD">CD of the breaking ability</param>
         /// <returns>Returns the Percentage of time lost to this Impedance type.
         /// <para>This is limited to 0%-100% to prevent wierd calc issues</para></returns>
-        public static float GetImpedancePerc(BossOptions bossOpts, PLAYER_ROLES role, int type, float breakingMOD, float react=0, float recovery=0)
+        public static float GetImpedancePerc(BossOptions bossOpts, PLAYER_ROLES role, int type, float breakingMOD, float breakingCD=0)
         {
             List<Impedance> imps;
             // Which Imps are we looking for?
@@ -491,25 +490,19 @@ namespace Rawr {
             // Are there any of this type?
             if (imps.Count <= 0) return 0f;
             // Process them individually and add to the total time lost
-            float timeIn = 0, newAmt = 0;
+            float timeIn = 0;
             foreach (Impedance i in imps) {
                 if (i.AffectsRole[role])
                 {
-                    // Determine how much time we lose
-                    newAmt = (i.Duration / 1000f)                    // The length of the Impedance
-                            * (1f - (i.Breakable ? breakingMOD : 0f)) // If you can break it, by how much
-                            * i.Chance                                // Chance the Occurrence affects you
-                            * (bossOpts.BerserkTimer / i.Frequency);  // Number of Occurrences
-                    // Add back how much time we can recover, up the amount lost - react time and only if it's breakable
-                    newAmt -= (i.Breakable ? Math.Min(Math.Max(0f, newAmt - (react / 1000f)), newAmt - (recovery / 1000f)) : 0f);
-                    // Add this to the total
-                    timeIn += newAmt;
+                    float acts = i.Chance * i.FightUptimePercent * bossOpts.BerserkTimer / i.Frequency;
+                    float breakedActs = acts * (i.Breakable && breakingCD > 0 ? Math.Min(i.Frequency / breakingCD, 1f) : 0f);
+                    acts -= breakedActs;
+                    timeIn += acts * i.Duration / 1000f * (i.Breakable ? (1f - breakingMOD) : 1f); // full duration
+                    timeIn += breakedActs * 3f; // breaked ones: 1.5 to react, 1.5 GCD 
                 }
             }
             // Convert this to a Percentage
-            float timeInPerc = Math.Max(0f, Math.Min(1f, timeIn / bossOpts.BerserkTimer));
-            // Return the Percentage
-            return timeInPerc;
+            return Math.Max(0f, Math.Min(1f, timeIn / bossOpts.BerserkTimer));
         }
 
         /// <summary>
@@ -522,25 +515,21 @@ namespace Rawr {
         /// <param name="stunBreakingMOD">The modifier for this type, eg- Type is Stuns, pass stats.StunDurReduc</param>
         /// <param name="rootBreakingMOD">The modifier for this type, eg- Type is Roots, pass stats.SnareRootDurReduc</param>
         /// <param name="silenceBreakingMOD">The modifier for this type, eg- Type is Silences, pass stats.SilenceDurReduc</param>
-        /// <param name="moveBreakingRec">How much time in milliseconds the recovery method consumes. eg- Charge still consumes a GCD</param>
-        /// <param name="fearBreakingRec">How much time in milliseconds the recovery method consumes. eg- Every Man for Himself still consumes a GCD</param>
-        /// <param name="stunBreakingRec">How much time in milliseconds the recovery method consumes. eg- Every Man for Himself still consumes a GCD</param>
-        /// <param name="rootBreakingRec">How much time in milliseconds the recovery method consumes. eg- Every Man for Himself still consumes a GCD</param>
-        /// <param name="silenceBreakingRec">How much time in milliseconds the recovery method consumes. eg- Every Man for Himself still consumes a GCD</param>
-        /// <param name="react">How much time in milliseconds it takes you to react to the Occurrence of the Impedance</param>
+        /// <param name="moveBreakingCD">CD of the move breaking ability in seconds</param>
+        /// <param name="fearBreakingCD">CD of the fear breaking ability in seconds</param>
+        /// <param name="stunBreakingCD">CD of the stun breaking ability in seconds</param>
+        /// <param name="rootBreakingCD">CD of the root breaking ability in seconds</param>
+        /// <param name="silenceBreakingCD">CD of the silence breaking ability in seconds</param>
         /// <returns>Returns the Percentage of time lost to all Impedance types.
         /// <para>This is limited to 0%-100% to prevent wierd calc issues</para></returns>
         public static float GetTotalImpedancePercs(BossOptions bossOpts, PLAYER_ROLES role, float moveBreakingMOD, float fearBreakingMOD, float stunBreakingMOD, float rootBreakingMOD, float silenceBreakingMOD,
-            float moveBreakingRec = 0, float fearBreakingRec = 0, float stunBreakingRec = 0, float rootBreakingRec = 0, float silenceBreakingRec = 0, float react = 0)
+            float moveBreakingCD = 0, float fearBreakingCD = 0, float stunBreakingCD = 0, float rootBreakingCD = 0, float silenceBreakingCD = 0)
         {
-            float MoveMOD = 1f - GetImpedancePerc(bossOpts, role, 0, moveBreakingMOD, react, moveBreakingRec);
-            float FearMOD = 1f - GetImpedancePerc(bossOpts, role, 1, fearBreakingMOD, react, fearBreakingRec);
-            float StunMOD = 1f - GetImpedancePerc(bossOpts, role, 2, stunBreakingMOD, react, stunBreakingRec);
-            float RootMOD = 1f - GetImpedancePerc(bossOpts, role, 3, rootBreakingMOD, react, rootBreakingRec);
-            float SilenceMOD = 1f - GetImpedancePerc(bossOpts, role, 4, silenceBreakingMOD, react, silenceBreakingRec);
-            //
-            float TotalBossHandlerMOD = MoveMOD * FearMOD * StunMOD * RootMOD * SilenceMOD;
-            return TotalBossHandlerMOD;
+            return GetImpedancePerc(bossOpts, role, 0, moveBreakingMOD, moveBreakingCD) +
+                   GetImpedancePerc(bossOpts, role, 1, fearBreakingMOD, fearBreakingCD) +
+                   GetImpedancePerc(bossOpts, role, 2, stunBreakingMOD, stunBreakingCD) +
+                   GetImpedancePerc(bossOpts, role, 3, rootBreakingMOD, rootBreakingCD) +
+                   GetImpedancePerc(bossOpts, role, 4, silenceBreakingMOD, silenceBreakingCD);
         }
     }
     public struct ImpedanceWithType

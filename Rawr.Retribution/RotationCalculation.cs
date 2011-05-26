@@ -383,9 +383,8 @@ namespace Rawr.Retribution
         {
             float normGCD = (1.5f + .1f);
             float lostTime = Impedance.GetTotalImpedancePercs(Character.BossOptions, PLAYER_ROLES.MeleeDPS,
-                                                              Stats.MovementSpeed, Stats.FearDurReduc, Stats.StunDurReduc, Stats.SnareRootDurReduc, 0f,
-                                                              0f, 0f, 0f, normGCD);
-            float fightLengthAttacking = fightlength * lostTime;
+                                                              Stats.MovementSpeed, Stats.FearDurReduc, Stats.StunDurReduc, Stats.SnareRootDurReduc, Stats.SilenceDurReduc);
+            float fightLengthAttacking = fightlength * (1f - lostTime);
 
             DoRotation(fightLengthAttacking * (1d - Character.BossOptions.Under20Perc), normGCD, false, false);
             Dictionary<DamageAbility, float> tmpCasts = new Dictionary<DamageAbility,float>();
@@ -405,8 +404,8 @@ namespace Rawr.Retribution
             casts[DamageAbility.White] = fightLengthAttacking / AbilityHelper.WeaponSpeed(Character, Stats.PhysicalHaste);
             casts[DamageAbility.SoC] = casts[DamageAbility.Seal] = (float)(fightlength * SealProcsPerSec(Seal));
             casts[DamageAbility.SealDot] = (float)(fightlength * SealDotProcPerSec(Seal));
-            
-            inquptime = (casts[DamageAbility.Inquisition] * skills[DamageAbility.Inquisition].Cooldown) / fightlength;
+
+            inquptime = (casts[DamageAbility.Inquisition] * skills[DamageAbility.Inquisition].Cooldown) / fightLengthAttacking;
 
             //UsagePerSecCalc
             foreach (KeyValuePair<DamageAbility, Skill> kvp in skills)
