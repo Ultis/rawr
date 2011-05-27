@@ -295,7 +295,7 @@ namespace Rawr.Mage
         {
             foreach (var spell in Spell)
             {
-                spell.Spell.AddSpellContribution(dict, spell.Weight * spell.Spell.CastTime / CastTime * duration, spell.DotUptime, effectSpellPower, effectMastery, effectCrit);
+                spell.Spell.AddSpellContribution(dict, spell.Weight * duration / CastTime, spell.DotUptime, effectSpellPower, effectMastery, effectCrit);
             }
         }
 
@@ -303,7 +303,7 @@ namespace Rawr.Mage
         {
             foreach (var spell in Spell)
             {
-                spell.Spell.AddManaUsageContribution(dict, spell.Weight * spell.Spell.CastTime / CastTime * duration);
+                spell.Spell.AddManaUsageContribution(dict, spell.Weight * duration / CastTime);
             }
         }
 

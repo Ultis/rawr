@@ -274,6 +274,8 @@ namespace Rawr.Mage
             InitializeCastTime(false, true, 0, 60);
             float explosion = solver.MageTalents.FirePower == 3 ? 1f : 0.33f * solver.MageTalents.FirePower;
             InitializeScaledDamage(solver, false, 40, solver.MageTalents.FrostfireOrb > 0 ? MagicSchool.FrostFire : MagicSchool.Fire, 0.06f, 15 * 0.277999997138977f + explosion * 1.317999958992f, 0.25f, 0, 15 * 0.13400000333786f + explosion * 0.193000003695488f, 0, 15 + explosion, 15 + explosion, 0);
+            CritBonus = CritBonus / (1 + solver.IgniteFactor); // Flame Orb doesn't generate ignite
+            IgniteFactor = 0;
             BaseDirectDamageModifier *= (1f + 0.05f * solver.MageTalents.CriticalMass);
             BaseDotDamageModifier += 0.05f * solver.MageTalents.CriticalMass; // additive with mastery
             Dirty = false;

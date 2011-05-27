@@ -874,7 +874,7 @@ namespace Rawr.Mage
             AverageCost = cost;
         }
 
-        public void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration, float dotUptime, float effectSpellPower, float effectMastery, float effectCrit)
+        public void AddSpellContribution(Dictionary<string, SpellContribution> dict, float count, float dotUptime, float effectSpellPower, float effectMastery, float effectCrit)
         {
             SpellContribution contrib;
             if (!dict.TryGetValue(Name, out contrib))
@@ -887,10 +887,10 @@ namespace Rawr.Mage
             float critBonus = CritBonus;
             if (IgniteDamage > 0)
             {
-                igniteContribution = (IgniteDamage + effectSpellPower * IgniteDamagePerSpellPower) / CastTime * duration;
+                igniteContribution = (IgniteDamage + effectSpellPower * IgniteDamagePerSpellPower) * count;
                 if (dotUptime > 0)
                 {
-                    dotIgniteContribution = dotUptime * (DotIgniteDamage + effectSpellPower * DotIgniteDamagePerSpellPower) / CastTime * duration;
+                    dotIgniteContribution = dotUptime * (DotIgniteDamage + effectSpellPower * DotIgniteDamagePerSpellPower) * count;
                 }
                 SpellContribution igniteContrib;
                 if (!dict.TryGetValue("Ignite", out igniteContrib))
@@ -901,25 +901,25 @@ namespace Rawr.Mage
                 igniteContrib.Damage += igniteContribution + dotIgniteContribution;
                 critBonus /= (1 + castingState.Solver.IgniteFactor);
             }
-            contrib.Hits += (HitProcs - CritProcs) * duration / CastTime;
-            contrib.Crits += CritProcs * duration / CastTime;
-            float damage = (AverageDamage + effectSpellPower * DamagePerSpellPower + effectMastery * DamagePerMastery + effectCrit * DamagePerCrit) / CastTime * duration - igniteContribution;
+            contrib.Hits += (HitProcs - CritProcs) * count;
+            contrib.Crits += CritProcs * count;
+            float damage = (AverageDamage + effectSpellPower * DamagePerSpellPower + effectMastery * DamagePerMastery + effectCrit * DamagePerCrit) * count - igniteContribution;
             contrib.Damage += damage;
             if (dotUptime > 0)
             {
-                float tickDamage = dotUptime * (DotAverageDamage + effectSpellPower * DotDamagePerSpellPower + effectMastery * DotDamagePerMastery + effectCrit * DotDamagePerCrit) / CastTime * duration - dotIgniteContribution;
+                float tickDamage = dotUptime * (DotAverageDamage + effectSpellPower * DotDamagePerSpellPower + effectMastery * DotDamagePerMastery + effectCrit * DotDamagePerCrit) * count - dotIgniteContribution;
                 contrib.Damage += tickDamage;
                 // dotUptime = DotProcs / (DotDuration / DotTickInterval)
-                contrib.Ticks += dotUptime * (DotDuration / DotTickInterval) * duration / CastTime;
+                contrib.Ticks += dotUptime * (DotDuration / DotTickInterval) * count;
                 contrib.TickDamage += tickDamage;
             }
             else
             {
                 if (DotTickInterval > 0)
                 {
-                    contrib.Ticks += DotProcs * duration / CastTime;
+                    contrib.Ticks += DotProcs * count;
                     float dotFactor = DotProcs / (DotDuration / DotTickInterval) * SpellModifier * DotDamageModifier * PartialResistFactor * HitRate * (1 + (CritBonus / (1 + template.IgniteFactor) - 1) * Math.Max(0, CritRate));
-                    float tickDamage = dotFactor * (BasePeriodicDamage + (RawSpellDamage + effectSpellPower) * DotDamageCoefficient) / CastTime * duration;
+                    float tickDamage = dotFactor * (BasePeriodicDamage + (RawSpellDamage + effectSpellPower) * DotDamageCoefficient) * count;
                     contrib.TickDamage += tickDamage;
                     damage -= tickDamage;
                 }
@@ -931,11 +931,11 @@ namespace Rawr.Mage
             contrib.Range = Range;
         }
 
-        public void AddManaUsageContribution(Dictionary<string, float> dict, float duration)
+        public void AddManaUsageContribution(Dictionary<string, float> dict, float count)
         {
             float contrib;
             dict.TryGetValue(Name, out contrib);
-            contrib += AverageCost / CastTime * duration;
+            contrib += AverageCost * count;
             dict[Name] = contrib;
         }
     }
