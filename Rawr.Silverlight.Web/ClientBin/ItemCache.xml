@@ -22804,6 +22804,8 @@
     <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
+    <UniqueId>55201</UniqueId>
+    <UniqueId>56270</UniqueId>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Throne of the Tides</Area>
@@ -23049,6 +23051,8 @@
     <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
+    <UniqueId>55236</UniqueId>
+    <UniqueId>56276</UniqueId>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Throne of the Tides</Area>
@@ -23090,6 +23094,8 @@
     <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
+    <UniqueId>55237</UniqueId>
+    <UniqueId>56280</UniqueId>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Throne of the Tides</Area>
@@ -23212,6 +23218,8 @@
     <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
+    <UniqueId>55250</UniqueId>
+    <UniqueId>56282</UniqueId>
     <LocationInfo>
       <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
@@ -23253,6 +23261,8 @@
     <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
+    <UniqueId>55251</UniqueId>
+    <UniqueId>56285</UniqueId>
     <LocationInfo>
       <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
@@ -23416,6 +23426,8 @@
     <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
+    <UniqueId>55256</UniqueId>
+    <UniqueId>56290</UniqueId>
     <LocationInfo>
       <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
@@ -23644,6 +23656,8 @@
     <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
+    <UniqueId>55265</UniqueId>
+    <UniqueId>56299</UniqueId>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Blackrock Caverns</Area>
@@ -23685,6 +23699,8 @@
     <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
+    <UniqueId>55266</UniqueId>
+    <UniqueId>56295</UniqueId>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Blackrock Caverns</Area>
@@ -23960,6 +23976,8 @@
     <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
+    <UniqueId>55276</UniqueId>
+    <UniqueId>56307</UniqueId>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Blackrock Caverns</Area>
@@ -24079,6 +24097,8 @@
     <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
+    <UniqueId>55776</UniqueId>
+    <UniqueId>56310</UniqueId>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Blackrock Caverns</Area>
@@ -24425,6 +24445,8 @@
     <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
+    <UniqueId>55787</UniqueId>
+    <UniqueId>56320</UniqueId>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Blackrock Caverns</Area>
@@ -29188,6 +29210,8 @@
     <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
+    <UniqueId>55201</UniqueId>
+    <UniqueId>56270</UniqueId>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Throne of the Tides</Area>
@@ -29314,6 +29338,8 @@
     <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
+    <UniqueId>55236</UniqueId>
+    <UniqueId>56276</UniqueId>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Throne of the Tides</Area>
@@ -29449,6 +29475,8 @@
     <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
+    <UniqueId>55237</UniqueId>
+    <UniqueId>56280</UniqueId>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Throne of the Tides</Area>
@@ -29513,6 +29541,8 @@
     <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
+    <UniqueId>55250</UniqueId>
+    <UniqueId>56282</UniqueId>
     <LocationInfo>
       <ItemLocation xsi:type="ContainerItem">
         <Heroic>true</Heroic>
@@ -29620,6 +29650,8 @@
     <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
+    <UniqueId>55251</UniqueId>
+    <UniqueId>56285</UniqueId>
     <LocationInfo>
       <ItemLocation xsi:type="ContainerItem">
         <Heroic>true</Heroic>
@@ -29750,6 +29782,8 @@
     <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
+    <UniqueId>55256</UniqueId>
+    <UniqueId>56290</UniqueId>
     <LocationInfo>
       <ItemLocation xsi:type="ContainerItem">
         <Heroic>true</Heroic>
@@ -29825,6 +29859,8 @@
     <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
+    <UniqueId>55266</UniqueId>
+    <UniqueId>56295</UniqueId>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Blackrock Caverns</Area>
@@ -29952,6 +29988,8 @@
     <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
+    <UniqueId>55265</UniqueId>
+    <UniqueId>56299</UniqueId>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Blackrock Caverns</Area>
@@ -30197,6 +30235,8 @@
     <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
+    <UniqueId>55276</UniqueId>
+    <UniqueId>56307</UniqueId>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Blackrock Caverns</Area>
@@ -30295,6 +30335,8 @@
     <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
+    <UniqueId>55776</UniqueId>
+    <UniqueId>56310</UniqueId>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Blackrock Caverns</Area>
@@ -30616,6 +30658,8 @@
     <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
+    <UniqueId>55787</UniqueId>
+    <UniqueId>56320</UniqueId>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Blackrock Caverns</Area>
@@ -32165,28 +32209,32 @@
   </Item>
   <Item>
     <ItemLevel>346</ItemLevel>
-    <DisplayId>77849</DisplayId>
+    <DisplayId>76747</DisplayId>
     <DisplaySlot>1</DisplaySlot>
     <IconPath>inv_helmet_plate_dungeonplate_c_03</IconPath>
     <Stats>
       <Stamina>454</Stamina>
-      <Intellect>302</Intellect>
-      <CritRating>202</CritRating>
-      <HasteRating>202</HasteRating>
+      <Intellect>242</Intellect>
+      <CritRating>172</CritRating>
+      <HasteRating>172</HasteRating>
       <Armor>2680</Armor>
     </Stats>
     <Quality>Rare</Quality>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <Bind>BoP</Bind>
-    <SocketBonus />
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <HasteRating>30</HasteRating>
+    </SocketBonus>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>The Vortex Pinnacle</Area>
         <Heroic>true</Heroic>
         <Boss>Asaad</Boss>
-        <Count>2106</Count>
-        <OutOf>10981</OutOf>
+        <Count>11323</Count>
+        <OutOf>58092</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Lunar Halo</Name>
@@ -90729,6 +90777,7 @@
     <Faction>Neutral</Faction>
     <SocketBonus />
     <LocationInfo>
+      <ItemLocation xsi:type="UnknownItem" />
       <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
     <Name>[Downloading from Wowhead]</Name>
