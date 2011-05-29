@@ -357,6 +357,16 @@ namespace Rawr.Healadin
 
         public float Casts()
         {
+            // if this was set to an invadid value, set it to a default value
+            // the could have been from an issue where I used to track the cast time as a % of the max number of times it could be cast
+            // thus loading a saved character file resulted in bad results
+            // however I changed these things on the options tab to be seconds between casts
+            if (Rotation.CalcOpts.HolyShock < 6)
+            {
+                Rotation.CalcOpts.HolyShock = 7.5f;
+                Rotation.CalcOpts.HRCasts = 60f;
+                Rotation.CalcOpts.JudgementCasts = 10f;
+            }
             return Rotation.ActiveTime / Rotation.CalcOpts.HolyShock;
         }
 
