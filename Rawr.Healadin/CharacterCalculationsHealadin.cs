@@ -210,7 +210,7 @@ namespace Rawr.Healadin
                                                             HealedPotI.ToString("N00"), PotICasts.ToString("N00"));
             dictValues["Enlightened Judgements "] = string.Format("{0} *Enlightened Judgements Info:\nNumber of Casts: {1}", 
                                                             HealedJudge.ToString("N00"), JudgeCasts.ToString("N00"));
-            dictValues["Illuminated Healing"] = string.Format("{0} *These are from the absorb shields, and increase with Master stat.\nThe shields often expire or are overwritten.\nSee options tab to set effective %.",
+            dictValues["Illuminated Healing"] = string.Format("{0} *These are from the absorb shields, and increase with Mastery stat.\nThe shields often expire or are overwritten.\nSee options tab to adjust the effective %.",
                                                             HealedIH.ToString("N00"));
             dictValues["Cleanse casting"] = string.Format("*Based on the settings from the options tab, you cast Cleanse {0} times, using up {1} mana.",
                                                             CleanseCasts.ToString("N00"), UsageCleanse.ToString("N00"));

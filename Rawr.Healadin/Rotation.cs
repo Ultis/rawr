@@ -166,9 +166,10 @@ namespace Rawr.Healadin
             calc.PotI = poti;
             calc.EJ = ej;
 
-            calc.RotationJudge = jotp.Time();
-            calc.UsageJudge = jotp.Usage();
             calc.JudgeCasts = jotp.Casts();
+            calc.RotationJudge = jotp.Time() + CalcOpts.Userdelay * calc.JudgeCasts;
+            calc.UsageJudge = jotp.Usage();
+            
 
             if (Talents.BeaconOfLight > 0)
             {
@@ -176,33 +177,34 @@ namespace Rawr.Healadin
                 calc.UsageBoL = bol.Usage();
             }
 
-            calc.RotationHS = hs.Time();
+            calc.RotationHS = hs.Time() + hs.Casts() + CalcOpts.Userdelay;
             calc.HealedHS = hs.Healed();
             calc.UsageHS = hs.Usage();
 
-            calc.RotationLoH = loh.Casts() * loh.CastTime();
+            calc.RotationLoH = loh.Casts() * (loh.CastTime() + CalcOpts.Userdelay);
             calc.HealedLoH = loh.Casts() * loh.AverageHealed();
             calc.UsageLoH = 0f; // always 0, costs no mana, code was: loh.Casts() * loh.BaseMana;
 
             calc.UsageCleanse = CalcOpts.Cleanse * cleanse.BaseMana;
-            calc.RotationCleanse = CalcOpts.Cleanse * cleanse.CastTime();
+            calc.RotationCleanse = CalcOpts.Cleanse * ( cleanse.CastTime() + CalcOpts.Userdelay);
             calc.CleanseCasts = CalcOpts.Cleanse;
             #endregion
-
+ 
             calc.HasteJotP = Talents.JudgementsOfThePure * 3f;
             calc.HasteSoL = Talents.SpeedOfLight * 1f;
             calc.SpellPowerTotal = Stats.Intellect + Stats.SpellPower;
 
-            #region Divine Favor
-            if (Talents.DivineFavor > 0)
+            #region Divine Favor - old code, commented out for now
+        /*    if (Talents.DivineFavor > 0)
             {
                 DivineFavor df = new DivineFavor(this);
                 calc.RotationHL += df.Time();
                 calc.UsageHL += df.Usage();
                 calc.HealedHL += df.Healed();
-            }
+            } */
             #endregion
 
+            #region active time, remaining mana / time
             float remainingMana = calc.TotalMana = ManaPool(calc);
             remainingMana -= calc.UsageJudge + calc.UsageBoL + calc.UsageHS + calc.UsageHR + calc.UsageCleanse;
 
@@ -211,9 +213,11 @@ namespace Rawr.Healadin
             float remainingTime = calc.ActiveTime;
             // now subtract time for lots of stuff we need to cast  
             remainingTime -= calc.RotationJudge + calc.RotationBoL + calc.RotationHS + calc.RotationLoH + calc.RotationHR + calc.RotationCleanse;
+            float RotationDP = DivinePleas * (calc.HS.CastTime() + CalcOpts.Userdelay);
+            remainingTime -= RotationDP; // subtract divine plea cast times.  HS is also a GCD, so I just used that to calculate it
+            #endregion
 
             #region HS and holy power
-            
             calc.HolyPowerCasts = hs.Casts() / 3f;
             if (Talents.LightOfDawn != 0)
             {
@@ -224,19 +228,21 @@ namespace Rawr.Healadin
                 calc.WoGCasts = (float)Math.Floor(calc.HolyPowerCasts);
                 calc.LoDCasts = 0;
             }
-            calc.RotationWoG = calc.WoGCasts * wog.CastTime();
+            calc.RotationWoG = calc.WoGCasts * (wog.CastTime() + CalcOpts.Userdelay);
             calc.UsageWoG = calc.WoGCasts * wog.BaseMana;
             calc.HealedWoG = calc.WoGCasts * wog.AverageHealed();
-            calc.RotationLoD = calc.LoDCasts * lod.CastTime();
+            calc.RotationLoD = calc.LoDCasts * (lod.CastTime() + CalcOpts.Userdelay);
             calc.UsageLoD = calc.LoDCasts * lod.BaseMana;
             calc.HealedLoD = calc.LoDCasts * lod.AverageHealed() * CalcOpts.LoDTargets;
+            remainingTime -= calc.RotationWoG + calc.RotationLoD;
+            #endregion
 
-            calc.HRCasts = (float)Math.Floor(FightLength / 30f * CalcOpts.HRCasts);
-            calc.RotationHR = calc.HRCasts * hr.CastTime();
+            #region Holy Radiance
+            calc.HRCasts = (float)Math.Floor(FightLength / CalcOpts.HRCasts);
+            calc.RotationHR = calc.HRCasts * (hr.CastTime() + CalcOpts.Userdelay);
             calc.UsageHR = calc.HRCasts * hr.BaseMana;
             calc.HealedHR = calc.HRCasts * hr.AverageHealed() * CalcOpts.HREff;
-            
-            remainingTime -= calc.RotationWoG + calc.RotationLoD + calc.RotationHR;
+            remainingTime -= calc.RotationHR;
             #endregion
 
             #region Melee mana regen
@@ -263,7 +269,7 @@ namespace Rawr.Healadin
             // DL and HL have the same casttime, so lets just figure max number of casts with time remaining
             float IoLprocs = hs.Casts() * Talents.InfusionOfLight * hs.ChanceToCrit();  // Infusion of Light procs - -0.75 sec to next HL or DL casttime per point
             remainingTime += IoLprocs * 0.75f;  // assuming we will be casting at least a few HL or DL, and can cast them when IoL procs, before next HS cast
-            float fill_casts = /*(float)Math.Floor*/(remainingTime / hl.CastTime());
+            float fill_casts = /*(float)Math.Floor*/(remainingTime / (hl.CastTime() + CalcOpts.Userdelay));
             calc.HLCasts = 0; // Holy Light
             calc.DLCasts = 0; // Divine Light
             calc.FoLCasts = 0;
@@ -272,10 +278,10 @@ namespace Rawr.Healadin
             if (remainingMana < mana_fill_hl)       // if you would run out of mana just casting Holy Light
             {     // then figure out how many Holy Lights you can cast
                 // calc.HLCasts = /*(float)Math.Floor*/(remainingMana / hl.BaseMana);
-                float timeleft = calc.HLCasts * hl.CastTime();
+                float timeleft = calc.HLCasts * (hl.CastTime() + + CalcOpts.Userdelay);
                 float MeleeMPS = calc.MeleeProcs / MeleeManaPerProc;
                 calc.HLCasts = ((remainingMana / (hl.MPS() - MeleeMPS) / hl.CastTime()));  // use time to spare to melee for more mana, for more HL casts
-                remainingTime -= calc.HLCasts * hl.CastTime();
+                remainingTime -= calc.HLCasts * (hl.CastTime() + + CalcOpts.Userdelay);
                 float moremeleemana = remainingTime / SwingTime * MeleeManaPerProc;
                 calc.RotationMelee = remainingTime;
                 calc.MeleeProcs += remainingTime / SwingTime;
@@ -295,19 +301,19 @@ namespace Rawr.Healadin
                 remainingMana -= calc.DLCasts * dl.BaseMana;
                 remainingMana -= fill_casts * dl.BaseMana;       // how much mana do we have to spare if we casts all Divine Lights
                 calc.FoLCasts = /*(float)Math.Floor*/((remainingMana / (fol.MPS() - dl.MPS()) / fol.CastTime()));
-                if (calc.FoLCasts > (remainingTime / fol.CastTime()))
-                    calc.FoLCasts = remainingTime / fol.CastTime();
-                remainingTime -= calc.FoLCasts * fol.CastTime();
-                calc.DLCasts += /*(float)Math.Floor*/(remainingTime / dl.CastTime());
+                if (calc.FoLCasts > (remainingTime / (fol.CastTime() + CalcOpts.Userdelay)))
+                    calc.FoLCasts = remainingTime / (fol.CastTime() + CalcOpts.Userdelay);
+                remainingTime -= calc.FoLCasts * (fol.CastTime() + CalcOpts.Userdelay);
+                calc.DLCasts += /*(float)Math.Floor*/(remainingTime / (dl.CastTime() + CalcOpts.Userdelay));
             }
 
-            calc.RotationHL = calc.HLCasts * hl.CastTime();
+            calc.RotationHL = calc.HLCasts * (hl.CastTime() + CalcOpts.Userdelay);
             calc.UsageHL = calc.HLCasts * hl.BaseMana;
             calc.HealedHL = calc.HLCasts * hl.AverageHealed();
-            calc.RotationDL = calc.DLCasts * dl.CastTime();
+            calc.RotationDL = calc.DLCasts * (dl.CastTime() + CalcOpts.Userdelay);
             calc.UsageDL = calc.DLCasts * dl.BaseMana;
             calc.HealedDL = calc.DLCasts * dl.AverageHealed();
-            calc.RotationFoL = calc.FoLCasts * fol.CastTime();
+            calc.RotationFoL = calc.FoLCasts * (fol.CastTime() + CalcOpts.Userdelay);
             calc.UsageFoL = calc.FoLCasts * fol.BaseMana;
             calc.HealedFoL = calc.FoLCasts * fol.AverageHealed();
             if (calc.RotationHL > (IoLprocs * 0.75f))
@@ -316,6 +322,7 @@ namespace Rawr.Healadin
                 calc.RotationDL -= IoLprocs * 0.75f;
             #endregion Filler Casts
 
+            #region Talent heals: Enlightened Judgement, Protector of the Innocent, Illuminated healing, Beacon, Conviction
             // Enlightened Judgement talent heals
             calc.HealedJudge = calc.JudgeCasts * ej.AverageHealed();
             // Protector of the Innocent
@@ -325,22 +332,37 @@ namespace Rawr.Healadin
             calc.UsageTotal = calc.UsageFoL + calc.UsageDL + calc.UsageHL + calc.UsageLoD + calc.UsageWoG +
                                  calc.UsageHS + calc.UsageHR + calc.UsageJudge + calc.UsageBoL + calc.UsageCleanse;
             calc.RotationTotal = calc.RotationFoL + calc.RotationDL + calc.RotationHL + calc.RotationLoD + calc.RotationWoG + calc.RotationHS +
-                                 calc.RotationHR + calc.RotationJudge + calc.RotationBoL + calc.RotationLoH + calc.RotationCleanse + calc.RotationMelee;
+                                 calc.RotationHR + calc.RotationJudge + calc.RotationBoL + calc.RotationLoH + calc.RotationCleanse + calc.RotationMelee
+                                 + RotationDP;  
 
+            // Illumnated Healing
             calc.HealedIH = calc.HealedFoL + calc.HealedHL + calc.HealedHS + calc.HealedWoG + calc.HealedLoD + calc.HealedDL;
             calc.TotalHealed = calc.HealedIH + calc.HealedPotI + calc.HealedJudge;
             // BoL doesn't use LoH, but Illuminated healing does - so add LoH to IH and do final IH calcs
             calc.HealedIH += calc.HealedLoH;
             calc.HealedIH *= CalcOpts.IHEff * (0.12f + ((8 + Stats.MasteryRating / 179.28f) * 0.015f));                   
-                        
-            calc.HealedBoL =  bol.HealingDone(calc.TotalHealed);
             
+            // Beacon of Light
+            calc.HealedBoL =  bol.HealingDone(calc.TotalHealed);
+
+            /*
+            float ConvictionUptime;
+            float CastsPerSec = calc.PotICasts / ActiveTime;
+            // Average crit chance is for all spells.  Start with spellcrit, then add extra for each spell.
+            float AverageCritChance = Stats.SpellCrit +
+                  (hs.Casts() / calc.PotICasts * (hs.ChanceToCrit() - Stats.SpellCrit)) +
+                  (calc.HLCasts / calc.PotICasts * (hl.ChanceToCrit() - Stats.SpellCrit));
+            float ChancePerCastToDrop = (float) Math.Pow((1 - AverageCritChance),(CastsPerSec * 15)) ;
+            float FullStackTime =          // average time we keep 3 stacks once we have it
+                  ChancePerCastToDrop;
+            float AverageStackBuildTime; // average time to build from 0 to 3 stacks
+            */
+            #endregion
+
             // adding Holy Radiance and LoH after BoL calculation, as they do not count towards BoL heals
             calc.TotalHealed += calc.HealedHR + calc.HealedLoH + calc.HealedIH + calc.HealedBoL; 
 
             calc.HealedOther = Stats.Healed;
-            if (calc.HealedOther > 100000)
-                calc.HealedOther = 100000; // calling BS til this is fixed
             calc.HealedOther += calc.TotalHealed * Stats.ShieldFromHealedProc;
 
             calc.TotalHealed += calc.HealedOther;

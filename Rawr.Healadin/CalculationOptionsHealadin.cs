@@ -26,22 +26,23 @@ namespace Rawr.Healadin
             cleanse = 10f;
             melee = 0.25f;
             boLUp = 1f;
-            holyShock = .8f;
+            holyShock = 7.5f;
             holyPoints = 0.75f;
             lodtargets = 0.6f;
-            judgementcasts = 0.8f;
-            hrCasts = 0.5f;
+            judgementcasts = 10f;
+            hrCasts = 60f;
             hrEff = 0.4f;
             ihEff = 0.4f;
             burstScale = .25f;
-            gHL_Targets = 1f;  // removing button for this
-            infusionOfLight = true; // removing button for this
-            ioLHolyLight = .9f;
-            jotP = true; // removing button for this
             judgement = true;
-            loHSelf = false;  // removing button for this
             hitIrrelevant = true;
             meleevsHL = false;
+            userdelay = 0.1f;
+         //   gHL_Targets = 1f;  // removing button for this
+         //   infusionOfLight = true; // removing button for this
+         //   ioLHolyLight = .9f;
+         //   jotP = true; // removing button for this
+         //   loHSelf = false;  // removing button for this
         }
 
         private float length;
@@ -97,15 +98,11 @@ namespace Rawr.Healadin
         public float HolyShock
         {
             get { return holyShock; }
-            set { holyShock = value; OnPropertyChanged("HolyShock"); OnPropertyChanged("HolyShockText"); }
+            set { holyShock = value; OnPropertyChanged("HolyShock"); /* OnPropertyChanged("HolyShockText"); */ }
         }
 
-        public string HolyShockText
-        {
-            get { return string.Format("Cast HS every {0} seconds", (6f / HolyShock).ToString("N01")); }
-        }
 
-        private float holyPoints;
+        private float holyPoints; // this tracks how they spend holy points, WoG vs LoD
         public float HolyPoints
         {
             get { return holyPoints; }
@@ -128,13 +125,9 @@ namespace Rawr.Healadin
         public float JudgementCasts
         {
             get { return judgementcasts; }
-            set { judgementcasts = value; OnPropertyChanged("JudgementCasts"); OnPropertyChanged("JudgementCastsText"); }
+            set { judgementcasts = value; OnPropertyChanged("JudgementCasts"); /* OnPropertyChanged("JudgementCastsText"); */ }
         }
 
-        public string JudgementCastsText
-        {
-            get { return string.Format("Cast Judgement every {0} seconds", (8f / JudgementCasts).ToString("N01")); }
-        }
 
         private float hrEff;
         public float HREff
@@ -147,7 +140,7 @@ namespace Rawr.Healadin
         public float HRCasts
         {
             get { return hrCasts; }
-            set { hrCasts = value; OnPropertyChanged("HRCasts"); OnPropertyChanged("HRCastsText"); }
+            set { hrCasts = value; OnPropertyChanged("HRCasts"); /* OnPropertyChanged("HRCastsText"); */ }
         }
 
         public string HRCastsText
@@ -178,14 +171,53 @@ namespace Rawr.Healadin
             get { return string.Format("{0:P0} Burst, {1:P0} Fight", BurstScale, 1f - BurstScale).Replace(" %", "%"); }
         }
 
-        private float gHL_Targets;
-        public float GHL_Targets
+        private float userdelay;
+        public float Userdelay
         {
-            get { return gHL_Targets; }
-            set { gHL_Targets = value; OnPropertyChanged("GHL_Targets"); }
+            get { return userdelay; }
+            set { userdelay = value; OnPropertyChanged("Userdelay"); }
         }
 
-        private bool infusionOfLight;
+
+        private bool judgement;
+        public bool Judgement
+        {
+            get { return judgement; }
+            set { judgement = value; OnPropertyChanged("Judgement"); }
+        }
+
+
+        private bool hitIrrelevant;
+        public bool HitIrrelevant
+        {
+            get { return hitIrrelevant; }
+            set { hitIrrelevant = value; OnPropertyChanged("HitIrrelevant"); }
+        }
+
+        private bool meleevsHL;
+        public bool MeleevsHL
+        {
+            get { return meleevsHL; }
+            set { meleevsHL = value; OnPropertyChanged("MeleevsHL"); }
+        }
+
+        /* stuff I want to delete, putting in comment block in case I still need it
+         * Molotok 5/27/11
+         * 
+         *  
+        private bool jotP;
+        public bool JotP
+        {
+            get { return jotP; }
+            set { jotP = value; OnPropertyChanged("JotP"); }
+        }
+        private bool loHSelf;
+        public bool LoHSelf
+        {
+            get { return loHSelf; }
+            set { loHSelf = value; OnPropertyChanged("LoHSelf"); }
+        }
+                private bool infusionOfLight;
         public bool InfusionOfLight
         {
             get { return infusionOfLight; }
@@ -202,41 +234,28 @@ namespace Rawr.Healadin
                 OnPropertyChanged("IoLHolyLightText");
             }
         }
-
-        private bool jotP;
-        public bool JotP
+        public string JudgementCastsText
         {
-            get { return jotP; }
-            set { jotP = value; OnPropertyChanged("JotP"); }
+            get { return string.Format("Cast Judgement every {0} seconds", (8f / JudgementCasts).ToString("N01")); }
         }
-
-        private bool judgement;
-        public bool Judgement
+        
+        private float gHL_Targets;
+        public float GHL_Targets
         {
-            get { return judgement; }
-            set { judgement = value; OnPropertyChanged("Judgement"); }
+            get { return gHL_Targets; }
+            set { gHL_Targets = value; OnPropertyChanged("GHL_Targets"); }
         }
-
-        private bool loHSelf;
-        public bool LoHSelf
+        
+        public string HolyShockText
         {
-            get { return loHSelf; }
-            set { loHSelf = value; OnPropertyChanged("LoHSelf"); }
+            get { return string.Format("Cast HS every {0} seconds", (6f / HolyShock).ToString("N01")); }
         }
+         * 
+         * 
+         * 
+         * 
+         */
 
-        private bool hitIrrelevant;
-        public bool HitIrrelevant
-        {
-            get { return hitIrrelevant; }
-            set { hitIrrelevant = value; OnPropertyChanged("HitIrrelevant"); }
-        }
-
-        private bool meleevsHL;
-        public bool MeleevsHL
-        {
-            get { return meleevsHL; }
-            set { meleevsHL = value; OnPropertyChanged("MeleevsHL"); }
-        }
 
         #region INotifyPropertyChanged Members
         public event PropertyChangedEventHandler PropertyChanged;

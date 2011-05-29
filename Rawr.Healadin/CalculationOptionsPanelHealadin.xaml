@@ -67,10 +67,7 @@
                 <Button Margin="2 2 2 10" x:Name="btnResetActivity" Grid.Row="3" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset the activity to 85%." Click="btnResetActivity_Click" />
                 <TextBlock Margin="2 2 2 10" Grid.Row="3" Grid.Column="1" Text="{Binding Mode=OneWay, Path=Activity, StringFormat='\{0:P0\}', ConverterCulture=en-ZA}" />
                 
-                <TextBlock Grid.Row="4" Grid.Column="0" Margin="2" Text="Holy Shock: *" ToolTipService.ToolTip="With a 6 second cooldown, you can cast Holy Shock up to 10 times per minute.  How often do you cast Holy Shock as a percentage of that?" />
-                <Slider Margin="2" Grid.Row="4" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=HolyShock}" />
-                <Button Margin="2 2 2 10" x:Name="btnResetHolyShock" Grid.Row="5" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset holy shock usage to 80%. (cast every 7.5 seconds)" Click="btnResetHolyShock_Click" />
-                <TextBlock Margin="2 2 2 10" Grid.Row="5" Grid.Column="1" Text="{Binding Mode=OneWay, Path=HolyShockText}" />
+        
 
                 <TextBlock Grid.Row="6" Grid.Column="0" Margin="2" Text="Holy Points: *" ToolTipService.ToolTip="Spend Holy Points on LoD or WoG?.  Use this slider to indicate how often you cast LoD as a percentage." />
                 <Slider Margin="2" Grid.Row="6" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=HolyPoints}" />
@@ -82,11 +79,6 @@
                 <Button Margin="2 2 2 10" x:Name="btnResetLoDTargets" Grid.Row="9" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset LoD targets to 60% of max targets." Click="btnResetLoDTargets_Click" />
                 <TextBlock Margin="2 2 2 10" Grid.Row="9" Grid.Column="1" Text="{Binding Mode=OneWay, Path=LoDTargets, StringFormat='\{0:P0\}', ConverterCulture=en-ZA}" />
 
-                <TextBlock Grid.Row="11" Grid.Column="0" Margin="2" Text="Judgements: *" ToolTipService.ToolTip="With an 8 sec cooldown, you can cast Judgement up to 7.5 times per minute.  How often do you cast Judgement as a percentage of that?  \n14% min so that Judgement of the Pure is maintained(1 judgement cast per minute)" />
-                <Slider Margin="2" Grid.Row="11" Grid.Column="1" Minimum="0.14" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=JudgementCasts}" IsEnabled="{Binding Mode=TwoWay, Path=InfusionOfLight}" />
-                <Button Margin="2 2 2 10" x:Name="btnResetJudgementCasts" Grid.Row="12" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset Judgement casts to 80% (Cast every 10 seconds)" Click="btnResetJudgementCasts_Click" />
-                <TextBlock Margin="2 2 2 10" Grid.Row="12" Grid.Column="1" Text="{Binding Mode=OneWay, Path=JudgementCastsText}" />
-                
                 <TextBlock Grid.Row="13" Grid.Column="0" Margin="2" Text="Replenishment: *" ToolTipService.ToolTip="The percent of time you expect Replenishment to be active on you." />
                 <Slider Margin="2" Grid.Row="13" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=Replenishment}" />
                 <Button Margin="2 2 2 10" x:Name="btnResetReplenishment" Grid.Row="14" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset Replenishment Uptime to 90%." Click="btnResetReplenishment_Click" />
@@ -96,11 +88,6 @@
                 <Slider Margin="2" Grid.Row="15" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=BoLUp}" />
                 <Button Margin="2 2 2 10" x:Name="btnResetBoLUp" Grid.Row="16" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset Beacon of Light Uptime to 100%." Click="btnResetBoLUp_Click" />
                 <TextBlock Margin="2 2 2 10" Grid.Row="16" Grid.Column="1" Text="{Binding Mode=OneWay, Path=BoLUp, StringFormat='\{0:P0\}', ConverterCulture=en-ZA}" />
-
-                <TextBlock Grid.Row="17" Grid.Column="0" Margin="2" Text="Holy Radiance casts: *" ToolTipService.ToolTip="How often do we cast Holy Radiance? Maximum is once per 30 secs" />
-                <Slider Margin="2" Grid.Row="17" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=HRCasts}" />
-                <Button Margin="2 2 2 10" x:Name="btnResetHRCasts" Grid.Row="18" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset HR usage to 50% (cast every 60 seconds)" Click="btnResetHRCasts_Click" />
-                <TextBlock Margin="2 2 2 10" Grid.Row="18" Grid.Column="1" Text="{Binding Mode=OneWay, Path=HRCastsText}" />
 
                 <TextBlock Grid.Row="19" Grid.Column="0" Margin="2" Text="HR efficiency: *" ToolTipService.ToolTip="Holy Radiance efficiency depends on tight raid stacking.  What % of the max heals actually happens?" />
                 <Slider Margin="2" Grid.Row="19" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=HREff}" />
@@ -122,7 +109,8 @@
         <StackPanel Grid.Row="1">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1.6*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
@@ -131,12 +119,25 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="1" Grid.Column="1" Margin="2" Text="Divine Plea: *" ToolTipService.ToolTip="The time in minutes between usage of Divine Plea." />
-                <inputToolkit:NumericUpDown Margin="2" Grid.Row="1" Grid.Column="2" Value="{Binding Mode=TwoWay, Path=DivinePlea}" Maximum="30" Minimum="2" DecimalPlaces="1" Increment="0.1"/>
-                <TextBlock Grid.Row="2" Grid.Column="1" Margin="2" Text="Cleanse casts: *" ToolTipService.ToolTip="Total number of Cleanse casts during the fight" />
-                <inputToolkit:NumericUpDown Margin="2" Grid.Row="2" Grid.Column="2" Value="{Binding Mode=TwoWay, Path=Cleanse}" Maximum="100" Minimum="0" DecimalPlaces="0" Increment="1"/>               
-                <CheckBox Margin="2" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Content="Ignore Hit Items *" IsChecked="{Binding Mode=TwoWay, Path=HitIrrelevant}" ToolTipService.ToolTip="Check to ignore most items with Hit Rating in the comparison chart." />
+                <TextBlock Grid.Row="1" Grid.Column="0" Margin="2" Text="Holy Shock: *" ToolTipService.ToolTip="The time in seconds between casting of Holy Shock." />
+                <inputToolkit:NumericUpDown Margin="2" Grid.Row="1" Grid.Column="1" Value="{Binding Mode=TwoWay, Path=HolyShock}" Maximum="30" Minimum="6" DecimalPlaces="1" Increment="0.5"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" Margin="2" Text="Judgement: *" ToolTipService.ToolTip="The time in seconds between casting of Judgement." />
+                <inputToolkit:NumericUpDown Margin="2" Grid.Row="2" Grid.Column="1" Value="{Binding Mode=TwoWay, Path=JudgementCasts}" Maximum="60" Minimum="8" DecimalPlaces="1" Increment="0.5"/>
+                <TextBlock Grid.Row="3" Grid.Column="0" Margin="2" Text="HR: *" ToolTipService.ToolTip="The time in seconds between casting of Holy Radiance." />
+                <inputToolkit:NumericUpDown Margin="2" Grid.Row="3" Grid.Column="1" Value="{Binding Mode=TwoWay, Path=HRCasts}" Maximum="120" Minimum="30" DecimalPlaces="0" Increment="10"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="2" Margin="2" Text="Divine Plea: *" ToolTipService.ToolTip="The time in minutes between usage of Divine Plea." />
+                <inputToolkit:NumericUpDown Margin="2" Grid.Row="1" Grid.Column="3" Value="{Binding Mode=TwoWay, Path=DivinePlea}" Maximum="30" Minimum="2" DecimalPlaces="1" Increment="0.1"/>
+                <TextBlock Grid.Row="2" Grid.Column="2" Margin="2" Text="Cleanse casts: *" ToolTipService.ToolTip="Total number of Cleanse casts during the fight" />
+                <inputToolkit:NumericUpDown Margin="2" Grid.Row="2" Grid.Column="3" Value="{Binding Mode=TwoWay, Path=Cleanse}" Maximum="100" Minimum="0" DecimalPlaces="0" Increment="1"/>
+                <TextBlock Grid.Row="3" Grid.Column="2" Margin="2" Text="User delay: *" ToolTipService.ToolTip="Average lag + user delay per cast.  On main Stats tab total cast times include this." />
+                <inputToolkit:NumericUpDown Margin="2" Grid.Row="3" Grid.Column="3" Value="{Binding Mode=TwoWay, Path=Userdelay}" Maximum="1" Minimum="0" DecimalPlaces="2" Increment="0.05"/>
+                <CheckBox Margin="2" Grid.Column="2" Grid.Row="4" Grid.ColumnSpan="3" Content="Ignore Hit Items *" IsChecked="{Binding Mode=TwoWay, Path=HitIrrelevant}" ToolTipService.ToolTip="Check to ignore most items with Hit Rating in the comparison chart." />
+                <Button Margin="2 2 2 10" x:Name="btnResetAll" Grid.Row="4" Grid.Column="0" Content="Reset All" ToolTipService.ToolTip="Click to reset everything to default values." Click="btnResetAll_Click" />
             </Grid>
         </StackPanel>
     </Grid>

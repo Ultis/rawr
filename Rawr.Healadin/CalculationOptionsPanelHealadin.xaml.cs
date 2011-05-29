@@ -84,7 +84,7 @@ namespace Rawr.Healadin
         }
 
         private void btnResetHolyShock_Click(object sender, RoutedEventArgs e) {
-            calcOpts.HolyShock = .8f;
+            calcOpts.HolyShock = 7.5f;
         }
 
         private void btnResetHolyPoints_Click(object sender, RoutedEventArgs e)
@@ -99,7 +99,7 @@ namespace Rawr.Healadin
 
         private void btnResetJudgementCasts_Click(object sender, RoutedEventArgs e)
         {
-            calcOpts.JudgementCasts = .8f;
+            calcOpts.JudgementCasts = 10f;
         }
 
         private void btnResetReplenishment_Click(object sender, RoutedEventArgs e) {
@@ -112,7 +112,7 @@ namespace Rawr.Healadin
 
         private void btnResetHRCasts_Click(object sender, RoutedEventArgs e)
         {
-            calcOpts.HRCasts = .5f;
+            calcOpts.HRCasts = 60f;
         }
 
         private void btnResetHREff_Click(object sender, RoutedEventArgs e)
@@ -128,6 +128,23 @@ namespace Rawr.Healadin
         private void btnResetMelee_Click(object sender, RoutedEventArgs e)
         {
             calcOpts.Melee = .25f;
+        }
+
+        private void btnResetAll_Click(object sender, RoutedEventArgs e)
+        {
+            calcOpts.BurstScale = .25f;
+            calcOpts.Activity = .85f;
+            calcOpts.HolyShock = 7.5f;
+            calcOpts.HolyPoints = .75f;
+            calcOpts.LoDTargets = .6f;
+            calcOpts.JudgementCasts = 10f;
+            calcOpts.Replenishment = .9f;
+            calcOpts.BoLUp = 1f;
+            calcOpts.Melee = .25f;
+            calcOpts.IHEff = .4f;
+            calcOpts.HREff = .4f;
+            calcOpts.HRCasts = 60f;
+            calcOpts.Userdelay = 0.1f;
         }
     }
 }

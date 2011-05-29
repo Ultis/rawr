@@ -4,24 +4,28 @@ using System.Text;
 
 /* Molotok's notes on stuff implemented for 4.1
  * 
+ * Done this patch:
+ * added "User delay" to options tab to account for average lag + user delay for each cast
+ * accounted for Divine Plea cast time
+ * adjusted options panel to make things more clear and compact
+ * 
+ * 
  *Left to do:
  *  Last Word(0-2) - 30% extra WoG crit per point, when target below 35% health
  *  Divine Favor(0-1) - increase haste/crit 20% for 20 secs.  3 min CD
  *  Daybreak(0-2) - FoL, DL, HL have 10% chance per point to make next HS not trigger its 6 sec CD.
- *  Conviction(0-3) - 1% heal bonus per point, for 15 secs after a crit from non-periodic spell.  (or weapon swing)
+ *  Conviction(0-3) - 1% heal bonus per point, for 15 secs after a crit from non-periodic spell.  (or weapon swing) stacks 3 times
  *  Tower of Radiance(0-3) - healing beacon target with FoL or DL has 33% chance per point of giving a Holy Power
- *  Blessed Life(0-2) - 50% chance to gain holy power when taking direct damage.  8 sec CD.
- *  Crusade (0-3) - 2nd part - after killing something, next HL heals for 100% extra per point, for 15 sec.
  *  Glyph of Divine Favor
  *  Avenging Wrath
  *  Guardian of Ancient Kings
- *  T11 set bonuses
+ *  T11 4 piece set bonus
  *  T12 set bonuses
- *  Divine Plea: causes 50% heals.  Also, does it take a GCD? (yes)  if so account for it.
+ *  Divine Plea: causes 50% heals.
  *  Haste talents - additive or multiplicative?  Assume mult for now. (Judgement of the Pure, Speed of Light)
  
  * 
- *Done with assumptions (which can't be changed in the options tab):
+ *Done, with assumptions (which can't be changed in the options tab):
  *  Speed of Light - assumes 3 points for Holy Radiance CD reduction.
  *  Assumes you are holy spec, so you get:
  *   - Illuminated Healing (shield on heals, Mastery ability)
@@ -32,6 +36,8 @@ using System.Text;
  *  
  * 
  *Not done, but no current plans to do:
+ *  Crusade (0-3) - 2nd part - after killing something, next HL heals for 100% extra per point, for 15 sec.
+ *  Blessed Life(0-2) - 50% chance to gain holy power when taking direct damage.  8 sec CD.
  *  figure hit into melee / Judgement mana regen - leaning towards not bothering to do this... *  
  *  Enlightened Judgements(0-2) - 1st part - gives +50% spirit to hit per point 
  * 
@@ -351,7 +357,7 @@ namespace Rawr.Healadin
 
         public float Casts()
         {
-            return Rotation.ActiveTime * Rotation.CalcOpts.HolyShock / Cooldown();
+            return Rotation.ActiveTime / Rotation.CalcOpts.HolyShock;
         }
 
         public float Time()
@@ -610,7 +616,7 @@ namespace Rawr.Healadin
         public JudgementsOfThePure(Rotation rotation, float JudgementCasts)
             : base(rotation)
         {
-            Duration = 60f / 7.5f / JudgementCasts;
+            Duration = JudgementCasts;
             Uptime = Rotation.CalcOpts.Activity * Rotation.FightLength;
             BaseCost = HealadinConstants.basemana * 0.05f;
         }

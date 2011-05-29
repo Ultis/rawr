@@ -15,78 +15,32 @@ namespace Rawr.Healadin
                 int[] brilliant = { 52084, 52207, 52207, 52257 };   // Intellect
 
                 // Purple
-                int[] purified = { 52100, 52236, 52236, 52236 };       // Intellect + Spirit
+                int[] purified = { 52100, 52236, 52236, 52236 };    // Intellect + Spirit
 
                 // Blue
                 int[] lustrous = { 52087, 52244, 52244, 52262 };    // Spirit
 
                 // Green
-                int[] dazzling = { 39984, 40094, 40175, 40175 };    // Intellect + MP5
-                int[] energized = { 39989, 40105, 40179, 40179 };   // Haste + MP5
-                int[] sundered = { 39985, 40096, 40176, 40176 };    // 
 
                 // Yellow
-                int[] quick = { 52093, 52232, 52232, 52268 };       // Haste
-                int[] smooth = { 39914, 40013, 40124, 42149 };      // Crit
 
                 // Orange
-                int[] luminous = { 39946, 40047, 40151, 40151 };    // Spell Power + Intellect
-                int[] potent = { 39956, 40048, 40152, 40152 };      // Spell Power + Crit
                 int[] reckless = { 39959, 52208, 52208, 52208 };    // Intellect + Haste
 
                 // Prismatic
-                int[] allStats = { 42701, 42702, 49110, 49110 };    // All Stats
 
                 // Meta
                 int insightful = 41401;
                 int revitalizing = 52297;
                 int ember = 52296;
-
-/*              // Commenting out in 4.1 to update to Cata gems
-                // Relevant Gem IDs for Healadin
-                // Red
-                int[] runed = { 39911, 39998, 40113, 42144 };       // Spell Power
-
-                // Purple
-                int[] royal = { 39943, 40027, 40134, 40134 };       // Spell Power + MP5
-
-                // Blue
-                int[] lustrous = { 39927, 40010, 40121, 42146 };    // MP5
-
-                // Green
-                int[] dazzling = { 39984, 40094, 40175, 40175 };    // Intellect + MP5
-                int[] energized = { 39989, 40105, 40179, 40179 };   // Haste + MP5
-                int[] sundered = { 39985, 40096, 40176, 40176 };    // Crit + MP5
-
-                // Yellow
-                int[] brilliant = { 39912, 40012, 40123, 42148 };   // Intellect
-                int[] quick = { 39918, 40017, 40128, 42150 };       // Haste
-                int[] smooth = { 39914, 40013, 40124, 42149 };      // Crit
-
-                // Orange
-                int[] luminous = { 39946, 40047, 40151, 40151 };    // Spell Power + Intellect
-                int[] potent = { 39956, 40048, 40152, 40152 };      // Spell Power + Crit
-                int[] reckless = { 39959, 40051, 40155, 40155 };    // Spell Power + Haste
-
-                // Prismatic
-                int[] allStats = { 42701, 42702, 49110, 49110 };    // All Stats
-
-                // Meta
-                int insightful = 41401;
-                int revitalizing = 41376;
-*/
+            
                 string[] qualityGroupNames = new string[] { "Uncommon", "Rare", "Epic", "Jeweler" };
                 string[] typeGroupNames = new string[] { "Intellect" };
 
                 int[] metaTemplates = new int[] { insightful, revitalizing, ember };
 
                 //    Red           Yellow      Blue        Prismatic
- /*               int[,][] SpiritTemplates = new int[,][]
-                { // Spirit
-                    { lustrous,     lustrous,   lustrous,   lustrous },
-                    { royal,        dazzling,   lustrous,   lustrous },
-                };
- */
+ 
                 int[,][] intellectTemplates = new int[,][]
                 { // Intellect
                     { brilliant,    brilliant,  brilliant,  brilliant },
@@ -95,18 +49,6 @@ namespace Rawr.Healadin
                     { brilliant,    reckless,   purified,   brilliant },
                 };
 
-  /*              int[,][] hasteTemplates = new int[,][]
-                { // Haste
-                    { quick,        quick,      quick,      quick },
-                    { reckless,     quick,      energized,  quick },
-                };
-
-               int[,][] critTemplates = new int[,][]
-                { // Crit
-                    { smooth,       smooth,     smooth,     smooth },
-                    { potent,       smooth,     sundered,   smooth },
-                };
-  */
                 int[][,][] gemmingTemplates = new int[][,][] { intellectTemplates };
 
                 // Generate List of Gemming Templates
