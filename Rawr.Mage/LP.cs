@@ -2781,6 +2781,108 @@ namespace Rawr.Mage
             return true;
         }
 
+        private bool RemoveFixedBasicVariables(double eps, ref int mini, ref int maxj)
+        {
+            for (int i = 0; i < rows; i++)
+            {
+                int col = B[i];
+                if (d[i] < lb[col] - Math.Abs(lb[col]) * epsPrimalRel - eps || d[i] > ub[col] + Math.Abs(ub[col]) * epsPrimalRel + eps)
+                {
+                    if ((flags[col] & flagFix) != 0)
+                    {
+                        ComputeDualPivotRowRaw(i);
+
+                        double maxv = eps;
+                        int maxc = -1;
+
+                        for (int j = 0; j < cols; j++)
+                        {
+                            col = V[j];
+                            if ((flags[col] & flagFix) != 0) continue;
+
+                            double v = Math.Abs(wd[j]);
+                            if (v > maxv)
+                            {
+                                maxv = v;
+                                maxc = j;
+                            }
+                        }
+
+                        if (maxc != -1)
+                        {
+                            mini = i;
+                            maxj = maxc;
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool ComputeDualPivotRowRaw(int mini)
+        {
+            lu.BSolveUnit(x, mini);
+
+#if SILVERLIGHT
+            double eps = phaseI ? epsDualI : epsDual;
+            for (int j = 0; j < cols; j++)
+            {
+                int col = V[j];
+                if ((flags[col] & flagFix) != 0) continue;
+                if (col < cols)
+                {
+                    wd[j] = 0;
+                    int sCol1 = sparseCol[col];
+                    int sCol2 = sparseCol[col + 1];
+                    for (int i = sCol1; i < sCol2; i++)
+                    {
+                        wd[j] += sparseValue[i] * x[sparseRow[i]];
+                    }
+                    for (int k = 0; k < numExtraConstraints; k++)
+                    {
+                        wd[j] += pD[k][col] * x[baseRows + k];
+                    }
+                }
+                else
+                {
+                    wd[j] = x[col - cols];
+                }
+            }
+#else
+            double* cj = c;
+            double* wdj = wd;
+            int* Vj = V;
+            for (int j = 0; j < cols; j++, cj++, wdj++, Vj++)
+            {
+                int col = *Vj;
+                if ((flags[col] & flagFix) != 0) continue;
+                if (col < cols)
+                {
+                    *wdj = 0;
+                    int sCol1 = sparseCol[col];
+                    int sCol2 = sparseCol[col + 1];
+                    int* sRow = sparseRow + sCol1;
+                    int* sRow2 = sparseRow + sCol2;
+                    double* sValue = sparseValue + sCol1;
+                    for (; sRow < sRow2; sRow++, sValue++)
+                    {
+                        *wdj += *sValue * x[*sRow];
+                    }
+                    for (int k = 0; k < numExtraConstraints; k++)
+                    {
+                        *wdj += pD[k][col] * x[baseRows + k];
+                    }
+                }
+                else
+                {
+                    *wdj = x[col - cols];
+                }
+            }
+#endif
+            return true;
+        }
+
         private void SelectDualIncoming(bool phaseI, int outgoing, out int minj, out double minr)
         {
             double minrr = double.PositiveInfinity;
@@ -3914,10 +4016,21 @@ namespace Rawr.Mage
 
             MINISTEP:
                 double direction;
-            int maxj = SelectPrimalIncoming(out direction, (prepareForDual) ? epsDualI : epsDual);
+                int maxj = SelectPrimalIncoming(out direction, (prepareForDual) ? epsDualI : epsDual);
+                int mini = -1;
+                int bound = 0;
 
                 if (maxj == -1)
                 {
+                    /*if (RemoveFixedBasicVariables(eps, ref mini, ref maxj))
+                    {
+                        ComputeBasisStep(maxj);
+                        bound = flagNLB;
+                        redecompose = 0;
+                        feasible = false;
+                        goto UPDATEBASIS;
+                    }*/
+
                     if (feasible && verifyRefactoredOptimality && redecompose < maxRedecompose && verificationAttempts < 5)
                     {
                         redecompose = 0;
@@ -3959,9 +4072,7 @@ namespace Rawr.Mage
                     return ComputeReturnSolution();
                 }
 
-                int mini = -1;
                 double minr = double.PositiveInfinity;
-                int bound = 0;
 
                 ComputeBasisStep(maxj);
 
@@ -4034,6 +4145,7 @@ namespace Rawr.Mage
 
                 // swap base
 
+            //UPDATEBASIS:
                 redecompose--;
                 if (redecompose > 0)
                 {

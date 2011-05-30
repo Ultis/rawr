@@ -4082,7 +4082,7 @@ namespace Rawr.Mage
             {
                 for (int seg = 0; seg < SegmentList.Count; seg++)
                 {
-                    if (segCount[seg] > 0.0 && SegmentList[seg].TimeEnd + effectDuration < CalculationOptions.FightDuration)
+                    if (segCount[seg] > eps && SegmentList[seg].TimeEnd + effectDuration < CalculationOptions.FightDuration)
                     {
                         // extend to resolution
                         int segmin = resolution[seg].MinSegment;
@@ -4816,17 +4816,49 @@ namespace Rawr.Mage
                     if (manaGem[i] < 1.0 - eps)
                     {
                         // either pop gem
-                        SolverLP gem = lp.Clone();
-                        if (gem.Log != null) gem.Log.AppendLine("Pop gem with gem effect at " + i);
-                        for (int index = 0; index < SolutionVariable.Count; index++)
+                        SolverLP gem;
+                        if (segmentMana)
                         {
-                            if (SolutionVariable[index].Type == VariableType.ManaGem && SolutionVariable[index].Segment == i)
+                            // either pop at 0
+                            gem = lp.Clone();
+                            if (gem.Log != null) gem.Log.AppendLine("Pop gem with gem effect at " + i + ".0");
+                            for (int index = 0; index < SolutionVariable.Count; index++)
                             {
-                                gem.SetColumnLowerBound(index, 1.0);
+                                if (SolutionVariable[index].Type == VariableType.ManaGem && SolutionVariable[index].Segment == i && SolutionVariable[index].ManaSegment == 0)
+                                {
+                                    gem.SetColumnLowerBound(index, 1.0);
+                                }
                             }
+                            gem.ForceRecalculation(true);
+                            HeapPush(gem);
+                            // or pop at 1 and no effect in 0
+                            gem = lp.Clone();
+                            if (gem.Log != null) gem.Log.AppendLine("Pop gem with gem effect at " + i + ".1");
+                            for (int index = 0; index < SolutionVariable.Count; index++)
+                            {
+                                if (SolutionVariable[index].Type == VariableType.ManaGem && SolutionVariable[index].Segment == i && SolutionVariable[index].ManaSegment == 1)
+                                {
+                                    gem.SetColumnLowerBound(index, 1.0);
+                                }
+                            }
+                            DisableCooldown(gem, (int)StandardEffect.ManaGemEffect, i, 0, i, 0);
+                            gem.ForceRecalculation(true);
+                            HeapPush(gem);
                         }
-                        gem.ForceRecalculation(true);
-                        HeapPush(gem);
+                        else
+                        {
+                            gem = lp.Clone();
+                            if (gem.Log != null) gem.Log.AppendLine("Pop gem with gem effect at " + i);
+                            for (int index = 0; index < SolutionVariable.Count; index++)
+                            {
+                                if (SolutionVariable[index].Type == VariableType.ManaGem && SolutionVariable[index].Segment == i)
+                                {
+                                    gem.SetColumnLowerBound(index, 1.0);
+                                }
+                            }
+                            gem.ForceRecalculation(true);
+                            HeapPush(gem);
+                        }
                         // or force activation before this segment
                         if (i > 0)
                         {

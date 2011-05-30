@@ -4007,14 +4007,17 @@ namespace Rawr.Mage
                                 first = false;
                             }
                             int segment = CalculationOptions.IncrementalSetSegments[index];
-                            int manaSegment = CalculationOptions.IncrementalSetManaSegment[index];
-                            float mult = segmentCooldowns ? CalculationOptions.GetDamageMultiplier(SegmentList[segment]) : 1.0f;
-                            double mps = wand.ManaPerSecond;
-                            double dps = wand.DamagePerSecond * mult;
-                            double tps = wand.ThreatPerSecond;
-                            if (mult > 0)
+                            if (CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], BaseState))
                             {
-                                SetWandColumn(wand, mps, segment, manaSegment, dps, tps);
+                                int manaSegment = CalculationOptions.IncrementalSetManaSegment[index];
+                                float mult = segmentCooldowns ? CalculationOptions.GetDamageMultiplier(SegmentList[segment]) : 1.0f;
+                                double mps = wand.ManaPerSecond;
+                                double dps = wand.DamagePerSecond * mult;
+                                double tps = wand.ThreatPerSecond;
+                                if (mult > 0)
+                                {
+                                    SetWandColumn(wand, mps, segment, manaSegment, dps, tps);
+                                }
                             }
                         }
                     }
@@ -4031,14 +4034,17 @@ namespace Rawr.Mage
                         double mps = wand.ManaPerSecond;
                         for (int segment = 0; segment < wandSegments; segment++)
                         {
-                            for (int manaSegment = 0; manaSegment < manaSegments; manaSegment++)
+                            if (CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], BaseState))
                             {
-                                float mult = segmentCooldowns ? CalculationOptions.GetDamageMultiplier(SegmentList[segment]) : 1.0f;
-                                double dps = wand.DamagePerSecond * mult;
-                                double tps = wand.ThreatPerSecond;
-                                if (mult > 0)
+                                for (int manaSegment = 0; manaSegment < manaSegments; manaSegment++)
                                 {
-                                    SetWandColumn(wand, mps, segment, manaSegment, dps, tps);
+                                    float mult = segmentCooldowns ? CalculationOptions.GetDamageMultiplier(SegmentList[segment]) : 1.0f;
+                                    double dps = wand.DamagePerSecond * mult;
+                                    double tps = wand.ThreatPerSecond;
+                                    if (mult > 0)
+                                    {
+                                        SetWandColumn(wand, mps, segment, manaSegment, dps, tps);
+                                    }
                                 }
                             }
                         }
@@ -4095,7 +4101,10 @@ namespace Rawr.Mage
                     {
                         int segment = CalculationOptions.IncrementalSetSegments[index];
                         int manaSegment = CalculationOptions.IncrementalSetManaSegment[index];
-                        SetIdleRegenColumn(idleRegenSegments, dps, tps, mps, segment, manaSegment);
+                        if (CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], BaseState))
+                        {
+                            SetIdleRegenColumn(idleRegenSegments, dps, tps, mps, segment, manaSegment);
+                        }
                     }
                 }
             }
@@ -4105,9 +4114,12 @@ namespace Rawr.Mage
                 {
                     for (int segment = 0; segment < idleRegenSegments; segment++)
                     {
-                        for (int manaSegment = 0; manaSegment < manaSegments; manaSegment++)
+                        if (CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], BaseState))
                         {
-                            SetIdleRegenColumn(idleRegenSegments, dps, tps, mps, segment, manaSegment);
+                            for (int manaSegment = 0; manaSegment < manaSegments; manaSegment++)
+                            {
+                                SetIdleRegenColumn(idleRegenSegments, dps, tps, mps, segment, manaSegment);
+                            }
                         }
                     }
                 }
@@ -4609,6 +4621,7 @@ namespace Rawr.Mage
                 for (int seg = 0; seg < SegmentList.Count; seg++)
                 {
                     lp.SetRHSUnsafe(rowSegment + seg, SegmentList[seg].Duration);
+                    //lp.SetLHSUnsafe(rowSegment + seg, SegmentList[seg].Duration); // good idea but it's causing numerical problems for some reason
                 }
             }
             if (restrictManaUse)
