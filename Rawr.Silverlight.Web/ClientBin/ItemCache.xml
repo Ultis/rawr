@@ -61220,7 +61220,7 @@
       <ItemLocation xsi:type="FactionItem">
         <FactionName>Guardians of Hyjal</FactionName>
         <Level>Revered</Level>
-        <Cost>0</Cost>
+        <Cost>759100</Cost>
         <TokenMap />
       </ItemLocation>
     </LocationInfo>
@@ -61313,7 +61313,7 @@
       <ItemLocation xsi:type="FactionItem">
         <FactionName>Guardians of Hyjal</FactionName>
         <Level>Exalted</Level>
-        <Cost>0</Cost>
+        <Cost>530134</Cost>
         <TokenMap />
       </ItemLocation>
     </LocationInfo>
@@ -61345,7 +61345,7 @@
       <ItemLocation xsi:type="FactionItem">
         <FactionName>Guardians of Hyjal</FactionName>
         <Level>Exalted</Level>
-        <Cost>0</Cost>
+        <Cost>624260</Cost>
         <TokenMap />
       </ItemLocation>
     </LocationInfo>
@@ -61377,7 +61377,7 @@
       <ItemLocation xsi:type="FactionItem">
         <FactionName>Guardians of Hyjal</FactionName>
         <Level>Exalted</Level>
-        <Cost>0</Cost>
+        <Cost>804479</Cost>
         <TokenMap />
       </ItemLocation>
     </LocationInfo>
@@ -61387,7 +61387,7 @@
   </Item>
   <Item>
     <ItemLevel>359</ItemLevel>
-    <DisplayId>88356</DisplayId>
+    <DisplayId>78765</DisplayId>
     <DisplaySlot>6</DisplaySlot>
     <IconPath>inv_belt_cloth_raidpriest_i_01</IconPath>
     <Stats>
@@ -61403,17 +61403,17 @@
     <Bind>BoP</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketBonus>
-      <HasteRating>10</HasteRating>
+      <Intellect>10</Intellect>
     </SocketBonus>
     <LocationInfo>
       <ItemLocation xsi:type="FactionItem">
         <FactionName>Guardians of Hyjal</FactionName>
         <Level>Exalted</Level>
-        <Cost>0</Cost>
+        <Cost>357235</Cost>
         <TokenMap />
       </ItemLocation>
     </LocationInfo>
-    <Name>Cord of Raven Queen</Name>
+    <Name>Cord of the Raven Queen</Name>
     <Id>62386</Id>
     <Slot>Waist</Slot>
   </Item>
@@ -83391,11 +83391,9 @@
     <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="FactionItem">
-        <FactionName>Guardians of Hyjal</FactionName>
-        <Level>Revered</Level>
-        <Cost>69647</Cost>
-        <TokenMap />
+      <ItemLocation xsi:type="WorldDrop">
+        <Location>Unknown Zone</Location>
+        <Heroic>false</Heroic>
       </ItemLocation>
     </LocationInfo>
     <Name>Nightrend Choker</Name>
@@ -83572,6 +83570,7 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="WorldDrop">
+        <Location>Unknown Zone</Location>
         <Heroic>false</Heroic>
       </ItemLocation>
     </LocationInfo>
@@ -86591,11 +86590,9 @@
     <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="FactionItem">
-        <FactionName>Guardians of Hyjal</FactionName>
-        <Level>Honored</Level>
-        <Cost>69647</Cost>
-        <TokenMap />
+      <ItemLocation xsi:type="WorldDrop">
+        <Location>Unknown Zone</Location>
+        <Heroic>false</Heroic>
       </ItemLocation>
     </LocationInfo>
     <Name>Thousand Bandage Drape</Name>
@@ -88440,11 +88437,11 @@
     <Bind>BoP</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
+      <ItemLocation xsi:type="FactionItem">
+        <FactionName>Guardians of Hyjal</FactionName>
+        <Level>Friendly</Level>
+        <Cost>10000</Cost>
         <TokenMap />
-        <Cost>0</Cost>
-        <VendorName>Provisioner Whitecloud</VendorName>
-        <VendorArea>Mount Hyjal</VendorArea>
       </ItemLocation>
     </LocationInfo>
     <Name>Tabard of the Guardians of Hyjal</Name>
@@ -90777,6 +90774,9 @@
     <Faction>Neutral</Faction>
     <SocketBonus />
     <LocationInfo>
+      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="UnknownItem" />
       <ItemLocation xsi:type="UnknownItem" />
       <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
