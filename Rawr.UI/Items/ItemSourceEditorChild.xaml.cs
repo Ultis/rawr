@@ -140,7 +140,7 @@ namespace Rawr.UI
                     }
                     case "PvP": {
                         St_PvP.Visibility = Visibility.Visible;
-                        NewSource = new PvpItem() { TokenCount = 0, TokenType = "", Points = 0, PointType = "Honor Points", };
+                        NewSource = new PvpItem() { TokenCount = 1, TokenType = "", Points = 2000, PointType = "Honor", };
                         break;
                     }
                     case "Crafted": {
@@ -401,10 +401,10 @@ namespace Rawr.UI
             isChanging = true;
             //
             NewSource = new PvpItem() {
-                PointType = TB_PvP_Name.Text,
-                Points = (int)TB_PvP_Money_1.Value,
-                TokenType = TB_PvP_Token_1.SelectedItem as String,
-                TokenCount = (int)TB_PvP_Money_2.Value,
+                PointType = TB_PvP_Points.SelectedItem as String,
+                Points = (int)NUD_PvP_Points.Value,
+                TokenType = TB_PvP_Token.Text,
+                TokenCount = (int)NUD_PvP_Token.Value,
             };
             //
             UpdateString();
@@ -417,13 +417,13 @@ namespace Rawr.UI
             //
             PvpItem topop = src as PvpItem;
             // Points Type and Cost
-            if (topop.PointType == null) { topop.PointType = "Unknown PvP"; }
+            if (topop.PointType == null) { topop.PointType = "Honor"; }
             if (topop.TokenType == null) { topop.TokenType = ""; }
-            TB_PvP_Name.Text = topop.PointType;
-            TB_PvP_Money_1.Value = topop.Points;
+            TB_PvP_Points.SelectedItem = topop.PointType;
+            NUD_PvP_Points.Value = topop.Points;
             // Token Map Cost (TODO)
-            TB_PvP_Token_1.SelectedItem = topop.TokenType;
-            TB_PvP_Money_2.Value = topop.TokenCount;
+            TB_PvP_Token.Text = topop.TokenType;
+            NUD_PvP_Token.Value = topop.TokenCount;
             //
             isChanging = false;
             PvP_InfoChanged();

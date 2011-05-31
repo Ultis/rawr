@@ -442,15 +442,19 @@ namespace Rawr
         [XmlIgnore]
         public override string Description {
             get {
-                string points = string.Format("Purchasable for {0} {1} Points", Points, PointType);
-                if (TokenCount > 0) {
-                    if (Points > 0) {
-                        return string.Format("{0} and {1} [{2}]", points, TokenCount, TokenType);
-                    } else {
-                        return string.Format("Purchasable for {1} [{2}]", points, TokenCount, TokenType);
-                    }
+                bool statePoints = !string.IsNullOrEmpty(PointType) && Points > 0;
+                bool stateTokens = !string.IsNullOrEmpty(TokenType) && TokenCount > 0;
+                if (statePoints && stateTokens) {
+                    return string.Format("Purchasable for {0} {1} Points and {2} [{3}]", Points, PointType, TokenCount, TokenType);
+                } else if (statePoints && !stateTokens) {
+                    return string.Format("Purchasable for {0} {1} Points", Points, PointType);
+                } else if (!statePoints && stateTokens) {
+                    return string.Format("Purchasable for {0} [{1}]", TokenCount, TokenType);
                 }
-                return points;
+                else //if (!statePoints && !stateTokens)
+                {
+                    return "Purchasable PvP Item";
+                }
             }
         }
 
