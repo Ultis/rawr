@@ -241,12 +241,21 @@ namespace Rawr
             get {
                 if (_allBuffsByName == null) {
                     _allBuffsByName = new Dictionary<string, Buff>();
-                    foreach (Buff buff in AllBuffs) {
-                        if (!_allBuffsByName.ContainsKey(buff.Name)) {
-                            _allBuffsByName.Add(buff.Name, buff);
-                            foreach (Buff improvement in buff.Improvements) {
-                                if (!_allBuffsByName.ContainsKey(improvement.Name)) {
-                                    _allBuffsByName.Add(improvement.Name, improvement);
+                    //&UT&
+                    // Chance for null
+                    if (AllBuffs != null)
+                    {
+                        foreach (Buff buff in AllBuffs)
+                        {
+                            if (!_allBuffsByName.ContainsKey(buff.Name))
+                            {
+                                _allBuffsByName.Add(buff.Name, buff);
+                                foreach (Buff improvement in buff.Improvements)
+                                {
+                                    if (!_allBuffsByName.ContainsKey(improvement.Name))
+                                    {
+                                        _allBuffsByName.Add(improvement.Name, improvement);
+                                    }
                                 }
                             }
                         }

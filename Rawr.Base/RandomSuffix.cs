@@ -470,7 +470,11 @@ new RandomSuffixDataType() { Id = 236, Suffix = "of the Zephyr", Stat = new int[
 
         public static void AccumulateStats(Stats stats, Item item, int id)
         {
-            if (item.ItemLevel < 277) return;
+            //&UT& 
+            // Should check ID to ensure it's not outside the array.
+            if (item.ItemLevel < 277 
+                || id < 0
+                || id > RandomSuffixData.Length) return;
             for (int i = 0; i < 5; i++)
             {
                 int statId = RandomSuffixData[id].Stat[i];

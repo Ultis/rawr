@@ -124,6 +124,9 @@ namespace Rawr
 
         public static Tinkering FindTinkering(int id, ItemSlot slot, Character character)
         {
+            //&UT&
+            // chance for Null
+            if (null == AllTinkerings) return null;
             return AllTinkerings.Find(new Predicate<Tinkering>(delegate(Tinkering Tinkering) {
                 return (Tinkering.Id == id) && (Tinkering.FitsInSlot(slot, character) ||
                   (Tinkering.Slot == ItemSlot.TwoHand && slot == ItemSlot.OneHand));

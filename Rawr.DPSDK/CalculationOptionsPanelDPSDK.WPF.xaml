@@ -28,26 +28,47 @@ x:Class="Rawr.DPSDK.CalculationOptionsPanelDPSDK"
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="6*"/>
-                    <ColumnDefinition Width="4*"/>
+                    <ColumnDefinition Width="5*"/>
+                    <ColumnDefinition Width="5*"/>
                 </Grid.ColumnDefinitions>
-				<TextBlock Grid.Row="0" Height="auto" Text="Presence:" VerticalAlignment="Stretch" Width="auto"/>
+                <TextBlock Grid.Row="0" Height="auto" Text="Presence:" VerticalAlignment="Stretch" Width="auto"/>
                 <ComboBox Grid.Row="0" Grid.Column="1" Height="Auto" SelectedIndex="{Binding PresenceByIndex, Mode=TwoWay}">
                     <ComboBoxItem Content="None" />
                     <ComboBoxItem Content="Blood" IsSelected="True" />
                     <ComboBoxItem Content="Frost" />
                     <ComboBoxItem Content="Unholy" />
                 </ComboBox>
-				<TextBlock Text="Bad Item Filters" Grid.Row="1" Grid.ColumnSpan="2" Margin="4,2" FontWeight="Bold" />
+                <TextBlock Text="Bad Item Filters" Grid.Row="1" Grid.ColumnSpan="2" Margin="4,2" FontWeight="Bold" />
                 <CheckBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="4,2" Content="Hide Defensive Gear *" ToolTipService.ToolTip="This hides Items, Buffs, Gems, etc. that are irrelevant to DPSDK on a Stats basis. If the object has Casting Related Stats (Mp5, Spell Power, Mana, Spirit, Intellect, Spell penetration) or Defense Related Stats (Defense, Dodge, Parry, Block) or PvP Stats (Resilience) the object will be removed from the lists (unless it has a specific reason not to be, like Powerful Stats still should be shown). Turn this off for normal behavior based solely on Item Type and having any kind of stat relevent to DPSDK." IsChecked="{Binding HideBadItems_Def, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
                 <CheckBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="4,2" Content="Hide PvP Gear *" ToolTipService.ToolTip="This hides Items, Buffs, Gems, etc. that are irrelevant to DPSDK on a Stats basis. If the object has Casting Related Stats (Mp5, Spell Power, Mana, Spirit, Intellect, Spell penetration) or Defense Related Stats (Defense, Dodge, Parry, Block) or PvP Stats (Resilience) the object will be removed from the lists (unless it has a specific reason not to be, like Powerful Stats still should be shown). Turn this off for normal behavior based solely on Item Type and having any kind of stat relevent to DPSDK." IsChecked="{Binding HideBadItems_PvP, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
                 <CheckBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="4,2" Content="Hide Spell Gear *" ToolTipService.ToolTip="This hides Items, Buffs, Gems, etc. that are irrelevant to DPSDK on a Stats basis. If the object has Casting Related Stats (Mp5, Spell Power, Mana, Spirit, Intellect, Spell penetration) or Defense Related Stats (Defense, Dodge, Parry, Block) or PvP Stats (Resilience) the object will be removed from the lists (unless it has a specific reason not to be, like Powerful Stats still should be shown). Turn this off for normal behavior based solely on Item Type and having any kind of stat relevent to DPSDK." IsChecked="{Binding HideBadItems_Spl, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                <!-- Row 5+: Stat Graph -->
+                <TextBlock Text="Stat Graph Options" Grid.Row="5" Grid.ColumnSpan="2" Margin="4,2" FontWeight="Bold" />
+                <CheckBox x:Name="CK_Stats_0" Grid.Row="6" Grid.Column="0" Margin="4,2" Content="Strength" IsChecked="{Binding SG_Str, Mode=TwoWay, UpdateSourceTrigger=Default}" />
+                <CheckBox x:Name="CK_Stats_1" Grid.Row="7" Grid.Column="0" Margin="4,2" Content="Agility" IsChecked="{Binding SG_Agi, Mode=TwoWay, UpdateSourceTrigger=Default}" />
+                <CheckBox x:Name="CK_Stats_2" Grid.Row="8" Grid.Column="0" Margin="4,2" Content="Attack Power" IsChecked="{Binding SG_AP, Mode=TwoWay, UpdateSourceTrigger=Default}" />
+                <CheckBox x:Name="CK_Stats_3" Grid.Row="9" Grid.Column="0" Margin="4,2" Content="Crit Rating" IsChecked="{Binding SG_Crit, Mode=TwoWay, UpdateSourceTrigger=Default}" />
+                <CheckBox x:Name="CK_Stats_4" Grid.Row="6" Grid.Column="1" Margin="4,2" Content="Hit Rating" IsChecked="{Binding SG_Hit, Mode=TwoWay, UpdateSourceTrigger=Default}" />
+                <CheckBox x:Name="CK_Stats_5" Grid.Row="7" Grid.Column="1" Margin="4,2" Content="Expertise Rating" IsChecked="{Binding SG_Exp, Mode=TwoWay, UpdateSourceTrigger=Default}" />
+                <CheckBox x:Name="CK_Stats_6" Grid.Row="8" Grid.Column="1" Margin="4,2" Content="Haste Rating" IsChecked="{Binding SG_Haste, Mode=TwoWay, UpdateSourceTrigger=Default}" />
+                <CheckBox x:Name="CK_Stats_7" Grid.Row="9" Grid.Column="1" Margin="4,2" Content="Mastery Rating" IsChecked="{Binding SG_Mstr, Mode=TwoWay, UpdateSourceTrigger=Default}" />
+                <TextBlock Grid.Row="10" Grid.Column="0" Margin="4,2" Text="Increment:" />
+                <inputToolkit:NumericUpDown Grid.Row="10" Grid.Column="1" Margin="4,2" Height="20" Value="{Binding StatsIncrement, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="5000" />
+                <Button Grid.Row="11" Grid.ColumnSpan="2" Margin="4,2" Content="Display Stat Graph" Click="BT_StatsGraph_Click" />
             </Grid>
         </layoutToolkit:AccordionItem>
         <layoutToolkit:AccordionItem HorizontalContentAlignment="Stretch" >
@@ -62,7 +83,7 @@ x:Class="Rawr.DPSDK.CalculationOptionsPanelDPSDK"
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
-				<TextBlock Grid.Row="5" Grid.ColumnSpan="2" Text="{Binding Mode=OneWay, Path=szRotReport}" TextWrapping="NoWrap" FontFamily="Simplified Arabic Fixed" Margin="0,6,0,0" Tag="Ability Usage" />
+                <TextBlock Grid.Row="5" Grid.ColumnSpan="2" Text="{Binding Mode=OneWay, Path=szRotReport}" TextWrapping="NoWrap" FontFamily="Simplified Arabic Fixed" Margin="0,6,0,0" Tag="Ability Usage" />
             </Grid>
         </layoutToolkit:AccordionItem>
     </layoutToolkit:Accordion>

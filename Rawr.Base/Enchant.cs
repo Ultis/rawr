@@ -126,6 +126,10 @@ namespace Rawr
 
         public static Enchant FindEnchant(int id, ItemSlot slot, Character character)
         {
+            //&UT&
+            // Chance for null
+            if (AllEnchants == null) return null;
+
             return AllEnchants.Find(new Predicate<Enchant>(delegate(Enchant enchant) {
                 return (enchant.Id == id) && (enchant.FitsInSlot(slot, character) ||
                   (enchant.Slot == ItemSlot.TwoHand && slot == ItemSlot.OneHand));
