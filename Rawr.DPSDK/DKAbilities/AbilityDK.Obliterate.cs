@@ -28,7 +28,7 @@ namespace Rawr.DK
         public override void UpdateCombatState(CombatState CS)
         {
             base.UpdateCombatState(CS);
-            this.AbilityCost[(int)DKCostTypes.RunicPower] = -20 + (CState.m_Talents.ChillOfTheGrave > 0 ? -5 : 0);
+            this.AbilityCost[(int)DKCostTypes.RunicPower] = -20 + (CState.m_Talents.ChillOfTheGrave * -5);
             this.wMH = CState.MH;
             this.wOH = CState.OH;
         }
@@ -69,13 +69,13 @@ namespace Rawr.DK
         {
             get
             {
-                float multiplier = (CState.m_uDiseaseCount * .125f) 
-                    + _DamageMultiplierModifer 
-                    + base.DamageMultiplierModifer 
-                    + (CState.m_Talents.GlyphofObliterate ? .20f : 0)
-                    + (CState.m_Talents.Annihilation * 0.15f);
+                float multiplier = 1 + (CState.m_uDiseaseCount * .125f); 
+                multiplier *= 1 + _DamageMultiplierModifer;
+                multiplier *= 1 + base.DamageMultiplierModifer;
+                multiplier *= 1 + (CState.m_Talents.GlyphofObliterate ? .20f : 0);
+                multiplier *= 1 + (CState.m_Talents.Annihilation * 0.15f);
                 multiplier *= (1 + ((CState.m_Talents.MercilessCombat * .06f) * .35f));
-                return multiplier;
+                return multiplier - 1 ;
             }
         }
 

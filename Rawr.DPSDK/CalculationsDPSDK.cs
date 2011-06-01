@@ -530,12 +530,12 @@ namespace Rawr.DPSDK
             if (needsDisplayCalculations)
             {
                 calc.MHWeaponDPS = rot.GetAbilityOfType(DKability.White).DPS;
-                calc.MHWeaponDamage = rot.GetAbilityOfType(DKability.White).TotalDamage;
+                calc.MHWeaponDamage = combatTable.MH.damage;
                 calc.MHAttackSpeed = combatTable.MH.hastedSpeed;
                 if (null != combatTable.OH)
                 {
                     calc.OHWeaponDPS = rot.GetAbilityOfType(DKability.WhiteOH).DPS;
-                    calc.OHWeaponDamage = rot.GetAbilityOfType(DKability.WhiteOH).TotalDamage;
+                    calc.OHWeaponDamage = combatTable.OH.damage;
                     calc.OHAttackSpeed = combatTable.OH.hastedSpeed;
                 }
                 calcOpts.szRotReport = rot.ReportRotation();
@@ -789,6 +789,7 @@ namespace Rawr.DPSDK
             statsTotal.Strength = (float)Math.Floor(statsTotal.Strength * (1 + statsTotal.BonusStrengthMultiplier));
             statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Health += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
+            statsTotal.Health *= 1 + statsTotal.BonusHealthMultiplier;
             statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower + statsTotal.Strength * 2);
             statsTotal.Armor = (float)Math.Floor(StatConversion.ApplyMultiplier(statsTotal.Armor, statsTotal.BaseArmorMultiplier) +
                                 StatConversion.ApplyMultiplier(statsTotal.BonusArmor, statsTotal.BonusArmorMultiplier));
@@ -1638,6 +1639,7 @@ namespace Rawr.DPSDK
                 NatureDamage = stats.NatureDamage,
 
                 // Bonus to stat
+                BonusHealthMultiplier = stats.BonusHealthMultiplier,
                 BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
                 BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
                 BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
@@ -1816,6 +1818,7 @@ namespace Rawr.DPSDK
             bResults |= (stats.NatureDamage) != 0;
 
             // Bonus to stat
+            bResults |= (stats.BonusHealthMultiplier != 0);
             bResults |= (stats.BonusStrengthMultiplier != 0);
             bResults |= ( stats.BonusStaminaMultiplier != 0);
             bResults |= ( stats.BonusAgilityMultiplier != 0);

@@ -719,7 +719,6 @@ namespace Rawr.DK
             // How much RP do we have at this point?
             foreach (AbilityDK_Base ab in ml_Rot)
                 m_RunicPower += ab.RunicPower;
-            m_RunicPower = (int)((float)m_RunicPower);
             if (m_CT.m_CState.m_Stats.RPp5 > 0)
                 m_RunicPower -= (int)((CurRotationDuration / 5) * m_CT.m_CState.m_Stats.RPp5);
 
@@ -993,31 +992,32 @@ namespace Rawr.DK
 
                 // Fill the disease.
                 float MaxRP = 100 + m_CT.m_CState.m_Stats.BonusMaxRunicPower;
-
-                ml_Rot.Add(SS); diseaseGCDs--;
-                ProcessRunningRunes(AvailableResources, SS.AbilityCost);
-                ml_Rot.Add(SS); diseaseGCDs--;
-                ProcessRunningRunes(AvailableResources, SS.AbilityCost);
-                ml_Rot.Add(Fest); diseaseGCDs--;
-                ProcessRunningRunes(AvailableResources, Fest.AbilityCost);
-                ml_Rot.Add(Fest); diseaseGCDs--;
-                ProcessRunningRunes(AvailableResources, Fest.AbilityCost);
-                ml_Rot.Add(SS); diseaseGCDs--;
-                ProcessRunningRunes(AvailableResources, SS.AbilityCost);
-                ml_Rot.Add(SS); diseaseGCDs--;
-                ProcessRunningRunes(AvailableResources, SS.AbilityCost);
-                ml_Rot.Add(SS); diseaseGCDs--;
-                ProcessRunningRunes(AvailableResources, SS.AbilityCost);
-                ml_Rot.Add(SS); diseaseGCDs--;
-                ProcessRunningRunes(AvailableResources, SS.AbilityCost);
-                while (AvailableResources[(int)DKCostTypes.RunicPower] > DC.RunicPower
-                    && diseaseGCDs > 0)
+                for (uint i = 3; i > 0; i--)
                 {
-                    ml_Rot.Add(DC); diseaseGCDs--;
-                    ProcessRunningRunes(AvailableResources, DC.AbilityCost);
+                    ml_Rot.Add(SS); diseaseGCDs--;
+                    ProcessRunningRunes(AvailableResources, SS.AbilityCost);
+                    ml_Rot.Add(SS); diseaseGCDs--;
+                    ProcessRunningRunes(AvailableResources, SS.AbilityCost);
+                    ml_Rot.Add(Fest); diseaseGCDs--;
+                    ProcessRunningRunes(AvailableResources, Fest.AbilityCost);
+                    ml_Rot.Add(Fest); diseaseGCDs--;
+                    ProcessRunningRunes(AvailableResources, Fest.AbilityCost);
+                    ml_Rot.Add(SS); diseaseGCDs--;
+                    ProcessRunningRunes(AvailableResources, SS.AbilityCost);
+                    ml_Rot.Add(SS); diseaseGCDs--;
+                    ProcessRunningRunes(AvailableResources, SS.AbilityCost);
+                    ml_Rot.Add(SS); diseaseGCDs--;
+                    ProcessRunningRunes(AvailableResources, SS.AbilityCost);
+                    ml_Rot.Add(SS); diseaseGCDs--;
+                    ProcessRunningRunes(AvailableResources, SS.AbilityCost);
+                    while (AvailableResources[(int)DKCostTypes.RunicPower] > DC.RunicPower
+                        && diseaseGCDs > 0)
+                    {
+                        ml_Rot.Add(DC); diseaseGCDs--;
+                        ProcessRunningRunes(AvailableResources, DC.AbilityCost);
+                    }
                 }
             }
-
             m_RunicPower = -1 * AvailableResources[(int)DKCostTypes.RunicPower];
             BuildCosts();
         }
