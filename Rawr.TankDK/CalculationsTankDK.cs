@@ -1217,7 +1217,7 @@ Points individually may be important.",
             calcs.Parry = sPaperDoll.Parry;
 
             calcs.BasicStats = sPaperDoll;
-            calcs.SEStats = stats;
+            calcs.SEStats = stats.Clone() as StatsDK;
             // The full character data.
             calcs.TargetLevel = TDK.bo.Level;
 
@@ -1599,7 +1599,8 @@ Points individually may be important.",
 
                 statSE.Armor += statSE.BonusArmor;
                 statSE.Health += StatConversion.GetHealthFromStamina(statSE.Stamina) + statSE.BattlemasterHealthProc;
-                StatConversion.ApplyMultiplier(statSE.Health, statsTotal.BonusHealthMultiplier);
+                statSE.Health = statSE.Health * (1 + statSE.BonusHealthMultiplier);
+                statsTotal.BonusHealthMultiplier = ((1 + statsTotal.BonusHealthMultiplier) * (1 + statSE.BonusHealthMultiplier)) - 1 ;
                 if (character.DeathKnightTalents.BladedArmor > 0)
                 {
                     statSE.AttackPower += (statSE.Armor / 180f) * (float)character.DeathKnightTalents.BladedArmor;
@@ -1652,8 +1653,7 @@ Points individually may be important.",
 
             statsTotal.Armor += statsTotal.BonusArmor;
             statsTotal.Health += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
-
-            StatConversion.ApplyMultiplier(statsTotal.Health, statsTotal.BonusHealthMultiplier);
+            statsTotal.Health = statsTotal.Health * (1 + statsTotal.BonusHealthMultiplier);
 
             // Talent: BladedArmor //////////////////////////////////////////////////////////////
             if (iBladedArmor > 0)
