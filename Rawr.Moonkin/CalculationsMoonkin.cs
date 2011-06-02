@@ -994,7 +994,7 @@ namespace Rawr.Moonkin
             #region Set Bonuses
             int T11Count, T12Count;
             character.SetBonusCount.TryGetValue("Stormrider's Regalia", out T11Count);
-            character.SetBonusCount.TryGetValue("Druid Balance T12", out T12Count);
+            character.SetBonusCount.TryGetValue("Obsidian Arborweave Regalia", out T12Count);
             if (T11Count >= 2) {
                 // 2 pieces: Increases the critical strike chance of your Insect Swarm and Moonfire spells by 5%.
                 statsTotal.BonusCritChanceInsectSwarm = 0.05f;

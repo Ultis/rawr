@@ -2749,25 +2749,25 @@ namespace Rawr
             });
             #endregion
             #endregion
-            #region Tier 12 | Placeholder
+            #region Tier 12 | Obsidian Arborweave
             #region Regalia (Balance)
             defaultBuffs.Add(new Buff()
             {
-                Name = "Druid Balance T12 2 Piece Bonus",
+                Name = "Obsidian Arborweave Regalia 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = new Stats() { },
-                SetName = "Druid Balance T12",
+                SetName = "Obsidian Arborweave Regalia",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Druid Balance T12 4 Piece Bonus",
+                Name = "Obsidian Arborweave Regalia 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = new Stats() { },
-                SetName = "Druid Balance T12",
+                SetName = "Obsidian Arborweave Regalia",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
             });
