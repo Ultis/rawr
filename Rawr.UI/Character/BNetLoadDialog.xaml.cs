@@ -860,6 +860,7 @@ namespace Rawr.UI
 
             _armoryService.ProgressChanged += new EventHandler<EventArgs<string>>(_armoryService_ProgressChanged);
             _armoryService.GetCharacterCompleted += new EventHandler<EventArgs<Character>>(_armoryService_GetCharacterCompleted);
+            _armoryService.GetCharacterErrored += new EventHandler<EventArgs<String>>(_armoryService_GetCharacterErrored);
 
             if (Rawr.Properties.RecentSettings.Default.RecentRegion == null
                 || Rawr.Properties.RecentSettings.Default.RecentRegion == "TW"
@@ -1012,6 +1013,18 @@ namespace Rawr.UI
             ProgressBarStatus.Value = ProgressBarStatus.Maximum;
             Character = e.Value;
             if (!isReload) { this.DialogResult = true; }
+        }
+
+        void _armoryService_GetCharacterErrored(object sender, EventArgs<String> e)
+        {
+            ProgressBarStatus.IsIndeterminate = true;
+            ProgressBarStatus.Value = ProgressBarStatus.Maximum;
+            Character = null;
+            if (isReload) {
+                this.DialogResult = false;
+            } else {
+                BT_CancelProcessing_Click(null, null);
+            }
         }
 
         public void Load(string characterName, CharacterRegion region, string realm)

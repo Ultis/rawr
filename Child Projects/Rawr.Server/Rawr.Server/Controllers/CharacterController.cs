@@ -80,7 +80,10 @@ namespace Rawr.Server.Controllers
                 string html = GetBattleNetHtml(characterName, region, realm);
                 try { 
                     if (html.Contains("It’s a busy day for Battle.net!")) {
-                        Response.Write(string.Format("{0} Battle.Net Server is {1}", region.ToUpper(), "Overloaded"));
+                        Response.Write(string.Format("<Error>The {0} Battle.Net Server is {1}</Error>", region.ToUpper(), "Overloaded"));
+                        return View();
+                    } else if (html.Contains("<div id=\"continue\">")) {
+                        Response.Write(string.Format("<Error>The {0} Battle.Net Server has an advertisement on it. Unfortunately, the server cannot press \"Continue\" to get the data it needs. Until the advertisement is removed, you will have to utilize an alternative means of importing your character.</Error>", region.ToUpper()));
                         return View();
                     /*} else if (html.Contains("Maintenance")) {
                         // TODO: Need a better check for this before implementing. Normal pages do have the word Maintenance on them.
@@ -122,7 +125,7 @@ namespace Rawr.Server.Controllers
                 }
             }
 
-            Response.Write(charXml ?? "<Error>There was an error resulting in null charXml</Error>");
+            Response.Write(charXml ?? string.Format("<Error>There was an error resulting in null charXml. {0} could not be loaded</Error>", characterRegionServer.TrimEnd('!')));
             return View();
         }
 

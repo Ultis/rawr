@@ -103,12 +103,26 @@ namespace Rawr
                         + " allow as many users as possible to claim keys, upgrade accounts and manage subscriptions."
                         + "\r\nAs soon as website load is back to normal they will open these sites again."
                         + "\r\nThank you for your patience!"
-                        + "\r\nThe Rawr team suggests using the Rawr Addon instead to load your character for now.");
+                        + "\r\nThe Rawr team suggests using the Rawr Addon instead to load your character for now.").Show();
+                    Progress = "Error!";
+                    if (this.GetCharacterErrored != null)
+                        this.GetCharacterErrored(this, new EventArgs<String>(e.Result.Replace("<Error>", "").Replace("</Error>", "")));
                     return;
                 } else if (e.Result != null && e.Result.ToLower().Contains("server is down for maintenance")) {
                     new Base.ErrorBox("Problem Getting Character from Battle.Net Armory",
                         "The server is down for Maintenance",
-                        "The Rawr team suggests using the Rawr Addon instead to load your character for now.");
+                        "The Rawr team suggests using the Rawr Addon instead to load your character for now.").Show();
+                    Progress = "Error!";
+                    if (this.GetCharacterErrored != null)
+                        this.GetCharacterErrored(this, new EventArgs<String>(e.Result.Replace("<Error>", "").Replace("</Error>", "")));
+                    return;
+                } else if (e.Result != null && e.Result.ToLower().Contains("<error>")) {
+                    new Base.ErrorBox("Problem Getting Character from Battle.Net Armory",
+                        e.Result.Replace("<Error>", "").Replace("</Error>", ""),
+                        "The Rawr team suggests using the Rawr Addon instead to load your character for now.").Show();
+                    Progress = "Error!";
+                    if (this.GetCharacterErrored != null)
+                        this.GetCharacterErrored(this, new EventArgs<String>(e.Result.Replace("<Error>", "").Replace("</Error>", "")));
                     return;
                 }
                 #endregion
@@ -121,7 +135,10 @@ namespace Rawr
                 if (xdoc.Root.Name == "Error") {
                     new Base.ErrorBox("Problem Getting Character from Battle.Net Armory",
                         xdoc.Root.Value,
-                        "The Rawr team suggests using the Rawr Addon instead to load your character for now.");
+                        "The Rawr team suggests using the Rawr Addon instead to load your character for now.").Show();
+                    Progress = "Error!";
+                    if (this.GetCharacterErrored != null)
+                        this.GetCharacterErrored(this, new EventArgs<String>(e.Result.Replace("<Error>", "").Replace("</Error>", "")));
                     return;
                 } else  if (xdoc.Root.Name == "Character") {
                     Progress = "Parsing Character Data...";
@@ -216,6 +233,7 @@ namespace Rawr
 
         #region Characters
         public event EventHandler<EventArgs<Character>> GetCharacterCompleted;
+        public event EventHandler<EventArgs<String>> GetCharacterErrored;
         public void GetCharacterAsync(CharacterRegion region, string realm, string name, bool forceRefresh)
         {
             _lastRegion = region;
