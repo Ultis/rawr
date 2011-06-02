@@ -200,7 +200,7 @@
                     <!-- Specify Points Type -->
                     <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Point Type" />
                     <TextBlock Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Points Cost" />
-                    <ComboBox x:Name="TB_PvP_Points" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="2,0,2,2" SelectionChanged="PvP_InfoChanged_CB" IsEditable="True">
+                    <ComboBox x:Name="TB_PvP_Points" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="2,0,2,2" SelectionChanged="PvP_InfoChanged_CB">
                         <System:String>Honor</System:String>
                         <System:String>Conquest</System:String>
                     </ComboBox>

@@ -1747,7 +1747,7 @@ namespace Rawr {
             }
             #endregion
             #region Damage Absorbed
-            else if ((match = new Regex(@"Absorbs up to (?<amount>\d+) damage for (?<duration>\d+) sec, but once the absorb expires, you take (?<damageamount>\d+)% of the damage absorbed every (?<damagetick>\d+) sec for (?<damagelength>\d+) sec").Match(line)).Success)
+            else if ((match = new Regex(@"Absorbs 20% of incoming damage, up to (?<amount>\d+).*\ After the effect ends, you take (?<damageamount>\d+)% of the damage absorbed every (?<damagetick>\d+) sec for (?<damagelength>\d+) sec.*\ Lasts (?<duration>\d+) sec").Match(line)).Success)
             {
                 // Stay Of Execution
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { DamageAbsorbed = int.Parse(match.Groups["amount"].Value) }, int.Parse(match.Groups["duration"].Value), 120f));
@@ -1901,19 +1901,19 @@ namespace Rawr {
             #endregion
             #region Intellect
             else if ((match = new Regex(@"Increases your Intellect by (?<amount>\d+) for (?<dur>\d+) sec.*\ ((?<cd1>\d+) Min (?<cd2>\d+) Sec Cooldown)").Match(line.Replace("  ", " "))).Success)
-            {   // Mark of the Firelord
+            {   // Rune of Zeth & Fiery Quintessence
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use,
                     new Stats() { Intellect = int.Parse(match.Groups["amount"].Value), },
                     int.Parse(match.Groups["dur"].Value), (int.Parse(match.Groups["cd1"].Value) * 60f) + int.Parse(match.Groups["cd2"].Value)));
             }
             else if ((match = new Regex(@"Increases your Intellect by (?<amount>\d+) for (?<dur>\d+) sec.*\ ((?<cd1>\d+) Min Cooldown)").Match(line.Replace("  ", " "))).Success)
-            {   // Mark of the Firelord
+            {   // Rune of Zeth & Fiery Quintessence
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use,
                     new Stats() { Intellect = int.Parse(match.Groups["amount"].Value), },
                     int.Parse(match.Groups["dur"].Value), int.Parse(match.Groups["cd1"].Value) * 60f));
             }
             else if ((match = new Regex(@"Increases your Intellect by (?<amount>\d+) for (?<dur>\d+) sec").Match(line.Replace("  ", " "))).Success)
-            {
+            {   // Rune of Zeth & Fiery Quintessence
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use,
                     new Stats() { Intellect = int.Parse(match.Groups["amount"].Value), },
                     int.Parse(match.Groups["dur"].Value), int.Parse(match.Groups["dur"].Value) * 6f));

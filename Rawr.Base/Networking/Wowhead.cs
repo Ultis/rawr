@@ -184,6 +184,38 @@ namespace Rawr
                     _tokenDropMap["67430"] = new TokenDropInfo() { Name = "Gauntlets of the Forlorn Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Magmaw", Heroic = true };
                     _tokenDropMap["67427"] = new TokenDropInfo() { Name = "Leggings of the Forlorn Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Maloriak", Heroic = true };
 
+                    // Unknown at this time where each of the tokens drops from
+                    // T12: Paladin, Priest, Warlock
+                    _tokenDropMap["71675"] = new TokenDropInfo() { Name = "Helm of the Fiery Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands" /*, Boss = "Nefarian"*/ };
+                    _tokenDropMap["71681"] = new TokenDropInfo() { Name = "Mantle of the Fiery Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands" /*, Boss = "Cho'gall"*/ };
+                    // T12: Rogue, Death Knight, Mage, Druid
+                    _tokenDropMap["71668"] = new TokenDropInfo() { Name = "Helm of the Fiery Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands"/*, Boss = "Nefarian"*/ };
+                    _tokenDropMap["71674"] = new TokenDropInfo() { Name = "Mantle of the Fiery Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands"/*, Boss = "Cho'gall"*/ };
+                    // T12: Warrior, Hunter, Shaman
+                    _tokenDropMap["71682"] = new TokenDropInfo() { Name = "Helm of the Fiery Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands"/*, Boss = "Nefarian"*/ };
+                    _tokenDropMap["71688"] = new TokenDropInfo() { Name = "Mantle of the Fiery Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands"/*, Boss = "Cho'gall"*/ };
+                    // T12.5: Paladin, Priest, Warlock
+                    _tokenDropMap["71677"] = new TokenDropInfo() { Name = "Crown of the Fiery Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent"/*, Boss = "Nefarian"*/, Heroic = true };
+                    _tokenDropMap["71680"] = new TokenDropInfo() { Name = "Shoulders of the Fiery Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "The Bastion of Twilight"/*, Boss = "Cho'gall"*/, Heroic = true };
+                    _tokenDropMap["71679"] = new TokenDropInfo() { Name = "Chest of the Fiery Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "The Bastion of Twilight"/*, Boss = "Halfus Wyrmbreaker"*/, Heroic = true };
+                    _tokenDropMap["71676"] = new TokenDropInfo() { Name = "Gauntlets of the Fiery Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent"/*, Boss = "Magmaw"*/, Heroic = true };
+                    _tokenDropMap["71678"] = new TokenDropInfo() { Name = "Leggings of the Fiery Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent"/*, Boss = "Maloriak"*/, Heroic = true };
+                    // T12.5: Rogue, Death Knight, Mage, Druid
+                    _tokenDropMap["71670"] = new TokenDropInfo() { Name = "Crown of the Fiery Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent"/*, Boss = "Nefarian"*/, Heroic = true };
+                    _tokenDropMap["71673"] = new TokenDropInfo() { Name = "Shoulders of the Fiery Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "The Bastion of Twilight"/*, Boss = "Cho'gall"*/, Heroic = true };
+                    _tokenDropMap["71672"] = new TokenDropInfo() { Name = "Chest of the Fiery Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "The Bastion of Twilight"/*, Boss = "Halfus Wyrmbreaker"*/, Heroic = true };
+                    _tokenDropMap["71669"] = new TokenDropInfo() { Name = "Gauntlets of the Fiery Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent"/*, Boss = "Magmaw"*/, Heroic = true };
+                    _tokenDropMap["71671"] = new TokenDropInfo() { Name = "Leggings of the Fiery Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent"/*, Boss = "Maloriak"*/, Heroic = true };
+                    // T12.5: Warrior, Hunter, Shaman
+                    _tokenDropMap["71684"] = new TokenDropInfo() { Name = "Crown of the Fiery Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent"/*, Boss = "Nefarian"*/, Heroic = true };
+                    _tokenDropMap["71687"] = new TokenDropInfo() { Name = "Shoulders of the Fiery Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "The Bastion of Twilight"/*, Boss = "Cho'gall"*/, Heroic = true };
+                    _tokenDropMap["71686"] = new TokenDropInfo() { Name = "Chest of the Fiery Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "The Bastion of Twilight"/*, Boss = "Halfus Wyrmbreaker"*/, Heroic = true };
+                    _tokenDropMap["71683"] = new TokenDropInfo() { Name = "Gauntlets of the Fiery Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent"/*, Boss = "Magmaw"*/, Heroic = true };
+                    _tokenDropMap["71685"] = new TokenDropInfo() { Name = "Leggings of the Fiery Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent"/*, Boss = "Maloriak"*/, Heroic = true };
+                    // T12.5: Non-Tier Items - these drop from all heroic bosses and are used to upgrade non-tier items to their heroic version (similar to Sunwell's Sunmotes)
+                    _tokenDropMap["71617"] = new TokenDropInfo() { Name = "Crystallized Firestone", Vendor = "Lurah Wrathvine", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Beth'tilac", Heroic = true };
+
+
 
                     // Holiday Satchels are going to be treated as quest rewards
                     // Valentines Day -  Reward is a Heart-Shaped Box http://www.wowhead.com/item=54537

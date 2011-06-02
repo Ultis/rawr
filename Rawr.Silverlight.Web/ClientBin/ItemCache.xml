@@ -54380,6 +54380,12 @@
         <Count>1946</Count>
         <OutOf>49817</OutOf>
       </ItemLocation>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Conquest</PointType>
+        <Points>1650</Points>
+        <TokenType />
+        <TokenCount>1</TokenCount>
+      </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Satin Gloves</Name>
     <Id>60473</Id>
@@ -54925,20 +54931,11 @@
       <Resilience>30</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Wyrmhide Helm</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Wyrmhide Helm</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Wyrmhide Helm</Name>
@@ -55038,20 +55035,11 @@
       <Intellect>10</Intellect>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Wyrmhide Gloves</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Wyrmhide Gloves</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Wyrmhide Gloves</Name>
@@ -55320,20 +55308,11 @@
       <Intellect>10</Intellect>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Kodohide Spaulders</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Kodohide Spaulders</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Kodohide Spaulders</Name>
@@ -55394,20 +55373,11 @@
       <Resilience>20</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Kodohide Robes</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Kodohide Robes</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Kodohide Robes</Name>
@@ -55438,20 +55408,11 @@
       <Resilience>20</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Kodohide Legguards</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Kodohide Legguards</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Kodohide Legguards</Name>
@@ -55482,20 +55443,11 @@
       <Resilience>30</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Kodohide Helm</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Kodohide Helm</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Kodohide Helm</Name>
@@ -55525,20 +55477,11 @@
       <Intellect>10</Intellect>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Kodohide Gloves</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Kodohide Gloves</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Kodohide Gloves</Name>
@@ -55568,20 +55511,11 @@
       <Agility>10</Agility>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Dragonhide Spaulders</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Dragonhide Spaulders</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Dragonhide Spaulders</Name>
@@ -55872,20 +55806,11 @@
       <Resilience>20</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Dragonhide Robes</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Dragonhide Robes</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Dragonhide Robes</Name>
@@ -55916,20 +55841,11 @@
       <Resilience>20</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Dragonhide Legguards</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Dragonhide Legguards</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Dragonhide Legguards</Name>
@@ -55960,20 +55876,11 @@
       <Resilience>30</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Dragonhide Helm</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Dragonhide Helm</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Dragonhide Helm</Name>
@@ -56083,20 +55990,11 @@
       <Agility>10</Agility>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Dragonhide Gloves</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Dragonhide Gloves</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Dragonhide Gloves</Name>
@@ -56165,20 +56063,11 @@
       <Resilience>10</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Treads of Meditation</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Treads of Meditation</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Treads of Meditation</Name>
@@ -56237,20 +56126,11 @@
       <Resilience>10</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Sabatons of Meditation</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Sabatons of Meditation</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Sabatons of Meditation</Name>
@@ -56279,20 +56159,11 @@
       <Resilience>10</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Greaves of Meditation</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Greaves of Meditation</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Greaves of Meditation</Name>
@@ -56319,8 +56190,9 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP</PointType>
-        <Points>0</Points>
+        <PointType>Conquest</PointType>
+        <Points>1250</Points>
+        <TokenType />
         <TokenCount>0</TokenCount>
       </ItemLocation>
     </LocationInfo>
@@ -56350,20 +56222,11 @@
       <Resilience>10</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Footguards of Meditation</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Footguards of Meditation</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Footguards of Meditation</Name>
@@ -56398,6 +56261,12 @@
         <Boss>Argaloth</Boss>
         <Count>137</Count>
         <OutOf>14347</OutOf>
+      </ItemLocation>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Conquest</PointType>
+        <Points>1650</Points>
+        <TokenType />
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Links of Accuracy</Name>
@@ -56885,20 +56754,11 @@
       <Resilience>10</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Warboots of Cruelty</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Warboots of Cruelty</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Warboots of Cruelty</Name>
@@ -56920,7 +56780,7 @@
     <Quality>Epic</Quality>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
-    <RequiredClasses>Rogue|Druid</RequiredClasses>
+    <RequiredClasses>Druid|Rogue</RequiredClasses>
     <Bind>BoP</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketBonus>
@@ -56933,6 +56793,12 @@
         <Boss>Argaloth</Boss>
         <Count>157</Count>
         <OutOf>14347</OutOf>
+      </ItemLocation>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Conquest</PointType>
+        <Points>1650</Points>
+        <TokenType />
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Waistband of Accuracy</Name>
@@ -56961,20 +56827,11 @@
       <Resilience>10</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Treads of Cruelty</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Treads of Cruelty</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Treads of Cruelty</Name>
@@ -57033,20 +56890,11 @@
       <Resilience>10</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Sabatons of Cruelty</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Sabatons of Cruelty</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Sabatons of Cruelty</Name>
@@ -57145,20 +56993,11 @@
       <Resilience>10</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Boots of Cruelty</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>2000</Points>
+        <TokenType>Vicious Gladiator's Boots of Cruelty</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Boots of Cruelty</Name>
@@ -57187,20 +57026,11 @@
       <Resilience>10</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Treads of Alacrity</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Treads of Alacrity</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Treads of Alacrity</Name>
@@ -57229,20 +57059,11 @@
       <Resilience>10</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Sabatons of Alacrity</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Sabatons of Alacrity</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Sabatons of Alacrity</Name>
@@ -57271,20 +57092,11 @@
       <Resilience>10</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Sabatons of Alacrity</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Sabatons of Alacrity</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Sabatons of Alacrity</Name>
@@ -57313,20 +57125,11 @@
       <Resilience>10</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Greaves of Alacrity</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Greaves of Alacrity</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Greaves of Alacrity</Name>
@@ -57355,20 +57158,11 @@
       <Resilience>10</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Footguards of Alacrity</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Captain Dirgehammer</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Footguards of Alacrity</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Footguards of Alacrity</Name>
@@ -57727,7 +57521,7 @@
     <Quality>Epic</Quality>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
-    <RequiredClasses>Priest|Mage|Warlock</RequiredClasses>
+    <RequiredClasses>Mage|Priest|Warlock</RequiredClasses>
     <Bind>BoP</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketBonus>
@@ -57740,6 +57534,12 @@
         <Boss>Argaloth</Boss>
         <Count>111</Count>
         <OutOf>14347</OutOf>
+      </ItemLocation>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Conquest</PointType>
+        <Points>1650</Points>
+        <TokenType />
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Cord of Accuracy</Name>
@@ -58280,7 +58080,7 @@
     <Quality>Epic</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
-    <RequiredClasses>Paladin|Priest|Shaman|Mage|Warlock|Druid</RequiredClasses>
+    <RequiredClasses>Druid|Mage|Paladin|Priest|Shaman|Warlock</RequiredClasses>
     <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
@@ -58291,6 +58091,12 @@
         <Boss>Argaloth</Boss>
         <Count>204</Count>
         <OutOf>14347</OutOf>
+      </ItemLocation>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Conquest</PointType>
+        <Points>1250</Points>
+        <TokenType />
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Pendant of Alacrity</Name>
@@ -58361,10 +58167,10 @@
         <OutOf>49817</OutOf>
       </ItemLocation>
       <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP</PointType>
-        <Points>0</Points>
-        <TokenType>Honor Points</TokenType>
-        <TokenCount>1250</TokenCount>
+        <PointType>Conquest</PointType>
+        <Points>1250</Points>
+        <TokenType />
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Necklace of Prowess</Name>
@@ -58385,7 +58191,7 @@
     <Quality>Epic</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
-    <RequiredClasses>Hunter|Rogue|Shaman|Druid</RequiredClasses>
+    <RequiredClasses>Druid|Hunter|Rogue|Shaman</RequiredClasses>
     <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
@@ -58396,6 +58202,12 @@
         <Boss>Argaloth</Boss>
         <Count>175</Count>
         <OutOf>14347</OutOf>
+      </ItemLocation>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Conquest</PointType>
+        <Points>1250</Points>
+        <TokenType />
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Necklace of Proficiency</Name>
@@ -58416,7 +58228,7 @@
     <Quality>Epic</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
-    <RequiredClasses>Warrior|Paladin|Death Knight</RequiredClasses>
+    <RequiredClasses>Paladin|Warrior</RequiredClasses>
     <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
@@ -58427,6 +58239,12 @@
         <Boss>Argaloth</Boss>
         <Count>170</Count>
         <OutOf>14347</OutOf>
+      </ItemLocation>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Conquest</PointType>
+        <Points>1250</Points>
+        <TokenType />
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Choker of Proficiency</Name>
@@ -58447,7 +58265,7 @@
     <Quality>Epic</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
-    <RequiredClasses>Warrior|Paladin|Death Knight</RequiredClasses>
+    <RequiredClasses>Paladin|Warrior</RequiredClasses>
     <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
@@ -58458,6 +58276,12 @@
         <Boss>Argaloth</Boss>
         <Count>299</Count>
         <OutOf>23390</OutOf>
+      </ItemLocation>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Conquest</PointType>
+        <Points>1250</Points>
+        <TokenType />
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Choker of Accuracy</Name>
@@ -58479,7 +58303,7 @@
     <Quality>Epic</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
-    <RequiredClasses>Warrior|Paladin|Death Knight</RequiredClasses>
+    <RequiredClasses>Paladin|Warrior</RequiredClasses>
     <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
@@ -58490,6 +58314,12 @@
         <Boss>Argaloth</Boss>
         <Count>306</Count>
         <OutOf>23390</OutOf>
+      </ItemLocation>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Conquest</PointType>
+        <Points>1250</Points>
+        <TokenType />
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Cloak of Alacrity</Name>
@@ -58913,8 +58743,8 @@
         <Area>Baradin Hold</Area>
         <Heroic>false</Heroic>
         <Boss>Argaloth</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Count>308</Count>
+        <OutOf>50970</OutOf>
       </ItemLocation>
       <ItemLocation xsi:type="PvpItem">
         <PointType>Conquest</PointType>
@@ -59050,8 +58880,14 @@
         <Area>Baradin Hold</Area>
         <Heroic>false</Heroic>
         <Boss>Argaloth</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Count>641</Count>
+        <OutOf>50970</OutOf>
+      </ItemLocation>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Conquest</PointType>
+        <Points>1650</Points>
+        <TokenType />
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Emblem of Tenacity</Name>
@@ -59132,12 +58968,11 @@
     <Bind>BoP</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Baradin Hold</Area>
-        <Heroic>false</Heroic>
-        <Boss>Argaloth</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Conquest</PointType>
+        <Points>1650</Points>
+        <TokenType />
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Badge of Victory</Name>
@@ -59236,12 +59071,11 @@
     <Bind>BoP</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Baradin Hold</Area>
-        <Heroic>false</Heroic>
-        <Boss>Argaloth</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Conquest</PointType>
+        <Points>1650</Points>
+        <TokenType />
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Insignia of Victory</Name>
@@ -60396,20 +60230,11 @@
       <Resilience>10</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Boots of Alacrity</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Boots of Alacrity</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Boots of Alacrity</Name>
@@ -84621,25 +84446,10 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP</PointType>
-        <Points>0</Points>
-        <TokenType>Conquest Points</TokenType>
-        <TokenCount>3400</TokenCount>
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Greatsword</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Lieutenant Tristia</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+        <PointType>Conquest</PointType>
+        <Points>3400</Points>
+        <TokenType>Vicious Gladiator's Greatsword</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Greatsword</Name>
@@ -84668,25 +84478,10 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP</PointType>
-        <Points>0</Points>
-        <TokenType>Conquest Points</TokenType>
-        <TokenCount>3400</TokenCount>
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Staff</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Lieutenant Tristia</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+        <PointType>Conquest</PointType>
+        <Points>3400</Points>
+        <TokenType>Vicious Gladiator's Staff</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Staff</Name>
@@ -84715,25 +84510,10 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP</PointType>
-        <Points>0</Points>
-        <TokenType>Conquest Points</TokenType>
-        <TokenCount>3400</TokenCount>
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Energy Staff</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Lieutenant Tristia</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+        <PointType>Conquest</PointType>
+        <Points>3400</Points>
+        <TokenType>Vicious Gladiator's Energy Staff</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Energy Staff</Name>
@@ -84762,25 +84542,10 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP</PointType>
-        <Points>0</Points>
-        <TokenType>Conquest Points</TokenType>
-        <TokenCount>3400</TokenCount>
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Battle Staff</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Lieutenant Tristia</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+        <PointType>Conquest</PointType>
+        <Points>3400</Points>
+        <TokenType>Vicious Gladiator's Battle Staff</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Battle Staff</Name>
@@ -84808,25 +84573,10 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP</PointType>
-        <Points>0</Points>
-        <TokenType>Conquest Points</TokenType>
-        <TokenCount>3400</TokenCount>
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Pike</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Lieutenant Tristia</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+        <PointType>Conquest</PointType>
+        <Points>3400</Points>
+        <TokenType>Vicious Gladiator's Pike</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Pike</Name>
@@ -84854,25 +84604,10 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP</PointType>
-        <Points>0</Points>
-        <TokenType>Conquest Points</TokenType>
-        <TokenCount>3400</TokenCount>
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Bonegrinder</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Lieutenant Tristia</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+        <PointType>Conquest</PointType>
+        <Points>3400</Points>
+        <TokenType>Vicious Gladiator's Bonegrinder</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Bonegrinder</Name>
@@ -84900,25 +84635,10 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP</PointType>
-        <Points>0</Points>
-        <TokenType>Conquest Points</TokenType>
-        <TokenCount>3400</TokenCount>
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Decapitator</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Lieutenant Tristia</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+        <PointType>Conquest</PointType>
+        <Points>3400</Points>
+        <TokenType>Vicious Gladiator's Decapitator</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Decapitator</Name>
@@ -84947,25 +84667,10 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP</PointType>
-        <Points>0</Points>
-        <TokenType>Conquest Points</TokenType>
-        <TokenCount>2450</TokenCount>
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Gavel</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Lieutenant Tristia</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+        <PointType>Conquest</PointType>
+        <Points>2450</Points>
+        <TokenType>Vicious Gladiator's Gavel</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Gavel</Name>
@@ -84993,25 +84698,10 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP</PointType>
-        <Points>0</Points>
-        <TokenType>Conquest Points</TokenType>
-        <TokenCount>2450</TokenCount>
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Right Render</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Lieutenant Tristia</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+        <PointType>Conquest</PointType>
+        <Points>2450</Points>
+        <TokenType>Vicious Gladiator's Right Render</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Right Render</Name>
@@ -85039,25 +84729,10 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP</PointType>
-        <Points>0</Points>
-        <TokenType>Conquest Points</TokenType>
-        <TokenCount>2450</TokenCount>
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Right Ripper</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Lieutenant Tristia</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+        <PointType>Conquest</PointType>
+        <Points>2450</Points>
+        <TokenType>Vicious Gladiator's Right Ripper</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Right Ripper</Name>
@@ -85086,25 +84761,10 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP</PointType>
-        <Points>0</Points>
-        <TokenType>Conquest Points</TokenType>
-        <TokenCount>2450</TokenCount>
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Spellblade</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Lieutenant Tristia</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+        <PointType>Conquest</PointType>
+        <Points>2450</Points>
+        <TokenType>Vicious Gladiator's Spellblade</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Spellblade</Name>
@@ -85132,25 +84792,10 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP</PointType>
-        <Points>0</Points>
-        <TokenType>Conquest Points</TokenType>
-        <TokenCount>950</TokenCount>
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Left Render</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Lieutenant Tristia</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+        <PointType>Conquest</PointType>
+        <Points>950</Points>
+        <TokenType>Vicious Gladiator's Left Render</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Left Render</Name>
@@ -85178,25 +84823,10 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP</PointType>
-        <Points>0</Points>
-        <TokenType>Conquest Points</TokenType>
-        <TokenCount>950</TokenCount>
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Left Ripper</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Lieutenant Tristia</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+        <PointType>Conquest</PointType>
+        <Points>950</Points>
+        <TokenType>Vicious Gladiator's Left Ripper</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Left Ripper</Name>
@@ -85224,25 +84854,10 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP</PointType>
-        <Points>0</Points>
-        <TokenType>Conquest Points</TokenType>
-        <TokenCount>950</TokenCount>
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Shiv</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Lieutenant Tristia</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+        <PointType>Conquest</PointType>
+        <Points>950</Points>
+        <TokenType>Vicious Gladiator's Shiv</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Shiv</Name>
@@ -85270,25 +84885,10 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP</PointType>
-        <Points>0</Points>
-        <TokenType>Conquest Points</TokenType>
-        <TokenCount>3400</TokenCount>
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Longbow</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Lieutenant Tristia</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+        <PointType>Conquest</PointType>
+        <Points>3400</Points>
+        <TokenType>Vicious Gladiator's Longbow</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Longbow</Name>
@@ -85316,25 +84916,10 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP</PointType>
-        <Points>0</Points>
-        <TokenType>Conquest Points</TokenType>
-        <TokenCount>3400</TokenCount>
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Heavy Crossbow</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Lieutenant Tristia</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+        <PointType>Conquest</PointType>
+        <Points>3400</Points>
+        <TokenType>Vicious Gladiator's Heavy Crossbow</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Heavy Crossbow</Name>
@@ -85362,25 +84947,10 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP</PointType>
-        <Points>0</Points>
-        <TokenType>Conquest Points</TokenType>
-        <TokenCount>3400</TokenCount>
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Rifle</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Lieutenant Tristia</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+        <PointType>Conquest</PointType>
+        <Points>3400</Points>
+        <TokenType>Vicious Gladiator's Rifle</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Rifle</Name>
@@ -85409,25 +84979,10 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP</PointType>
-        <Points>0</Points>
-        <TokenType>Conquest Points</TokenType>
-        <TokenCount>700</TokenCount>
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Baton of Light</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Lieutenant Tristia</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+        <PointType>Conquest</PointType>
+        <Points>700</Points>
+        <TokenType>Vicious Gladiator's Baton of Light</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Baton of Light</Name>
@@ -85456,25 +85011,10 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP</PointType>
-        <Points>0</Points>
-        <TokenType>Conquest Points</TokenType>
-        <TokenCount>700</TokenCount>
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Touch of Defeat</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Lieutenant Tristia</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+        <PointType>Conquest</PointType>
+        <Points>700</Points>
+        <TokenType>Vicious Gladiator's Touch of Defeat</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Touch of Defeat</Name>
@@ -85502,25 +85042,10 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP</PointType>
-        <Points>0</Points>
-        <TokenType>Conquest Points</TokenType>
-        <TokenCount>700</TokenCount>
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Hatchet</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Lieutenant Tristia</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+        <PointType>Conquest</PointType>
+        <Points>700</Points>
+        <TokenType>Vicious Gladiator's Hatchet</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Hatchet</Name>
@@ -85548,25 +85073,10 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP</PointType>
-        <Points>0</Points>
-        <TokenType>Conquest Points</TokenType>
-        <TokenCount>700</TokenCount>
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's War Edge</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Lieutenant Tristia</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+        <PointType>Conquest</PointType>
+        <Points>700</Points>
+        <TokenType>Vicious Gladiator's War Edge</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's War Edge</Name>
@@ -85594,25 +85104,10 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP</PointType>
-        <Points>0</Points>
-        <TokenType>Conquest Points</TokenType>
-        <TokenCount>2450</TokenCount>
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Quickblade</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Lieutenant Tristia</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+        <PointType>Conquest</PointType>
+        <Points>2450</Points>
+        <TokenType>Vicious Gladiator's Quickblade</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Quickblade</Name>
@@ -85640,25 +85135,10 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP</PointType>
-        <Points>0</Points>
-        <TokenType>Conquest Points</TokenType>
-        <TokenCount>2450</TokenCount>
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Slicer</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Lieutenant Tristia</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+        <PointType>Conquest</PointType>
+        <Points>2450</Points>
+        <TokenType>Vicious Gladiator's Slicer</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Slicer</Name>
@@ -85686,25 +85166,10 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP</PointType>
-        <Points>0</Points>
-        <TokenType>Conquest Points</TokenType>
-        <TokenCount>2450</TokenCount>
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Bonecracker</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Lieutenant Tristia</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+        <PointType>Conquest</PointType>
+        <Points>2450</Points>
+        <TokenType>Vicious Gladiator's Bonecracker</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Bonecracker</Name>
@@ -85732,25 +85197,10 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP</PointType>
-        <Points>0</Points>
-        <TokenType>Conquest Points</TokenType>
-        <TokenCount>2450</TokenCount>
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Pummeler</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Lieutenant Tristia</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+        <PointType>Conquest</PointType>
+        <Points>2450</Points>
+        <TokenType>Vicious Gladiator's Pummeler</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Pummeler</Name>
@@ -85778,25 +85228,10 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP</PointType>
-        <Points>0</Points>
-        <TokenType>Conquest Points</TokenType>
-        <TokenCount>2450</TokenCount>
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Shanker</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Lieutenant Tristia</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+        <PointType>Conquest</PointType>
+        <Points>2450</Points>
+        <TokenType>Vicious Gladiator's Shanker</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Shanker</Name>
@@ -85824,25 +85259,10 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP</PointType>
-        <Points>0</Points>
-        <TokenType>Conquest Points</TokenType>
-        <TokenCount>2450</TokenCount>
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Hacker</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Lieutenant Tristia</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+        <PointType>Conquest</PointType>
+        <Points>2450</Points>
+        <TokenType>Vicious Gladiator's Hacker</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Hacker</Name>
@@ -85870,25 +85290,10 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP</PointType>
-        <Points>0</Points>
-        <TokenType>Conquest Points</TokenType>
-        <TokenCount>2450</TokenCount>
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Cleaver</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Lieutenant Tristia</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+        <PointType>Conquest</PointType>
+        <Points>2450</Points>
+        <TokenType>Vicious Gladiator's Cleaver</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Cleaver</Name>
@@ -85914,25 +85319,10 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP</PointType>
-        <Points>0</Points>
-        <TokenType>Conquest Points</TokenType>
-        <TokenCount>950</TokenCount>
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Redoubt</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Lieutenant Tristia</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+        <PointType>Conquest</PointType>
+        <Points>950</Points>
+        <TokenType>Vicious Gladiator's Redoubt</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Redoubt</Name>
@@ -85958,25 +85348,10 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP</PointType>
-        <Points>0</Points>
-        <TokenType>Conquest Points</TokenType>
-        <TokenCount>950</TokenCount>
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Barrier</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Lieutenant Tristia</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+        <PointType>Conquest</PointType>
+        <Points>950</Points>
+        <TokenType>Vicious Gladiator's Barrier</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Barrier</Name>
@@ -86002,25 +85377,10 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP</PointType>
-        <Points>0</Points>
-        <TokenType>Conquest Points</TokenType>
-        <TokenCount>950</TokenCount>
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Shield Wall</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Lieutenant Tristia</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+        <PointType>Conquest</PointType>
+        <Points>950</Points>
+        <TokenType>Vicious Gladiator's Shield Wall</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Shield Wall</Name>
@@ -86045,25 +85405,10 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP</PointType>
-        <Points>0</Points>
-        <TokenType>Conquest Points</TokenType>
-        <TokenCount>950</TokenCount>
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Reprieve</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Lieutenant Tristia</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+        <PointType>Conquest</PointType>
+        <Points>950</Points>
+        <TokenType>Vicious Gladiator's Reprieve</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Reprieve</Name>
@@ -86088,25 +85433,10 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP</PointType>
-        <Points>0</Points>
-        <TokenType>Conquest Points</TokenType>
-        <TokenCount>950</TokenCount>
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Endgame</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Lieutenant Tristia</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+        <PointType>Conquest</PointType>
+        <Points>950</Points>
+        <TokenType>Vicious Gladiator's Endgame</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Endgame</Name>
@@ -89860,20 +89190,11 @@
       <Resilience>30</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Dreadplate Helm</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Dreadplate Helm</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Dreadplate Helm</Name>
@@ -89902,20 +89223,11 @@
       <Strength>10</Strength>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Dreadplate Shoulders</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Dreadplate Shoulders</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Dreadplate Shoulders</Name>
@@ -89945,20 +89257,11 @@
       <Resilience>20</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Dreadplate Chestpiece</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Dreadplate Chestpiece</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Dreadplate Chestpiece</Name>
@@ -89987,20 +89290,11 @@
       <Strength>10</Strength>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Dreadplate Gauntlets</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Dreadplate Gauntlets</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Dreadplate Gauntlets</Name>
@@ -90030,20 +89324,11 @@
       <Resilience>20</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Dreadplate Legguards</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Dreadplate Legguards</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Dreadplate Legguards</Name>
@@ -90072,20 +89357,11 @@
       <Resilience>10</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Warboots of Alacrity</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Warboots of Alacrity</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Warboots of Alacrity</Name>
@@ -91569,12 +90845,6 @@
     <Faction>Neutral</Faction>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
       <ItemLocation xsi:type="UnknownItem" />
       <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
@@ -95602,20 +94872,11 @@
       <Resilience>20</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Wyrmhide Legguards</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Wyrmhide Legguards</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Wyrmhide Legguards</Name>
@@ -95646,20 +94907,11 @@
       <Resilience>20</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Wyrmhide Robes</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Wyrmhide Robes</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Wyrmhide Robes</Name>
@@ -95689,20 +94941,11 @@
       <Intellect>10</Intellect>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Wyrmhide Spaulders</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Wyrmhide Spaulders</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Wyrmhide Spaulders</Name>
@@ -95733,20 +94976,11 @@
       <Resilience>20</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Chain Armor</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Chain Armor</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Chain Armor</Name>
@@ -95776,20 +95010,11 @@
       <Agility>10</Agility>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Chain Gauntlets</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Chain Gauntlets</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Chain Gauntlets</Name>
@@ -95820,20 +95045,11 @@
       <Resilience>30</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Chain Helm</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Chain Helm</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Chain Helm</Name>
@@ -95864,20 +95080,11 @@
       <Resilience>20</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Chain Leggings</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Chain Leggings</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Chain Leggings</Name>
@@ -95907,20 +95114,11 @@
       <Agility>10</Agility>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Chain Spaulders</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Chain Spaulders</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Chain Spaulders</Name>
@@ -95950,20 +95148,11 @@
       <Intellect>10</Intellect>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Silk Amice</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Silk Amice</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Silk Amice</Name>
@@ -95994,20 +95183,11 @@
       <Resilience>30</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Silk Cowl</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Silk Cowl</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Silk Cowl</Name>
@@ -96037,20 +95217,11 @@
       <Intellect>10</Intellect>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Silk Handguards</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Silk Handguards</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Silk Handguards</Name>
@@ -96081,20 +95252,11 @@
       <Resilience>20</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Silk Robe</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Silk Robe</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Silk Robe</Name>
@@ -96125,20 +95287,11 @@
       <Resilience>20</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Silk Trousers</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Silk Trousers</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Silk Trousers</Name>
@@ -96168,20 +95321,11 @@
       <Strength>10</Strength>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Scaled Shoulders</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Scaled Shoulders</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Scaled Shoulders</Name>
@@ -96212,20 +95356,11 @@
       <Resilience>20</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Scaled Legguards</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Scaled Legguards</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Scaled Legguards</Name>
@@ -96256,20 +95391,11 @@
       <Resilience>30</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Scaled Helm</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Scaled Helm</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Scaled Helm</Name>
@@ -96299,20 +95425,11 @@
       <Strength>10</Strength>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Scaled Gauntlets</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Scaled Gauntlets</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Scaled Gauntlets</Name>
@@ -96343,20 +95460,11 @@
       <Resilience>20</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Scaled Chestpiece</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Scaled Chestpiece</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Scaled Chestpiece</Name>
@@ -96386,20 +95494,11 @@
       <Intellect>10</Intellect>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Ornamented Spaulders</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Ornamented Spaulders</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Ornamented Spaulders</Name>
@@ -96430,20 +95529,11 @@
       <Resilience>20</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Ornamented Legplates</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Ornamented Legplates</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Ornamented Legplates</Name>
@@ -96474,20 +95564,11 @@
       <Resilience>30</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Ornamented Headcover</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Ornamented Headcover</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Ornamented Headcover</Name>
@@ -96517,20 +95598,11 @@
       <Intellect>10</Intellect>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Ornamented Gloves</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Ornamented Gloves</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Ornamented Gloves</Name>
@@ -96561,20 +95633,11 @@
       <Resilience>20</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Ornamented Chestguard</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Ornamented Chestguard</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Ornamented Chestguard</Name>
@@ -96605,20 +95668,11 @@
       <Resilience>20</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Satin Robe</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Satin Robe</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Satin Robe</Name>
@@ -96648,20 +95702,11 @@
       <Intellect>10</Intellect>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Satin Mantle</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Satin Mantle</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Satin Mantle</Name>
@@ -96692,20 +95737,11 @@
       <Resilience>20</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Satin Leggings</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Satin Leggings</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Satin Leggings</Name>
@@ -96736,20 +95772,11 @@
       <Resilience>30</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Satin Hood</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Satin Hood</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Satin Hood</Name>
@@ -96779,20 +95806,11 @@
       <Intellect>10</Intellect>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Satin Gloves</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Satin Gloves</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Satin Gloves</Name>
@@ -96823,20 +95841,11 @@
       <Resilience>20</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Mooncloth Robe</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Mooncloth Robe</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Mooncloth Robe</Name>
@@ -96866,20 +95875,11 @@
       <Intellect>10</Intellect>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Mooncloth Mantle</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Mooncloth Mantle</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Mooncloth Mantle</Name>
@@ -96910,20 +95910,11 @@
       <Resilience>20</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Mooncloth Leggings</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Mooncloth Leggings</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Mooncloth Leggings</Name>
@@ -96954,20 +95945,11 @@
       <Resilience>30</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Mooncloth Helm</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Mooncloth Helm</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Mooncloth Helm</Name>
@@ -96997,20 +95979,11 @@
       <Intellect>10</Intellect>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Mooncloth Gloves</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Mooncloth Gloves</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Mooncloth Gloves</Name>
@@ -97040,20 +96013,11 @@
       <Agility>10</Agility>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Leather Gloves</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Leather Gloves</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Leather Gloves</Name>
@@ -97084,20 +96048,11 @@
       <Resilience>30</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Leather Helm</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Leather Helm</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Leather Helm</Name>
@@ -97128,20 +96083,11 @@
       <Resilience>20</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Leather Legguards</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Leather Legguards</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Leather Legguards</Name>
@@ -97171,20 +96117,11 @@
       <Agility>10</Agility>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Leather Spaulders</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Leather Spaulders</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Leather Spaulders</Name>
@@ -97215,20 +96152,11 @@
       <Resilience>20</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Leather Tunic</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Leather Tunic</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Leather Tunic</Name>
@@ -97258,20 +96186,11 @@
       <Intellect>10</Intellect>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Ringmail Spaulders</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Ringmail Spaulders</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Ringmail Spaulders</Name>
@@ -97302,20 +96221,11 @@
       <Resilience>20</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Ringmail Leggings</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Ringmail Leggings</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Ringmail Leggings</Name>
@@ -97346,20 +96256,11 @@
       <Resilience>30</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Ringmail Helm</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Ringmail Helm</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Ringmail Helm</Name>
@@ -97389,20 +96290,11 @@
       <Intellect>10</Intellect>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Ringmail Gauntlets</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Ringmail Gauntlets</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Ringmail Gauntlets</Name>
@@ -97433,20 +96325,11 @@
       <Resilience>20</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Ringmail Armor</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Ringmail Armor</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Ringmail Armor</Name>
@@ -97476,20 +96359,11 @@
       <Intellect>10</Intellect>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Mail Spaulders</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Mail Spaulders</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Mail Spaulders</Name>
@@ -97520,20 +96394,11 @@
       <Resilience>20</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Mail Leggings</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Mail Leggings</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Mail Leggings</Name>
@@ -97564,20 +96429,11 @@
       <Resilience>30</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Mail Helm</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Mail Helm</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Mail Helm</Name>
@@ -97607,20 +96463,11 @@
       <Intellect>10</Intellect>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Mail Gauntlets</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Mail Gauntlets</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Mail Gauntlets</Name>
@@ -97651,20 +96498,11 @@
       <Resilience>20</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Mail Armor</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Mail Armor</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Mail Armor</Name>
@@ -97694,20 +96532,11 @@
       <Agility>10</Agility>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Linked Spaulders</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Linked Spaulders</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Linked Spaulders</Name>
@@ -97738,20 +96567,11 @@
       <Resilience>20</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Linked Leggings</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Linked Leggings</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Linked Leggings</Name>
@@ -97782,20 +96602,11 @@
       <Resilience>30</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Linked Helm</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Linked Helm</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Linked Helm</Name>
@@ -97825,20 +96636,11 @@
       <Agility>10</Agility>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Linked Gauntlets</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Linked Gauntlets</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Linked Gauntlets</Name>
@@ -97869,20 +96671,11 @@
       <Resilience>20</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Linked Armor</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Linked Armor</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Linked Armor</Name>
@@ -97912,20 +96705,11 @@
       <Intellect>10</Intellect>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Felweave Amice</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Felweave Amice</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Felweave Amice</Name>
@@ -97956,20 +96740,11 @@
       <Resilience>30</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Felweave Cowl</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Felweave Cowl</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Felweave Cowl</Name>
@@ -97999,20 +96774,11 @@
       <Intellect>10</Intellect>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Felweave Handguards</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Felweave Handguards</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Felweave Handguards</Name>
@@ -98043,20 +96809,11 @@
       <Resilience>20</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Felweave Raiment</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Felweave Raiment</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Felweave Raiment</Name>
@@ -98087,20 +96844,11 @@
       <Resilience>20</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Felweave Trousers</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Felweave Trousers</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Felweave Trousers</Name>
@@ -98130,20 +96878,11 @@
       <Strength>10</Strength>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Plate Shoulders</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Plate Shoulders</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Plate Shoulders</Name>
@@ -98174,20 +96913,11 @@
       <Resilience>20</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Plate Legguards</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Plate Legguards</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Plate Legguards</Name>
@@ -98218,20 +96948,11 @@
       <Resilience>30</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Plate Helm</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Plate Helm</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Plate Helm</Name>
@@ -98261,20 +96982,11 @@
       <Strength>10</Strength>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Plate Gauntlets</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Plate Gauntlets</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Plate Gauntlets</Name>
@@ -98305,24 +97017,36 @@
       <Resilience>20</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Vicious Gladiator's Plate Chestpiece</string>
-            </key>
-            <value>
-              <int>1</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Captain Dirgehammer</VendorName>
-        <VendorArea>Stormwind City</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>0</Points>
+        <TokenType>Vicious Gladiator's Plate Chestpiece</TokenType>
+        <TokenCount>1</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Plate Chestpiece</Name>
     <Id>65584</Id>
     <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>1</ItemLevel>
+    <DisplayId>98991</DisplayId>
+    <DisplaySlot>19</DisplaySlot>
+    <IconPath>inv_epicguildtabard</IconPath>
+    <Stats />
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoA</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="VendorItem">
+        <TokenMap />
+        <Cost>0</Cost>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Renowned Guild Tabard</Name>
+    <Id>69210</Id>
+    <Slot>Tabard</Slot>
   </Item>
 </ArrayOfItem>
