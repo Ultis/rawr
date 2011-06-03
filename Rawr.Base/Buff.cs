@@ -2772,6 +2772,50 @@ namespace Rawr
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
             });
             #endregion
+            #region Battlegarb (Feral)
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Obsidian Arborweave Battlegarb 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = new Stats() { },
+                SetName = "Obsidian Arborweave Battlegarb",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Obsidian Arborweave Battlegarb 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = new Stats() { },
+                SetName = "Obsidian Arborweave Battlegarb",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+            });
+            #endregion
+            #region Vestments (Restoration)
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Obsidian Arborweave Vestments 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = new Stats() { },
+                SetName = "Obsidian Arborweave Vestments",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Obsidian Arborweave Vestments 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = new Stats() { },
+                SetName = "Obsidian Arborweave Vestments",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+            });
+            #endregion
             #endregion
             #endregion
             #region PvP
