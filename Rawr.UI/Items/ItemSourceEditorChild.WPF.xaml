@@ -188,6 +188,8 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
@@ -200,7 +202,7 @@
                     <!-- Specify Points Type -->
                     <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Point Type" />
                     <TextBlock Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Points Cost" />
-                    <ComboBox x:Name="TB_PvP_Points" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="2,0,2,2" SelectionChanged="PvP_InfoChanged_CB" IsEditable="True">
+                    <ComboBox x:Name="TB_PvP_Points" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="2,0,2,2" SelectionChanged="PvP_InfoChanged_CB">
                         <System:String>Honor</System:String>
                         <System:String>Conquest</System:String>
                     </ComboBox>
@@ -208,8 +210,10 @@
                     <!-- Named Point Type -->
                     <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Token" />
                     <TextBlock Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Token Count" />
-                    <TextBox x:Name="TB_PvP_Token" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Text="" Margin="2,0,2,2" TextChanged="PvP_InfoChanged_Text" />
+                    <TextBox x:Name="TB_PvP_Token" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Text="" Margin="2,0,2,2" TextChanged="PvP_InfoChanged_Text" />
                     <inputToolkit:NumericUpDown x:Name="NUD_PvP_Token" Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="3" Margin="2,0,2,2" Value="0" Maximum="10000" ValueChanged="PvP_InfoChanged_NUD" />
+                    <TextBlock Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="6" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Arena or Battleground Rating" />
+                    <inputToolkit:NumericUpDown x:Name="NUD_PvP_Arena" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="6" Margin="2,0,2,2" Value="0" Maximum="10000" ValueChanged="PvP_InfoChanged_NUD" />
                 </Grid>
                 <Grid x:Name="St_Crafted" Visibility="Collapsed">
                     <!-- Crafted -->

@@ -2825,7 +2825,6 @@ namespace Rawr.Mage
             lu.BSolveUnit(x, mini);
 
 #if SILVERLIGHT
-            double eps = phaseI ? epsDualI : epsDual;
             for (int j = 0; j < cols; j++)
             {
                 int col = V[j];
