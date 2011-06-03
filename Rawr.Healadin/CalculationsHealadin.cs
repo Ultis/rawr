@@ -386,20 +386,17 @@ namespace Rawr.Healadin
             int T11Count;
             character.SetBonusCount.TryGetValue("Reinforced Sapphirium Regalia", out T11Count);
             stats.BonusCritChanceDeathCoil = 0; // using this for Holy Light crit bonus, for now
+            stats.BonusCritChanceFrostStrike = 0;  // yes, I'm pure evil, using this to track 4T11 
             if (T11Count >= 2)
             {
-                // stuff from cat model
-                //statsTotal.BonusDamageMultiplierRakeTick = (1f + statsTotal.BonusDamageMultiplierRakeTick) * (1f + 0.10f) - 1f;
-                //statsTotal.BonusDamageMultiplierLacerate = (1f + statsTotal.BonusDamageMultiplierLacerate) * (1f + 0.10f) - 1f;
+               
                 // T11 Pally 2 piece bonus: add 5% crit to HL
                 stats.BonusCritChanceDeathCoil = 0.05f;
             }
             if (T11Count >= 4)
             {
-                // stuff from cat model
-                //statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.MangleCatAttack,
-                //    new Stats() { BonusAttackPowerMultiplier = 0.01f, }, 30, 0, 1f, 3));
                 // T11 Pally 4 piece bonus: 540 spirit buff for 6 secs after HS cast
+                stats.BonusCritChanceFrostStrike = 1; 
             }
             #endregion Set Bonuses
 

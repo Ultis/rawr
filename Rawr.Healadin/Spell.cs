@@ -5,7 +5,7 @@ using System.Text;
 /* Molotok's notes on stuff implemented for 4.1
  * 
  * Done this patch:
- * Conviction talent
+ * T11 4 piece bonus
  * 
  * 
  *Left to do: (in no particular order)
@@ -16,7 +16,6 @@ using System.Text;
  *  Glyph of Divine Favor
  *  Avenging Wrath
  *  Guardian of Ancient Kings
- *  T11 4 piece set bonus
  *  T12 set bonuses
  *  Divine Plea: causes 50% heals.
  *  Haste talents - additive or multiplicative?  Assume mult for now. (Judgement of the Pure, Speed of Light)
@@ -37,6 +36,10 @@ using System.Text;
  *  Blessed Life(0-2) - 50% chance to gain holy power when taking direct damage.  8 sec CD.
  *  figure hit into melee / Judgement mana regen - leaning towards not bothering to do this... *  
  *  Enlightened Judgements(0-2) - 1st part - gives +50% spirit to hit per point 
+ * 
+ * 
+ *Known shortcomings of the model:
+ *  Crits often cause overheals.  Model does not take this into account.
  * 
  * 
  *DONE  Gemming template (except jewelcrafting gems)
@@ -61,7 +64,7 @@ using System.Text;
  *DONE Beacon of Light(0-1) - 50% of heals to beacon target
  *DONE Speed of Light(0-3) - 1% haste per point
  *Currently assuming 3 points for HR CD reduction. - reduce HR CD by 10 sec per point
- *  Conviction(0-3) - 1% heal bonus per point, for 15 secs after a crit from non-periodic spell.  (or weapon swing)
+ *DONE  Conviction(0-3) - 1% heal bonus per point, for 15 secs after a crit from non-periodic spell.  (or weapon swing)
  *  Tower of Radiance(0-3) - healing beacon target with FoL or DL has 33% chance per point of giving a Holy Power
  *  Blessed Life(0-2) - 50% chance to gain holy power when taking direct damage.  8 sec CD.
  *DONE Light of Dawn(0-1) - gives the spell.

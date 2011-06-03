@@ -112,7 +112,8 @@ namespace Rawr.Healadin
 
             // check if this is correct regen per 5 seconds..  
             // combat regen = 50% of spirit regen (from Meditation), plus MP5 from gear, plus 5% base mana per 5 secs.  Base mana = 23422 at 85
-            float spirit_regen = StatConversion.GetSpiritRegenSec(Stats.Spirit, Stats.Intellect) * 5f;
+            float effective_spirit = Stats.Spirit + Stats.BonusCritChanceFrostStrike * 540 * 6 / CalcOpts.HolyShock; // add in bonus spirit from 4T11 procs
+            float spirit_regen = StatConversion.GetSpiritRegenSec(effective_spirit, Stats.Intellect) * 5f;
             calc.CombatRegenRate = spirit_regen * 0.5f + Stats.Mp5 + HealadinConstants.basemana * 0.05f;
             calc.ManaRegenRate = spirit_regen + Stats.Mp5 + HealadinConstants.basemana * 0.05f;
             calc.CombatRegenTotal = calc.CombatRegenRate * FightLength / 5f;
