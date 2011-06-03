@@ -322,12 +322,58 @@ namespace Rawr.Healadin
                 calc.RotationDL -= IoLprocs * 0.75f;
             #endregion Filler Casts
 
-            #region Talent heals: Enlightened Judgement, Protector of the Innocent, Illuminated healing, Beacon, Conviction
+            #region Conviction
+            // does enlightened judgements crit seperately from judgement?  does it count towards conviction proc?
+            // does Protector of the Innocent crit seperately?  does it count towards conviction proc?
+            // I'm assuming yes for all these questions for now.
+            // Frankly this was my first pass at modeling Conviction.  It's far from perfect, but the results are
+            // in the same ballpark as combatlogs, and should be somewhat accurate in this talent's effect on
+            // the value of crit.
+
+            float ConvictionUptime;  // time having 3 stacks up
+            float ConvictionCasts = 2f * (calc.HLCasts + calc.DLCasts + calc.FoLCasts +
+                                 calc.WoGCasts + calc.JudgeCasts + calc.HSCasts) + calc.LoHCasts +
+                                  calc.LoDCasts * CalcOpts.LoDTargets * (5f + (Talents.GlyphOfLightOfDawn ? 1f : 0f)) + 
+                                  calc.MeleeSwings;
+            float CastsPerSec = ConvictionCasts / ActiveTime;
+            // Average crit chance is for all spells.  Start with spellcrit, then add extra for each spell.
+            float AverageCritChance = Stats.SpellCrit +
+                  (hs.Casts() / ConvictionCasts * (hs.ChanceToCrit() - Stats.SpellCrit)) +
+                  (calc.HLCasts / ConvictionCasts * (hl.ChanceToCrit() - Stats.SpellCrit));
+            float ChancePerCastToDrop = (float)Math.Pow((1 - AverageCritChance), (CastsPerSec * 15));
+
+            float FullStackTime =   // average time we keep 3 stacks once we have it
+                // might not be the best way, but for now using the time to get to 60% chance the stack has dropped
+                // considering the tail 40% can take very long to drop potentially, pulling the median out past 50%
+                // combat logs show this is the correct ballpark
+                  1f / CastsPerSec * (float)Math.Log(0.4f, (1f - ChancePerCastToDrop));
+            float AverageStackBuildTime = // average time to build from 0 to 3 stacks
+                  1f / CastsPerSec *
+                  (3 / AverageCritChance);  // time to get 3 stacks, assuming you dont drop the stack along the way
+            // now should add time for if stacks drop along the way
+            float StackBuilds = // number of times we will build the stack in the fight
+                    1 + (ActiveTime - AverageStackBuildTime) / (AverageStackBuildTime + FullStackTime);
+            ConvictionUptime = StackBuilds * AverageStackBuildTime / 3f +  // lets count stack builds as having 1 stack on average for now 
+                               (StackBuilds - 1f) * FullStackTime;
+            float ConvictionBuff = 1f + ConvictionUptime / ActiveTime * 0.03f * Talents.Conviction;
+
+            calc.HealedHL *= ConvictionBuff;
+            calc.HealedDL *= ConvictionBuff;
+            calc.HealedFoL *= ConvictionBuff;
+            calc.HealedHS  *= ConvictionBuff;
+            calc.HealedWoG  *= ConvictionBuff;
+            calc.HealedLoD  *= ConvictionBuff;
+            calc.HealedLoH *= ConvictionBuff; 
+
+            #endregion Conviction
+
+            #region Talent heals: Enlightened Judgement, Protector of the Innocent, Illuminated healing, Beacon
             // Enlightened Judgement talent heals
-            calc.HealedJudge = calc.JudgeCasts * ej.AverageHealed();
+            calc.HealedJudge = calc.JudgeCasts * ej.AverageHealed() * ConvictionBuff;
+
             // Protector of the Innocent
             calc.PotICasts = fill_casts + calc.WoGCasts + calc.LoDCasts + calc.LoHCasts + calc.HSCasts;
-            calc.HealedPotI = calc.PotICasts * poti.AverageHealed();
+            calc.HealedPotI = calc.PotICasts * poti.AverageHealed() * ConvictionBuff;
 
             calc.UsageTotal = calc.UsageFoL + calc.UsageDL + calc.UsageHL + calc.UsageLoD + calc.UsageWoG +
                                  calc.UsageHS + calc.UsageHR + calc.UsageJudge + calc.UsageBoL + calc.UsageCleanse;
@@ -344,20 +390,8 @@ namespace Rawr.Healadin
             
             // Beacon of Light
             calc.HealedBoL =  bol.HealingDone(calc.TotalHealed);
-
-            /*
-            float ConvictionUptime;
-            float CastsPerSec = calc.PotICasts / ActiveTime;
-            // Average crit chance is for all spells.  Start with spellcrit, then add extra for each spell.
-            float AverageCritChance = Stats.SpellCrit +
-                  (hs.Casts() / calc.PotICasts * (hs.ChanceToCrit() - Stats.SpellCrit)) +
-                  (calc.HLCasts / calc.PotICasts * (hl.ChanceToCrit() - Stats.SpellCrit));
-            float ChancePerCastToDrop = (float) Math.Pow((1 - AverageCritChance),(CastsPerSec * 15)) ;
-            float FullStackTime =          // average time we keep 3 stacks once we have it
-                  ChancePerCastToDrop;
-            float AverageStackBuildTime; // average time to build from 0 to 3 stacks
-            */
             #endregion
+
 
             // adding Holy Radiance and LoH after BoL calculation, as they do not count towards BoL heals
             calc.TotalHealed += calc.HealedHR + calc.HealedLoH + calc.HealedIH + calc.HealedBoL; 

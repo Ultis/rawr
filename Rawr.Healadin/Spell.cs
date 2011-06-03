@@ -5,16 +5,13 @@ using System.Text;
 /* Molotok's notes on stuff implemented for 4.1
  * 
  * Done this patch:
- * added "User delay" to options tab to account for average lag + user delay for each cast
- * accounted for Divine Plea cast time
- * adjusted options panel to make things more clear and compact
+ * Conviction talent
  * 
  * 
- *Left to do:
+ *Left to do: (in no particular order)
  *  Last Word(0-2) - 30% extra WoG crit per point, when target below 35% health
  *  Divine Favor(0-1) - increase haste/crit 20% for 20 secs.  3 min CD
  *  Daybreak(0-2) - FoL, DL, HL have 10% chance per point to make next HS not trigger its 6 sec CD.
- *  Conviction(0-3) - 1% heal bonus per point, for 15 secs after a crit from non-periodic spell.  (or weapon swing) stacks 3 times
  *  Tower of Radiance(0-3) - healing beacon target with FoL or DL has 33% chance per point of giving a Holy Power
  *  Glyph of Divine Favor
  *  Avenging Wrath
