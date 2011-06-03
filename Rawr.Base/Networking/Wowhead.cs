@@ -213,7 +213,7 @@ namespace Rawr
                     _tokenDropMap["71683"] = new TokenDropInfo() { Name = "Gauntlets of the Fiery Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent"/*, Boss = "Magmaw"*/, Heroic = true };
                     _tokenDropMap["71685"] = new TokenDropInfo() { Name = "Leggings of the Fiery Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent"/*, Boss = "Maloriak"*/, Heroic = true };
                     // T12.5: Non-Tier Items - these drop from all heroic bosses and are used to upgrade non-tier items to their heroic version (similar to Sunwell's Sunmotes)
-                    _tokenDropMap["71617"] = new TokenDropInfo() { Name = "Crystallized Firestone", Vendor = "Lurah Wrathvine", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Beth'tilac", Heroic = true };
+                    _tokenDropMap["71617"] = new TokenDropInfo() { Name = "Crystallized Firestone", Vendor = "Lurah Wrathvine", VendorArea = "Mount Hyjal", Area = "Firelands", Boss = "Beth'tilac", Heroic = true };
 
 
 
