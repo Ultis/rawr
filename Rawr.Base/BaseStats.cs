@@ -64,7 +64,7 @@ namespace Rawr
                 };
                 // From Chardev (85)
                 //Class           Str Agi Sta Int Spi
-                //Druid            76  69  86 136 151
+                //Druid            76  69  86 136 153
                 //Shaman          111  60 128 119 136
                 //Death Knight    171 101 154  16  44
                 //Hunter           60 178 119  77  88
@@ -99,7 +99,7 @@ namespace Rawr
                     #region Druid
                     case CharacterClass.Druid:
                         Stats druid = new Stats() {
-                            Strength = 76, Agility = 69, Stamina = 86, Intellect = 136, Spirit = 151,
+                            Strength = 76, Agility = 69, Stamina = 86, Intellect = 136, Spirit = 153,
                             Health = 39533f, Mana = 18635f,
                             Dodge = 0.03758f, Parry = 0.05f, Block = 0.05f,
                             PhysicalCrit = 0.03192f, AttackPower = 613f,
