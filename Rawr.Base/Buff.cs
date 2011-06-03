@@ -2211,6 +2211,49 @@ namespace Rawr
             });
             #endregion
             #endregion
+            #region Tier 12 | Elementium Deathplate
+            #region Battlearmor (Blood)
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Elementium Deathplate Battlearmor (T12) 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Elementium Deathplate Battlearmor",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Elementium Deathplate Battlearmor (T12) 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Elementium Deathplate Battlearmor",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
+            });
+            #endregion
+            #region Battlegear (DPS)
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Elementium Deathplate Battlegear (T12) 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Elementium Deathplate Battlegear",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
+            });
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Elementium Deathplate Battlegear (T12) 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Elementium Deathplate Battlegear",
+                Stats = new Stats(),
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
+            });
+            #endregion
+            #endregion
             #endregion
             #region PvP
             defaultBuffs.Add(new Buff()
@@ -3014,6 +3057,26 @@ namespace Rawr
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
             });
             #endregion
+            #region Tier 12 | Flamewaker's Battlegear
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Flamewaker's Battlegear (T12) 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Flamewaker's Battlegear",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Flamewaker's Battlegear (T12) 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Flamewaker's Battlegear",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
+            });
+            #endregion
             #endregion
             #region PvP
             defaultBuffs.Add(new Buff()
@@ -3212,6 +3275,28 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { },
                 SetName = "Firelord's Vestments",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Mage, },
+            });
+            #endregion
+            #region Tier 12 | Firehawk Robes of Conflagration
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Firehawk Robes of Conflagration (T12) 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { },
+                SetName = "Firehawk Robes of Conflagration",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Mage, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Firehawk Robes of Conflagration (T12) 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { },
+                SetName = "Firehawk Robes of Conflagration",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Mage, },
             });
@@ -3645,6 +3730,73 @@ namespace Rawr
             });
             #endregion
             #endregion
+            #region Tier 12 | of Immolation
+            #region Regalia (Holy)
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Regalia of Immolation (T12) 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Regalia of Immolation",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
+            });
+
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Regalia of Immolation (T12) 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Regalia of Immolation",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
+            });
+
+            #endregion
+            #region Battlearmor (Protection)
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Battlearmor of Immolation (T12) 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Battlearmor of Immolation",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
+            });
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Battlearmor of Immolation (T12) 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Battlearmor of Immolation",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.DivinePlea, new Stats() { Dodge = .12f }, 10.0f, 0.0f, 1.0f));
+            #endregion
+            #region Battleplate (Retribution)
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Battleplate of Immolation (T12) 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Battleplate of Immolation",
+                Stats = { },
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
+            });
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Battleplate of Immolation (T12) 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Battleplate of Immolation",
+                Stats = { },
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
+            });
+            #endregion
+            #endregion
             #endregion
             #region PvP
             defaultBuffs.Add(new Buff()
@@ -3990,6 +4142,48 @@ namespace Rawr
             });
             #endregion
             #endregion
+            #region Tier 12 | of the Cleansing Flame
+            #region Vestments (Heals)
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Vestments of the Cleansing Flame (T12) 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Vestments of the Cleansing Flame",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Vestments of the Cleansing Flame (T12) 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Vestments of the Cleansing Flame",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
+            });
+            #endregion
+            #region Regalia (Shadow)
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Regalia of the Cleansing Flame (T12) 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Regalia of the Cleansing Flame",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Regalia of the Cleansing Flame (T12) 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Regalia of the Cleansing Flame",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
+            });
+            #endregion
+            #endregion
             #endregion
             #region PvP
             #region Gladiator's Investiture (Heals)
@@ -4239,6 +4433,28 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = new Stats() { Rogue_T11_4P = 1f },
                 SetName = "Wind Dancer's Regalia",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Rogue, },
+            });
+            #endregion
+            #region Tier 12 | Vestments of the Dark Phoenix
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Vestments of the Dark Phoenix (T12) 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = new Stats() { Rogue_T11_2P = 1f },
+                SetName = "Vestments of the Dark Phoenix",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Rogue, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Vestments of the Dark Phoenix (T12) 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = new Stats() { Rogue_T11_4P = 1f },
+                SetName = "Vestments of the Dark Phoenix",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Rogue, },
             });
@@ -4642,7 +4858,7 @@ namespace Rawr
                 Name = "Vestments of the Raging Elements (T11) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Shadowflame Regalia",
+                SetName = "Vestments of the Raging Elements",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
             });
@@ -4651,7 +4867,7 @@ namespace Rawr
                 Name = "Vestments of the Raging Elements (T11) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Shadowflame Regalia",
+                SetName = "Vestments of the Raging Elements",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
             });
@@ -4672,6 +4888,70 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Regalia of the Raging Elements",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
+            });
+            #endregion
+            #endregion
+            #region Tier 12 | Volcanic
+            #region Battlegear (Enhancement)
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Volcanic Battlegear (T12) 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Enhance_T11_2P = 1, },
+                SetName = "Volcanic Battlegear",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Volcanic Battlegear (T12) 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Enhance_T11_4P = 1, },
+                SetName = "Volcanic Battlegear",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
+            });
+            #endregion
+            #region Vestments (Resto)
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Volcanic Vestments (T12) 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Volcanic Vestments",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Volcanic Vestments (T12) 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Volcanic Vestments",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
+            });
+            #endregion
+            #region Regalia (Elemental)
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Volcanic Regalia (T12) 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Volcanic Regalia",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Volcanic Regalia (T12) 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Volcanic Regalia",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
             });
@@ -4876,6 +5156,26 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { Warlock_T11_4P = 0.02f },
                 SetName = "Shadowflame Regalia",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warlock, },
+            });
+            #endregion
+            #region Tier 12 | Balespider's Burning Vestments
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Balespider's Burning Vestments (T12) 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Balespider's Burning Vestments",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warlock, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Balespider's Burning Vestments (T12) 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Balespider's Burning Vestments",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warlock, },
             });
@@ -5125,6 +5425,48 @@ namespace Rawr
                 //Stats = new Stats() { BonusWarrior_T11_4P_ShieldWallDurMult = 0.05f, },
                 SetName = "Earthen Battleplate",
                 SpellId = 90297,
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
+            });
+            #endregion
+            #endregion
+            #region Tier 12 | Molten Giant
+            #region Warplate (DPS)
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Molten Giant Warplate (T12) 2P",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Molten Giant Warplate",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
+            });
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Molten Giant Warplate (T12) 4P",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Molten Giant Warplate",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
+            });
+            #endregion
+            #region Battleplate (Protection)
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Molten Giant Battleplate (T12) 2P",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Molten Giant Battleplate",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Molten Giant Battleplate (T12) 4P",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Molten Giant Battleplate",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
             });
