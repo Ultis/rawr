@@ -529,12 +529,14 @@ namespace Rawr.DPSDK
             PetDPS[(int)DKability.Ghoul] = calc.dpsSub[(int)DKability.Ghoul];
             if (needsDisplayCalculations)
             {
-                calc.MHWeaponDPS = rot.GetAbilityOfType(DKability.White).DPS;
+                AbilityDK_Base a = rot.GetAbilityOfType(DKability.White);
+                calc.MHWeaponDPS = (a == null ? 0 : rot.GetAbilityOfType(DKability.White).DPS);
                 calc.MHWeaponDamage = combatTable.MH.damage;
                 calc.MHAttackSpeed = combatTable.MH.hastedSpeed;
                 if (null != combatTable.OH)
                 {
-                    calc.OHWeaponDPS = rot.GetAbilityOfType(DKability.WhiteOH).DPS;
+                    a = rot.GetAbilityOfType(DKability.WhiteOH);
+                    calc.OHWeaponDPS = (a == null ? 0 : rot.GetAbilityOfType(DKability.WhiteOH).DPS);
                     calc.OHWeaponDamage = combatTable.OH.damage;
                     calc.OHAttackSpeed = combatTable.OH.hastedSpeed;
                 }
