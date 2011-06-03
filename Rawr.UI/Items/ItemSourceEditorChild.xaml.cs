@@ -140,7 +140,7 @@ namespace Rawr.UI
                     }
                     case "PvP": {
                         St_PvP.Visibility = Visibility.Visible;
-                        NewSource = new PvpItem() { TokenCount = 1, TokenType = "", Points = 2000, PointType = "Honor", };
+                        NewSource = new PvpItem() { TokenCount = 1, TokenType = "", Points = 2000, PointType = "Honor", ArenaRating = 0 };
                         break;
                     }
                     case "Crafted": {
@@ -405,6 +405,7 @@ namespace Rawr.UI
                 Points = (int)NUD_PvP_Points.Value,
                 TokenType = TB_PvP_Token.Text,
                 TokenCount = (int)NUD_PvP_Token.Value,
+                ArenaRating = (int)NUD_PvP_Arena.Value,
             };
             //
             UpdateString();
@@ -424,6 +425,8 @@ namespace Rawr.UI
             // Token Map Cost (TODO)
             TB_PvP_Token.Text = topop.TokenType;
             NUD_PvP_Token.Value = topop.TokenCount;
+            // Arena Rating Cost
+            NUD_PvP_Arena.Value = topop.ArenaRating;
             //
             isChanging = false;
             PvP_InfoChanged();

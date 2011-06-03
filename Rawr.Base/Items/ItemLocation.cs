@@ -436,6 +436,7 @@ namespace Rawr
         public int Points { get; set; }
         public string TokenType { get; set; }
         public int TokenCount { get; set; }
+        public int ArenaRating { get; set; }
 
         public PvpItem() { Source = ItemSource.PVP; }
 
@@ -444,12 +445,31 @@ namespace Rawr
             get {
                 bool statePoints = !string.IsNullOrEmpty(PointType) && Points > 0;
                 bool stateTokens = !string.IsNullOrEmpty(TokenType) && TokenCount > 0;
-                if (statePoints && stateTokens) {
-                    return string.Format("Purchasable for {0} {1} Points and {2} [{3}]", Points, PointType, TokenCount, TokenType);
-                } else if (statePoints && !stateTokens) {
+                bool stateArena = ArenaRating > 0;
+                if (statePoints && stateTokens && stateArena) {
+                    return string.Format("Purchasable for {0} {1} Points and {2} [{3}] and a {4} Arena or Battleground Rating", Points, PointType, TokenCount, TokenType, ArenaRating);
+                } else if (statePoints && !stateTokens && stateArena) {
+                    return string.Format("Purchasable for {0} {1} Points and a {2} Arena or Battleground Rating", Points, PointType, ArenaRating);
+                }
+                else if (statePoints && !stateTokens && !stateArena)
+                {
                     return string.Format("Purchasable for {0} {1} Points", Points, PointType);
-                } else if (!statePoints && stateTokens) {
+                }
+                else if (statePoints && !stateTokens && stateArena)
+                {
+                    return string.Format("Purchasable for {0} {1} Points and a {2} Arena or Battleground Rating", Points, PointType, stateArena);
+                }
+                else if (!statePoints && stateTokens & stateArena)
+                {
+                    return string.Format("Purchasable for {0} [{1}] and a {2} Arena or Battleground Rating", TokenCount, TokenType, ArenaRating);
+                }
+                else if (!statePoints && stateTokens & !stateArena)
+                {
                     return string.Format("Purchasable for {0} [{1}]", TokenCount, TokenType);
+                }
+                else if (!statePoints && !stateTokens & stateArena)
+                {
+                    return string.Format("Purchasable with a {0} Arena or Battleground Rating", ArenaRating);
                 }
                 else //if (!statePoints && !stateTokens)
                 {

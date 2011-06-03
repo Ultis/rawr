@@ -882,6 +882,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>100</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Knight's Colors</Name>
@@ -7584,6 +7585,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>100</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Perfect Mystic Sun Crystal</Name>
@@ -8330,6 +8332,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>100</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Perfect Steady Dark Jade</Name>
@@ -8430,6 +8433,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>100</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Perfect Turbid Dark Jade</Name>
@@ -8580,6 +8584,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>100</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Perfect Willful Huge Citrine</Name>
@@ -8730,6 +8735,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>100</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Perfect Lucent Huge Citrine</Name>
@@ -8880,6 +8886,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>100</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Perfect Resplendent Huge Citrine</Name>
@@ -9925,6 +9932,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>165</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Kharmaa's Grace</Name>
@@ -16095,6 +16103,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>450</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Wrathful Gladiator's Tabard</Name>
@@ -18176,6 +18185,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>100</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Perfect Mystic Alicite</Name>
@@ -51950,6 +51960,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Dreadplate Chestpiece</Name>
@@ -51990,6 +52001,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Dreadplate Gauntlets</Name>
@@ -52025,6 +52037,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Dreadplate Helm</Name>
@@ -52066,6 +52079,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Dreadplate Legguards</Name>
@@ -52100,6 +52114,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Dreadplate Shoulders</Name>
@@ -52135,6 +52150,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Scaled Chestpiece</Name>
@@ -52176,6 +52192,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Scaled Gauntlets</Name>
@@ -52211,6 +52228,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Scaled Helm</Name>
@@ -52253,6 +52271,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Scaled Legguards</Name>
@@ -52287,6 +52306,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Scaled Shoulders</Name>
@@ -52322,6 +52342,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Plate Chestpiece</Name>
@@ -52363,6 +52384,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Plate Gauntlets</Name>
@@ -52398,6 +52420,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Plate Helm</Name>
@@ -52440,6 +52463,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Plate Legguards</Name>
@@ -52474,6 +52498,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Plate Shoulders</Name>
@@ -52509,6 +52534,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Chain Armor</Name>
@@ -52550,6 +52576,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Chain Gauntlets</Name>
@@ -52585,6 +52612,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Chain Helm</Name>
@@ -52627,6 +52655,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Chain Leggings</Name>
@@ -52661,6 +52690,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Chain Spaulders</Name>
@@ -52696,6 +52726,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Ringmail Armor</Name>
@@ -52737,6 +52768,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Ringmail Gauntlets</Name>
@@ -52772,6 +52804,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Ringmail Helm</Name>
@@ -52814,6 +52847,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Ringmail Leggings</Name>
@@ -52848,6 +52882,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Ringmail Spaulders</Name>
@@ -52883,6 +52918,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Linked Armor</Name>
@@ -52924,6 +52960,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Linked Gauntlets</Name>
@@ -52959,6 +52996,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Linked Helm</Name>
@@ -53001,6 +53039,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Linked Leggings</Name>
@@ -53035,6 +53074,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Linked Spaulders</Name>
@@ -53070,6 +53110,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Mail Armor</Name>
@@ -53111,6 +53152,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Mail Gauntlets</Name>
@@ -53146,6 +53188,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Mail Helm</Name>
@@ -53188,6 +53231,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Mail Leggings</Name>
@@ -53222,6 +53266,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Mail Spaulders</Name>
@@ -53263,6 +53308,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Dragonhide Gloves</Name>
@@ -53298,6 +53344,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Dragonhide Helm</Name>
@@ -53340,6 +53387,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Dragonhide Legguards</Name>
@@ -53375,6 +53423,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Dragonhide Robes</Name>
@@ -53409,6 +53458,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Dragonhide Spaulders</Name>
@@ -53450,6 +53500,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Kodohide Gloves</Name>
@@ -53485,6 +53536,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Kodohide Helm</Name>
@@ -53527,6 +53579,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Kodohide Legguards</Name>
@@ -53562,6 +53615,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Kodohide Robes</Name>
@@ -53596,6 +53650,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Kodohide Spaulders</Name>
@@ -53637,6 +53692,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Wyrmhide Gloves</Name>
@@ -53672,6 +53728,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Wyrmhide Helm</Name>
@@ -53714,6 +53771,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Wyrmhide Legguards</Name>
@@ -53749,6 +53807,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Wyrmhide Robes</Name>
@@ -53783,6 +53842,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Wyrmhide Spaulders</Name>
@@ -53818,6 +53878,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Leather Tunic</Name>
@@ -53859,6 +53920,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Leather Gloves</Name>
@@ -53894,6 +53956,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Leather Helm</Name>
@@ -53936,6 +53999,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Leather Legguards</Name>
@@ -53970,6 +54034,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Leather Spaulders</Name>
@@ -54011,6 +54076,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Silk Handguards</Name>
@@ -54046,6 +54112,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Silk Cowl</Name>
@@ -54088,6 +54155,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Silk Trousers</Name>
@@ -54123,6 +54191,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Silk Robe</Name>
@@ -54157,6 +54226,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Silk Amice</Name>
@@ -54198,6 +54268,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Mooncloth Gloves</Name>
@@ -54233,6 +54304,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Mooncloth Helm</Name>
@@ -54275,6 +54347,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Mooncloth Leggings</Name>
@@ -54310,6 +54383,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Mooncloth Robe</Name>
@@ -54344,6 +54418,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Mooncloth Mantle</Name>
@@ -54385,6 +54460,7 @@
         <Points>1650</Points>
         <TokenType />
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Satin Gloves</Name>
@@ -54420,6 +54496,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Satin Hood</Name>
@@ -54462,6 +54539,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Satin Leggings</Name>
@@ -54497,6 +54575,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Satin Robe</Name>
@@ -54531,6 +54610,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Satin Mantle</Name>
@@ -54572,6 +54652,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Felweave Handguards</Name>
@@ -54607,6 +54688,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Felweave Cowl</Name>
@@ -54649,6 +54731,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Felweave Trousers</Name>
@@ -54684,6 +54767,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Felweave Raiment</Name>
@@ -54718,6 +54802,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Felweave Amice</Name>
@@ -54758,6 +54843,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Clasp of Cruelty</Name>
@@ -54791,6 +54877,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>12050</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Greaves of Salvation</Name>
@@ -54821,6 +54908,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Bracers of Salvation</Name>
@@ -54861,6 +54949,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Girdle of Cruelty</Name>
@@ -54901,6 +54990,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Warboots of Cruelty</Name>
@@ -54936,6 +55026,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Wyrmhide Helm</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Wyrmhide Helm</Name>
@@ -54966,6 +55057,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Armplates of Alacrity</Name>
@@ -55006,6 +55098,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Warboots of Alacrity</Name>
@@ -55040,6 +55133,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Wyrmhide Gloves</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Wyrmhide Gloves</Name>
@@ -55070,6 +55164,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Bracers of Salvation</Name>
@@ -55110,6 +55205,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Greaves of Alacrity</Name>
@@ -55143,6 +55239,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Girdle of Salvation</Name>
@@ -55176,6 +55273,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Girdle of Salvation</Name>
@@ -55209,6 +55307,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Greaves of Salvation</Name>
@@ -55239,6 +55338,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Bracers of Prowess</Name>
@@ -55279,6 +55379,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Girdle of Prowess</Name>
@@ -55313,6 +55414,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Kodohide Spaulders</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Kodohide Spaulders</Name>
@@ -55343,6 +55445,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Armplates of Proficiency</Name>
@@ -55378,6 +55481,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Kodohide Robes</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Kodohide Robes</Name>
@@ -55413,6 +55517,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Kodohide Legguards</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Kodohide Legguards</Name>
@@ -55448,6 +55553,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Kodohide Helm</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Kodohide Helm</Name>
@@ -55482,6 +55588,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Kodohide Gloves</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Kodohide Gloves</Name>
@@ -55516,6 +55623,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Dragonhide Spaulders</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Dragonhide Spaulders</Name>
@@ -55556,6 +55664,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Waistguard of Meditation</Name>
@@ -55596,6 +55705,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Sabatons of Meditation</Name>
@@ -55626,6 +55736,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Armbands of Meditation</Name>
@@ -55666,6 +55777,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Waistguard of Cruelty</Name>
@@ -55706,6 +55818,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Clasp of Meditation</Name>
@@ -55746,6 +55859,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Greaves of Meditation</Name>
@@ -55776,6 +55890,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Bracers of Meditation</Name>
@@ -55811,6 +55926,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Dragonhide Robes</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Dragonhide Robes</Name>
@@ -55846,6 +55962,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Dragonhide Legguards</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Dragonhide Legguards</Name>
@@ -55881,6 +55998,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Dragonhide Helm</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Dragonhide Helm</Name>
@@ -55921,6 +56039,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Sabatons of Cruelty</Name>
@@ -55961,6 +56080,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Links of Cruelty</Name>
@@ -55995,6 +56115,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Dragonhide Gloves</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Dragonhide Gloves</Name>
@@ -56035,6 +56156,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Sabatons of Alacrity</Name>
@@ -56068,6 +56190,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Treads of Meditation</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Treads of Meditation</Name>
@@ -56098,6 +56221,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Wristguards of Alacrity</Name>
@@ -56131,6 +56255,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Sabatons of Meditation</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Sabatons of Meditation</Name>
@@ -56164,6 +56289,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Greaves of Meditation</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Greaves of Meditation</Name>
@@ -56194,6 +56320,7 @@
         <Points>1250</Points>
         <TokenType />
         <TokenCount>0</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Wristguards of Triumph</Name>
@@ -56227,6 +56354,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Footguards of Meditation</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Footguards of Meditation</Name>
@@ -56267,6 +56395,7 @@
         <Points>1650</Points>
         <TokenType />
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Links of Accuracy</Name>
@@ -56297,6 +56426,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Wristguards of Accuracy</Name>
@@ -56330,6 +56460,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Waistguard of Salvation</Name>
@@ -56370,6 +56501,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Sabatons of Alacrity</Name>
@@ -56400,6 +56532,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Wristguards of Salvation</Name>
@@ -56430,6 +56563,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Armbands of Prowess</Name>
@@ -56463,6 +56597,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Sabatons of Salvation</Name>
@@ -56496,6 +56631,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Waistguard of Salvation</Name>
@@ -56536,6 +56672,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Belt of Meditation</Name>
@@ -56576,6 +56713,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Footguards of Meditation</Name>
@@ -56606,6 +56744,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Bindings of Meditation</Name>
@@ -56646,6 +56785,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Belt of Cruelty</Name>
@@ -56686,6 +56826,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Waistband of Cruelty</Name>
@@ -56726,6 +56867,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Boots of Cruelty</Name>
@@ -56759,6 +56901,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Warboots of Cruelty</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Warboots of Cruelty</Name>
@@ -56799,6 +56942,7 @@
         <Points>1650</Points>
         <TokenType />
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Waistband of Accuracy</Name>
@@ -56832,6 +56976,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Treads of Cruelty</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Treads of Cruelty</Name>
@@ -56862,6 +57007,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Armwraps of Accuracy</Name>
@@ -56895,6 +57041,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Sabatons of Cruelty</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Sabatons of Cruelty</Name>
@@ -56935,6 +57082,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Boots of Alacrity</Name>
@@ -56965,6 +57113,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Armwraps of Alacrity</Name>
@@ -56998,6 +57147,7 @@
         <Points>2000</Points>
         <TokenType>Vicious Gladiator's Boots of Cruelty</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Boots of Cruelty</Name>
@@ -57031,6 +57181,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Treads of Alacrity</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Treads of Alacrity</Name>
@@ -57064,6 +57215,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Sabatons of Alacrity</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Sabatons of Alacrity</Name>
@@ -57097,6 +57249,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Sabatons of Alacrity</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Sabatons of Alacrity</Name>
@@ -57130,6 +57283,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Greaves of Alacrity</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Greaves of Alacrity</Name>
@@ -57163,6 +57317,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Footguards of Alacrity</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Footguards of Alacrity</Name>
@@ -57198,6 +57353,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Ornamented Chestguard</Name>
@@ -57239,6 +57395,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Ornamented Gloves</Name>
@@ -57274,6 +57431,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Ornamented Headcover</Name>
@@ -57316,6 +57474,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Ornamented Legplates</Name>
@@ -57350,6 +57509,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Ornamented Spaulders</Name>
@@ -57390,6 +57550,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Footguards of Alacrity</Name>
@@ -57420,6 +57581,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Bindings of Prowess</Name>
@@ -57460,6 +57622,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Cord of Cruelty</Name>
@@ -57500,6 +57663,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Treads of Cruelty</Name>
@@ -57540,6 +57704,7 @@
         <Points>1650</Points>
         <TokenType />
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Cord of Accuracy</Name>
@@ -57577,6 +57742,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Cuffs of Accuracy</Name>
@@ -57617,6 +57783,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Treads of Alacrity</Name>
@@ -57654,6 +57821,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Cuffs of Prowess</Name>
@@ -57684,6 +57852,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Cuffs of Meditation</Name>
@@ -57724,6 +57893,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Treads of Meditation</Name>
@@ -57764,6 +57934,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Cord of Meditation</Name>
@@ -57801,6 +57972,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Band of Cruelty</Name>
@@ -57838,6 +58010,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Band of Accuracy</Name>
@@ -57875,6 +58048,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Band of Dominance</Name>
@@ -57912,6 +58086,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Signet of Cruelty</Name>
@@ -57949,6 +58124,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Signet of Accuracy</Name>
@@ -57986,6 +58162,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Ring of Accuracy</Name>
@@ -58023,6 +58200,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Ring of Cruelty</Name>
@@ -58060,6 +58238,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Pendant of Diffusion</Name>
@@ -58097,6 +58276,7 @@
         <Points>1250</Points>
         <TokenType />
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Pendant of Alacrity</Name>
@@ -58134,6 +58314,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Pendant of Meditation</Name>
@@ -58171,6 +58352,7 @@
         <Points>1250</Points>
         <TokenType />
         <TokenCount>0</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Necklace of Prowess</Name>
@@ -58208,6 +58390,7 @@
         <Points>1250</Points>
         <TokenType />
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Necklace of Proficiency</Name>
@@ -58245,6 +58428,7 @@
         <Points>1250</Points>
         <TokenType />
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Choker of Proficiency</Name>
@@ -58282,6 +58466,7 @@
         <Points>1250</Points>
         <TokenType />
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Choker of Accuracy</Name>
@@ -58320,6 +58505,7 @@
         <Points>1250</Points>
         <TokenType />
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Cloak of Alacrity</Name>
@@ -58358,6 +58544,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Cloak of Prowess</Name>
@@ -58396,6 +58583,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Cape of Prowess</Name>
@@ -58434,6 +58622,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Cape of Cruelty</Name>
@@ -58472,6 +58661,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Drape of Diffusion</Name>
@@ -58510,6 +58700,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Drape of Prowess</Name>
@@ -58548,6 +58739,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Drape of Meditation</Name>
@@ -58582,6 +58774,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Medallion of Cruelty</Name>
@@ -58616,6 +58809,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Medallion of Meditation</Name>
@@ -58649,6 +58843,7 @@
         <PointType>Conquest</PointType>
         <Points>1650</Points>
         <TokenCount>0</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Medallion of Tenacity</Name>
@@ -58683,6 +58878,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Medallion of Cruelty</Name>
@@ -58717,6 +58913,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Medallion of Meditation</Name>
@@ -58750,6 +58947,7 @@
         <PointType>Conquest</PointType>
         <Points>1650</Points>
         <TokenCount>0</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Medallion of Tenacity</Name>
@@ -58796,6 +58994,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Emblem of Cruelty</Name>
@@ -58842,6 +59041,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Emblem of Meditation</Name>
@@ -58888,6 +59088,7 @@
         <Points>1650</Points>
         <TokenType />
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Emblem of Tenacity</Name>
@@ -58934,6 +59135,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Badge of Conquest</Name>
@@ -58973,6 +59175,7 @@
         <Points>1650</Points>
         <TokenType />
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Badge of Victory</Name>
@@ -59012,6 +59215,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Badge of Dominance</Name>
@@ -59037,6 +59241,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Insignia of Dominance</Name>
@@ -59076,6 +59281,7 @@
         <Points>1650</Points>
         <TokenType />
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Insignia of Victory</Name>
@@ -59122,6 +59328,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Insignia of Conquest</Name>
@@ -59153,6 +59360,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2450</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Cleaver</Name>
@@ -59184,6 +59392,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2450</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Hacker</Name>
@@ -59215,6 +59424,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>3400</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Decapitator</Name>
@@ -59246,6 +59456,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2450</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Shanker</Name>
@@ -59277,6 +59488,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>950</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Shiv</Name>
@@ -59309,6 +59521,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2450</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Spellblade</Name>
@@ -59340,6 +59553,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2450</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Right Ripper</Name>
@@ -59371,6 +59585,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>950</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Left Ripper</Name>
@@ -59402,6 +59617,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>950</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Left Render</Name>
@@ -59433,6 +59649,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2450</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Right Render</Name>
@@ -59464,6 +59681,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2450</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Pummeler</Name>
@@ -59495,6 +59713,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2450</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Bonecracker</Name>
@@ -59527,6 +59746,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2450</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Gavel</Name>
@@ -59558,6 +59778,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>3400</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Bonegrinder</Name>
@@ -59589,6 +59810,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>3400</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Pike</Name>
@@ -59621,6 +59843,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>3400</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Battle Staff</Name>
@@ -59653,6 +59876,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>3400</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Energy Staff</Name>
@@ -59685,6 +59909,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>3400</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Staff</Name>
@@ -59716,6 +59941,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2450</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Slicer</Name>
@@ -59747,6 +59973,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>2450</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Quickblade</Name>
@@ -59778,6 +60005,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>3400</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Greatsword</Name>
@@ -59809,6 +60037,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>700</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's War Edge</Name>
@@ -59840,6 +60069,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>700</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Hatchet</Name>
@@ -59872,6 +60102,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>700</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Touch of Defeat</Name>
@@ -59904,6 +60135,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>700</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Baton of Light</Name>
@@ -59935,6 +60167,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>3400</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Longbow</Name>
@@ -59966,6 +60199,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>3400</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Rifle</Name>
@@ -59997,6 +60231,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>3400</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Heavy Crossbow</Name>
@@ -60025,6 +60260,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>950</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Endgame</Name>
@@ -60053,6 +60289,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>950</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Reprieve</Name>
@@ -60082,6 +60319,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>950</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Shield Wall</Name>
@@ -60111,6 +60349,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>950</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Barrier</Name>
@@ -60140,6 +60379,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>950</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Redoubt</Name>
@@ -60171,6 +60411,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>700</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Relic of Dominance</Name>
@@ -60202,6 +60443,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>700</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Relic of Salvation</Name>
@@ -60235,6 +60477,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Boots of Alacrity</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Boots of Alacrity</Name>
@@ -60266,6 +60509,7 @@
         <Points>0</Points>
         <TokenType>Conquest Points</TokenType>
         <TokenCount>700</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Relic of Conquest</Name>
@@ -67136,6 +67380,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Armbands of Meditation</Name>
@@ -67166,6 +67411,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Armbands of Prowess</Name>
@@ -67196,6 +67442,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Armplates of Alacrity</Name>
@@ -67226,6 +67473,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Armplates of Proficiency</Name>
@@ -67256,6 +67504,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Armwraps of Accuracy</Name>
@@ -67286,6 +67535,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Armwraps of Alacrity</Name>
@@ -67325,6 +67575,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Badge of Conquest</Name>
@@ -67364,6 +67615,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Badge of Dominance</Name>
@@ -67403,6 +67655,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Badge of Victory</Name>
@@ -67433,6 +67686,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Band of Accuracy</Name>
@@ -67463,6 +67717,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Band of Cruelty</Name>
@@ -67493,6 +67748,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Band of Dominance</Name>
@@ -67526,6 +67782,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Belt of Cruelty</Name>
@@ -67559,6 +67816,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Belt of Meditation</Name>
@@ -67589,6 +67847,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Bindings of Meditation</Name>
@@ -67619,6 +67878,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Bindings of Prowess</Name>
@@ -67652,6 +67912,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Boots of Alacrity</Name>
@@ -67685,6 +67946,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Boots of Cruelty</Name>
@@ -67715,6 +67977,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Bracers of Meditation</Name>
@@ -67745,6 +68008,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Bracers of Prowess</Name>
@@ -67776,6 +68040,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Cape of Cruelty</Name>
@@ -67807,6 +68072,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Cape of Prowess</Name>
@@ -67842,6 +68108,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Chain Armor</Name>
@@ -67876,6 +68143,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Chain Gauntlets</Name>
@@ -67911,6 +68179,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Chain Helm</Name>
@@ -67946,6 +68215,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Chain Leggings</Name>
@@ -67980,6 +68250,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Chain Spaulders</Name>
@@ -68010,6 +68281,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Choker of Accuracy</Name>
@@ -68040,6 +68312,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Choker of Proficiency</Name>
@@ -68073,6 +68346,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Clasp of Cruelty</Name>
@@ -68106,6 +68380,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Clasp of Meditation</Name>
@@ -68137,6 +68412,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Cloak of Alacrity</Name>
@@ -68168,6 +68444,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Cloak of Prowess</Name>
@@ -68201,6 +68478,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Cord of Accuracy</Name>
@@ -68234,6 +68512,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Cord of Cruelty</Name>
@@ -68267,6 +68546,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Cord of Meditation</Name>
@@ -68297,6 +68577,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Cuffs of Accuracy</Name>
@@ -68327,6 +68608,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Cuffs of Meditation</Name>
@@ -68357,6 +68639,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Cuffs of Prowess</Name>
@@ -68391,6 +68674,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Dragonhide Gloves</Name>
@@ -68426,6 +68710,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Dragonhide Helm</Name>
@@ -68461,6 +68746,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Dragonhide Legguards</Name>
@@ -68495,6 +68781,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Dragonhide Spaulders</Name>
@@ -68526,6 +68813,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Drape of Diffusion</Name>
@@ -68557,6 +68845,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Drape of Meditation</Name>
@@ -68588,6 +68877,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Drape of Prowess</Name>
@@ -68623,6 +68913,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Dreadplate Chestpiece</Name>
@@ -68657,6 +68948,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Dreadplate Gauntlets</Name>
@@ -68692,6 +68984,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Dreadplate Helm</Name>
@@ -68727,6 +69020,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Dreadplate Legguards</Name>
@@ -68761,6 +69055,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Dreadplate Shoulders</Name>
@@ -68800,6 +69095,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Emblem of Cruelty</Name>
@@ -68839,6 +69135,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Emblem of Meditation</Name>
@@ -68878,6 +69175,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Emblem of Tenacity</Name>
@@ -68912,6 +69210,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Felweave Amice</Name>
@@ -68947,6 +69246,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Felweave Cowl</Name>
@@ -68981,6 +69281,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Felweave Handguards</Name>
@@ -69016,6 +69317,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Felweave Raiment</Name>
@@ -69051,6 +69353,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Felweave Trousers</Name>
@@ -69084,6 +69387,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Footguards of Alacrity</Name>
@@ -69117,6 +69421,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Footguards of Meditation</Name>
@@ -69150,6 +69455,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Girdle of Cruelty</Name>
@@ -69183,6 +69489,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Girdle of Prowess</Name>
@@ -69216,6 +69523,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Greaves of Alacrity</Name>
@@ -69249,6 +69557,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Greaves of Meditation</Name>
@@ -69288,6 +69597,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Insignia of Conquest</Name>
@@ -69327,6 +69637,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Insignia of Dominance</Name>
@@ -69366,6 +69677,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Insignia of Victory</Name>
@@ -69400,6 +69712,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Kodohide Gloves</Name>
@@ -69435,6 +69748,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Kodohide Helm</Name>
@@ -69471,6 +69785,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Kodohide Legguards</Name>
@@ -69506,6 +69821,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Kodohide Robes</Name>
@@ -69540,6 +69856,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Kodohide Spaulders</Name>
@@ -69574,6 +69891,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Leather Gloves</Name>
@@ -69609,6 +69927,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Leather Helm</Name>
@@ -69644,6 +69963,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Leather Legguards</Name>
@@ -69678,6 +69998,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Leather Spaulders</Name>
@@ -69713,6 +70034,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Leather Tunic</Name>
@@ -69748,6 +70070,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Linked Armor</Name>
@@ -69782,6 +70105,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Linked Gauntlets</Name>
@@ -69817,6 +70141,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Linked Helm</Name>
@@ -69852,6 +70177,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Linked Leggings</Name>
@@ -69886,6 +70212,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Linked Spaulders</Name>
@@ -69919,6 +70246,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Links of Accuracy</Name>
@@ -69952,6 +70280,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Links of Cruelty</Name>
@@ -69987,6 +70316,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Mail Armor</Name>
@@ -70021,6 +70351,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Mail Gauntlets</Name>
@@ -70056,6 +70387,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Mail Helm</Name>
@@ -70091,6 +70423,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Mail Leggings</Name>
@@ -70125,6 +70458,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Mail Spaulders</Name>
@@ -70152,6 +70486,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Medallion of Cruelty</Name>
@@ -70179,6 +70514,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Medallion of Cruelty</Name>
@@ -70206,6 +70542,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Medallion of Meditation</Name>
@@ -70233,6 +70570,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Medallion of Meditation</Name>
@@ -70260,6 +70598,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Medallion of Tenacity</Name>
@@ -70287,6 +70626,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Medallion of Tenacity</Name>
@@ -70321,6 +70661,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Mooncloth Gloves</Name>
@@ -70356,6 +70697,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Mooncloth Helm</Name>
@@ -70391,6 +70733,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Mooncloth Leggings</Name>
@@ -70425,6 +70768,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Mooncloth Mantle</Name>
@@ -70460,6 +70804,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Mooncloth Robe</Name>
@@ -70490,6 +70835,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Necklace of Proficiency</Name>
@@ -70520,6 +70866,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Necklace of Prowess</Name>
@@ -70555,6 +70902,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Ornamented Chestguard</Name>
@@ -70589,6 +70937,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Ornamented Gloves</Name>
@@ -70624,6 +70973,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Ornamented Headcover</Name>
@@ -70659,6 +71009,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Ornamented Legplates</Name>
@@ -70693,6 +71044,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Ornamented Spaulders</Name>
@@ -70723,6 +71075,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Pendant of Alacrity</Name>
@@ -70753,6 +71106,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Pendant of Diffusion</Name>
@@ -70783,6 +71137,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Pendant of Meditation</Name>
@@ -70818,6 +71173,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Plate Chestpiece</Name>
@@ -70852,6 +71208,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Plate Gauntlets</Name>
@@ -70887,6 +71244,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Plate Helm</Name>
@@ -70922,6 +71280,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Plate Legguards</Name>
@@ -70956,6 +71315,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Plate Shoulders</Name>
@@ -70987,6 +71347,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>700</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Relic of Conquest</Name>
@@ -71018,6 +71379,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>700</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Relic of Dominance</Name>
@@ -71049,6 +71411,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>700</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Relic of Salvation</Name>
@@ -71080,6 +71443,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>700</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Relic of Triumph</Name>
@@ -71115,6 +71479,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Ringmail Helm</Name>
@@ -71150,6 +71515,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Ringmail Leggings</Name>
@@ -71184,6 +71550,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Ringmail Spaulders</Name>
@@ -71214,6 +71581,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Ring of Accuracy</Name>
@@ -71244,6 +71612,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Ring of Cruelty</Name>
@@ -71277,6 +71646,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Sabatons of Alacrity</Name>
@@ -71310,6 +71680,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Sabatons of Alacrity</Name>
@@ -71343,6 +71714,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Sabatons of Cruelty</Name>
@@ -71376,6 +71748,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Sabatons of Meditation</Name>
@@ -71410,6 +71783,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Satin Gloves</Name>
@@ -71445,6 +71819,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Satin Hood</Name>
@@ -71480,6 +71855,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Satin Leggings</Name>
@@ -71514,6 +71890,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Satin Mantle</Name>
@@ -71549,6 +71926,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Satin Robe</Name>
@@ -71584,6 +71962,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Scaled Chestpiece</Name>
@@ -71619,6 +71998,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Scaled Gauntlets</Name>
@@ -71654,6 +72034,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Scaled Helm</Name>
@@ -71689,6 +72070,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Scaled Legguards</Name>
@@ -71723,6 +72105,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Scaled Shoulders</Name>
@@ -71753,6 +72136,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Signet of Accuracy</Name>
@@ -71783,6 +72167,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Signet of Cruelty</Name>
@@ -71817,6 +72202,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Silk Amice</Name>
@@ -71852,6 +72238,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Silk Cowl</Name>
@@ -71886,6 +72273,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Silk Handguards</Name>
@@ -71921,6 +72309,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Silk Robe</Name>
@@ -71956,6 +72345,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Silk Trousers</Name>
@@ -71989,6 +72379,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Treads of Alacrity</Name>
@@ -72022,6 +72413,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Treads of Cruelty</Name>
@@ -72055,6 +72447,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Treads of Meditation</Name>
@@ -72088,6 +72481,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Waistband of Accuracy</Name>
@@ -72121,6 +72515,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Waistband of Cruelty</Name>
@@ -72154,6 +72549,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Waistguard of Cruelty</Name>
@@ -72187,6 +72583,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Waistguard of Meditation</Name>
@@ -72220,6 +72617,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Warboots of Alacrity</Name>
@@ -72253,6 +72651,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Warboots of Cruelty</Name>
@@ -72283,6 +72682,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Wristguards of Accuracy</Name>
@@ -72313,6 +72713,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1250</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Wristguards of Alacrity</Name>
@@ -72347,6 +72748,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Wyrmhide Gloves</Name>
@@ -72382,6 +72784,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Wyrmhide Helm</Name>
@@ -72418,6 +72821,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Wyrmhide Legguards</Name>
@@ -72453,6 +72857,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>2200</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Wyrmhide Robes</Name>
@@ -72487,6 +72892,7 @@
         <Points>0</Points>
         <TokenType>Honor Points</TokenType>
         <TokenCount>1650</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Wyrmhide Spaulders</Name>
@@ -84450,6 +84856,7 @@
         <Points>3400</Points>
         <TokenType>Vicious Gladiator's Greatsword</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Greatsword</Name>
@@ -84482,6 +84889,7 @@
         <Points>3400</Points>
         <TokenType>Vicious Gladiator's Staff</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Staff</Name>
@@ -84514,6 +84922,7 @@
         <Points>3400</Points>
         <TokenType>Vicious Gladiator's Energy Staff</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Energy Staff</Name>
@@ -84546,6 +84955,7 @@
         <Points>3400</Points>
         <TokenType>Vicious Gladiator's Battle Staff</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Battle Staff</Name>
@@ -84577,6 +84987,7 @@
         <Points>3400</Points>
         <TokenType>Vicious Gladiator's Pike</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Pike</Name>
@@ -84608,6 +85019,7 @@
         <Points>3400</Points>
         <TokenType>Vicious Gladiator's Bonegrinder</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Bonegrinder</Name>
@@ -84639,6 +85051,7 @@
         <Points>3400</Points>
         <TokenType>Vicious Gladiator's Decapitator</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Decapitator</Name>
@@ -84671,6 +85084,7 @@
         <Points>2450</Points>
         <TokenType>Vicious Gladiator's Gavel</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Gavel</Name>
@@ -84702,6 +85116,7 @@
         <Points>2450</Points>
         <TokenType>Vicious Gladiator's Right Render</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Right Render</Name>
@@ -84733,6 +85148,7 @@
         <Points>2450</Points>
         <TokenType>Vicious Gladiator's Right Ripper</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Right Ripper</Name>
@@ -84765,6 +85181,7 @@
         <Points>2450</Points>
         <TokenType>Vicious Gladiator's Spellblade</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Spellblade</Name>
@@ -84796,6 +85213,7 @@
         <Points>950</Points>
         <TokenType>Vicious Gladiator's Left Render</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Left Render</Name>
@@ -84827,6 +85245,7 @@
         <Points>950</Points>
         <TokenType>Vicious Gladiator's Left Ripper</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Left Ripper</Name>
@@ -84858,6 +85277,7 @@
         <Points>950</Points>
         <TokenType>Vicious Gladiator's Shiv</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Shiv</Name>
@@ -84889,6 +85309,7 @@
         <Points>3400</Points>
         <TokenType>Vicious Gladiator's Longbow</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Longbow</Name>
@@ -84920,6 +85341,7 @@
         <Points>3400</Points>
         <TokenType>Vicious Gladiator's Heavy Crossbow</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Heavy Crossbow</Name>
@@ -84951,6 +85373,7 @@
         <Points>3400</Points>
         <TokenType>Vicious Gladiator's Rifle</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Rifle</Name>
@@ -84983,6 +85406,7 @@
         <Points>700</Points>
         <TokenType>Vicious Gladiator's Baton of Light</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Baton of Light</Name>
@@ -85015,6 +85439,7 @@
         <Points>700</Points>
         <TokenType>Vicious Gladiator's Touch of Defeat</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Touch of Defeat</Name>
@@ -85046,6 +85471,7 @@
         <Points>700</Points>
         <TokenType>Vicious Gladiator's Hatchet</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Hatchet</Name>
@@ -85077,6 +85503,7 @@
         <Points>700</Points>
         <TokenType>Vicious Gladiator's War Edge</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's War Edge</Name>
@@ -85108,6 +85535,7 @@
         <Points>2450</Points>
         <TokenType>Vicious Gladiator's Quickblade</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Quickblade</Name>
@@ -85139,6 +85567,7 @@
         <Points>2450</Points>
         <TokenType>Vicious Gladiator's Slicer</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Slicer</Name>
@@ -85170,6 +85599,7 @@
         <Points>2450</Points>
         <TokenType>Vicious Gladiator's Bonecracker</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Bonecracker</Name>
@@ -85201,6 +85631,7 @@
         <Points>2450</Points>
         <TokenType>Vicious Gladiator's Pummeler</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Pummeler</Name>
@@ -85232,6 +85663,7 @@
         <Points>2450</Points>
         <TokenType>Vicious Gladiator's Shanker</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Shanker</Name>
@@ -85263,6 +85695,7 @@
         <Points>2450</Points>
         <TokenType>Vicious Gladiator's Hacker</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Hacker</Name>
@@ -85294,6 +85727,7 @@
         <Points>2450</Points>
         <TokenType>Vicious Gladiator's Cleaver</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Cleaver</Name>
@@ -85323,6 +85757,7 @@
         <Points>950</Points>
         <TokenType>Vicious Gladiator's Redoubt</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Redoubt</Name>
@@ -85352,6 +85787,7 @@
         <Points>950</Points>
         <TokenType>Vicious Gladiator's Barrier</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Barrier</Name>
@@ -85381,6 +85817,7 @@
         <Points>950</Points>
         <TokenType>Vicious Gladiator's Shield Wall</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Shield Wall</Name>
@@ -85409,6 +85846,7 @@
         <Points>950</Points>
         <TokenType>Vicious Gladiator's Reprieve</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Reprieve</Name>
@@ -85437,6 +85875,7 @@
         <Points>950</Points>
         <TokenType>Vicious Gladiator's Endgame</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Endgame</Name>
@@ -88963,6 +89402,7 @@
         <PointType>Honor Points</PointType>
         <Points>55</Points>
         <TokenCount>0</TokenCount>
+        <ArenaRating>0</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Mystic Cogwheel</Name>
@@ -89195,6 +89635,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Dreadplate Helm</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Dreadplate Helm</Name>
@@ -89228,6 +89669,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Dreadplate Shoulders</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Dreadplate Shoulders</Name>
@@ -89262,6 +89704,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Dreadplate Chestpiece</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Dreadplate Chestpiece</Name>
@@ -89295,6 +89738,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Dreadplate Gauntlets</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Dreadplate Gauntlets</Name>
@@ -89329,6 +89773,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Dreadplate Legguards</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Dreadplate Legguards</Name>
@@ -89362,6 +89807,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Warboots of Alacrity</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Warboots of Alacrity</Name>
@@ -90845,6 +91291,9 @@
     <Faction>Neutral</Faction>
     <SocketBonus />
     <LocationInfo>
+      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="UnknownItem" />
       <ItemLocation xsi:type="UnknownItem" />
       <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
@@ -94877,6 +95326,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Wyrmhide Legguards</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Wyrmhide Legguards</Name>
@@ -94912,6 +95362,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Wyrmhide Robes</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Wyrmhide Robes</Name>
@@ -94946,6 +95397,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Wyrmhide Spaulders</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Wyrmhide Spaulders</Name>
@@ -94981,6 +95433,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Chain Armor</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Chain Armor</Name>
@@ -95015,6 +95468,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Chain Gauntlets</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Chain Gauntlets</Name>
@@ -95050,6 +95504,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Chain Helm</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Chain Helm</Name>
@@ -95085,6 +95540,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Chain Leggings</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Chain Leggings</Name>
@@ -95119,6 +95575,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Chain Spaulders</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Chain Spaulders</Name>
@@ -95153,6 +95610,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Silk Amice</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Silk Amice</Name>
@@ -95188,6 +95646,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Silk Cowl</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Silk Cowl</Name>
@@ -95222,6 +95681,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Silk Handguards</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Silk Handguards</Name>
@@ -95257,6 +95717,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Silk Robe</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Silk Robe</Name>
@@ -95292,6 +95753,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Silk Trousers</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Silk Trousers</Name>
@@ -95326,6 +95788,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Scaled Shoulders</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Scaled Shoulders</Name>
@@ -95361,6 +95824,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Scaled Legguards</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Scaled Legguards</Name>
@@ -95396,6 +95860,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Scaled Helm</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Scaled Helm</Name>
@@ -95430,6 +95895,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Scaled Gauntlets</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Scaled Gauntlets</Name>
@@ -95465,6 +95931,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Scaled Chestpiece</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Scaled Chestpiece</Name>
@@ -95499,6 +95966,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Ornamented Spaulders</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Ornamented Spaulders</Name>
@@ -95534,6 +96002,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Ornamented Legplates</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Ornamented Legplates</Name>
@@ -95569,6 +96038,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Ornamented Headcover</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Ornamented Headcover</Name>
@@ -95603,6 +96073,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Ornamented Gloves</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Ornamented Gloves</Name>
@@ -95638,6 +96109,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Ornamented Chestguard</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Ornamented Chestguard</Name>
@@ -95673,6 +96145,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Satin Robe</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Satin Robe</Name>
@@ -95707,6 +96180,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Satin Mantle</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Satin Mantle</Name>
@@ -95742,6 +96216,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Satin Leggings</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Satin Leggings</Name>
@@ -95777,6 +96252,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Satin Hood</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Satin Hood</Name>
@@ -95811,6 +96287,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Satin Gloves</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Satin Gloves</Name>
@@ -95846,6 +96323,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Mooncloth Robe</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Mooncloth Robe</Name>
@@ -95880,6 +96358,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Mooncloth Mantle</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Mooncloth Mantle</Name>
@@ -95915,6 +96394,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Mooncloth Leggings</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Mooncloth Leggings</Name>
@@ -95950,6 +96430,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Mooncloth Helm</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Mooncloth Helm</Name>
@@ -95984,6 +96465,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Mooncloth Gloves</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Mooncloth Gloves</Name>
@@ -96018,6 +96500,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Leather Gloves</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Leather Gloves</Name>
@@ -96053,6 +96536,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Leather Helm</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Leather Helm</Name>
@@ -96088,6 +96572,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Leather Legguards</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Leather Legguards</Name>
@@ -96122,6 +96607,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Leather Spaulders</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Leather Spaulders</Name>
@@ -96157,6 +96643,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Leather Tunic</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Leather Tunic</Name>
@@ -96191,6 +96678,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Ringmail Spaulders</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Ringmail Spaulders</Name>
@@ -96226,6 +96714,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Ringmail Leggings</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Ringmail Leggings</Name>
@@ -96261,6 +96750,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Ringmail Helm</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Ringmail Helm</Name>
@@ -96295,6 +96785,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Ringmail Gauntlets</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Ringmail Gauntlets</Name>
@@ -96330,6 +96821,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Ringmail Armor</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Ringmail Armor</Name>
@@ -96364,6 +96856,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Mail Spaulders</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Mail Spaulders</Name>
@@ -96399,6 +96892,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Mail Leggings</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Mail Leggings</Name>
@@ -96434,6 +96928,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Mail Helm</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Mail Helm</Name>
@@ -96468,6 +96963,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Mail Gauntlets</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Mail Gauntlets</Name>
@@ -96503,6 +96999,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Mail Armor</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Mail Armor</Name>
@@ -96537,6 +97034,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Linked Spaulders</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Linked Spaulders</Name>
@@ -96572,6 +97070,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Linked Leggings</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Linked Leggings</Name>
@@ -96607,6 +97106,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Linked Helm</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Linked Helm</Name>
@@ -96641,6 +97141,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Linked Gauntlets</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Linked Gauntlets</Name>
@@ -96676,6 +97177,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Linked Armor</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Linked Armor</Name>
@@ -96710,6 +97212,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Felweave Amice</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Felweave Amice</Name>
@@ -96745,6 +97248,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Felweave Cowl</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Felweave Cowl</Name>
@@ -96779,6 +97283,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Felweave Handguards</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Felweave Handguards</Name>
@@ -96814,6 +97319,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Felweave Raiment</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Felweave Raiment</Name>
@@ -96849,6 +97355,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Felweave Trousers</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Felweave Trousers</Name>
@@ -96883,6 +97390,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Plate Shoulders</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Plate Shoulders</Name>
@@ -96918,6 +97426,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Plate Legguards</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Plate Legguards</Name>
@@ -96953,6 +97462,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Plate Helm</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Plate Helm</Name>
@@ -96987,6 +97497,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Plate Gauntlets</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Plate Gauntlets</Name>
@@ -97022,6 +97533,7 @@
         <Points>0</Points>
         <TokenType>Vicious Gladiator's Plate Chestpiece</TokenType>
         <TokenCount>1</TokenCount>
+        <ArenaRating>2200</ArenaRating>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Plate Chestpiece</Name>

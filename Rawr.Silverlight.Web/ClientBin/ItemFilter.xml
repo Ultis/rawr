@@ -2811,7 +2811,7 @@
     <ItemFilterRegex>
       <Name>PvP</Name>
       <Enabled>true</Enabled>
-      <Pattern>Lieutenant Tristia|Captain Dirgehammer|PVP|Honor Points|Conquest Points|Arena Rating|Vicious Gladiator</Pattern>
+      <Pattern>Lieutenant Tristia|Captain Dirgehammer|PVP|Honor Points|Conquest Points|Arena|Battleground</Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
       <BoP>true</BoP>
@@ -2830,9 +2830,9 @@
       <AppliesToGems>false</AppliesToGems>
       <RegexList>
         <ItemFilterRegex>
-          <Name>Requires Arena Rating</Name>
+          <Name>Arena or Battleground Rating</Name>
           <Enabled>true</Enabled>
-          <Pattern>Arena Rating</Pattern>
+          <Pattern>Arena|Battleground</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
