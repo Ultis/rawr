@@ -337,6 +337,47 @@ namespace Rawr
             return (match.Value == " ") ? "+" : String.Format("%{0:X2}", Convert.ToInt32(match.Value[0])); 
         }
 #endif
+
+        public static string CamelCaseToSpaced(string s)
+        {
+            StringBuilder bld = new StringBuilder();
+            char initial = (char)0;
+            bool start = true;
+            bool needsSpace = false;
+            foreach (char c in s)
+            {
+                if (Char.IsUpper(c))
+                {
+                    if (initial != 0)
+                    {
+                        bld.Append(initial);
+                        needsSpace = true;
+                    }
+                    else
+                    {
+                        if (!start)
+                            bld.Append(' ');
+                        needsSpace = false;
+                    }
+                    initial = c;
+                }
+                else
+                {
+                    if (initial != 0)
+                    {
+                        if (needsSpace)
+                            bld.Append(' ');
+                        bld.Append(initial);
+                        initial = (char)0;
+                    }
+                    bld.Append(c);
+                }
+                start = false;
+            }
+            if (initial != 0)
+                bld.Append(initial);
+            return bld.ToString();
+        }
     }
 
 }

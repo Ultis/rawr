@@ -7,49 +7,269 @@
     xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
     xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
     xmlns:System="clr-namespace:System;assembly=mscorlib"
-    mc:Ignorable="d"
-    d:DesignWidth="330" d:DesignHeight="600"
-    xmlns:local="clr-namespace:Rawr.Tree"
-    x:Class="Rawr.Tree.CalculationOptionsPanelTree" 
-    >
+    mc:Ignorable="d" xmlns:local="clr-namespace:Rawr.Tree"
+    x:Class="Rawr.Tree.CalculationOptionsPanelTree" d:DesignHeight="559" d:DesignWidth="391">
 
     <UserControl.Resources>
         <local:CalculationOptionsTree x:Key="CalculationOptionsTreeDataSource" d:IsDataSource="True"/>
     </UserControl.Resources>
+	<controls:TabControl x:Name="LayoutRoot" DataContext="{Binding Source={StaticResource CalculationOptionsTreeDataSource}}">
+		<controls:TabItem Header="General">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="29" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+				</Grid.RowDefinitions>
 
-    <Grid x:Name="LayoutRoot" DataContext="{Binding Source={StaticResource CalculationOptionsTreeDataSource}}">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+				<Border Grid.ColumnSpan="5" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
+					<TextBlock Margin="4" FontWeight="Bold" Text="Weights" VerticalAlignment="Center" />
+				</Border>
 
-        <!-- ========= Weighting Adjustments ========= -->
-        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
-            <TextBlock Margin="4" FontWeight="Bold" Text="Weighting Adjustments" VerticalAlignment="Center" />
-        </Border>
-        <TextBlock Grid.Row="1" Grid.ColumnSpan="4" Margin="4,2" TextWrapping="Wrap" FontSize="10"
-            Text="The following settings will adjust the overall scores for each type. This does not involve Stat Weights as described by Pawn, SimCraft or other similar utilities. These are meant to describe your general importance to each point." />
-        <!-- Burst v Sustained -->
-        <TextBlock Margin="4,2" Grid.Row="2" Text="Burst vs Sustained:" TextWrapping="Wrap" VerticalAlignment="Center"/>
-        <Slider Grid.Column="1" Grid.Row="2" Maximum="100" SmallChange="1" Value="{Binding Path=BSRatio, Mode=TwoWay}" Margin="2" ToolTipService.ToolTip="Percentage of combined value that comes from sustained"/>
-        <inputToolkit:NumericUpDown Margin="2" Grid.Column="2" Grid.Row="2" Value="{Binding Path=BSRatio, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50" />
-        <!-- Survival Multiplier -->
-        <TextBlock Margin="4,2" Grid.Row="3" Text="Survival Multiplier:" TextWrapping="Wrap" VerticalAlignment="Center"/>
-        <Slider Grid.Column="1" Grid.Row="3" Maximum="10" LargeChange="1" SmallChange="1" Value="{Binding Path=SurvValuePer100, Mode=TwoWay}" Margin="2"/>
-        <inputToolkit:NumericUpDown Margin="2" Grid.Column="2" Grid.Row="3" Value="{Binding Path=SurvValuePer100, Mode=TwoWay}" Maximum="10" DecimalPlaces="0" MinWidth="50" />
-        <!-- ========= Misc ========= -->
-        <Border Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
-            <TextBlock Margin="4" FontWeight="Bold" Text="Misc" VerticalAlignment="Center" />
-        </Border>
-        <CheckBox Margin="4,2,2,2" Content="Cast Innervates on Self" Grid.Row="5" IsChecked="{Binding Mode=TwoWay, Path=Innervates}" Grid.ColumnSpan="3" />
-    </Grid>
+				<Grid Grid.ColumnSpan="3" Grid.Row="1" Grid.RowSpan="3">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition Width="*" />
+						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition Width="Auto" />
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+					</Grid.RowDefinitions>
+					<TextBlock Margin="4,2" Grid.Row="0" Text="Raid" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Right" />
+					<TextBlock Text="Tank" TextWrapping="Wrap" VerticalAlignment="Center" Grid.Column="2" Grid.Row="0" Height="Auto" Margin="4,2" />
+					<Slider Grid.Column="1" Grid.Row="0" Maximum="100" SmallChange="1" Value="{Binding Path=TankRatio, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Margin="2,2,0,2" Grid.ColumnSpan="1" />
+					<inputToolkit:NumericUpDown Margin="2" Grid.Column="4" Grid.Row="0" Value="{Binding Path=TankRatio, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50" />
+
+					<TextBlock Margin="4,2" Grid.Row="1" Text="Raid Sustained" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Right" ToolTipService.ToolTip="Raid healing accounting for actual mana regeneration, averaged over the whole fight" />
+					<TextBlock Margin="4,2" Grid.Row="1" Text="Raid Burst" TextWrapping="Wrap" VerticalAlignment="Center" Grid.Column="2" ToolTipService.ToolTip="Raid healing assuming infinite mana, averaged over the whole fight" />
+					<Slider Grid.Column="1" Grid.Row="1" Maximum="100" SmallChange="1" Value="{Binding Path=RaidBurstRatio, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Margin="2,2,0,2" Grid.ColumnSpan="1" />
+					<inputToolkit:NumericUpDown Margin="2" Grid.Column="4" Grid.Row="1" Value="{Binding Path=RaidBurstRatio, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50" />
+
+					<TextBlock Margin="4,2" Grid.Row="2" Text="Tank Sustained" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Right" ToolTipService.ToolTip="Tank healing accounting for actual mana regeneration, averaged over the whole fight" />
+					<TextBlock Margin="4,2" Grid.Row="2" Text="Tank Burst" TextWrapping="Wrap" VerticalAlignment="Center" Grid.Column="2" ToolTipService.ToolTip="Tank healing assuming infinite mana, averaged over the whole fight" />
+					<Slider Grid.Column="1" Grid.Row="2" Maximum="100" SmallChange="1" Value="{Binding Path=TankBurstRatio, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Margin="2,2,0,2" Grid.ColumnSpan="1" />
+					<inputToolkit:NumericUpDown Margin="2" Grid.Column="4" Grid.Row="2" Value="{Binding Path=TankBurstRatio, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50" />
+				</Grid>
+
+				<Border Grid.Row="4" Grid.ColumnSpan="5" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
+					<TextBlock Margin="4" FontWeight="Bold" Text="General" VerticalAlignment="Center" />
+				</Border>
+
+				<CheckBox Grid.Row="5" IsChecked="{Binding Path=Restoration, Mode=TwoWay}" MinWidth="50" Content="Restoration specialization" Grid.ColumnSpan="3" Margin="4,2,2,2" ToolTipService.ToolTip="Whether the druid is a restoration druid as opposed to a moonkin or feral; if you unselect this, you should also unselect all deep Restoration talents and ideally fully specify the feral or balance spec." />
+
+				<Border Grid.Row="6" Grid.ColumnSpan="5" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
+					<TextBlock Margin="4" FontWeight="Bold" Text="Innervate" VerticalAlignment="Center" />
+				</Border>
+
+				<CheckBox Grid.Column="0" Grid.Row="7" IsChecked="{Binding Path=TimedInnervates, Mode=TwoWay}" MinWidth="50" Content="Time Innervate with best intellect proc" Margin="4,2,2,2" Grid.ColumnSpan="5" ToolTipService.ToolTip="Whether Innervate should be timed with the best random Intellect proc (such as Power Torrent, Lightweave or Mandala of Stirring Patterns)"/>
+				<CheckBox Grid.Column="0" Grid.Row="8" IsChecked="{Binding Path=BoostIntellectBeforeInnervate, Mode=TwoWay}" MinWidth="50" Content="Boost intellect before Innervate" Margin="4,2,2,2" Grid.ColumnSpan="5" ToolTipService.ToolTip="Whether, before using Innervate, intellect-boosting on-use effects should be activated (such as Synapse Springs)"/>
+				<CheckBox Grid.Column="0" Grid.Row="9" IsChecked="{Binding Path=InnervateOther, Mode=TwoWay}" MinWidth="50" Content="Innervate someone else" Margin="4,2,2,2" Grid.ColumnSpan="5"/>
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="External innervate(s) size:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="10" ToolTipService.ToolTip="If someone else is innervating you, the mana gain from each innervate they cast (enter the sum if several druids are innervating you)." />
+
+				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="10" Value="{Binding Path=ExternalInnervateSize, Mode=TwoWay}" DecimalPlaces="0" MinWidth="50" Maximum="1000000" />
+
+				<Border Grid.Row="11" Grid.ColumnSpan="5" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
+					<TextBlock Margin="4" FontWeight="Bold" Text="Special effects" VerticalAlignment="Center" />
+				</Border>				
+				
+				<CheckBox Grid.Column="0" Grid.Row="12" IsChecked="{Binding Path=SeparateHasteEffects, Mode=TwoWay}" MinWidth="50" Content="Use same-CD haste effects separately" Margin="4,2,2,2" Grid.ColumnSpan="5" ToolTipService.ToolTip="Whether haste effects with a common cooldown should be activated in a staggered fashion rather than all at once (examples are Nature's Grace, Witching Hourglass and Shard of Woe)"/>
+
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Initial trigger interval:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="13" ToolTipService.ToolTip="Initial estimation for the trigger interval (average time between heals) for random procs" />
+				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="13" Value="{Binding Path=ProcTriggerInterval, Mode=TwoWay}" DecimalPlaces="2" MinWidth="50" />
+
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Initial periodic trigger interval:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="14" ToolTipService.ToolTip="Initial estimation for the periodic trigger interval (average time between HoT heals) for random procs" />
+				<inputToolkit:NumericUpDown Margin="2,2,2,0" Grid.Column="1" Grid.Row="14" Value="{Binding Path=ProcPeriodicTriggerInterval, Mode=TwoWay}" DecimalPlaces="2" MinWidth="50" Height="22" VerticalAlignment="Top" />
+
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Trigger interval iterations (SLOW):" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="15" ToolTipService.ToolTip="Iterations for refinement of the trigger interval for random procs (will slow the model by this factor)" />
+				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="15" Value="{Binding Path=ProcTriggerIterations, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50" />
+
+				<Border Grid.Row="16" Grid.ColumnSpan="5" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
+					<TextBlock Margin="4" FontWeight="Bold" Text="Timing (in seconds)" VerticalAlignment="Center" />
+				</Border>
+
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Lifebloom wasted duration:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="17" ToolTipService.ToolTip="Lifebloom duration wasted due to refreshing too early" />
+				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="17" Value="{Binding Path=LifebloomWastedDuration, Mode=TwoWay}" Maximum="6" DecimalPlaces="2" MinWidth="50" />
+
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Wild Growth cast delay:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="18" ToolTipService.ToolTip="Average time interval between the time the spell comes off cooldown and the time it is cast again" />
+				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="18" Value="{Binding Path=WildGrowthCastDelay, Mode=TwoWay}" DecimalPlaces="2" MinWidth="50" Maximum="10000"/>
+
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Swiftmend cast delay:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="19" ToolTipService.ToolTip="Average time interval between the time the spell comes off cooldown and the time it is cast again" />
+				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="19" Value="{Binding Path=SwiftmendCastDelay, Mode=TwoWay}" DecimalPlaces="2" MinWidth="50" Maximum="10000" />
+
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Nature's Swiftness cast delay:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="20" ToolTipService.ToolTip="Average time interval between the time the spell comes off cooldown and the time it is cast again" />
+				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="20" Value="{Binding Path=NaturesSwiftnessCastDelay, Mode=TwoWay}" DecimalPlaces="2" MinWidth="50" Maximum="10000" />
+
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Tranquility cast delay:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="21" ToolTipService.ToolTip="Average time interval between the time the spell comes off cooldown and the time it is cast again" />
+				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="21" Value="{Binding Path=TranquilityCastDelay, Mode=TwoWay}" DecimalPlaces="2" MinWidth="50" Maximum="10000" />
+
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Glyph of Regrowth extra time:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="22" ToolTipService.ToolTip="Average extra duration for Regrowth's HoT if Glyph of Regrowth is in use" />
+				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="22" Value="{Binding Path=GlyphOfRegrowthExtraDuration, Mode=TwoWay}" DecimalPlaces="2" MinWidth="50" Maximum="1000" />
+			</Grid>
+		</controls:TabItem>
+		<controls:TabItem Header="Tank">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+				</Grid.RowDefinitions>
+
+				<Border Grid.Row="0" Grid.ColumnSpan="5" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
+					<TextBlock Margin="4" FontWeight="Bold" Text="Tank healing" VerticalAlignment="Center" />
+				</Border>
+
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Unevenly allocated filler mana:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="1" ToolTipService.ToolTip="How much of the mana available to be spent on spammable spells should be allocated in an uneven fashion to achieve better results, by trying to spend it when beneficial effects and proc are active; the rest will be instead used evenly regardless of active effects." />
+				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="1" Value="{Binding Path=TankUnevenlyAllocatedFillerMana, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50" />
+
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Collateral raid healing weight:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="2" ToolTipService.ToolTip="Percentage of collateral raid healing (from Efflorescence, Rejuvenations for Nature's Bounty and Wild Growth) should be added to the tank healing score." />
+				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="2" Value="{Binding Path=TankRaidHealingWeight, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50" />
+
+				<CheckBox Grid.Column="0" Grid.Row="3" IsChecked="{Binding Path=TankSwiftmend, Mode=TwoWay}" MinWidth="50" Content="Use Swiftmend/Efforescence" Margin="4,2,2,2" Grid.ColumnSpan="3" ToolTipService.ToolTip="Whether Swiftmend should be used on the tank (you should enable this, unless you want to model a situation where it is being reserved for raid healing with Efflorescence)."/>
+				<CheckBox Grid.Column="0" Grid.Row="4" IsChecked="{Binding Path=TankWildGrowth, Mode=TwoWay}" MinWidth="50" Content="Use Wild Growth" Margin="4,2,2,2" Grid.ColumnSpan="3" ToolTipService.ToolTip="Whether Wild Growth should be cast on cooldown (use this to model typical where you tank heal but also cast Wild Growth due to its high HPM)"/>
+			</Grid>
+		</controls:TabItem>
+		<controls:TabItem Header="Raid">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="54*"/>
+					<ColumnDefinition Width="82*" />
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+				</Grid.RowDefinitions>
+				<Border Grid.ColumnSpan="5" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
+					<TextBlock Margin="4" FontWeight="Bold" Text="Raid healing" VerticalAlignment="Center" />
+				</Border>
+
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Unevenly allocated filler mana:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="1" ToolTipService.ToolTip="How much of the mana available to be spent on spammable spells should be allocated in an uneven fashion to achieve better results, by trying to spend it when beneficial effects and proc are active; the rest will be instead used evenly regardless of active effects." />
+				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="1" Value="{Binding Path=RaidUnevenlyAllocatedFillerMana, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50" />
+				
+				<CheckBox Grid.Column="0" Grid.Row="2" IsChecked="{Binding Path=RefreshLifebloomWithDirectHeals, Mode=TwoWay}" MinWidth="50" Content="Refresh Lifebloom with direct heals" Margin="4,2,2,2" Grid.ColumnSpan="5" ToolTipService.ToolTip="Whether Lifebloom should be refreshed with direct heals rather than by casting the Lifebloom spell (only applies if Empowered Touch has been selected)"/>
+				<CheckBox Grid.Column="0" Grid.Row="3" IsChecked="{Binding Path=RejuvenationTankDuringRaid, Mode=TwoWay}" MinWidth="50" Content="Keep Rejuvenation up on the tank" Margin="4,2,2,2" Grid.ColumnSpan="5" ToolTipService.ToolTip="Whether Rejuvenation is kept up on the main tank (improves overall healing due to Symbiosis synergy with Lifebloom)"/>
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Mean Efflorescence targets:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="5" ToolTipService.ToolTip="Average number of targets missing health standing in Efflorescence's green circle" />
+				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="5" Value="{Binding Path=EfflorescenceTargets, Mode=TwoWay}" Maximum="3" DecimalPlaces="2" MinWidth="50" />
+
+				<Border Grid.Row="4" Grid.ColumnSpan="5" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
+					<TextBlock Margin="4" FontWeight="Bold" Text="Multi-target raid healing" VerticalAlignment="Center" />
+				</Border>
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Wild Growth symbiosis rate:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="6" ToolTipService.ToolTip="Average percentage of Wild Growth targets where Rejuvenation or Lifebloom are present" />
+				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="6" Value="{Binding Path=WildGrowthSymbiosisRate, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50" />
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Wild Growth effectiveness:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="7" ToolTipService.ToolTip="Percentage of Wild Growth healing that is not overhealing" />
+				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="7" Value="{Binding Path=WildGrowthEffectiveHealing, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50"  />
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Tranquility symbiosis rate:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="8" ToolTipService.ToolTip="Average percentage of Tranquility targets where Wild Growth, Rejuvenation or Lifebloom are present" />
+				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="8" Value="{Binding Path=TranquilitySymbiosisRate, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50" />
+
+				<Border Grid.Row="9" Grid.ColumnSpan="5" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
+					<TextBlock Margin="4" FontWeight="Bold" Text="Single-target raid healing" VerticalAlignment="Center" />
+				</Border>
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Symbiosis rate:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="10" ToolTipService.ToolTip="Average percentage of target of single-target raid heals where Wild Growth or Lifebloom are present" />
+				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="10" Value="{Binding Path=RaidSTSymbiosisRate, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50" />
+
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Living Seed effectiveness:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="11" ToolTipService.ToolTip="Average usage rate of Living Seed placed by single-target raid healing" />
+				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="11" Value="{Binding Path=LivingSeedEffectiveHealing, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50"  />
+
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="ToL Lifebloom effectiveness:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="12" ToolTipService.ToolTip="Percentage of raid Lifebloom healing during Tree of Life that is not overhealing" />
+				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="12" Value="{Binding Path=ToLLifebloomEffectiveHealing, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50"  />
+
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Rejuvenation effectiveness:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="13" ToolTipService.ToolTip="Percentage of raid Rejuvenation healing that is not overhealing" />
+				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="13" Value="{Binding Path=RejuvenationEffectiveHealing, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50"  />
+
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Healing Touch effectiveness:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="14" ToolTipService.ToolTip="Percentage of raid Healing Touch healing that is not overhealing" />
+				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="14" Value="{Binding Path=HealingTouchEffectiveHealing, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50"  />
+
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Nourish/RG effectiveness:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="15" ToolTipService.ToolTip="Percentage of raid Nourish or Regrowth healing that is not overhealing" />
+				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="15" Value="{Binding Path=NourishEffectiveHealing, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50"  />
+			</Grid>
+		</controls:TabItem>
+		<controls:TabItem Header="Experimental">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+				</Grid.RowDefinitions>
+				<Border Grid.Row="0" Grid.ColumnSpan="5" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
+					<TextBlock Margin="4" FontWeight="Bold" Text="PTR changes" VerticalAlignment="Center" />
+				</Border>
+
+				<CheckBox Grid.Column="0" Grid.Row="1" IsChecked="{Binding Path=Crit100Bonus, Mode=TwoWay}" MinWidth="50" Content="+100% crits" Margin="4,2,2,2" Grid.ColumnSpan="5" ToolTipService.ToolTip="Whether critical hits should result in a 100% bonus like on PTR rather than the 50% bonus on 4.1"/>
+				<CheckBox Grid.Column="0" Grid.Row="2" IsChecked="{Binding Path=Harmony, Mode=TwoWay}" MinWidth="50" Content="Use Harmony mastery" Margin="4,2,2,2" Grid.ColumnSpan="5" ToolTipService.ToolTip="Whether the Harmony mastery used on PTR should be used rather than the Symbiosis mastery on 4.1" />
+
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Harmony coefficient:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="3" ToolTipService.ToolTip="Coefficient of the Harmony mastery, if enabled (currenly 1.25 on PTR)"/>
+				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="3" Value="{Binding Path=HarmonyCoefficient, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="2" MinWidth="50" />
+
+				<CheckBox Grid.Column="0" Grid.Row="4" IsChecked="{Binding Path=T12_2P, Mode=TwoWay}" MinWidth="50" Content="Replace the T11 2P bonus with T12 2P" Margin="4,2,2,2" Grid.ColumnSpan="5" />
+
+				<CheckBox Grid.Column="0" Grid.Row="5" IsChecked="{Binding Path=T12_4P_Swiftmend, Mode=TwoWay}" MinWidth="50" Content="Replace the T11 4P bonus with T12 4P" Margin="4,2,2,2" Grid.ColumnSpan="5" />
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Swiftmend extra heal effectiveness:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="6" ToolTipService.ToolTip="Percentage of the Swiftend healing to an extra target due to the T12 4P bonus that is not overhealing" />
+				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="6" Value="{Binding Path=SwiftmendExtraHealEffectiveHealing, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50"  />
+			</Grid>
+
+		</controls:TabItem>
+	</controls:TabControl>
 </UserControl>

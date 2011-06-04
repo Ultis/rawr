@@ -1,259 +1,386 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
+using Rawr.Base;
 
 namespace Rawr.Tree {
-    public class CharacterCalculationsTree : CharacterCalculationsBase {
-        public Stats BasicStats { get; set; }
-        public Stats CombatStats { get; set; }
+    enum TreeAction
+    {
+        // must be in the same order of TreeSpells
+        RaidNourish,
+        RaidHealingTouch,
+        RaidRegrowth,
+        RaidTolLb,
+        RaidRejuvenation,
+        RaidTranquility,
+        RaidSwiftmend,
+        RaidWildGrowth,
 
-        private float[] subPoints = new float[] { 0f, 0f, 0f };
-        public override float[] SubPoints {
+        TankNourish,
+        TankHealingTouch,
+        TankRegrowth,
+        TankTolLb,
+        TankRejuvenation,
+        TankTranquility,
+        TankSwiftmend,
+        TankWildGrowth,
+
+        RaidRj2NourishNB,
+        RaidRj3NourishNB,
+        RaidClearHT,
+        RaidClearRegrowth,
+        RaidSwiftHT,
+        RaidTolLbCcHt,
+
+        TankRj2NourishNB,
+        TankClearHT,
+        TankClearRegrowth,
+        TankSwiftHT,
+        TankTolLbCcHt, // the LB is on the raid, but the CCHT is on the tank
+
+        ReLifebloom,
+
+        Count
+    };
+
+    enum TreePassive
+    {
+        RollingLifebloom,
+        Perserverance,
+        NaturesWard,
+
+        Count
+    };
+
+    sealed internal class TreeStats
+    {
+        public HasteStats Haste;
+
+        public double SpellPower;
+        public double SpellCrit;
+
+        public double TreeOfLifeUptime;
+        public double Symbiosis;
+        public double Harmony;
+
+        public double SpellsManaCostReduction;
+        public double BonusCritHealMultiplier;
+
+        // derived
+        public double PassiveDirectHealBonus;
+        public double PassivePeriodicHealBonus;
+        public double HealMultiplier;
+        public double SpellsManaCostMultiplier;
+
+        public TreeStats(Character character, Stats stats, KeyValuePair<double, SpecialEffect>[] hasteProcs, double treeOfLifeUptime)
+        {
+            CalculationOptionsTree opts = character.CalculationOptions as CalculationOptionsTree;
+
+            bool Restoration = (opts != null) ? opts.Restoration : true;
+
+            Haste = new HasteStats(stats, hasteProcs);
+
+            SpellCrit = StatConversion.GetSpellCritFromIntellect(stats.Intellect) + StatConversion.GetSpellCritFromRating(stats.CritRating) + stats.SpellCrit;
+
+            SpellPower = (float)(stats.SpellPower + Math.Max(0f, stats.Intellect - 10));
+            // TODO: does nurturing instinct actually work like this?
+            SpellPower += character.DruidTalents.NurturingInstinct * 0.5 * stats.Agility;
+            SpellPower *= (1 + stats.BonusSpellPowerMultiplier);
+
+            TreeOfLifeUptime = treeOfLifeUptime;
+            double mastery = 8.0f + StatConversion.GetMasteryFromRating(stats.MasteryRating);
+            if(Restoration)
+            {
+                if(!opts.Harmony)
+                    Symbiosis = mastery * 0.0145f;
+                else
+                    Harmony = mastery * opts.HarmonyCoefficient;
+            }
+
+            SpellsManaCostReduction = stats.SpellsManaCostReduction + stats.NatureSpellsManaCostReduction;
+            BonusCritHealMultiplier = stats.BonusCritHealMultiplier;
+
+            // according to Paragon's Anaram posting on ElitistJerks, Harmony is additive
+            PassiveDirectHealBonus = (Restoration ? 1.25f : 1.0f) + Harmony;
+            PassivePeriodicHealBonus = PassiveDirectHealBonus + 0.02f * character.DruidTalents.Genesis;
+            HealMultiplier = (1.0f + character.DruidTalents.MasterShapeshifter * 0.04f) * (1 + TreeOfLifeUptime * 0.15f);
+            SpellsManaCostMultiplier = 1.0f - character.DruidTalents.Moonglow * 0.03f;
+        }
+    }
+
+    sealed class ComputedSpell
+    {
+        public SpellData Data;
+        public TreeStats Stats;
+
+        public int TimeReductionMS;
+
+        public double DirectMultiplier;
+        public double TickMultiplier;
+
+        public double ExtraDirectBonus;
+        public double ExtraTickBonus;
+        public double ExtraDurationMS;
+
+        public double Tick;
+        public double Ticks;
+        public double Duration;
+        public double TPS;
+
+        public DiscreteAction Action;
+
+        public DiscreteAction RaidAction;
+        public DiscreteAction TankAction;
+
+        public void Multiply(double v)
+        {
+            RaidAction.Direct *= v;
+            RaidAction.Periodic *= v;
+            TankAction.Direct *= v;
+            TankAction.Periodic *= v;
+        }
+
+        public void MultiplyTank(double v)
+        {
+            TankAction.Direct *= v;
+            TankAction.Periodic *= v;
+        }
+
+        public void MultiplyRaid(double v)
+        {
+            RaidAction.Direct *= v;
+            RaidAction.Periodic *= v;
+        }
+
+        public void MultiplyDirect(double v)
+        {
+            TankAction.Direct *= v;
+            RaidAction.Direct *= v;
+        }
+
+        public void MultiplyPeriodic(double v)
+        {
+            TankAction.Periodic *= v;
+            RaidAction.Periodic *= v;
+        }
+
+        public ComputedSpell(SpellData data, TreeStats stats)
+        {
+            this.Data = data;
+            this.Stats = stats;
+            this.DirectMultiplier = stats.HealMultiplier;
+            this.TickMultiplier = stats.HealMultiplier;
+        }
+
+        public void ComputeTiming()
+        {
+            Action.Time = Stats.Haste.ComputeHastedCastTime(Data.BaseTimeMS - TimeReductionMS);
+
+            if (Data.BaseDurationMS > 0)
+                Ticks = Stats.Haste.ComputeTicks(Data.BaseTickRateMS, Data.BaseDurationMS + ExtraDurationMS, out Duration, out TPS);
+        }
+
+        public void ComputeRest()
+        {
+            Action.Direct = 0;
+            Action.Casts = 0;
+            if (Data.AvgHeal > 0 || Data.Coeff > 0)
+            {
+                double direct = Data.AvgHeal + Stats.SpellPower * Data.Coeff;
+                direct *= (Stats.PassiveDirectHealBonus + ExtraDirectBonus) * DirectMultiplier;
+                Action.Direct = direct;
+                Action.Casts = 1;
+            }
+
+            Tick = 0;
+            if (Data.TickHeal > 0 || Data.TickCoeff > 0)
+            {
+                double tick = Data.TickHeal + Stats.SpellPower * Data.TickCoeff;
+                tick *= (Stats.PassivePeriodicHealBonus + ExtraTickBonus) * TickMultiplier;
+
+                Tick = tick;
+            }
+
+            double mana = Data.Mana;
+            mana -= Stats.SpellsManaCostReduction;
+            mana *= Stats.SpellsManaCostMultiplier;
+            Action.Mana = (int)mana;
+
+            Action.Periodic = Tick * Ticks;
+
+            Action.Ticks = Ticks;
+        }
+    }
+
+    public class CharacterCalculationsTree : CharacterCalculationsBase
+    {
+        private float[] subPoints = new float[(int)PointsTree.Count];
+        public override float[] SubPoints
+        {
             get { return subPoints; }
             set { subPoints = value; }
         }
-        public float SingleTargetPoints {
-            get { return subPoints[0]; }
-            set { subPoints[0] = value; }
-        }
-        public float SustainedPoints {
-            get { return subPoints[1]; }
-            set { subPoints[1] = value; }
-        }
-        public float SurvivalPoints {
-            get { return subPoints[2]; }
-            set { subPoints[2] = value; }
-        } 
         public override float OverallPoints { get; set; }
-        public SustainedResult Sustained;
-        public SingleTargetBurstResult[] SingleTarget;
-        public Character LocalCharacter { get; set; }
-        public BossOptions boss;
-        public float SingleTargetHPS;
-        public float SustainedHPS;
-        public float SpellPower;
 
-        string LifebloomMethod_ToString(int lbStack, LifeBloomType type) {
-            string result;
-            if (type == LifeBloomType.Fast)
-            {
-                switch (lbStack)
-                {
-                    case 0: result = "Unused"; break;
-                    case 1: result = "Single blooms"; break;
-                    case 2: result = "Fast Double blooms"; break;
-                    case 3: result = "Fast Triple blooms"; break;
-                    case 4:
-                    default: result = "Stack"; break;
-                }
-            }
-            else if (type == LifeBloomType.Slow)
-            {
-                switch (lbStack)
-                {
-                    case 0: result = "Unused"; break;
-                    case 1: result = "Single blooms"; break;
-                    case 2: result = "Slow Double blooms"; break;
-                    case 3: result = "Slow Triple blooms"; break;
-                    case 4:
-                    default: result = "Stack"; break;
-                }
-            }
-            else result = "Rolling stack";
+        public double MeanMana { get; set; }
+        public double InnervateMana { get; set; }
 
-            return result;
+        public double ManaRegen { get; set; }
+        public double BaseRegen { get; set; }
+        public double ManaPoolRegen { get; set; }
+        public double PotionRegen { get; set; }
+        public double SpiritRegen { get; set; }
+        public double InnervateRegen { get; set; }
+        public double ExternalInnervateRegen { get; set; }
+        public double ReplenishmentRegen { get; set; }
+        public double RevitalizeRegen { get; set; }
+
+        public double FightLength { get; set; }
+        public double Innervates { get; set; }
+
+        public double ProcTriggerInterval { get; set; }
+        public double ProcPeriodicTriggerInterval { get; set; }
+
+        public Stats BasicStats { get; set; }
+        public double BaseSpellPower { get; set; }
+
+        public FightDivision Division { get; set; }
+
+        private ActionDistributionsByDivision[] solutions = new ActionDistributionsByDivision[(int)PointsTree.Count];
+        public ActionDistributionsByDivision[] Solutions { get { return solutions; } }
+
+        internal TreeStats[] Stats { get; set; }
+        internal ComputedSpell[][] Spells { get; set; }
+        public ContinuousAction[][] Actions { get; set; }
+
+        delegate double SpellValueDelegate(ComputedSpell spell);
+
+        void addSpellCalculationValues(Dictionary<string, string> dict, string name, SpellValueDelegate del)
+        {
+            for (int i = 0; i < CalculationsTree.SpellData.Length; ++i)
+            {
+                double avg = 0;
+                for (int div = 0; div < Spells.Length; ++div)
+                    avg += Division.Fractions[div] * del(Spells[div][i]);
+
+                dict.Add(CalculationsTree.SpellData[i].Name + " " + name, String.Format("{0:F2}", avg) + "*" + Division.GetDivisionDetailTooltip(div => String.Format("{0:F2}", del(Spells[div][i]))));
+            }
         }
 
-        public override Dictionary<string, string> GetCharacterDisplayCalculationValues() {
-            Dictionary<string, string> dictValues = new Dictionary<string, string>();
+        delegate double SpellStatValueDelegate(TreeStats stats);
 
-            dictValues.Add("Single Target Points", SingleTargetPoints.ToString());
-            dictValues.Add("Sustained Points", SustainedPoints.ToString());
-            dictValues.Add("Survival Points", SurvivalPoints.ToString());
-            dictValues.Add("Overall Points", OverallPoints.ToString());
+        void addSpellStatValues(Dictionary<string, string> dict, string name, string format, SpellStatValueDelegate del, string extraInfo = null)
+        {
+            double avg = 0;
+            for (int div = 0; div < Spells.Length; ++div)
+                avg += Division.Fractions[div] * del(Stats[div]);
 
-            dictValues.Add("Base Health", BasicStats.Health.ToString());
-            dictValues.Add("Base Armor", Math.Round(BasicStats.Armor, 0) + "*Reduces damage taken by " + Math.Round(StatConversion.GetArmorDamageReduction(88, BasicStats.Armor, 0, 0/*, 0*/) * 100.0f, 2) + "%");
-            dictValues.Add("Base Mana", BasicStats.Mana.ToString());
-            dictValues.Add("Base Stamina", BasicStats.Stamina.ToString());
-            dictValues.Add("Base Intellect", BasicStats.Intellect.ToString());
-            dictValues.Add("Base Spirit", BasicStats.Spirit.ToString());
-            dictValues.Add("Base Spell Power", (BasicStats.SpellPower).ToString() /* This should be 151 + Int (at least for a Tauren) + "*" + BasicStats.Spirit * LocalCharacter.DruidTalents.ImprovedTreeOfLife * 0.05f + " from Improved Tree of Life" */);
-            dictValues.Add("Base Spell Crit", Math.Round(BasicStats.SpellCrit * 100.0f,2).ToString());
-            dictValues.Add("Base Mastery", String.Format("{0:F}*{1} Rating\n {2} % bonus healing", TreeConstants.Mastery(BasicStats), BasicStats.MasteryRating, Math.Round(TreeConstants.Symbiosis(BasicStats)*100.0f,2)));
+            string tooltip = String.Format(format, avg) + "*" + Division.GetDivisionDetailTooltip(div => String.Format(format, del(Stats[div])));
+            if(extraInfo != null)
+                tooltip += "\n\n" + extraInfo;
+            dict.Add(name, tooltip);
+        }
 
-            float speed_from_hr = (1f + StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating));
-            float speed_from_sh = (1f + BasicStats.SpellHaste);
-            float speed = speed_from_hr * speed_from_sh;
-            float hard = (1.5f / (1f * speed_from_sh) - 1) * StatConversion.RATING_PER_SPELLHASTE;
-            float untilcap = hard - BasicStats.HasteRating;
+        public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
+        {
+            Dictionary<string, string> retVal = new Dictionary<string, string>();
+            //
+            if (BasicStats == null) BasicStats = new Stats();
 
-            float speed_step = (float)(Math.Round(4.0f * speed) + 0.5f) / 4.0f;
-            float speed_needed_rejuv = speed_step - speed;
-            float haste_until_rejuv_step = speed_needed_rejuv * StatConversion.RATING_PER_SPELLHASTE;
-            speed_step = (float)(Math.Round(10.0f * speed) + 0.5f) / 10.0f;
-            float speed_needed_lb = speed_step - speed;
-            float haste_until_lb_step = speed_needed_lb * StatConversion.RATING_PER_SPELLHASTE;
+            retVal.Add("Health", BasicStats.Health.ToString());
+            retVal.Add("Mana", BasicStats.Mana.ToString());
+            retVal.Add("Mean Mana", String.Format("{0:F0}", MeanMana));
+            retVal.Add("Innervate Mana", String.Format("{0:F0}", InnervateMana));
+            retVal.Add("Armor", BasicStats.Armor.ToString());
+            retVal.Add("Agility", Math.Floor(BasicStats.Agility).ToString());
+            retVal.Add("Stamina", Math.Floor(BasicStats.Stamina).ToString());
+            retVal.Add("Intellect", Math.Floor(BasicStats.Intellect).ToString());
+            retVal.Add("Spirit", Math.Floor(BasicStats.Spirit).ToString());
 
-            dictValues.Add("Base Spell Haste", Math.Round((speed - 1.0f) * 100.0f, 2) + "%*" + Math.Round((speed_from_sh - 1.0f) * 100.0f, 2) + "% from spell effects and talents\n" + Math.Round((speed_from_hr - 1.0f) * 100.0f, 2) + "% from " + BasicStats.HasteRating + " haste rating \n" + Math.Round(haste_until_rejuv_step) + " haste rating (" + Math.Round(speed_needed_rejuv * 100.0, 1) + "%) until next rejuv tick\n" + Math.Round(haste_until_lb_step) + " haste rating (" + Math.Round(speed_needed_lb * 100.0, 1) + "%) until next lifebloom tick");
-            // Use Nourish gcd to equal normal GCD
-            Spell spell = new Nourish(LocalCharacter, BasicStats);
-            dictValues.Add("Base Global CD", Math.Round(spell.gcd, 2) + " sec*" + Math.Ceiling(untilcap).ToString() + " Haste Rating until hard gcd cap");
+            retVal.Add("Fight Length", String.Format("{0:F0}s", FightLength));
+            retVal.Add("Divisions", Division.Fractions.Length.ToString() + "*" + Division.GetDivisionDetailTooltip(i => String.Format("{0:F0}s ({1:F2}%)", Division.Fractions[i] * FightLength, 100 * Division.Fractions[i])));
 
-            ManaPool manaPool = new ManaPool(CombatStats, boss.BerserkTimer);
-            dictValues.Add("Health", CombatStats.Health.ToString());
-            dictValues.Add("Armor", Math.Round(CombatStats.Armor, 0) + "*Reduces damage taken by " + Math.Round(StatConversion.GetArmorDamageReduction(88, CombatStats.Armor, 0, 0) * 100.0f, 2) + "%");
-            dictValues.Add("Mana", CombatStats.Mana.ToString() + "*" + manaPool.ToString());
-            dictValues.Add("Stamina", CombatStats.Stamina.ToString());
-            dictValues.Add("Intellect", CombatStats.Intellect.ToString());
-            dictValues.Add("Spirit", CombatStats.Spirit.ToString());
-            dictValues.Add("Spell Power", (CombatStats.SpellPower).ToString() /* + "*" + CombatStats.Spirit * LocalCharacter.DruidTalents.ImprovedTreeOfLife * 0.05f + " from Improved Tree of Life" */);
-            dictValues.Add("Spell Crit", Math.Round(CombatStats.SpellCrit * 100.0f, 2).ToString());
-            dictValues.Add("Mastery", String.Format("{0:F}*{1} Rating\n {2} % bonus healing", TreeConstants.Mastery(CombatStats), CombatStats.MasteryRating, Math.Round(TreeConstants.Symbiosis(CombatStats) * 100.0f, 2)));
-
-            speed_from_hr = (1f + StatConversion.GetSpellHasteFromRating(CombatStats.HasteRating));
-            speed_from_sh = (1f + CombatStats.SpellHaste);
-            speed = speed_from_hr * speed_from_sh;
-            hard = (1.5f / (1f * speed_from_sh) - 1) * StatConversion.RATING_PER_SPELLHASTE;
-            untilcap = hard - CombatStats.HasteRating;
-            speed_step = (float) (Math.Round(4.0f * speed) + 0.5f) / 4.0f;
-            speed_needed_rejuv = speed_step - speed;
-            haste_until_rejuv_step = speed_needed_rejuv * StatConversion.RATING_PER_SPELLHASTE;
-            speed_step = (float)(Math.Round(10.0f * speed) + 0.5f) / 10.0f;
-            speed_needed_lb = speed_step - speed;
-            haste_until_lb_step = speed_needed_lb * StatConversion.RATING_PER_SPELLHASTE;
-
-
-            dictValues.Add("Spell Haste", Math.Round((speed - 1.0f) * 100.0f, 2) + "%*" + Math.Round((speed_from_sh - 1.0f) * 100.0f, 2) + "% from spell effects and talents\n" + Math.Round((speed_from_hr - 1.0f) * 100.0f, 2) + "% from " + CombatStats.HasteRating + " haste rating \n" + Math.Round(haste_until_rejuv_step) + " haste rating (" + Math.Round(speed_needed_rejuv * 100.0, 1) + "%) until next rejuv tick\n" + Math.Round(haste_until_lb_step) + " haste rating (" + Math.Round(speed_needed_lb * 100.0, 1) + "%) until next lifebloom tick");
-            // Use Nourish gcd to equal normal GCD
-            spell = Sustained.spellMix.nourish[0];
-            dictValues.Add("Global CD", Math.Round(spell.gcd, 2) + " sec*" + Math.Ceiling(untilcap).ToString() + " Haste Rating until soft gcd cap");
-
-            dictValues.Add("Boss Name", boss.Name + "*" + boss.ToString()); 
-            dictValues.Add("Total Time", Math.Round(Sustained.TotalTime, 2).ToString());
-  //          dictValues.Add("Time until OOM (unreduced)", Math.Round(Sustained.TimeToOOM_unreduced, 2).ToString());
-  //          dictValues.Add("Time until OOM", Math.Round(Sustained.TimeToOOM, 2).ToString());
-            dictValues.Add("Total healing done", Math.Round(Sustained.TotalTime * SustainedHPS, 2).ToString()); // Has extra component from procs
-            dictValues.Add("Sustained HPS", Math.Round(SustainedHPS, 2).ToString());
-            dictValues.Add("Single Target HPS", Math.Round(SingleTargetHPS, 2).ToString());
-            dictValues.Add("Mana regen per second", Math.Round(Sustained.ManaRegen, 2).ToString());
-            dictValues.Add("Mana from innervates", Math.Round(Sustained.InnervateMana, 2).ToString());
-            dictValues.Add("Average casts per minute", Math.Round(Sustained.spellMix.CastsPerMinute, 2).ToString());
-            dictValues.Add("Average crits per minute", Math.Round(Sustained.spellMix.CritsPerMinute, 2).ToString());
-            dictValues.Add("Average heals per minute", Math.Round(Sustained.spellMix.HealsPerMinute, 2).ToString());
-            dictValues.Add("Rejuvenation casts per minute", Math.Round(Sustained.spellMix.RejuvCPM, 2).ToString());
-            dictValues.Add("Rejuvenation average up", Math.Round(Sustained.spellMix.RejuvAvg, 2).ToString());
-            dictValues.Add("Regrowth casts per minute", Math.Round(Sustained.spellMix.RegrowthCPM, 2).ToString());
-            dictValues.Add("Regrowth average up", Math.Round(Sustained.spellMix.RegrowthAvg, 2).ToString());
-            dictValues.Add("Lifebloom (stack) casts per minute", Math.Round(Sustained.spellMix.LifebloomStackCPM, 2).ToString());
-            dictValues.Add("Lifebloom (stack) average up", Math.Round(Sustained.spellMix.LifebloomStackAvg, 2).ToString());
-            dictValues.Add("Lifebloom (stack) method", LifebloomMethod_ToString(3, Sustained.rotSettings.lifeBloomType));
-            dictValues.Add("Lifebloom casts per minute", Math.Round(Sustained.spellMix.LifebloomCPM, 2).ToString());
-            dictValues.Add("Lifebloom average up", Math.Round(Sustained.spellMix.LifebloomAvg, 2).ToString());
-            dictValues.Add("Nourish casts per minute", Math.Round(Sustained.spellMix.NourishCPM, 2).ToString());
-            //dictValues.Add("Healing Touch casts per minute", Math.Round(, 2).ToString());
-            dictValues.Add("Swiftmend casts per minute", Math.Round(Sustained.spellMix.SwiftmendCPM, 2).ToString());
-            dictValues.Add("Wild Growth casts per minute", Math.Round(Sustained.spellMix.WildGrowthCPM, 2).ToString());
-            dictValues.Add("Revitalize procs per minute", Math.Round(Sustained.spellMix.RevitalizeProcsPerMinute, 2).ToString());
-
-//            dictValues.Add("RJ Heal per tick", Math.Round(Sustained.spellMix.rejuvenate.PeriodicTickwithCrit, 2).ToString()+"*"+Sustained.spellMix.rejuvenate.PeriodicTicks.ToString()+" ticks @ "+Sustained.spellMix.rejuvenate.PeriodicTickTime+" s");
-            dictValues.Add("RJ Heal per tick", Sustained.spellMix.rejuvenate.TickToString() );
-            dictValues.Add("RJ Tick time", Math.Round(Sustained.spellMix.rejuvenate.PeriodicTickTime, 2).ToString());
-            dictValues.Add("RJ HPS", Math.Round(Sustained.spellMix.rejuvenate.HPS, 2).ToString());
-            dictValues.Add("RJ HPM", Sustained.spellMix.rejuvenate.HPMToString());
-            dictValues.Add("RJ HPCT", Math.Round(Sustained.spellMix.rejuvenate.HPCT, 2).ToString());
-
-            dictValues.Add("RG Heal", Sustained.spellMix.regrowth.ToString());
-            dictValues.Add("RG Tick", Sustained.spellMix.regrowth.TickToString());
-            dictValues.Add("RG HPS", Math.Round(Sustained.spellMix.regrowth.HPS, 2).ToString());
-            dictValues.Add("RG HPS (HoT only)", Math.Round(Sustained.spellMix.regrowth.HPS_HOT, 2).ToString());
-            dictValues.Add("RG HPM", Sustained.spellMix.regrowth.HPMToString());
-            dictValues.Add("RG HPCT", Math.Round(Sustained.spellMix.regrowth.HPCT, 2).ToString());
-            dictValues.Add("RG Heal (spam)", Sustained.spellMix.regrowthAgain.ToString());
-            dictValues.Add("RG HPS (spam)", Math.Round(Sustained.spellMix.regrowthAgain.HPCT_DH, 2).ToString());
-            dictValues.Add("RG HPM (spam)", Sustained.spellMix.regrowthAgain.HPMToString());
-            dictValues.Add("RG HPCT (spam)", Math.Round(Sustained.spellMix.regrowthAgain.HPCT_DH, 2).ToString());
-
-//            dictValues.Add("LB Tick", Math.Round(Sustained.spellMix.lifebloom.PeriodicTick, 2).ToString()+"*"+Sustained.spellMix.lifebloom.PeriodicTicks.ToString()+" ticks @ "+Sustained.spellMix.lifebloom.PeriodicTickTime+" s");
-            dictValues.Add("LB Tick", Sustained.spellMix.lifebloom.TickToString());
-            dictValues.Add("LB Bloom Heal", Math.Round(Sustained.spellMix.lifebloom.AverageHealingwithCrit, 2).ToString());
-            dictValues.Add("LB HPS", Math.Round(Sustained.spellMix.lifebloom.HPS, 2).ToString());
-            dictValues.Add("LB HPS (HoT only)", Math.Round(Sustained.spellMix.lifebloom.HPS_HOT, 2).ToString());
-            dictValues.Add("LB HPM", Sustained.spellMix.lifebloom.HPMToString());
-            dictValues.Add("LB HPCT", Math.Round(Sustained.spellMix.lifebloom.HPCT, 2).ToString());
-
-            dictValues.Add("LBx2 (fast stack) HPS", Math.Round(Sustained.spellMix.lifebloomFast2Stack.HPS, 2).ToString());
-            dictValues.Add("LBx2 (fast stack) HPM", Sustained.spellMix.lifebloomFast2Stack.HPMToString());
-            dictValues.Add("LBx2 (fast stack) HPCT", Math.Round(Sustained.spellMix.lifebloomFast2Stack.HPCT, 2).ToString());
-            dictValues.Add("LBx3 (fast stack) HPS", Math.Round(Sustained.spellMix.lifebloomFastStack.HPS, 2).ToString());
-            dictValues.Add("LBx3 (fast stack) HPM", Math.Round(Sustained.spellMix.lifebloomFastStack.HPM, 2).ToString());
-            dictValues.Add("LBx3 (fast stack) HPCT", Math.Round(Sustained.spellMix.lifebloomFastStack.HPCT, 2).ToString());
-            dictValues.Add("LBx2 (slow stack) HPS", Math.Round(Sustained.spellMix.lifebloomSlow2Stack.HPS, 2).ToString());
-            dictValues.Add("LBx2 (slow stack) HPM", Sustained.spellMix.lifebloomSlow2Stack.HPMToString());
-            dictValues.Add("LBx2 (slow stack) HPCT", Math.Round(Sustained.spellMix.lifebloomSlow2Stack.HPCT, 2).ToString());
-            dictValues.Add("LBx3 (slow stack) HPS", Math.Round(Sustained.spellMix.lifebloomSlowStack.HPS, 2).ToString());
-            dictValues.Add("LBx3 (slow stack) HPM", Math.Round(Sustained.spellMix.lifebloomSlowStack.HPM, 2).ToString());
-            dictValues.Add("LBx3 (slow stack) HPCT", Math.Round(Sustained.spellMix.lifebloomSlowStack.HPCT, 2).ToString());
-            dictValues.Add("LBx3 (rolling) Tick", Sustained.spellMix.lifebloomRollingStack.TickToString());
-            dictValues.Add("LBx3 (rolling) HPS", Math.Round(Sustained.spellMix.lifebloomRollingStack.HPS, 2).ToString());
-            dictValues.Add("LBx3 (rolling) HPM", Sustained.spellMix.lifebloomRollingStack.HPMToString());
-            dictValues.Add("LBx3 (rolling) HPCT", Math.Round(Sustained.spellMix.lifebloomRollingStack.HPCT, 2).ToString());
-
-            dictValues.Add("HT Heal", Sustained.spellMix.healingTouch.ToString());
-            dictValues.Add("HT HPS", Math.Round(Sustained.spellMix.healingTouch.HPCT_DH, 2).ToString());
-            dictValues.Add("HT HPM", Sustained.spellMix.healingTouch.HPMToString());
-            dictValues.Add("HT HPCT", Math.Round(Sustained.spellMix.healingTouch.HPCT_DH, 2).ToString());
-
-            dictValues.Add("WG first Tick", Sustained.spellMix.wildGrowth.TickToString());
-            dictValues.Add("WG HPS(single target)", Math.Round(Sustained.spellMix.wildGrowth.HPS / Sustained.spellMix.wildGrowth.MaxTargets, 2).ToString());
-            dictValues.Add("WG HPM(single target)", Math.Round(Sustained.spellMix.wildGrowth.HPM / Sustained.spellMix.wildGrowth.MaxTargets, 2).ToString());
-            dictValues.Add("WG HPS(max)", Sustained.spellMix.wildGrowth.HPSToString());
-            dictValues.Add("WG HPM(max)",Sustained.spellMix.wildGrowth.HPMToString());
-
-            dictValues.Add("N Heal",Sustained.spellMix.nourish[0].ToString());
-            dictValues.Add("N HPM", Sustained.spellMix.nourish[0].HPMToString());
-            dictValues.Add("N HPS", Math.Round(Sustained.spellMix.nourish[0].HPCT_DH, 2).ToString());
-            dictValues.Add("N HPCT", Math.Round(Sustained.spellMix.nourish[0].HPCT_DH, 2).ToString());
-            dictValues.Add("N (1 HoT) Heal", Sustained.spellMix.nourish[1].ToString());
-            dictValues.Add("N (1 HoT) HPM", Sustained.spellMix.nourish[1].HPMToString());
-            dictValues.Add("N (1 HoT) HPS", Math.Round(Sustained.spellMix.nourish[1].HPCT_DH, 2).ToString());
-            dictValues.Add("N (1 HoT) HPCT", Math.Round(Sustained.spellMix.nourish[1].HPCT_DH, 2).ToString());
-            //dictValues.Add("N (2 HoTs) Heal", Sustained.spellMix.nourish[2].ToString());
-            //dictValues.Add("N (2 HoTs) HPM", Math.Round(Sustained.spellMix.nourish[2].HPM_DH, 2).ToString());
-            //dictValues.Add("N (2 HoTs) HPS", Math.Round(Sustained.spellMix.nourish[2].HPCT_DH, 2).ToString());
-            //dictValues.Add("N (2 HoTs) HPCT", Math.Round(Sustained.spellMix.nourish[2].HPCT_DH, 2).ToString());
-            //dictValues.Add("N (3 HoTs) Heal", Sustained.spellMix.nourish[3].ToString());
-            //dictValues.Add("N (3 HoTs) HPM", Math.Round(Sustained.spellMix.nourish[3].HPM_DH, 2).ToString());
-            //dictValues.Add("N (3 HoTs) HPS", Math.Round(Sustained.spellMix.nourish[3].HPCT_DH, 2).ToString());
-            //dictValues.Add("N (3 HoTs) HPCT", Math.Round(Sustained.spellMix.nourish[3].HPCT_DH, 2).ToString());
-            //dictValues.Add("N (4 HoTs) Heal", Sustained.spellMix.nourish[4].ToString());
-            //dictValues.Add("N (4 HoTs) HPM", Math.Round(Sustained.spellMix.nourish[4].HPM_DH, 2).ToString());
-            //dictValues.Add("N (4 HoTs) HPS", Math.Round(Sustained.spellMix.nourish[4].HPCT_DH, 2).ToString());
-            //dictValues.Add("N (4 HoTs) HPCT", Math.Round(Sustained.spellMix.nourish[4].HPCT_DH, 2).ToString());
-
-            Swiftmend swift = new Swiftmend(LocalCharacter, CombatStats, new Rejuvenation(LocalCharacter, CombatStats));
-            dictValues.Add("SM Heal", swift.ToString());
-            dictValues.Add("SM HPM", swift.HPMToString());
-            dictValues.Add("SM Rejuv Lost Ticks", Math.Round(swift.rejuvTicksLost, 2).ToString());
-            Efflorescence efflorescence = new Efflorescence(LocalCharacter, BasicStats, new Rejuvenation(LocalCharacter, CombatStats));
-            dictValues.Add("Efflorescence Heal", efflorescence.TickToString());
-
-            Tranquility tranq = new Tranquility(LocalCharacter, CombatStats);
-            dictValues.Add("T Heal", tranq.ToString());
-            dictValues.Add("T Tick", tranq.TickToString());
-            dictValues.Add("T HPM", tranq.HPMToString());
-            dictValues.Add("T HPS", tranq.HPSToString());
-            dictValues.Add("T HPCT", tranq.HPCTToString());
-   
+            addSpellStatValues(retVal, "Spell Power", "{0:F0}", x => x.SpellPower, String.Format("{0:F0} Base Spell Power", Math.Floor(BaseSpellPower)));
+            addSpellStatValues(retVal, "Spell Crit", "{0:F2}%", x => x.SpellCrit * 100, String.Format("{0} Crit Rating from Gear, {1:F}% Crit from Gear, {2:F}% Crit from Gear Intellect",
+                BasicStats.CritRating,
+                100 * StatConversion.GetSpellCritFromRating(BasicStats.CritRating),
+                100 * StatConversion.GetSpellCritFromIntellect(BasicStats.Intellect)));
+            addSpellStatValues(retVal, "Spell Haste", "{0:F2}%", x => 100 * (1 / x.Haste.HastedSecond - 1), String.Format("{0} Haste Rating from Gear, {1:F}% Haste from Gear, {2:F}% Haste from Gear and Buffs",
+                (float)BasicStats.HasteRating,
+                100 * StatConversion.GetSpellHasteFromRating((float)BasicStats.HasteRating),
+                100 * ((1 + StatConversion.GetSpellHasteFromRating((float)BasicStats.HasteRating)) * (1.0f + BasicStats.SpellHaste) - 1)
+                ));
+            addSpellStatValues(retVal, "Spell Mana Cost Reduction", "{0:F0}", x => x.SpellsManaCostReduction);
+            addSpellStatValues(retVal, "Spell Crit Extra Bonus", "{0:F0}%", x => 100 * x.BonusCritHealMultiplier);
+            string masteryInfo = String.Format("{0:F0} Mastery Rating from Gear, {1:F2} Mastery from Gear",
+                BasicStats.MasteryRating, 8 + StatConversion.GetMasteryFromRating(BasicStats.MasteryRating));
+            addSpellStatValues(retVal, "Symbiosis", "{0:F}%", x => 100 * x.Symbiosis, masteryInfo);
+            addSpellStatValues(retVal, "Harmony", "{0:F}%", x => 100 * x.Harmony, masteryInfo);
             
-            return dictValues;
-        }
-        public override float GetOptimizableCalculationValue(string calculation) {
-            switch (calculation) {
-                case "Mana": return CombatStats.Mana;
-                case "MP5": return Sustained.MPSInFSR;
-                case "Global CD": return (new Nourish(LocalCharacter, CombatStats)).gcd * 1000.0f;  // Use Nourish gcd to equal normal GCD
+            retVal.Add("Mana Regen", String.Format("{0:F0}", ManaRegen));
+            retVal.Add("Base Mana Regen", String.Format("{0:F0}", BaseRegen));
+            retVal.Add("Initial Mana Pool Regen", String.Format("{0:F0}", ManaPoolRegen));
+            retVal.Add("Spirit Mana Regen", String.Format("{0:F0}", SpiritRegen));
+            retVal.Add("Innervate Mana Regen", String.Format("{0:F0}", InnervateRegen));
+            retVal.Add("Ext Innervate Mana Regen", String.Format("{0:F0}", ExternalInnervateRegen));
+            retVal.Add("Replenishment Mana Regen", String.Format("{0:F0}", ReplenishmentRegen));
+            retVal.Add("Revitalize Mana Regen", String.Format("{0:F0}", RevitalizeRegen));
+            retVal.Add("Potion Mana Regen", String.Format("{0:F0}", PotionRegen));
+            retVal.Add("Innervates", Innervates.ToString());
+
+            retVal.Add("Total Score", String.Format("{0:F2}", OverallPoints));
+            string[] longNames = { "Raid Sustained", "Raid Burst", "Tank Sustained", "Tank Burst" };
+            for (int i = 0; i < longNames.Length; ++i)
+            {
+                retVal.Add(longNames[i] + " HPS", String.Format("{0:F2}", Solutions[i].Distribution.TotalEPS()));
+                retVal.Add(longNames[i] + " Directs/s", String.Format("{0:F2}", Solutions[i].Distribution.TotalCPS()));
+                retVal.Add(longNames[i] + " Ticks/s", String.Format("{0:F2}", Solutions[i].Distribution.TotalTPS()));
             }
-            return 0f;
+
+            retVal.Add("Proc trigger interval", String.Format("{0:F2}", ProcTriggerInterval));
+            retVal.Add("Proc periodic trigger interval", String.Format("{0:F2}", ProcPeriodicTriggerInterval));
+
+            ContinuousAction[] actions = ContinuousAction.AverageActionSets(Actions, Division.Fractions);
+
+            for (int i = 0; i < actions.Length; ++i)
+            {
+                retVal.Add(CalculationsTree.ActionNames[i] + " HPCT", actions[i].EPSText + "*" + Division.GetDivisionDetailTooltip(div => Actions[div][i].EPSText));
+                retVal.Add(CalculationsTree.ActionNames[i] + " MPCT", actions[i].MPSText + "*" + Division.GetDivisionDetailTooltip(div => Actions[div][i].MPSText));
+                retVal.Add(CalculationsTree.ActionNames[i] + " HPM", actions[i].EPMText + "*" + Division.GetDivisionDetailTooltip(div => Actions[div][i].EPMText));
+            }
+
+            string[] names = {"Raid S.", "Raid B.", "Tank S.", "Tank B."};
+            for (int i = 0; i < names.Length; ++i)
+                Solutions[i].GetProperties(retVal, names[i] + ' ', CalculationsTree.ActionNames, CalculationsTree.PassiveNames);
+
+            addSpellCalculationValues(retVal, "Time", s => s.Action.Time);
+            addSpellCalculationValues(retVal, "Duration", s => s.Duration);
+            addSpellCalculationValues(retVal, "Mana", s => s.Action.Mana);
+            addSpellCalculationValues(retVal, "Direct", s => s.Action.Direct);
+            addSpellCalculationValues(retVal, "Tick", s => s.Tick);
+            addSpellCalculationValues(retVal, "Ticks", s => s.Ticks);
+            addSpellCalculationValues(retVal, "Periodic", s => s.Action.Periodic);
+            addSpellCalculationValues(retVal, "Raid Direct", s => s.RaidAction.Direct);
+            addSpellCalculationValues(retVal, "Raid Periodic", s => s.RaidAction.Periodic);
+            addSpellCalculationValues(retVal, "Tank Direct", s => s.TankAction.Direct);
+            addSpellCalculationValues(retVal, "Tank Periodic", s => s.TankAction.Periodic);
+            return retVal;
+        }
+
+        public override float GetOptimizableCalculationValue(string calculation)
+        {
+            switch (calculation)
+            {
+                case "Intellect": return BasicStats.Intellect;
+                case "Spirit": return BasicStats.Spirit;
+                case "Haste Rating": return BasicStats.HasteRating;
+                case "Crit Rating": return BasicStats.CritRating;
+                case "Mastery Rating": return BasicStats.MasteryRating;
+                case "Health": return (float)BasicStats.Health;
+                case "Mana": return (float)BasicStats.Mana;
+                case "Mana Regen": return (float)ManaRegen;
+            }
+            return 0;
         }
     }
 }

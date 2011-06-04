@@ -89,12 +89,11 @@
     <Compile Include="CalculationsTree.cs" />
     <Compile Include="CharacterCalculationsTree.cs" />
     <Compile Include="ComparisonCalculationTree.cs" />
-    <Compile Include="Solver.cs" />
-    <Compile Include="Spell.cs" />
     <Compile Include="CalculationOptionsPanelTree.xaml.cs">
       <DependentUpon>CalculationOptionsPanelTree.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TreeSolver.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">

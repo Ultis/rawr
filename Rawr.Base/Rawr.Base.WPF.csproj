@@ -108,10 +108,12 @@
     <Compile Include="CustomControls\Graph.xaml.cs">
       <DependentUpon>Graph.WPF.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ModelFramework\Actions.cs" />
     <Compile Include="Items\Item.cs" />
     <Compile Include="Items\ItemCache.cs" />
     <Compile Include="Items\ItemLocation.cs" />
     <Compile Include="Items\ItemUpdater.cs" />
+    <Compile Include="ModelFramework\HasteStats.cs" />
     <Compile Include="Networking\WebHelpService.cs" />
     <Compile Include="Optimizer\AvailableItemGenerator.cs" />
     <Compile Include="Optimizer\BatchCharacter.cs" />

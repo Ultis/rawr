@@ -5,140 +5,443 @@ using System.Windows.Media;
 using System.Xml.Serialization;
 
 namespace Rawr.Tree {
-    public class DiminishingReturns
+    enum PointsTree : int
     {
-        private double C;
-        private double D;
-        private float multiplier;
-        private float factor;
-        public DiminishingReturns(float multiplier, int factor)
-        {
-            C = Math.Pow(multiplier / factor, factor / (factor - 1));
-            D = Math.Pow(C, 1 / factor);
-            this.multiplier = multiplier;
-            this.factor = factor;
-        }
-        public float Cap(float value, float cap)
-        {
-            if (cap >= value) return value;
-            return (float)(cap + multiplier * cap * (Math.Pow(value / cap - 1 + C, 1 / factor) - D));
-        }
-        // DiminishingReturns(multiplier,factor).Cap(value,cap) gives the same result as this function
-        public static float Cap(float value, float cap, float multiplier, int factor)
-        {
-            if (cap >= value) return value;
-            double C = Math.Pow(multiplier / factor, factor / (factor - 1));
-            return (float)(cap + multiplier * cap * (Math.Pow(value / cap - 1 + C, 1 / factor) - Math.Pow(C, 1 / factor)));
-        }
-        // max > cap, adviced is cap < max <= 2*cap
-        public static float CapWithMaximum(float value, float cap, float max)
-        {
-            if (cap >= value) return value;
-            return (value * max - cap * cap) / (value + max - 2 * cap);
-        }
-        // with max = 2 * cap 
-        // This is exactly the same as the one above, actually, but with 2*cap the formula is much simpler
-        public static float CapWithMaximum2(float value, float cap)
-        {
-            if (cap >= value) return value;
-            return cap * (2 - cap/value);
-        }
-        /*
-         * Derivation of Cap:
-         * we want to base on a function like "y = x^(1/n)"
-         * parameters: cap, x, C and D (a constant tbd), n, f (a multiplier)
-         * y'(cap) = 1
-         * y(cap) = cap
-         * y = cap + f * cap * ( (x/cap-1+C)^(1/n) - (C)^(1/n) ) + D
-         * y' = f * (C + x/cap - 1)^(1/n - 1) / n = 1 when x=cap
-         *   1   = f/n * (C)^(1/n-1)
-         *   n/f = (C)^((1-n)/n) 
-         *   C   = (n/f)^(n/(1-n))
-         *   C   = (f/n)^(n/(n-1))
-         * y(cap) = cap
-         *   0   = f * cap * ((x/cap-1+C)^(1/n) - (C)^(1/n)) + D
-         *   0   = f * cap * ((C)^(1/n) - (C)^(1/n)) + D
-         *   0   = D
-         *   
-         * Derivation of CapWithMaximum:
-         * we want to base on a function like "y = max - 1/x"
-         * parameters: cap, max, A and B (a constant tbd)
-         * y'(cap) = 1
-         * y(cap) = cap
-         * limit of x to infinity = max
-         *  .... to be written out eventually
-         * y = (x * max - cap^2) / (x + max - 2*cap)
-         * y' = (max - cap)^2 / (max - 2 * cap + x)^2
-         * y'(cap) = (max - cap)^2 / (max - cap)^2 = 1
-         * y(cap) = (cap * max - cap*cap) / (cap + max - 2 * cap)
-         *        = cap * (max - cap) / (max - cap) = 1
-         * limit of x to infinity:
-         * y = (x * max - cap^2) / (x + max - 2*cap) with x to infinity ==> differentiate top and bottom with respect to x
-         * y = (max) / (1) = max
-         */
+        RaidSustained,
+        RaidBurst,
+        TankSustained,
+        TankBurst,
+        Count
     }
 
+    enum TreeSpell
+    {
+        Nourish,
+        HealingTouch,
+        Regrowth,
+        Lifebloom,
+        Rejuvenation,
+        Tranquility,
+        Swiftmend,
+        WildGrowth,
+        Count
+    }
+
+    sealed internal class SpellData
+    {
+        public string Name;
+        public int ID;
+        public int Mana;
+        public int BaseTimeMS;
+        public int MinHeal;
+        public int MaxHeal;
+        public double AvgHeal;
+        public double Coeff;
+        public int TickHeal;
+        public double TickCoeff;
+        public int BaseTickRateMS;
+        public int BaseDurationMS;
+
+        public SpellData(string name, int id, int baseManaPercent, int baseTimeMS, int minHeal, int maxHeal, int coeff, int tickHeal = 0, int tickCoeff = 0, int baseTickRateMS = 0, int baseDurationMS = 0)
+        {
+            this.Name = name;
+            this.ID = id;
+            this.Mana = (int)Math.Floor(CalculationsTree.BaseMana * baseManaPercent / 100f);
+            this.BaseTimeMS = baseTimeMS;
+            this.MinHeal = minHeal;
+            this.MaxHeal = maxHeal;
+            this.Coeff = coeff / 10000.0;
+            this.TickHeal = tickHeal;
+            this.TickCoeff = tickCoeff / 10000.0;
+            this.BaseTickRateMS = baseTickRateMS;
+            this.BaseDurationMS = baseDurationMS;
+            this.AvgHeal = (MinHeal + MaxHeal) * 0.5;
+        }
+    }
+
+
     [Rawr.Calculations.RawrModelInfo("Tree", "Ability_Druid_TreeofLife", CharacterClass.Druid)]
-    public class CalculationsTree : CalculationsBase {
-        private List<GemmingTemplate> _defaultGemmingTemplates = null;
-        public override List<GemmingTemplate> DefaultGemmingTemplates {
-            get {
-                if (_defaultGemmingTemplates == null) {
-                    // Meta
-                    int ember = 52296;
-                    int revitalizing = 52297;
+    public class CalculationsTree : CalculationsBase
+    {
+        internal const int BaseMana = 18635;
 
-                    // [0] uncommon
-                    // [1] perfect uncommon
-                    // [2] rare
-                    // [3] epic
-                    // [4] jewelcrafting
+        internal static SpellData[] SpellData = 
+        {            
+            /* Numbers are:
+             * base mana percentage
+             * cast time in ms (including GCD)
+             * min heal, max heal, coefficient*10000
+             * tick heal, tick coefficient*10000
+             * tick rate in ms, hot duration in ms
+             * 
+             * Swiftmend's HoT part is Efflorescence, later multiplied by the talent-specific percentage
+             * Multi-target hots are later multiplier by the number of targets
+             * Tranquility is later multiplier by 4 * 5 (4 smart heals to 5 people each)
+             */
+            new SpellData("Nourish", 50464,
+                10,
+                3000,
+                2403, 2791, 2660
+                ),
+            new SpellData("Healing Touch", 5185,
+                30,
+                3000,
+                7211, 8515, 8060
+                ),
+            new SpellData("Regrowth", 8936,
+                35,
+                1500,
+                3383, 3775, 2936,
+                361, 296,
+                2000, 6000
+                ),
+            new SpellData("Lifebloom", 33763,
+                7,
+                1500,
+                1847, 1847, 2840,
+                228, 234,
+                1000, 10000
+                ),
+            new SpellData("Rejuvenation", 774,
+                20,
+                1500,
+                0, 0, 0,
+                1307, 1340,
+                3000, 12000
+                ),
+            new SpellData("Tranquility", 740,
+                32,
+                8000,
+                3882, 3882, 3980,
+                343, 680,
+                2000, 8000
+                ),
+            new SpellData("Swiftmend", 18562,
+                10,
+                1500,
+                5228, 5228, 5360,
+                5228, 5360,
+                1000, 7000
+                ),
+            new SpellData("Wild Growth", 48438,
+                27,
+                1500,
+                0, 0, 0,
+                531, 546,
+                1000, 7000
+                )
+        };
 
-                    // Reds
-                    int[] runed = { 52084, 52173, 52207, 52207, 52257 }; // int
-                    // Blue
-                    int[] sparkling = { 52087, 52170, 52244, 52244, 52262 }; // spi [pure]
-                    // Yellow
-                    int[] quick = { 52093, 52164, 52232, 52232, 52268 }; // haste [pure]
-                    // Purple
-                    int[] purified = { 52100, 52157, 52236, 52236 }; // int + spirit
-                    // Green
-                    // Zen - Spirit + Mastery = Worthless
-                    // Orange
-                    int[] reckless = { 52113, 52144, 52208, 52208 }; // int + haste
+        #region Variables and Properties
+        #region Gemming Templates
+        private string[] tierNames = { "Uncommon", "Rare", "Epic", "Jeweler" };
 
-                    /*
-                     * Gemmings
-                     * No Crit No MP5, Int > Spirit > Haste > Crit > Mastery
-                     * red: Runed, Purified
-                     * yellow: Quick, Reckless
-                     * blue: Sparkling, Purified
-                     * = runed, purified, reckless, sparkling, quick
-                     * Meta: use ember
-                     */
+        // Red
+        private int[] brilliant = { 52173, 52207, 52207, 52257 };
 
-                    _defaultGemmingTemplates = new List<GemmingTemplate>();
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon (Ember)", false, runed[0], purified[0], reckless[0], ember);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon (Revitalizing)", false, runed[0], purified[0], reckless[0], revitalizing);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Perfect (Ember)", false, runed[1], purified[1], reckless[1], ember);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Perfect (Revitalizing)", false, runed[1], purified[1], reckless[1], revitalizing);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Ember)", false, runed[2], purified[2], reckless[2], ember);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Revitalizing)", false, runed[2], purified[2], reckless[2], revitalizing);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Ember)", true, runed[3], purified[3], reckless[3], ember);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Revitalizing)", true, runed[3], purified[3], reckless[3], revitalizing);
-                    AddJCGemmingTemplateGroup(_defaultGemmingTemplates, "Jewelcrafting (Ember)", false, runed[4], ember);
-                    AddJCGemmingTemplateGroup(_defaultGemmingTemplates, "Jewelcrafting (Revitalizing)", false, runed[4], revitalizing);
+        // Orange
+        private int[] reckless = { 52144, 52208, 52208, 52208 };
+        private int[] artful = { 52140, 52205, 52205, 52205 };
+        private int[] potent = { 52147, 52239, 52239, 52239 };
+
+        // Purple
+        private int[] purified = { 52100, 52236, 52236, 52236 };
+
+        // Meta
+        private int ember = 52296;
+        private int revitalizing = 52297;
+
+        //Cogwheel
+        private int cog_fractured = 59480;  //Mastery
+        private int cog_sparkling = 59496;  //Spirit
+        private int cog_quick = 59479;  //Haste
+        private int cog_smooth = 59478;  //Crit
+
+        /// <summary>
+        /// List of gemming templates available to Rawr.
+        /// </summary>
+        public override List<GemmingTemplate> DefaultGemmingTemplates
+        {
+            get
+            {
+                List<GemmingTemplate> retval = new List<GemmingTemplate>();
+                for (int tier = 0; tier < 4; ++tier)
+                {
+                    retval.AddRange(TreeGemmingTemplateBlock(tier, ember));
+                    retval.AddRange(TreeGemmingTemplateBlock(tier, revitalizing));
                 }
-                return _defaultGemmingTemplates;
+
+                retval.AddRange(new GemmingTemplate[] {
+                    // Engineering cogwheel templates (meta and 2 cogs each, no repeats)
+                    CreateTreeCogwheelTemplate(ember, cog_fractured, cog_quick),
+                    CreateTreeCogwheelTemplate(ember, cog_fractured, cog_smooth),
+                    CreateTreeCogwheelTemplate(ember, cog_fractured, cog_sparkling),
+                    CreateTreeCogwheelTemplate(ember, cog_quick, cog_smooth),
+                    CreateTreeCogwheelTemplate(ember, cog_quick, cog_sparkling),
+                    CreateTreeCogwheelTemplate(ember, cog_smooth, cog_sparkling),
+                    CreateTreeCogwheelTemplate(revitalizing, cog_fractured, cog_quick),
+                    CreateTreeCogwheelTemplate(revitalizing, cog_fractured, cog_smooth),
+                    CreateTreeCogwheelTemplate(revitalizing, cog_fractured, cog_sparkling),
+                    CreateTreeCogwheelTemplate(revitalizing, cog_quick, cog_smooth),
+                    CreateTreeCogwheelTemplate(revitalizing, cog_quick, cog_sparkling),
+                    CreateTreeCogwheelTemplate(revitalizing, cog_smooth, cog_sparkling),
+                });
+                return retval;
             }
         }
-        private void AddGemmingTemplateGroup(List<GemmingTemplate> list, string name, bool enabled, int runed, int purified, int reckless, int meta) {
-            // Overrides, only "runed" and "seers"
-            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = runed, YellowId = runed, BlueId = runed, PrismaticId = runed, MetaId = meta, Enabled = enabled });
-            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = runed, YellowId = reckless, BlueId = purified, PrismaticId = runed, MetaId = meta, Enabled = enabled });
+
+        private List<GemmingTemplate> TreeGemmingTemplateBlock(int tier, int meta)
+        {
+            List<GemmingTemplate> retval = new List<GemmingTemplate>();
+            retval.AddRange(new GemmingTemplate[] {
+                CreateTreeGemmingTemplate(tier, tierNames, brilliant, brilliant, brilliant, brilliant, meta), // Straight Intellect
+                CreateTreeGemmingTemplate(tier, tierNames, brilliant, reckless, brilliant, brilliant, meta), // Int/Haste/Int
+                CreateTreeGemmingTemplate(tier, tierNames, brilliant, potent, brilliant, brilliant, meta), // Int/Crit/Int
+                CreateTreeGemmingTemplate(tier, tierNames, brilliant, artful, brilliant, brilliant, meta), // Int/Mastery/Int
+                CreateTreeGemmingTemplate(tier, tierNames, brilliant, reckless, purified, brilliant, meta), // Int/Haste/Spirit
+                CreateTreeGemmingTemplate(tier, tierNames, brilliant, potent, purified, brilliant, meta), // Int/Crit/Spirit
+                CreateTreeGemmingTemplate(tier, tierNames, brilliant, artful, purified, brilliant, meta), // Int/Mastery/Spirit
+            });
+            return retval;
         }
-        private void AddJCGemmingTemplateGroup(List<GemmingTemplate> list, string name, bool enabled, int runed, int meta) {
-            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = runed, YellowId = runed, BlueId = runed, PrismaticId = runed, MetaId = meta, Enabled = enabled });
+
+        const int DEFAULT_GEMMING_TIER = 1;
+        private GemmingTemplate CreateTreeGemmingTemplate(int tier, string[] tierNames, int[] red, int[] yellow, int[] blue, int[] prismatic, int meta)
+        {
+            return new GemmingTemplate
+            {
+                Model = "Tree",
+                Group = tierNames[tier],
+                Enabled = (tier == DEFAULT_GEMMING_TIER),
+                RedId = red[tier],
+                YellowId = yellow[tier],
+                BlueId = blue[tier],
+                PrismaticId = prismatic[tier],
+                MetaId = meta
+            };
+        }
+
+        private GemmingTemplate CreateTreeCogwheelTemplate(int meta, int cogwheel1, int cogwheel2)
+        {
+            return new GemmingTemplate
+            {
+                Model = "Tree",
+                Group = "Engineering",
+                Enabled = false,
+                MetaId = meta,
+                CogwheelId = cogwheel1,
+                Cogwheel2Id = cogwheel2
+            };
+        }
+        #endregion
+
+        /// <summary>Labels of the stats available to the Optimizer</summary>
+        public override string[] OptimizableCalculationLabels
+        {
+            get { return _optimizableCalculationLabels; }
+        }
+        
+        private static string[] _optimizableCalculationLabels = new string[] {
+            "Intellect",
+            "Spirit",
+            "Haste Rating",
+            "Crit Rating",
+            "Mastery Rating",
+            "Health",
+            "Mana",
+            "Mana Regen"
+        };
+
+        public override Dictionary<string, Color> SubPointNameColors
+        {
+            get
+            {
+                if (_subPointNameColors == null)
+                {
+                    _subPointNameColors = new Dictionary<string, Color>();
+                    
+                    _subPointNameColors.Add("Raid Sustained", Colors.Green);
+                    _subPointNameColors.Add("Raid Burst", Colors.Yellow);
+                    _subPointNameColors.Add("Tank Sustained", Colors.Blue);
+                    _subPointNameColors.Add("Tank Burst", Colors.Red);
+
+                }
+                return _subPointNameColors;
+            }
+        }
+        private Dictionary<string, Color> _subPointNameColors = null;
+
+        private static string[] _actionNames;
+
+        public static string[] ActionNames
+        {
+            get
+            {
+                if(_actionNames == null)
+                {
+                    string[] actionNames = new string[(int)TreeAction.Count];
+                    for (int i = 0; i < (int)TreeAction.Count; ++i)
+                        actionNames[i] = Utilities.CamelCaseToSpaced(Enum.GetName(typeof(TreeAction), (TreeAction)i));
+                    _actionNames = actionNames;
+                }
+                return _actionNames;
+            }
+        }
+
+        private static string[] _passiveNames;
+
+        public static string[] PassiveNames
+        {
+            get
+            {
+                if (_passiveNames == null)
+                {
+                    string[] passiveNames = new string[(int)TreePassive.Count];
+                    for (int i = 0; i < (int)TreePassive.Count; ++i)
+                        passiveNames[i] = Utilities.CamelCaseToSpaced(Enum.GetName(typeof(TreePassive), (TreePassive)i));
+                    _passiveNames = passiveNames;
+                }
+                return _passiveNames;
+            }
+        }
+
+
+        private string[] characterDisplayCalculationLabels = null;
+        public override string[] CharacterDisplayCalculationLabels
+        {
+            get
+            {
+                if (characterDisplayCalculationLabels != null)
+                    return characterDisplayCalculationLabels;
+
+                string[] basic = new string[] {
+                    "Basic Stats:Health",
+                    "Basic Stats:Mana",
+                    "Basic Stats:Agility",
+                    "Basic Stats:Stamina",
+                    "Basic Stats:Intellect",
+                    "Basic Stats:Spirit",
+                    "Basic Stats:Armor",
+
+                    "Fight:Fight Length",
+                    "Fight:Divisions",
+
+                    "Fight Stats:Mean Mana",
+                    "Fight Stats:Innervate Mana",
+                    "Fight Stats:Spell Power",
+                    "Fight Stats:Spell Crit",
+                    "Fight Stats:Spell Haste",
+                    "Fight Stats:Symbiosis",
+                    "Fight Stats:Harmony",
+                    "Fight Stats:Spell Mana Cost Reduction",
+                    "Fight Stats:Spell Crit Extra Bonus",
+
+                    "Mana Regen:Mana Regen",
+                    "Mana Regen:Initial Mana Pool Regen",
+                    "Mana Regen:Base Mana Regen",
+                    "Mana Regen:Spirit Mana Regen",
+                    "Mana Regen:Replenishment Mana Regen",
+                    "Mana Regen:Revitalize Mana Regen",
+                    "Mana Regen:Innervate Mana Regen",
+                    "Mana Regen:Ext Innervate Mana Regen",
+                    "Mana Regen:Potion Mana Regen",
+                    "Mana Regen:Innervates",
+                    
+                    "Solution:Total Score",
+                    };
+
+                List<string> list = new List<string>();
+                list.AddRange(basic);
+
+                string[] longNames = { "Raid Sustained", "Raid Burst", "Tank Sustained", "Tank Burst" };
+                string[] names = { "Raid S.", "Raid B.", "Tank S.", "Tank B." };
+                for (int i = 0; i < longNames.Length; ++i)
+                    list.Add("Solution:" + longNames[i] + " HPS");
+
+                list.Add("Proc Triggers:Proc trigger interval");
+                list.Add("Proc Triggers:Proc periodic trigger interval");
+
+                for (int i = 0; i < longNames.Length; ++i)
+                    list.Add("Proc Triggers:" + longNames[i] + " Ticks/s");
+                for (int i = 0; i < longNames.Length; ++i)
+                    list.Add("Proc Triggers:" + longNames[i] + " Directs/s");
+
+                for (int i = 0; i < longNames.Length; ++i)
+                {
+                    List<string> distPassiveList = new List<string>();
+                    for (int j = 0; j < (int)TreePassive.Count; ++j)
+                        distPassiveList.Add(longNames[i] + ':' + names[i] + ' ' + PassiveNames[j]);
+                    distPassiveList.Sort();
+                    list.AddRange(distPassiveList);
+
+                    List<string> distActionList = new List<string>();
+                    for (int j = 0; j < (int)TreeAction.Count; ++j)
+                    {
+                        if (names[i].Substring(0, 4) == "Raid" || ActionNames[j].Substring(0, 4) != "Raid")
+                            distActionList.Add(longNames[i] + ':' + names[i] + ' ' + ActionNames[j]);
+                    }
+                    distActionList.Sort();
+                    list.AddRange(distActionList);
+                    
+                    list.Add(longNames[i] + ':' + names[i] + " Idle");
+                }
+
+                List<string> actionList = new List<string>();
+                for (int i = 0; i < (int)TreeAction.Count; ++i)
+                    actionList.Add("Action HPCT:" + ActionNames[i] + " HPCT");
+                for (int i = 0; i < (int)TreeAction.Count; ++i)
+                    actionList.Add("Action HPM:" + ActionNames[i] + " HPM");
+                for (int i = 0; i < (int)TreeAction.Count; ++i)
+                    actionList.Add("Action MPCT:" + ActionNames[i] + " MPCT");
+                actionList.Sort();
+                list.AddRange(actionList);
+
+                string[] spellProperties = { "Time", "Duration", "Mana", "Direct", "Tick", "Ticks", "Periodic", "Raid Direct", "Raid Periodic", "Tank Direct", "Tank Periodic" };
+                for (int i = 0; i < (int)TreeSpell.Count; ++i)
+                {
+                    for (int j = 0; j < spellProperties.Length; ++j)
+                        list.Add(SpellData[i].Name + ":" + SpellData[i].Name + ' ' + spellProperties[j]);
+                }
+
+                characterDisplayCalculationLabels = list.ToArray();
+                return characterDisplayCalculationLabels;
+            }
+        }
+
+        public override CharacterClass TargetClass { get { return CharacterClass.Druid; } }
+        public override ICalculationOptionsPanel CalculationOptionsPanel { get { if (calculationOptionsPanel == null) { calculationOptionsPanel = new CalculationOptionsPanelTree(); } return calculationOptionsPanel; } }
+        private ICalculationOptionsPanel calculationOptionsPanel = null;
+        public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationTree(); }
+        public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsTree(); }
+
+        public override ICalculationOptionBase DeserializeDataObject(string xml)
+        {
+            System.Xml.Serialization.XmlSerializer serializer =
+                new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsTree));
+            System.IO.StringReader reader = new System.IO.StringReader(xml);
+            CalculationOptionsTree calcOpts = serializer.Deserialize(reader) as CalculationOptionsTree;
+            return calcOpts;
+        }
+
+        #endregion
+
+        #region Relevancy
+        public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot)
+        {
+            // No enchants allowed on our ranged slot
+            if (slot == ItemSlot.Ranged) return false;
+            // Make an exception for enchant 4091 - Enchant Off-Hand - Superior Intellect
+            if (slot == ItemSlot.OffHand && enchant.Id == 4091) return true;
+            // No other enchants allowed on our offhands
+            if (slot == ItemSlot.OffHand) return false;
+            // Otherwise, return the base value
+            return base.EnchantFitsInSlot(enchant, character, slot);
+        }
+
+        public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
+        {
+            if (slot == CharacterSlot.OffHand && item.Slot == ItemSlot.OneHand) return false;
+            return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
         }
 
         private static List<string> _relevantGlyphs;
@@ -146,2025 +449,706 @@ namespace Rawr.Tree {
         {
             if (_relevantGlyphs == null)
             {
+                // TODO: implement the commented out glyphs
+
                 _relevantGlyphs = new List<string>();
-                _relevantGlyphs.Add("Glyph of Healing Touch");
-                _relevantGlyphs.Add("Glyph of Innervate");
                 _relevantGlyphs.Add("Glyph of Lifebloom");
-                //_relevantGlyphs.Add("Glyph of Nourish");
-                _relevantGlyphs.Add("Glyph of Rebirth");
-                _relevantGlyphs.Add("Glyph of Regrowth");
                 _relevantGlyphs.Add("Glyph of Rejuvenation");
                 _relevantGlyphs.Add("Glyph of Swiftmend");
+                _relevantGlyphs.Add("Glyph of Regrowth");
+
                 _relevantGlyphs.Add("Glyph of Wild Growth");
-                //_relevantGlyphs.Add("Glyph of Rapid Rejuvenation");
+                _relevantGlyphs.Add("Glyph of Healing Touch");
+                _relevantGlyphs.Add("Glyph of Innervate");
+                _relevantGlyphs.Add("Glyph of Rebirth");
             }
             return _relevantGlyphs;
         }
-        
-        private Dictionary<string, Color> _subPointNameColors = null;
-        private Dictionary<string, Color> _subPointNameColorsRating = null;
-        private Dictionary<string, Color> _subPointNameColorsMPS = null;
-        private Dictionary<string, Color> _subPointNameColorsHPS = null;
-        private Dictionary<string, Color> _subPointNameColorsHPCT = null;
-        private Dictionary<string, Color> _subPointNameColorsHPM = null;
-        private Dictionary<string, Color> _subPointNameColorsCF = null;
 
-        public CalculationsTree()
-        {
-            _subPointNameColorsRating = new Dictionary<string, Color>();
-            _subPointNameColorsRating.Add("SingleTarget", Color.FromArgb(255, 255, 0, 0));
-            _subPointNameColorsRating.Add("Sustained", Color.FromArgb(255, 0, 0, 255));
-            _subPointNameColorsRating.Add("Survival", Color.FromArgb(255, 0, 128, 0));
-
-            _subPointNameColorsMPS = new Dictionary<string, Color>();
-            _subPointNameColorsMPS.Add("Mana per second", Color.FromArgb(128, 0, 0, 255));
-
-            _subPointNameColorsHPS = new Dictionary<string, Color>();
-            _subPointNameColorsHPS.Add("Healing per second", Color.FromArgb(128, 0, 255, 0));
-
-            _subPointNameColorsHPCT = new Dictionary<string, Color>();
-            _subPointNameColorsHPCT.Add("Healing per cast time", Color.FromArgb(128, 0, 255, 0));
-
-            _subPointNameColorsHPM = new Dictionary<string, Color>();
-            _subPointNameColorsHPM.Add("Healing per mana", Color.FromArgb(128, 0, 255, 255));
-
-            _subPointNameColorsCF = new Dictionary<string, Color>();
-            _subPointNameColorsCF.Add("Casting time percentage", Color.FromArgb(196, 0, 255, 0));
-            _subPointNameColorsCF.Add("Mana reduction", Color.FromArgb(196, 255, 255, 0));
-            _subPointNameColorsCF.Add("Time reduction", Color.FromArgb(196, 255, 0, 0));
-
-            _subPointNameColors = _subPointNameColorsRating;
-        }
-
-        public override Dictionary<string, Color> SubPointNameColors {
-            get {
-                Dictionary<string, Color> ret = _subPointNameColors;
-                _subPointNameColors = _subPointNameColorsRating;
-                return ret;
-            }
-        }
-
-        private string[] _characterDisplayCalculationLabels = null;
-        public override string[] CharacterDisplayCalculationLabels {
-            get {
-                if (_characterDisplayCalculationLabels == null) {
-                    _characterDisplayCalculationLabels = new string[] {
-                        "Points:Single Target Points",
-                        "Points:Sustained Points",
-                        @"Points:Survival Points*Survival Points represents the total raw physical damage 
-you can take before dying. Calculated based on Health
-and Armor damage reduction. (Survival multiplier is 
-applied and result is scaled down by 100)",
-                        "Points:Overall Points",
-
-                        "Base Stats:Base Health",
-                        "Base Stats:Base Armor",
-                        "Base Stats:Base Mana",
-                        "Base Stats:Base Stamina",
-                        "Base Stats:Base Intellect",
-                        "Base Stats:Base Spirit",
-                        "Base Stats:Base Spell Power",
-                        "Base Stats:Base Spell Crit",
-                        "Base Stats:Base Spell Haste",
-                        "Base Stats:Base Mastery",
-                        "Base Stats:Base Global CD",
-
-                        "Combat Stats:Health",
-                        "Combat Stats:Armor",
-                        "Combat Stats:Mana",
-                        "Combat Stats:Stamina",
-                        "Combat Stats:Intellect",
-                        "Combat Stats:Spirit",
-                        "Combat Stats:Spell Power",
-                        "Combat Stats:Spell Crit",
-                        "Combat Stats:Spell Haste",
-                        "Combat Stats:Mastery",
-                        "Combat Stats:Global CD",
-
-                        "Model:Boss Name",
-                        "Model:Total Time",
-                     //   "Model:Time until OOM (unreduced)",
-                     //   "Model:Time until OOM",
-                        "Model:Total healing done",
-                        "Model:Sustained HPS",
-                        "Model:Single Target HPS",
-                        "Model:Mana regen per second",
-                        "Model:Mana from innervates",
-                        "Model:Average casts per minute",
-                        "Model:Average crits per minute",
-                        "Model:Average heals per minute",
-                        "Model:Rejuvenation casts per minute",
-                        "Model:Rejuvenation average up",
-                        "Model:Regrowth casts per minute",
-                        "Model:Regrowth average up",
-                        "Model:Lifebloom (stack) casts per minute",
-                        "Model:Lifebloom (stack) average up",
-                        "Model:Lifebloom (stack) method",
-                        "Model:Lifebloom casts per minute",
-                        "Model:Lifebloom average up",
-                        "Model:Nourish casts per minute",
-                        //"Model:Healing Touch casts per minute",
-                        "Model:Swiftmend casts per minute",
-                        "Model:Wild Growth casts per minute",
-                        "Model:Revitalize procs per minute",
-
-
-                        "Lifebloom:LB Tick",
-                        "Lifebloom:LB Bloom Heal",
-                        "Lifebloom:LB HPS",
-                        "Lifebloom:LB HPS (HoT only)",
-                        "Lifebloom:LB HPM",
-                        "Lifebloom:LB HPCT",
-
-                        "Lifebloom Stacked Blooms:LBx2 (fast stack) HPS",
-                        "Lifebloom Stacked Blooms:LBx2 (fast stack) HPM",
-                        "Lifebloom Stacked Blooms:LBx2 (fast stack) HPCT",
-
-                        "Lifebloom Stacked Blooms:LBx3 (fast stack) HPS",
-                        "Lifebloom Stacked Blooms:LBx3 (fast stack) HPM",
-                        "Lifebloom Stacked Blooms:LBx3 (fast stack) HPCT",
-
-                        "Lifebloom Stacked Blooms:LBx2 (slow stack) HPS",
-                        "Lifebloom Stacked Blooms:LBx2 (slow stack) HPM",
-                        "Lifebloom Stacked Blooms:LBx2 (slow stack) HPCT",
-
-                        "Lifebloom Stacked Blooms:LBx3 (slow stack) HPS",
-                        "Lifebloom Stacked Blooms:LBx3 (slow stack) HPM",
-                        "Lifebloom Stacked Blooms:LBx3 (slow stack) HPCT",
-
-                        "Lifebloom Stacked Blooms:LBx3 (rolling) Tick",
-                        "Lifebloom Stacked Blooms:LBx3 (rolling) HPS",
-                        "Lifebloom Stacked Blooms:LBx3 (rolling) HPM",
-                        "Lifebloom Stacked Blooms:LBx3 (rolling) HPCT",
-
-                        "Healing Touch:HT Heal",
-                        "Healing Touch:HT HPS",
-                        "Healing Touch:HT HPM",
-                        "Healing Touch:HT HPCT",
-                       
-                        "Nourish:N Heal",
-                        "Nourish:N HPM",
-                        "Nourish:N HPS",
-                        "Nourish:N HPCT",
-                        "Nourish:N (1 HoT) Heal",
-                        "Nourish:N (1 HoT) HPM",
-                        "Nourish:N (1 HoT) HPS",
-                        "Nourish:N (1 HoT) HPCT",
-                        //"Nourish:N (2 HoTs) Heal",
-                        //"Nourish:N (2 HoTs) HPM",
-                        //"Nourish:N (2 HoTs) HPS",
-                        //"Nourish:N (2 HoTs) HPCT",
-                        //"Nourish:N (3 HoTs) Heal",
-                        //"Nourish:N (3 HoTs) HPM",
-                        //"Nourish:N (3 HoTs) HPS",
-                        //"Nourish:N (3 HoTs) HPCT",
-                        //"Nourish:N (4 HoTs) Heal",
-                        //"Nourish:N (4 HoTs) HPM",
-                        //"Nourish:N (4 HoTs) HPS",
-                        //"Nourish:N (4 HoTs) HPCT",
-
-                        "Rejuvenation:RJ Heal per tick",
-                        "Rejuvenation:RJ Tick time",
-                        "Rejuvenation:RJ HPS",
-                        "Rejuvenation:RJ HPM",
-                        "Rejuvenation:RJ HPCT",
-
-                        "Regrowth:RG Heal",
-                        "Regrowth:RG Tick",
-                        "Regrowth:RG HPS",
-                        "Regrowth:RG HPS (HoT only)",
-                        "Regrowth:RG HPM",
-                        "Regrowth:RG HPCT",
-                        "Regrowth:RG Heal (spam)",
-                        "Regrowth:RG HPS (spam)",
-                        "Regrowth:RG HPM (spam)",
-                        "Regrowth:RG HPCT (spam)",
-
-                        "Swiftmend:SM Heal",
-                        "Swiftmend:SM HPM",
-                        "Swiftmend:SM Rejuv Lost Ticks",
-                        "Swiftmend:Efflorescence Heal",
-
-                        "Wild Growth:WG first Tick",
-                        "Wild Growth:WG HPS(single target)",
-                        "Wild Growth:WG HPM(single target)",
-                        "Wild Growth:WG HPS(max)",
-                        "Wild Growth:WG HPM(max)",
-
-                        "Tranquility:T Heal",
-                        "Tranquility:T Tick",
-                        "Tranquility:T HPM",
-                        "Tranquility:T HPS",
-                        "Tranquility:T HPCT",
-                    };
-                }
-                return _characterDisplayCalculationLabels;
-            }
-        }
-
-        private string[] _customChartNames = null;
-        public override string[] CustomChartNames {
-            get {
-                if (_customChartNames == null) {
-                    _customChartNames = new string[] {
-                        "Single target spell mixes (HPS)",
-                        "Single target spell mixes (HPM)",
-                        "Single target spell mixes (MPS)",
-                        "Healing per spell (single target)",
-                        "Mana sources (sustained)",
-                        "Mana usage per spell (sustained)",
-                        "Total HPS per spell (sustained)",
-                        "Casting time percentage per spell (sustained)",
-                        "HPCT per spell",
-                        "HPS per spell",
-                        "HPM per spell",
-                        "New HPM per rotation",
-                        "New HPS per rotation",
-                        "New MPS per rotation",
-
-                    };
-                }
-                return _customChartNames;
-            }
-        }
-
-        private string[] _optimizableCalculationLabels = null;
-        public override string[] OptimizableCalculationLabels {
-            get {
-                if (_optimizableCalculationLabels == null)
-                    _optimizableCalculationLabels = new string[] {
-                        "Mana",
-                        "MP5",
-                        "Global CD",
-                    };
-                return _optimizableCalculationLabels;
-            }
-        }
-
-        private BossOptions boss = null;
-        private ICalculationOptionsPanel _calculationOptionsPanel = null;
-        public override ICalculationOptionsPanel CalculationOptionsPanel { get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelTree()); } }
-
+        /// <summary>
+        /// List of itemtypes that are relevant for Tree
+        /// </summary>
         private List<ItemType> _relevantItemTypes = null;
-        public override List<ItemType> RelevantItemTypes {
-            get {
-                if (_relevantItemTypes == null) {
-                    _relevantItemTypes = new List<ItemType>(new ItemType[]{
-                        ItemType.None,
-//                        ItemType.Cloth,   // Exclude cloth since Leather Int Bonus >> typical single item value
-                        ItemType.Leather,
-                        ItemType.Dagger,
-                        ItemType.FistWeapon,
-                        ItemType.Idol, ItemType.Relic,
-                        ItemType.OneHandMace,
-                        ItemType.TwoHandMace,
-                        ItemType.Staff
-                    });
-                }
-                return _relevantItemTypes;
-            }
-        }
-
-        public override CharacterClass TargetClass { get { return CharacterClass.Druid; } }
-        public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationTree(); }
-        public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsTree(); }
-
-        protected RotationSettings getRotationFromCalculationOptions(Stats stats, CalculationOptionsTree calcOpts, CharacterCalculationsTree calculatedStats) {
-            RotationSettings settings = new RotationSettings();
-            SpellProfile profile = calcOpts.Current;
-
-            switch (profile.LifebloomStackType)
+        public override List<ItemType> RelevantItemTypes
+        {
+            get
             {
-                case 0:
-                    settings.lifeBloomType = LifeBloomType.Slow;
-                    break;
-                case 1:
-                    settings.lifeBloomType = LifeBloomType.Fast;
-                    break;
-                case 2:
-                default:
-                    settings.lifeBloomType = LifeBloomType.Rolling;
-                    break;
-                case 3:
-                    settings.lifeBloomType = LifeBloomType.Slow2;
-                    break;
-                case 4:
-                    settings.lifeBloomType = LifeBloomType.Fast2;
-                    break;
+                return _relevantItemTypes ?? (_relevantItemTypes = new List<ItemType>(new ItemType[]
+                {
+                            ItemType.None,
+                            ItemType.Leather,
+                            ItemType.Dagger,
+                            ItemType.Staff,
+                            ItemType.FistWeapon,
+                            ItemType.OneHandMace,
+                            ItemType.TwoHandMace,
+                            ItemType.Idol,
+                            ItemType.Relic,
+                }));
             }
-
-            settings.averageLifebloomStacks = (float)profile.LifebloomStackAmount;
-            settings.averageRejuv = (float)profile.RejuvAmount;
-            settings.averageRegrowth = (float)profile.RegrowthAmount;
-
-            settings.SwiftmendPerMin = profile.SwiftmendPerMinute;
-            settings.WildGrowthPerMin = profile.WildGrowthPerMinute;
-
-            settings.RejuvFraction = (float)profile.RejuvFrac / 100.0f;
-            settings.LifebloomFraction = (float)profile.LifebloomFrac / 100.0f;
-            settings.RegrowthFraction = (float)profile.RegrowthFrac / 100.0f;
-            settings.NourishFraction = (float)profile.NourishFrac / 100.0f;
-
-            settings.nourish1 = (float)profile.Nourish1 / 100f;
-            //settings.nourish2 = (float)profile.Nourish2 / 100f;
-            //settings.nourish3 = (float)profile.Nourish3 / 100f;
-            //settings.nourish4 = (float)profile.Nourish4 / 100f;
-            settings.nourish0 = 1.0f - (settings.nourish1); // + settings.nourish2 + settings.nourish3 + settings.nourish4);
-
-            settings.healTarget = HealTargetTypes.RaidHealing;
-
-            settings.livingSeedEfficiency = (float)profile.LivingSeedEfficiency / 100f;
-
-            return settings;
         }
 
-        protected void CalculateTriggers(CombatFactors cf, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances)
+
+        /// <summary>
+        /// List of SpecialEffect Triggers that are relevant for tree model
+        /// Every trigger listed here needs an implementation in ProcessSpecialEffects()
+        /// A trigger not listed here should not appear in ProcessSpecialEffects()
+        /// </summary>
+        internal static List<Trigger> _RelevantTriggers = null;
+        internal static List<Trigger> RelevantTriggers
         {
-            float CastInterval = 1f / cf.CastsPerSecond;
-            float HealInterval = 1f / cf.HealsPerSecond;
-            float CritsRatio = cf.CritsPerSecond / cf.CastsPerSecond;
-            float RejuvInterval = 1f / cf.RejuvTicksPerSecond;
-            
-            triggerIntervals[Trigger.Use] = 0f;
-            triggerChances[Trigger.Use] = 1f;
-
-            triggerIntervals[Trigger.SpellCast] = CastInterval;
-            triggerChances[Trigger.SpellCast] = 1f;
-
-            triggerIntervals[Trigger.HealingSpellCast] = CastInterval;
-            triggerChances[Trigger.HealingSpellCast] = 1f;
-
-            triggerIntervals[Trigger.HealingSpellHit] = HealInterval;
-            triggerChances[Trigger.HealingSpellHit] = 1f;
-
-            triggerIntervals[Trigger.SpellCrit] = CastInterval;
-            triggerChances[Trigger.SpellCrit] = CritsRatio;
-
-            triggerIntervals[Trigger.HealingSpellCrit] = CastInterval;
-            triggerChances[Trigger.HealingSpellCrit] = CritsRatio;
-
-            triggerIntervals[Trigger.RejuvenationTick] = RejuvInterval;
-            triggerChances[Trigger.RejuvenationTick] = 1f;
+            get
+            {
+                return _RelevantTriggers ?? (_RelevantTriggers = new List<Trigger>() {
+                            Trigger.Use,
+                            Trigger.HealingSpellCast,
+                            Trigger.HealingSpellCrit,
+                            Trigger.HealingSpellHit,
+                            Trigger.SpellCast,
+                            Trigger.SpellCrit,        
+                            Trigger.SpellHit, 
+                            Trigger.DoTTick,
+                            Trigger.DamageOrHealingDone,
+                        });
+            }
+            //set { _RelevantTriggers = value; }
         }
 
-        public enum ProcCalc
+        public override bool IsItemRelevant(Item item)
         {
-            None,
-            Average,
-            Max
-        };
+            // First we let normal rules (profession, class, relevant stats) decide
+            bool relevant = base.IsItemRelevant(item);
 
-        private void DoSpecialEffects(Character character, Stats stats, CombatFactors cf, float TotalTime, List<float> hasteRatings, List<float> hasteRatingUptimes, ProcCalc pc)
+            // Next we use our special stat relevancy filtering.
+            if (relevant)
+                relevant = HasPrimaryStats(item.Stats) || (HasSecondaryStats(item.Stats) && !HasUnwantedStats(item.Stats));
+
+            return relevant;
+        }
+
+        public override bool IsBuffRelevant(Buff buff, Character character)
         {
-            #region Initialize Triggers
-            Dictionary<Trigger, float> triggerIntervals = new Dictionary<Trigger, float>(); ;
-            Dictionary<Trigger, float> triggerChances = new Dictionary<Trigger, float>(); ;
-            CalculateTriggers(cf, triggerIntervals, triggerChances);
-            #endregion
+            // First we let normal rules (profession, class, relevant stats) decide
+            bool relevant = base.IsBuffRelevant(buff, character);
 
-            #region Haste Lists (seperately handled)
-            List<SpecialEffect> tempHasteEffects = new List<SpecialEffect>();
-            List<float> tempHasteEffectIntervals = new List<float>();
-            List<float> tempHasteEffectChances = new List<float>();
-            List<float> tempHasteEffectOffsets = new List<float>();
-            List<float> tempHasteEffectScales = new List<float>();
-            #endregion
+            // Next we use our special stat relevancy filtering on consumables. (party buffs only need filtering on relevant stats)
+            if (relevant && (buff.Group == "Elixirs and Flasks" || buff.Group == "Potion" || buff.Group == "Food" || buff.Group == "Scrolls" || buff.Group == "Temporary Buffs"))
+                relevant = HasPrimaryStats(buff.Stats) || (HasSecondaryStats(buff.Stats) && !HasUnwantedStats(buff.Stats));
 
-            float offset = 0;
+            return relevant;
+        }
 
-            List<SpecialEffect> effects = new List<SpecialEffect>();
+        public override bool IsEnchantRelevant(Enchant enchant, Character character)
+        {
+            // First we let the normal rules (profession, class, relevant stats) decide
+            bool relevant = base.IsEnchantRelevant(enchant, character);
+
+            // Next we use our special stat relevancy filtering.
+            if (relevant)
+                relevant = HasPrimaryStats(enchant.Stats) || (HasSecondaryStats(enchant.Stats) && !HasUnwantedStats(enchant.Stats));
+
+            return relevant;
+        }
+
+
+        public override Stats GetRelevantStats(Stats stats)
+        {
+            Stats s = new Stats()
+            {
+                // -- State Properties --
+                // Base Stats
+                Health = stats.Health,
+                Mana = stats.Mana,
+                Agility = stats.Agility,
+                Stamina = stats.Stamina,
+                Intellect = stats.Intellect,
+                Spirit = stats.Spirit,
+                Armor = stats.Armor,
+                HasteRating = stats.HasteRating,
+                CritRating = stats.CritRating,
+                SpellPower = stats.SpellPower,
+                MasteryRating = stats.MasteryRating,
+                // SpellPenetration = stats.SpellPenetration,
+                Mp5 = stats.Mp5,
+                BonusArmor = stats.BonusArmor,
+
+                // Buffs / Debuffs
+                ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
+
+                // Combat Values
+                SpellCrit = stats.SpellCrit,
+                SpellCritOnTarget = stats.SpellCritOnTarget,
+                SpellHit = stats.SpellHit,
+                SpellCombatManaRegeneration = stats.SpellCombatManaRegeneration,
+                TargetArmorReduction = stats.TargetArmorReduction,
+
+                // Spell Combat Ratings
+                SpellArcaneDamageRating = stats.SpellArcaneDamageRating,
+                SpellNatureDamageRating = stats.SpellNatureDamageRating,
+
+                // Equipment Effects
+                ManaRestore = stats.ManaRestore,
+                SpellsManaCostReduction = stats.SpellsManaCostReduction,
+                NatureSpellsManaCostReduction = stats.NatureSpellsManaCostReduction,
+
+                // -- MultiplicativeStats --
+                // Buffs / Debuffs
+                BonusHealthMultiplier = stats.BonusHealthMultiplier,
+                BonusManaMultiplier = stats.BonusManaMultiplier,
+                BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
+                BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
+                BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
+                BaseArmorMultiplier = stats.BaseArmorMultiplier,
+                BonusArmorMultiplier = stats.BonusArmorMultiplier,
+                SpellHaste = stats.SpellHaste,
+                BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
+                BonusHealingDoneMultiplier = stats.BonusHealingDoneMultiplier,
+                BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
+
+                // -- NoStackStats
+                MovementSpeed = stats.MovementSpeed,
+                SnareRootDurReduc = stats.SnareRootDurReduc,
+                FearDurReduc = stats.FearDurReduc,
+                StunDurReduc = stats.StunDurReduc,
+                BonusManaPotionEffectMultiplier = stats.BonusManaPotionEffectMultiplier,
+                HighestStat = stats.HighestStat,
+            };
+
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
-                effect.Stats.GenerateSparseData();
-
-                #region Filter out unhandled effects
-                if (!triggerIntervals.ContainsKey(effect.Trigger)) continue;
-                #endregion
-
-                #region Filter out Haste effects
-                if (effect.Stats.HasteRating > 0)
-                {
-                    tempHasteEffects.Add(effect);
-                    // PATCH for use effects
-                    if (effect.Trigger == Trigger.Use)
-                    {
-                        tempHasteEffectIntervals.Add(effect.Cooldown);
-                        tempHasteEffectChances.Add(1f);
-                        tempHasteEffectOffsets.Add(offset);
-                        offset += effect.Duration;
-                    }
-                    else
-                    {
-                        tempHasteEffectIntervals.Add(triggerIntervals[effect.Trigger]);
-                        tempHasteEffectChances.Add(triggerChances[effect.Trigger]);
-                        tempHasteEffectOffsets.Add(0f);
-                    }
-                    tempHasteEffectScales.Add(1f);
-                    continue;
-                }
-                #endregion
-
-                effects.Add(effect);
+                if (RelevantTriggers.Contains(effect.Trigger) && HasRelevantStats(effect.Stats))
+                    s.AddSpecialEffect(effect);
             }
-
-            #region Calculate Haste Breakdown
-            if (tempHasteEffects.Count == 0 || pc == ProcCalc.None)
-            {
-                hasteRatings.Add(0.0f);
-                hasteRatingUptimes.Add(1.0f);
-            }
-            else if (pc == ProcCalc.Max)
-            {
-                float hasteRating = 0;
-                for (int i = 0; i < tempHasteEffects.Count; i++) hasteRating += tempHasteEffects[i].Stats.HasteRating;
-                hasteRatings.Add(hasteRating);
-                hasteRatingUptimes.Add(1f);
-            }
-            else if (tempHasteEffects.Count == 1)
-            {   //Only one, add it to
-                SpecialEffect effect = tempHasteEffects[0];
-                float uptime = effect.GetAverageStackSize(tempHasteEffectIntervals[0], tempHasteEffectChances[0], 0, TotalTime);
-                hasteRatings.Add(effect.Stats.HasteRating);
-                hasteRatingUptimes.Add(uptime);
-                hasteRatings.Add(0.0f);
-                hasteRatingUptimes.Add(1.0f - uptime);
-            }
-            else if (tempHasteEffects.Count > 1)
-            {
-                WeightedStat[] HasteRatingWeights = SpecialEffect.GetAverageCombinedUptimeCombinations(tempHasteEffects.ToArray(), tempHasteEffectIntervals.ToArray(), tempHasteEffectChances.ToArray(), tempHasteEffectOffsets.ToArray(), tempHasteEffectScales.ToArray(), 0, TotalTime, AdditiveStat.HasteRating);
-                for (int i = 0; i < HasteRatingWeights.Length; i++)
-                {
-                    hasteRatings.Add(HasteRatingWeights[i].Value);
-                    hasteRatingUptimes.Add(HasteRatingWeights[i].Chance);
-                }
-            }
-            #endregion
-
-            /*
-            #region Calculate average Haste from effects (capped)
-            if (tempHasteRatings.Count > 0f)
-            {
-                float cap = (1.5f / (1f + stats.SpellHaste) - 1) * StatConversion.RATING_PER_SPELLHASTE - stats.HasteRating;
-
-                float HasteRatingFromProcs = 0f;
-                for (int i = 0; i < tempHasteRatings.Count; i++)
-                {
-                    float Haste = Math.Min(cap, tempHasteRatings[i]);
-                    HasteRatingFromProcs += tempHasteRatingUptimes[i] * Haste;
-                }
-
-                stats.HasteRating += HasteRatingFromProcs;                
-            }
-            #endregion
-            */
-
-            AccumulateSpecialEffects(character, ref stats, TotalTime, triggerIntervals, triggerChances, effects, 1f, pc);
-
-            #region Clear special effects from Stats
-            for (int i = 0; i < stats._rawSpecialEffectDataSize; i++) stats._rawSpecialEffectData[i] = null;
-            stats._rawSpecialEffectDataSize = 0;
-            #endregion
+            return s;
         }
 
-        protected void AccumulateSpecialEffects(Character character, ref Stats stats, float FightDuration, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances, List<SpecialEffect> effects, float weight, ProcCalc pc) 
+        private Stats emptyStats = new Stats();
+
+        public override bool HasRelevantStats(Stats stats)
         {
-            foreach (SpecialEffect effect in effects) 
+            // These 3 calls should amount to the same list of stats as used in GetRelevantStats()
+            // Add a null call to catch relevance for set bonuses that have no actual stats
+            return stats == emptyStats|| HasPrimaryStats(stats) || HasSecondaryStats(stats) || HasExtraStats(stats);
+        }
+
+        /// <summary>
+        /// HasPrimaryStats() should return true if the Stats object has any stats that define the item
+        /// as being 'for your class/spec'. For melee classes this is typical melee stats like Strength, 
+        /// Agility, AP, Expertise... For casters it would be spellpower, intellect, ...
+        /// As soon as an item/enchant/buff has any of the stats listed here, it will be assumed to be 
+        /// relevant unless explicitely filtered out.
+        /// Stats that could be usefull for both casters and melee such as HitRating, CritRating and Haste
+        /// don't belong here, but are SecondaryStats. Specific melee versions of these do belong here 
+        /// for melee, spell versions would fit here for casters.
+        /// </summary>
+        public bool HasPrimaryStats(Stats stats)
+        {
+            bool PrimaryStats =
+                // -- State Properties --
+                // Base Stats
+                stats.Intellect != 0 ||
+                stats.Spirit != 0 ||
+                stats.SpellPower != 0 ||
+                // stats.SpellPenetration != 0 ||
+
+                // Combat Values
+                stats.SpellHaste != 0 ||
+                stats.SpellCrit != 0 ||
+                stats.SpellCritOnTarget != 0 ||
+
+                stats.Mp5 != 0 ||
+                stats.ManaRestoreFromMaxManaPerSecond != 0 ||
+                stats.SpellCombatManaRegeneration != 0 ||
+                stats.ManaRestore != 0 ||
+                stats.SpellsManaCostReduction != 0 ||
+                stats.NatureSpellsManaCostReduction != 0 ||
+
+                // Spell Combat Ratings
+
+                // -- MultiplicativeStats --
+                // Buffs / Debuffs
+                stats.BonusIntellectMultiplier != 0 ||
+                stats.BonusSpiritMultiplier != 0 ||
+                stats.BonusCritHealMultiplier != 0 ||
+                stats.BonusSpellPowerMultiplier != 0 ||
+                stats.BonusHealingDoneMultiplier != 0 ||
+                stats.BonusManaPotionEffectMultiplier != 0 ||
+                stats.BonusPeriodicHealingMultiplier != 0
+                ;
+
+            if (!PrimaryStats)
             {
-                Stats effectStats = effect.Stats;
-
-                float upTime = 0f;
-
-                #region Filter out Haste effects
-                if (effect.Stats.HasteRating > 0f) continue;
-                #endregion
-
-                if (effect.Trigger == Trigger.Use)
+                foreach (SpecialEffect effect in stats.SpecialEffects())
                 {
-                    if (effect.Stats._rawSpecialEffectDataSize >= 1)
+                    if (RelevantTriggers.Contains(effect.Trigger) && HasPrimaryStats(effect.Stats))
                     {
-                        upTime = effect.GetAverageUptime(0f, 1f, 0, FightDuration);
-                        List<SpecialEffect> nestedEffect = new List<SpecialEffect>(effect.Stats.SpecialEffects());
-                        Stats _stats2 = effectStats.Clone();
-                        AccumulateSpecialEffects(character, ref _stats2, effect.Duration, triggerIntervals, triggerChances, nestedEffect, upTime, pc);
-                        effectStats = _stats2;
-                    }
-                    else
-                    {
-                        upTime = effect.GetAverageStackSize(0f, 1f, 0, FightDuration);
-                    }
-                }
-                else if (effect.Duration == 0f)
-                {
-                    upTime = effect.GetAverageProcsPerSecond(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger],
-                                                             0, FightDuration);
-                }
-                else if (triggerIntervals.ContainsKey(effect.Trigger))
-                {
-                    upTime = effect.GetAverageStackSize(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger],
-                                                             0, FightDuration);
-                }
-
-                if (upTime > 0f)
-                {
-                    if (pc == ProcCalc.None && upTime < 0.5f)
-                    {
-                        Stats s = new Stats()
-                        {
-                            SpellPower = effectStats.SpellPower,
-                            CritRating = effectStats.CritRating,
-                            //HasteRating = effectStats.HasteRating,
-                            SpellHaste = effectStats.SpellHaste
-                        };
-                        effectStats.SpellPower = 0;
-                        effectStats.CritRating = 0;
-                        //effectStats.HasteRating = 0;
-                        effectStats.SpellHaste = 0;
-                        stats.Accumulate(effectStats, upTime * weight);
-                        effectStats.SpellPower = s.SpellPower;
-                        effectStats.CritRating = s.CritRating;
-                        //effectStats.HasteRating = s.HasteRating;
-                        effectStats.SpellHaste = s.SpellHaste;
-                    }
-                    else if (pc == ProcCalc.Max && upTime < 0.5f)
-                    {
-                        Stats s = new Stats()
-                        {
-                            SpellPower = effectStats.SpellPower,
-                            CritRating = effectStats.CritRating,
-                            //HasteRating = effectStats.HasteRating,
-                            SpellHaste = effectStats.SpellHaste
-                        };
-                        effectStats.SpellPower = 0;
-                        effectStats.CritRating = 0;
-                        //effectStats.HasteRating = 0;
-                        effectStats.SpellHaste = 0;
-                        stats.Accumulate(effectStats, upTime * weight);
-                        effectStats.SpellPower = s.SpellPower;
-                        effectStats.CritRating = s.CritRating;
-                        //effectStats.HasteRating = s.HasteRating;
-                        effectStats.SpellHaste = s.SpellHaste;
-                        stats.Accumulate(s, weight);
-                    }
-                    else
-                    {
-                        stats.Accumulate(effectStats, upTime * weight);
+                        PrimaryStats = true;
+                        break;
                     }
                 }
             }
+
+            return PrimaryStats;
+        }
+
+        /// <summary>
+        /// HasSecondaryStats() should return true if the Stats object has any stats that are relevant for the 
+        /// model but only to a smaller degree, so small that you wouldn't typically consider the item.
+        /// Stats that are usefull to both melee and casters (HitRating, CritRating & Haste) fit in here also.
+        /// An item/enchant/buff having these stats would be considered only if it doesn't have any of the 
+        /// unwanted stats.  Group/Party buffs are slighly different, they would be considered regardless if 
+        /// they have unwanted stats.
+        /// Note that a stat may be listed here since it impacts the model, but may also be listed as an unwanted stat.
+        /// </summary>
+        public bool HasSecondaryStats(Stats stats)
+        {
+            bool SecondaryStats =
+                // -- State Properties --
+                // Base Stats
+                stats.Mana != 0 ||
+                stats.HasteRating != 0 ||
+                stats.CritRating != 0 ||
+                stats.MasteryRating != 0 ||
+
+                // -- MultiplicativeStats --
+                // Buffs / Debuffs
+                stats.BonusManaMultiplier != 0 ||
+
+                // -- NoStackStats
+                stats.MovementSpeed != 0 ||
+                stats.SnareRootDurReduc != 0 ||
+                stats.FearDurReduc != 0 ||
+                stats.StunDurReduc != 0 ||
+                stats.HighestStat != 0;
+
+            if (!SecondaryStats)
+            {
+                foreach (SpecialEffect effect in stats.SpecialEffects())
+                {
+                    if (RelevantTriggers.Contains(effect.Trigger) && HasSecondaryStats(effect.Stats))
+                    {
+                        SecondaryStats = true;
+                        break;
+                    }
+                }
+            }
+
+            return SecondaryStats;
+        }
+
+        /// <summary>
+        /// Return true if the Stats object has any stats that don't influence the model but that you do want 
+        /// to display in tooltips and in calculated summary values.
+        /// </summary>
+        public bool HasExtraStats(Stats stats)
+        {
+            bool ExtraStats =
+                stats.Health != 0 ||
+                stats.Stamina != 0 ||
+                stats.Armor != 0 ||
+                stats.BonusArmor != 0 ||
+                stats.BonusHealthMultiplier != 0 ||
+                stats.BonusStaminaMultiplier != 0 ||
+                stats.BaseArmorMultiplier != 0 ||
+                stats.BonusArmorMultiplier != 0;
+
+            if (!ExtraStats)
+            {
+                foreach (SpecialEffect effect in stats.SpecialEffects())
+                {
+                    if (RelevantTriggers.Contains(effect.Trigger) && HasExtraStats(effect.Stats))
+                    {
+                        ExtraStats = true;
+                        break;
+                    }
+                }
+            }
+
+            return ExtraStats;
+        }
+
+        /// <summary>
+        /// Return true if the Stats object contains any stats that are making the item undesired.
+        /// Any item having only Secondary stats would be removed if it also has one of these.
+        /// </summary>
+        public bool HasUnwantedStats(Stats stats)
+        {
+            /// List of stats that will filter out some buffs (Flasks, Elixirs & Scrolls), Enchants and Items.
+            bool UnwantedStats =
+                stats.Strength > 0 ||
+                stats.Agility > 0 ||
+                stats.AttackPower > 0 ||
+                stats.ExpertiseRating > 0 ||
+                stats.DodgeRating > 0 ||
+                stats.ParryRating > 0 ||
+                stats.BlockRating > 0 ||
+                stats.Resilience > 0;
+
+            if (!UnwantedStats)
+            {
+                foreach (SpecialEffect effect in stats.SpecialEffects())
+                {
+                    if (/*RelevantTriggers.Contains(effect.Trigger) && */HasUnwantedStats(effect.Stats))    // An unwanted stat could be behind a trigger we don't model.
+                    {
+                        UnwantedStats = true;
+                        break;
+                    }
+                }
+            }
+
+            return UnwantedStats;
+        }
+
+        public Stats GetBuffsStats(Character character, CalculationOptionsTree calcOpts)
+        {
+            List<Buff> removedBuffs = new List<Buff>();
+            List<Buff> addedBuffs = new List<Buff>();
+
+            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs, character.SetBonusCount);
+
+            foreach (Buff b in removedBuffs)
+            {
+                character.ActiveBuffsAdd(b);
+            }
+            foreach (Buff b in addedBuffs)
+            {
+                character.ActiveBuffs.Remove(b);
+            }
+
+            return statsBuffs;
+        }
+
+        public override void SetDefaults(Character character)
+        {
+            character.ActiveBuffsAdd(("Arcane Tactics"));
+            character.ActiveBuffsAdd(("Arcane Brilliance (Mana)"));
+            character.ActiveBuffsAdd(("Arcane Brilliance (SP%)"));
+            character.ActiveBuffsAdd(("Blessing of Might (Mp5)"));
+            character.ActiveBuffsAdd(("Tree Form"));
+            character.ActiveBuffsAdd(("Elemental Oath"));
+            character.ActiveBuffsAdd(("Replenishment"));
+            character.ActiveBuffsAdd(("Power Word: Fortitude"));
+            character.ActiveBuffsAdd(("Mark of the Wild"));
+            character.ActiveBuffsAdd(("Heroism/Bloodlust"));
+            character.ActiveBuffsAdd(("Power Infusion"));
+            character.ActiveBuffsAdd(("Flask of the Draconic Mind"));
+            character.ActiveBuffsAdd(("Intellect Food"));
+        }
+        #endregion
+
+        private static SpecialEffect[] naturesGrace = null;
+        public static SpecialEffect[] NaturesGrace
+        {
+            get
+            {
+                if (naturesGrace == null)
+                {
+                    naturesGrace = new SpecialEffect[4];
+                    for (int i = 1; i <= 3; ++i)
+                        naturesGrace[i] = new SpecialEffect(Trigger.Use, new Stats() { SpellHaste = 0.05f * i }, 15.0f, 60.0f, 1f);
+                }
+                return naturesGrace;
+            }
+        }
+
+        public class TreeOfLifeStats : Stats
+        {
+            public override string ToString() { return "Tree of Life"; }
+        }
+
+        private static SpecialEffect[] treeOfLife = null;
+        public static SpecialEffect[] TreeOfLife
+        {
+            get
+            {
+                if (treeOfLife == null)
+                {
+                    treeOfLife = new SpecialEffect[3];
+                    for (int i = 0; i <= 2; ++i)
+                        treeOfLife[i] = new SpecialEffect(Trigger.Use, new TreeOfLifeStats(), 25 + 3 * i, 180.0f);
+                }
+                return treeOfLife;
+            }
+        }
+
+        public override Stats GetCharacterStats(Character character, Item additionalItem)
+        {
+            CalculationOptionsTree opts = character.CalculationOptions as CalculationOptionsTree;
+            if (opts == null)
+                opts = new CalculationOptionsTree();
+
+            Stats stats = new Stats();
+            Stats statsBase = BaseStats.GetBaseStats(character.Level, character.Class, character.Race);
+            stats.Accumulate(statsBase);
+            stats.BaseAgility = statsBase.Agility;
+
+            // Get the gear/enchants/buffs stats loaded in
+            stats.Accumulate(GetItemStats(character, additionalItem));
+            stats.Accumulate(GetBuffsStats(character, opts));
+
+            // Talented bonus multipliers
+            Stats statsTalents = new Stats()
+            {
+                BonusIntellectMultiplier = (1 + 0.02f * character.DruidTalents.HeartOfTheWild) * (Character.ValidateArmorSpecialization(character, ItemType.Leather) ? 1.05f : 1f) - 1f,
+                BonusManaMultiplier = 0.05f * character.DruidTalents.Furor,
+                SpellCrit = 0.02f * character.DruidTalents.NaturesMajesty
+            };
+
+            stats.Accumulate(statsTalents);
+
+            FinalizeStats(stats, stats);
+
+            // Derived stats: Health, mana pool, armor
+            stats.Health = (float)Math.Round(stats.Health + StatConversion.GetHealthFromStamina(stats.Stamina));
+            stats.Health = (float)Math.Floor(stats.Health * (1f + stats.BonusHealthMultiplier));
+            stats.Mana = (float)Math.Round(stats.Mana + StatConversion.GetManaFromIntellect(stats.Intellect));
+            stats.Mana = (float)Math.Floor(stats.Mana * (1f + stats.BonusManaMultiplier));
+
+            // Armor
+            stats.Armor = stats.Armor * (1f + stats.BaseArmorMultiplier);
+            stats.BonusArmor = stats.BonusArmor * (1f + stats.BonusArmorMultiplier);
+            stats.Armor += stats.BonusArmor;
+            stats.Armor = (float)Math.Round(stats.Armor);
+
+            if (character.DruidTalents.NaturesGrace > 0)
+                stats.AddSpecialEffect(NaturesGrace[character.DruidTalents.NaturesGrace]);
+
+            if (character.DruidTalents.TreeOfLife > 0)
+                stats.AddSpecialEffect(TreeOfLife[character.DruidTalents.NaturalShapeshifter]);
+
+            return stats;
+        }
+
+        public static void FinalizeStats(Stats stats, Stats statsMultipliers)
+        {
+            stats.Intellect += stats.HighestStat;
+            stats.Intellect *= (1 + statsMultipliers.BonusIntellectMultiplier);
+            stats.Agility *= (1 + statsMultipliers.BonusAgilityMultiplier);
+            stats.Stamina *= (1 + statsMultipliers.BonusStaminaMultiplier);
+            stats.Spirit *= (1 + statsMultipliers.BonusSpiritMultiplier);
         }
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
             // First things first, we need to ensure that we aren't using bad data
             CharacterCalculationsTree calc = new CharacterCalculationsTree();
-            if (character == null) { return calc; }
-            CalculationOptionsTree calcOpts = character.CalculationOptions as CalculationOptionsTree;
-            if (calcOpts == null) { return calc; }
-            //
-            SpellProfile profile = calcOpts.Current;
-            boss = character.BossOptions;
-            calc.boss = character.BossOptions;
-
-            calc.LocalCharacter = character;
-            calc.BasicStats = GetCharacterStats(character, additionalItem); //Move spell power and mastery inside.
-
-            // All spells: Damage +(1 * Int)
-            float spellDamageFromIntPercent = 1f;
-            // Fix for rounding error in converting partial points of int/spirit to spell power
-            float spellPowerFromStats = (float)Math.Floor(spellDamageFromIntPercent * (Math.Max(0f, calc.BasicStats.Intellect - 10)));
-            calc.SpellPower = calc.BasicStats.SpellPower + spellPowerFromStats;
-
-            //// Mastery from rating
-            //calc.Mastery = 8.0f + StatConversion.GetMasteryFromRating(calc.BasicStats.MasteryRating);
-
-            #region Rotations
-            Stats stats = calc.BasicStats;
-            stats.ManaRestore /= boss.BerserkTimer; //  profile.FightDuration;
-            //float replenish = stats.ManaRestoreFromMaxManaPerSecond >= 0.002f ? 0.002f : 0;
-            //stats.ManaRestore += (stats.ManaRestoreFromMaxManaPerSecond - replenish) * stats.Mana;
-            //stats.ManaRestoreFromMaxManaPerSecond = replenish;
-
-            stats.Spirit += character.SetBonusCount.ContainsKey("Stormrider's Vestments") && character.SetBonusCount["Stormrider's Vestments"] == 4 ? 540f : 0;
-            
-            float ExtraHealing = 0f;
-            RotationSettings settings = getRotationFromCalculationOptions(stats, calcOpts, calc);
-
-            // Initial run
-            SustainedResult rot = Solver.SimulateHealing(calc, stats, calcOpts, boss, settings);
-
-            List<float> hasteRatings = new List<float>();
-            List<float> hasteRatingUptimes = new List<float>();
-
-            ProcCalc pc = ProcCalc.None;
-            switch (calcOpts.ProcType)
-            {
-                case 0:
-                    pc = ProcCalc.None;
-                    break;
-                case 1:
-                    pc = ProcCalc.Average;
-                    break;
-                case 2:
-                    pc = ProcCalc.Max;
-                    break;
-            }
-
-            CombatFactors cfs = rot.getCombatFactors();
-            cfs.Compute();
-
-            for (int k = 0; k < 2; k++) {
-                // Create new stats instance with procs
-                stats = GetCharacterStats(character, additionalItem);
-                stats.ManaRestore /= boss.BerserkTimer;  // profile.FightDuration;
-
-                stats.Spirit += character.SetBonusCount.ContainsKey("Stormrider's Vestments") && character.SetBonusCount["Stormrider's Vestments"] == 4 ? 540f : 0;
-
-                hasteRatings.Clear();
-                hasteRatingUptimes.Clear();
-                DoSpecialEffects(character, stats, cfs, rot.TotalTime, hasteRatings, hasteRatingUptimes, pc);
-
-                //// Add replenish
-                //replenish = stats.ManaRestoreFromMaxManaPerSecond >= 0.002f ? 0.002f : 0;
-                //stats.ManaRestore += (stats.ManaRestoreFromMaxManaPerSecond - replenish) * stats.Mana;
-                //stats.ManaRestoreFromMaxManaPerSecond = replenish;
-
-                ExtraHealing = stats.Healed;
-
-                if (false)//calcOpts.IgnoreAllHasteEffects)
-                {
-                    /*stats.SpellHaste = calculationResult.BasicStats.SpellHaste;
-                    stats.HasteRating = calculationResult.BasicStats.HasteRating;
-
-                    rot = Solver.SimulateHealing(calculationResult, stats, calcOpts, settings);
-                    cfs = rot.getCombatFactors();
-                    cfs.Compute();*/
-                }
-                else
-                {
-                    cfs = new CombatFactors();
-                    float AverageHasteRating = 0;
-                    for (int i = 0; i < hasteRatings.Count; i++)
-                    {
-                        stats.HasteRating += hasteRatings[i];
-                        SustainedResult r = Solver.SimulateHealing(calc, stats, calcOpts, boss, settings);
-                        cfs.Accumulate(r.getCombatFactors(), hasteRatingUptimes[i]);
-                        stats.HasteRating -= hasteRatings[i];
-                        AverageHasteRating += hasteRatings[i] * hasteRatingUptimes[i];
-                        if (i == 0) rot = r;
-                    }
-                    cfs.Compute();
-                    stats.HasteRating += AverageHasteRating; // For Burst
-                }
-            }
-            calc.Sustained = rot;
-            calc.CombatStats = stats;
-            #endregion
-
-            calc.SingleTarget = Solver.CalculateSingleTargetBurst(calc, stats, calcOpts, Solver.SingleTargetIndexToRotation(calcOpts.SingleTargetRotation));
-
-            calc.SingleTargetHPS = calc.SingleTarget[0].HPS;
-            calc.SustainedHPS = cfs.TotalHealing / rot.TotalTime + ExtraHealing;
-
-            #region Survival Points
-            float DamageReduction = StatConversion.GetArmorDamageReduction(character.BossOptions.Level, stats.Armor, 0, 0/*, 0*/);
-            calc.SurvivalPoints = stats.Health / (1f - DamageReduction) / 100f * calcOpts.SurvValuePer100;
-            #endregion
-
-            // Apply diminishing returns - this needs to be removed with testing.
-
-            calc.SingleTargetPoints = DiminishingReturns.CapWithMaximum2(calc.SingleTargetHPS, calcOpts.SingleTarget);
-            calc.SustainedPoints = DiminishingReturns.CapWithMaximum2(calc.SustainedHPS, calcOpts.SustainedTarget);
-
-            // --- Replacement code from here
-            Rotation rotionNew = new Rotation(105, character, calc.CombatStats, boss);
-            calc.SustainedPoints = rotionNew.HPS;
-
-            calc.OverallPoints = calc.SingleTargetPoints + calc.SustainedPoints + calc.SurvivalPoints;
-
+            if (character == null)
+                return calc;
+            calc.BasicStats = (Stats)GetCharacterStats(character, additionalItem);
+            new TreeSolver(character, calc);
             return calc;
         }
-        private static readonly SpecialEffect[] _SE_NaturesGrace = new SpecialEffect[] {
-            null,
-            new SpecialEffect(Trigger.HealingSpellCrit, new Stats() { SpellHaste = 0.2f }, 3f, 0, 1 * 1f / 3f, 1),
-            new SpecialEffect(Trigger.HealingSpellCrit, new Stats() { SpellHaste = 0.2f }, 3f, 0, 2 * 1f / 3f, 1),
-            new SpecialEffect(Trigger.HealingSpellCrit, new Stats() { SpellHaste = 0.2f }, 3f, 0, 3 * 1f / 3f, 1),
+
+        #region Custom Charts
+
+        private string[] customChartNames = new string[] { 
+            "Haste Breakpoints (vs Crit, Mast, Spi, Int)",
+            "Haste Breakpoints (vs Crit, Spi, Mast, Int)",
+            "Haste Breakpoints (vs Mast, Crit, Spi, Int)",
+            "Haste Breakpoints (vs Spi, Crit, Mask, Int)",
+            "Haste Breakpoints (vs Mast, Spi, Crit, Int)",
+            "Haste Breakpoints (vs Spi, Mast, Crit, Int)",
+            "Haste Breakpoints (vs Int)"
         };
-        public override Stats GetCharacterStats(Character character, Item additionalItem) { return GetCharacterStats(character, additionalItem, new Stats()); }
-        public Stats GetCharacterStats(Character character, Item additionalItem, Stats statsProcs) {
-            CalculationOptionsTree calcOpts = character.CalculationOptions as CalculationOptionsTree;
-            DruidTalents talents = character.DruidTalents;
-            SpellProfile profile = calcOpts.Current;
 
-            Stats statsRace = BaseStats.GetBaseStats(character.Level, character.Class, character.Race); //GetRacialBaseStats(character.Race);
-            TreeConstants.BaseMana = statsRace.Mana; // Setup TreeConstant
+        public override string[] CustomChartNames
+        {
+            get
+            {
+                return customChartNames;
+            }
+        }
 
-            Stats statsTalents = new Stats() {
-#if !RAWR4
-                BonusAgilityMultiplier   = (1f + 0.01f * talents.SurvivalOfTheFittest * 2f) * (1f + 0.01f * talents.ImprovedMarkOfTheWild) - 1f,
-                BonusIntellectMultiplier = (1f + 0.01f * talents.SurvivalOfTheFittest * 2f) * (1f + 0.01f * talents.ImprovedMarkOfTheWild) * (1f + 0.04f * talents.HeartOfTheWild) - 1f,
-                BonusSpiritMultiplier    = (1f + 0.01f * talents.SurvivalOfTheFittest * 2f) * (1f + 0.01f * talents.ImprovedMarkOfTheWild) * (1f + 0.05f * talents.LivingSpirit) - 1f,
-                BonusStaminaMultiplier   = (1f + 0.01f * talents.SurvivalOfTheFittest * 2f) * (1f + 0.01f * talents.ImprovedMarkOfTheWild) - 1f,
-                BonusStrengthMultiplier  = (1f + 0.01f * talents.SurvivalOfTheFittest * 2f) * (1f + 0.01f * talents.ImprovedMarkOfTheWild) - 1f,
-                BonusArmorMultiplier     = 0.80f * talents.ImprovedTreeOfLife,
-                SpellHaste               = ((1f + 0.01f * talents.CelestialFocus) * (1f + 0.02f * talents.GiftOfTheEarthmother)) - 1f,
+        public int[] GetHasteBreakpoints(Character character, int maxHaste)
+        {
+            Stats stats = GetCharacterStats(character, null);
 
-                //SpellDamageFromSpiritPercentage = talents.ImprovedTreeOfLife * 0.05f,
-                SpellCombatManaRegeneration = talents.Intensity * 0.5f / 3f, //still necessary?
-#endif
-                BonusIntellectMultiplier = (0.02f * talents.HeartOfTheWild ) +
-                                           (Character.ValidateArmorSpecialization(character, ItemType.Leather) ? 0.05f: 0f),
+            List<int> hasteRatingProcsList = new List<int>();
+            List<float> spellHasteProcsList = new List<float>();
 
-/*                BonusIntellectMultiplier = (1.0f+(0.02f * talents.HeartOfTheWild)) *
-                                           (Character.ValidateArmorSpecialization(character, ItemType.Leather) ? 1.05f : 1f) - 1f, */
-            };
-
-#if !RAWR4
-            if (!calcOpts.IgnoreNaturesGrace && talents.NaturesGrace > 0) { statsTalents.AddSpecialEffect(_SE_NaturesGrace[talents.NaturesGrace]); }
-#endif
-
-            Stats statsBaseGear = GetItemStats(character, additionalItem);
-            Stats statsBuffs = GetBuffsStats(character, calcOpts);
-            Stats statsTotal = statsBaseGear + statsBuffs + statsRace + statsTalents + statsProcs;
-
-            statsTotal.Agility   = (float)Math.Floor(statsTotal.Agility   * (1f + statsTotal.BonusAgilityMultiplier));
-            statsTotal.Stamina   = (float)Math.Floor(statsTotal.Stamina   * (1f + statsTotal.BonusStaminaMultiplier));
-            statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect * (1f + statsTotal.BonusIntellectMultiplier));
-            statsTotal.Spirit    = (float)Math.Floor(statsTotal.Spirit    * (1f + statsTotal.BonusSpiritMultiplier));
-            statsTotal.Armor     = (float)Math.Floor(statsTotal.Armor     * (1f + statsTotal.BonusArmorMultiplier));
-
-            if (statsTotal.HighestStat > 0) {
-                if (statsTotal.Spirit > statsTotal.Intellect) {
-                    statsTotal.Spirit += (float)Math.Floor(statsTotal.HighestStat * (1f + statsTotal.BonusSpiritMultiplier));
-                } else {
-                    statsTotal.Intellect += (float)Math.Floor(statsTotal.HighestStat * (1f + statsTotal.BonusIntellectMultiplier));
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (CalculationsTree.RelevantTriggers.Contains(effect.Trigger))
+                {
+                    if (effect.Stats.HasteRating > 0)
+                        hasteRatingProcsList.Add((int)effect.Stats.HasteRating);
+                    if (effect.Stats.SpellHaste > 0)
+                        spellHasteProcsList.Add(1 + effect.Stats.SpellHaste);
                 }
             }
 
-            // Add spellpower from spirit, intellect and... agility :)
-            statsTotal.SpellPower = (float)Math.Round(statsTotal.SpellPower
-                                                    //+ (statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit) // This line is no longer valid
-                                                    + (statsTotal.Intellect /* * talents.LunarGuidance * 0.04*/)  // Googling intellect to spellpower comes up at a 1:1 ratio, needs more testing
-                //                                                    + (talents.NurturingInstinct * 0.35f * statsTotal.Agility)  Technically true in patch 4.0, but not reachable from resto spec
-                                                    );
+            int[] hasteRatingProcs = hasteRatingProcsList.ToArray();
+            float[] spellHasteProcs = spellHasteProcsList.ToArray();
 
-            statsTotal.Mana = statsTotal.Mana + StatConversion.GetManaFromIntellect(statsTotal.Intellect);
-            statsTotal.Mana *= (1f + statsTotal.BonusManaMultiplier) * (1f + 0.05f*talents.Furor);
+            List<int> baseHasteBreakpointsList = new List<int>();
 
-            statsTotal.Health = (float)Math.Round(statsTotal.Health + StatConversion.GetHealthFromStamina(statsTotal.Stamina));
-//            statsTotal.Mp5   += (float)Math.Floor(statsTotal.Intellect * (talents.Dreamstate > 0 ? talents.Dreamstate * 0.03f + 0.01f : 0f));
+            string[] spells = { "LB", "WG", "Rj", "Tq" };
+            int[] tickRates = { 1, 1, 3, 2 };
+            int[] durations = { 10, 7, 12, 8 };
 
-            statsTotal.SpellCrit = (float)Math.Round((StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect)
-                                                    + StatConversion.GetSpellCritFromRating(statsTotal.CritRating)
-                                                    + (statsTotal.SpellCrit)
-                                                    + 0.02f * talents.NaturesMajesty), 4);          // Round to xx.xx %
-                                                    //+ 0.01f * talents.NaturalPerfection) * 100f, 2);
+            int numHasteMults = 1 << spellHasteProcs.Length;
+            double[] hasteMults = new double[numHasteMults];
+            for (int i = 0; i < numHasteMults; ++i)
+            {
+                double hasteMult = 1 + stats.SpellHaste;
+                for (int j = 0; j < spellHasteProcs.Length; ++j)
+                {
+                    if ((i & (1 << j)) != 0)
+                        hasteMult *= spellHasteProcs[j];
+                }
 
-            //Mastery and Spell Power from INT
+                hasteMults[i] = hasteMult;
+            }
 
-            return statsTotal;
+            int numHasteOffsets = 1 << hasteRatingProcs.Length;
+            int[] hasteOffsets = new int[numHasteOffsets];
+            for (int i = 0; i < numHasteOffsets; ++i)
+            {
+                int hasteOffset = 0;
+                for (int j = 0; j < hasteRatingProcs.Length; ++j)
+                {
+                    if ((i & (1 << j)) != 0)
+                        hasteOffset += hasteRatingProcs[j];
+                }
+
+                hasteOffsets[i] = hasteOffset;
+            }
+
+            int[] ticks = new int[numHasteMults * 4];
+            int gotem = 0;
+            bool[] hasteBreakpointsMask = new bool[maxHaste + 1];
+            int maxh = maxHaste + hasteOffsets[hasteOffsets.Length - 1];
+            for (int h = 0; h <= maxh; ++h)
+            {
+                double hasteRatingMult = 1 + StatConversion.GetSpellHasteFromRating(h);
+                bool isBreakpoint = h == 0;
+                int curGotem = (int)Math.Floor(4.0f * (1 + StatConversion.GetSpellHasteFromRating((float)h)) + 0.5f);
+                if (curGotem > gotem)
+                {
+                    isBreakpoint = true;
+                    gotem = curGotem;
+                }
+                for (int i = 0; i < numHasteMults * 4; ++i)
+                {
+                    double curTickRate = Math.Round(tickRates[i & 3] / (hasteMults[i >> 2] * hasteRatingMult), 3);
+                    int curTicks = (int)Math.Ceiling(durations[i & 3] / curTickRate - 0.5);
+                    if (curTicks > ticks[i])
+                    {
+                        ticks[i] = curTicks;
+                        isBreakpoint = true;
+                    }
+                }
+                if (isBreakpoint)
+                {
+                    for (int j = 0; j < numHasteOffsets; ++j)
+                    {
+                        int hr = h - hasteOffsets[j];
+                        if (hr >= 0 && hr <= maxHaste)
+                            hasteBreakpointsMask[hr] = true;
+                    }
+                }
+            }
+
+            List<int> hasteBreakpointsList = new List<int>();
+            for (int h = 0; h <= maxHaste; ++h)
+            {
+                if (hasteBreakpointsMask[h])
+                    hasteBreakpointsList.Add(h);
+            }
+            return hasteBreakpointsList.ToArray();
         }
+
+
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
-            List<ComparisonCalculationBase> comparisonList = new List<ComparisonCalculationBase>();
-
-            CalculationOptionsTree calculationOptions = character.CalculationOptions as CalculationOptionsTree;
-            DruidTalents talents = character.DruidTalents;
-            CharacterCalculationsTree calculationResult = GetCharacterCalculations(character) as CharacterCalculationsTree;
-
-            int customRotationsMax = 106;
-
-            switch (chartName)
+            int i = customChartNames.FindIndex(x => x == chartName);
+            if(i < 0)
+                return new ComparisonCalculationBase[0];
+            //if(i <= 4)
             {
-                #region Mana sources (sustained)
-                case "Mana sources (sustained)":
-                    _subPointNameColors = _subPointNameColorsMPS;
-                    ComparisonCalculationTree gear = new ComparisonCalculationTree()
+                List<ComparisonCalculationBase> chart = new List<ComparisonCalculationBase>();
+                CharacterCalculationsTree calcsBase = GetCharacterCalculations(character) as CharacterCalculationsTree;
+                Character c2 = character.Clone();
+
+                bool curIsBreakpoint = false;
+                int[] hasteBreakpoints = GetHasteBreakpoints(character, 5000);
+                foreach(int hb in hasteBreakpoints)
+                {
+                    float hasteDelta = hb - calcsBase.BasicStats.HasteRating;
+                    float curHasteDelta;
+
+                    Buff buff = new Buff();
+                    buff.Name = "Haste adjustment to meet breakpoint";
+                    buff.Stats.HasteRating += hasteDelta;
+                    bool stop = false;
+
+                    if(i == 6)
                     {
-                        Name = "MP5 from gear, buffs and MP5 procs",
-                        Equipped = false,
-                        OverallPoints = calculationResult.Sustained.GearMPS,
-                        SubPoints = new float[] { calculationResult.Sustained.GearMPS, 0, 0 }
-                    };
-                    comparisonList.Add(gear);
-                    ComparisonCalculationTree procs = new ComparisonCalculationTree()
+                        if (hasteDelta > calcsBase.BasicStats.Intellect)
+                            stop = true;
+                        buff.Stats.Intellect -= hasteDelta;
+                    }
+                    else
                     {
-                        Name = "Mana from procs",
-                        Equipped = false,
-                        OverallPoints = calculationResult.Sustained.ProcsMPS,
-                        SubPoints = new float[] { calculationResult.Sustained.ProcsMPS, 0, 0 }
-                    };
-                    comparisonList.Add(procs);
-                    ComparisonCalculationTree revitalize = new ComparisonCalculationTree()
-                    {
-                        Name = "Mana from Revitalize",
-                        Equipped = false,
-                        OverallPoints = calculationResult.Sustained.RevitalizeMPS,
-                        SubPoints = new float[] { calculationResult.Sustained.RevitalizeMPS, 0, 0 }
-                    };
-                    comparisonList.Add(revitalize);
-                    ComparisonCalculationTree spiritIC = new ComparisonCalculationTree()
-                    {
-                        Name = "Spirit",
-                        Equipped = false,
-                        OverallPoints = calculationResult.Sustained.SpiritMPS,
-                        SubPoints = new float[] { calculationResult.Sustained.SpiritMPS, 0, 0 }
-                    };
-                    comparisonList.Add(spiritIC);
-                    ComparisonCalculationTree replenishment = new ComparisonCalculationTree()
-                    {
-                        Name = "Replenishment",
-                        Equipped = false,
-                        OverallPoints = calculationResult.Sustained.ReplenishmentMPS,
-                        SubPoints = new float[] { calculationResult.Sustained.ReplenishmentMPS, 0, 0 }
-                    };
-                    comparisonList.Add(replenishment);
-                    ComparisonCalculationTree innervates = new ComparisonCalculationTree()
-                    {
-                        Name = "Innervates",
-                        Equipped = false,
-                        OverallPoints = calculationResult.Sustained.InnervateMPS,
-                        SubPoints = new float[] { calculationResult.Sustained.InnervateMPS, 0, 0 }
-                    };
-                    comparisonList.Add(innervates);
-                    
-                    return comparisonList.ToArray();
-                #endregion
-                #region Casting time percentage per spell (sustained)
-                case "Casting time percentage per spell (sustained)":
-                    {
-                        _subPointNameColors = _subPointNameColorsCF;
-                        ComparisonCalculationTree rejuv = new ComparisonCalculationTree()
+                        int[] ratings = new int[3];
+                        int critPos = i >> 1;
+                        ratings[critPos] = 0; // crit
+                        ratings[critPos == 0 ? 1 : 0] = 1 + (i & 1);
+                        ratings[critPos == 2 ? 1 : 2] = 2 - (i & 1);
+
+                        for(int j = 0; j < 3; ++j)
                         {
-                            Name = "Rejuvenation",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.RejuvCF_unreduced * 100,
-                            SubPoints = new float[] { 
-                                calculationResult.Sustained.spellMix.RejuvCF * 100,
-                                (calculationResult.Sustained.RejuvCF_unreducedOOM - calculationResult.Sustained.spellMix.RejuvCF) * 100f,
-                                (calculationResult.Sustained.RejuvCF_unreduced - calculationResult.Sustained.RejuvCF_unreducedOOM) * 100
+                            switch(ratings[j])
+                            {
+                                case 0:
+                                    curHasteDelta = Math.Min(hasteDelta, calcsBase.BasicStats.CritRating);
+                                    buff.Stats.CritRating -= curHasteDelta;
+                                    hasteDelta -= curHasteDelta;
+                                    break;
+                                case 1:
+                                    curHasteDelta = Math.Min(hasteDelta, calcsBase.BasicStats.MasteryRating);
+                                    buff.Stats.MasteryRating -= curHasteDelta;
+                                    hasteDelta -= curHasteDelta;
+                                    break;
+                                case 2:
+                                    curHasteDelta = Math.Min(hasteDelta, calcsBase.BasicStats.Spirit);
+                                    buff.Stats.Spirit -= curHasteDelta;
+                                    hasteDelta -= curHasteDelta;
+                                    break;
                             }
-                        };
-                        comparisonList.Add(rejuv);
-                        ComparisonCalculationTree regrowth = new ComparisonCalculationTree()
-                        {
-                            Name = "Regrowth",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.RegrowthCF_unreduced * 100,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.RegrowthCF * 100,
-                            (calculationResult.Sustained.RegrowthCF_unreducedOOM - calculationResult.Sustained.spellMix.RegrowthCF) * 100f,
-                            (calculationResult.Sustained.RegrowthCF_unreduced - calculationResult.Sustained.RegrowthCF_unreducedOOM) * 100}
-                        };
-                        comparisonList.Add(regrowth);
-                        ComparisonCalculationTree managedrejuv = new ComparisonCalculationTree()
-                        {
-                            Name = "Maintained Rejuvenation",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.ManagedRejuvCF_unreduced * 100,
-                            SubPoints = new float[] { 
-                                calculationResult.Sustained.spellMix.ManagedRejuvCF * 100,
-                                (calculationResult.Sustained.ManagedRejuvCF_unreducedOOM - calculationResult.Sustained.spellMix.ManagedRejuvCF) * 100f,
-                                (calculationResult.Sustained.ManagedRejuvCF_unreduced - calculationResult.Sustained.ManagedRejuvCF_unreducedOOM) * 100
-                            }
-                        };
-                        comparisonList.Add(managedrejuv);
-                        ComparisonCalculationTree managedregrowth = new ComparisonCalculationTree()
-                        {
-                            Name = "Maintained Regrowth",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.ManagedRegrowthCF_unreduced * 100,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.ManagedRegrowthCF * 100,
-                            (calculationResult.Sustained.ManagedRegrowthCF_unreducedOOM - calculationResult.Sustained.spellMix.ManagedRegrowthCF) * 100f,
-                            (calculationResult.Sustained.ManagedRegrowthCF_unreduced - calculationResult.Sustained.ManagedRegrowthCF_unreducedOOM) * 100}
-                        };
-                        comparisonList.Add(managedregrowth);
-                        ComparisonCalculationTree lifebloom = new ComparisonCalculationTree()
-                        {
-                            Name = "Lifebloom",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.LifebloomCF_unreduced * 100,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.LifebloomCF * 100,
-                                (calculationResult.Sustained.LifebloomCF_unreducedOOM - calculationResult.Sustained.spellMix.LifebloomCF) * 100f,
-                            (calculationResult.Sustained.LifebloomCF_unreduced - calculationResult.Sustained.LifebloomCF_unreducedOOM) * 100 }
-                        };
-                        comparisonList.Add(lifebloom);
-                        ComparisonCalculationTree lifebloomStack = new ComparisonCalculationTree()
-                        {
-                            Name = "Lifebloom Stack",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.LifebloomStackCF_unreduced * 100,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.LifebloomStackCF * 100, 0,
-                            (calculationResult.Sustained.LifebloomStackCF_unreduced - calculationResult.Sustained.spellMix.LifebloomStackCF) * 100 }
-                        };
-                        comparisonList.Add(lifebloomStack);
-                        ComparisonCalculationTree wildGrowth = new ComparisonCalculationTree()
-                        {
-                            Name = "Wild Growth",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.WildGrowthCF_unreduced * 100,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.WildGrowthCF * 100,
-                                (calculationResult.Sustained.WildGrowthCF_unreducedOOM - calculationResult.Sustained.spellMix.WildGrowthCF) * 100f,
-                            (calculationResult.Sustained.WildGrowthCF_unreduced - calculationResult.Sustained.WildGrowthCF_unreducedOOM) * 100 }
-                        };
-                        comparisonList.Add(wildGrowth);
-                        ComparisonCalculationTree swiftmend = new ComparisonCalculationTree()
-                        {
-                            Name = "Swiftmend",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.SwiftmendCF_unreduced * 100,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.SwiftmendCF * 100, 0,
-                            (calculationResult.Sustained.SwiftmendCF_unreduced - calculationResult.Sustained.spellMix.SwiftmendCF) * 100 }
-                        };
-                        comparisonList.Add(swiftmend);
-                        ComparisonCalculationTree nourish = new ComparisonCalculationTree()
-                        {
-                            Name = "Nourish",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.NourishCF_unreduced * 100,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.NourishCF * 100,
-                                (calculationResult.Sustained.NourishCF_unreducedOOM - calculationResult.Sustained.spellMix.NourishCF) * 100f,
-                            (calculationResult.Sustained.NourishCF_unreduced - calculationResult.Sustained.NourishCF_unreducedOOM) * 100 }
-                        };
-                        comparisonList.Add(nourish);
-                        /*ComparisonCalculationTree idle = new ComparisonCalculationTree()
-                        {
-                            Name = "Idle",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.IdleCF * 100,
-                            SubPoints = new float[] { calculationResult.Sustained.IdleCF_unreduced * 100f,
-                                (calculationResult.Sustained.spellMix.IdleCF - calculationResult.Sustained.IdleCF_unreducedOOM) * 100f,
-                            (calculationResult.Sustained.IdleCF_unreducedOOM - calculationResult.Sustained.IdleCF_unreduced) * 100f }
-                        };
-                        comparisonList.Add(idle);*/
-                    }
-                    return comparisonList.ToArray();
-                #endregion
-                #region Mana usage per spell (sustained)
-                case "Mana usage per spell (sustained)":
-                    {
-                        _subPointNameColors = _subPointNameColorsMPS;
-                        ComparisonCalculationTree rejuv = new ComparisonCalculationTree()
-                        {
-                            Name = "Rejuvenation",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.RejuvMPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.RejuvMPS }
-                        };
-                        comparisonList.Add(rejuv);
-                        ComparisonCalculationTree regrowth = new ComparisonCalculationTree()
-                        {
-                            Name = "Regrowth",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.RegrowthMPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.RegrowthMPS }
-                        };
-                        comparisonList.Add(regrowth);
-                        ComparisonCalculationTree managedrejuv = new ComparisonCalculationTree()
-                        {
-                            Name = "Maintained Rejuvenation",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.ManagedRejuvMPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.ManagedRejuvMPS }
-                        };
-                        comparisonList.Add(managedrejuv);
-                        ComparisonCalculationTree managedregrowth = new ComparisonCalculationTree()
-                        {
-                            Name = "Maintained Regrowth",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.ManagedRegrowthMPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.ManagedRegrowthMPS }
-                        };
-                        comparisonList.Add(managedregrowth);
-                        ComparisonCalculationTree lifebloom = new ComparisonCalculationTree()
-                        {
-                            Name = "Lifebloom",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.LifebloomMPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.LifebloomMPS }
-                        };
-                        comparisonList.Add(lifebloom);
-                        ComparisonCalculationTree lifebloomStack = new ComparisonCalculationTree()
-                        {
-                            Name = "Lifebloom Stack",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.LifebloomStackMPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.LifebloomStackMPS }
-                        };
-                        comparisonList.Add(lifebloomStack);
-                        ComparisonCalculationTree wildGrowth = new ComparisonCalculationTree()
-                        {
-                            Name = "Wild Growth",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.WildGrowthMPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.WildGrowthMPS }
-                        };
-                        comparisonList.Add(wildGrowth);
-                        ComparisonCalculationTree swiftmend = new ComparisonCalculationTree()
-                        {
-                            Name = "Swiftmend",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.SwiftmendMPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.SwiftmendMPS }
-                        };
-                        comparisonList.Add(swiftmend);
-                        ComparisonCalculationTree primary = new ComparisonCalculationTree()
-                        {
-                            Name = "Nourish",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.NourishMPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.NourishMPS }
-                        };
-                        comparisonList.Add(primary);
-                    }
-                    return comparisonList.ToArray();
-                #endregion
-                #region Healing per spell (sustained)
-                case "Total HPS per spell (sustained)":
-                    {
-                        _subPointNameColors = _subPointNameColorsHPS;
-                        ComparisonCalculationTree rejuv = new ComparisonCalculationTree()
-                        {
-                            Name = "Rejuvenation",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.RejuvHPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.RejuvHPS }
-                        };
-                        comparisonList.Add(rejuv);
-                        ComparisonCalculationTree regrowth = new ComparisonCalculationTree()
-                        {
-                            Name = "Regrowth",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.RegrowthHPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.RegrowthHPS }
-                        };
-                        comparisonList.Add(regrowth);
-                        ComparisonCalculationTree managedrejuv = new ComparisonCalculationTree()
-                        {
-                            Name = "Maintained Rejuvenation",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.ManagedRejuvHPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.ManagedRejuvHPS }
-                        };
-                        comparisonList.Add(managedrejuv);
-                        ComparisonCalculationTree managedregrowth = new ComparisonCalculationTree()
-                        {
-                            Name = "Maintained Regrowth",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.ManagedRegrowthHPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.ManagedRegrowthHPS }
-                        };
-                        comparisonList.Add(managedregrowth);
-                        ComparisonCalculationTree regrowthDH = new ComparisonCalculationTree()
-                        { // RegrowthAvg * regrowth.HPSHoT + RegrowthCPS * regrowth.AverageHealingwithCrit
-                            Name = "Regrowth (DH)",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.RegrowthCPS * calculationResult.Sustained.spellMix.RegrowthSpell.AverageHealingwithCrit,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.RegrowthCPS * calculationResult.Sustained.spellMix.RegrowthSpell.AverageHealingwithCrit }
-                        };
-                        comparisonList.Add(regrowthDH);
-                        ComparisonCalculationTree regrowthHoT = new ComparisonCalculationTree()
-                        {
-                            Name = "Regrowth (HoT)",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.RegrowthAvg * calculationResult.Sustained.spellMix.RegrowthSpell.HPS_HOT,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.RegrowthAvg * calculationResult.Sustained.spellMix.RegrowthSpell.HPS_HOT }
-                        };
-                        comparisonList.Add(regrowthHoT);
-                        ComparisonCalculationTree managedregrowthDH = new ComparisonCalculationTree()
-                        { // RegrowthAvg * regrowth.HPSHoT + RegrowthCPS * regrowth.AverageHealingwithCrit
-                            Name = "Maintained Regrowth (DH)",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.ManagedRegrowthCPS * calculationResult.Sustained.spellMix.ManagedRegrowthSpell.AverageHealingwithCrit,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.ManagedRegrowthCPS * calculationResult.Sustained.spellMix.ManagedRegrowthSpell.AverageHealingwithCrit }
-                        };
-                        comparisonList.Add(managedregrowthDH);
-                        ComparisonCalculationTree managedregrowthHoT = new ComparisonCalculationTree()
-                        {
-                            Name = "Maintained Regrowth (HoT)",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.ManagedRegrowthAvg * calculationResult.Sustained.spellMix.ManagedRegrowthSpell.HPS_HOT,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.ManagedRegrowthAvg * calculationResult.Sustained.spellMix.ManagedRegrowthSpell.HPS_HOT }
-                        };
-                        comparisonList.Add(managedregrowthHoT);
-                        ComparisonCalculationTree lifebloom = new ComparisonCalculationTree()
-                        {
-                            Name = "Lifebloom",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.LifebloomHPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.LifebloomHPS }
-                        };
-                        comparisonList.Add(lifebloom);
-                        ComparisonCalculationTree lifebloomDH = new ComparisonCalculationTree()
-                        {
-                            Name = "Lifebloom (Bloom)",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.LifebloomCPS * calculationResult.Sustained.spellMix.lifebloom.AverageHealingwithCrit,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.LifebloomCPS * calculationResult.Sustained.spellMix.lifebloom.AverageHealingwithCrit }
-                        };
-                        comparisonList.Add(lifebloomDH);
-                        ComparisonCalculationTree lifebloomHoT = new ComparisonCalculationTree()
-                        {
-                            Name = "Lifebloom (HoT)",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.LifebloomAvg * calculationResult.Sustained.spellMix.lifebloom.HPS_HOT,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.LifebloomAvg * calculationResult.Sustained.spellMix.lifebloom.HPS_HOT }
-                        };
-                        comparisonList.Add(lifebloomHoT);
-                        ComparisonCalculationTree lifebloomStack = new ComparisonCalculationTree()
-                        {
-                            Name = "Lifebloom Stack",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.LifebloomStackHPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.LifebloomStackHPS }
-                        };
-                        comparisonList.Add(lifebloomStack);
-                        ComparisonCalculationTree lifebloomStackDH = new ComparisonCalculationTree()
-                        {
-                            Name = "Lifebloom Stack (Bloom)",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.LifebloomStackHPS_DH,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.LifebloomStackHPS_DH }
-                        };
-                        comparisonList.Add(lifebloomStackDH);
-                        ComparisonCalculationTree lifebloomStackHOT = new ComparisonCalculationTree()
-                        {
-                            Name = "Lifebloom Stack (HoT)",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.LifebloomStackHPS_HOT,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.LifebloomStackHPS_HOT }
-                        };
-                        comparisonList.Add(lifebloomStackHOT);
-                        ComparisonCalculationTree wildGrowth = new ComparisonCalculationTree()
-                        {
-                            Name = "Wild Growth",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.WildGrowthHPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.WildGrowthHPS }
-                        };
-                        comparisonList.Add(wildGrowth);
-                        ComparisonCalculationTree wildGrowthSingle = new ComparisonCalculationTree()
-                        {
-                            Name = "Wild Growth (single target)",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.WildGrowthHPS / calculationResult.Sustained.spellMix.wildGrowth.MaxTargets,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.WildGrowthHPS / calculationResult.Sustained.spellMix.wildGrowth.MaxTargets }
-                        };
-                        comparisonList.Add(wildGrowthSingle);
-                        ComparisonCalculationTree swiftmend = new ComparisonCalculationTree()
-                        {
-                            Name = "Swiftmend",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.SwiftmendHPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.SwiftmendHPS }
-                        };
-                        comparisonList.Add(swiftmend);
-                        ComparisonCalculationTree primary = new ComparisonCalculationTree()
-                        {
-                            Name = "Nourish",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.NourishHPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.NourishHPS }
-                        };
-                        comparisonList.Add(primary);
-                    }
-                    return comparisonList.ToArray();
-                #endregion
-                #region HPCT per spell
-                case "HPCT per spell":
-                    {
-                        _subPointNameColors = _subPointNameColorsHPCT;
-                        ComparisonCalculationTree rejuv = new ComparisonCalculationTree()
-                        {
-                            Name = "Rejuvenation",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.rejuvenate.HPCT,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.rejuvenate.HPCT, 0, 0 }
-                        };
-                        comparisonList.Add(rejuv);
-                        ComparisonCalculationTree regrowth = new ComparisonCalculationTree()
-                        {
-                            Name = "Regrowth",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.regrowth.HPCT,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.regrowth.HPCT, 0, 0 }
-                        };
-                        comparisonList.Add(regrowth);
-                        ComparisonCalculationTree regrowthAgain = new ComparisonCalculationTree()
-                        {
-                            Name = "Regrowth (chaincast)",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.regrowthAgain.HPCT_DH,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.regrowthAgain.HPCT_DH, 0, 0 }
-                        };
-                        comparisonList.Add(regrowthAgain);
-                        ComparisonCalculationTree lifebloom = new ComparisonCalculationTree()
-                        {
-                            Name = "Lifebloom",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.lifebloom.HPCT,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloom.HPCT, 0, 0 }
-                        };
-                        comparisonList.Add(lifebloom);
-                        ComparisonCalculationTree lifebloomRollingStack = new ComparisonCalculationTree()
-                        {
-                            Name = "Lifebloom Rolling Stack",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.lifebloomRollingStack.HPCT,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomRollingStack.HPCT, 0, 0 }
-                        };
-                        comparisonList.Add(lifebloomRollingStack);
-                        ComparisonCalculationTree lifebloomSlowStack = new ComparisonCalculationTree()
-                        {
-                            Name = "Lifebloom Slow Stack",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.lifebloomSlowStack.HPCT,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomSlowStack.HPCT, 0, 0 }
-                        };
-                        comparisonList.Add(lifebloomSlowStack);
-                        ComparisonCalculationTree lifebloomFastStack = new ComparisonCalculationTree()
-                        {
-                            Name = "Lifebloom Fast Stack",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.lifebloomFastStack.HPCT,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomFastStack.HPCT, 0, 0 }
-                        };
-                        comparisonList.Add(lifebloomFastStack);
-                        ComparisonCalculationTree lifebloomSlow2Stack = new ComparisonCalculationTree()
-                        {
-                            Name = "Lifebloom Slow x2 Stack",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.lifebloomSlow2Stack.HPCT,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomSlow2Stack.HPCT, 0, 0 }
-                        };
-                        comparisonList.Add(lifebloomSlow2Stack);
-                        ComparisonCalculationTree lifebloomFast2Stack = new ComparisonCalculationTree()
-                        {
-                            Name = "Lifebloom Fast x2 Stack",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.lifebloomFast2Stack.HPCT,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomFast2Stack.HPCT, 0, 0 }
-                        };
-                        comparisonList.Add(lifebloomFast2Stack);
-                        ComparisonCalculationTree wildGrowth = new ComparisonCalculationTree()
-                        {
-                            Name = "Wild Growth",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.wildGrowth.HPCT,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.wildGrowth.HPCT, 0, 0 }
-                        };
-                        comparisonList.Add(wildGrowth);
-                        ComparisonCalculationTree wildGrowthSingle = new ComparisonCalculationTree()
-                        {
-                            Name = "Wild Growth (single target)",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.wildGrowth.HPCT / calculationResult.Sustained.spellMix.wildGrowth.MaxTargets,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.wildGrowth.HPCT / calculationResult.Sustained.spellMix.wildGrowth.MaxTargets, 0, 0 }
-                        };
-                        comparisonList.Add(wildGrowthSingle);
-                        if (calculationResult.Sustained.spellMix.swiftmend != null)
-                        {
-                            ComparisonCalculationTree swiftmend = new ComparisonCalculationTree()
-                            {
-                                Name = "Swiftmend",
-                                Equipped = false,
-                                OverallPoints = calculationResult.Sustained.spellMix.swiftmend.HPCT,
-                                SubPoints = new float[] { calculationResult.Sustained.spellMix.swiftmend.HPCT, 0, 0 }
-                            };
-                            comparisonList.Add(swiftmend);
                         }
-                        ComparisonCalculationTree nourish0 = new ComparisonCalculationTree()
-                        {
-                            Name = "Nourish (0)",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.nourish[0].HPCT,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[0].HPCT, 0, 0 }
-                        };
-                        comparisonList.Add(nourish0);
-                        ComparisonCalculationTree nourish1 = new ComparisonCalculationTree()
-                        {
-                            Name = "Nourish (1)",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.nourish[1].HPCT,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[1].HPCT, 0, 0 }
-                        };
-                        comparisonList.Add(nourish1);
-                        //ComparisonCalculationTree nourish2 = new ComparisonCalculationTree()
-                        //{
-                        //    Name = "Nourish (2)",
-                        //    Equipped = false,
-                        //    OverallPoints = calculationResult.Sustained.spellMix.nourish[2].HPCT,
-                        //    SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[2].HPCT }
-                        //};
-                        //comparisonList.Add(nourish2);
-                        //ComparisonCalculationTree nourish3 = new ComparisonCalculationTree()
-                        //{
-                        //    Name = "Nourish (3)",
-                        //    Equipped = false,
-                        //    OverallPoints = calculationResult.Sustained.spellMix.nourish[3].HPCT,
-                        //    SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[3].HPCT }
-                        //};
-                        //comparisonList.Add(nourish3);
-                        //ComparisonCalculationTree nourish4 = new ComparisonCalculationTree()
-                        //{
-                        //    Name = "Nourish (4)",
-                        //    Equipped = false,
-                        //    OverallPoints = calculationResult.Sustained.spellMix.nourish[4].HPCT,
-                        //    SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[4].HPCT }
-                        //};
-                        //comparisonList.Add(nourish4);
-                        ComparisonCalculationTree healingTouch = new ComparisonCalculationTree()
-                        {
-                            Name = "Healing Touch",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.healingTouch.HPCT,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.healingTouch.HPCT, 0, 0 }
-                        };
-                        comparisonList.Add(healingTouch);
-                    }
-                    return comparisonList.ToArray();
-                #endregion
-                #region HPS per spell
-                case "HPS per spell":
-                    {
-                        // YES, we use HPCTD here. That's TotalAverageHealing / max(CastTime, Duration)
-                        // with CastTime, that means chaincasting a DH spell (Nourish/HT/SM)
-                        // with Duration, that means refreshing a spell with a HoT component (RG/RJ/LB/WG)
-                        _subPointNameColors = _subPointNameColorsHPS;
-                        ComparisonCalculationTree rejuv = new ComparisonCalculationTree()
-                        {
-                            Name = "Rejuvenation",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.rejuvenate.HPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.rejuvenate.HPS, 0, 0 }
-                        };
-                        comparisonList.Add(rejuv);
-                        ComparisonCalculationTree regrowth = new ComparisonCalculationTree()
-                        {
-                            Name = "Regrowth",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.regrowth.HPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.regrowth.HPS, 0, 0 }
-                        };
-                        comparisonList.Add(regrowth);
-                        ComparisonCalculationTree regrowthAgain = new ComparisonCalculationTree()
-                        {
-                            Name = "Regrowth (chaincasting)",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.regrowthAgain.HPCT_DH,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.regrowthAgain.HPCT_DH, 0, 0 }
-                        };
-                        comparisonList.Add(regrowthAgain);
-                        ComparisonCalculationTree lifebloom = new ComparisonCalculationTree()
-                        {
-                            Name = "Lifebloom",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.lifebloom.HPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloom.HPS, 0, 0 }
-                        };
-                        comparisonList.Add(lifebloom);
-                        ComparisonCalculationTree lifebloomRollingStack = new ComparisonCalculationTree()
-                        {
-                            Name = "Lifebloom Rolling Stack",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.lifebloomRollingStack.HPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomRollingStack.HPS, 0, 0 }
-                        };
-                        comparisonList.Add(lifebloomRollingStack);
-                        ComparisonCalculationTree lifebloomSlowStack = new ComparisonCalculationTree()
-                        {
-                            Name = "Lifebloom Slow Stack",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.lifebloomSlowStack.HPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomSlowStack.HPS, 0, 0 }
-                        };
-                        comparisonList.Add(lifebloomSlowStack);
-                        ComparisonCalculationTree lifebloomFastStack = new ComparisonCalculationTree()
-                        {
-                            Name = "Lifebloom Fast Stack",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.lifebloomFastStack.HPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomFastStack.HPS, 0, 0 }
-                        };
-                        comparisonList.Add(lifebloomFastStack);
-                        ComparisonCalculationTree lifebloomSlow2Stack = new ComparisonCalculationTree()
-                        {
-                            Name = "Lifebloom Slow x2 Stack",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.lifebloomSlow2Stack.HPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomSlow2Stack.HPS, 0, 0 }
-                        };
-                        comparisonList.Add(lifebloomSlow2Stack);
-                        ComparisonCalculationTree lifebloomFast2Stack = new ComparisonCalculationTree()
-                        {
-                            Name = "Lifebloom Fast x2 Stack",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.lifebloomFast2Stack.HPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomFast2Stack.HPS, 0, 0 }
-                        };
-                        comparisonList.Add(lifebloomFast2Stack);
-                        ComparisonCalculationTree wildGrowth = new ComparisonCalculationTree()
-                        {
-                            Name = "Wild Growth",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.wildGrowth.HPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.wildGrowth.HPS, 0, 0 }
-                        };
-                        comparisonList.Add(wildGrowth);
-                        ComparisonCalculationTree wildGrowthSingle = new ComparisonCalculationTree()
-                        {
-                            Name = "Wild Growth (single target)",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.wildGrowth.HPS / calculationResult.Sustained.spellMix.wildGrowth.MaxTargets,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.wildGrowth.HPS / calculationResult.Sustained.spellMix.wildGrowth.MaxTargets, 0, 0 }
-                        };
-                        comparisonList.Add(wildGrowthSingle);
-                        if (calculationResult.Sustained.spellMix.swiftmend != null)
-                        {
-                            ComparisonCalculationTree swiftmend = new ComparisonCalculationTree()
-                            {
-                                Name = "Swiftmend",
-                                Equipped = false,
-                                OverallPoints = calculationResult.Sustained.spellMix.swiftmend.HPS,
-                                SubPoints = new float[] { calculationResult.Sustained.spellMix.swiftmend.HPS, 0, 0 }
-                            };
-                            comparisonList.Add(swiftmend);
-                        }
-                        ComparisonCalculationTree nourish0 = new ComparisonCalculationTree()
-                        {
-                            Name = "Nourish (0)",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.nourish[0].HPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[0].HPS, 0, 0 }
-                        };
-                        comparisonList.Add(nourish0);
-                        ComparisonCalculationTree nourish1 = new ComparisonCalculationTree()
-                        {
-                            Name = "Nourish (1)",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.nourish[1].HPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[1].HPS, 0, 0 }
-                        };
-                        comparisonList.Add(nourish1);
-                        //ComparisonCalculationTree nourish2 = new ComparisonCalculationTree()
-                        //{
-                        //    Name = "Nourish (2)",
-                        //    Equipped = false,
-                        //    OverallPoints = calculationResult.Sustained.spellMix.nourish[2].HPS,
-                        //    SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[2].HPS }
-                        //};
-                        //comparisonList.Add(nourish2);
-                        //ComparisonCalculationTree nourish3 = new ComparisonCalculationTree()
-                        //{
-                        //    Name = "Nourish (3)",
-                        //    Equipped = false,
-                        //    OverallPoints = calculationResult.Sustained.spellMix.nourish[3].HPS,
-                        //    SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[3].HPS }
-                        //};
-                        //comparisonList.Add(nourish3);
-                        //ComparisonCalculationTree nourish4 = new ComparisonCalculationTree()
-                        //{
-                        //    Name = "Nourish (4)",
-                        //    Equipped = false,
-                        //    OverallPoints = calculationResult.Sustained.spellMix.nourish[4].HPS,
-                        //    SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[4].HPS }
-                        //};
-                        //comparisonList.Add(nourish4);
-                        ComparisonCalculationTree healingTouch = new ComparisonCalculationTree()
-                        {
-                            Name = "Healing Touch",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.healingTouch.HPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.healingTouch.HPS, 0, 0 }
-                        };
-                        comparisonList.Add(healingTouch);
-                    }
-                    return comparisonList.ToArray();
-#endregion
-                #region HPM per spell
-                case "HPM per spell":
-                    {
-                        _subPointNameColors = _subPointNameColorsHPM;
-                        ComparisonCalculationTree rejuv = new ComparisonCalculationTree()
-                        {
-                            Name = "Rejuvenation",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.rejuvenate.HPM,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.rejuvenate.HPM, 0, 0 }
-                        };
-                        comparisonList.Add(rejuv);
-                        ComparisonCalculationTree regrowth = new ComparisonCalculationTree()
-                        {
-                            Name = "Regrowth",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.regrowth.HPM,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.regrowth.HPM, 0, 0 }
-                        };
-                        comparisonList.Add(regrowth);
-                        ComparisonCalculationTree regrowthAgain = new ComparisonCalculationTree()
-                        {
-                            Name = "Regrowth (chaincast)",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.regrowthAgain.HPM_DH,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.regrowthAgain.HPM_DH, 0, 0 }
-                        };
-                        comparisonList.Add(regrowthAgain);
-                        ComparisonCalculationTree lifebloom = new ComparisonCalculationTree()
-                        {
-                            Name = "Lifebloom",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.lifebloom.HPM,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloom.HPM, 0, 0 }
-                        };
-                        comparisonList.Add(lifebloom);
-                        ComparisonCalculationTree lifebloomRollingStack = new ComparisonCalculationTree()
-                        {
-                            Name = "Lifebloom Rolling Stack",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.lifebloomRollingStack.HPM,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomRollingStack.HPM, 0, 0 }
-                        };
-                        comparisonList.Add(lifebloomRollingStack);
-                        ComparisonCalculationTree lifebloomSlowStack = new ComparisonCalculationTree()
-                        {
-                            Name = "Lifebloom Slow Stack",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.lifebloomSlowStack.HPM,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomSlowStack.HPM, 0, 0 }
-                        };
-                        comparisonList.Add(lifebloomSlowStack);
-                        ComparisonCalculationTree lifebloomFastStack = new ComparisonCalculationTree()
-                        {
-                            Name = "Lifebloom Fast Stack",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.lifebloomFastStack.HPM,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomFastStack.HPM, 0, 0 }
-                        };
-                        comparisonList.Add(lifebloomFastStack);
-                        ComparisonCalculationTree lifebloomSlow2Stack = new ComparisonCalculationTree()
-                        {
-                            Name = "Lifebloom Slow x2 Stack",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.lifebloomSlow2Stack.HPM,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomSlow2Stack.HPM, 0, 0 }
-                        };
-                        comparisonList.Add(lifebloomSlow2Stack);
-                        ComparisonCalculationTree lifebloomFast2Stack = new ComparisonCalculationTree()
-                        {
-                            Name = "Lifebloom Fast x2 Stack",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.lifebloomFast2Stack.HPM,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomFast2Stack.HPM, 0, 0 }
-                        };
-                        comparisonList.Add(lifebloomFast2Stack);
-                        ComparisonCalculationTree wildGrowth = new ComparisonCalculationTree()
-                        {
-                            Name = "Wild Growth",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.wildGrowth.HPM,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.wildGrowth.HPM, 0, 0 }
-                        };
-                        comparisonList.Add(wildGrowth);
-                        ComparisonCalculationTree wildGrowthSingle = new ComparisonCalculationTree()
-                        {
-                            Name = "Wild Growth (one target)",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.wildGrowth.HPM / calculationResult.Sustained.spellMix.wildGrowth.MaxTargets,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.wildGrowth.HPM / calculationResult.Sustained.spellMix.wildGrowth.MaxTargets, 0, 0 }
-                        };
-                        comparisonList.Add(wildGrowthSingle);
-                        if (calculationResult.Sustained.spellMix.swiftmend != null)
-                        {
-                            ComparisonCalculationTree swiftmend = new ComparisonCalculationTree()
-                            {
-                                Name = "Swiftmend",
-                                Equipped = false,
-                                OverallPoints = calculationResult.Sustained.spellMix.swiftmend.HPM,
-                                SubPoints = new float[] { calculationResult.Sustained.spellMix.swiftmend.HPM, 0, 0 }
-                            };
-                            comparisonList.Add(swiftmend);
-                        }
-                        ComparisonCalculationTree nourish0 = new ComparisonCalculationTree()
-                        {
-                            Name = "Nourish (0)",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.nourish[0].HPM,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[0].HPM, 0, 0 }
-                        };
-                        comparisonList.Add(nourish0);
-                        ComparisonCalculationTree nourish1 = new ComparisonCalculationTree()
-                        {
-                            Name = "Nourish (1)",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.nourish[1].HPM,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[1].HPM, 0, 0 }
-                        };
-                        comparisonList.Add(nourish1);
-                        //ComparisonCalculationTree nourish2 = new ComparisonCalculationTree()
-                        //{
-                        //    Name = "Nourish (2)",
-                        //    Equipped = false,
-                        //    OverallPoints = calculationResult.Sustained.spellMix.nourish[2].HPM,
-                        //    SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[2].HPM }
-                        //};
-                        //comparisonList.Add(nourish2);
-                        //ComparisonCalculationTree nourish3 = new ComparisonCalculationTree()
-                        //{
-                        //    Name = "Nourish (3)",
-                        //    Equipped = false,
-                        //    OverallPoints = calculationResult.Sustained.spellMix.nourish[3].HPM,
-                        //    SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[3].HPM }
-                        //};
-                        //comparisonList.Add(nourish3);
-                        //ComparisonCalculationTree nourish4 = new ComparisonCalculationTree()
-                        //{
-                        //    Name = "Nourish (4)",
-                        //    Equipped = false,
-                        //    OverallPoints = calculationResult.Sustained.spellMix.nourish[4].HPM,
-                        //    SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[4].HPM }
-                        //};
-                        //comparisonList.Add(nourish4);
-                        ComparisonCalculationTree healingTouch = new ComparisonCalculationTree()
-                        {
-                            Name = "Healing Touch",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.healingTouch.HPM,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.healingTouch.HPM, 0, 0 }
-                        };
-                        comparisonList.Add(healingTouch);
-                    }
-                    return comparisonList.ToArray();
-#endregion
-                #region Healing per spell (single target)
-                case "Healing per spell (single target)":
-                    {
-                        _subPointNameColors = _subPointNameColorsHPS;
-                        ComparisonCalculationTree rejuv = new ComparisonCalculationTree()
-                        {
-                            Name = "Rejuvenation",
-                            Equipped = false,
-                            OverallPoints = calculationResult.SingleTarget[0].spellMix.RejuvHPS,
-                            SubPoints = new float[] { calculationResult.SingleTarget[0].spellMix.RejuvHPS }
-                        };
-                        comparisonList.Add(rejuv);
-                        ComparisonCalculationTree regrowth = new ComparisonCalculationTree()
-                        {
-                            Name = "Regrowth",
-                            Equipped = false,
-                            OverallPoints = calculationResult.SingleTarget[0].spellMix.RegrowthHPS,
-                            SubPoints = new float[] { calculationResult.SingleTarget[0].spellMix.RegrowthHPS }
-                        };
-                        comparisonList.Add(regrowth);
-                        ComparisonCalculationTree lifebloomStack = new ComparisonCalculationTree()
-                        {
-                            Name = "Lifebloom Stack",
-                            Equipped = false,
-                            OverallPoints = calculationResult.SingleTarget[0].spellMix.LifebloomStackHPS,
-                            SubPoints = new float[] { calculationResult.SingleTarget[0].spellMix.LifebloomStackHPS }
-                        };
-                        comparisonList.Add(lifebloomStack);
-                        if (calculationResult.Sustained.spellMix.swiftmend != null)
-                        {
-                            ComparisonCalculationTree swiftmend = new ComparisonCalculationTree()
-                            {
-                                Name = "Swiftmend",
-                                Equipped = false,
-                                OverallPoints = calculationResult.SingleTarget[0].spellMix.SwiftmendHPS,
-                                SubPoints = new float[] { calculationResult.SingleTarget[0].spellMix.SwiftmendHPS }
-                            };
-                            comparisonList.Add(swiftmend);
-                        }
-                        ComparisonCalculationTree primary = new ComparisonCalculationTree()
-                        {
-                            Name = "Nourish",
-                            Equipped = false,
-                            OverallPoints = calculationResult.SingleTarget[0].spellMix.NourishHPS,
-                            SubPoints = new float[] { calculationResult.SingleTarget[0].spellMix.NourishHPS }
-                        };
-                        comparisonList.Add(primary);
-                    }
-                    return comparisonList.ToArray();
-                    #endregion
-                #region Single Target spell mixes (HPS)
-                case "Single target spell mixes (HPS)":
-                    {
-                        _subPointNameColors = _subPointNameColorsHPS;
-                        for (int i = 2; i < 20; i++)
-                        {
 
-                            ComparisonCalculationTree spell = new ComparisonCalculationTree()
-                            {
-                                Name = Solver.SingleTargetRotationToText(calculationResult.SingleTarget[i].rotation),
-                                Equipped = false,
-                                OverallPoints = calculationResult.SingleTarget[i].HPS,
-                                SubPoints = new float[] { calculationResult.SingleTarget[i].HPS }
-                            };
-                            comparisonList.Add(spell);
-                        }
+                        if (hasteDelta > calcsBase.BasicStats.Intellect)
+                            stop = true;
+                        buff.Stats.Intellect -= hasteDelta;
                     }
-                    return comparisonList.ToArray();
-                #endregion
-                #region Single Target spell mixes (HPM)
-                case "Single target spell mixes (HPM)":
-                    {
-                        _subPointNameColors = _subPointNameColorsHPM;
-                        for (int i = 2; i < 20; i++)
-                        {
-
-                            ComparisonCalculationTree spell = new ComparisonCalculationTree()
-                            {
-                                Name = Solver.SingleTargetRotationToText(calculationResult.SingleTarget[i].rotation),
-                                Equipped = false,
-                                OverallPoints = calculationResult.SingleTarget[i].HPM,
-                                SubPoints = new float[] { calculationResult.SingleTarget[i].HPM }
-                            };
-                            comparisonList.Add(spell);
-                        }
-                    }
-                    return comparisonList.ToArray();
-                #endregion
-                #region Single Target spell mixes (MPS)
-                case "Single target spell mixes (MPS)":
-                    {
-                        _subPointNameColors = _subPointNameColorsMPS;
-                        for (int i = 2; i < 20; i++)
-                        {
-
-                            ComparisonCalculationTree spell = new ComparisonCalculationTree()
-                            {
-                                Name = Solver.SingleTargetRotationToText(calculationResult.SingleTarget[i].rotation),
-                                Equipped = false,
-                                OverallPoints = calculationResult.SingleTarget[i].spellMix.MPS,
-                                SubPoints = new float[] { calculationResult.SingleTarget[i].spellMix.MPS }
-                            };
-                            comparisonList.Add(spell);
-                        }
-                    }
-                    return comparisonList.ToArray();
+                    if (stop)
+                        break;
                     
-                #endregion
-                #region HPM per rotation
-                case "New HPM per rotation":
-                     _subPointNameColors = _subPointNameColorsHPM;
-                     for (int i = 0; i < 25; i++)
-                     {
-                         Rotation rot = new Rotation(i, character, calculationResult.CombatStats, boss);
-                         ComparisonCalculationTree tmp = new ComparisonCalculationTree()
-                         {
-                             Name = rot.Name,
-                             OverallPoints = rot.HPM,
-                             SubPoints = new float[] { rot.HPM, 0, 0 }
-                         };
-                         comparisonList.Add(tmp);
-                     }
-                     for (int i = 100; i < customRotationsMax; i++)
-                    {
-                        Rotation rot = new Rotation(i, character, calculationResult.CombatStats, boss);
-                        ComparisonCalculationTree tmp = new ComparisonCalculationTree()
-                        {
-                            Name = rot.Name,
-                            OverallPoints = rot.HPM,
-                            SubPoints = new float[] { rot.HPM, 0, 0 },
-                            PartEquipped = true,
+                    c2.ActiveBuffs.Add(buff);
+                    CharacterCalculationsTree calcsCur = GetCharacterCalculations(c2) as CharacterCalculationsTree;
+                    c2.ActiveBuffs.Remove(buff);
 
-                        };
-                        comparisonList.Add(tmp);
-                    }
-                    return comparisonList.ToArray();
-                #endregion
-                #region HPS per rotation
-                case "New HPS per rotation":
-                     _subPointNameColors = _subPointNameColorsHPS;
-                     for (int i = 0; i < 25; i++)
-                     {
-                         Rotation rot = new Rotation(i, character, calculationResult.CombatStats, boss);
-                         ComparisonCalculationTree tmp = new ComparisonCalculationTree()
-                         {
-                             Name = rot.Name,
-                             OverallPoints = rot.HPS,
-                             SubPoints = new float[] { rot.HPS, 0, 0 }
-                         };
-                         comparisonList.Add(tmp);
-                     }
-                     for (int i = 100; i < customRotationsMax; i++)
-                     {
-                         Rotation rot = new Rotation(i, character, calculationResult.CombatStats, boss);
-                         ComparisonCalculationTree tmp = new ComparisonCalculationTree()
-                         {
-                             Name = rot.Name,
-                             OverallPoints = rot.HPS,
-                             SubPoints = new float[] { rot.HPS, 0, 0 },
-                             PartEquipped = true,
-                         };
-                         comparisonList.Add(tmp);
-                     }
-                    return comparisonList.ToArray();
-                #endregion
-                #region MPS per rotation
-                case "New MPS per rotation":
-                    _subPointNameColors = _subPointNameColorsMPS;
-                    for (int i = 0; i < 25; i++)
-                    {
-                        Rotation rot = new Rotation(i, character, calculationResult.CombatStats, boss);
-                        ComparisonCalculationTree tmp = new ComparisonCalculationTree()
-                        {
-                            Name = rot.Name,
-                            OverallPoints = rot.MPS,
-                            SubPoints = new float[] { rot.MPS, 0, 0 }
-                        };
-                        comparisonList.Add(tmp);
-                    }
+                    ComparisonCalculationBase comp = Calculations.GetCharacterComparisonCalculations(calcsBase, calcsCur, String.Format("{0,4:F0}", hb), false, false);
+                    if (hb == calcsBase.BasicStats.HasteRating)
+                        comp.Description = "Current Gear (and on a breakpoint)";
+                    else
+                        comp.Description = buff.ToString();
 
-                    for (int i = 100; i < customRotationsMax; i++)
-                    {
-                        Rotation rot = new Rotation(i, character, calculationResult.CombatStats, boss);
-                        ComparisonCalculationTree tmp = new ComparisonCalculationTree()
-                        {
-                            Name = rot.Name,
-                            OverallPoints = rot.MPS,
-                            SubPoints = new float[] { rot.MPS, 0, 0 },
-                              PartEquipped = true,
-                       };
-                        comparisonList.Add(tmp);
-                    }
+                    chart.Add(comp);
+                }
 
-                    return comparisonList.ToArray();
-                #endregion
-                default:
-                    return new ComparisonCalculationBase[0];
-            }
-        }
-
-        public override Stats GetRelevantStats(Stats stats) {
-            Stats s = new Stats() {
-                #region Base Stats
-                //Stamina = stats.Stamina,
-                Intellect = stats.Intellect,
-                Spirit = stats.Spirit,
-                SpellPower = stats.SpellPower,
-                CritRating = stats.CritRating,
-                HasteRating = stats.HasteRating,
-                SpellHaste = stats.SpellHaste,
-                SpellCrit = stats.SpellCrit,
-                MasteryRating = stats.MasteryRating,
-                //Health = stats.Health,
-                Mana = stats.Mana,
-                Mp5 = stats.Mp5,
-                Armor = stats.Armor,
-                Stamina = stats.Stamina,
-                ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
-                MovementSpeed = stats.MovementSpeed,
-                SnareRootDurReduc = stats.SnareRootDurReduc,
-                FearDurReduc = stats.FearDurReduc,
-                StunDurReduc = stats.StunDurReduc,
-                BonusHealingDoneMultiplier = stats.BonusHealingDoneMultiplier,
-                #endregion
-                #region Trinkets
-                HighestStat = stats.HighestStat,
-                SpellsManaCostReduction = stats.SpellsManaCostReduction,
-                NatureSpellsManaCostReduction = stats.NatureSpellsManaCostReduction,
-                #endregion
-                #region Gems
-                BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
-                BonusManaMultiplier = stats.BonusManaMultiplier,
-                BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
-                #endregion
-            };
-            foreach (Rawr.SpecialEffect effect in stats.SpecialEffects()) {
-                if (effect.Trigger == Trigger.Use || 
-                    effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.SpellHit
-                    || effect.Trigger == Trigger.HealingSpellCast || effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.HealingSpellHit
-                    )
+                if (!curIsBreakpoint)
                 {
-                    if (HasRelevantSpecialEffectStats(effect.Stats)) {
-                        s.AddSpecialEffect(effect);
-                    } else {
-                        // Trigger seems relevant, but effect not. Sounds weird, probably DPS bonus on Use or general SpellCast ...
-                    }
+                    ComparisonCalculationBase comp = Calculations.GetCharacterComparisonCalculations(calcsBase, calcsBase, String.Format("{0,4:F0}" + (curIsBreakpoint ? "" : "(-)"), calcsBase.BasicStats.HasteRating), true, false);
+                    comp.Description = "Current Gear (not on a breakpoint)";
+                    chart.Add(comp);
                 }
+
+                return chart.ToArray();
             }
-            return s;
-        }
-        public bool HasRelevantSpecialEffectStats(Stats stats) {
-            foreach (Rawr.SpecialEffect effect in stats.SpecialEffects())
-            {
-                if (effect.Trigger == Trigger.Use ||
-                    effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit
-                    || effect.Trigger == Trigger.HealingSpellCast || effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.HealingSpellHit
-                    )
-                {
-                    if (HasRelevantSpecialEffectStats(effect.Stats)) return true;
-                }
-            }
-            return (stats.Intellect + stats.Spirit + stats.SpellPower + stats.CritRating + stats.HasteRating + stats.ManaRestore + stats.MasteryRating
-                   + stats.Mp5 + stats.Healed + stats.HighestStat + stats.BonusHealingReceived
-                   + stats.ShieldFromHealedProc + stats.ManaRestoreFromMaxManaPerSecond
-                   + stats.SnareRootDurReduc + stats.FearDurReduc + stats.StunDurReduc + stats.MovementSpeed) != 0;
-        }
-        public override bool HasRelevantStats(Stats stats) {
-            if (HasRelevantSpecialEffectStats(stats)) return true;
-
-            if (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower + stats.Mana + stats.CritRating + stats.SpellCrit + stats.MasteryRating
-                + stats.HasteRating + stats.SpellHaste + stats.BonusSpellPowerMultiplier
-                + stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier + stats.BonusStaminaMultiplier
-                + stats.BonusCritHealMultiplier + stats.BonusManaMultiplier
-                /*+ stats.Armor + stats.Stamina*/ + stats.ManaRestoreFromMaxManaPerSecond
-                + stats.MovementSpeed + stats.SpellCombatManaRegeneration // Bangle of nerfed - might be useful in future
-                + stats.SnareRootDurReduc + stats.FearDurReduc + stats.StunDurReduc
-                + stats.BonusHealingDoneMultiplier
-                #region Trinkets
-                + stats.HighestStat + stats.SpellsManaCostReduction + stats.NatureSpellsManaCostReduction
-                #endregion
-                != 0)
-                return true;
-
-            return false;
-        }
-        public Stats GetBuffsStats(Character character, CalculationOptionsTree calcOpts) {
-            List<Buff> removedBuffs = new List<Buff>();
-            List<Buff> addedBuffs = new List<Buff>();
-
-            //float hasRelevantBuff;
-
-            #region Passive Ability Auto-Fixing
-            // Removes the Trueshot Aura Buff and it's equivalents Unleashed Rage and Abomination's Might if you are
-            // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
-            // value to relevant talents
-            /*{
-                hasRelevantBuff = character.HunterTalents.TrueshotAura;
-                Buff a = Buff.GetBuffByName("Trueshot Aura");
-                Buff b = Buff.GetBuffByName("Unleashed Rage");
-                Buff c = Buff.GetBuffByName("Abomination's Might");
-                if (hasRelevantBuff > 0)
-                {
-                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
-                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
-                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); removedBuffs.Add(c); }
-                }
-            }
-            // Removes the Hunter's Mark Buff and it's Children 'Glyphed', 'Improved' and 'Both' if you are
-            // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
-            // value to relevant talents
-            {
-                hasRelevantBuff =  character.HunterTalents.ImprovedHuntersMark
-                                + (character.HunterTalents.GlyphOfHuntersMark ? 1 : 0);
-                Buff a = Buff.GetBuffByName("Hunter's Mark");
-                Buff b = Buff.GetBuffByName("Glyphed Hunter's Mark");
-                Buff c = Buff.GetBuffByName("Improved Hunter's Mark");
-                Buff d = Buff.GetBuffByName("Improved and Glyphed Hunter's Mark");
-                // Since we are doing base Hunter's mark ourselves, we still don't want to double-dip
-                if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); /*removedBuffs.Add(a);*//* }
-                // If we have an enhanced Hunter's Mark, kill the Buff
-                if (hasRelevantBuff > 0) {
-                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); /*removedBuffs.Add(b);*//* }
-                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); /*removedBuffs.Add(c);*//* }
-                    if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); /*removedBuffs.Add(c);*//* }
-                }
-            }*/
-            /* [More Buffs to Come to this method]
-             * Ferocious Inspiration | Sanctified Retribution
-             * Hunting Party | Judgements of the Wise, Vampiric Touch, Improved Soul Leech, Enduring Winter
-             * Acid Spit | Expose Armor, Sunder Armor (requires BM & Worm Pet)
-             */
-            #endregion
-
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs, character.SetBonusCount);
-
-            foreach (Buff b in removedBuffs) {
-                character.ActiveBuffsAdd(b);
-            }
-            foreach (Buff b in addedBuffs) {
-                character.ActiveBuffs.Remove(b);
-            }
-
-            return statsBuffs;
-        }
-        // Wildebees 20090407 : Overload base function to disable all enchants on OffHand for tree druids
-        public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot) {
-            if (slot == ItemSlot.OffHand) { return false; }
-            return base.EnchantFitsInSlot(enchant, character, slot);
         }
 
-        public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
-        {
-            if ((slot == CharacterSlot.OffHand) &&
-                ( (item.Type == ItemType.Dagger) || (item.Type == ItemType.OneHandMace) || (item.Type == ItemType.FistWeapon) ) )
-                return false;
-            return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
-        }
-
-        public override bool IsBuffRelevant(Buff buff, Character character)
-        {
-            if ( (buff == Buff.GetBuffByName("Stormrider's Vestments (T11) 2 Piece Bonus")) || (buff == Buff.GetBuffByName("Stormrider's Vestments (T11) 4 Piece Bonus")) )
-                return true;
-            return base.IsBuffRelevant(buff, character);
-        }
-
-        public override ICalculationOptionBase DeserializeDataObject(string xml)
-        {
-            XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsTree));
-            StringReader reader = new StringReader(xml);
-            CalculationOptionsTree calcOpts = serializer.Deserialize(reader) as CalculationOptionsTree;
-            return calcOpts;
-        }
+        #endregion
     }
-
 }

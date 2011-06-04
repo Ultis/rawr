@@ -106,16 +106,26 @@
   </ItemGroup>
   <ItemGroup>
     <AppDesigner Include="Properties\" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CalculationOptionsPanelTree.xaml.cs">
       <DependentUpon>CalculationOptionsPanelTree.WPF.xaml</DependentUpon>
+      <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CalculationOptionsTree.cs" />
-    <Compile Include="CalculationsTree.cs" />
-    <Compile Include="CharacterCalculationsTree.cs" />
-    <Compile Include="ComparisonCalculationTree.cs" />
-    <Compile Include="Solver.cs" />
-    <Compile Include="Spell.cs" />
+    <Compile Include="CalculationOptionsTree.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CalculationsTree.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CharacterCalculationsTree.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ComparisonCalculationTree.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TreeSolver.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rawr.Base\Rawr.Base.WPF.csproj">
@@ -142,8 +152,8 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="CalculationOptionsPanelTree.WPF.xaml">
-      <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
