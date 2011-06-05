@@ -431,11 +431,11 @@ namespace Rawr
                 object tmp;
                 // Pull Faction Info
                 //,reqfaction:1073,reqrep:6
-                if (json.TryGetValue("reqfaction", out tmp))
+                if (json.TryGetValue("reqfaction", out tmp) || json.TryGetValue("requiredFaction", out tmp))
                 {
                     repSource = tmp.ToString();
                 }
-                if (json.TryGetValue("reqrep", out tmp))
+                if (json.TryGetValue("reqrep", out tmp) || json.TryGetValue("requiredRep", out tmp))
                 {
                     repLevel = tmp.ToString();
                 }
@@ -495,15 +495,15 @@ namespace Rawr
                 {
                     item.Speed = Convert.ToSingle(tmp);
                 }
-                if (json.TryGetValue("dmgmin1", out tmp))
+                if (json.TryGetValue("dmgmin1", out tmp) || json.TryGetValue("dmgMin", out tmp))
                 {
                     item.MinDamage = (int)Math.Floor(Convert.ToSingle(tmp));
                 }
-                if (json.TryGetValue("dmgmax1", out tmp))
+                if (json.TryGetValue("dmgmax1", out tmp) || json.TryGetValue("dmgMax", out tmp))
                 {
                     item.MaxDamage = (int)Math.Ceiling(Convert.ToSingle(tmp));
                 }
-                if (json.TryGetValue("dmgtype1", out tmp))
+                if (json.TryGetValue("dmgtype1", out tmp) || json.TryGetValue("dmgType", out tmp))
                 {
                     item.DamageType = (ItemDamageType)(int)tmp;
                 }
@@ -516,11 +516,11 @@ namespace Rawr
                     item.Stats.Armor -= Convert.ToSingle(tmp);
                     item.Stats.BonusArmor = Convert.ToSingle(tmp);
                 }
-                if (json.TryGetValue("healthrgn", out tmp))
+                if (json.TryGetValue("healthrgn", out tmp) || json.TryGetValue("health5Combat", out tmp))
                 {
                     item.Stats.Hp5 += Convert.ToSingle(tmp);
                 }
-                if (json.TryGetValue("manargn", out tmp))
+                if (json.TryGetValue("manargn", out tmp) || json.TryGetValue("mana5Combat", out tmp))
                 {
                     item.Stats.Mp5 += Convert.ToSingle(tmp);
                 }
@@ -536,7 +536,7 @@ namespace Rawr
                 {
                     item.Stats.Intellect += Convert.ToSingle(tmp);
                 }
-                if (json.TryGetValue("spi", out tmp))
+                if (json.TryGetValue("spi", out tmp) || json.TryGetValue("spr", out tmp))
                 {
                     item.Stats.Spirit += Convert.ToSingle(tmp);
                 }
@@ -548,47 +548,47 @@ namespace Rawr
                 {
                     item.Stats.Strength += Convert.ToSingle(tmp);
                 }
-                if (json.TryGetValue("hastertng", out tmp) || json.TryGetValue("mlehastertng", out tmp) || json.TryGetValue("rgdhastertng", out tmp) || json.TryGetValue("splhastertng", out tmp))
+                if (json.TryGetValue("hastertng", out tmp) || json.TryGetValue("mlehastertng", out tmp) || json.TryGetValue("rgdhastertng", out tmp) || json.TryGetValue("splhastertng", out tmp) || json.TryGetValue("hasteRating", out tmp))
                 {
                     item.Stats.HasteRating += Convert.ToSingle(tmp);
                 }
-                if (json.TryGetValue("mastrtng", out tmp))
+                if (json.TryGetValue("mastrtng", out tmp) || json.TryGetValue("masteryRating", out tmp))
                 {
                     item.Stats.MasteryRating += Convert.ToSingle(tmp);
                 }
-                if (json.TryGetValue("splpwr", out tmp) || json.TryGetValue("splheal", out tmp) || json.TryGetValue("spldmg", out tmp))
+                if (json.TryGetValue("splpwr", out tmp) || json.TryGetValue("splheal", out tmp) || json.TryGetValue("spldmg", out tmp) || json.TryGetValue("spellPower", out tmp))
                 {
                     item.Stats.SpellPower += Convert.ToSingle(tmp);
                 }
-                if (json.TryGetValue("critstrkrtng", out tmp) || json.TryGetValue("mlecritstrkrtng", out tmp) || json.TryGetValue("rgdcritstrkrtng", out tmp) || json.TryGetValue("splcritstrkrtng", out tmp))
+                if (json.TryGetValue("critstrkrtng", out tmp) || json.TryGetValue("mlecritstrkrtng", out tmp) || json.TryGetValue("rgdcritstrkrtng", out tmp) || json.TryGetValue("splcritstrkrtng", out tmp) || json.TryGetValue("critRating", out tmp))
                 {
                     item.Stats.CritRating += Convert.ToSingle(tmp);
                 }
-                if (json.TryGetValue("firres", out tmp))
+                if (json.TryGetValue("firres", out tmp) || json.TryGetValue("fireResistance", out tmp))
                 {
                     item.Stats.FireResistance += Convert.ToSingle(tmp);
                 }
-                if (json.TryGetValue("natres", out tmp))
+                if (json.TryGetValue("natres", out tmp) || json.TryGetValue("natureResistance", out tmp))
                 {
                     item.Stats.NatureResistance += Convert.ToSingle(tmp);
                 }
-                if (json.TryGetValue("frores", out tmp))
+                if (json.TryGetValue("frores", out tmp) || json.TryGetValue("frostResistance", out tmp))
                 {
                     item.Stats.FrostResistance += Convert.ToSingle(tmp);
                 }
-                if (json.TryGetValue("shares", out tmp))
+                if (json.TryGetValue("shares", out tmp) || json.TryGetValue("shadowResistance", out tmp))
                 {
                     item.Stats.ShadowResistance += Convert.ToSingle(tmp);
                 }
-                if (json.TryGetValue("arcres", out tmp))
+                if (json.TryGetValue("arcres", out tmp) || json.TryGetValue("arcaneResistance", out tmp))
                 {
                     item.Stats.ArcaneResistance += Convert.ToSingle(tmp);
                 }
-                if (json.TryGetValue("hitrtng", out tmp) || json.TryGetValue("mlehitrtng", out tmp) || json.TryGetValue("rgdhitrtng", out tmp) || json.TryGetValue("splhitrtng", out tmp))
+                if (json.TryGetValue("hitrtng", out tmp) || json.TryGetValue("mlehitrtng", out tmp) || json.TryGetValue("rgdhitrtng", out tmp) || json.TryGetValue("splhitrtng", out tmp) || json.TryGetValue("hitRating", out tmp))
                 {
                     item.Stats.HitRating += Convert.ToSingle(tmp);
                 }
-                if (json.TryGetValue("atkpwr", out tmp) || json.TryGetValue("mleatkpwr", out tmp))
+                if (json.TryGetValue("atkpwr", out tmp) || json.TryGetValue("mleatkpwr", out tmp) || json.TryGetValue("attackPower", out tmp))
                 {
                     item.Stats.AttackPower += Convert.ToSingle(tmp);
                 }
@@ -599,15 +599,15 @@ namespace Rawr
                         item.Stats.RangedAttackPower = Convert.ToSingle(tmp);
                     }
                 }
-                if (json.TryGetValue("exprtng", out tmp))
+                if (json.TryGetValue("exprtng", out tmp) || json.TryGetValue("expertiseRating", out tmp))
                 {
                     item.Stats.ExpertiseRating += Convert.ToSingle(tmp);
                 }
-                if (json.TryGetValue("dodgertng", out tmp))
+                if (json.TryGetValue("dodgertng", out tmp) || json.TryGetValue("dodgeRating", out tmp))
                 {
                     item.Stats.DodgeRating += Convert.ToSingle(tmp);
                 }
-                if (json.TryGetValue("blockrtng", out tmp))
+                if (json.TryGetValue("blockrtng", out tmp) || json.TryGetValue("blockRating", out tmp))
                 {
                     item.Stats.BlockRating += Convert.ToSingle(tmp);
                 }
@@ -623,11 +623,11 @@ namespace Rawr
                 {
                     item.SocketColor3 = GetSocketType(tmp.ToString());
                 }
-                if (json.TryGetValue("socketbonus", out tmp))
+                if (json.TryGetValue("socketbonus", out tmp) || json.TryGetValue("socketBonus", out tmp))
                 {
                     item.SocketBonus = GetSocketBonus(tmp.ToString());
                 }
-                if (json.TryGetValue("parryrtng", out tmp))
+                if (json.TryGetValue("parryrtng", out tmp) || json.TryGetValue("parryRating", out tmp))
                 {
                     item.Stats.ParryRating += Convert.ToSingle(tmp);
                 }
@@ -659,11 +659,11 @@ namespace Rawr
                         requiredClasses.Add("Druid");
                     item.RequiredClasses = string.Join("|", requiredClasses.ToArray());
                 }
-                if (json.TryGetValue("resirtng", out tmp))
+                if (json.TryGetValue("resirtng", out tmp) || json.TryGetValue("resilRating", out tmp))
                 {
                     item.Stats.Resilience += Convert.ToSingle(tmp);
                 }
-                if (json.TryGetValue("splpen", out tmp))
+                if (json.TryGetValue("splpen", out tmp) || json.TryGetValue("spellPen", out tmp))
                 {
                     item.Stats.SpellPenetration = Convert.ToSingle(tmp);
                 }
