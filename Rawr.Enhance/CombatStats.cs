@@ -239,7 +239,7 @@ namespace Rawr.Enhance
                 stormstrikeBonusCrit = 0f;
             }
             //set bonus
-            if (_stats.Enhance_T11_2P == 1)
+            if (_stats.Enhance_T11_4P == 1)
             {
                 enhance4T11 = .1f;
             }
