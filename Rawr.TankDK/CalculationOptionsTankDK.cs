@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using System.IO;
 using System.Text;
 using System.Xml.Serialization;
-using Rawr.DK;
 
 namespace Rawr.TankDK
 {
-#if !SILVERLIGHT
-    [Serializable]
-#endif
+    /// <summary>
+    /// Holds the options the user selects from the options tab.
+    /// </summary>
     public class CalculationOptionsTankDK : ICalculationOptionBase, INotifyPropertyChanged
     {
-        #region Options
         /// <summary>
         /// Defines the role the TankDK currently has in the Raid<br/>
         /// Possible Values: MT=0, OT=1, TT=2, Any Tank = 3<br/>
@@ -43,7 +40,6 @@ namespace Rawr.TankDK
         [DefaultValue(false)]
         public bool bExperimental { get { return _m_bExperimental; } set { _m_bExperimental = value; OnPropertyChanged("Experimental"); } }
         private bool _m_bExperimental = false;
-        #endregion
 
         #region Stat Graph
         [DefaultValue(new bool[] { true, true, true, true, true, true, true, true, true, true, true, true, true })]
@@ -87,12 +83,16 @@ namespace Rawr.TankDK
         public string szRotReport { get { return _szRotReport; } set { _szRotReport = value.Replace("Dancing Rune Weapon", "Dancing Rune Wp"); OnPropertyChanged("szRotReport"); } }
         private string _szRotReport = "";
 
-        #region XML IO
+        #region ICalculationOptionBase overrides
+        /// <summary>
+        /// Gets the XML serialization of the calculation options for use in the character file.
+        /// </summary>
+        /// <returns></returns>
         public string GetXml()
         {
             XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsTankDK));
             StringBuilder xml = new StringBuilder();
-            System.IO.StringWriter writer = new System.IO.StringWriter(xml);
+            StringWriter writer = new StringWriter(xml);
             serializer.Serialize(writer, this);
             return xml.ToString();
         }

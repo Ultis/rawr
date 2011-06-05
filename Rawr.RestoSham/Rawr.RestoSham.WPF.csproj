@@ -112,6 +112,7 @@
     <Compile Include="CalculationsRestoSham.cs" />
     <Compile Include="CharacterCalculationsRestoSham.cs" />
     <Compile Include="Charting.cs" />
+    <Compile Include="NumericField.cs" />
     <Compile Include="ComparisonCalculationRestoSham.cs" />
     <Compile Include="RestoShamanSpells.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

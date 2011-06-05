@@ -19,14 +19,14 @@ namespace Rawr.Rogue
         private float[] _averageMutiCP = new float[6];
         private float[] _avgMutiNeeded = new float[6];
 
-        public RogueRotationCalculatorAss(Character character, Stats stats, CalculationOptionsRogue calcOpts, float hasteBonus,
+        public RogueRotationCalculatorAss(Character character, Stats stats, BossOptions bossOpts, CalculationOptionsRogue calcOpts, float hasteBonus,
             float mainHandSpeed, float offHandSpeed, float mainHandSpeedNorm, float offHandSpeedNorm, float avoidedWhiteMHAttacks, float avoidedWhiteOHAttacks, float avoidedMHAttacks,
             float avoidedOHAttacks, float avoidedFinisherAttacks, float avoidedPoisonAttacks, float chanceExtraCPPerHit, float chanceExtraCPPerMutiHit, RogueAbilityStats mainHandStats,
             RogueAbilityStats offHandStats, RogueAbilityStats backstabStats, RogueAbilityStats mutiStats, RogueAbilityStats ruptStats, RogueAbilityStats envenomStats, RogueAbilityStats snDStats,
-            RogueAbilityStats exposeStats, RogueAbilityStats iPStats, RogueAbilityStats dPStats, RogueAbilityStats wPStats, RogueAbilityStats venomousWoundsStats) : base (character, stats, calcOpts, hasteBonus,
+            RogueAbilityStats exposeStats, RogueAbilityStats iPStats, RogueAbilityStats dPStats, RogueAbilityStats wPStats, RogueAbilityStats venomousWoundsStats) : base (character, stats, bossOpts, calcOpts, hasteBonus,
             mainHandSpeed, offHandSpeed, mainHandSpeedNorm, offHandSpeedNorm, avoidedWhiteMHAttacks, avoidedWhiteOHAttacks, avoidedMHAttacks, avoidedOHAttacks, avoidedFinisherAttacks,
             avoidedPoisonAttacks, chanceExtraCPPerHit, mainHandStats, offHandStats, ruptStats, snDStats, exposeStats, iPStats, dPStats, wPStats)
-		{
+        {
             BackstabStats = backstabStats;
             MutiStats = mutiStats;
             EnvenomStats = envenomStats;
@@ -64,7 +64,7 @@ namespace Rawr.Rogue
         public override RogueRotationCalculation GetRotationCalculations(float durationMult, int cPG, int recupCP, int ruptCP, bool useRS, int finisher, int envenomCP, int snDCP, int mHPoison, int oHPoison, bool useTotT, int exposeCP, bool PTRMode)
         {
             DurationMult = durationMult;
-            Duration = durationMult * CalcOpts.Duration;
+            Duration = durationMult * BossOpts.BerserkTimer;
             UseTotT = useTotT;
             CPG = cPG;
             NumberOfStealths = getNumberStealths();

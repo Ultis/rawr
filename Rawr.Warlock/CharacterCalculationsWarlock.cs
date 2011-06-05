@@ -20,7 +20,8 @@ namespace Rawr.Warlock
         public Stats PreProcStats { get; private set; }
         public Stats PetBuffs { get; private set; }
         public Stats Stats { get; private set; }
-        public CalculationOptionsWarlock Options { get; private set; }
+        public CalculationOptionsWarlock CalcOpts { get; private set; }
+        public BossOptions BossOpts { get; private set; }
         public WarlockTalents Talents { get; private set; }
         public SpellModifiers SpellModifiers { get; private set; }
         public List<WeightedStat> Haste { get; private set; }
@@ -77,7 +78,8 @@ namespace Rawr.Warlock
         public CharacterCalculationsWarlock(Character character, Stats stats, Stats petBuffs)
         {
             Character = character;
-            Options = character.CalculationOptions as CalculationOptionsWarlock;
+            CalcOpts = character.CalculationOptions as CalculationOptionsWarlock;
+            BossOpts = character.BossOptions;
             Talents = character.WarlockTalents;
             Stats = stats;
             PreProcStats = Stats.Clone();
@@ -86,7 +88,7 @@ namespace Rawr.Warlock
             BaseIntellect = BaseStats.GetBaseStats(character).Intellect;
             Spells = new Dictionary<string, Spell>();
             CastSpells = new Dictionary<string, Spell>();
-            HitChance = Math.Min(1f, Options.GetBaseHitRate() / 100f + CalcSpellHit());
+            HitChance = Math.Min(1f, CalcOpts.GetBaseHitRate() / 100f + CalcSpellHit());
 
             int temp;
             if (character.SetBonusCount.TryGetValue("Shadowflame Regalia", out temp))
@@ -95,9 +97,9 @@ namespace Rawr.Warlock
                 Warlock_T11_4P = (temp >= 4);
             }
 
-            if (!Options.Pet.Equals("None") && (Demonology || !Options.Pet.Equals("Felguard")))
+            if (!CalcOpts.Pet.Equals("None") && (Demonology || !CalcOpts.Pet.Equals("Felguard")))
             {
-                Type type = Type.GetType("Rawr.Warlock." + Options.Pet);
+                Type type = Type.GetType("Rawr.Warlock." + CalcOpts.Pet);
                 Pet = (Pet)Activator.CreateInstance(type, new object[] { this });
             }
 
@@ -108,15 +110,15 @@ namespace Rawr.Warlock
         }
 
         public float CalcStamina() { return StatUtils.CalcStamina(Stats); }
-        public float CalcIntellect() { return StatUtils.CalcIntellect(Stats, BaseIntellect, Options.PlayerLevel); }
+        public float CalcIntellect() { return StatUtils.CalcIntellect(Stats, BaseIntellect, CalcOpts.PlayerLevel); }
         public float CalcHealth() { return StatUtils.CalcHealth(Stats); }
-        public float CalcMana() { return StatUtils.CalcMana(Stats, BaseIntellect, Options.PlayerLevel); }
-        public float CalcUsableMana(float fightLen) { return StatUtils.CalcUsableMana(Stats, fightLen, BaseIntellect, Options.PlayerLevel); }
-        public float CalcSpellCrit() { return StatUtils.CalcSpellCrit(Stats, BaseIntellect, Options.PlayerLevel); }
-        public float CalcSpellHit() { return StatUtils.CalcSpellHit(Stats, Options.PlayerLevel); }
-        public float CalcSpellPower() { return StatUtils.CalcSpellPower(Stats, BaseIntellect, Options.PlayerLevel); }
-        public float CalcSpellHaste() { return StatUtils.CalcSpellHaste(Stats, Options.PlayerLevel); }
-        public float CalcMastery() { return StatUtils.CalcMastery(Stats, Options.PlayerLevel); }
+        public float CalcMana() { return StatUtils.CalcMana(Stats, BaseIntellect, CalcOpts.PlayerLevel); }
+        public float CalcUsableMana(float fightLen) { return StatUtils.CalcUsableMana(Stats, fightLen, BaseIntellect, CalcOpts.PlayerLevel); }
+        public float CalcSpellCrit() { return StatUtils.CalcSpellCrit(Stats, BaseIntellect, CalcOpts.PlayerLevel); }
+        public float CalcSpellHit() { return StatUtils.CalcSpellHit(Stats, CalcOpts.PlayerLevel); }
+        public float CalcSpellPower() { return StatUtils.CalcSpellPower(Stats, BaseIntellect, CalcOpts.PlayerLevel); }
+        public float CalcSpellHaste() { return StatUtils.CalcSpellHaste(Stats, CalcOpts.PlayerLevel); }
+        public float CalcMastery() { return StatUtils.CalcMastery(Stats, CalcOpts.PlayerLevel); }
 
         /// <summary>
         /// Builds a dictionary containing the values to display for each of the
@@ -142,13 +144,13 @@ namespace Rawr.Warlock
             dictValues.Add("Health", string.Format("{0:0}*{1:0} stamina", CalcHealth(), CalcStamina()));
             dictValues.Add("Mana", string.Format("{0:0}*{1:0} intellect", CalcMana(), CalcIntellect()));
 
-            dictValues.Add("Spell Power", string.Format("{0:0.0}*{1:0.0}\tBefore Procs", CalcSpellPower(), StatUtils.CalcSpellPower(PreProcStats, BaseIntellect, Options.PlayerLevel)));
+            dictValues.Add("Spell Power", string.Format("{0:0.0}*{1:0.0}\tBefore Procs", CalcSpellPower(), StatUtils.CalcSpellPower(PreProcStats, BaseIntellect, CalcOpts.PlayerLevel)));
 
             #region Hit Rating
-            float onePercentOfHitRating = (1 / StatUtils.GetSpellHitFromRating(1, Options.PlayerLevel));
-            float hitFromRating = StatUtils.GetSpellHitFromRating(Stats.HitRating, Options.PlayerLevel);
+            float onePercentOfHitRating = (1 / StatUtils.GetSpellHitFromRating(1, CalcOpts.PlayerLevel));
+            float hitFromRating = StatUtils.GetSpellHitFromRating(Stats.HitRating, CalcOpts.PlayerLevel);
             float hitFromBuffs = (CalcSpellHit() - hitFromRating);
-            float targetHit = Options.GetBaseHitRate() / 100f;
+            float targetHit = CalcOpts.GetBaseHitRate() / 100f;
             float totalHit = targetHit + CalcSpellHit();
             float missChance = totalHit > 1 ? 0 : (1 - totalHit);
             dictValues.Add(
@@ -163,7 +165,7 @@ namespace Rawr.Warlock
                     totalHit,
                     missChance,
                     targetHit,
-                    Options.TargetLevel,
+                    CalcOpts.TargetLevel,
                     hitFromRating,
                     Stats.HitRating,
                     hitFromBuffs,
@@ -171,7 +173,7 @@ namespace Rawr.Warlock
                     (totalHit > 1) ? "above" : "below"));
             #endregion
 
-            dictValues.Add("Crit Chance", string.Format("{0:0.00%}*{1:0.00%}\tBefore Procs", CalcSpellCrit(), StatUtils.CalcSpellCrit(PreProcStats, BaseIntellect, Options.PlayerLevel)));
+            dictValues.Add("Crit Chance", string.Format("{0:0.00%}*{1:0.00%}\tBefore Procs", CalcSpellCrit(), StatUtils.CalcSpellCrit(PreProcStats, BaseIntellect, CalcOpts.PlayerLevel)));
             dictValues.Add("Average Haste", 
                 string.Format(
                     "{0:0.00}%*"
@@ -181,10 +183,10 @@ namespace Rawr.Warlock
                         + "\r\n"
                         + "{5:0.00}s\tGlobal Cooldown\r\n",
                     (AvgHaste - 1f) * 100f,
-                    StatUtils.GetSpellHasteFromRating(Stats.HasteRating, Options.PlayerLevel) * 100f,
+                    StatUtils.GetSpellHasteFromRating(Stats.HasteRating, CalcOpts.PlayerLevel) * 100f,
                     Stats.HasteRating,
                     Stats.SpellHaste * 100f,
-                    (AvgHaste - StatUtils.CalcSpellHaste(PreProcStats, Options.PlayerLevel)) * 100f,
+                    (AvgHaste - StatUtils.CalcSpellHaste(PreProcStats, CalcOpts.PlayerLevel)) * 100f,
                     Math.Max(1.0f, 1.5f / AvgHaste)));
             dictValues.Add("Mastery", string.Format("{0:0.0}*from {1:0.0} Mastery Rating", CalcMastery(), Stats.MasteryRating));
 
@@ -264,17 +266,17 @@ namespace Rawr.Warlock
             // SP & Crit: lock before pet (both affected by procs)
             // Procs after crit
 
-            if (Options.GetActiveRotation().GetError() != null)
+            if (CalcOpts.GetActiveRotation().GetError() != null)
             {
                 return 0f;
             }
 
             CalcHasteAndManaProcs();
-            AvgTimeUsed = Spell.GetTimeUsed(CalculationsWarlock.AVG_UNHASTED_CAST_TIME, 0f, Haste, Options.Latency);
+            AvgTimeUsed = Spell.GetTimeUsed(CalculationsWarlock.AVG_UNHASTED_CAST_TIME, 0f, Haste, CalcOpts.Latency);
 
-            float timeRemaining = Options.Duration;
+            float timeRemaining = BossOpts.BerserkTimer;
             float totalMana = CalcUsableMana(timeRemaining);
-            float maxMana = StatUtils.CalcMana(PreProcStats, BaseIntellect, Options.PlayerLevel);
+            float maxMana = StatUtils.CalcMana(PreProcStats, BaseIntellect, CalcOpts.PlayerLevel);
             float manaFromEffects = totalMana - maxMana;
             float manaUsed = 0f;
 
@@ -283,7 +285,7 @@ namespace Rawr.Warlock
             // execute stage collision delays
             Spell execute = null;
             float executePercent = GetExecutePercentage();
-            string executeName = Options.GetActiveRotation().Execute;
+            string executeName = CalcOpts.GetActiveRotation().Execute;
             if (executePercent > 0)
             {
                 execute = GetSpell(executeName);
@@ -292,7 +294,7 @@ namespace Rawr.Warlock
             }
 
             // normal collision delays
-            Spell filler = GetSpell(Options.GetActiveRotation().Filler);
+            Spell filler = GetSpell(CalcOpts.GetActiveRotation().Filler);
             SetupSpells(false);
             RecordCollisionDelays(new CastingState(this, filler, 1f - executePercent));
 
@@ -313,13 +315,13 @@ namespace Rawr.Warlock
                 execute.Spam(executeTime);
                 timeRemaining -= executeTime;
                 manaUsed += execute.ManaCost * execute.GetNumCasts();
-                CastSpells.Add(Options.GetActiveRotation().Execute, execute);
+                CastSpells.Add(CalcOpts.GetActiveRotation().Execute, execute);
             }
             timeRemaining -= lifeTap.GetAvgTimeUsed() * lifeTap.AddCastsForRegen(timeRemaining, totalMana - manaUsed, filler);
             filler.Spam(timeRemaining);
-            if (!CastSpells.ContainsKey(Options.GetActiveRotation().Filler))
+            if (!CastSpells.ContainsKey(CalcOpts.GetActiveRotation().Filler))
             {
-                CastSpells.Add(Options.GetActiveRotation().Filler, filler);
+                CastSpells.Add(CalcOpts.GetActiveRotation().Filler, filler);
             }
 
             foreach (Spell spell in CastSpells.Values)
@@ -414,7 +416,7 @@ namespace Rawr.Warlock
                 damageDone += conflagrate.GetNumCasts() * conflagrate.AvgDamagePerCast;
             }
 
-            return damageDone / Options.Duration;
+            return damageDone / BossOpts.BerserkTimer;
         }
         private float CalcPetDps()
         {
@@ -433,32 +435,32 @@ namespace Rawr.Warlock
         private float CalcRaidBuff()
         {
             float raidBuff = 0f;
-            float perSP = Options.PerSP;
+            float perSP = CalcOpts.PerSP;
             if (perSP > 0 && Pet != null)
             {
-                if (Options.ConvertTotem)
+                if (CalcOpts.ConvertTotem)
                 {
                     float curTotem = StatUtils.GetActiveBuff(Character.ActiveBuffs, "Spell Power", s => s.SpellPower);
                     if (curTotem == 144f || curTotem == 165f)
                     {
-                        raidBuff += Options.PerFlametongue;
+                        raidBuff += CalcOpts.PerFlametongue;
                     }
                 }
             }
 
             if (CastSpells.ContainsKey("Curse Of The Elements"))
             {
-                raidBuff += Options.PerMagicBuff;
+                raidBuff += CalcOpts.PerMagicBuff;
             }
 
-            raidBuff += Options.PerCritBuff * (CalcAddedCritBuff() / .05f);
-            raidBuff += Options.PerHealth * CalculationsWarlock.CalcPetHealthBuff(Options.Pet, Talents, Character.ActiveBuffs, Options);
+            raidBuff += CalcOpts.PerCritBuff * (CalcAddedCritBuff() / .05f);
+            raidBuff += CalcOpts.PerHealth * CalculationsWarlock.CalcPetHealthBuff(CalcOpts.Pet, Talents, Character.ActiveBuffs, CalcOpts);
 
             return raidBuff;
         }
         public float GetExecutePercentage()
         {
-            string executeName = Options.GetActiveRotation().Execute;
+            string executeName = CalcOpts.GetActiveRotation().Execute;
 
             if (executeName == null || executeName == "")
             {
@@ -473,11 +475,11 @@ namespace Rawr.Warlock
 
             if (execute is SoulFire)
             {
-                return Options.ThirtyFive;
+                return CalcOpts.ThirtyFive;
             }
             else
             {
-                return Options.TwentyFive;
+                return CalcOpts.TwentyFive;
             }
         }
         private float CalcAddedCritBuff()
@@ -507,14 +509,14 @@ namespace Rawr.Warlock
             float uprate = Spell.CalcUprate(
                 Talents.ShadowAndFlame * .33f, // proc rate
                 30f, // duration
-                Options.Duration / casts); // trigger period
+                BossOpts.BerserkTimer / casts); // trigger period
             float benefit = .05f - Stats.SpellCritOnTarget;
             return benefit * uprate;
         }
         private void CalcHasteAndManaProcs()
         {
-            float nonProcHaste = StatUtils.CalcSpellHaste(PreProcStats, Options.PlayerLevel);
-            if (Options.NoProcs)
+            float nonProcHaste = StatUtils.CalcSpellHaste(PreProcStats, CalcOpts.PlayerLevel);
+            if (CalcOpts.NoProcs)
             {
                 WeightedStat staticHaste = new WeightedStat();
                 staticHaste.Chance = 1f;
@@ -530,11 +532,11 @@ namespace Rawr.Warlock
             Dictionary<int, float> periods = new Dictionary<int, float>();
             Dictionary<int, float> chances = new Dictionary<int, float>();
             float corruptionPeriod = 0f;
-            if (Options.GetActiveRotation().Contains("Corruption"))
+            if (CalcOpts.GetActiveRotation().Contains("Corruption"))
             {
                 corruptionPeriod = 3.1f / nonProcHaste;
             }
-            PopulateTriggers(periods, chances, CalculationsWarlock.AVG_UNHASTED_CAST_TIME / nonProcHaste + Options.Latency, 1 / 1.5f, corruptionPeriod, 1f);
+            PopulateTriggers(periods, chances, CalculationsWarlock.AVG_UNHASTED_CAST_TIME / nonProcHaste + CalcOpts.Latency, 1 / 1.5f, corruptionPeriod, 1f);
 
             // calculate the haste procs
             Haste = new List<WeightedStat>();
@@ -558,7 +560,7 @@ namespace Rawr.Warlock
                     WeightedStat s = new WeightedStat();
                     s.Chance = percentages[p].Chance * ratings[r].Chance;
                     s.Value =   (1 + percentages[p].Value) 
-                              * (1 + StatUtils.GetSpellHasteFromRating(ratings[r].Value + Stats.HasteRating, Options.PlayerLevel))
+                              * (1 + StatUtils.GetSpellHasteFromRating(ratings[r].Value + Stats.HasteRating, CalcOpts.PlayerLevel))
                               * (1 + Stats.SpellHaste);
                     Haste.Add(s);
                     AvgHaste += s.Chance * s.Value;
@@ -574,10 +576,10 @@ namespace Rawr.Warlock
                     continue;
                 }
 
-                Stats proc = effect.GetAverageStats(periods[(int)effect.Trigger], chances[(int)effect.Trigger], CalculationsWarlock.AVG_UNHASTED_CAST_TIME, Options.Duration);
+                Stats proc = effect.GetAverageStats(periods[(int)effect.Trigger], chances[(int)effect.Trigger], CalculationsWarlock.AVG_UNHASTED_CAST_TIME, BossOpts.BerserkTimer);
                 if (proc.ManaRestore > 0)
                 {
-                    proc.ManaRestore *= Options.Duration;
+                    proc.ManaRestore *= BossOpts.BerserkTimer;
                 }
                 procStats.Accumulate(proc);
             }
@@ -619,12 +621,12 @@ namespace Rawr.Warlock
                     hasteOffsets.ToArray(),
                     hasteScales.ToArray(),
                     CalculationsWarlock.AVG_UNHASTED_CAST_TIME,
-                    Options.Duration,
+                    BossOpts.BerserkTimer,
                     hasteValues.ToArray());
         }
         private Stats CalcCritProcs()
         {
-            if (Options.NoProcs)
+            if (CalcOpts.NoProcs)
             {
                 return new Stats();
             }
@@ -645,15 +647,15 @@ namespace Rawr.Warlock
                 procStats.Accumulate(proc);
                 if (effect.Trigger == Trigger.Use && !IsDoublePot(effect))
                 {
-                    ExtraCritAtMax += StatUtils.CalcSpellCrit(effect.Stats, BaseIntellect, Options.PlayerLevel)
-                                    - StatUtils.CalcSpellCrit(proc, BaseIntellect, Options.PlayerLevel);
+                    ExtraCritAtMax += StatUtils.CalcSpellCrit(effect.Stats, BaseIntellect, CalcOpts.PlayerLevel)
+                                    - StatUtils.CalcSpellCrit(proc, BaseIntellect, CalcOpts.PlayerLevel);
                 }
             }
             return procStats;
         }
         private float CalcRemainingProcs()
         {
-            if (Options.NoProcs)
+            if (CalcOpts.NoProcs)
             {
                 return 0f;
             }
@@ -732,7 +734,7 @@ namespace Rawr.Warlock
         private Stats CalcNormalProc(SpecialEffect effect, Dictionary<int, float> periods, Dictionary<int, float> chances)
         {
             Stats effectStats = effect.Stats;
-            Stats proc = effect.GetAverageStats(periods[(int)effect.Trigger], chances[(int)effect.Trigger], CalculationsWarlock.AVG_UNHASTED_CAST_TIME, Options.Duration);
+            Stats proc = effect.GetAverageStats(periods[(int)effect.Trigger], chances[(int)effect.Trigger], CalculationsWarlock.AVG_UNHASTED_CAST_TIME, BossOpts.BerserkTimer);
 
             // Handle "recursive effects" - i.e. those that *enable* a
             // proc during a short window.
@@ -740,14 +742,14 @@ namespace Rawr.Warlock
             {
                 SpecialEffect inner = effect.Stats._rawSpecialEffectData[0];
                 Stats innerStats = inner.GetAverageStats(periods[(int)inner.Trigger], chances[(int)inner.Trigger], 1f, effect.Duration);
-                float upTime = effect.GetAverageUptime(periods[(int)effect.Trigger], chances[(int)effect.Trigger], 1f, Options.Duration);
+                float upTime = effect.GetAverageUptime(periods[(int)effect.Trigger], chances[(int)effect.Trigger], 1f, BossOpts.BerserkTimer);
                 proc.Accumulate(innerStats, upTime);
             }
 
             // E.g. Sorrowsong
             if (effect.LimitedToExecutePhase)
             {
-                proc *= Options.ThirtyFive;
+                proc *= CalcOpts.ThirtyFive;
             }
 
             return proc;
@@ -757,14 +759,14 @@ namespace Rawr.Warlock
             damagePerProc *=
                   modifiers.GetFinalDirectMultiplier()
                 * (1 + (modifiers.GetFinalCritMultiplier() - 1) * modifiers.CritChance)
-                * (1 - StatConversion.GetAverageResistance(Options.PlayerLevel, Options.TargetLevel, 0f, 0f));
+                * (1 - StatConversion.GetAverageResistance(CalcOpts.PlayerLevel, CalcOpts.TargetLevel, 0f, 0f));
             float numProcs
-                = Options.Duration
+                = BossOpts.BerserkTimer
                     * effect.GetAverageProcsPerSecond(
                         periods[(int)effect.Trigger],
                         chances[(int)effect.Trigger],
                         CalculationsWarlock.AVG_UNHASTED_CAST_TIME,
-                        Options.Duration);
+                        BossOpts.BerserkTimer);
             return numProcs * damagePerProc;
         }
         private bool IsDoublePot(SpecialEffect effect)
@@ -811,9 +813,9 @@ namespace Rawr.Warlock
             PopulateTriggers(
                 periods,
                 chances,
-                Options.Duration / totalCasts,
-                totalTicks / Options.Duration,
-                corruptionTicks == 0 ? -1 : Options.Duration / corruptionTicks,
+                BossOpts.BerserkTimer / totalCasts,
+                totalTicks / BossOpts.BerserkTimer,
+                corruptionTicks == 0 ? -1 : BossOpts.BerserkTimer / corruptionTicks,
                 castsPerCrittable.GetValue());
         }
 
@@ -875,7 +877,7 @@ namespace Rawr.Warlock
         private void SetupSpells(bool execute)
         {
             Priorities = new List<Spell>();
-            foreach (string spellName in Options.GetActiveRotation().GetPrioritiesForCalcs(Talents, execute))
+            foreach (string spellName in CalcOpts.GetActiveRotation().GetPrioritiesForCalcs(Talents, execute))
             {
                 Spell spell = GetSpell(spellName);
                 if (spell.IsCastable() && (!execute || spell.IsCastDuringExecute()))
@@ -955,7 +957,7 @@ namespace Rawr.Warlock
             {
                 modifiers.AddAdditiveTickMultiplier(.1304f + (CalcMastery() - 8f) * .0163f);
             }
-            if (Options.GetActiveRotation().Contains("Shadow Bolt") || (Options.GetActiveRotation().Contains("Haunt") && Talents.Haunt > 0))
+            if (CalcOpts.GetActiveRotation().Contains("Shadow Bolt") || (CalcOpts.GetActiveRotation().Contains("Haunt") && Talents.Haunt > 0))
             {
                 // we assume a steady state of 3 stacks
                 float[] talentEffects = { 0f, .03f, .04f, .05f };

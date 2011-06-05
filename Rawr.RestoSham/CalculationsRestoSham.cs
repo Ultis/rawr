@@ -489,12 +489,14 @@ namespace Rawr.RestoSham
             if (character == null) { return calc; }
             CalculationOptionsRestoSham calcOpts = character.CalculationOptions as CalculationOptionsRestoSham;
             if (calcOpts == null) { return calc; }
+            BossOptions bossOpts = character.BossOptions;
+            if (bossOpts == null) { return calc; }
 
             Stats stats = GetCharacterStats(character, additionalItem, statModifier);
             calc.BasicStats = stats;
             
             #region FightSeconds, and CastingActivity
-            _FightSeconds = calcOpts.FightLength * 60f;
+            _FightSeconds = bossOpts.BerserkTimer;
             _CastingActivity = 1f;
             #endregion
             #region Spell Power and Haste Based Calcs

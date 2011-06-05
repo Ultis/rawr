@@ -449,7 +449,6 @@ namespace Rawr.Elemental {
 
             calc.BasicStats = stats;
             calc.LocalCharacter = character;
-            calcOpts.calculatedStats = calc;
 
             Rawr.Elemental.Estimation.solve(calc, calcOpts, bossOpts);
 

@@ -126,11 +126,11 @@ namespace Rawr.Warlock
         public float CalcMana()
         {
             // not clear how accurate this is; factor of 13 was reportedly 7.5 in wrath
-            return BaseMana + (Mommy.CalcIntellect() - Mommy.BaseIntellect) * (Mommy.Options.PlayerLevel / 80) * 13f;
+            return BaseMana + (Mommy.CalcIntellect() - Mommy.BaseIntellect) * (Mommy.CalcOpts.PlayerLevel / 80) * 13f;
         }
         public float CalcSpellPower()
         {
-            return Mommy.CalcSpellPower() * (Mommy.Options.PlayerLevel / 80) * 0.5f;
+            return Mommy.CalcSpellPower() * (Mommy.CalcOpts.PlayerLevel / 80) * 0.5f;
         }
         public float CalcSpellCrit()
         {
@@ -138,7 +138,7 @@ namespace Rawr.Warlock
         }
         public float CalcAttackPower()
         {
-            return BaseAttackPower + Stats.Strength * 2f + Mommy.CalcSpellPower() * (Mommy.Options.PlayerLevel / 80);
+            return BaseAttackPower + Stats.Strength * 2f + Mommy.CalcSpellPower() * (Mommy.CalcOpts.PlayerLevel / 80);
         }
         public float CalcMeleeCrit()
         {
@@ -169,8 +169,8 @@ namespace Rawr.Warlock
         }
         protected float CalcMeleeDamage(bool canGlance, float bonusDamage)
         {
-            int level = Mommy.Options.TargetLevel;
-            int levelDelta = level - Mommy.Options.PlayerLevel;
+            int level = Mommy.CalcOpts.TargetLevel;
+            int levelDelta = level - Mommy.CalcOpts.PlayerLevel;
             if (levelDelta > 3)
             {
                 levelDelta = 3;
@@ -191,11 +191,11 @@ namespace Rawr.Warlock
         }
         public float GetSpecialSpeed()
         {
-            return SpecialCooldown + SpecialCastTime / StatUtils.CalcSpellHaste(Stats, Mommy.Options.PlayerLevel);
+            return SpecialCooldown + SpecialCastTime / StatUtils.CalcSpellHaste(Stats, Mommy.CalcOpts.PlayerLevel);
         }
         public virtual float GetSpecialDamage()
         {
-            float resist = StatConversion.GetAverageResistance(Mommy.Options.PlayerLevel, Mommy.Options.TargetLevel, 0f, 0f);
+            float resist = StatConversion.GetAverageResistance(Mommy.CalcOpts.PlayerLevel, Mommy.CalcOpts.TargetLevel, 0f, 0f);
             float nonCrit = (SpecialBaseDamage + SpecialDamagePerSpellPower * CalcSpellPower()) * SpecialModifiers.GetFinalDirectMultiplier() * (1 - resist);
             float crit = nonCrit * SpecialModifiers.GetFinalCritMultiplier();
             float critChance = CalcSpellCrit();
@@ -237,7 +237,7 @@ namespace Rawr.Warlock
         public override float GetSpecialDamage()
         {
             //spellid 30213, effectid 19795, 19796
-            return CalcMeleeDamage(false, WARLOCKSPELLBASEVALUES[Mommy.Options.PlayerLevel - 80] * 0.1439999938f);
+            return CalcMeleeDamage(false, WARLOCKSPELLBASEVALUES[Mommy.CalcOpts.PlayerLevel - 80] * 0.1439999938f);
         }
         protected override void FinalizeModifiers()
         {
@@ -263,7 +263,7 @@ namespace Rawr.Warlock
             // 19072 base mana
 
             //spellid 54049, effectid 46748-9
-            SpecialBaseDamage = WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * 0.126f;
+            SpecialBaseDamage = WARLOCKSPELLBASEVALUES[mommy.CalcOpts.PlayerLevel - 80] * 0.126f;
             SpecialDamagePerSpellPower = 1.228f;
             SpecialCooldown = 6f;
         }
@@ -324,7 +324,7 @@ namespace Rawr.Warlock
             BaseSpellCrit = .01f;
 
             //spellID 3110, effectID 929, 92747
-            SpecialBaseDamage = WARLOCKSPELLBASEVALUES[Mommy.Options.PlayerLevel - 80] * 0.1230000034f;
+            SpecialBaseDamage = WARLOCKSPELLBASEVALUES[Mommy.CalcOpts.PlayerLevel - 80] * 0.1230000034f;
             SpecialDamagePerSpellPower = .657f * .5f;
             SpecialCastTime = 2.5f - Mommy.Talents.DarkArts * .25f;
         }
@@ -360,7 +360,7 @@ namespace Rawr.Warlock
             DamagePerAttackPower = .157f;
 
             //spellID 7814, effectID 3106
-            SpecialBaseDamage = WARLOCKSPELLBASEVALUES[Mommy.Options.PlayerLevel - 80] * 0.2010000050f;
+            SpecialBaseDamage = WARLOCKSPELLBASEVALUES[Mommy.CalcOpts.PlayerLevel - 80] * 0.2010000050f;
             SpecialDamagePerSpellPower = .5f * .612f;
         }
 

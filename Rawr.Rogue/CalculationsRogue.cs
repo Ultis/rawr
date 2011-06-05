@@ -454,7 +454,7 @@ namespace Rawr.Rogue
             calc.MissedPoisonAttacks = chancePoisonMiss * 100f;
 
             float timeToReapplyDebuffs = 1f / (1f - chanceMHAvoided) - 1f;
-            float lagVariance = (float)calcOpts.LagVariance / 1000f;
+            float lagVariance = (float)calcOpts.Latency / 1000f;
             float ruptDurationUptime = RV.Rupt.BaseDuration + ruptDurationBonus;
             float ruptDurationAverage = ruptDurationUptime + timeToReapplyDebuffs + lagVariance;
             float snDBonusDuration = snDDurationBonus - lagVariance;
@@ -714,7 +714,7 @@ namespace Rawr.Rogue
             #region Assassination
             if (spec == 0)
             {
-                rotationCalculator = new RogueRotationCalculatorAss(character, stats, calcOpts,
+                rotationCalculator = new RogueRotationCalculatorAss(character, stats, bossOpts, calcOpts,
                     hasteBonus, mainHandSpeed, offHandSpeed, mainHandSpeedNorm, offHandSpeedNorm, chanceWhiteMHAvoided, chanceWhiteOHAvoided, chanceMHAvoided, chanceOHAvoided,
                     chanceFinisherAvoided, chancePoisonAvoided, chanceCritYellow * cPonCPGCritChance, (1f - chanceHitMuti * chanceHitMuti) * cPonCPGCritChance, mainHandStats,
                     offHandStats, backstabStats, mutiStats, ruptStats, envenomStats, snDStats, exposeStats, iPStats, dPStats, wPStats, venomousWoundsStats);
@@ -783,7 +783,7 @@ namespace Rawr.Rogue
             #region Combat
             else if (spec == 1)
             {
-                rotationCalculator = new RogueRotationCalculatorCombat(character, stats, calcOpts, hasteBonus, mainHandSpeed, offHandSpeed, mainHandSpeedNorm, offHandSpeedNorm,
+                rotationCalculator = new RogueRotationCalculatorCombat(character, stats, bossOpts, calcOpts, hasteBonus, mainHandSpeed, offHandSpeed, mainHandSpeedNorm, offHandSpeedNorm,
                     chanceWhiteMHAvoided, chanceWhiteOHAvoided, chanceMHAvoided, chanceOHAvoided, chanceFinisherAvoided, chancePoisonAvoided, chanceCritYellow * cPonCPGCritChance,
                     mainHandStats, offHandStats, mainGaucheStats, sStrikeStats, rStrikeStats, ruptStats, evisStats, snDStats, exposeStats, iPStats, dPStats, wPStats);
                 rotationCalculationOptimal = new RogueRotationCalculatorCombat.RogueRotationCalculation();
@@ -826,7 +826,7 @@ namespace Rawr.Rogue
             #region Subtlety
             else
             {
-                rotationCalculator = new RogueRotationCalculatorSubt(character, stats, calcOpts, hasteBonus, mainHandSpeed, offHandSpeed, mainHandSpeedNorm, offHandSpeedNorm, chanceWhiteMHAvoided,
+                rotationCalculator = new RogueRotationCalculatorSubt(character, stats, bossOpts, calcOpts, hasteBonus, mainHandSpeed, offHandSpeed, mainHandSpeedNorm, offHandSpeedNorm, chanceWhiteMHAvoided,
                     chanceWhiteOHAvoided, chanceMHAvoided, chanceOHAvoided, chanceFinisherAvoided, chancePoisonAvoided, chanceCritYellow * cPonCPGCritChance, mainHandStats, offHandStats,
                     backstabStats, hemoStats, ruptStats, evisStats, snDStats, recupStats, exposeStats, iPStats, dPStats, wPStats);
                 rotationCalculationOptimal = new RogueRotationCalculatorSubt.RogueRotationCalculation();
@@ -893,7 +893,7 @@ namespace Rawr.Rogue
             calc.MainHandSpeed = mainHandSpeed;
             calc.OffHandSpeed = offHandSpeed;
             calc.ArmorMitigation = (1f - modArmor) * 100f;
-            calc.Duration = calcOpts.Duration;
+            calc.Duration = bossOpts.BerserkTimer;
 
             calc.MainHandStats = mainHandStats;
             calc.OffHandStats = offHandStats;
@@ -983,7 +983,7 @@ namespace Rawr.Rogue
             float meleeHitInterval = 1f / ((mHSpeed + oHSpeed) / speedBonus);
 
             //To calculate the Poison hit interval only white attacks are taken into account, IP is assumed on the slowest and DP on the fastest weapon
-            float dPPS = calcOpts.Duration / (Math.Min(mHSpeed, oHSpeed) / speedBonus) * RV.DP.Chance + (spec == 0 ? RV.Mastery.ImprovedPoisonsDPBonus : 0);
+            float dPPS = bossOpts.BerserkTimer / (Math.Min(mHSpeed, oHSpeed) / speedBonus) * RV.DP.Chance + (spec == 0 ? RV.Mastery.ImprovedPoisonsDPBonus : 0);
             float poisonHitInterval = 1 / (Math.Max(mHSpeed, mHSpeed) * RV.IP.Chance * (1f + RV.Mastery.ImprovedPoisonsIPFreqMult) / RV.IP.NormWeapSpeed + dPPS);
             
             float hitBonus = StatConversion.GetPhysicalHitFromRating(statsTotal.HitRating) + statsTotal.PhysicalHit;
@@ -1038,10 +1038,10 @@ namespace Rawr.Rogue
                     && triggerIntervals.ContainsKey(effect.Stats._rawSpecialEffectData[0].Trigger))
                 {
                     float upTime = effect.GetAverageUptime(triggerIntervals[effect.Trigger],
-                        triggerChances[effect.Trigger], 1f, calcOpts.Duration);
+                        triggerChances[effect.Trigger], 1f, bossOpts.BerserkTimer);
                     statsProcs.Accumulate(effect.Stats._rawSpecialEffectData[0].GetAverageStats(
                         triggerIntervals[effect.Stats._rawSpecialEffectData[0].Trigger],
-                        triggerChances[effect.Stats._rawSpecialEffectData[0].Trigger], 1f, calcOpts.Duration),
+                        triggerChances[effect.Stats._rawSpecialEffectData[0].Trigger], 1f, bossOpts.BerserkTimer),
                         upTime);
                 }
                 else if (effect.Stats.MoteOfAnger > 0)
@@ -1049,12 +1049,12 @@ namespace Rawr.Rogue
                     // When in effect stats, MoteOfAnger is % of melee hits
                     // When in character stats, MoteOfAnger is average procs per second
                     statsProcs.MoteOfAnger = effect.Stats.MoteOfAnger * effect.GetAverageProcsPerSecond(triggerIntervals[effect.Trigger],
-                        triggerChances[effect.Trigger], 1f, calcOpts.Duration) / effect.MaxStack;
+                        triggerChances[effect.Trigger], 1f, bossOpts.BerserkTimer) / effect.MaxStack;
                 }
                 else
                 {
                     statsProcs.Accumulate(effect.GetAverageStats(triggerIntervals[effect.Trigger],
-                        triggerChances[effect.Trigger], 1f, calcOpts.Duration),
+                        triggerChances[effect.Trigger], 1f, bossOpts.BerserkTimer),
                         1f);
                 }
             }
@@ -1105,7 +1105,7 @@ namespace Rawr.Rogue
             else if (tempCritEffects.Count == 1)
             { //Only one, add it to
                 SpecialEffect effect = tempCritEffects[0];
-                float uptime = effect.GetAverageUptime(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], 1f, calcOpts.Duration) * tempCritEffectScales[0];
+                float uptime = effect.GetAverageUptime(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], 1f, bossOpts.BerserkTimer) * tempCritEffectScales[0];
                 float totalAgi = (effect.Stats.Agility + effect.Stats.HighestStat + effect.Stats.Paragon) * (1f + statsTotal.BonusAgilityMultiplier);
                 critRatingUptimes = new WeightedStat[] { new WeightedStat() { Chance = uptime, Value = 
                         effect.Stats.CritRating + StatConversion.GetCritFromAgility(totalAgi - 10,
@@ -1135,7 +1135,7 @@ namespace Rawr.Rogue
                 {
                     offset[0] = calcOpts.TrinketOffset;
                 }
-                WeightedStat[] critWeights = SpecialEffect.GetAverageCombinedUptimeCombinations(tempCritEffects.ToArray(), intervals, chances, offset, tempCritEffectScales.ToArray(), 1f, calcOpts.Duration, tempCritEffectsValues.ToArray());
+                WeightedStat[] critWeights = SpecialEffect.GetAverageCombinedUptimeCombinations(tempCritEffects.ToArray(), intervals, chances, offset, tempCritEffectScales.ToArray(), 1f, bossOpts.BerserkTimer, tempCritEffectsValues.ToArray());
                 critRatingUptimes = critWeights;
             }
             return statsTotal;

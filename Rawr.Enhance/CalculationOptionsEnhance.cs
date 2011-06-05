@@ -6,11 +6,8 @@ using System.Xml.Serialization;
 
 namespace Rawr.Enhance
 {
-#if !SILVERLIGHT
-	[Serializable]
-#endif
     public class CalculationOptionsEnhance : ICalculationOptionBase, INotifyPropertyChanged
-	{
+    {
         // General parameters
         private int _averageLag = 250;
         private int _reactionTime = 250;
@@ -154,5 +151,5 @@ namespace Rawr.Enhance
             if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(property));
         }
         #endregion
-	}
+    }
 }

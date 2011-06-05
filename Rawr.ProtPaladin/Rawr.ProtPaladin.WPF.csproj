@@ -115,6 +115,7 @@
     <Compile Include="CharacterCalculationsProtPaladin.cs" />
     <Compile Include="CombatTable.cs" />
     <Compile Include="ComparisonCalculationProtPaladin.cs" />
+    <Compile Include="CalculationsOptionsConvertersProtPaladin.cs" />
     <Compile Include="DefendModel.cs" />
     <Compile Include="Enum.cs" />
     <Compile Include="Lookup.cs" />

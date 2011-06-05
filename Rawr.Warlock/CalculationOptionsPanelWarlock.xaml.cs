@@ -14,7 +14,7 @@ namespace Rawr.Warlock
             InitializeComponent();
             DataContext = this;
         }
-        public UserControl PanelControl { get { return this; } }      
+        public UserControl PanelControl { get { return this; } }
         public Character Character
         {
             get { return m_character; }

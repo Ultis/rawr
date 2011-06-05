@@ -15,11 +15,11 @@ namespace Rawr.Rogue
         private float[] _averageNormalCP = new float[6];
         private float[] _averageSStrikeCP = new float[6];
 
-        public RogueRotationCalculatorCombat(Character character, Stats stats, CalculationOptionsRogue calcOpts, float hasteBonus, float mainHandSpeed, float offHandSpeed, float mainHandSpeedNorm,
+        public RogueRotationCalculatorCombat(Character character, Stats stats, BossOptions bossOpts, CalculationOptionsRogue calcOpts, float hasteBonus, float mainHandSpeed, float offHandSpeed, float mainHandSpeedNorm,
             float offHandSpeedNorm, float avoidedWhiteMHAttacks, float avoidedWhiteOHAttacks, float avoidedMHAttacks, float avoidedOHAttacks, float avoidedFinisherAttacks,
             float avoidedPoisonAttacks, float chanceExtraCPPerHit, RogueAbilityStats mainHandStats, RogueAbilityStats offHandStats, RogueAbilityStats mainGaucheStats,
             RogueAbilityStats sStrikeStats, RogueAbilityStats rStrikeStats, RogueAbilityStats ruptStats, RogueAbilityStats evisStats, RogueAbilityStats snDStats, RogueAbilityStats exposeStats,
-            RogueAbilityStats iPStats, RogueAbilityStats dPStats, RogueAbilityStats wPStats) : base(character, stats, calcOpts, hasteBonus, mainHandSpeed, offHandSpeed, mainHandSpeedNorm,
+            RogueAbilityStats iPStats, RogueAbilityStats dPStats, RogueAbilityStats wPStats) : base(character, stats, bossOpts, calcOpts, hasteBonus, mainHandSpeed, offHandSpeed, mainHandSpeedNorm,
             offHandSpeedNorm, avoidedWhiteMHAttacks, avoidedWhiteOHAttacks, avoidedMHAttacks, avoidedOHAttacks, avoidedFinisherAttacks, avoidedPoisonAttacks, chanceExtraCPPerHit, mainHandStats,
             offHandStats, ruptStats, snDStats, exposeStats, iPStats, dPStats, wPStats)
         {
@@ -50,7 +50,7 @@ namespace Rawr.Rogue
 
         public override RogueRotationCalculation GetRotationCalculations(float durationMult, int cPG, int recupCP, int ruptCP, bool useRS, int finisher, int evisCP, int snDCP, int mHPoison, int oHPoison, bool useTotT, int exposeCP, bool PTRMode)
         {
-            Duration = CalcOpts.Duration;
+            Duration = BossOpts.BerserkTimer;
             UseTotT = useTotT;
             NumberOfStealths = getNumberStealths();
             EnergyRegen = getEnergyRegen();

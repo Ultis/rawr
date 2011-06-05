@@ -159,20 +159,21 @@ namespace Rawr.Warlock
                 }
             }
             Stats stats = GetBuffsStats(buffs);
-            var options = character.CalculationOptions as CalculationOptionsWarlock;
-            ApplyPetsRaidBuff(stats, options.Pet, character.WarlockTalents, character.ActiveBuffs, options);
+            CalculationOptionsWarlock calcOpts = character.CalculationOptions as CalculationOptionsWarlock;
+            ApplyPetsRaidBuff(stats, calcOpts.Pet, character.WarlockTalents, character.ActiveBuffs, calcOpts);
             return stats;
         }
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
             WarlockTalents talents = character.WarlockTalents;
-            CalculationOptionsWarlock options = character.CalculationOptions as CalculationOptionsWarlock;
+            CalculationOptionsWarlock calcOpts = character.CalculationOptions as CalculationOptionsWarlock;
+            BossOptions bossOpts = character.BossOptions;
             Stats stats = BaseStats.GetBaseStats(character);
             
             AccumulateItemStats(stats, character, additionalItem);
             AccumulateBuffsStats(stats, character.ActiveBuffs);
             AccumulateSetBonusStats(stats, character.SetBonusCount);
-            ApplyPetsRaidBuff(stats, options.Pet, talents, character.ActiveBuffs, options);
+            ApplyPetsRaidBuff(stats, calcOpts.Pet, talents, character.ActiveBuffs, calcOpts);
 
             float[] demonicEmbraceValues = { 0f, .04f, .07f, .1f };
             Stats statsTalents = new Stats {
@@ -197,7 +198,7 @@ namespace Rawr.Warlock
             stats.ManaRestoreFromMaxManaPerSecond
                 = Math.Max(
                     stats.ManaRestoreFromMaxManaPerSecond,
-                    .001f * Spell.CalcUprate(talents.SoulLeech > 0 ? 1f : 0f, 15f, options.Duration * 1.1f));
+                    .001f * Spell.CalcUprate(talents.SoulLeech > 0 ? 1f : 0f, 15f, bossOpts.BerserkTimer * 1.1f));
             return stats;
         }
         private void ApplyPetsRaidBuff(Stats stats, string pet, WarlockTalents talents, List<Buff> activeBuffs, CalculationOptionsWarlock options)

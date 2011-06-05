@@ -1,129 +1,103 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Text;
 using System.Xml.Serialization;
 
 namespace Rawr.Moonkin
 {
-#if !SILVERLIGHT
-	[Serializable]
-#endif
-	public class CalculationOptionsMoonkin : ICalculationOptionBase, INotifyPropertyChanged
-	{
-		public string GetXml()
-		{
-			XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsMoonkin));
-			StringBuilder xml = new StringBuilder();
-			System.IO.StringWriter writer = new System.IO.StringWriter(xml);
-			serializer.Serialize(writer, this);
-			return xml.ToString();
-		}
-
+    public class CalculationOptionsMoonkin : ICalculationOptionBase, INotifyPropertyChanged
+    {
         public bool Notify = true;
 
-		private int targetLevel = 88;
-		public int TargetLevel
-		{
-			get { return targetLevel; }
-			set { targetLevel = value; OnPropertyChanged("TargetLevel"); }
-		}
+        [DefaultValue(0.100f)]
+        public float Latency { get { return latency; } set { latency = value; OnPropertyChanged("Latency"); } }
+        private float latency = 0.100f;
+        [XmlIgnore]
+        public float ExternalLatency { get { return latency * 1000f; } set { latency = value / 1000f; OnPropertyChanged("Latency"); } }
 
-		private float latency = 0.1f;
-		public float Latency
-		{
-			get { return latency; }
-			set { latency = value; OnPropertyChanged("Latency"); }
-		}
-		public float ExternalLatency
-		{
-			get { return latency * 1000f; }
-			set { latency = value / 1000f; OnPropertyChanged("Latency"); }
-		}
+        [DefaultValue(false)]
+        public bool Innervate { get { return innervate; } set { innervate = value; OnPropertyChanged("Innervate"); } }
+        private bool innervate = false;
 
-		private float fightLength = 5;
-		public float FightLength
-		{
-			get { return fightLength; }
-			set { fightLength = value; OnPropertyChanged("FightLength"); }
-		}
+        [DefaultValue(1)]
+        public float InnervateDelay { get { return innervateDelay; } set { innervateDelay = value; OnPropertyChanged("InnervateDelay"); } }
+        private float innervateDelay = 1;
 
-		private bool innervate = false;
-		public bool Innervate
-		{
-			get { return innervate; }
-			set { innervate = value; OnPropertyChanged("Innervate"); }
-		}
+        [DefaultValue(1.00f)]
+        public float ReplenishmentUptime { get { return replenishmentUptime; } set { replenishmentUptime = value; OnPropertyChanged("ReplenishmentUptime"); } }
+        private float replenishmentUptime = 1.00f;
 
-		private float innervateDelay = 1;
-		public float InnervateDelay
-		{
-			get { return innervateDelay; }
-			set { innervateDelay = value; OnPropertyChanged("InnervateDelay"); }
-		}
+        [DefaultValue(1.00f)]
+        public float TreantLifespan { get { return treantLifespan; } set { treantLifespan = value; OnPropertyChanged("TreantLifespan"); } }
+        private float treantLifespan = 1.00f;
 
-		private float replenishmentUptime = 1.0f;
-		public float ReplenishmentUptime
-		{
-			get { return replenishmentUptime; }
-			set { replenishmentUptime = value; OnPropertyChanged("ReplenishmentUptime"); }
-		}
+        [DefaultValue("None")]
+        public string UserRotation { get { return _userRotation; } set { _userRotation = value; OnPropertyChanged("UserRotation"); } }
+        private string _userRotation = "None";
 
-		private float treantLifespan = 1.0f;
-		public float TreantLifespan
-		{
-			get { return treantLifespan; }
-			set { treantLifespan = value; OnPropertyChanged("TreantLifespan"); }
-		}
-
-		private string userRotation = "None";
-		public string UserRotation
-		{
-			get { return userRotation; }
-			set { userRotation = value; OnPropertyChanged("UserRotation"); }
-		}
-
+        [XmlIgnore]
+        public List<string> ReforgePriorityList { get { return _reforgePriorityList; } }
         private List<string> _reforgePriorityList = new List<string> { "Spirit over Hit", "Hit over Spirit" };
-        public List<string> ReforgePriorityList
-        {
-            get { return _reforgePriorityList; }
-        }
 
+        [DefaultValue(0)]
+        public int ReforgePriority { get { return _reforgePriority; } set { _reforgePriority = value; OnPropertyChanged("ReforgePriority"); } }
         private int _reforgePriority = 0;
-        public int ReforgePriority
-        {
-            get { return _reforgePriority; }
-            set
-            {
-                _reforgePriority = value;
-                OnPropertyChanged("ReforgePriority");
-            }
-        }
 
+        [DefaultValue(false)]
+        public bool AllowReforgingSpiritToHit { get { return _allowReforgingSpiritToHit; } set { _allowReforgingSpiritToHit = value; OnPropertyChanged("AllowReforgingSpiritToHit"); } }
         private bool _allowReforgingSpiritToHit = false;
-        public bool AllowReforgingSpiritToHit
-        {
-            get { return _allowReforgingSpiritToHit; }
-            set
-            {
-                _allowReforgingSpiritToHit = value;
-                OnPropertyChanged("AllowReforgingSpiritToHit");
-            }
-        }
 
+        [DefaultValue(false)]
+        public bool PTRMode { get { return ptrMode; } set { ptrMode = value; OnPropertyChanged("PTRMode"); } }
         private bool ptrMode = false;
-        public bool PTRMode
-        {
-            get { return ptrMode; }
-            set { ptrMode = value; OnPropertyChanged("PTRMode"); }
-        }
 
-		#region INotifyPropertyChanged Members
+        #region Stat Graph
+        [DefaultValue(new bool[] { true, true, true, true, true, /**/ true, true, true, true, })]
+        public bool[] StatsList { get { return _statsList; } set { _statsList = value; OnPropertyChanged("StatsList"); } }
+        private bool[] _statsList = new bool[] { true, true, true, true, true, /**/ true, true, true, true, };
+        [DefaultValue(100)]
+        public int StatsIncrement { get { return _StatsIncrement; } set { _StatsIncrement = value; OnPropertyChanged("StatsIncrement"); } }
+        private int _StatsIncrement = 100;
+        [DefaultValue("Overall Rating")]
+        public string CalculationToGraph { get { return _calculationToGraph; } set { _calculationToGraph = value; OnPropertyChanged("CalculationToGraph"); } }
+        private string _calculationToGraph = "Overall Rating";
+        [XmlIgnore]
+        public bool SG_Int { get { return StatsList[0]; } set { StatsList[0] = value; OnPropertyChanged("SG_Int"); } }
+        [XmlIgnore]
+        public bool SG_Spi { get { return StatsList[1]; } set { StatsList[1] = value; OnPropertyChanged("SG_SPI"); } }
+        [XmlIgnore]
+        public bool SG_SP { get { return StatsList[2]; } set { StatsList[2] = value; OnPropertyChanged("SG_SP"); } }
+        [XmlIgnore]
+        public bool SG_Crit { get { return StatsList[3]; } set { StatsList[3] = value; OnPropertyChanged("SG_Crit"); } }
+        [XmlIgnore]
+        public bool SG_Hit { get { return StatsList[4]; } set { StatsList[4] = value; OnPropertyChanged("SG_Hit"); } }
+        [XmlIgnore]
+        public bool SG_Exp { get { return StatsList[5]; } set { StatsList[5] = value; OnPropertyChanged("SG_Exp"); } }
+        [XmlIgnore]
+        public bool SG_Haste { get { return StatsList[6]; } set { StatsList[6] = value; OnPropertyChanged("SG_Haste"); } }
+        [XmlIgnore]
+        public bool SG_Mstr { get { return StatsList[7]; } set { StatsList[7] = value; OnPropertyChanged("SG_Mstr"); } }
+        [XmlIgnore]
+        public bool SG_SpPen { get { return StatsList[8]; } set { StatsList[8] = value; OnPropertyChanged("SG_SpPen"); } }
+        #endregion
+
+        #region ICalculationOptionBase Overrides
+        public string GetXml()
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsMoonkin));
+            StringBuilder xml = new StringBuilder();
+            StringWriter writer = new StringWriter(xml);
+            serializer.Serialize(writer, this);
+            return xml.ToString();
+        }
+        #endregion
+        #region INotifyPropertyChanged Members
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string property)
-		{
-			if (PropertyChanged != null && Notify) PropertyChanged(this, new PropertyChangedEventArgs(property));
-		}
-		#endregion
-	}
+        {
+            if (PropertyChanged != null && Notify) PropertyChanged(this, new PropertyChangedEventArgs(property));
+        }
+        #endregion
+    }
 }

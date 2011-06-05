@@ -331,8 +331,6 @@ namespace Rawr.ShadowPriest
 
             calc.BasicStats = stats;
             calc.LocalCharacter = character;
-            calcOpts.calculatedStats = calc;
-
 
             Solver.solve(calc, calcOpts, bossOpts);
 

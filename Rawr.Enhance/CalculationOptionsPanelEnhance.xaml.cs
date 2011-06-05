@@ -18,7 +18,6 @@ namespace Rawr.Enhance
         public CalculationOptionsPanelEnhance()
         {
             InitializeComponent();
-            btnExport.Click += new RoutedEventHandler(btnExport_Click);
             SetEnhSimTextBoxText();
         }
 

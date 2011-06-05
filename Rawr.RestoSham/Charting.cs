@@ -158,7 +158,7 @@ namespace Rawr.RestoSham
             if (originalOptions == null)
                 originalOptions = new CalculationOptionsRestoSham();
 
-            CalculationOptionsRestoSham opts = originalOptions;
+            CalculationOptionsRestoSham calcOpts = originalOptions;
             string[] styles = new string[] { "CH Spam", "HW Spam", "HSrg Spam", "RT+HW", "RT+CH", "RT+HSrg" };
             string[] descs = new string[] {
                         "All chain heal, all the time.  \nMana available for use per minute added to sustained.",
@@ -170,13 +170,13 @@ namespace Rawr.RestoSham
                     };
             for (int i = 0; i < styles.Length; i++)
             {
-                opts.SustStyle = styles[i];
-                opts.BurstStyle = styles[i];
-                character.CalculationOptions = opts;
+                calcOpts.SustStyle = styles[i];
+                calcOpts.BurstStyle = styles[i];
+                character.CalculationOptions = calcOpts;
                 CharacterCalculationsRestoSham statCalc = (CharacterCalculationsRestoSham)baseCalculations.GetCharacterCalculations(character);
 
                 // normalize the mana a bit to make a better chart
-                float mana = statCalc.ManaUsed / (opts.FightLength);
+                float mana = statCalc.ManaUsed / (character.BossOptions.BerserkTimer / 60f);
 
                 ComparisonCalculationRestoSham hsComp = new ComparisonCalculationRestoSham(styles[i]);
                 hsComp.OverallPoints = statCalc.BurstHPS + statCalc.SustainedHPS + mana;

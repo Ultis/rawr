@@ -71,7 +71,7 @@ namespace Rawr.TankDK
             // This would handle any special changes, especially combobox assignments, but not when the pane is trying to load
             if (e.PropertyName == "szRotReport" || e.PropertyName.Contains("SG_"))
             {
-                // Don't want to invalidate Calcs just for the RotationReport:
+                // Don't want to invalidate Calcs just for the RotationReport or for changing stat graph options
                 return;
             }
             //
@@ -83,6 +83,7 @@ namespace Rawr.TankDK
         private void BT_VengeanceScale_Click(object sender, RoutedEventArgs e) { calcOpts.VengeanceWeight = 1.0f; }
         private void BT_Overhealing_Click(object sender, RoutedEventArgs e) { calcOpts.pOverHealing = 0.25f; }
 
+        #region Stats Graph
         protected Stats[] BuildStatsList()
         {
             List<Stats> statsList = new List<Stats>();
@@ -117,5 +118,6 @@ namespace Rawr.TankDK
             gw.GetGraph.SetupStatsGraph(Character, statsList, calcOpts.StatsIncrement, explanatoryText, calcOpts.CalculationToGraph);
             gw.Show();
         }
+        #endregion
     }
 }

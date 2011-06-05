@@ -12,6 +12,7 @@ namespace Rawr.Rogue
         public int Spec { get; set; }
         public Stats Stats { get; set; }
         public CalculationOptionsRogue CalcOpts { get; set; }
+        public BossOptions BossOpts { get; set; }
         public float Duration { get; set; }
         public float HasteBonus { get; set; }
         public float MainHandSpeed { get; set; }
@@ -71,15 +72,16 @@ namespace Rawr.Rogue
         public float StepVanishResetCD { get; set; }
         public float VanishCDReduction { get; set; }
 
-        public RogueRotationCalculator(Character character, Stats stats, CalculationOptionsRogue calcOpts, float hasteBonus, float mainHandSpeed, float offHandSpeed,
+        public RogueRotationCalculator(Character character, Stats stats, BossOptions bossOpts, CalculationOptionsRogue calcOpts, float hasteBonus, float mainHandSpeed, float offHandSpeed,
             float mainHandSpeedNorm, float offHandSpeedNorm, float avoidedWhiteMHAttacks, float avoidedWhiteOHAttacks, float avoidedMHAttacks, float avoidedOHAttacks, float avoidedFinisherAttacks,
             float avoidedPoisonAttacks, float chanceExtraCPPerHit, RogueAbilityStats mainHandStats, RogueAbilityStats offHandStats, RogueAbilityStats ruptStats,
             RogueAbilityStats snDStats, RogueAbilityStats exposeStats, RogueAbilityStats iPStats, RogueAbilityStats dPStats, RogueAbilityStats wPStats)
-		{
+        {
             Char = character;
             Talents = character.RogueTalents;
-			Stats = stats;
+            Stats = stats;
             CalcOpts = calcOpts;
+            BossOpts = bossOpts;
             HasteBonus = hasteBonus;
             MainHandSpeed = mainHandSpeed;
             OffHandSpeed = offHandSpeed;

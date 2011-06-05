@@ -93,6 +93,7 @@
       <DependentUpon>CalculationOptionsPanelProtPaladin.xaml</DependentUpon>
     </Compile>
     <Compile Include="CalculationOptionsProtPaladin.cs" />
+    <Compile Include="CalculationsOptionsConvertersProtPaladin.cs" />
     <Compile Include="CalculationsProtPaladin.cs" />
     <Compile Include="CharacterCalculationsProtPaladin.cs" />
     <Compile Include="CombatTable.cs" />

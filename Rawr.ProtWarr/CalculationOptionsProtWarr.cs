@@ -7,9 +7,6 @@ using System.Xml.Serialization;
 
 namespace Rawr.ProtWarr
 {
-#if !SILVERLIGHT
-    [Serializable]
-#endif
     public class CalculationOptionsProtWarr : ICalculationOptionBase, INotifyPropertyChanged
     {
         #region Weight Adjustments

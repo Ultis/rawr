@@ -7,20 +7,8 @@ using Rawr.DK;
 
 namespace Rawr.DPSDK
 {
-#if !SILVERLIGHT
-    [Serializable]
-#endif
     public class CalculationOptionsDPSDK : ICalculationOptionBase, INotifyPropertyChanged
     {
-        public string GetXml()
-        {
-            XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsDPSDK));
-            StringBuilder xml = new StringBuilder();
-            System.IO.StringWriter writer = new System.IO.StringWriter(xml);
-            serializer.Serialize(writer, this);
-            return xml.ToString();
-        }
-
         private Presence _presence = Presence.Frost;
         public Presence presence
         {
@@ -149,6 +137,14 @@ namespace Rawr.DPSDK
         public bool SG_Rage { get { return StatsList[8]; } set { StatsList[8] = value; OnPropertyChanged("SG_Rage"); } }
         #endregion
 
+        public string GetXml()
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsDPSDK));
+            StringBuilder xml = new StringBuilder();
+            System.IO.StringWriter writer = new System.IO.StringWriter(xml);
+            serializer.Serialize(writer, this);
+            return xml.ToString();
+        }
 
         #region INotifyPropertyChanged Members
         public event PropertyChangedEventHandler PropertyChanged;

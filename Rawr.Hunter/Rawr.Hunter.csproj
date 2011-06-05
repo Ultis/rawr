@@ -155,15 +155,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\bgCunning.jpg">
-      <Link>Resources\bgCunning.jpg</Link>
-    </Resource>
-    <Resource Include="Resources\bgFerocity.jpg">
-      <Link>Resources\bgFerocity.jpg</Link>
-    </Resource>
-    <Resource Include="Resources\bgTenacity.jpg">
-      <Link>Resources\bgTenacity.jpg</Link>
-    </Resource>
+    <Resource Include="Resources\bgCunning.jpg" />
+    <Resource Include="Resources\bgFerocity.jpg" />
+    <Resource Include="Resources\bgTenacity.jpg" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

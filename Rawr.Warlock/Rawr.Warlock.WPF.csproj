@@ -110,6 +110,7 @@
     <Compile Include="CalculationOptionsPanelWarlock.xaml.cs">
       <DependentUpon>CalculationOptionsPanelWarlock.WPF.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Rotation.cs" />
     <Compile Include="TextInputDialog.xaml.cs">
       <DependentUpon>TextInputDialog.WPF.xaml</DependentUpon>
     </Compile>
