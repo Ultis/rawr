@@ -20,14 +20,7 @@ namespace Rawr.UI
 #endif
 
         private CharacterSlot slot;
-        public CharacterSlot Slot
-        {
-            get { return slot; }
-            set
-            {                
-                slot = value;
-            }
-        }
+        public CharacterSlot Slot { get { return slot; } set { slot = value; } }
 
         private Character character;
         public Character Character
@@ -313,25 +306,25 @@ namespace Rawr.UI
                     }
                 } else if (calcs[0].SubPoints.Length == 4) {
                     switch ((int)Sort) {
-                        case 3: { orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[0] + calc.SubPoints[1]); break; }
-                        case 4: { orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[0] + calc.SubPoints[2]); break; }
-                        case 5: { orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[0] + calc.SubPoints[3]); break; }
-                        case 6: { orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[1] + calc.SubPoints[2]); break; }
+                        case 4: { orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[0] + calc.SubPoints[1]); break; }
+                        case 5: { orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[0] + calc.SubPoints[2]); break; }
+                        case 6: { orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[0] + calc.SubPoints[3]); break; }
                         case 7: { orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[1] + calc.SubPoints[2]); break; }
+                        case 8: { orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[1] + calc.SubPoints[2]); break; }
                         default:{ orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[2] + calc.SubPoints[3]); break; }
                     }
                 }
                 else /*if (calcs[0].SubPoints.Length == 5)*/ {
                     switch ((int)Sort) {
-                        case 3: { orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[0] + calc.SubPoints[1]); break; }
-                        case 4: { orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[0] + calc.SubPoints[2]); break; }
-                        case 5: { orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[0] + calc.SubPoints[3]); break; }
-                        case 6: { orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[0] + calc.SubPoints[4]); break; }
-                        case 7: { orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[1] + calc.SubPoints[2]); break; }
-                        case 8: { orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[1] + calc.SubPoints[3]); break; }
-                        case 9: { orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[1] + calc.SubPoints[4]); break; }
-                        case 10:{ orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[2] + calc.SubPoints[3]); break; }
-                        case 11:{ orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[2] + calc.SubPoints[4]); break; }
+                        case 5: { orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[0] + calc.SubPoints[1]); break; }
+                        case 6: { orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[0] + calc.SubPoints[2]); break; }
+                        case 7: { orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[0] + calc.SubPoints[3]); break; }
+                        case 8: { orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[0] + calc.SubPoints[4]); break; }
+                        case 9: { orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[1] + calc.SubPoints[2]); break; }
+                        case 10:{ orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[1] + calc.SubPoints[3]); break; }
+                        case 11:{ orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[1] + calc.SubPoints[4]); break; }
+                        case 12:{ orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[2] + calc.SubPoints[3]); break; }
+                        case 13:{ orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[2] + calc.SubPoints[4]); break; }
                         default:{ orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[3] + calc.SubPoints[4]); break; }
                     }
                 }
