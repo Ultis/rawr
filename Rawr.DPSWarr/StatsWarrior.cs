@@ -1,50 +1,77 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Reflection;
-using System.Reflection.Emit;
 using System.Text;
 using System.Xml.Serialization;
 
 namespace Rawr.Base
 {
+    /// <summary>List of Warrior stats that are Additive</summary>
     public enum AdditiveStatWarrior : int
     {
         // Prot
+        /// <summary>Chance to critically block</summary>
         CriticalBlock,
         //BonusDevastateCritChance, // Deprecated
         // DPS
         // Both
+        /// <summary>Your Intercept abilities cooldown is reduced by 5 sec.</summary>
         InterceptCDReduc,
     }
+    /// <summary>List of Warrior stats that are Multiplicative</summary>
     public enum MultiplicativeStatWarrior : int {
         // Prot
+        /// <summary>Percentage mod for Shield Slam Damage. Use as 0.05 = +5% Damage</summary>
         BonusShieldSlamDamageMultiplier,
+        /// <summary>Percentage mod for Devastate Damage. Use as 0.05 = +5% Damage</summary>
         BonusDevastateDamageMultiplier,
+        /// <summary>Percentage mod for Shockwave Damage. Use as 0.05 = +5% Damage</summary>
         BonusShockwaveDamageMultiplier,
+        /// <summary>Percentage mod for Shield Wall Damage. Use as 0.05 = +5% Damage</summary>
         BonusShieldWallDurMultiplier,
         // DPS
+        /// <summary>Percentage mod for Execute Damage. Use as 0.05 = +5% Damage</summary>
         BonusExecuteDamageMultiplier,
+        /// <summary>Percentage mod for Overpower Damage. Use as 0.05 = +5% Damage</summary>
         BonusOverpowerDamageMultiplier,
+        /// <summary>Percentage mod for Mortal Strike Damage. Use as 0.05 = +5% Damage</summary>
         BonusMortalStrikeDamageMultiplier,
+        /// <summary>Percentage mod for Bloodthirst Damage. Use as 0.05 = +5% Damage</summary>
         BonusBloodthirstDamageMultiplier,
+        /// <summary>Percentage mod for Raging Blow Damage. Use as 0.05 = +5% Damage</summary>
         BonusRagingBlowDamageMultiplier,
+        /// <summary>Percentage mod for Whirlwind Damage. Use as 0.05 = +5% Damage</summary>
         BonusWhirlwindDamageMultiplier,
+        /// <summary>Percentage mod for Slam Damage. Use as 0.05 = +5% Damage</summary>
         BonusSlamDamageMultiplier,
+        /// <summary>Percentage mod for Victory Rush Damage. Use as 0.05 = +5% Damage</summary>
         BonusVictoryRushDamageMultiplier,
         // Both
+        /// <summary>Percentage mod for Heroic Strike Damage. Use as 0.05 = +5% Damage</summary>
         BonusHeroicStrikeDamageMultiplier,
+        /// <summary>Percentage mod for Cleave Damage. Use as 0.05 = +5% Damage</summary>
         BonusCleaveDamageMultiplier,
+        /// <summary>Percentage mod for Rage Cost Damage. Use as 0.05 = -5% Rage Cost</summary>
         RageCostMultiplier,
+        /// <summary>Percentage mod for Victory Rush Damage. Use as 0.05 = +5% Damage</summary>
         HeroicStrikeCleaveCooldownReduction,
     }
+    /// <summary>
+    /// List of Warrior stats that are Inverse Multiplicative
+    /// </summary>
     public enum InverseMultiplicativeStatWarrior : int { }
+    /// <summary>
+    /// List of Warrior stats that do not Stack
+    /// </summary>
     public enum NonStackingStatWarrior : int { }
 
+    /// <summary>
+    /// Warrior Specific override of the Stats class
+    /// </summary>
 #if SILVERLIGHT
     public class StatsWarrior : Stats
-#else    
+#else
     public unsafe class StatsWarrior : Stats
 #endif
     {
@@ -60,15 +87,22 @@ namespace Rawr.Base
         internal int _sparseInverseMultiplicativeWarriorCount;
         internal int _sparseNoStackWarriorCount;
 
+        /// <summary></summary>
         protected static PropertyInfo[] _propertyInfoCacheWarrior = null;
+        /// <summary></summary>
         protected static List<PropertyInfo> _percentagePropertiesWarrior = new List<PropertyInfo>();
+        /// <summary></summary>
         protected static int AdditiveStatWarriorCount = 0;
+        /// <summary></summary>
         protected static int MultiplicativeStatWarriorCount = 0;
+        /// <summary></summary>
         protected static int InverseMultiplicativeStatWarriorCount = 0;
+        /// <summary></summary>
         protected static int NonStackingStatWarriorCount = 0;
         #endregion
 
         #region Sort-Of Overrides, they call the base function and then do the same thing with Warrior Stats
+        /// <summary>Dumps the cached values</summary>
         public new void Clear()
         {
             base.Clear();
@@ -79,12 +113,14 @@ namespace Rawr.Base
             _rawSpecialEffectDataSize = 0;
         }
 
+        /// <summary>Dumps the sparse data</summary>
         public new void InvalidateSparseData()
         {
             base.InvalidateSparseData();
             _sparseIndicesWarrior = null;
         }
 
+        /// <summary>Generates the sparse data in base Stats class and in Warrior Specific</summary>
         public new void GenerateSparseData() {
             base.GenerateSparseData();
             //List<float> data = new List<float>();
@@ -140,6 +176,7 @@ namespace Rawr.Base
             }
         }
 
+        /// <summary>Clones the stats object for duplication with separation</summary>
         public new StatsWarrior Clone() {
             StatsWarrior clone = (StatsWarrior)this.MemberwiseClone();
             StatsWarrior retVal = new StatsWarrior();
@@ -154,6 +191,7 @@ namespace Rawr.Base
             return retVal;
         }
 
+        /// <summary></summary>
         public static PropertyInfo[] PropertyInfoCacheWarrior { get { return _propertyInfoCacheWarrior; } }
 
         [XmlIgnore]
@@ -472,10 +510,8 @@ namespace Rawr.Base
             List<PropertyInfo> items = new List<PropertyInfo>();
             List<PropertyInfo> itemsWarrior = new List<PropertyInfo>();
 
-            /*foreach (PropertyInfo info in typeof(Stats).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.ExactBinding))
-            {
-                if (info.PropertyType.IsAssignableFrom(typeof(float)))
-                {
+            /*foreach (PropertyInfo info in typeof(Stats).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.ExactBinding)) {
+                if (info.PropertyType.IsAssignableFrom(typeof(float))) {
                     items.Add(info);
                 }
             }
@@ -489,10 +525,8 @@ namespace Rawr.Base
             }
             _propertyInfoCacheWarrior = itemsWarrior.ToArray();
 
-            /*foreach (PropertyInfo info in _propertyInfoCache)
-            {
-                if (info.GetCustomAttributes(typeof(PercentageAttribute), false).Length > 0)
-                {
+            /*foreach (PropertyInfo info in _propertyInfoCache) {
+                if (info.GetCustomAttributes(typeof(PercentageAttribute), false).Length > 0) {
                     _percentageProperties.Add(info);
                 }
             }*/
@@ -517,6 +551,7 @@ namespace Rawr.Base
 
         #region Attributes as Callable and Serializable points
         #region Additive Stats
+        /// <summary>Chance to critically block</summary>
         [DefaultValueAttribute(0f)]
         [Percentage]
         [DisplayName("% Critical Block")]
@@ -550,6 +585,7 @@ namespace Rawr.Base
         #endregion
         #region Multiplicative Stats
         #region Prot
+        /// <summary>Percentage mod for Shield Slam Damage. Use as 0.05 = +5% Damage</summary>
         [DefaultValueAttribute(0f)]
         [Percentage]
         [DisplayName("% Bonus Shield Slam Damage")]
@@ -560,6 +596,7 @@ namespace Rawr.Base
             set { _rawMultiplicativeWarriorData[(int)MultiplicativeStatWarrior.BonusShieldSlamDamageMultiplier] = value; }
         }
 
+        /// <summary>Percentage mod for Devastate Damage. Use as 0.05 = +5% Damage</summary>
         [DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Warrior")]
@@ -570,6 +607,7 @@ namespace Rawr.Base
             set { _rawMultiplicativeWarriorData[(int)MultiplicativeStatWarrior.BonusDevastateDamageMultiplier] = value; }
         }
 
+        /// <summary>Percentage mod for Shockwave Damage. Use as 0.05 = +5% Damage</summary>
         [DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Warrior")]
@@ -592,6 +630,7 @@ namespace Rawr.Base
         }
         #endregion
         #region DPS
+        /// <summary>Percentage mod for Execute Damage. Use as 0.05 = +5% Damage</summary>
         [DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Warrior")]
@@ -602,6 +641,7 @@ namespace Rawr.Base
             set { _rawMultiplicativeWarriorData[(int)MultiplicativeStatWarrior.BonusExecuteDamageMultiplier] = value; }
         }
 
+        /// <summary>Percentage mod for Overpower Damage. Use as 0.05 = +5% Damage</summary>
         [DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Warrior")]
@@ -612,6 +652,7 @@ namespace Rawr.Base
             set { _rawMultiplicativeWarriorData[(int)MultiplicativeStatWarrior.BonusOverpowerDamageMultiplier] = value; }
         }
 
+        /// <summary>Percentage mod for Mortal Strike Damage. Use as 0.05 = +5% Damage</summary>
         [DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Warrior")]
@@ -622,6 +663,7 @@ namespace Rawr.Base
             set { _rawMultiplicativeWarriorData[(int)MultiplicativeStatWarrior.BonusMortalStrikeDamageMultiplier] = value; }
         }
 
+        /// <summary>Percentage mod for Bloodthirst Damage. Use as 0.05 = +5% Damage</summary>
         [DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Warrior")]
@@ -632,6 +674,7 @@ namespace Rawr.Base
             set { _rawMultiplicativeWarriorData[(int)MultiplicativeStatWarrior.BonusSlamDamageMultiplier] = value; }
         }
 
+        /// <summary>Percentage mod for Raging Blow Damage. Use as 0.05 = +5% Damage</summary>
         [DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Warrior")]
@@ -642,6 +685,7 @@ namespace Rawr.Base
             set { _rawMultiplicativeWarriorData[(int)MultiplicativeStatWarrior.BonusRagingBlowDamageMultiplier] = value; }
         }
 
+        /// <summary>Percentage mod for Victory Rush Damage. Use as 0.05 = +5% Damage</summary>
         [DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Warrior")]
@@ -652,6 +696,7 @@ namespace Rawr.Base
             set { _rawMultiplicativeWarriorData[(int)MultiplicativeStatWarrior.BonusVictoryRushDamageMultiplier] = value; }
         }
 
+        /// <summary>Percentage mod for Bloodthirst Damage. Use as 0.05 = +5% Damage</summary>
         [DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Warrior")]
@@ -663,6 +708,7 @@ namespace Rawr.Base
         }
         #endregion
         #region Both
+        /// <summary>Percentage mod for Heroic Strike Damage. Use as 0.05 = +5% Damage</summary>
         [DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Warrior")]
@@ -673,6 +719,7 @@ namespace Rawr.Base
             set { _rawMultiplicativeWarriorData[(int)MultiplicativeStatWarrior.BonusHeroicStrikeDamageMultiplier] = value; }
         }
 
+        /// <summary>Percentage mod for Cleave Damage. Use as 0.05 = +5% Damage</summary>
         [DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Warrior")]
@@ -682,7 +729,8 @@ namespace Rawr.Base
             get { return _rawMultiplicativeWarriorData[(int)MultiplicativeStatWarrior.BonusCleaveDamageMultiplier]; }
             set { _rawMultiplicativeWarriorData[(int)MultiplicativeStatWarrior.BonusCleaveDamageMultiplier] = value; }
         }
-        
+
+        /// <summary>Percentage mod for Whirlwind Damage. Use as 0.05 = +5% Damage</summary>
         [DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Warrior")]
@@ -693,6 +741,7 @@ namespace Rawr.Base
             set { _rawMultiplicativeWarriorData[(int)MultiplicativeStatWarrior.BonusWhirlwindDamageMultiplier] = value; }
         }
 
+        /// <summary>Percentage mod for Rage Cost Damage. Use as 0.05 = -5% Rage Cost</summary>
         [DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Warrior")]
@@ -703,6 +752,7 @@ namespace Rawr.Base
             set { _rawMultiplicativeWarriorData[(int)MultiplicativeStatWarrior.RageCostMultiplier] = value; }
         }
 
+        /// <summary>Percentage mod for Victory Rush Damage. Use as 0.05 = +5% Damage</summary>
         [DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Warrior")]

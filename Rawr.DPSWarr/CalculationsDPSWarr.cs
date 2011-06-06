@@ -1143,7 +1143,7 @@ a GCD's length, you will use this while running back into place",
             Character zeClone = character.Clone();
             CharacterCalculationsDPSWarr calculations = GetCharacterCalculations(zeOriginal) as CharacterCalculationsDPSWarr;
             CalculationOptionsDPSWarr calcOpts = zeOriginal.CalculationOptions as CalculationOptionsDPSWarr;
-            ((CalculationOptionsPanelDPSWarr)CalculationOptionsPanel)._loadingCalculationOptions = true;
+            ((CalculationOptionsPanelDPSWarr)CalculationOptionsPanel).IsLoadingCalculationOptions = true;
             bool[] origMaints = (bool[])calcOpts.MaintenanceTree.Clone();
             DPSWarrCharacter dpswarchar = new DPSWarrCharacter() {
                 Char = zeOriginal,
@@ -1177,7 +1177,7 @@ a GCD's length, you will use this while running back into place",
                         comp.OverallPoints = comp.DPSPoints + comp.SurvPoints;
                     }
                     calcOpts.MaintenanceTree = origMaints;
-                    ((CalculationOptionsPanelDPSWarr)CalculationOptionsPanel)._loadingCalculationOptions = false;
+                    ((CalculationOptionsPanelDPSWarr)CalculationOptionsPanel).IsLoadingCalculationOptions = false;
                     return comparisons.ToArray();
                 }
                 #endregion
@@ -1203,7 +1203,7 @@ a GCD's length, you will use this while running back into place",
                             comp.OverallPoints = comp.DPSPoints + comp.SurvPoints;
                         }
                         calcOpts.MaintenanceTree = origMaints;
-                        ((CalculationOptionsPanelDPSWarr)CalculationOptionsPanel)._loadingCalculationOptions = false;
+                        ((CalculationOptionsPanelDPSWarr)CalculationOptionsPanel).IsLoadingCalculationOptions = false;
                         return comparisons.ToArray();
                     }
                 #endregion
@@ -1259,7 +1259,7 @@ a GCD's length, you will use this while running back into place",
                         comp.OverallPoints = comp.DPSPoints + comp.SurvPoints;
                     }
                     calcOpts.MaintenanceTree = origMaints;
-                    ((CalculationOptionsPanelDPSWarr)CalculationOptionsPanel)._loadingCalculationOptions = false;
+                    ((CalculationOptionsPanelDPSWarr)CalculationOptionsPanel).IsLoadingCalculationOptions = false;
                     return comparisons.ToArray();
                 }
                 #endregion
@@ -1289,7 +1289,7 @@ a GCD's length, you will use this while running back into place",
                         comp.OverallPoints = comp.SubPoints[0] + comp.SubPoints[1];
                     }
                     calcOpts.MaintenanceTree = origMaints;
-                    ((CalculationOptionsPanelDPSWarr)CalculationOptionsPanel)._loadingCalculationOptions = false;
+                    ((CalculationOptionsPanelDPSWarr)CalculationOptionsPanel).IsLoadingCalculationOptions = false;
                     return comparisons.ToArray();
                 }
                 #endregion
@@ -1352,7 +1352,7 @@ a GCD's length, you will use this while running back into place",
                         comp.OverallPoints = comp.SubPoints[0] + comp.SubPoints[1];
                     }
                     calcOpts.MaintenanceTree = origMaints;
-                    ((CalculationOptionsPanelDPSWarr)CalculationOptionsPanel)._loadingCalculationOptions = false;
+                    ((CalculationOptionsPanelDPSWarr)CalculationOptionsPanel).IsLoadingCalculationOptions = false;
                     return comparisons.ToArray();
                 }
                 #endregion
@@ -1393,7 +1393,7 @@ a GCD's length, you will use this while running back into place",
                             comp.OverallPoints = comp.SubPoints[0] + comp.SubPoints[1];
                         }
                         calcOpts.MaintenanceTree = origMaints;
-                        ((CalculationOptionsPanelDPSWarr)CalculationOptionsPanel)._loadingCalculationOptions = false;
+                        ((CalculationOptionsPanelDPSWarr)CalculationOptionsPanel).IsLoadingCalculationOptions = false;
                         return comparisons.ToArray();
                     }
                 #endregion

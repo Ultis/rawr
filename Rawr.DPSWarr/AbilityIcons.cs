@@ -8,6 +8,9 @@ using System.Windows.Media.Imaging;
 
 namespace Rawr.DPSWarr
 {
+    /// <summary>
+    /// Downloads the Icons for Abilities in DPSWarr to be used in Tooltips
+    /// </summary>
     public static class AbilityIcons
     {
         /// <summary>
@@ -25,7 +28,7 @@ namespace Rawr.DPSWarr
             return NewBitmapImage(uri);
         }
 
-        public static BitmapImage NewBitmapImage(Uri uri)
+        private static BitmapImage NewBitmapImage(Uri uri)
         {
             // this thing is throwing InvalidDeploymentException in WPF when you're catching handled exceptions
             // there's nothing wrong actually, it works when run normally

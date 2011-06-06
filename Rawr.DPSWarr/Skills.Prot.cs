@@ -18,6 +18,7 @@ namespace Rawr.DPSWarr.Skills
         /// OneHandedWeaponSpecialization [+(2*Pts)% Damage]
         /// </para>
         /// <para>Glyphs: </para>
+        public ShieldSlam() { }
     }
     public sealed class Revenge : Ability
     {
@@ -30,6 +31,7 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: </para>
         ///  -(Talents.FocusedRage * 1f) RageCost
         ///  +(10*Pts)% Damage
+        public Revenge() { }
     }
     public sealed class ConcussionBlow : Ability
     {
@@ -39,6 +41,7 @@ namespace Rawr.DPSWarr.Skills
         /// </summary>
         /// <para>Talents: Concussion Blow [Requires Talent], Focused Rage [-(Talents.FocusedRage * 1f ) Ragecost]</para>
         /// <para>Glyphs: </para>
+        public ConcussionBlow() { }
     }
     public sealed class Devastate : Ability
     {
@@ -55,6 +58,7 @@ namespace Rawr.DPSWarr.Skills
         /// Sword and Board [+(5*Pts)% Crit Chance]
         /// </para>
         /// <para>Glyphs: Glyph of Devastate [+1 stack of Sunder Armor]</para>
+        public Devastate() { }
     }
     public sealed class Shockwave : Ability
     {
@@ -65,5 +69,6 @@ namespace Rawr.DPSWarr.Skills
         /// </summary>
         /// <para>Talents: Shockwave [Requires Talent], Focused Rage [-(Talents.FocusedRage*1f) RageCost]</para>
         /// <para>Glyphs: Glyph of Shockwave [-3 sec Cd]</para>
+        public Shockwave() { }
     }
 }

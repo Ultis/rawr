@@ -7,8 +7,15 @@ using System.Text;
 using Rawr.DPSWarr.Skills;
 
 namespace Rawr.DPSWarr {
+    /// <summary>
+    /// Fury Implementation of the Rotation class, generates Fury rotation numbers
+    /// </summary>
     public class FuryRotation : Rotation {
-        public FuryRotation(DPSWarrCharacter dpswarrchar) {
+        /// <summary>
+        /// Fury Implementation of the Rotation class, generates Fury rotation numbers
+        /// </summary>
+        public FuryRotation(DPSWarrCharacter dpswarrchar)
+        {
             DPSWarrChar = dpswarrchar;
 
             _cachedLatentGCD = 1.5f + DPSWarrChar.CalcOpts.Latency + DPSWarrChar.CalcOpts.AllowedReact;

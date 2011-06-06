@@ -22,23 +22,25 @@ using System.Windows.Shapes;
 
 namespace Rawr.DPSWarr {
     public partial class CalculationOptionsPanelDPSWarr : ICalculationOptionsPanel {
-        public bool _loadingCalculationOptions = false;
+        /// <summary>Prevents certain operations during load</summary>
+        public bool IsLoadingCalculationOptions = false;
         CalculationOptionsDPSWarr calcOpts = null;
         private Dictionary<string, string> FAQStuff = new Dictionary<string, string>();
         private Dictionary<string, string> PNStuff = new Dictionary<string, string>();
+        /// <summary>Override from base</summary>
         public UserControl PanelControl { get { return this; } }
-        private Character character;
+        /// <summary>Character object to bind to</summary>
         public Character Character
         {
-            get { return character; }
+            get { return _character; }
             set {
                 // Kill any old event connections
-                if (character != null && character.CalculationOptions != null
-                    && character.CalculationOptions is CalculationOptionsDPSWarr)
-                    ((CalculationOptionsDPSWarr)character.CalculationOptions).PropertyChanged
+                if (_character != null && _character.CalculationOptions != null
+                    && _character.CalculationOptions is CalculationOptionsDPSWarr)
+                    ((CalculationOptionsDPSWarr)_character.CalculationOptions).PropertyChanged
                         -= new PropertyChangedEventHandler(CalculationOptionsPanelDPSWarr_PropertyChanged);
                 // Apply the new character
-                character = value;
+                _character = value;
                 // Load the new CalcOpts
                 LoadCalculationOptions();
                 // Model Specific Code
@@ -50,8 +52,11 @@ namespace Rawr.DPSWarr {
                 CalculationOptionsPanelDPSWarr_PropertyChanged(null, new PropertyChangedEventArgs(""));
             }
         }
-        public CalculationOptionsPanelDPSWarr() {
-            _loadingCalculationOptions = true;
+        private Character _character;
+        /// <summary>Panel of UI Elements to tie to the options stored in CalculationOptionsDPSWarr.cs</summary>
+        public CalculationOptionsPanelDPSWarr()
+        {
+            IsLoadingCalculationOptions = true;
             try {
                 InitializeComponent();
                 //
@@ -66,18 +71,19 @@ namespace Rawr.DPSWarr {
                     Function = "CalculationOptionsPanelDPSWarr()",
                 }.Show();
             }
-            _loadingCalculationOptions = false;
+            IsLoadingCalculationOptions = false;
         }
+        /// <summary>Load the Character.CalculationOptions into the form as DataContext</summary>
         public void LoadCalculationOptions()
         {
             //string info = "";
-            _loadingCalculationOptions = true;
+            IsLoadingCalculationOptions = true;
             try {
                 if (Character != null && Character.CalculationOptions == null)
                 {
                     // If it's broke, make a new one with the defaults
                     Character.CalculationOptions = new CalculationOptionsDPSWarr();
-                    _loadingCalculationOptions = true;
+                    IsLoadingCalculationOptions = true;
                 }
                 else if (Character == null) { return; }
                 calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
@@ -97,7 +103,7 @@ namespace Rawr.DPSWarr {
                     //Info = info,
                 }.Show();
             }
-            _loadingCalculationOptions = false;
+            IsLoadingCalculationOptions = false;
         }
         // Informational
         private void SetUpFAQ() {
@@ -1138,52 +1144,53 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
         }
         private void Element_MouseLeave(object sender, MouseEventArgs e) { tooltip.Hide(); }
         // Abilities to Maintain Changes
+        /// <summary>Validates the Maintenance Tree for being the wrong size. This occurs when a change happens between releases to the number of abilities in the tree</summary>
         public static void CheckSize(CalculationOptionsDPSWarr calcOpts)
         {
             if (calcOpts == null) { calcOpts = new CalculationOptionsDPSWarr(); }
             if (calcOpts.MaintenanceTree.Length != (int)Maintenance.InnerRage + 1)
             {
                 bool[] newArray = new bool[] {
-                        true,  // == Rage Gen ==
-                            true,   // Start With A Charge
-                            false,  // Berserker Rage
-                            true,   // Deadly Calm
-                        false, // == Maintenance ==
-                            false, // Shout Choice
-                                false, // Battle Shout
-                                false, // Commanding Shout
-                            false, // Rallying Cry
-                            false, // Demoralizing Shout
-                            false, // Sunder Armor
-                            true,  // Thunder Clap
-                            false, // Hamstring
-                        true,  // == Periodics ==
-                            true,  // Shattering Throw
-                            true,  // Sweeping Strikes
-                            true,  // DeathWish
-                            true,  // Recklessness
-                            false, // Enraged Regeneration
-                        true,  // == Damage Dealers ==
-                            true,  // Fury
-                                true,  // Whirlwind
-                                true,  // Bloodthirst
-                                true,  // Bloodsurge
-                                true,  // Raging Blow
-                            true,  // Arms
-                                true,  // Bladestorm
-                                true,  // Mortal Strike
-                                true,  // Rend
-                                true,  // Overpower
-                                true,  // Taste for Blood
-                                true,  // Colossus Smash
-                                true,  // Victory Rush
-                                true,  // Slam
-                            true,  // <20% Execute Spamming
-                            true,  // <20% Execute Spamming (Stage 2)
-                        true,  // == Rage Dumps ==
-                            true,  // Cleave
-                            true,  // Heroic Strike
-                            true,  // Inner Rage
+                    true,  // == Rage Gen ==
+                        true,   // Start With A Charge
+                        false,  // Berserker Rage
+                        true,   // Deadly Calm
+                    false, // == Maintenance ==
+                        false, // Shout Choice
+                            false, // Battle Shout
+                            false, // Commanding Shout
+                        false, // Rallying Cry
+                        false, // Demoralizing Shout
+                        false, // Sunder Armor
+                        true,  // Thunder Clap
+                        false, // Hamstring
+                    true,  // == Periodics ==
+                        true,  // Shattering Throw
+                        true,  // Sweeping Strikes
+                        true,  // DeathWish
+                        true,  // Recklessness
+                        false, // Enraged Regeneration
+                    true,  // == Damage Dealers ==
+                        true,  // Fury
+                            true,  // Whirlwind
+                            true,  // Bloodthirst
+                            true,  // Bloodsurge
+                            true,  // Raging Blow
+                        true,  // Arms
+                            true,  // Bladestorm
+                            true,  // Mortal Strike
+                            true,  // Rend
+                            true,  // Overpower
+                            true,  // Taste for Blood
+                            true,  // Colossus Smash
+                            true,  // Victory Rush
+                            true,  // Slam
+                        true,  // <20% Execute Spamming
+                        true,  // <20% Execute Spamming (Stage 2)
+                    true,  // == Rage Dumps ==
+                        true,  // Cleave
+                        true,  // Heroic Strike
+                        true,  // Inner Rage
                     };
                 calcOpts.MaintenanceTree = newArray;
             }
@@ -1194,9 +1201,10 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             CalculationOptionsPanelDPSWarr_PropertyChanged(null, null);
         }
         //
+        /// <summary>Occurs when a property changes. Should cause a Recalc unless told otherwise</summary>
         public void CalculationOptionsPanelDPSWarr_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (_loadingCalculationOptions) { return; }
+            if (IsLoadingCalculationOptions) { return; }
             if (e == null) { e = new PropertyChangedEventArgs(""); }
             // This would handle any special changes, especially combobox assignments, but not when the pane is trying to load
             if (e.PropertyName.Contains("SG_")
@@ -1211,7 +1219,8 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             if (Character != null) { Character.OnCalculationsInvalidated(); }
         }
 
-        protected Stats[] BuildStatsList()
+        /// <summary>Generates the list of stats that would actually change in each step</summary>
+        private Stats[] BuildStatsList()
         {
             List<Stats> statsList = new List<Stats>();
             if (CK_Stats_0.IsChecked.GetValueOrDefault(true)) { statsList.Add(new Stats() { Strength = 1f }); }
@@ -1227,11 +1236,11 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
         }
         private void CB_CalculationToGraph_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (_loadingCalculationOptions) { return; }
+            if (IsLoadingCalculationOptions) { return; }
             calcOpts.CalculationToGraph = (string)CB_CalculationToGraph.SelectedItem;
         }
 
-        protected void BT_StatsGraph_Click(object sender, RoutedEventArgs e)
+        private void BT_StatsGraph_Click(object sender, RoutedEventArgs e)
         {
             Stats[] statsList = BuildStatsList();
             StatGraphWindow gw = new StatGraphWindow();
