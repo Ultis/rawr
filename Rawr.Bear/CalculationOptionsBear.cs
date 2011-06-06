@@ -6,6 +6,9 @@ using System.Xml.Serialization;
 
 namespace Rawr.Bear
 {
+    /// <summary>
+    /// Holds the options the user selects from the options tab.
+    /// </summary>
 #if !SILVERLIGHT
 	[Serializable]
 #endif

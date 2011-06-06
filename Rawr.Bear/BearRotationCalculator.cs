@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Rawr.Bear
 {
+    /// <summary>
+    /// Provides interface for and calculates the Bear rotation
+    /// </summary>
 	public static class BearRotationCalculator
 	{
 		public static Tuple<BearRotationCalculation, BearRotationCalculation> GetOptimalRotations(BearAbilityBuilder abilities)
