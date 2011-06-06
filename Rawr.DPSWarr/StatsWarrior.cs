@@ -224,7 +224,7 @@ namespace Rawr.Base
                 }
             }
 #if SILVERLIGHT
-            dict.OrderBy(kvp => kvp.Key, new PropertyComparer());
+            //dict.OrderBy(kvp => kvp.Key, new PropertyComparer());
 #endif
             return dict;
         }
