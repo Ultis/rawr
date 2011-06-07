@@ -35,6 +35,8 @@ namespace Rawr
         HealingSpellCrit,
         /// <summary>Any Heal spell (non-damage) is cast, regardless of result</summary>
         HealingSpellCast,
+        /// <summary>The tick of a player's HoT on the target</summary>
+        HoTTick,
         #endregion
 
         #region General Physical Attacks

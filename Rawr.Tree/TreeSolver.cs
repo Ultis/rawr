@@ -80,8 +80,7 @@ namespace Rawr.Tree
                     float triggerInterval = 0.0f, triggerChance = 1.0f;
                     if (effect.Trigger != Trigger.Use)
                     {
-                        // TODO: used for Gale of Shadows, but that should be fixed to something like DoTOrHoTTick
-                        if(effect.Trigger == Trigger.DoTTick)
+                        if(effect.Trigger == Trigger.HoTTick)
                             triggerInterval = (float)calc.ProcPeriodicTriggerInterval;
                         else
                             triggerInterval = (float)calc.ProcTriggerInterval;

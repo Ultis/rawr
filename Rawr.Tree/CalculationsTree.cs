@@ -507,7 +507,7 @@ namespace Rawr.Tree {
                             Trigger.SpellCast,
                             Trigger.SpellCrit,        
                             Trigger.SpellHit, 
-                            Trigger.DoTTick,
+                            Trigger.HoTTick,
                             Trigger.DamageOrHealingDone,
                         });
             }

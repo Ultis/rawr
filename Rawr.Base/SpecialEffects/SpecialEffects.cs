@@ -804,7 +804,11 @@ namespace Rawr {
             }
             else if ((match = new Regex(@"Your healing and damage periodic spells grant (?<amount>\d+) spell power each time they heal or deal damage. Lasts (?<dur>\d+) sec, stacking up to (?<stacks>\d+) times").Match(line)).Success)
             {   // Gale of Shadows
+                // The effect is actually a single effect, but we approximate it with two effects to avoid having to introduce Trigger.DoTOrHoTTick
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DoTTick,
+                    new Stats() { SpellPower = int.Parse(match.Groups["amount"].Value) },
+                    int.Parse(match.Groups["dur"].Value), 0f, 1f, int.Parse(match.Groups["stacks"].Value)));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.HoTTick,
                     new Stats() { SpellPower = int.Parse(match.Groups["amount"].Value) },
                     int.Parse(match.Groups["dur"].Value), 0f, 1f, int.Parse(match.Groups["stacks"].Value)));
             }
