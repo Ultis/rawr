@@ -242,13 +242,26 @@ namespace Rawr.Tree
                     // (t / FightLength) + (innervateGain / mana) * t / innervateCooldown = 0.2
                     // t = 0.2 / (1 / FightLength + innervateGain / mana / innervateCooldown)
 
+                    /* Wildebees 20110607: FIXME: 
+                     * Should above formula use 0.8 hardcoded? 
+                     * Shouldn't that actually be (1-innervateRatio)*mana as a basic method, i.e. to recover the mana you have used thus far?
+                     * Or more advanced: mana - innervateGain = ...     , i.e. innervate when the buffed innervate return will top you off again
+                     *   thus:
+                     *                mana(t) = mana - mana * (t / FightLength) - innervateGain * t / innervateCooldown
+                     *   mana - innervateGain = mana - mana * (t / FightLength) - innervateGain * t / innervateCooldown
+                     *          innervateGain = mana * (t / FightLength) + innervateGain * t / innervateCooldown
+                     *          innervateGain = t * (mana / FightLength) + (innervateGain / innervateCooldown)
+                     *                      t = innervateGain / ( (mana / FightLength) + (innervateGain / innervateCooldown) )
+                     */
+
                     double curInnervateMana = calc.MeanMana + proc.Value;
                     if (opts.BoostIntellectBeforeInnervate)
                         curInnervateMana += OnUseIntellectProcsMana;
-                    double innervateDelay = 0.2 / (1.0 / calc.FightLength + curInnervateMana * 0.2 / ((double)calc.BasicStats.Mana * (double)innervateCooldown));
-                    double innervateFightLength = calc.FightLength * 0.8; // for 20% of the fight we'll have less than 20% mana missing
+                    double singleInnervateManaGain = curInnervateMana * innervateRatio;
+                    double innervateDelay = 0.2 / (1.0 / calc.FightLength + singleInnervateManaGain / ((double)calc.BasicStats.Mana * (double)innervateCooldown));
+//                    double innervateFightLength = calc.FightLength * 0.8; // for 20% of the fight we'll have less than 20% mana missing
                     int numInnervates = (int)((calc.FightLength - innervateDelay) / (innervateCooldown + proc.Key)) + 1;
-                    double curInnervateGains = curInnervateMana * 0.2 * numInnervates;
+                    double curInnervateGains = singleInnervateManaGain * numInnervates;
                     if (curInnervateGains > innervateGains)
                     {
                         calc.InnervateMana = curInnervateMana;
