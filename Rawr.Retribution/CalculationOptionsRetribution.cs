@@ -22,11 +22,7 @@ namespace Rawr.Retribution
         [DefaultValue(3)]
         public int HPperInq { get { return hPperInq; } set { hPperInq = value; OnPropertyChanged("HPperInq"); } }
         private int hPperInq = 3;
-
-        [DefaultValue(false)]
-        public bool NewRotation { get { return newRotation; } set { newRotation = value; OnPropertyChanged("NewRotation"); } }
-        private bool newRotation;
-
+        
         #region Stat Graph
         [DefaultValue(new bool[] { true, true, true, true, true, /**/ true, true, true, })]
         public bool[] StatsList { get { return _statsList; } set { _statsList = value; OnPropertyChanged("StatsList"); } }
@@ -35,7 +31,7 @@ namespace Rawr.Retribution
         public int StatsIncrement { get { return _StatsIncrement; } set { _StatsIncrement = value; OnPropertyChanged("StatsIncrement"); } }
         private int _StatsIncrement = 100;
         [DefaultValue("Overall Rating")]
-        public string CalculationToGraph { get { return _calculationToGraph; } set { _calculationToGraph = value; OnPropertyChanged("CalculationToGraph"); } }
+        public string CalculationToGraph { get { return _calculationToGraph; } }
         private string _calculationToGraph = "Overall Rating";
         [XmlIgnore]
         public bool SG_Str { get { return StatsList[0]; } set { StatsList[0] = value; OnPropertyChanged("SG_STR"); } }
@@ -62,7 +58,7 @@ namespace Rawr.Retribution
             clone.Seal = Seal;
             clone.InqRefresh = InqRefresh;
             clone.SkipToCrusader = SkipToCrusader;
-            clone.NewRotation = NewRotation;
+            clone.HPperInq = HPperInq;
             return clone;
         }
         #region ICalculationOptionBase Members

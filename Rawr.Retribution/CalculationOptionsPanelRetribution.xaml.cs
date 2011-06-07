@@ -116,11 +116,6 @@ namespace Rawr.Retribution
             if (CK_Stats_7.IsChecked.GetValueOrDefault(true)) { statsList.Add(new Stats() { MasteryRating = 1f }); }
             return statsList.ToArray();
         }
-        private void CB_CalculationToGraph_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (_loadingCalculationOptions || calcOpts == null) { return; }
-            calcOpts.CalculationToGraph = (string)CB_CalculationToGraph.SelectedItem;
-        }
 
         protected void BT_StatsGraph_Click(object sender, RoutedEventArgs e)
         {
