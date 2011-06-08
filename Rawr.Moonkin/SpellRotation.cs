@@ -269,8 +269,8 @@ namespace Rawr.Moonkin
             starfallBaseDamage *= 1 + (talents.GlyphOfFocus ? 0.1f : 0f);
             float starfallEclipseDamage = starfallBaseDamage * eclipseBonus;
             RotationData.TreantDamage = talents.ForceOfNature == 0 ? 0 : DoTreeCalcs(calcs, spellPower, treantLifespan);
-            // T12 2-piece - currently assumed to be a single treant at half duration, or 1/6 of a full treant cast
-            float T122PieceBaseDamage = DoTreeCalcs(calcs, spellPower, 1f) / 6f;
+            // T12 2-piece: 2-sec cast, 5192-6035 damage, affected by haste and hit, 15-sec duration
+            float T122PieceBaseDamage = (5192 + 6035) / 2f * 15f / (2f / (1 + spellHaste)) * spellHit;
             float mushroomBaseDamage = RotationData.WildMushroomCastMode == MushroomMode.Unused ? 0 : DoMushroomCalcs(calcs, spellPower, spellHit, spellCrit);
             float mushroomEclipseDamage = mushroomBaseDamage * eclipseBonus;
 
@@ -306,9 +306,9 @@ namespace Rawr.Moonkin
             float starfireEnergyRate = sf.AverageEnergy / sf.CastTime;
             float starfireEclipseEnergyRate = eclipseSFAverageEnergy / sf.CastTime;
 
-            float preLunarCasts = (barHalfSize - eclipseWAverageEnergy / 2 - w.AverageEnergy * talents.Euphoria * 0.12f * 2) * (1 - (starsurgeEnergyRate) / wrathEnergyRate) / w.AverageEnergy;
+            float preLunarCasts = (barHalfSize - eclipseWAverageEnergy / 2 - w.BaseEnergy * talents.Euphoria * 0.12f * 2) * (1 - (starsurgeEnergyRate) / wrathEnergyRate) / w.AverageEnergy;
             float lunarCasts = (barHalfSize + eclipseSFAverageEnergy / 2) / eclipseSFAverageEnergy * (1 - (starsurgeEnergyRate) / starfireEclipseEnergyRate);
-            float preSolarCasts = (barHalfSize - eclipseSFAverageEnergy / 2 - sf.AverageEnergy * (1 - (float)Math.Pow(1 - 0.12f * talents.Euphoria, 2))) * (1 - (starsurgeEnergyRate) / starfireEnergyRate) / sf.AverageEnergy;
+            float preSolarCasts = (barHalfSize - eclipseSFAverageEnergy / 2 - sf.BaseEnergy * (1 - (float)Math.Pow(1 - 0.12f * talents.Euphoria, 2))) * (1 - (starsurgeEnergyRate) / starfireEnergyRate) / sf.AverageEnergy;
             float solarCasts = (barHalfSize + eclipseWAverageEnergy / 2) / eclipseWAverageEnergy * (1 - (starsurgeEnergyRate) / wrathEclipseEnergyRate);
 
             float preLunarTime = preLunarCasts * w.CastTime;
