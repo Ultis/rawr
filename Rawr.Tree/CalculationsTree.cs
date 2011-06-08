@@ -325,9 +325,12 @@ namespace Rawr.Tree {
 
                     "Fight:Fight Length",
                     "Fight:Divisions",
+                    "Fight:Innervates",
+                    "Fight:Innervate Effect Delay",
+                    "Fight:Mean Mana",
+                    "Fight:Innervate Mana",
+                    "Fight:Innervate Size",
 
-                    "Fight Stats:Mean Mana",
-                    "Fight Stats:Innervate Mana",
                     "Fight Stats:Spell Power",
                     "Fight Stats:Spell Crit",
                     "Fight Stats:Spell Haste",
@@ -345,7 +348,6 @@ namespace Rawr.Tree {
                     "Mana Regen:Innervate Mana Regen",
                     "Mana Regen:Ext Innervate Mana Regen",
                     "Mana Regen:Potion Mana Regen",
-                    "Mana Regen:Innervates",
                     
                     "Solution:Total Score",
                     };

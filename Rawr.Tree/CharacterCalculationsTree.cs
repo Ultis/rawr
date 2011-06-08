@@ -222,9 +222,6 @@ namespace Rawr.Tree {
         }
         public override float OverallPoints { get; set; }
 
-        public double MeanMana { get; set; }
-        public double InnervateMana { get; set; }
-
         public double ManaRegen { get; set; }
         public double BaseRegen { get; set; }
         public double ManaPoolRegen { get; set; }
@@ -237,6 +234,11 @@ namespace Rawr.Tree {
 
         public double FightLength { get; set; }
         public double Innervates { get; set; }
+        public double InnervateEffectDelay { get; set; }
+        public SpecialEffect InnervateEffect { get; set; }
+        public double MeanMana { get; set; }
+        public double InnervateMana { get; set; }
+        public double InnervateSize { get; set; }
 
         public double ProcTriggerInterval { get; set; }
         public double ProcPeriodicTriggerInterval { get; set; }
@@ -289,8 +291,6 @@ namespace Rawr.Tree {
 
             retVal.Add("Health", BasicStats.Health.ToString());
             retVal.Add("Mana", BasicStats.Mana.ToString());
-            retVal.Add("Mean Mana", String.Format("{0:F0}", MeanMana));
-            retVal.Add("Innervate Mana", String.Format("{0:F0}", InnervateMana));
             retVal.Add("Armor", BasicStats.Armor.ToString());
             retVal.Add("Agility", Math.Floor(BasicStats.Agility).ToString());
             retVal.Add("Stamina", Math.Floor(BasicStats.Stamina).ToString());
@@ -299,6 +299,12 @@ namespace Rawr.Tree {
 
             retVal.Add("Fight Length", String.Format("{0:F0}s", FightLength));
             retVal.Add("Divisions", Division.Fractions.Length.ToString() + "*" + Division.GetDivisionDetailTooltip(i => String.Format("{0:F0}s ({1:F2}%)", Division.Fractions[i] * FightLength, 100 * Division.Fractions[i])));
+
+            retVal.Add("Innervates", String.Format("{0:F2}", Innervates) + ((Innervates != Math.Floor(Innervates)) ? "*Fractional values denote the reduced value of innervates near the fight beginning or end" : ""));
+            retVal.Add("Innervate Effect Delay", String.Format("{0:F2}", InnervateEffectDelay) + ((InnervateEffect != null) ? "*Innervate when this effect is up, and it wouldn't cap mana:\n" + InnervateEffect.ToString() : ""));
+            retVal.Add("Mean Mana", String.Format("{0:F0}", MeanMana));
+            retVal.Add("Innervate Mana", String.Format("{0:F0}", InnervateMana));
+            retVal.Add("Innervate Size", String.Format("{0:F0}", InnervateSize));
 
             addSpellStatValues(retVal, "Spell Power", "{0:F0}", x => x.SpellPower, String.Format("{0:F0} Base Spell Power", Math.Floor(BaseSpellPower)));
             addSpellStatValues(retVal, "Spell Crit", "{0:F2}%", x => x.SpellCrit * 100, String.Format("{0} Crit Rating from Gear, {1:F}% Crit from Gear, {2:F}% Crit from Gear Intellect",
@@ -326,7 +332,6 @@ namespace Rawr.Tree {
             retVal.Add("Replenishment Mana Regen", String.Format("{0:F0}", ReplenishmentRegen));
             retVal.Add("Revitalize Mana Regen", String.Format("{0:F0}", RevitalizeRegen));
             retVal.Add("Potion Mana Regen", String.Format("{0:F0}", PotionRegen));
-            retVal.Add("Innervates", Innervates.ToString());
 
             retVal.Add("Total Score", String.Format("{0:F2}", OverallPoints));
             string[] longNames = { "Raid Sustained", "Raid Burst", "Tank Sustained", "Tank Burst" };

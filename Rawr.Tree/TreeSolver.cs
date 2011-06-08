@@ -6,12 +6,28 @@ namespace Rawr.Tree
 {
     sealed class TreeSolver
     {
+        class RandomIntellectEffect
+        {
+            public double ManaIncrease;
+            public SpecialEffect Effect;
+            public double Interval;
+            public double Chance;
+
+            public RandomIntellectEffect(double manaIncrease, SpecialEffect effect, double interval, double chance)
+            {
+                this.ManaIncrease = manaIncrease;
+                this.Effect = effect;
+                this.Interval = interval;
+                this.Chance = chance;
+            }
+        }
+
         Character character;
         CharacterCalculationsTree calc;
         CalculationOptionsTree opts;
         double PerseveranceHPS;
         double NaturesWardUptime;
-        List<KeyValuePair<double, double>> RandomIntellectProcsMana;
+        List<RandomIntellectEffect> RandomIntellectEffects;
         double OnUseIntellectProcsMana;
         Stats MeanStats;
         int T11Count;
@@ -52,8 +68,8 @@ namespace Rawr.Tree
 
         void computeStats()
         {
-            RandomIntellectProcsMana = new List<KeyValuePair<double, double>>();
-            RandomIntellectProcsMana.Add(new KeyValuePair<double, double>(0, 0));
+            RandomIntellectEffects = new List<RandomIntellectEffect>();
+            RandomIntellectEffects.Add(new RandomIntellectEffect(0, null, 0, 0));
             OnUseIntellectProcsMana = 0.0f;
 
             calc.MeanMana = calc.BasicStats.Mana;
@@ -95,11 +111,9 @@ namespace Rawr.Tree
                     {
                         double mana = StatConversion.GetManaFromIntellect((effect.Stats.Intellect + effect.Stats.HighestStat) * (1 + calc.BasicStats.BonusIntellectMultiplier)) * (1 + calc.BasicStats.BonusManaMultiplier);
                         double avgMana = mana * effect.GetAverageFactor(triggerInterval, triggerChance, 3.0f, character.BossOptions.BerserkTimer);
-                        if (effect.Trigger != Trigger.Use && effect.Cooldown <= 60.0f)
-                        {
-                            double delay = 1.0 / effect.GetAverageProcsPerSecond(triggerInterval, triggerChance, 3.0f, character.BossOptions.BerserkTimer);
-                            RandomIntellectProcsMana.Add(new KeyValuePair<double, double>(delay, mana - avgMana));
-                        }
+                        if (effect.Trigger != Trigger.Use)
+                            RandomIntellectEffects.Add(new RandomIntellectEffect(mana - avgMana, effect, triggerInterval, triggerChance));
+
                         if (effect.Trigger == Trigger.Use && effect.Cooldown <= 180.0f)
                             OnUseIntellectProcsMana += mana - avgMana;
                         calc.MeanMana += avgMana;
@@ -204,14 +218,18 @@ namespace Rawr.Tree
         }
 
         void computeManaRegen()
-        {
-            double innervateGains = 0;
+        {            
+            // TODO: maybe share this innervate computation with Rawr.Moonkin?
+            double bestInnervateGains = double.NegativeInfinity;
             double innervateRatio;
             double innervateCooldown = 180;
+            double innervateDuration = 10; // haste doesn't affect Innervate
             calc.InnervateMana = 0;
+            calc.InnervateSize = 0;
             calc.Innervates = 0;
+            calc.InnervateEffect = null;
+            calc.InnervateEffectDelay = 0;
 
-            int numExternalInnervates = (int)(calc.FightLength * 0.8 / innervateCooldown);
             if (opts.InnervateOther)
             {
                 if (character.DruidTalents.GlyphOfInnervate)
@@ -224,62 +242,106 @@ namespace Rawr.Tree
 
             if (innervateRatio > 0)
             {
+                /* TODO: support using this burstMPS value in the before and after the first and last innervates
+                double burstMPS = 0;
+                for (int model = 1; model < calc.Solutions.Length; model += 2)
+                    burstMPS = Math.Max(burstMPS, calc.Solutions[model].Distribution.TotalMPS);
+                 */
 
-                List<KeyValuePair<double, double>> intellectProcsMana;
+                List<RandomIntellectEffect> randomIntellectEffects;
                 if(opts.TimedInnervates)
-                    intellectProcsMana = RandomIntellectProcsMana;
+                    randomIntellectEffects = RandomIntellectEffects;
                 else
                 {
-                    intellectProcsMana = new List<KeyValuePair<double,double>>();
-                    intellectProcsMana.Add(new KeyValuePair<double,double>(0, 0));
+                    randomIntellectEffects = new List<RandomIntellectEffect>();
+                    randomIntellectEffects.Add(new RandomIntellectEffect(0, null, 0, 0));
                 }
-                foreach (KeyValuePair<double, double> proc in intellectProcsMana)
+                foreach (RandomIntellectEffect effect in randomIntellectEffects)
                 {
-                    // Mana before fight innervate (approx.)
-                    // mana(t) = mana - mana * (t / FightLength) - innervateGain * t / innervateCooldown
-                    // 0.8 * mana = mana - mana * (t / FightLength) - innervateGain * t / innervateCooldown
-                    // (t / FightLength) + (innervateGain / mana) * t / innervateCooldown = 0.2
-                    // t = 0.2 / (1 / FightLength + innervateGain / mana / innervateCooldown)
-
-                    /* Wildebees 20110607: FIXME: 
-                     * Should above formula use 0.8 hardcoded? 
-                     * Shouldn't that actually be (1-innervateRatio)*mana as a basic method, i.e. to recover the mana you have used thus far?
-                     * Or more advanced: mana - innervateGain = ...     , i.e. innervate when the buffed innervate return will top you off again
-                     *   thus:
-                     *                mana(t) = mana - mana * (t / FightLength) - innervateGain * t / innervateCooldown
-                     *   mana - innervateGain = mana - mana * (t / FightLength) - innervateGain * t / innervateCooldown
-                     *          innervateGain = mana * (t / FightLength) + innervateGain * t / innervateCooldown
-                     *          innervateGain = t * (mana / FightLength) + (innervateGain / innervateCooldown)
-                     *                      t = innervateGain / ( (mana / FightLength) + (innervateGain / innervateCooldown) )
+                    /* First of all, after the first innervate it always makes sense to innervate as soon as possible in our model,
+                     * since we are spending mana at a higher rate than the innervate regen due to the need to spend initial mana.
+                     * 
+                     * Hence, the number of innervates can be either the maximum possible, or one less, if starting late.
+                     * The first and last innervates might be wasted due to capping for the first, and not being able to spend the mana for the last.
+                     * To model this, we compute the average Innervate mana regen and use it to cap the mana gain from the first and last innervates.
+                     * 
+                     * Note that it can be assumed that the first Innervate is done exactly as soon as it wouldn't cap mana (which
+                     * thus determines the number of innervates), but code-wise it's simpler to just try both values for the number of innervates.
+                     * 
+                     * This model has the significant advantage that mana regeneration is continuous in the fight length,
+                     * which is good especially because the effective innervate cooldown is random, if synced to random procs.
+                     * 
+                     * TODO: it would be better to use a whole-fight probability distribution of proc trigger intervals, rather than taking the average
+                     * TODO: we perhaps don't necessarily spend mana evenly enough to not cap the second innervate (due to saving for Tree of Life), although we currently ignore this
                      */
 
-                    double curInnervateMana = calc.MeanMana + proc.Value;
-                    if (opts.BoostIntellectBeforeInnervate)
-                        curInnervateMana += OnUseIntellectProcsMana;
-                    double singleInnervateManaGain = curInnervateMana * innervateRatio;
-                    double innervateDelay = 0.2 / (1.0 / calc.FightLength + singleInnervateManaGain / ((double)calc.BasicStats.Mana * (double)innervateCooldown));
-//                    double innervateFightLength = calc.FightLength * 0.8; // for 20% of the fight we'll have less than 20% mana missing
-                    int numInnervates = (int)((calc.FightLength - innervateDelay) / (innervateCooldown + proc.Key)) + 1;
-                    double curInnervateGains = singleInnervateManaGain * numInnervates;
-                    if (curInnervateGains > innervateGains)
+                    double delay = 0;
+                    if (effect.Effect != null)
+                        delay = effect.Effect.Cooldown * 0.5 + effect.Interval * (1.0 / effect.Chance - 0.5);
+
+                    for (int i = 0; i < 2; ++i)
                     {
-                        calc.InnervateMana = curInnervateMana;
-                        calc.Innervates = numInnervates;
-                        innervateGains = curInnervateGains;
+                        double innervateMana = calc.MeanMana + effect.ManaIncrease;
+                        if (opts.BoostIntellectBeforeInnervate)
+                            innervateMana += OnUseIntellectProcsMana;
+
+                        double innervateDelay = innervateMana;
+
+                        double innervateGain = innervateMana * innervateRatio;
+                        double innervateInterval = innervateCooldown + delay;
+                        double numInnervates = Math.Floor((calc.FightLength + innervateDuration) / innervateInterval) + i;
+                        if (numInnervates == 0)
+                            continue;
+
+                        if (numInnervates > 1)
+                        {
+                            /* Cap first/last innervate MPS using mana usage between innervates
+                             * 
+                             * Innervate is not instantaneous, but we model it by considering when it *ends*, with the
+                             * exception of the latest, which we assume instantaneous, so we gain 10 seconds of edge time */
+                            double innervateEdgeTime = calc.FightLength - (numInnervates - 1) * innervateInterval + innervateDuration;
+
+                            double innerManaUsage = (calc.BasicStats.Mana / (calc.FightLength - innervateEdgeTime)) + innervateGain / innervateInterval;
+
+                            double lostInnervates = 2 - innervateEdgeTime * innerManaUsage / innervateGain;
+                            if (lostInnervates >= 0)
+                                numInnervates -= lostInnervates;
+                        }
+                        else if (calc.FightLength < innervateDuration)
+                        {
+                            // this is only for completeness, <10 sec fights won't be modelled that well anyway :)
+                            numInnervates = innervateDuration / calc.FightLength;
+                        }
+
+                        double innervateGains = numInnervates * innervateGain;
+
+                        if (innervateGains > bestInnervateGains)
+                        {
+                            bestInnervateGains = innervateGains;
+                            calc.InnervateMana = innervateMana;
+                            calc.Innervates = numInnervates;
+                            calc.InnervateEffectDelay = delay;
+                            calc.InnervateEffect = effect.Effect;
+                            calc.InnervateSize = innervateGain;
+                        }
                     }
                 }
             }
 
+            // TODO: estimate: might want to let the user configure it, but this is going away in 4.2 anyway, so don't really bother
+            int numExternalInnervates = (int)(calc.FightLength * 0.9 / innervateCooldown);
+
+            // TODO: should estimate this properly
             double revitalizeDelay = 1.0f;
+
             calc.ManaPoolRegen = calc.BasicStats.Mana / calc.FightLength;
             calc.BaseRegen = MeanStats.Mp5 / 5f;
             calc.SpiritRegen = opts.Restoration ? (StatConversion.GetSpiritRegenSec(MeanStats.Spirit, MeanStats.Intellect) / 2) : 0;
             calc.ReplenishmentRegen = MeanStats.ManaRestoreFromMaxManaPerSecond * calc.MeanMana;
-            calc.InnervateRegen = innervateGains / calc.FightLength;
+            calc.InnervateRegen = calc.Innervates * calc.InnervateSize / calc.FightLength;
             calc.ExternalInnervateRegen = opts.ExternalInnervateSize * numExternalInnervates / calc.FightLength;
             calc.RevitalizeRegen = character.DruidTalents.Revitalize * (1.0f / (12.0f + revitalizeDelay)) * 0.01f * calc.MeanMana;
             calc.PotionRegen = MeanStats.ManaRestore / calc.FightLength;
-
             calc.ManaRegen = calc.ManaPoolRegen + calc.BaseRegen + calc.SpiritRegen + calc.ReplenishmentRegen + calc.InnervateRegen + calc.ExternalInnervateRegen + calc.RevitalizeRegen + calc.PotionRegen;
         }
 
@@ -332,25 +394,36 @@ namespace Rawr.Tree
  */
         }
 
+        void computeModels(bool infMana)
+        {
+            for (int model = infMana ? 1 : 0; model < 4; model += 2)
+            {
+                int[] fillers;
+                bool isTank = (model >> 1) == 1;
+                ActionDistribution[] dists = isTank ? computeTankHealing(infMana, out fillers) : computeRaidHealing(infMana, out fillers);
+
+                ActionOptimization.AddBestActions(dists, calc.Division.Fractions, fillers, isTank ? opts.TankUnevenlyAllocatedFillerMana : opts.RaidUnevenlyAllocatedFillerMana);
+                calc.Solutions[model] = new ActionDistributionsByDivision(calc.Division, dists);
+            }
+        }
+
         void computeIteration()
         {
             computeBasics();
             computeStats();
             computeActions();
-            computeManaRegen();
             computeSelfHealing();
 
-            for(int model = 0; model < 4; ++model)
+            computeModels(true);
+            computeManaRegen();
+            computeModels(false);
+
+            // this is just for display purposes
+            for (int model = 0; model < calc.Solutions.Length; ++model)
             {
-                int[] fillers;
-                bool isTank = (model >> 1) == 1;
-                bool infMana = (model & 1) == 1;
-                ActionDistribution[] dists = isTank ? computeTankHealing(infMana, out fillers) : computeRaidHealing(infMana, out fillers);
-                
-                ActionOptimization.AddBestActions(dists, calc.Division.Fractions, fillers, isTank ? opts.TankUnevenlyAllocatedFillerMana : opts.RaidUnevenlyAllocatedFillerMana);
-                for (int i = 0; i < dists.Length; ++i)
-                    dists[i].MaxMPS = calc.ManaRegen;
-                calc.Solutions[model] = new ActionDistributionsByDivision(calc.Division, dists);
+                calc.Solutions[model].Distribution.MaxMPS = calc.ManaRegen;
+                for(int i = 0; i < calc.Solutions[model].Distributions.Length; ++i)
+                    calc.Solutions[model].Distributions[i].MaxMPS = calc.ManaRegen;
             }
 
             double[] weights = new double[(int)PointsTree.Count];
