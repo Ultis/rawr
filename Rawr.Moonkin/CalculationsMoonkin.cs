@@ -973,7 +973,7 @@ namespace Rawr.Moonkin
             {
                 if (_se_t122p == null)
                 {
-                    _se_t122p = new SpecialEffect(Trigger.MageNukeCast, new Stats() { }, 15f, 0f, 0.2f, 1);
+                    _se_t122p = new SpecialEffect(Trigger.MageNukeCast, new Stats() { }, 15f, 15f, 0.2f, 1);
                 }
                 return _se_t122p;
             }
