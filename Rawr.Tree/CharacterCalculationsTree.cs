@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Rawr.Base;
+using Rawr.ModelFramework;
 
 namespace Rawr.Tree {
     enum TreeAction

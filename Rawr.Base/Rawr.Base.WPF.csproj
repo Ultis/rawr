@@ -86,6 +86,7 @@
   <ItemGroup>
     <Compile Include="Algorithms\ArrayPool.cs" />
     <Compile Include="Algorithms\CalculationCache.cs" />
+    <Compile Include="Algorithms\Heap.cs" />
     <Compile Include="Algorithms\LU.cs" />
     <Compile Include="Algorithms\MarkovProcess.cs" />
     <Compile Include="Algorithms\StateSpace.cs" />
@@ -113,6 +114,7 @@
     <Compile Include="Items\ItemCache.cs" />
     <Compile Include="Items\ItemLocation.cs" />
     <Compile Include="Items\ItemUpdater.cs" />
+    <Compile Include="ModelFramework\FightDivision.cs" />
     <Compile Include="ModelFramework\HasteStats.cs" />
     <Compile Include="Networking\WebHelpService.cs" />
     <Compile Include="Optimizer\AvailableItemGenerator.cs" />
