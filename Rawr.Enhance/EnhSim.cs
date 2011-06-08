@@ -130,7 +130,7 @@ namespace Rawr.Enhance
             if (character.MainHand != null || character.OffHand != null)
             {
                 if (character.MainHand.Id == 63537 || character.OffHand.Id == 63538)
-                    weaponSetProc = "Agony and Torment";
+                    weaponSetProc = "weapon_set_proc agony_and_torment";
             }
             sb.AppendLine("weapon_set_proc                   " + weaponSetProc);
 
