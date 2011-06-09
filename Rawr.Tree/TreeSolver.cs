@@ -729,12 +729,23 @@ namespace Rawr.Tree
 
             actions[(int)TreeAction.TankWildGrowth].Periodic += (wgTargets - 1) * actions[(int)TreeAction.RaidWildGrowth].Periodic * opts.TankRaidHealingWeight;
             actions[(int)TreeAction.RaidWildGrowth].Periodic *= wgTargets;
+
+            actions[(int)TreeAction.TankWildGrowth].Ticks *= wgTargets;
+            actions[(int)TreeAction.RaidWildGrowth].Ticks *= wgTargets;
             
+            double efflorescenceTargets = Math.Min(opts.EfflorescenceTargets, 3.0f);
+
             actions[(int)TreeAction.TankSwiftmend].Direct *= (1 + swiftmendExtraTargets * opts.TankRaidHealingWeight);
             actions[(int)TreeAction.RaidSwiftmend].Direct *= (1 + swiftmendExtraTargets);
+
+            actions[(int)TreeAction.TankSwiftmend].Casts *= (1 + swiftmendExtraTargets);
+            actions[(int)TreeAction.RaidSwiftmend].Casts *= (1 + swiftmendExtraTargets);
             
-            actions[(int)TreeAction.TankSwiftmend].Periodic *= 1 + opts.TankRaidHealingWeight * (Math.Max(Math.Min(opts.EfflorescenceTargets, 3.0f), 1.0f) - 1.0f);
-            actions[(int)TreeAction.RaidSwiftmend].Periodic *= Math.Min(opts.EfflorescenceTargets, 3.0f);
+            actions[(int)TreeAction.TankSwiftmend].Periodic *= 1 + opts.TankRaidHealingWeight * (Math.Max(efflorescenceTargets, 1.0f) - 1.0f);
+            actions[(int)TreeAction.RaidSwiftmend].Periodic *= efflorescenceTargets;
+
+            actions[(int)TreeAction.TankSwiftmend].Ticks *= Math.Max(efflorescenceTargets, 1);
+            actions[(int)TreeAction.RaidSwiftmend].Ticks *= efflorescenceTargets;
             #endregion
 
             #region Swiftmend
