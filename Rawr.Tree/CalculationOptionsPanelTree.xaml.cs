@@ -20,6 +20,36 @@ namespace Rawr.Tree
             InitializeComponent();
         }
 
+        #region Stats Graph
+        protected Stats[] BuildStatsList()
+        {
+            List<Stats> statsList = new List<Stats>();
+            if (CK_Stats_0.IsChecked.GetValueOrDefault(true)) { statsList.Add(new Stats() { Intellect = 1f }); }
+            if (CK_Stats_1.IsChecked.GetValueOrDefault(true)) { statsList.Add(new Stats() { Spirit = 1f }); }
+            if (CK_Stats_2.IsChecked.GetValueOrDefault(true)) { statsList.Add(new Stats() { SpellPower = 1f }); }
+            if (CK_Stats_3.IsChecked.GetValueOrDefault(true)) { statsList.Add(new Stats() { CritRating = 1f }); }
+            if (CK_Stats_4.IsChecked.GetValueOrDefault(true)) { statsList.Add(new Stats() { HasteRating = 1f }); }
+            if (CK_Stats_5.IsChecked.GetValueOrDefault(true)) { statsList.Add(new Stats() { MasteryRating = 1f }); }
+            return statsList.ToArray();
+        }
+        private void CB_CalculationToGraph_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_loadingCalculationOptions || calcOpts == null) { return; }
+            calcOpts.CalculationToGraph = (string)CB_CalculationToGraph.SelectedItem;
+        }
+
+        protected void BT_StatsGraph_Click(object sender, RoutedEventArgs e)
+        {
+            Stats[] statsList = BuildStatsList();
+            StatGraphWindow gw = new StatGraphWindow();
+            string explanatoryText = "This graph shows how adding or subtracting\nmultiples of a stat affects your score.\n\nAt the Zero position is your current score.\n" +
+                         "To the right of the zero vertical is adding stats.\nTo the left of the zero vertical is subtracting stats.\n" +
+                         "The vertical axis shows the amount of score added or lost";
+            gw.GetGraph.SetupStatsGraph(Character, statsList, calcOpts.StatsIncrement, explanatoryText, calcOpts.CalculationToGraph);
+            gw.Show();
+        }
+        #endregion
+
         #region ICalculationOptionsPanel Members
         public UserControl PanelControl { get { return this; } }
 

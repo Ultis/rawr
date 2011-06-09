@@ -339,6 +339,30 @@ namespace Rawr.Tree
             set { swiftmendExtraHealEffectiveHealing = value; OnPropertyChanged("SwiftmendExtraHealEffectiveHealing"); }
         }
 
+        #region Stat Graph
+        [DefaultValue(new bool[] { true, true, true, true, true, true })]
+        public bool[] StatsList { get { return _statsList; } set { _statsList = value; OnPropertyChanged("StatsList"); } }
+        private bool[] _statsList = new bool[] { true, true, true, true, true, /**/ true, true, true, true, };
+        [DefaultValue(100)]
+        public int StatsIncrement { get { return _StatsIncrement; } set { _StatsIncrement = value; OnPropertyChanged("StatsIncrement"); } }
+        private int _StatsIncrement = 100;
+        [DefaultValue("Overall Rating")]
+        public string CalculationToGraph { get { return _calculationToGraph; } set { _calculationToGraph = value; OnPropertyChanged("CalculationToGraph"); } }
+        private string _calculationToGraph = "Overall Rating";
+        [XmlIgnore]
+        public bool SG_Int { get { return StatsList[0]; } set { StatsList[0] = value; OnPropertyChanged("SG_Int"); } }
+        [XmlIgnore]
+        public bool SG_Spi { get { return StatsList[1]; } set { StatsList[1] = value; OnPropertyChanged("SG_Spi"); } }
+        [XmlIgnore]
+        public bool SG_SP { get { return StatsList[2]; } set { StatsList[2] = value; OnPropertyChanged("SG_SP"); } }
+        [XmlIgnore]
+        public bool SG_Crit { get { return StatsList[3]; } set { StatsList[3] = value; OnPropertyChanged("SG_Crit"); } }
+        [XmlIgnore]
+        public bool SG_Haste { get { return StatsList[4]; } set { StatsList[4] = value; OnPropertyChanged("SG_Haste"); } }
+        [XmlIgnore]
+        public bool SG_Mstr { get { return StatsList[5]; } set { StatsList[5] = value; OnPropertyChanged("SG_Mstr"); } }
+        #endregion
+
         #region ICalculationOptionBase Overrides
         public string GetXml()
         {

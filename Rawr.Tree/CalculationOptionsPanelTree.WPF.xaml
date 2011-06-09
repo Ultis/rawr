@@ -8,13 +8,13 @@
     xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.WPFToolkit"
     xmlns:System="clr-namespace:System;assembly=mscorlib"
     mc:Ignorable="d" xmlns:local="clr-namespace:Rawr.Tree"
-    x:Class="Rawr.Tree.CalculationOptionsPanelTree" d:DesignHeight="559" d:DesignWidth="391">
+    x:Class="Rawr.Tree.CalculationOptionsPanelTree" d:DesignHeight="694" d:DesignWidth="438">
 
     <UserControl.Resources>
         <local:CalculationOptionsTree x:Key="CalculationOptionsTreeDataSource" d:IsDataSource="True"/>
     </UserControl.Resources>
 	<controls:TabControl x:Name="LayoutRoot" DataContext="{Binding Source={StaticResource CalculationOptionsTreeDataSource}}">
-		<controls:TabItem Header="General">
+		<controls:TabItem Header="Model">
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="Auto"/>
@@ -26,14 +26,6 @@
 					<RowDefinition Height="Auto"/>
 					<RowDefinition Height="Auto"/>
 					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="29" />
 					<RowDefinition Height="Auto" />
 					<RowDefinition Height="Auto" />
 					<RowDefinition Height="Auto" />
@@ -85,53 +77,121 @@
 
 				<CheckBox Grid.Row="5" IsChecked="{Binding Path=Restoration, Mode=TwoWay}" MinWidth="50" Content="Restoration specialization" Grid.ColumnSpan="3" Margin="4,2,2,2" ToolTipService.ToolTip="Whether the druid is a restoration druid as opposed to a moonkin or feral; if you unselect this, you should also unselect all deep Restoration talents and ideally fully specify the feral or balance spec." />
 
-				<Border Grid.Row="6" Grid.ColumnSpan="5" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
-					<TextBlock Margin="4" FontWeight="Bold" Text="Innervate" VerticalAlignment="Center" />
+				<Border Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="4" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
+					<TextBlock Margin="4" FontWeight="Bold" Text="Stat Graph Options" VerticalAlignment="Center" />
 				</Border>
+				<Grid Grid.Row="10" Grid.ColumnSpan="4">
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="Auto" />
+					</Grid.RowDefinitions>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*" />
+						<ColumnDefinition Width="*" />
+						<ColumnDefinition Width="Auto" />
+					</Grid.ColumnDefinitions>
 
-				<CheckBox Grid.Column="0" Grid.Row="7" IsChecked="{Binding Path=TimedInnervates, Mode=TwoWay}" MinWidth="50" Content="Time Innervate with best intellect proc" Margin="4,2,2,2" Grid.ColumnSpan="5" ToolTipService.ToolTip="Whether Innervate should be timed with the best random Intellect proc (such as Power Torrent, Lightweave or Mandala of Stirring Patterns)"/>
-				<CheckBox Grid.Column="0" Grid.Row="8" IsChecked="{Binding Path=BoostIntellectBeforeInnervate, Mode=TwoWay}" MinWidth="50" Content="Boost intellect before Innervate" Margin="4,2,2,2" Grid.ColumnSpan="5" ToolTipService.ToolTip="Whether, before using Innervate, intellect-boosting on-use effects should be activated (such as Synapse Springs)"/>
-				<CheckBox Grid.Column="0" Grid.Row="9" IsChecked="{Binding Path=InnervateOther, Mode=TwoWay}" MinWidth="50" Content="Innervate someone else" Margin="4,2,2,2" Grid.ColumnSpan="5"/>
-				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="External innervate(s) size:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="10" ToolTipService.ToolTip="If someone else is innervating you, the mana gain from each innervate they cast (enter the sum if several druids are innervating you)." />
+					<!-- Stat Graph -->
+					<CheckBox x:Name="CK_Stats_0" Grid.Row="0" Grid.Column="0" Margin="4,2" Content="Intellect" IsChecked="{Binding SG_Int, Mode=TwoWay}" />
+					<CheckBox x:Name="CK_Stats_1" Grid.Row="1" Grid.Column="0" Margin="4,2" Content="Spell Power" IsChecked="{Binding SG_SP, Mode=TwoWay}" />
+					<CheckBox x:Name="CK_Stats_2" Grid.Row="2" Grid.Column="0" Margin="4,2" Content="Crit Rating" IsChecked="{Binding SG_Crit, Mode=TwoWay}" />
+					<CheckBox x:Name="CK_Stats_3" Grid.Row="0" Grid.Column="2" Margin="4,2" Content="Spirit" IsChecked="{Binding SG_Spi, Mode=TwoWay}" />
+					<CheckBox x:Name="CK_Stats_4" Grid.Row="1" Grid.Column="2" Margin="4,2" Content="Haste Rating" IsChecked="{Binding SG_Haste, Mode=TwoWay}" />
+					<CheckBox x:Name="CK_Stats_5" Grid.Row="2" Grid.Column="2" Margin="4,2" Content="Mastery Rating" IsChecked="{Binding SG_Mstr, Mode=TwoWay}" />
+					<TextBlock Grid.Row="5" Grid.Column="1" Margin="4,2" Text="Rating to Graph:" VerticalAlignment="Center" />
+					<ComboBox x:Name="CB_CalculationToGraph" Grid.Row="5" Grid.Column="2" Margin="4,2" SelectedItem="{Binding CalculationToGraph, Mode=TwoWay}" SelectionChanged="CB_CalculationToGraph_SelectionChanged">
+						<System:String>Overall Rating</System:String>
+						<System:String>Raid Sustained Rating</System:String>
+						<System:String>Raid Burst Rating</System:String>
+						<System:String>Tank Sustained Rating</System:String>
+						<System:String>Tank Burst Rating</System:String>
+					</ComboBox>
+					<TextBlock Grid.Row="7" Grid.Column="0" Margin="4,2" Text="Increment:" />
+					<inputToolkit:NumericUpDown Grid.Row="7" Grid.Column="1" Margin="4,2" Height="20" Value="{Binding StatsIncrement, Mode=TwoWay}" Maximum="5000" />
+					<Button Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="1" Margin="4,2" Content="Display Stat Graph" Click="BT_StatsGraph_Click" />
+				</Grid>
+			</Grid>
+		</controls:TabItem>
+		<controls:TabItem Header="General">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+				</Grid.RowDefinitions>
+			<Border Grid.ColumnSpan="5" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
+				<TextBlock Margin="4" FontWeight="Bold" Text="Innervate" VerticalAlignment="Center" />
+			</Border>
 
-				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="10" Value="{Binding Path=ExternalInnervateSize, Mode=TwoWay}" DecimalPlaces="0" MinWidth="50" Maximum="1000000" />
+			<CheckBox Grid.Column="0" Grid.Row="1" IsChecked="{Binding Path=TimedInnervates, Mode=TwoWay}" MinWidth="50" Content="Time Innervate with best intellect proc" Margin="4,2,2,2" Grid.ColumnSpan="5" ToolTipService.ToolTip="Whether Innervate should be timed with the best random Intellect proc (such as Power Torrent, Lightweave or Mandala of Stirring Patterns)"/>
+			<CheckBox Grid.Column="0" Grid.Row="2" IsChecked="{Binding Path=BoostIntellectBeforeInnervate, Mode=TwoWay}" MinWidth="50" Content="Boost intellect before Innervate" Margin="4,2,2,2" Grid.ColumnSpan="5" ToolTipService.ToolTip="Whether, before using Innervate, intellect-boosting on-use effects should be activated (such as Synapse Springs)"/>
+			<CheckBox Grid.Column="0" Grid.Row="3" IsChecked="{Binding Path=InnervateOther, Mode=TwoWay}" MinWidth="50" Content="Innervate someone else" Margin="4,2,2,2" Grid.ColumnSpan="5"/>
+			<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="External innervate(s) size:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="4" ToolTipService.ToolTip="If someone else is innervating you, the mana gain from each innervate they cast (enter the sum if several druids are innervating you)." />
 
-				<Border Grid.Row="11" Grid.ColumnSpan="5" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
-					<TextBlock Margin="4" FontWeight="Bold" Text="Special effects" VerticalAlignment="Center" />
-				</Border>				
-				
-				<CheckBox Grid.Column="0" Grid.Row="12" IsChecked="{Binding Path=SeparateHasteEffects, Mode=TwoWay}" MinWidth="50" Content="Use same-CD haste effects separately" Margin="4,2,2,2" Grid.ColumnSpan="5" ToolTipService.ToolTip="Whether haste effects with a common cooldown should be activated in a staggered fashion rather than all at once (examples are Nature's Grace, Witching Hourglass and Shard of Woe)"/>
+			<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="4" Value="{Binding Path=ExternalInnervateSize, Mode=TwoWay}" DecimalPlaces="0" MinWidth="50" Maximum="1000000" />
 
-				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Initial trigger interval:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="13" ToolTipService.ToolTip="Initial estimation for the trigger interval (average time between heals) for random procs" />
-				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="13" Value="{Binding Path=ProcTriggerInterval, Mode=TwoWay}" DecimalPlaces="2" MinWidth="50" />
+			<Border Grid.Row="5" Grid.ColumnSpan="5" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
+				<TextBlock Margin="4" FontWeight="Bold" Text="Special effects" VerticalAlignment="Center" />
+			</Border>
 
-				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Initial periodic trigger interval:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="14" ToolTipService.ToolTip="Initial estimation for the periodic trigger interval (average time between HoT heals) for random procs" />
-				<inputToolkit:NumericUpDown Margin="2,2,2,0" Grid.Column="1" Grid.Row="14" Value="{Binding Path=ProcPeriodicTriggerInterval, Mode=TwoWay}" DecimalPlaces="2" MinWidth="50" Height="22" VerticalAlignment="Top" />
+			<CheckBox Grid.Column="0" Grid.Row="6" IsChecked="{Binding Path=SeparateHasteEffects, Mode=TwoWay}" MinWidth="50" Content="Use same-CD haste effects separately" Margin="4,2,2,2" Grid.ColumnSpan="5" ToolTipService.ToolTip="Whether haste effects with a common cooldown should be activated in a staggered fashion rather than all at once (examples are Nature's Grace, Witching Hourglass and Shard of Woe)"/>
 
-				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Trigger interval iterations (SLOW):" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="15" ToolTipService.ToolTip="Iterations for refinement of the trigger interval for random procs (will slow the model by this factor)" />
-				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="15" Value="{Binding Path=ProcTriggerIterations, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50" />
+			<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Initial trigger interval:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="7" ToolTipService.ToolTip="Initial estimation for the trigger interval (average time between heals) for random procs" />
+			<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="7" Value="{Binding Path=ProcTriggerInterval, Mode=TwoWay}" DecimalPlaces="2" MinWidth="50" />
 
-				<Border Grid.Row="16" Grid.ColumnSpan="5" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
-					<TextBlock Margin="4" FontWeight="Bold" Text="Timing (in seconds)" VerticalAlignment="Center" />
-				</Border>
+			<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Initial periodic trigger interval:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="8" ToolTipService.ToolTip="Initial estimation for the periodic trigger interval (average time between HoT heals) for random procs" />
+			<inputToolkit:NumericUpDown Margin="2,2,2,0" Grid.Column="1" Grid.Row="8" Value="{Binding Path=ProcPeriodicTriggerInterval, Mode=TwoWay}" DecimalPlaces="2" MinWidth="50" Height="22" VerticalAlignment="Top" />
 
-				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Lifebloom wasted duration:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="17" ToolTipService.ToolTip="Lifebloom duration wasted due to refreshing too early" />
-				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="17" Value="{Binding Path=LifebloomWastedDuration, Mode=TwoWay}" Maximum="6" DecimalPlaces="2" MinWidth="50" />
+			<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Trigger interval iterations (SLOW):" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="9" ToolTipService.ToolTip="Iterations for refinement of the trigger interval for random procs (will slow the model by this factor)" />
+			<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="9" Value="{Binding Path=ProcTriggerIterations, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50" />
 
-				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Wild Growth cast delay:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="18" ToolTipService.ToolTip="Average time interval between the time the spell comes off cooldown and the time it is cast again" />
-				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="18" Value="{Binding Path=WildGrowthCastDelay, Mode=TwoWay}" DecimalPlaces="2" MinWidth="50" Maximum="10000"/>
+			<Border Grid.Row="10" Grid.ColumnSpan="5" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
+				<TextBlock Margin="4" FontWeight="Bold" Text="Timing (in seconds)" VerticalAlignment="Center" />
+			</Border>
 
-				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Swiftmend cast delay:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="19" ToolTipService.ToolTip="Average time interval between the time the spell comes off cooldown and the time it is cast again" />
-				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="19" Value="{Binding Path=SwiftmendCastDelay, Mode=TwoWay}" DecimalPlaces="2" MinWidth="50" Maximum="10000" />
+			<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Lifebloom wasted duration:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="11" ToolTipService.ToolTip="Lifebloom duration wasted due to refreshing too early" />
+			<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="11" Value="{Binding Path=LifebloomWastedDuration, Mode=TwoWay}" Maximum="6" DecimalPlaces="2" MinWidth="50" />
 
-				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Nature's Swiftness cast delay:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="20" ToolTipService.ToolTip="Average time interval between the time the spell comes off cooldown and the time it is cast again" />
-				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="20" Value="{Binding Path=NaturesSwiftnessCastDelay, Mode=TwoWay}" DecimalPlaces="2" MinWidth="50" Maximum="10000" />
+			<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Wild Growth cast delay:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="12" ToolTipService.ToolTip="Average time interval between the time the spell comes off cooldown and the time it is cast again" />
+			<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="12" Value="{Binding Path=WildGrowthCastDelay, Mode=TwoWay}" DecimalPlaces="2" MinWidth="50" Maximum="10000"/>
 
-				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Tranquility cast delay:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="21" ToolTipService.ToolTip="Average time interval between the time the spell comes off cooldown and the time it is cast again" />
-				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="21" Value="{Binding Path=TranquilityCastDelay, Mode=TwoWay}" DecimalPlaces="2" MinWidth="50" Maximum="10000" />
+			<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Swiftmend cast delay:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="13" ToolTipService.ToolTip="Average time interval between the time the spell comes off cooldown and the time it is cast again" />
+			<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="13" Value="{Binding Path=SwiftmendCastDelay, Mode=TwoWay}" DecimalPlaces="2" MinWidth="50" Maximum="10000" />
 
-				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Glyph of Regrowth extra time:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="22" ToolTipService.ToolTip="Average extra duration for Regrowth's HoT if Glyph of Regrowth is in use" />
-				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="22" Value="{Binding Path=GlyphOfRegrowthExtraDuration, Mode=TwoWay}" DecimalPlaces="2" MinWidth="50" Maximum="1000" />
+			<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Nature's Swiftness cast delay:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="14" ToolTipService.ToolTip="Average time interval between the time the spell comes off cooldown and the time it is cast again" />
+			<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="14" Value="{Binding Path=NaturesSwiftnessCastDelay, Mode=TwoWay}" DecimalPlaces="2" MinWidth="50" Maximum="10000" />
+
+			<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Tranquility cast delay:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="15" ToolTipService.ToolTip="Average time interval between the time the spell comes off cooldown and the time it is cast again" />
+			<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="15" Value="{Binding Path=TranquilityCastDelay, Mode=TwoWay}" DecimalPlaces="2" MinWidth="50" Maximum="10000" />
+
+			<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Glyph of Regrowth extra time:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="16" ToolTipService.ToolTip="Average extra duration for Regrowth's HoT if Glyph of Regrowth is in use" />
+			<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="16" Value="{Binding Path=GlyphOfRegrowthExtraDuration, Mode=TwoWay}" DecimalPlaces="2" MinWidth="50" Maximum="1000" />
 			</Grid>
 		</controls:TabItem>
 		<controls:TabItem Header="Tank">
