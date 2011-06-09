@@ -42,21 +42,21 @@
                         <ColumnDefinition Width="25*"/>
                         <ColumnDefinition Width="25*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Seal:" Style="{StaticResource LabelDescriptionStyle}" Grid.ColumnSpan="2" />
-                    <ComboBox Grid.Row="0" Grid.Column="2" SelectedItem="{Binding Path=Seal, Mode=TwoWay}" Margin="2" Grid.ColumnSpan="2">
+                    <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
+                        <TextBlock Margin="4" FontWeight="Bold" Text="Paladin" VerticalAlignment="Center" />
+                    </Border>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Seal:" Style="{StaticResource LabelDescriptionStyle}" Grid.ColumnSpan="2" />
+                    <ComboBox Grid.Row="1" Grid.Column="2" SelectedItem="{Binding Path=Seal, Mode=TwoWay}" Margin="2" Grid.ColumnSpan="2">
                         <local:SealOf>Righteousness</local:SealOf>
                         <local:SealOf>Truth</local:SealOf>
                         <local:SealOf>None</local:SealOf>
                     </ComboBox>
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Inquisition refreshed below:" Style="{StaticResource LabelDescriptionStyle}" Grid.ColumnSpan="2" />
-                    <inputToolkit:NumericUpDown Grid.Row="1" Grid.Column="2" DecimalPlaces="0" Increment="1" Minimum="0" Maximum="10" Value="{Binding InqRefresh, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="2" Grid.ColumnSpan="1" Height="20" />
-                    <TextBlock Grid.Row="1" Grid.Column="3" Text="sec" Style="{StaticResource LabelDescriptionStyle}" Grid.ColumnSpan="1" />
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="HP used for Inquisition:" Style="{StaticResource LabelDescriptionStyle}" Grid.ColumnSpan="2" />
-                    <inputToolkit:NumericUpDown Grid.Row="2" Grid.Column="2" DecimalPlaces="0" Increment="1" Minimum="1" Maximum="3" Value="{Binding HPperInq, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="2" Grid.ColumnSpan="1" Height="20" />
-                    <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource LabelDescriptionStyle}" Text="Wait for Crusader Strike if CD &lt;:" Grid.ColumnSpan="2" />
-                    <inputToolkit:NumericUpDown Grid.Row="3" Grid.Column="2" DecimalPlaces="1" Increment="0.1" Minimum=".1" Maximum="1" Value="{Binding SkipToCrusader, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="2" Grid.ColumnSpan="1" Height="20" />
-                    <TextBlock Grid.Row="3" Grid.Column="3" Text="sec" Style="{StaticResource LabelDescriptionStyle}" Grid.ColumnSpan="1" />
-                    <CheckBox x:Name="CK_NewRot" Content="New Rotation" Grid.Row="4" Grid.Column="2" IsChecked="{Binding NewRotation, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="2" Grid.ColumnSpan="2" />
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Inquisition refreshed below:" Style="{StaticResource LabelDescriptionStyle}" Grid.ColumnSpan="2" />
+                    <inputToolkit:NumericUpDown Grid.Row="2" Grid.Column="2" DecimalPlaces="0" Increment="1" Minimum="0" Maximum="8" Value="{Binding InqRefresh, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="2" Grid.ColumnSpan="1" Height="20" />
+                    <TextBlock Grid.Row="2" Grid.Column="3" Text="sec" Style="{StaticResource LabelDescriptionStyle}" Grid.ColumnSpan="1" />
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="HP used for Inquisition:" Style="{StaticResource LabelDescriptionStyle}" Grid.ColumnSpan="2" />
+                    <inputToolkit:NumericUpDown Grid.Row="3" Grid.Column="2" DecimalPlaces="0" Increment="1" Minimum="1" Maximum="3" Value="{Binding HPperInq, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="2" Grid.ColumnSpan="1" Height="20" />
+                    
                     <Border Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="4" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
                         <TextBlock Margin="4" FontWeight="Bold" Text="Stat Graph Options" VerticalAlignment="Center" />
                     </Border>
@@ -88,14 +88,6 @@
                         <CheckBox x:Name="CK_Stats_5" Grid.Row="1" Grid.Column="2" Margin="4,2" Content="Expertise Rating" IsChecked="{Binding SG_Exp, Mode=TwoWay}" />
                         <CheckBox x:Name="CK_Stats_6" Grid.Row="2" Grid.Column="2" Margin="4,2" Content="Haste Rating" IsChecked="{Binding SG_Haste, Mode=TwoWay}" />
                         <CheckBox x:Name="CK_Stats_7" Grid.Row="3" Grid.Column="2" Margin="4,2" Content="Mastery Rating" IsChecked="{Binding SG_Mstr, Mode=TwoWay}" />
-                        <TextBlock Grid.Row="6" Grid.Column="0" Margin="4,2" Text="Rating to Graph:" VerticalAlignment="Center" />
-                        <ComboBox x:Name="CB_CalculationToGraph" Grid.Row="6" Grid.Column="1" Margin="4,2" SelectedItem="{Binding CalculationToGraph, Mode=TwoWay}" SelectionChanged="CB_CalculationToGraph_SelectionChanged" Grid.ColumnSpan="2">
-                            <System:String>Overall Rating</System:String>
-                            <System:String>Survivability Rating</System:String>
-                            <System:String>Mitigation Rating</System:String>
-                            <System:String>Burst Rating</System:String>
-                            <System:String>Threat Rating</System:String>
-                        </ComboBox>
                         <TextBlock Grid.Row="8" Grid.Column="0" Margin="4,2" Text="Increment:" />
                         <inputToolkit:NumericUpDown Grid.Row="8" Grid.Column="1" Margin="4,2" Height="20" Value="{Binding StatsIncrement, Mode=TwoWay}" Maximum="5000" />
                         <Button Grid.Row="8" Grid.Column="2" Grid.ColumnSpan="1" Margin="4,2" Content="Display Stat Graph" Click="BT_StatsGraph_Click" />
