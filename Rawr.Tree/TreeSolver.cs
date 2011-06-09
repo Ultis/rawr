@@ -84,43 +84,41 @@ namespace Rawr.Tree
             Stats statsDividing = new Stats();
             Stats statsProcs = new Stats();
 
+            Dictionary<Trigger, float> triggerIntervals = new Dictionary<Trigger,float>();
+            Dictionary<Trigger, float> triggerChances = new Dictionary<Trigger, float>();
+
+            triggerIntervals[Trigger.Use] = 0;
+
+            triggerIntervals[Trigger.HealingSpellCast] = triggerIntervals[Trigger.HealingSpellCrit] = triggerIntervals[Trigger.HealingSpellHit] =
+                triggerIntervals[Trigger.SpellCast] = triggerIntervals[Trigger.SpellCrit] = triggerIntervals[Trigger.SpellHit] =
+                triggerIntervals[Trigger.DamageOrHealingDone] = (float)calc.ProcTriggerInterval;
+
+            triggerIntervals[Trigger.HoTTick] = (float)calc.ProcPeriodicTriggerInterval;
+
+            foreach(Trigger trigger in triggerIntervals.Keys)
+                triggerChances[trigger] = 1;
+
             // NOTE: this ignores crit from procs, but hopefully this shouldn't matter much
-            float critTriggerChance = StatConversion.GetSpellCritFromIntellect(calc.BasicStats.Intellect) + StatConversion.GetSpellCritFromRating(calc.BasicStats.CritRating) + calc.BasicStats.SpellCrit;
+            triggerChances[Trigger.HealingSpellCrit] = triggerChances[Trigger.SpellCrit] =
+                StatConversion.GetSpellCritFromIntellect(calc.BasicStats.Intellect) + StatConversion.GetSpellCritFromRating(calc.BasicStats.CritRating) + calc.BasicStats.SpellCrit;
 
             foreach (SpecialEffect effect in calc.BasicStats.SpecialEffects())
             {
                 if (CalculationsTree.RelevantTriggers.Contains(effect.Trigger))
                 {
-                    // the 0.15-1.10 range results in DMC: Tsunami > 359 Fall of Mortality > Core of Ripeness as expected
-                    // about >0.76 causes 372 Fall of Mortality > (timed Innervate) Mandala of Stirring Patterns
-                    float triggerInterval = 0.0f, triggerChance = 1.0f;
-                    if (effect.Trigger != Trigger.Use)
-                    {
-                        if(effect.Trigger == Trigger.HoTTick)
-                            triggerInterval = (float)calc.ProcPeriodicTriggerInterval;
-                        else
-                            triggerInterval = (float)calc.ProcTriggerInterval;
-
-                        // TODO: slightly inaccurate due to not accounting crit/int procs, regrowth and lifebloom with T11 2P having different crit rates, but oh well
-                        // anyway, no 359/372 trinkets proc on crit heals
-                        if (effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.SpellCrit)
-                            triggerChance = critTriggerChance;
-                    }
-
                     if (effect.Stats.Intellect > 0 || effect.Stats.HighestStat > 0)
                     {
                         double mana = StatConversion.GetManaFromIntellect((effect.Stats.Intellect + effect.Stats.HighestStat) * (1 + calc.BasicStats.BonusIntellectMultiplier)) * (1 + calc.BasicStats.BonusManaMultiplier);
-                        double avgMana = mana * effect.GetAverageFactor(triggerInterval, triggerChance, 3.0f, character.BossOptions.BerserkTimer);
+                        double avgMana = mana * effect.GetAverageFactor(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], 3.0f, character.BossOptions.BerserkTimer);
                         if (effect.Trigger != Trigger.Use)
-                            RandomIntellectEffects.Add(new RandomIntellectEffect(mana - avgMana, effect, triggerInterval, triggerChance));
+                            RandomIntellectEffects.Add(new RandomIntellectEffect(mana - avgMana, effect, triggerIntervals[effect.Trigger], triggerChances[effect.Trigger]));
 
                         if (effect.Trigger == Trigger.Use && effect.Cooldown <= 180.0f)
                             OnUseIntellectProcsMana += mana - avgMana;
                         calc.MeanMana += avgMana;
                     }
 
-                    Stats stats = effect.GetAverageStats(triggerInterval, triggerChance, 3.0f, character.BossOptions.BerserkTimer);
-                    
+                    Stats stats = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], 3.0f, character.BossOptions.BerserkTimer);
                     
                     if (effect.Trigger == Trigger.Use
                         && effect.MaxStack <= 1
@@ -138,7 +136,7 @@ namespace Rawr.Tree
                     {
                         if (effect.Stats.HasteRating > 0 || effect.Stats.SpellHaste > 0)
                         {
-                            double uptime = effect.GetAverageUptime(triggerInterval, triggerChance, 3.0f, character.BossOptions.BerserkTimer);
+                            double uptime = effect.GetAverageUptime(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], 3.0f, character.BossOptions.BerserkTimer);
                             hasteProcsList.Add(new KeyValuePair<double, SpecialEffect>(uptime, effect));
                             stats.HasteRating = 0;
                             stats.SpellHaste = 0;
