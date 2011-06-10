@@ -269,8 +269,9 @@ namespace Rawr.Moonkin
             starfallBaseDamage *= 1 + (talents.GlyphOfFocus ? 0.1f : 0f);
             float starfallEclipseDamage = starfallBaseDamage * eclipseBonus;
             RotationData.TreantDamage = talents.ForceOfNature == 0 ? 0 : DoTreeCalcs(calcs, spellPower, treantLifespan);
-            // T12 2-piece: 2-sec cast, 5192-6035 damage, affected by haste and hit, 15-sec duration
-            float T122PieceBaseDamage = (5192 + 6035) / 2f * 15f / (2f / (1 + spellHaste)) * spellHit;
+            // T12 2-piece: 2-sec cast, 5192-6035 damage, affected by hit, 15-sec duration
+            // For now, hard-code the 8% multiplier from Earth and Moon
+            float T122PieceBaseDamage = (5192 + 6035) / 2f * (float)Math.Floor(15f / 2f) * spellHit * 1.08f;
             float mushroomBaseDamage = RotationData.WildMushroomCastMode == MushroomMode.Unused ? 0 : DoMushroomCalcs(calcs, spellPower, spellHit, spellCrit);
             float mushroomEclipseDamage = mushroomBaseDamage * eclipseBonus;
 
