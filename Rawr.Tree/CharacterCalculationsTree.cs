@@ -69,7 +69,8 @@ namespace Rawr.Tree {
         // derived
         public double PassiveDirectHealBonus;
         public double PassivePeriodicHealBonus;
-        public double HealMultiplier;
+        public double DirectHealMultiplier;
+        public double PeriodicHealMultiplier;
         public double SpellsManaCostMultiplier;
 
         public TreeStats(Character character, Stats stats, KeyValuePair<double, SpecialEffect>[] hasteProcs, double treeOfLifeUptime)
@@ -103,7 +104,8 @@ namespace Rawr.Tree {
             // according to Paragon's Anaram posting on ElitistJerks, Harmony is additive
             PassiveDirectHealBonus = (Restoration ? 1.25f : 1.0f) + Harmony;
             PassivePeriodicHealBonus = PassiveDirectHealBonus + 0.02f * character.DruidTalents.Genesis;
-            HealMultiplier = (1.0f + character.DruidTalents.MasterShapeshifter * 0.04f) * (1 + TreeOfLifeUptime * 0.15f);
+            DirectHealMultiplier = (1 + stats.BonusHealingDoneMultiplier) * (1.0f + character.DruidTalents.MasterShapeshifter * 0.04f) * (1 + TreeOfLifeUptime * 0.15f);
+            PeriodicHealMultiplier = DirectHealMultiplier * (1 + stats.BonusPeriodicHealingMultiplier);
             SpellsManaCostMultiplier = 1.0f - character.DruidTalents.Moonglow * 0.03f;
         }
     }
@@ -168,8 +170,8 @@ namespace Rawr.Tree {
         {
             this.Data = data;
             this.Stats = stats;
-            this.DirectMultiplier = stats.HealMultiplier;
-            this.TickMultiplier = stats.HealMultiplier;
+            this.DirectMultiplier = stats.DirectHealMultiplier;
+            this.TickMultiplier = stats.PeriodicHealMultiplier;
         }
 
         public void ComputeTiming()
