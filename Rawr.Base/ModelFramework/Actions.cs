@@ -496,7 +496,6 @@ namespace Rawr.ModelFramework
 
         /* PROBLEM DESCRIPTION:
          * We have a set budget, that we need to split between agents who can divide their time between a set of actions, to maximize the resulting gain.
-         * Must contain a 0 cost action in each set
          * 
          * OUTPUT:
          * selections[] is the selected action for each agent
@@ -520,6 +519,7 @@ namespace Rawr.ModelFramework
             {
                 int c = i * l;
                 cursors[i] = c;
+                budget -= costs[c];
                 if ((c + 1) < hullends[i])
                     pq.Push((gains[c + 1] - gains[c]) / (costs[c + 1] - costs[c]), i);
             }
