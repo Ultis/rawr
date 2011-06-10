@@ -370,7 +370,7 @@ namespace Rawr.Moonkin
                         {
                             float procInterval = rot.RotationData.Duration / (rot.RotationData.CastCount - rot.RotationData.InsectSwarmCasts + rot.RotationData.DotTicks);
                             float boltRate = 1 / proc.Effect.GetAverageProcsPerSecond(procInterval, currentCrit, 3.0f, calcs.FightLength * 60.0f);
-                            float averageStackSize = 1 / childEffect.GetAverageStackSize(procInterval, currentCrit, 3.0f, boltRate);
+                            float averageStackSize = childEffect.GetAverageStackSize(procInterval, currentCrit, 3.0f, boltRate);
                             float averageBoltDamage = averageStackSize * proc.Effect.Stats.NatureDamage;
                             currentTrinketDPS += averageBoltDamage / boltRate;
                         }
