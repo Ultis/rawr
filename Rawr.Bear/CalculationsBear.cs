@@ -572,7 +572,7 @@ the Threat Scale defined on the Options tab.",
 
             #region Survivability Points
             calculatedStats.SurvivalPointsRaw = (stats.Health / (1f - calculatedStats.TotalConstantDamageReduction));
-            double survivalCap = bossAttack.DamagePerHit * calcOpts.HitsToSurvive / 1000d;
+            double survivalCap = /*bossAttack.DamagePerHit * calcOpts.HitsToSurvive*/ calcOpts.SurvivalSoftCap / 1000d;
             double survivalRaw = calculatedStats.SurvivalPointsRaw / 1000d;
 
             //Implement Survival Soft Cap

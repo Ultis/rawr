@@ -56,10 +56,9 @@
                     </ComboBox>
                     <inputToolkit:NumericUpDown Margin="2" Grid.Column="2" Grid.Row="3" Value="{Binding ThreatScale, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="1000" DecimalPlaces="1" MinWidth="50" />
 
-                    <TextBlock Text="Hits to Survive: *" VerticalAlignment="Center" Margin="4,2" Grid.Row="2" 
-                              ToolTipService.ToolTip="Hits to Survive Value is the new implementation for Survival Soft Caps.&#x0a;Instead of providing a static number to shoot for, this instead provides&#x0a;a number of Boss Attacks you must survive without heals." />
-                    <inputToolkit:NumericUpDown Margin="2" Grid.Column="2" Grid.Row="2" Value="{Binding HitsToSurvive, Mode=TwoWay}" Maximum="10" Increment="0.1" DecimalPlaces="1" MinWidth="50" Name="NUD_HitsToSurvive" />
-                    <Slider Grid.Column="1" Grid.Row="2" Margin="2" Value="{Binding HitsToSurvive, Mode=TwoWay}" Minimum="{Binding Path=Minimum, ElementName=NUD_HitsToSurvive}" Maximum="{Binding Path=Maximum, ElementName=NUD_HitsToSurvive}"/>
+                    <TextBlock Text="Survival Soft Cap: *" VerticalAlignment="Center" Margin="4,2" Grid.Row="2" 
+                              ToolTipService.ToolTip="Survival Rating past this cap will be soft capped.&#x0a;If you die to burst damage, you should raise this.&#x0a;If you're not close to dying to burst damage, especially if&#x0a;healers are running OOM, you should lower this." />
+                    <inputToolkit:NumericUpDown Grid.ColumnSpan="2" Margin="2" Grid.Column="1" Grid.Row="2" Value="{Binding SurvivalSoftCap, Mode=TwoWay}" Maximum="10000000" Increment="100000" DecimalPlaces="0" MinWidth="50" Name="NUD_HitsToSurvive" />
 
                     <!-- ========= Notices ========= -->
                     <!-- Notices about needing to use the Boss Handler -->
@@ -68,13 +67,8 @@
                     </Border>
                     <StackPanel Grid.Row="5" Grid.ColumnSpan="4">
                         <!-- Explanations -->
-                        <TextBlock TextWrapping="Wrap" Margin="4" FontSize="10" Text="Note that many of Bear's stats are based on Boss Content. Please see the Boss Handler (next to Options in the Tabs above) for additional Fight Related settings you can adjust.
-
-A Fresh 85 should use An Easy Boss to start and once some gear has been gathered to appropriately defend against that, move on to The Average Boss. More details on this can be found on the Boss Handler Pane and in the Documentation of Rawr's website." />
-                        <TextBlock TextWrapping="Wrap" Margin="4" FontSize="10" Text="The Boss MUST have an active attack for many of Bear's numbers to be valid. Bear will automatically generate a Default Melee Attack if you delete it by accident." />
+                        <TextBlock TextWrapping="Wrap" Margin="4" FontSize="10" Text="Rawr.Bear now uses the Boss Handler for things like Target Level, Target Damage, Parry Haste, etc. Please see the Boss Handler tab for those options.&#x0a;&#x0a;Note that the Boss MUST have an active attack for many of Bear's numbers to be valid." />
                     </StackPanel>
-                    <Button Content="Reset" Grid.Column="3" Grid.Row="2" Margin="2" Name="BT_ResetHitsToSurvive" />
-                    <Button Content="Reset" Grid.Column="3" Grid.Row="3" Margin="2" Name="BT_ResetThreatScale" />
                 </Grid>
             </controls:TabItem>
         </controls:TabControl>

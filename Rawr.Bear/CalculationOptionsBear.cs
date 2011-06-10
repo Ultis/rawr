@@ -30,11 +30,11 @@ namespace Rawr.Bear
 			get { return _threatScale; }
 			set { if (_threatScale != value) { _threatScale = value; OnPropertyChanged("ThreatScale"); } }
 		}
-		private double _hitsToSurvive = 3.5f;
-        public double HitsToSurvive
+		private double _survivalSoftCap = 600000f;
+        public double SurvivalSoftCap
 		{
-			get { return _hitsToSurvive; }
-            set { if (_hitsToSurvive != value) { _hitsToSurvive = value; OnPropertyChanged("HitsToSurvive"); } }
+            get { return _survivalSoftCap; }
+            set { if (_survivalSoftCap != value) { _survivalSoftCap = value; OnPropertyChanged("SurvivalSoftCap"); } }
 		}
 		private float _temporarySurvivalScale = 1f;
 		public float TemporarySurvivalScale
