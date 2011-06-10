@@ -345,6 +345,7 @@ namespace Rawr.Moonkin
                     {
                         calcs.BasicStats.BonusNatureDamageMultiplier += proc.Effect.GetAverageUptime(rot.RotationData.Duration / rot.RotationData.CastCount, 1f, 3.0f, calcs.FightLength * 60.0f) * proc.Effect.Stats.BonusNatureDamageMultiplier;
                     }
+                    // Nested special effects
                     if (proc.Effect.Stats._rawSpecialEffectDataSize > 0)
                     {
                         SpecialEffect childEffect = proc.Effect.Stats._rawSpecialEffectData[0];
@@ -362,6 +363,15 @@ namespace Rawr.Moonkin
                             float averageNegativeValue = childEffect.Stats.SpellCrit * numNegativeStacks;
                             float averageCrit = maxStack + averageNegativeValue;
                             currentCrit += averageCrit * proc.Effect.GetAverageUptime(rot.RotationData.Duration / 2f, 1f, 3.0f, calcs.FightLength * 60.0f);
+                        }
+                        // Variable Pulse Lightning Capacitor
+                        if (proc.Effect.Stats.NatureDamage > 0)
+                        {
+                            float procInterval = rot.RotationData.Duration / (rot.RotationData.CastCount - rot.RotationData.InsectSwarmCasts + rot.RotationData.DotTicks);
+                            float boltRate = 1 / proc.Effect.GetAverageProcsPerSecond(procInterval, currentCrit, 3.0f, calcs.FightLength * 60.0f);
+                            float averageStackSize = childEffect.GetAverageStackSize(procInterval, currentCrit, 3.0f, boltRate);
+                            float averageBoltDamage = averageStackSize * proc.Effect.Stats.NatureDamage;
+                            trinketDPS += averageBoltDamage / boltRate;
                         }
                     }
                 }
