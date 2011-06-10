@@ -346,6 +346,7 @@ namespace Rawr.Moonkin
                     {
                         calcs.BasicStats.BonusNatureDamageMultiplier += proc.Effect.GetAverageUptime(rot.RotationData.Duration / rot.RotationData.CastCount, 1f, 3.0f, calcs.FightLength * 60.0f) * proc.Effect.Stats.BonusNatureDamageMultiplier;
                     }
+                    // This area reserved for Dragonwrath, Tarecgosa's Rest
                     // Nested special effects
                     if (proc.Effect.Stats._rawSpecialEffectDataSize > 0)
                     {
@@ -370,7 +371,7 @@ namespace Rawr.Moonkin
                         {
                             float procInterval = rot.RotationData.Duration / (rot.RotationData.CastCount - rot.RotationData.InsectSwarmCasts + rot.RotationData.DotTicks);
                             float boltRate = 1 / proc.Effect.GetAverageProcsPerSecond(procInterval, currentCrit, 3.0f, calcs.FightLength * 60.0f);
-                            float averageStackSize = childEffect.GetAverageStackSize(procInterval, currentCrit, 3.0f, boltRate);
+                            float averageStackSize = boltRate * childEffect.GetAverageProcsPerSecond(procInterval, currentCrit, 3.0f, boltRate);
                             float averageBoltDamage = averageStackSize * proc.Effect.Stats.NatureDamage;
                             currentTrinketDPS += averageBoltDamage / boltRate;
                         }
