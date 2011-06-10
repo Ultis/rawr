@@ -897,6 +897,7 @@ namespace Rawr.Tree
                 if (!burst)
                     dist.MaxMPS = calc.ManaRegen;
 
+                dist.AddPassive((int)TreePassive.HealingTrinkets, stats.Healed);
                 addSelfHealing(dist, actions, spells, 1);
 
                 addLifebloomRefresh(dist, actions, spells[(int)TreeSpell.Lifebloom], data, refreshLBWithDHs, opts.RejuvenationTankDuringRaid);
@@ -954,6 +955,7 @@ namespace Rawr.Tree
                 if (!burst)
                     dist.MaxMPS = calc.ManaRegen;
 
+                dist.AddPassive((int)TreePassive.HealingTrinkets, opts.TankRaidHealingWeight * stats.Healed);
                 addSelfHealing(dist, actions, spells, opts.TankRaidHealingWeight);
 
                 addLifebloomRefresh(dist, actions, spells[(int)TreeSpell.Lifebloom], data, Talents.EmpoweredTouch != 0, true);

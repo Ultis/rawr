@@ -592,6 +592,7 @@ namespace Rawr.Tree {
                 ManaRestore = stats.ManaRestore,
                 SpellsManaCostReduction = stats.SpellsManaCostReduction,
                 NatureSpellsManaCostReduction = stats.NatureSpellsManaCostReduction,
+                Healed = stats.Healed,
 
                 // -- MultiplicativeStats --
                 // Buffs / Debuffs
@@ -664,6 +665,7 @@ namespace Rawr.Tree {
                 stats.ManaRestore != 0 ||
                 stats.SpellsManaCostReduction != 0 ||
                 stats.NatureSpellsManaCostReduction != 0 ||
+                stats.Healed != 0 ||
 
                 // Spell Combat Ratings
 

@@ -48,6 +48,7 @@ namespace Rawr.Tree {
         RollingLifebloom,
         Perserverance,
         NaturesWard,
+        HealingTrinkets,
 
         Count
     };
@@ -66,12 +67,13 @@ namespace Rawr.Tree {
         public double SpellsManaCostReduction;
         public double BonusCritHealMultiplier;
 
-        // derived
         public double PassiveDirectHealBonus;
         public double PassivePeriodicHealBonus;
         public double DirectHealMultiplier;
         public double PeriodicHealMultiplier;
         public double SpellsManaCostMultiplier;
+
+        public double Healed;
 
         public TreeStats(Character character, Stats stats, KeyValuePair<double, SpecialEffect>[] hasteProcs, double treeOfLifeUptime)
         {
@@ -107,6 +109,8 @@ namespace Rawr.Tree {
             DirectHealMultiplier = (1 + stats.BonusHealingDoneMultiplier) * (1.0f + character.DruidTalents.MasterShapeshifter * 0.04f) * (1 + TreeOfLifeUptime * 0.15f);
             PeriodicHealMultiplier = DirectHealMultiplier * (1 + stats.BonusPeriodicHealingMultiplier);
             SpellsManaCostMultiplier = 1.0f - character.DruidTalents.Moonglow * 0.03f;
+
+            Healed = stats.Healed;
         }
     }
 
