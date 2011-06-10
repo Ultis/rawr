@@ -2217,6 +2217,11 @@ namespace Rawr
                 _rawSpecialEffectData[_rawSpecialEffectDataSize] = null;
             }
         }
+        public void ClearSpecialEffects()
+        {
+            _rawSpecialEffectDataSize = 0;
+            _rawSpecialEffectData = null;
+        }
         public struct SpecialEffectEnumerator : IEnumerator<SpecialEffect>, IDisposable, System.Collections.IEnumerator, IEnumerable<SpecialEffect>
         {
             internal Stats stats;
