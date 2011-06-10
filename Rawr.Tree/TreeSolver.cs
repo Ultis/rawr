@@ -118,7 +118,7 @@ namespace Rawr.Tree
                         calc.MeanMana += avgMana;
                     }
 
-                    Stats stats = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], 3.0f, character.BossOptions.BerserkTimer);
+                    Stats stats = effect.GetAverageStats(triggerIntervals, triggerChances, 3.0f, character.BossOptions.BerserkTimer);
                     
                     if (effect.Trigger == Trigger.Use
                         && effect.MaxStack <= 1
