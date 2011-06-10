@@ -251,6 +251,7 @@ namespace Rawr.Moonkin
                 float currentCrit = baseCrit + StatConversion.NPC_LEVEL_SPELL_CRIT_MOD[calcs.TargetLevel - character.Level];
                 float currentHaste = baseHaste;
                 float currentMastery = baseMastery;
+                float currentTrinketDPS = trinketDPS;
                 calcs.BasicStats.BonusArcaneDamageMultiplier = oldArcaneMultiplier;
                 calcs.BasicStats.BonusNatureDamageMultiplier = oldNatureMultiplier;
                 float accumulatedDamage = 0.0f;
@@ -369,9 +370,9 @@ namespace Rawr.Moonkin
                         {
                             float procInterval = rot.RotationData.Duration / (rot.RotationData.CastCount - rot.RotationData.InsectSwarmCasts + rot.RotationData.DotTicks);
                             float boltRate = 1 / proc.Effect.GetAverageProcsPerSecond(procInterval, currentCrit, 3.0f, calcs.FightLength * 60.0f);
-                            float averageStackSize = childEffect.GetAverageStackSize(procInterval, currentCrit, 3.0f, boltRate);
+                            float averageStackSize = 1 / childEffect.GetAverageStackSize(procInterval, currentCrit, 3.0f, boltRate);
                             float averageBoltDamage = averageStackSize * proc.Effect.Stats.NatureDamage;
-                            trinketDPS += averageBoltDamage / boltRate;
+                            currentTrinketDPS += averageBoltDamage / boltRate;
                         }
                     }
                 }
@@ -550,8 +551,8 @@ namespace Rawr.Moonkin
                     sustainedDPS = burstDPS * timeToOOM / (calcs.FightLength * 60.0f);
                 }
                 
-                burstDPS += trinketDPS;
-                sustainedDPS += trinketDPS;
+                burstDPS += currentTrinketDPS;
+                sustainedDPS += currentTrinketDPS;
 
                 rot.RotationData.SustainedDPS = sustainedDPS;
                 rot.RotationData.BurstDPS = burstDPS;
