@@ -620,9 +620,11 @@ namespace Rawr {
             }
             else if ((match = new Regex(@"Your melee and ranged attacks have a chance to grant you (?<amount>\d+) haste rating for (?<dur>\d+) sec").Match(line)).Success)
             {   // Prestor's Talisman of Machination. The Hungerer
+                float icd = 0f;
+                if ((id == 68927) || (id == 69112)) { icd = 60f; } else { icd = (float)int.Parse(match.Groups["dur"].Value) * 5f; }
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalAttack,
                     new Stats() { HasteRating = (float)int.Parse(match.Groups["amount"].Value) },
-                    (float)int.Parse(match.Groups["dur"].Value), (float)int.Parse(match.Groups["dur"].Value) * 5f, 0.10f));
+                    (float)int.Parse(match.Groups["dur"].Value), icd, 0.10f));
             }
             else if ((match = new Regex(@"Your healing spells have a chance to grant (?<amount>\d+) haste rating for (?<dur>\d+) sec").Match(line)).Success)
             {   // Rainsong

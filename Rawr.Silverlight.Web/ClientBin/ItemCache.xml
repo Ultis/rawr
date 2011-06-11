@@ -91836,6 +91836,7 @@
       <ItemLocation xsi:type="UnknownItem" />
       <ItemLocation xsi:type="UnknownItem" />
       <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
     <Name>[Downloading from Wowhead]</Name>
     <Id>0</Id>
@@ -118235,7 +118236,7 @@
             <HasteRating>1532</HasteRating>
           </Stats>
           <Duration>15</Duration>
-          <Cooldown>75</Cooldown>
+          <Cooldown>60</Cooldown>
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
@@ -118662,7 +118663,7 @@
             <HasteRating>1730</HasteRating>
           </Stats>
           <Duration>15</Duration>
-          <Cooldown>75</Cooldown>
+          <Cooldown>60</Cooldown>
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
