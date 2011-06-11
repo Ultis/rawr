@@ -2048,9 +2048,8 @@ namespace Rawr.Mage
 
         public override bool IsBuffRelevant(Buff buff, Character character)
         {
-            if (!string.IsNullOrEmpty(buff.SetName) && buff.AllowedClasses.Contains(CharacterClass.Mage)) {
-                return true;
-            } else if (buff.Group.Contains("Pot")) {
+            if (buff.Group.Contains("Pot")) 
+            {
                 return false;
             }
             return base.IsBuffRelevant(buff, character);

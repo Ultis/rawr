@@ -1740,6 +1740,10 @@ namespace Rawr
                 // Class Restrictions Enforcement
                 else if (character != null && !buff.AllowedClasses.Contains(character.Class))
                     return false;
+                // if it's a set bonus and class matches treat it as relevant
+                if (!string.IsNullOrEmpty(buff.SetName) && buff.AllowedClasses.Contains(character.Class))
+                    return true;
+
                 return HasRelevantStats(buff.GetTotalStats());
             }
             catch (Exception)
