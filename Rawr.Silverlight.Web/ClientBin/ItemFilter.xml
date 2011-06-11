@@ -2136,7 +2136,7 @@
         </ItemFilterRegex>
         <ItemFilterRegex>
           <Name>Occuthar</Name>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
           <Pattern>Occuthar</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
