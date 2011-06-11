@@ -500,14 +500,6 @@ namespace Rawr.Tree
             return action;
         }
 
-        DiscreteAction applySwiftness(DiscreteAction action, TreeStats stats, ComputedSpell healingTouch)
-        {
-            // according to Paragon's Anaram posting on ElitistJerks, Nature's Swiftness is additive
-            action.Direct *= (1 + 0.5 / (stats.PassiveDirectHealBonus + healingTouch.ExtraDirectBonus));
-            action.Time = stats.Haste.HastedGCD;
-            return action;
-        }
-
         /* Spell data is computed in the following stages:
          * 1. SpellData with constants
          * 2. ComputedSpell containing computed data for a generic target (thus excluding crit, mastery, targets, effective healing)
@@ -766,25 +758,37 @@ namespace Rawr.Tree
             }
             #endregion
 
-            #region Healing Touch
+            #region Nature's Swiftness
             if (Talents.NaturesSwiftness > 0)
             {
-                actions[(int)TreeAction.RaidSwiftHT] = applySwiftness(actions[(int)TreeAction.RaidHealingTouch], stats, spells[(int)TreeSpell.HealingTouch]);
-                actions[(int)TreeAction.TankSwiftHT] = applySwiftness(actions[(int)TreeAction.TankHealingTouch], stats, spells[(int)TreeSpell.HealingTouch]);
-            }
+                // Nature's Swiftness is actually additive
+                double nshtMultiplier = 1 + 0.5 / (1 + stats.PassiveDirectHealBonus + spells[(int)TreeSpell.HealingTouch].ExtraDirectBonus);
 
-            if (Talents.NaturesSwiftness > 0 && healingTouchNSReduction > 0)
-            {
-                // add the NS effect as an amortized extra heal to each HT
-                double swiftHtFraction = (healingTouchNSReduction / (180.0 + opts.NaturesSwiftnessCastDelay));
-                double htAddTime = swiftHtFraction * stats.Haste.HastedGCD;
-                double htMulDirect = 1 + swiftHtFraction * 1.5;
+                actions[(int)TreeAction.RaidSwiftHT] = actions[(int)TreeAction.RaidHealingTouch];
+                actions[(int)TreeAction.TankSwiftHT] = actions[(int)TreeAction.TankHealingTouch];
 
-                actions[(int)TreeAction.TankHealingTouch].Time += htAddTime;
-                actions[(int)TreeAction.TankHealingTouch].Direct *= htMulDirect;
+                actions[(int)TreeAction.RaidSwiftHT].Time = stats.Haste.HastedGCD;
+                actions[(int)TreeAction.TankSwiftHT].Time = stats.Haste.HastedGCD;
 
-                actions[(int)TreeAction.RaidHealingTouch].Time += htAddTime;
-                actions[(int)TreeAction.RaidHealingTouch].Direct *= htMulDirect;
+                actions[(int)TreeAction.RaidSwiftHT].Direct *= nshtMultiplier;
+                actions[(int)TreeAction.TankSwiftHT].Direct *= nshtMultiplier;
+
+                if (healingTouchNSReduction > 0)
+                {
+                    // add the NS effect as an amortized extra heal to each HT
+                    double swiftHtFraction = (healingTouchNSReduction / (180.0 + opts.NaturesSwiftnessCastDelay));
+                    double htAddTime = swiftHtFraction * stats.Haste.HastedGCD;
+                    double htMulDirect = 1 + swiftHtFraction * nshtMultiplier;
+                    double htMulMana = 1 + swiftHtFraction;
+
+                    actions[(int)TreeAction.TankHealingTouch].Time += htAddTime;
+                    actions[(int)TreeAction.TankHealingTouch].Mana *= htMulMana;
+                    actions[(int)TreeAction.TankHealingTouch].Direct *= htMulDirect;
+
+                    actions[(int)TreeAction.RaidHealingTouch].Time += htAddTime;
+                    actions[(int)TreeAction.RaidHealingTouch].Mana *= htMulMana;
+                    actions[(int)TreeAction.RaidHealingTouch].Direct *= htMulDirect;
+                }
             }
             #endregion
 
@@ -917,7 +921,8 @@ namespace Rawr.Tree
                     dist.AddActionPeriodically((int)TreeAction.RaidSwiftmend, 15 + opts.SwiftmendCastDelay);
 
                 // Glyph of Healing Touch is handled by adding the amortized Swift HT to normal healing touches
-                dist.AddActionPeriodically((int)TreeAction.RaidSwiftHT, 180.0 + opts.NaturesSwiftnessCastDelay);
+                if(Talents.NaturesSwiftness > 0)
+                    dist.AddActionPeriodically((int)TreeAction.RaidSwiftHT, 180.0 + opts.NaturesSwiftnessCastDelay);
 
                 if (opts.RejuvenationTankDuringRaid)
                     dist.AddActionPeriodically((int)TreeAction.TankRejuvenation, spells[(int)TreeSpell.Rejuvenation].Duration);
@@ -969,7 +974,8 @@ namespace Rawr.Tree
                     dist.AddActionPeriodically((int)TreeAction.TankSwiftmend, 15 + opts.SwiftmendCastDelay);
 
                 // Glyph of Healing Touch is handled by adding the amortized Swift HT to normal healing touches
-                dist.AddActionPeriodically((int)TreeAction.TankSwiftHT, 180.0 + opts.NaturesSwiftnessCastDelay);
+                if (Talents.NaturesSwiftness > 0)
+                    dist.AddActionPeriodically((int)TreeAction.TankSwiftHT, 180.0 + opts.NaturesSwiftnessCastDelay);
 
                 if (!burst && opts.TankWildGrowth && Talents.WildGrowth > 0)
                     dist.AddActionPeriodically((int)TreeAction.TankWildGrowth, 8 + opts.WildGrowthCastDelay);
