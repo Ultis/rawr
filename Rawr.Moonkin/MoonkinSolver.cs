@@ -281,8 +281,10 @@ namespace Rawr.Moonkin
                 // Add spell crit effects here as well, since they no longer affect timing
                 foreach (ProcEffect proc in procEffects)
                 {
+                    bool handled = false;
                     if (proc.Effect.Stats.SpellPower > 0 || proc.Effect.Stats.CritRating > 0 || proc.Effect.Stats.MasteryRating > 0)
                     {
+                        handled = true;
                         float procSpellPower = proc.Effect.Stats.SpellPower;
                         float procSpellCrit = StatConversion.GetSpellCritFromRating(proc.Effect.Stats.CritRating);
                         float procMastery = StatConversion.GetMasteryFromRating(proc.Effect.Stats.MasteryRating);
@@ -340,16 +342,26 @@ namespace Rawr.Moonkin
                     // 2T10 (both if statements, which is why it isn't else-if)
                     if (proc.Effect.Stats.BonusArcaneDamageMultiplier > 0)
                     {
+                        handled = true;
                         calcs.BasicStats.BonusArcaneDamageMultiplier += proc.Effect.GetAverageUptime(rot.RotationData.Duration / rot.RotationData.CastCount, 1f, 3.0f, calcs.FightLength * 60.0f) * proc.Effect.Stats.BonusArcaneDamageMultiplier;
                     }
                     if (proc.Effect.Stats.BonusNatureDamageMultiplier > 0)
                     {
+                        handled = true;
                         calcs.BasicStats.BonusNatureDamageMultiplier += proc.Effect.GetAverageUptime(rot.RotationData.Duration / rot.RotationData.CastCount, 1f, 3.0f, calcs.FightLength * 60.0f) * proc.Effect.Stats.BonusNatureDamageMultiplier;
                     }
                     // This area reserved for Dragonwrath, Tarecgosa's Rest
+                    // Variable Pulse Lightning Capacitor
+                    // This might catch some other effects, I probably need a better way to differentiate
+                    if (proc.Effect.Trigger == Trigger.DamageSpellCrit && proc.Effect.Stats.NatureDamage > 0)
+                    {
+                        float procInterval = rot.RotationData.Duration / (rot.RotationData.CastCount - rot.RotationData.InsectSwarmCasts + rot.RotationData.DotTicks);
+                        currentTrinketDPS += proc.Effect.GetAverageProcsPerSecond(procInterval, currentCrit, 3.0f, calcs.FightLength * 60.0f) * proc.Effect.Stats.NatureDamage;
+                    }
                     // Nested special effects
                     if (proc.Effect.Stats._rawSpecialEffectDataSize > 0)
                     {
+                        handled = true;
                         SpecialEffect childEffect = proc.Effect.Stats._rawSpecialEffectData[0];
                         // Heart of Ignacious
                         if (childEffect.Stats.SpellPower > 0)
@@ -366,41 +378,30 @@ namespace Rawr.Moonkin
                             float averageCrit = maxStack + averageNegativeValue;
                             currentCrit += averageCrit * proc.Effect.GetAverageUptime(rot.RotationData.Duration / 2f, 1f, 3.0f, calcs.FightLength * 60.0f);
                         }
-                        // Variable Pulse Lightning Capacitor
-                        if (proc.Effect.Stats.NatureDamage > 0)
+                    }
+                    if (!handled)
+                    {
+                        if (proc.CalculateDPS != null)
                         {
-                            float procInterval = rot.RotationData.Duration / (rot.RotationData.CastCount - rot.RotationData.InsectSwarmCasts + rot.RotationData.DotTicks);
-                            float boltRate = 1 / proc.Effect.GetAverageProcsPerSecond(procInterval, currentCrit, 3.0f, calcs.FightLength * 60.0f);
-                            float averageStackSize = boltRate * childEffect.GetAverageProcsPerSecond(procInterval, currentCrit, 3.0f, boltRate);
-                            float averageBoltDamage = averageStackSize * proc.Effect.Stats.NatureDamage;
-                            currentTrinketDPS += averageBoltDamage / boltRate;
+                            accumulatedDamage += proc.CalculateDPS(rot, calcs, currentSpellPower, baseHit, currentCrit, currentHaste) * rot.RotationData.Duration;
                         }
-                    }
-                }
-                // Calculate damage and mana contributions for non-stat-boosting trinkets
-                // Separate timing-altering proc trinkets into their own list
-                foreach (ProcEffect proc in procEffects)
-                {
-                    if (proc.CalculateDPS != null)
-                    {
-                        accumulatedDamage += proc.CalculateDPS(rot, calcs, currentSpellPower, baseHit, currentCrit, currentHaste) * rot.RotationData.Duration;
-                    }
-                    if (proc.Activate != null)
-                    {
-                        float upTime = proc.UpTime(rot, calcs);
-                        // Procs with 100% uptime should be activated and not put into the combination loop
-                        if (upTime == 1)
+                        if (proc.Activate != null)
                         {
-                            alwaysUpEffects.Add(proc);
-                            proc.Activate(character, calcs, ref currentSpellPower, ref baseHit, ref currentCrit, ref currentHaste, ref currentMastery);
+                            float upTime = proc.UpTime(rot, calcs);
+                            // Procs with 100% uptime should be activated and not put into the combination loop
+                            if (upTime == 1)
+                            {
+                                alwaysUpEffects.Add(proc);
+                                proc.Activate(character, calcs, ref currentSpellPower, ref baseHit, ref currentCrit, ref currentHaste, ref currentMastery);
+                            }
+                            // Procs with uptime 0 < x < 100 should be activated
+                            else if (upTime > 0)
+                                activatedEffects.Add(proc);
                         }
-                        // Procs with uptime 0 < x < 100 should be activated
-                        else if (upTime > 0)
-                            activatedEffects.Add(proc);
-                    }
-                    if (proc.CalculateMP5 != null)
-                    {
-                        manaGained += proc.CalculateMP5(rot, calcs, currentSpellPower, baseHit, currentCrit, currentHaste) / 5.0f * calcs.FightLength * 60.0f;
+                        if (proc.CalculateMP5 != null)
+                        {
+                            manaGained += proc.CalculateMP5(rot, calcs, currentSpellPower, baseHit, currentCrit, currentHaste) / 5.0f * calcs.FightLength * 60.0f;
+                        }
                     }
                 }
                 // Calculate stat-boosting trinkets, taking into effect interactions with other stat-boosting procs
