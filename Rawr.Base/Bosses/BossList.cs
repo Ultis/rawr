@@ -221,15 +221,15 @@ namespace Rawr {
                 #endregion
                 #region ==== Tier 12 Content ====
                 // Baradin Hold
-//                Occuthar[0], Occuthar[1],
+                Occuthar[0], Occuthar[1],
                 // Fireland
-//                Bethtilac[0],Bethtilac[1],Bethtilac[2],Bethtilac[3],
-//                LordRhyolith[0],LordRhyolith[1],LordRhyolith[2],LordRhyolith[3],
-//                Alysrazor[0],Alysrazor[1],Alysrazor[2],Alysrazor[3],
-//                Shannox[0],Shannox[1],Shannox[2],Shannox[3],
-//                Baleroc[0],Baleroc[1],Baleroc[2],Baleroc[3],
-//                MajordomoStaghelm[0],MajordomoStaghelm[1],MajordomoStaghelm[2],MajordomoStaghelm[3],
-//                Ragnaros[0],Ragnaros[1],Ragnaros[2],Ragnaros[3],
+                Bethtilac[0],Bethtilac[1],Bethtilac[2],Bethtilac[3],
+                LordRhyolith[0],LordRhyolith[1],LordRhyolith[2],LordRhyolith[3],
+                Alysrazor[0],Alysrazor[1],Alysrazor[2],Alysrazor[3],
+                Shannox[0],Shannox[1],Shannox[2],Shannox[3],
+                Baleroc[0],Baleroc[1],Baleroc[2],Baleroc[3],
+                MajordomoStaghelm[0],MajordomoStaghelm[1],MajordomoStaghelm[2],MajordomoStaghelm[3],
+                Ragnaros[0],Ragnaros[1],Ragnaros[2],Ragnaros[3],
                 #endregion
 
             };

@@ -21,7 +21,7 @@ namespace Rawr.Bosses
             Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T12_10, BossHandler.TierLevels.T12_25, BossHandler.TierLevels.T12_10H, BossHandler.TierLevels.T12_25H };
             #endregion
             #region Basics
-            Health = new float[] { 53946000f, 64419000f, 0, 0 };
+            Health = new float[] { 53946000f, 80900000f, 0, 0 };
             MobType = (int)MOB_TYPES.DEMON;
             // 5 minute Berserk timer
             BerserkTimer = new int[] { 5 * 60, 5 * 60, 0, 0 };
@@ -80,7 +80,7 @@ namespace Rawr.Bosses
                     AttackType = ATTACK_TYPES.AT_MELEE,
                     DamagePerHit = ( 102375f + 107625f) / 2f,
                     MaxNumTargets = 1f,
-                    AttackSpeed = 30f,
+                    AttackSpeed = 22f,
                 });
                 EntireFight.LastAttack.SetUnavoidable();
                 EntireFight.LastAttack.AffectsRole[PLAYER_ROLES.MainTank] = true;
@@ -93,7 +93,7 @@ namespace Rawr.Bosses
                     AttackType = ATTACK_TYPES.AT_MELEE,
                     DamagePerHit = (102375f + 107625f) / 2f,
                     MaxNumTargets = 1f,
-                    AttackSpeed = 30f,
+                    AttackSpeed = 22f,
                 });
                 EntireFight.LastAttack.SetUnavoidable();
                 EntireFight.LastAttack.AffectsRole[PLAYER_ROLES.OffTank] = true;
@@ -123,7 +123,7 @@ namespace Rawr.Bosses
                     MaxNumTargets = new float[] { 3, 3 }[i],
                     // Initial release, one video I saw showed 15 seconds between each cast with the zone lasting
                     // about 5 seconds into the next zone's time frame.
-                    AttackSpeed = 20f,
+                    AttackSpeed = 15.5f,
                 });
                 EntireFight.LastAttack.SetUnavoidable();
                 EntireFight.LastAttack.SetAffectsRoles_DPS();
@@ -149,17 +149,26 @@ namespace Rawr.Bosses
                     Name = "Eyes of Occu'thar",
                     TargetID = new float[] { 52389, 52428, 0, 0 }[i],
                     // Initial release, assume 15 seconds
-                    Frequency = 15f,
+                    Frequency = 60f,
                     // Need verification on how many are released in 25 man
                     // Does not appear to target tanks
-                    NumTargs = new float[] { 5, 5, 0, 0 }[i],
-                    Chance = new float[] { 5, 5, 0, 0 }[i] / (Max_Players[i] - Min_Tanks[i]),
+                    NumTargs = new float[] { 5, 20, 0, 0 }[i],
+                    Chance = new float[] { 5, 20, 0, 0 }[i] / Max_Players[i],
                     Duration = 10f * 1000f,
                     LevelOfTargets = 87,
-                    NearBoss = false,
+                    NearBoss = true,
                 });
                 EntireFight.LastTarget.SetAffectsRoles_DPS();
                 EntireFight.LastTarget.SetAffectsRoles_Healers();
+
+                // Assume 2 seconds to clump up together to AOE down the adds, the 2 seconds to run back out after all have been killed
+                EntireFight.Moves.Add(new Impedance
+                {
+                    Name = "Eyes of Occu'thar",
+                    Chance = EntireFight.LastTarget.Chance,
+                    Duration = 4f * 1000f,
+                    Frequency = EntireFight.LastTarget.Frequency,
+                });
 
                 /* Gaze of Occu'thar
                  * The eye of Occu'thar fires a beam at its target. Inflicting 5850 to 6150 Shadow damage every

@@ -2136,7 +2136,7 @@
         </ItemFilterRegex>
         <ItemFilterRegex>
           <Name>Occuthar</Name>
-          <Enabled>true</Enabled>
+          <Enabled>false</Enabled>
           <Pattern>Occuthar</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
@@ -2877,7 +2877,7 @@
       <RegexList>
         <ItemFilterRegex>
           <Name>Arena or Battleground Rating</Name>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
           <Pattern>Arena|Battleground</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>

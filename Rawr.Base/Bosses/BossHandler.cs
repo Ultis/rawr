@@ -413,13 +413,15 @@ namespace Rawr {
             "Tier 11 25N",
             "Tier 11 10H",
             "Tier 11 25H",
-//            "Tier 12 10N",
-//            "Tier 12 25N",
-//            "Tier 12 10H",
-//            "Tier 12 25H",
+            "Tier 12 10N",
+            "Tier 12 25N",
+            "Tier 12 10H",
+            "Tier 12 25H",
         };
         public enum TierLevels : int { T11_10 = 0, T11_25, T11_10H, T11_25H, T12_10, T12_25, T12_10H, T12_25H }
         public static readonly float[] StandardMeleePerHit = new float[] {
+//                112000f, // T11_10 // 4.2 lowered the base damage on all T11 Normal mode damage by 20%
+//                140000f, // T11_25 // 4.2 lowered the base damage on all T11 Normal mode damage by 20%
             140000f, // T11_10,  //     Tested and verified, Used a Magmaw Kill from April, 2011
             175000f, // T11_25,  //     Tested and verified, Used a Magmaw Kill from April, 2011
             200000f, // T11_10H, // Not tested and verified, assumed based on other values
