@@ -315,22 +315,6 @@ namespace Rawr.Tree
             set { crit100Bonus = value; OnPropertyChanged("Crit100Bonus"); }
         }
 
-        private bool t12_2p = false;
-        [DefaultValue(false)]
-        public bool T12_2P
-        {
-            get { return t12_2p; }
-            set { t12_2p = value; OnPropertyChanged("T12_2P"); }
-        }
-
-        private bool t12_4p_swiftmend = false;
-        [DefaultValue(false)]
-        public bool T12_4P_Swiftmend
-        {
-            get { return t12_4p_swiftmend; }
-            set { t12_4p_swiftmend = value; OnPropertyChanged("T12_4P_Swiftmend"); }
-        }
-
         private float swiftmendExtraHealEffectiveHealing = 2.0f;
         [DefaultValue(2.0f)]
         public float SwiftmendExtraHealEffectiveHealing

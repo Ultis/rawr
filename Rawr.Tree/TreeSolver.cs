@@ -154,7 +154,7 @@ namespace Rawr.Tree
             MeanStats.Mp5 = MeanStats.ManaRestore * 5;
             MeanStats.ManaRestore = 0;
 
-            if (T11Count >= 4 && !opts.T12_4P_Swiftmend)
+            if (T11Count >= 4)
                 MeanStats.Spirit += 540;
 
             CalculationsTree.FinalizeStats(MeanStats, calc.BasicStats);
@@ -609,7 +609,7 @@ namespace Rawr.Tree
             double tankLivingSeed, raidLivingSeed;
 
             #region Talents
-            if (T11Count >= 2 && !opts.T12_2P)
+            if (T11Count >= 2)
                 lifebloomExtraTickCrit += 0.05f;
 
             tankLivingSeed = raidLivingSeed = 0.1f * Talents.LivingSeed;
@@ -689,10 +689,10 @@ namespace Rawr.Tree
             double swiftmendExtraTargets = 0;
             double lifebloomManaPerTick = 0;
 
-            if (T12Count >= 2 || (T11Count >= 2 && opts.T12_2P))
+            if (T12Count >= 2)
                 lifebloomManaPerTick += CalculationsTree.BaseMana * 0.01 * 0.4;
 
-            if (T12Count >= 4 || (T11Count >= 4 && opts.T12_4P_Swiftmend))
+            if (T12Count >= 4)
                 swiftmendExtraTargets += opts.SwiftmendExtraHealEffectiveHealing;
 
             if (Talents.GlyphOfSwiftmend)
