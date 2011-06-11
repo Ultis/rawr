@@ -310,8 +310,6 @@
 					<RowDefinition Height="Auto" />
 					<RowDefinition Height="Auto" />
 					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
 				</Grid.RowDefinitions>
 				<Border Grid.Row="0" Grid.ColumnSpan="5" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
 					<TextBlock Margin="4" FontWeight="Bold" Text="PTR changes" VerticalAlignment="Center" />
@@ -322,12 +320,8 @@
 
 				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Harmony coefficient:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="3" ToolTipService.ToolTip="Coefficient of the Harmony mastery, if enabled (currenly 1.25 on PTR)"/>
 				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="3" Value="{Binding Path=HarmonyCoefficient, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="2" MinWidth="50" />
-
-				<CheckBox Grid.Column="0" Grid.Row="4" IsChecked="{Binding Path=T12_2P, Mode=TwoWay}" MinWidth="50" Content="Replace the T11 2P bonus with T12 2P" Margin="4,2,2,2" Grid.ColumnSpan="5" />
-
-				<CheckBox Grid.Column="0" Grid.Row="5" IsChecked="{Binding Path=T12_4P_Swiftmend, Mode=TwoWay}" MinWidth="50" Content="Replace the T11 4P bonus with T12 4P" Margin="4,2,2,2" Grid.ColumnSpan="5" />
-				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Swiftmend extra heal effectiveness:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="6" ToolTipService.ToolTip="Percentage of the Swiftend healing to an extra target due to the T12 4P bonus that is not overhealing" />
-				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="6" Value="{Binding Path=SwiftmendExtraHealEffectiveHealing, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50"  />
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="T12 4P extra heal effectiveness:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="4" ToolTipService.ToolTip="Percentage of the Swiftend healing to an extra target due to the T12 4P bonus that is not overhealing" />
+				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="4" Value="{Binding Path=SwiftmendExtraHealEffectiveHealing, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50"  />
 			</Grid>
 
 		</controls:TabItem>
