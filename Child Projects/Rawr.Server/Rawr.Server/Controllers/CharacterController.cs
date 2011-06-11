@@ -150,15 +150,36 @@ namespace Rawr.Server.Controllers
             return xml;
         }
 
+        public class CookieAwareWebClient : WebClient
+        {
+            private CookieContainer m_container = new CookieContainer();
+            
+            protected override WebRequest GetWebRequest(Uri address) 
+            { 
+                WebRequest request = base.GetWebRequest(address);
+                if (request is HttpWebRequest) 
+                { 
+                    (request as HttpWebRequest).CookieContainer = m_container;
+                }
+                return request; 
+            }
+        }
+
         private string GetBattleNetHtml(string characterName, string region, string realm)
         {
             double secWaited = WaitInQueryQueue();
             _loadedChars += string.Format("{3}: Loading {0}@{1}-{2} ({4:N1}s delay)\r\n", characterName, region, realm, DateTime.Now, secWaited);
-            WebClient client = new WebClient();
+            WebClient client = new CookieAwareWebClient();
             client.Encoding = Encoding.UTF8;
             client.Headers["User-Agent"] = "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/525.13 (KHTML, like Gecko) Chrome/0.A.B.C Safari/525.13";
             client.Headers["Accept-Language"] = "en-US";
             string html = client.DownloadString(string.Format("http://{1}.battle.net/wow/en/character/{2}/{0}/advanced", characterName, region, realm));
+            if (html.Contains("<div id=\"continue\">"))
+            {
+                // advertisement, click continue
+                // cookie stored, let's try again
+                html = client.DownloadString(string.Format("http://{1}.battle.net/wow/en/character/{2}/{0}/advanced", characterName, region, realm));
+            }
             html += "\r\n\r\n|||\r\n\r\n" + client.DownloadString(string.Format("http://{1}.battle.net/wow/en/character/{2}/{0}/talent/", characterName, region, realm));
             return html;
         }
@@ -466,14 +487,6 @@ namespace Rawr.Server.Controllers
             string charXml = reader.ReadToEnd();
             #region Character Weight Loss Program
             charXml = charXml.Replace(@"
-  <CustomGemmingTemplates />
-  <GemmingTemplateOverrides />
-  <ItemFilterEnabledOverride>
-    <ItemFilterEnabledOverride>
-      <Name>Other</Name>
-      <Enabled>true</Enabled>
-    </ItemFilterEnabledOverride>
-  </ItemFilterEnabledOverride>
   <Boss>
     <Targets />
     <BuffStates />
@@ -483,47 +496,102 @@ namespace Rawr.Server.Controllers
     <Roots />
     <Silences />
     <Disarms />
-    <Name>Generic</Name>
-    <Content>T11_0</Content>
-    <Instance>None</Instance>
-    <Version>V_10N</Version>
-    <Comment>No comments have been written for this Boss.</Comment>
-    <Level>88</Level>
-    <Armor>11977</Armor>
-    <BerserkTimer>600</BerserkTimer>
-    <SpeedKillTimer>180</SpeedKillTimer>
-    <Health>1000000</Health>
-    <InBackPerc_Melee>0</InBackPerc_Melee>
-    <InBackPerc_Ranged>0</InBackPerc_Ranged>
-    <Max_Players>10</Max_Players>
-    <Min_Healers>3</Min_Healers>
-    <Min_Tanks>2</Min_Tanks>
-    <DoTs />
-    <Attacks />
-    <Resist_Physical>0</Resist_Physical>
-    <Resist_Frost>0</Resist_Frost>
-    <Resist_Fire>0</Resist_Fire>
-    <Resist_Nature>0</Resist_Nature>
-    <Resist_Arcane>0</Resist_Arcane>
-    <Resist_Shadow>0</Resist_Shadow>
-    <Resist_Holy>0</Resist_Holy>
-    <TimeBossIsInvuln>0</TimeBossIsInvuln>
-    <InBack>false</InBack>
-    <MultiTargs>false</MultiTargs>
-    <HasBuffStates>false</HasBuffStates>
-    <StunningTargs>false</StunningTargs>
-    <MovingTargs>false</MovingTargs>
-    <FearingTargs>false</FearingTargs>
-    <RootingTargs>false</RootingTargs>
-    <SilencingTargs>false</SilencingTargs>
-    <DisarmingTargs>false</DisarmingTargs>
-    <DamagingTargs>false</DamagingTargs>
-    <Under35Perc>0.1</Under35Perc>
-    <Under20Perc>0.15</Under20Perc>
-    <FilterType>Content</FilterType>
-    <Filter />
-    <BossName />
-  </Boss>", "");
+    <Attacks>
+      <Attack>
+        <Name>Generated Default Melee Attack</Name>
+        <IsTheDefaultMelee>true</IsTheDefaultMelee>
+        <DamagePerHit>175000</DamagePerHit>
+        <PhaseTimes>
+          <item>
+            <key>
+              <int>1</int>
+            </key>
+            <value>
+              <ArrayOfFloat>
+                <float>0</float>
+                <float>1200</float>
+              </ArrayOfFloat>
+            </value>
+          </item>
+        </PhaseTimes>
+        <AffectsRole>
+          <item>
+            <key>
+              <PLAYER_ROLES>MainTank</PLAYER_ROLES>
+            </key>
+            <value>
+              <boolean>true</boolean>
+            </value>
+          </item>
+          <item>
+            <key>
+              <PLAYER_ROLES>OffTank</PLAYER_ROLES>
+            </key>
+            <value>
+              <boolean>true</boolean>
+            </value>
+          </item>
+          <item>
+            <key>
+              <PLAYER_ROLES>TertiaryTank</PLAYER_ROLES>
+            </key>
+            <value>
+              <boolean>true</boolean>
+            </value>
+          </item>
+          <item>
+            <key>
+              <PLAYER_ROLES>MeleeDPS</PLAYER_ROLES>
+            </key>
+            <value>
+              <boolean>false</boolean>
+            </value>
+          </item>
+          <item>
+            <key>
+              <PLAYER_ROLES>RangedDPS</PLAYER_ROLES>
+            </key>
+            <value>
+              <boolean>false</boolean>
+            </value>
+          </item>
+          <item>
+            <key>
+              <PLAYER_ROLES>MainTankHealer</PLAYER_ROLES>
+            </key>
+            <value>
+              <boolean>false</boolean>
+            </value>
+          </item>
+          <item>
+            <key>
+              <PLAYER_ROLES>OffAndTertTankHealer</PLAYER_ROLES>
+            </key>
+            <value>
+              <boolean>false</boolean>
+            </value>
+          </item>
+          <item>
+            <key>
+              <PLAYER_ROLES>RaidHealer</PLAYER_ROLES>
+            </key>
+            <value>
+              <boolean>false</boolean>
+            </value>
+          </item>
+        </AffectsRole>
+      </Attack>
+    </Attacks>
+  </Boss>
+  <ItemFilterEnabledOverride>
+    <ItemFilterEnabledOverride>
+      <Name>Other</Name>
+      <Enabled>true</Enabled>
+    </ItemFilterEnabledOverride>
+  </ItemFilterEnabledOverride>
+  <CustomGemmingTemplates />
+  <GemmingTemplateOverrides />
+  <CustomItemInstances />", "");
             charXml = charXml.Replace(@"
   <ItemFiltersSettings_UseChecks>true</ItemFiltersSettings_UseChecks>
   <ItemFiltersSettings_0>true</ItemFiltersSettings_0>
