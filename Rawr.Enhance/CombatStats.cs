@@ -15,6 +15,7 @@ namespace Rawr.Enhance
         private ShamanTalents _talents;
         private Priorities _rotation;
 
+        private int setCount;
         private int levelDifference = 3;
         private float whiteCritDepression = 0.048f;
         private float yellowCritDepression = 0.018f;
@@ -239,13 +240,11 @@ namespace Rawr.Enhance
                 stormstrikeBonusCrit = 0f;
             }
             //set bonus
-            if (_stats.Enhance_T11_4P == 1)
+            enhance4T11 = 0f;
+            _character.SetBonusCount.TryGetValue("Battlegear of the Raging Elements", out setCount);
+            if (setCount >= 4)
             {
-                enhance4T11 = .1f;
-            }
-            else
-            {
-                enhance4T11 = 0f;
+                enhance4T11 = 0.1f;
             }
 
             critMultiplierSpell = 1.5f * (1 + _stats.BonusSpellCritDamageMultiplier);

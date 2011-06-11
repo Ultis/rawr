@@ -256,10 +256,26 @@ namespace Rawr.Enhance
             }
 
             // Tier Bonuses
+            int setCount;
             float enhance2T11 = 0f;
-            if (stats.Enhance_T11_2P == 1)
+            character.SetBonusCount.TryGetValue("Battlegear of the Raging Elements", out setCount);
+            if (setCount >= 2)
             {
                 enhance2T11 = 0.1f;
+            }
+            float enhance2T12 = 0f;
+            float enhance4T12 = 0f;
+            character.SetBonusCount.TryGetValue("Volcanic Battlegear", out setCount);
+            if (setCount >= 2)
+            {
+                enhance2T12 = 0.05f;
+            }
+            if (setCount >= 4)
+            {
+                if (calcOpts.PriorityInUse(EnhanceAbility.StormStrike))
+                {
+                    enhance4T12 = 0.06f;
+                }
             }
             //
             float FTspellpower = (float)Math.Floor((float)(748f * (1 + character.ShamanTalents.ElementalWeapons * .2f)));
@@ -357,7 +373,7 @@ namespace Rawr.Enhance
             #endregion
 
             #region Lavalash DPS
-            /* 
+            /* Taken from EnhSim (thank you ziff)
                Damage = bwd * llb * (1.0 + sfs * (sfb + t12-2p) + ftb) * (1.0 + llt + llg + t11-2p) * fdm
 
                bwd    - Base weapon damage against a target with no armor
@@ -382,7 +398,7 @@ namespace Rawr.Enhance
                 float glyphLL = 0f;
                 if (calcOpts.PriorityInUse(EnhanceAbility.SearingTotem) && character.ShamanTalents.SearingFlames != 0)
                 {
-                    searingFlames = character.ShamanTalents.ImprovedLavaLash * 0.1f * 5f; //5f = number of stacks of searing flames (takes app. 8.25s to hit 5 stacks, LL CD is 10s).
+                    searingFlames = (character.ShamanTalents.ImprovedLavaLash * 0.1f + enhance2T12) * 5f; //5f = number of stacks of searing flames (takes app. 8.25s to hit 5 stacks, LL CD is 10s).
                 }
                 if (calcOpts.OffhandImbue == "Flametongue")
                 {
@@ -395,7 +411,7 @@ namespace Rawr.Enhance
                 float lavalashDPS = damageOHSwing * 2f * cs.HitsPerSLL;
                 float LLnormal = lavalashDPS * cs.YellowHitModifierOH;
                 float LLcrit = lavalashDPS * cs.YellowCritModifierOH * cs.CritMultiplierMelee;
-                dpsLL = (LLnormal + LLcrit) * (1f + searingFlames + flametongue) * (1f + impLL + glyphLL + enhance2T11) * mastery * bonusFireDamage;
+                dpsLL = (LLnormal + LLcrit) * (1f + searingFlames + flametongue) * (1f + impLL + glyphLL + enhance2T11) * (1 + enhance4T12) * mastery * bonusFireDamage;
             }
             #endregion
 
@@ -430,7 +446,7 @@ namespace Rawr.Enhance
                 float flameShockDoTdps = damageFTDoT / usesCooldown;
                 float flameShockNormal = (flameShockdps + flameShockDoTdps) * cs.SpellHitModifier;
                 float flameShockCrit = (flameShockdps + flameShockDoTdps) * cs.SpellCritModifier * cs.CritMultiplierSpell;
-                dpsFS = (flameShockNormal + flameShockCrit) * mastery * bonusFireDamage;
+                dpsFS = (flameShockNormal + flameShockCrit) * (1 + enhance4T12) * mastery * bonusFireDamage;
             }
             #endregion
 
@@ -527,7 +543,7 @@ namespace Rawr.Enhance
                 float FireNovadps = (damageFireNova / cs.AbilityCooldown(EnhanceAbility.FireNova));
                 float FireNovaNormal = FireNovadps * cs.SpellHitModifier;
                 float FireNovaCrit = FireNovadps * cs.SpellCritModifier * cs.CritMultiplierSpell;
-                dpsFireNova = (FireNovaNormal + FireNovaCrit) * mastery * bonusFireDamage * cs.MultiTargetMultiplier;
+                dpsFireNova = (FireNovaNormal + FireNovaCrit) * (1 + enhance4T12) * mastery * bonusFireDamage * cs.MultiTargetMultiplier;
             }
             #endregion
 
@@ -544,7 +560,7 @@ namespace Rawr.Enhance
                 float FTdps = damageFT * (cs.HitsPerSOH - cs.HitsPerSLL);
                 float FTNormal = FTdps * cs.SpellHitModifier;
                 float FTCrit = FTdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
-                dpsFT += (FTNormal + FTCrit) * mastery * bonusFireDamage * bossFireResistance;
+                dpsFT += (FTNormal + FTCrit) * (1 + enhance4T12) * mastery * bonusFireDamage * bossFireResistance;
             }*/
             if (calcOpts.OffhandImbue == "Flametongue" && character.OffHand != null)
             {
@@ -557,7 +573,7 @@ namespace Rawr.Enhance
                 float FTdps = damageFT * (cs.HitsPerSOH - cs.HitsPerSLL);
                 float FTNormal = FTdps * cs.SpellHitModifier;
                 float FTCrit = FTdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
-                dpsFT += (FTNormal + FTCrit) * mastery * bonusFireDamage;
+                dpsFT += (FTNormal + FTCrit) * (1 + enhance4T12) * mastery * bonusFireDamage;
             }
             #endregion
 
@@ -583,7 +599,7 @@ namespace Rawr.Enhance
                 float UFdps = damageUF / cs.AbilityCooldown(EnhanceAbility.UnleashElements);
                 float UFnormal = UFdps * cs.SpellHitModifier;
                 float UFcrit = UFdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
-                dpsUF = (UFnormal + UFcrit) * mastery * bonusFireDamage;
+                dpsUF = (UFnormal + UFcrit) * (1 + enhance4T12) * mastery * bonusFireDamage;
             }
             #endregion
             #endregion
