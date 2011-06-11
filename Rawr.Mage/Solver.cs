@@ -164,9 +164,10 @@ namespace Rawr.Mage
         private bool evocationAvailable;
         private bool manaPotionAvailable;
         private bool flameOrbAvailable;
+        private bool bloodFuryAvailable;
 
         // initialized in InitializeEffectCooldowns
-        private const int standardEffectCount = 13; // can't just compute from enum, because that counts the combined masks also
+        private const int standardEffectCount = 14; // can't just compute from enum, because that counts the combined masks also
         public List<EffectCooldown> CooldownList { get; set; }
         public Dictionary<int, EffectCooldown> EffectCooldown { get; set; }
         private int[] effectExclusionList;
@@ -991,6 +992,7 @@ namespace Rawr.Mage
         private int rowSummonMirrorImageCount;
         private int rowThreat;
         private int rowBerserking;
+        private int rowBloodFury;
         private int rowTimeExtension;
         private int rowAfterFightRegenMana;
         private int rowTargetDamage;
@@ -1008,6 +1010,7 @@ namespace Rawr.Mage
         private List<SegmentConstraint> rowSegmentSummonMirrorImage;
         private List<SegmentConstraint> rowSegmentCombustion;
         private List<SegmentConstraint> rowSegmentBerserking;
+        private List<SegmentConstraint> rowSegmentBloodFury;
         private List<SegmentConstraint> rowSegmentFlameCap;
         private List<SegmentConstraint> rowSegmentManaGem;
         private List<SegmentConstraint> rowSegmentManaGemEffect;
@@ -1806,6 +1809,7 @@ namespace Rawr.Mage
             mirrorImageAvailable = !CalculationOptions.DisableCooldowns && CalculationOptions.MirrorImage == 2;
             manaGemEffectAvailable = CalculationOptions.ManaGemEnabled && MageTalents.ImprovedManaGem > 0;
             flameOrbAvailable = !CalculationOptions.DisableCooldowns && CalculationOptions.FlameOrb == 2 && CalculationOptions.PlayerLevel >= 81;
+            bloodFuryAvailable = !CalculationOptions.DisableCooldowns && Character.Race == CharacterRace.Orc;
 
             // if we're using incremental optimizations it's possible we know some effects won't be used
             // in that case we can skip them and possible save some constraints
@@ -2147,6 +2151,17 @@ namespace Rawr.Mage
             AutomaticStackingConstraints = true,
             Color = Color.FromArgb(0xFF, 0xFF, 0xA0, 0x7A), //LightSalmon
         };
+        EffectCooldown cachedEffectBloodFury = new EffectCooldown()
+        {
+            Cooldown = 120.0f,
+            Duration = 15.0f,
+            AutomaticConstraints = true,
+            AutomaticStackingConstraints = true,
+            Mask = (int)StandardEffect.BloodFury,
+            Name = "Blood Fury",
+            StandardEffect = StandardEffect.BloodFury,
+            Color = Color.FromArgb(0xFF, 0xA5, 0x2A, 0x2A) //Brown
+        };
 
         private void InitializeEffectCooldowns()
         {
@@ -2256,6 +2271,11 @@ namespace Rawr.Mage
             if (mirrorImageAvailable)
             {
                 EffectCooldown cooldown = NewStandardEffectCooldown(cachedEffectMirrorImage);
+                CooldownList.Add(cooldown);
+            }
+            if (bloodFuryAvailable)
+            {
+                EffectCooldown cooldown = NewStandardEffectCooldown(cachedEffectBloodFury);
                 CooldownList.Add(cooldown);
             }
 
@@ -3287,6 +3307,7 @@ namespace Rawr.Mage
                 lp.SetElementUnsafe(rowAoe, column, CalculationOptions.AoeDuration);
                 lp.SetElementUnsafe(rowCombustion, column, CombustionDuration / CombustionCooldown);
                 lp.SetElementUnsafe(rowBerserking, column, 10.0 / 180.0);
+                lp.SetElementUnsafe(rowBloodFury, column, 15.0 / 120.0);
             }
         }
 
@@ -4239,6 +4260,7 @@ namespace Rawr.Mage
                     }
                     if (combustionAvailable) AddSegmentTicks(ticks, 300.0);
                     if (berserkingAvailable) AddSegmentTicks(ticks, 180.0);
+                    if (bloodFuryAvailable) AddSegmentTicks(ticks, 120.0);
                     if (CalculationOptions.ManaGemEnabled || manaGemEffectAvailable)
                     {
                         ticks.Add(15.0); // get a better grasp on mana overflow
@@ -4546,6 +4568,14 @@ namespace Rawr.Mage
                         lp.SetRHSUnsafe(constraint.Row, 10.0);
                     }
                 }
+                // blood furt
+                if (bloodFuryAvailable)
+                {
+                    foreach (SegmentConstraint constraint in rowSegmentBloodFury)
+                    {
+                        lp.SetRHSUnsafe(constraint.Row, 10.0);
+                    }
+                }
                 // water elemental
                 /*if (waterElementalAvailable && !MageTalents.GlyphOfEternalWater)
                 {
@@ -4694,6 +4724,7 @@ namespace Rawr.Mage
             rowSummonMirrorImageCount = -1;
             rowThreat = -1;
             rowBerserking = -1;
+            rowBloodFury = -1;
             rowTimeExtension = -1;
             rowAfterFightRegenMana = -1;
             rowTargetDamage = -1;
@@ -4920,6 +4951,7 @@ namespace Rawr.Mage
             if (flameOrbAvailable) rowFlameOrb = EffectCooldown[(int)StandardEffect.FlameOrb].Row;
             if (flameCapAvailable) rowFlameCap = EffectCooldown[(int)StandardEffect.FlameCap].Row;
             if (berserkingAvailable) rowBerserking = EffectCooldown[(int)StandardEffect.Berserking].Row;
+            if (bloodFuryAvailable) rowBloodFury = EffectCooldown[(int)StandardEffect.BloodFury].Row;
             if (mirrorImageAvailable) rowMirrorImage = EffectCooldown[(int)StandardEffect.MirrorImage].Row;
 
 
@@ -5046,6 +5078,21 @@ namespace Rawr.Mage
             if (berserkingAvailable)
             {
                 List<SegmentConstraint> list = rowSegmentBerserking = new List<SegmentConstraint>();
+                double cool = 120;
+                for (int seg = 0; seg < SegmentList.Count; seg++)
+                {
+                    int maxs = SegmentList.FindIndex(s => s.TimeEnd > SegmentList[seg].TimeStart + cool + 0.00001) - 1;
+                    if (maxs == -2) maxs = SegmentList.Count - 1;
+                    if (list.Count == 0 || maxs > list[list.Count - 1].MaxSegment)
+                    {
+                        list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
+                    }
+                }
+            }
+            // blood fury
+            if (bloodFuryAvailable)
+            {
+                List<SegmentConstraint> list = rowSegmentBloodFury = new List<SegmentConstraint>();
                 double cool = 120;
                 for (int seg = 0; seg < SegmentList.Count; seg++)
                 {
@@ -5280,6 +5327,7 @@ namespace Rawr.Mage
             //if (state.Berserking && state.Heroism) lp.SetElementUnsafe(rowHeroismBerserking, column, 1.0);
             //if (state.Berserking && state.IcyVeins) lp.SetElementUnsafe(rowIcyVeinsBerserking, column, 1.0);
             //if (state.Berserking && state.ArcanePower) lp.SetElementUnsafe(rowArcanePowerBerserking, column, 1.0);
+            if (state.BloodFury) lp.SetElementUnsafe(rowBloodFury, column, 1.0);
             lp.SetElementUnsafe(rowThreat, column, cycle.ThreatPerSecond);
             //lp[rowManaPotionManaGem, index] = (statsList[buffset].FlameCap ? 1 : 0) + (statsList[buffset].DestructionPotion ? 40.0 / 15.0 : 0);
             if (needsQuadratic)

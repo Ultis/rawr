@@ -20,8 +20,9 @@ namespace Rawr.Mage
         MoltenFury = 0x200,
         Evocation = 0x400,
         ManaGemEffect = 0x800,
-        MirrorImage = 0x1000, // make sure to update shifting of item based effects if this changes (Solver.standardEffectCount)
-        NonItemBasedMask = PowerInfusion | VolcanicPotion | ArcanePower | Combustion | Berserking | FlameCap | Heroism | IcyVeins | MoltenFury | ManaGemEffect | MirrorImage | FlameOrb
+        MirrorImage = 0x1000,
+        BloodFury = 0x2000, // make sure to update shifting of item based effects if this changes (Solver.standardEffectCount)
+        NonItemBasedMask = PowerInfusion | VolcanicPotion | ArcanePower | Combustion | Berserking | FlameCap | Heroism | IcyVeins | MoltenFury | ManaGemEffect | MirrorImage | FlameOrb | BloodFury
     }
 
     public class CastingState
@@ -127,6 +128,7 @@ namespace Rawr.Mage
         public bool WaterElemental { get { return Solver.Specialization == Specialization.Frost; } }
         public bool MirrorImage { get; private set; }
         public bool PowerInfusion { get; private set; }
+        public bool BloodFury { get; private set; }
         public bool Frozen { get; set; }
         public bool UseMageWard { get; set; }
 
@@ -154,6 +156,7 @@ namespace Rawr.Mage
                 //WaterElemental = (value & (int)StandardEffect.WaterElemental) != 0;
                 MirrorImage = (value & (int)StandardEffect.MirrorImage) != 0;
                 PowerInfusion = (value & (int)StandardEffect.PowerInfusion) != 0;
+                BloodFury = (value & (int)StandardEffect.BloodFury) != 0;
             }
         }
 
@@ -176,23 +179,6 @@ namespace Rawr.Mage
         public override string ToString()
         {
             return BuffLabel;
-        }
-
-        private static float ComputeCombustion(float critRate)
-        {
-            float c0 = 1, c1 = 0, c2 = 0, c3 = 0;
-            float duration = 0;
-
-            for (int cast = 1; cast <= 13; cast++)
-            {
-                c3 = critRate * c2;
-                c2 = c2 * (1 - critRate) + c1 * critRate;
-                c1 = c1 * (1 - critRate) + c0 * critRate;
-                c0 = c0 * (1 - critRate);
-                critRate = Math.Min(critRate + 0.1f, 1f);
-                duration += c3 * cast;
-            }
-            return duration;
         }
 
         private CastingState maintainSnareState;
@@ -374,9 +360,12 @@ namespace Rawr.Mage
 
             if (ManaGemEffect)
             {
-#if RAWR4
                 StateSpellPower += 0.01f * MageTalents.ImprovedManaGem * BaseStats.Mana;
-#endif
+            }
+
+            if (BloodFury)
+            {
+                StateSpellPower += 584;
             }
 
             List<EffectCooldown> cooldownList = solver.CooldownList;

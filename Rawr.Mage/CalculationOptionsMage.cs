@@ -378,12 +378,12 @@ namespace Rawr.Mage
 
         public const float SetBonus4T8ProcRate = 0.25f;
 
-        /*private bool _ModePTR;
+        private bool _ModePTR;
         public bool ModePTR
         {
             get { return _ModePTR; }
             set { _ModePTR = value; OnPropertyChanged("ModePTR"); }
-        }*/
+        }
 
         private bool _BossHandler;
         public bool BossHandler

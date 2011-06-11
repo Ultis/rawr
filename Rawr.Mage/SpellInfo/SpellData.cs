@@ -129,6 +129,10 @@ namespace Rawr.Mage
             Name = "Waterbolt";
             InitializeCastTime(false, false, 2.5f, 0);
             InitializeScaledDamage(solver, false, 45, MagicSchool.Frost, 0.01f, 0.405000001192093f, 0.25f, 0, 0.833000004291534f, 0, 1, 1, 0);
+            if (solver.Character.Race == CharacterRace.Orc)
+            {
+                BaseSpellModifier *= 1.05f;
+            }
             // TODO recheck all buffs that apply
             Dirty = false;
         }

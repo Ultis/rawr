@@ -756,6 +756,8 @@ namespace Rawr.Mage
                 if (icyVeinsAvailable && !ValidateCooldown((int)StandardEffect.IcyVeins, 20.0 + (coldsnapAvailable ? 20.0 : 0.0), IcyVeinsCooldown + (coldsnapAvailable ? 20.0 : 0.0), true, 20.0, rowSegmentIcyVeins, VariableType.None)) return false;
                 // pi
                 if (powerInfusionAvailable && !ValidateCooldown((int)StandardEffect.PowerInfusion, PowerInfusionDuration, PowerInfusionCooldown, true, PowerInfusionDuration, rowSegmentPowerInfusion, VariableType.None)) return false;
+                // blood fury
+                if (bloodFuryAvailable && !ValidateCooldown((int)StandardEffect.BloodFury, 15.0, 120.0, true, 15.0, rowSegmentBloodFury, VariableType.None)) return false;
                 // flame orb
                 if (flameOrbAvailable && !ValidateCooldown((int)StandardEffect.FlameOrb, FlameOrbDuration, FlameOrbCooldown, true, FlameOrbDuration, rowSegmentFlameOrb, VariableType.None)) return false;
                 // water elemental
@@ -826,6 +828,8 @@ namespace Rawr.Mage
                 if (icyVeinsAvailable && !ValidateCooldown((int)StandardEffect.IcyVeins, 20.0 + (coldsnapAvailable ? 20.0 : 0.0), IcyVeinsCooldown + (coldsnapAvailable ? 20.0 : 0.0), true, 20.0, rowSegmentIcyVeins, VariableType.None)) return false;
                 // pi
                 if (powerInfusionAvailable && !ValidateCooldown((int)StandardEffect.PowerInfusion, PowerInfusionDuration, PowerInfusionCooldown, true, PowerInfusionDuration, rowSegmentPowerInfusion, VariableType.None)) return false;
+                // blood fury
+                if (bloodFuryAvailable && !ValidateCooldown((int)StandardEffect.BloodFury, 15.0, 120.0, true, 15.0, rowSegmentBloodFury, VariableType.None)) return false;
                 // flame orb
                 if (flameOrbAvailable && !ValidateCooldown((int)StandardEffect.FlameOrb, FlameOrbDuration, FlameOrbCooldown, true, FlameOrbDuration, rowSegmentFlameOrb, VariableType.None)) return false;
                 // water elemental
@@ -921,6 +925,7 @@ namespace Rawr.Mage
                 }
                 if (manaGemEffectAvailable && !ValidateCooldownAdvanced((int)StandardEffect.ManaGemEffect, ManaGemEffectDuration, 120.0, VariableType.None)) return false;
                 if (berserkingAvailable && !ValidateCooldownAdvanced((int)StandardEffect.Berserking, 10.0, 180.0, VariableType.None)) return false;
+                if (bloodFuryAvailable && !ValidateCooldownAdvanced((int)StandardEffect.BloodFury, 15.0, 120.0, VariableType.None)) return false;
                 if (mirrorImageAvailable && !ValidateCooldownAdvanced((int)StandardEffect.MirrorImage, MirrorImageDuration, MirrorImageCooldown, VariableType.None)) return false;
             }
 
@@ -950,6 +955,7 @@ namespace Rawr.Mage
                 }
                 if (manaGemEffectAvailable && !ValidateCooldownAdvanced2((int)StandardEffect.ManaGemEffect, ManaGemEffectDuration, 120.0, VariableType.None)) return false;
                 if (berserkingAvailable && !ValidateCooldownAdvanced2((int)StandardEffect.Berserking, 10.0, 180.0, VariableType.None)) return false;
+                if (bloodFuryAvailable && !ValidateCooldownAdvanced2((int)StandardEffect.BloodFury, 15.0, 120.0, VariableType.None)) return false;
                 if (mirrorImageAvailable && !ValidateCooldownAdvanced2((int)StandardEffect.MirrorImage, MirrorImageDuration, MirrorImageCooldown, VariableType.None)) return false;
             }
 
