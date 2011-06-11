@@ -763,6 +763,9 @@ namespace Rawr.Moonkin
             // PTR changes go here
             if (calcs.PtrMode)
             {
+                // TODO: Find the exact values of this increase.
+                Starfire.BaseDamage *= 1.23f;
+                Wrath.BaseDamage *= 1.23f;
             }
         }
     }

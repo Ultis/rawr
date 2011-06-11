@@ -28,6 +28,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -67,10 +68,10 @@
         <CheckBox x:Name="CK_AllowSpiritToHit" Grid.Row="8" Margin="2" Content="Allow Spirit-&gt;Hit Reforges" IsChecked="{Binding Path=AllowReforgingSpiritToHit, Mode=TwoWay}" VerticalAlignment="Center" Grid.ColumnSpan="4" />
         <CheckBox x:Name="CK_PTRMode" Grid.Column="0" Grid.Row="9" Margin="4,2,2,2" Content="PTR Mode" IsChecked="{Binding Path=PTRMode, Mode=TwoWay}" VerticalAlignment="Center" />
 
-        <Border Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="4" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
+        <Border Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="4" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
             <TextBlock Margin="4" FontWeight="Bold" Text="Stat Graph Options" VerticalAlignment="Center" />
         </Border>
-        <Grid Grid.Row="10" Grid.ColumnSpan="4">
+        <Grid Grid.Row="11" Grid.ColumnSpan="4">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />

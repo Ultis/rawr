@@ -973,7 +973,7 @@ namespace Rawr.Moonkin
             {
                 if (_se_t122p == null)
                 {
-                    _se_t122p = new SpecialEffect(Trigger.MageNukeCast, new Stats() { }, 15f, 15f, 0.2f, 1);
+                    _se_t122p = new SpecialEffect(Trigger.MageNukeCast, new Stats() { }, 15f, 45f, 0.2f, 1);
                 }
                 return _se_t122p;
             }
@@ -1003,6 +1003,12 @@ namespace Rawr.Moonkin
             if (T11Count >= 4) {
                 // 4 pieces: Whenever Eclipse triggers, your critical strike chance with spells is increased by 99%
                 //           for 8 sec. Each critical strike you achieve reduces that bonus by 33%.
+                if (calcOpts.PTRMode)
+                {
+                    // 4.2 PTR: Nerf the 4T11 set bonus badly.
+                    _SE_T114P.Stats.SpellCrit = 0.15f;
+                    _SE_T114P.Stats._rawSpecialEffectData[0].Stats.SpellCrit = -0.05f;
+                }
                 statsTotal.AddSpecialEffect(_SE_T114P);
             }
             if (T12Count >= 2)
