@@ -465,7 +465,8 @@ namespace Rawr
         /// triggerChance to crit chance)</param>
         /// <param name="attackSpeed">Average unhasted attack speed, used in PPM calculations.</param>
         /// <param name="fightDuration">Duration of fight in seconds.</param>
-        public Stats GetAverageStats(Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances, float attackSpeed = 3.0f, float fightDuration = 0.0f)
+        /// <param name="scale">Scale factor.</param>
+        public Stats GetAverageStats(Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances, float attackSpeed = 3.0f, float fightDuration = 0.0f, float scale = 1.0f)
         {
             Stats stats = new Stats();
             AccumulateAverageStats(stats, triggerIntervals, triggerChances, attackSpeed, fightDuration);
@@ -482,26 +483,40 @@ namespace Rawr
         /// triggerChance to crit chance)</param>
         /// <param name="attackSpeed">Average unhasted attack speed, used in PPM calculations.</param>
         /// <param name="fightDuration">Duration of fight in seconds.</param>
-        public float AccumulateAverageStats(Stats stats, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances, float attackSpeed = 3.0f, float fightDuration = 0.0f)
+        /// <param name="scale">Scale factor.</param>
+        public float AccumulateAverageStats(Stats stats, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances, float attackSpeed = 3.0f, float fightDuration = 0.0f, float scale = 1.0f)
         {
-            Stats effectStats = Stats;
+            float factor = scale * GetAverageFactor(triggerIntervals[Trigger], triggerChances[Trigger], attackSpeed, fightDuration);
+
+            Stats.GenerateSparseData();
             if (Stats.ContainsSpecialEffect())
             {
-                effectStats = effectStats.Clone();
-                effectStats.ClearSpecialEffects();
-                effectStats.InvalidateSparseData();
-                foreach (SpecialEffect effect in Stats.SpecialEffects())
+                if (Stats.sparseIndices.Length != 0)
                 {
-                    // this assumes that the child effect gets consumed at the end of the duration
-                    // this assumes that the child effect is off cooldown before the next occurrence of the parent effect
-                    effect.AccumulateAverageStats(effectStats, triggerIntervals, triggerChances, attackSpeed, Duration);
+                    Stats effectStats = Stats.Clone();
+                    effectStats.ClearSpecialEffects();
+                    effectStats.InvalidateSparseData();
+                    foreach (SpecialEffect effect in Stats.SpecialEffects())
+                    {
+                        // this assumes that the child effect gets consumed at the end of the duration
+                        // this assumes that the child effect is off cooldown before the next occurrence of the parent effect
+                        effect.AccumulateAverageStats(effectStats, triggerIntervals, triggerChances, attackSpeed, Duration);
+                    }
+                    stats.Accumulate(effectStats, factor);
+                }
+                else
+                {
+                    // this path is an optimization to avoid intermediate dense storage
+                    foreach (SpecialEffect effect in Stats.SpecialEffects())
+                    {
+                        // this assumes that the child effect gets consumed at the end of the duration
+                        // this assumes that the child effect is off cooldown before the next occurrence of the parent effect
+                        effect.AccumulateAverageStats(stats, triggerIntervals, triggerChances, attackSpeed, Duration, factor);
+                    }
                 }
             }
             else
-                Stats.GenerateSparseData();
-
-            float factor = GetAverageFactor(triggerIntervals[Trigger], triggerChances[Trigger], attackSpeed, fightDuration);
-            stats.Accumulate(effectStats, factor);
+                stats.Accumulate(Stats, factor);
             return factor;
         }
 
