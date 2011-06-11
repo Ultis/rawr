@@ -159,6 +159,7 @@
             </Grid>
         </local:GroupBox>
         <TextBlock x:Name="MaxScoreLabel" HorizontalAlignment="Left" Margin="4,2,2,4" VerticalAlignment="Center" Grid.Row="4" TextWrapping="Wrap"/>
+        <Button x:Name="PauseButton" Content="Pause" Click="PauseButton_Click" Grid.Row="4" HorizontalAlignment="Right" Margin="0,2,84,4" VerticalAlignment="Bottom" Width="75" Grid.Column="1" Visibility="Collapsed" />
         <Button x:Name="CancelButton" Content="Cancel" Click="CancelButton_Click" Grid.Row="4" HorizontalAlignment="Right" Margin="0,2,4,4" VerticalAlignment="Bottom" Width="75" Grid.Column="1" Visibility="Collapsed" />
     </Grid>
 </basics2:ChildWindow>

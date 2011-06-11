@@ -321,11 +321,13 @@ namespace Rawr.UI
             {
                 DoneButton.Visibility = Visibility.Visible;
                 CancelButton.Visibility = Visibility.Collapsed;
+                PauseButton.Visibility = Visibility.Collapsed;
             }
             else
             {
                 DoneButton.Visibility = Visibility.Collapsed;
                 CancelButton.Visibility = Visibility.Visible;
+                PauseButton.Visibility = Visibility.Visible;
             }
             foreach (UIElement requirementGrid in RequirementsStack.Children)
             {
@@ -399,6 +401,24 @@ namespace Rawr.UI
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             if (optimizer.IsBusy) optimizer.CancelAsync();
+            PauseButton.Content = "Pause";
+        }
+
+        private void PauseButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (optimizer.IsBusy)
+            {
+                if ((string)PauseButton.Content == "Pause")
+                {
+                    optimizer.PauseAsync();
+                    PauseButton.Content = "Resume";
+                }
+                else
+                {
+                    optimizer.ResumeAsync();
+                    PauseButton.Content = "Pause";
+                }
+            }
         }
 
         private void OptimizeButton_Click(object sender, RoutedEventArgs e)

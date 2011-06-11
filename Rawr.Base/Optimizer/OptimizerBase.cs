@@ -76,8 +76,31 @@ namespace Rawr.Optimizer
         public virtual void CancelAsync()
         {
             cancellationPending = true;
+            if (resumeEvent != null)
+            {
+                resumeEvent.Set();
+                resumeEvent = null;
+            }
         }
 
+        public virtual void PauseAsync()
+        {
+            if (resumeEvent == null)
+            {
+                resumeEvent = new ManualResetEvent(false);
+            }
+        }
+
+        public virtual void ResumeAsync()
+        {
+            if (resumeEvent != null)
+            {
+                resumeEvent.Set();
+                resumeEvent = null;
+            }
+        }
+
+        protected ManualResetEvent resumeEvent;
         protected bool cancellationPending;
 
         protected abstract void ReportProgress(int progressPercentage, float bestValue);
@@ -168,6 +191,10 @@ namespace Rawr.Optimizer
 
             for (int cycle = 0; cycle < maxCycles; cycle++)
             {
+                if (resumeEvent != null)
+                {
+                    resumeEvent.WaitOne();
+                }
                 if (cancellationPending) return null;
                 ReportProgress((int)Math.Round((float)cycle / ((float)(maxCycles / 100f))), (float)bestValue);
 
@@ -486,6 +513,10 @@ namespace Rawr.Optimizer
             {
                 if (_thoroughness > 1)
                 {
+                    if (resumeEvent != null)
+                    {
+                        resumeEvent.WaitOne();
+                    }
                     if (cancellationPending)
                     {
                         population = null;

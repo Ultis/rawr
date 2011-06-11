@@ -521,6 +521,10 @@ namespace Rawr.Optimizer
                     SuffixItem item = items[i];
                     currentItem = item.Name;
                     itemProgressPercentage = (int)Math.Round((float)i / ((float)items.Length / 100f));
+                    if (resumeEvent != null)
+                    {
+                        resumeEvent.WaitOne();
+                    }
                     if (cancellationPending)
                     {
                         return null;
