@@ -751,12 +751,10 @@ namespace Rawr
             new RangeValue { Min = 285, Max = 333 }, // 3
             new RangeValue { Min = 334, Max = 358 }, // 4
             new RangeValue { Min = 359, Max = 371 }, // 5
-//            new RangeValue { Min = 372, Max = 377 }, // 6
-            new RangeValue { Min = 372, Max = 378 }, // 6
-//            new RangeValue { Min = 378, Max = 390 }, // 7
-//            new RangeValue { Min = 391, Max = 397 }, // 8
-            new RangeValue { Min = 379, Max = 500 }, // 7
-//            new RangeValue { Min = 398, Max = 500 }, // 9
+            new RangeValue { Min = 372, Max = 377 }, // 6
+            new RangeValue { Min = 378, Max = 390 }, // 7
+            new RangeValue { Min = 391, Max = 403 }, // 8
+            new RangeValue { Min = 404, Max = 500 }, // 9
         };
         private readonly static PercRangeValue[] DropRangeValues = new PercRangeValue[] {
             new PercRangeValue { Min = 0.00f, Max = 0.01f },
@@ -824,30 +822,26 @@ namespace Rawr
             true, // 3 285-333 (Cata Dungeons)
             true, // 4 334-358 (Cata Heroics)
             true, // 5 359-371 (Tier 11.0)
-//            true, // 6 372 - 377 (Tier 11.5)
-            true, // 6 372-378 (Tier 11.5)
-//            true, // 7 378 - 390 (Tier 12.0)
-//            true, // 8 391 - 397 (Tier 12.5)
-            true, // 7 379+    (Tier 12.0)
-//            true, // 9 398+    (Tier 13.0)
+            true, // 6 372 - 377 (Tier 11.5)
+            true, // 7 378 - 390 (Tier 12.0)
+            true, // 8 391 - 403 (Tier 12.5)
+            true, // 9 404+      (Tier 13.0)
         };
         [XmlIgnore]
         public bool[] iLvl {
             get {
                 if (_iLvl == null) {
                     _iLvl = new bool[] {
-                        true, // 0 000-001 (Heirloom)
-                        true, // 1 002-199 (Tier 01-06)
-                        true, // 2 200-284 (Tier 07-10)
-                        true, // 3 285-333 (Cata Dungeons)
-                        true, // 4 334-358 (Cata Heroics)
-                        true, // 5 359-371 (Tier 11.0)
-//                        true, // 6 372 - 377 (Tier 11.5)
-                        true, // 6 372-378 (Tier 11.5)
-//                        true, // 7 378 - 390 (Tier 12.0)
-//                        true, // 8 391 - 397 (Tier 12.5)
-                        true, // 7 379+    (Tier 12.0)
-//                        true, // 9 398+    (Tier 13.0)
+                        true, // 0 000 - 001 (Heirloom)
+                        true, // 1 002 - 199 (Tier 01-06)
+                        true, // 2 200 - 284 (Tier 07-10)
+                        true, // 3 285 - 333 (Cata Dungeons)
+                        true, // 4 334 - 358 (Cata Heroics)
+                        true, // 5 359 - 371 (Tier 11.0)
+                        true, // 6 372 - 377 (Tier 11.5)
+                        true, // 7 378 - 390 (Tier 12.0)
+                        true, // 8 391 - 403 (Tier 12.5)
+                        true, // 9 404+      (Tier 13.0)
                     };
                 }
                 return _iLvl;
@@ -855,18 +849,16 @@ namespace Rawr
             set {
                 if (value == null) {
                     _iLvl = new bool[] {
-                        true, // 0 000-001 (Heirloom)
-                        true, // 1 002-199 (Tier 01-06)
-                        true, // 2 200-284 (Tier 07-10)
-                        true, // 3 285-333 (Cata Dungeons)
-                        true, // 4 334-358 (Cata Heroics)
-                        true, // 5 359-371 (Tier 11.0)
-//                        true, // 6 372 - 377 (Tier 11.5)
-                        true, // 6 372-378 (Tier 11.5)
-//                        true, // 7 378 - 390 (Tier 12.0)
-//                        true, // 8 391 - 397 (Tier 12.5)
-                        true, // 7 379+    (Tier 12.0)
-//                        true, // 9 398+    (Tier 13.0)
+                        true, // 0 000 - 001 (Heirloom)
+                        true, // 1 002 - 199 (Tier 01-06)
+                        true, // 2 200 - 284 (Tier 07-10)
+                        true, // 3 285 - 333 (Cata Dungeons)
+                        true, // 4 334 - 358 (Cata Heroics)
+                        true, // 5 359 - 371 (Tier 11.0)
+                        true, // 6 372 - 377 (Tier 11.5)
+                        true, // 7 378 - 390 (Tier 12.0)
+                        true, // 8 391 - 403 (Tier 12.5)
+                        true, // 9 404+      (Tier 13.0)
                     };
                 } else {
                     _iLvl = value;
@@ -890,18 +882,18 @@ namespace Rawr
         public bool ilvlF_6 { get { return _iLvl[6]; } set { _iLvl[6] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersSettings_7")][DefaultValue(true)]
         public bool ilvlF_7 { get { return _iLvl[7]; } set { _iLvl[7] = value; OnFiltersChanged(); } }
-//        [XmlElement("ItemFiltersSettings_7")][DefaultValue(true)]
-//        public bool ilvlF_8 { get { return _iLvl[8]; } set { _iLvl[8] = value; OnFiltersChanged(); } }
-//        [XmlElement("ItemFiltersSettings_7")][DefaultValue(true)]
-//        public bool ilvlF_9 { get { return _iLvl[9]; } set { _iLvl[9] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersSettings_8")][DefaultValue(true)]
+        public bool ilvlF_8 { get { return _iLvl[8]; } set { _iLvl[8] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersSettings_9")][DefaultValue(true)]
+        public bool ilvlF_9 { get { return _iLvl[9]; } set { _iLvl[9] = value; OnFiltersChanged(); } }
 
         [XmlIgnore]
         private double _ilvlF_SLMin = 285;
         [XmlElement("ItemFiltersSettings_SLMin")][DefaultValue(285)]
         public double ilvlF_SLMin { get { return _ilvlF_SLMin; } set { _ilvlF_SLMin = value; OnFiltersChanged(); } }
         [XmlIgnore]
-        private double _ilvlF_SLMax = 377;
-        [XmlElement("ItemFiltersSettings_SLMax")][DefaultValue(377)]
+        private double _ilvlF_SLMax = 397;
+        [XmlElement("ItemFiltersSettings_SLMax")][DefaultValue(397)]
         public double ilvlF_SLMax { get { return _ilvlF_SLMax; } set { _ilvlF_SLMax = value; OnFiltersChanged(); } }
         #endregion
 

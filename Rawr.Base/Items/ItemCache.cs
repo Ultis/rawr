@@ -549,6 +549,11 @@ namespace Rawr
                 {
                     item.UniqueId = new List<int>() { 50400, 50386, 50399, 50378 };
                 }
+                // Brimstone Rings
+                else if (item.Id == 70940 || item.Id == 71210 || item.Id == 71208 || item.Id == 71211 || item.Id == 71209)
+                {
+                    item.UniqueId = new List<int>() { 70940, 71210, 71208, 71211, 71209 };
+                }
 
                 // special rules for alchemist stones
                 if (item.Id == 58483 || item.Id == 68776 || item.Id == 68777 || item.Id == 68775)

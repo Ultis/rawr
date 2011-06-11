@@ -173,9 +173,14 @@ namespace Rawr
             MaxDropRatePerc = 100.0d;
             MinItemQuality = ItemQuality.Temp;
             MaxItemQuality = ItemQuality.Heirloom;
+            BoP = true;
+            BoE = true;
+            BoU = true;
+            BoN = true;
+            BoA = true;
             AdditiveFilter = true;
             AppliesToItems = true;
-            AppliesToGems = true;
+            AppliesToGems = false;
         }
 
         [XmlIgnore]

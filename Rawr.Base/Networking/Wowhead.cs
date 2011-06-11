@@ -2411,10 +2411,58 @@ namespace Rawr
             string profession = "";
             switch (Rawr.Properties.GeneralSettings.Default.Locale)
             {
+                #region German Translation
+                case "de":
+                    switch (profId.ToString())
+                    {
+                        case "171": profession = "Alchemie"; break;
+                        case "794": profession = "Archäologie"; break;
+                        case "164": profession = "Schmiedekunst"; break;
+                        case "333": profession = "Verzauberkunst"; break;
+                        case "202": profession = "Ingenieurskunst"; break;
+                        case "182": profession = "Kräuterkunde"; break;
+                        case "773": profession = "Inschriftenkunde"; break;
+                        case "755": profession = "Juwelenschleifen"; break;
+                        case "165": profession = "Lederverarbeitung"; break;
+                        case "186": profession = "Bergbau"; break;
+                        case "393": profession = "Kürschnerei"; break;
+                        case "197": profession = "Schneiderei"; break;
+
+                        default:
+                            "".ToString();
+                            break;
+                    }
+                    break;
+                #endregion
+                #region Spanish Translation
+                case "es":
+                    switch (profId.ToString())
+                    {
+                        case "171": profession = "Alquimia"; break;
+                        case "794": profession = "Arqueología"; break;
+                        case "164": profession = "Herrería"; break;
+                        case "333": profession = "Encantamiento"; break;
+                        case "202": profession = "Ingeniería"; break;
+                        case "182": profession = "Herboristería"; break;
+                        case "773": profession = "Inscripción"; break;
+                        case "755": profession = "Joyería"; break;
+                        case "165": profession = "Peletería"; break;
+                        case "186": profession = "Minería"; break;
+                        case "393": profession = "Desuello"; break;
+                        case "197": profession = "Sastrería"; break;
+
+                        default:
+                            "".ToString();
+                            break;
+                    }
+                    break;
+                #endregion
+                #region French Translation
                 case "fr":
                     switch (profId.ToString())
                     {
                         case "171": profession = "Alchimie"; break;
+                        case "794": profession = "Archéologie"; break;
                         case "164": profession = "Forge"; break;
                         case "333": profession = "Enchantement"; break;
                         case "202": profession = "Ingénierie"; break;
@@ -2431,11 +2479,35 @@ namespace Rawr
                             break;
                     }
                     break;
+                #endregion
+                #region Russian Translation
+                case "ru":
+                    switch (profId.ToString())
+                    {
+                        case "171": profession = "Алхимия"; break;
+                        case "794": profession = "Археология"; break;
+                        case "164": profession = "Кузнечное дело"; break;
+                        case "333": profession = "Наложение чар"; break;
+                        case "202": profession = "Инженерное дело"; break;
+                        case "182": profession = "Травничество"; break;
+                        case "773": profession = "Начертание"; break;
+                        case "755": profession = "Ювелирное дело"; break;
+                        case "165": profession = "Кожевничество"; break;
+                        case "186": profession = "Горное дело"; break;
+                        case "393": profession = "Снятие шкур"; break;
+                        case "197": profession = "Портняжное дело"; break;
 
+                        default:
+                            "".ToString();
+                            break;
+                    }
+                    break;
+                #endregion
                 default:
                     switch (profId.ToString())
                     {
                         case "171": profession = "Alchemy"; break;
+                        case "794": profession = "Archaeology"; break;
                         case "164": profession = "Blacksmithing"; break;
                         case "333": profession = "Enchanting"; break;
                         case "202": profession = "Engineering"; break;
@@ -2682,6 +2754,7 @@ namespace Rawr
                             case "5146": return "Vashj'ir";
                             case "5416": return "Der Mahlstrom";
                             case "5630": return "Der Mahlstrom";
+                            case "5733": return "Geschmolzene Front";
                             #endregion
                             #region Dungeons
                             case "4926": return "Schwarzfelshöhlen";
@@ -2691,13 +2764,13 @@ namespace Rawr
                             case "5035": return "Der Vortexgipfel";
                             case "5088": return "Der Steinerne Kern";
                             case "5396": return "Die Verlorene Stadt der Tol'vir";
-                            case "5723": return "Feuerlande";
                             #endregion
                             #region Raids
                             case "5094": return "Pechschwingenabstieg";
                             case "5334": return "Die Bastion des Zwielichts";
                             case "5600": return "Baradinfestung";
                             case "5638": return "Thron der Vier Winde";
+                            case "5723": return "Feuerlande";
                             #endregion
                             case "5706": return "Die Dampfteiche";
                             #endregion
@@ -2912,38 +2985,39 @@ namespace Rawr
                             #endregion
                             #region Cataclysm
                             #region Zones
-                            case "616": return "Mount Hyjal";
+                            case "616": return "Monte Hyjal";
                             case "4714": return "Gilneas";
-                            case "4720": return "The Lost Isles";
+                            case "4720": return "Las Islas Perdidas";
                             case "4737": return "Kezan";
-                            case "4755": return "Gilneas City";
-                            case "4815": return "Vashj'ir: Kelp'thar Forest";
-                            case "4922": return "Twilight Highlands";
+                            case "4755": return "Ciudad de Gilneas";
+                            case "4815": return "Vashj'ir: Bosque Kelp'thar";
+                            case "4922": return "Tierras Altas Crepusculares";
                             case "5034": return "Uldum";
-                            case "5042": return "Deepholm";
+                            case "5042": return "Infralar";
                             case "5095": return "Tol Barad";
-                            case "5144": return "Vashj'ir: Shimmering Expanse";
-                            case "5145": return "Vashj'ir: Abyssal Depths";
+                            case "5144": return "Vashj'ir: Extensión Bruñida";
+                            case "5145": return "Vashj'ir: Profundidades Abisales";
                             case "5146": return "Vashj'ir";
-                            case "5416": return "The Maelstrom";
-                            case "5630": return "The Maelstrom";
+                            case "5416": return "La Vorágine";
+                            case "5630": return "La Vorágine";
+                            case "5733": return "Frente de Magma";
                             #endregion
                             #region Dungeons
-                            case "4926": return "Blackrock Caverns";
-                            case "4945": return "Halls of Origination";
+                            case "4926": return "Cavernas Roca Negra";
+                            case "4945": return "Cámaras de los Orígenes";
                             case "4950": return "Grim Batol";
-                            case "5004": return "Throne of the Tides";
-                            case "5035": return "The Vortex Pinnacle";
-                            case "5088": return "The Stonecore";
-                            case "5396": return "Lost City of the Tol'vir";
-                            case "5723": return "Firelands";
+                            case "5004": return "Trono de las Mareas";
+                            case "5035": return "La Cumbre del Vórtice";
+                            case "5088": return "El Núcleo Pétreo";
+                            case "5396": return "Ciudad Perdida de los Tol'vir";
 							case "1977": return "Zul'Gurub";
                             #endregion
                             #region Raids
-                            case "5094": return "Blackwing Descent";
-                            case "5334": return "The Bastion of Twilight";
-                            case "5600": return "Baradin Hold";
-                            case "5638": return "Throne of the Four Winds";
+                            case "5094": return "Descenso de Alanegra";
+                            case "5334": return "El Bastión del Crepúsculo";
+                            case "5600": return "Bastión de Baradin";
+                            case "5638": return "Trono de los Cuatro Vientos";
+                            case "5723": return "Tierras de Fuego";
                             #endregion
                             case "5706": return "The Steam Pools";
                             #endregion
@@ -3173,6 +3247,7 @@ namespace Rawr
                             case "5146": return "Vashj'ir";
                             case "5416": return "Le Maelström";
                             case "5630": return "Le Maelström";
+                            case "5733": return "Front du Magma";
                             #endregion
                             #region Dungeons
                             case "4926": return "Cavernes de Rochenoire";
@@ -3182,13 +3257,14 @@ namespace Rawr
                             case "5035": return "La cime du Vortex";
                             case "5088": return "Le Cœur-de-pierre";
                             case "5396": return "Cité perdue des Tol'vir";
-                            case "5723": return "Terres de Feu";
+                            case "1977": return "Zul'Gurub";
                             #endregion
                             #region Raids
                             case "5094": return "Descente de l'Aile noire";
                             case "5334": return "Le bastion du Crépuscule";
                             case "5600": return "Bastion de Baradin";
                             case "5638": return "Trône des quatre vents";
+                            case "5723": return "Terres de Feu";
                             #endregion
                             case "5706": return "Les bassins de Vapeur";
                             #endregion
@@ -3403,37 +3479,39 @@ namespace Rawr
                             #endregion
                             #region Cataclysm
                             #region Zones
-                            case "616": return "Mount Hyjal";
-                            case "4714": return "Gilneas";
-                            case "4720": return "The Lost Isles";
-                            case "4737": return "Kezan";
-                            case "4755": return "Gilneas City";
-                            case "4815": return "Vashj'ir: Kelp'thar Forest";
-                            case "4922": return "Twilight Highlands";
-                            case "5034": return "Uldum";
-                            case "5042": return "Deepholm";
-                            case "5095": return "Tol Barad";
-                            case "5144": return "Vashj'ir: Shimmering Expanse";
-                            case "5145": return "Vashj'ir: Abyssal Depths";
-                            case "5146": return "Vashj'ir";
-                            case "5416": return "The Maelstrom";
-                            case "5630": return "The Maelstrom";
+                            case "616": return "Хиджал";
+                            case "4714": return "Гилнеас";
+                            case "4720": return "Затерянные острова";
+                            case "4737": return "Кезан";
+                            case "4755": return "Гилнеас";
+                            case "4815": return "Вайш'ир: Лес Келп’тар";
+                            case "4922": return "Сумеречное нагорье";
+                            case "5034": return "Ульдум";
+                            case "5042": return "Подземье";
+                            case "5095": return "Тол Барад";
+                            case "5144": return "Вайш'ир: Мерцающий простор";
+                            case "5145": return "Вайш'ир: Бездонные глубины";
+                            case "5146": return "Вайш'ир";
+                            case "5416": return "Водоворот";
+                            case "5630": return "Водоворот";
+                            case "5733": return "Огненная передовая";
                             #endregion
                             #region Dungeons
-                            case "4926": return "Blackrock Caverns";
-                            case "4945": return "Halls of Origination";
-                            case "4950": return "Grim Batol";
-                            case "5004": return "Throne of the Tides";
-                            case "5035": return "The Vortex Pinnacle";
-                            case "5088": return "The Stonecore";
-                            case "5396": return "Lost City of the Tol'vir";
-                            case "5723": return "Firelands";
+                            case "4926": return "Пещеры Черной горы";
+                            case "4945": return "Чертоги Созидания";
+                            case "4950": return "Грим Батол";
+                            case "5004": return "Трон Приливов";
+                            case "5035": return "Вершина Смерча";
+                            case "5088": return "Каменные Недра";
+                            case "5396": return "Затерянный город Тол'вир";
+                            case "1977": return "Зул'Гуруб";
                             #endregion
                             #region Raids
-                            case "5094": return "Blackwing Descent";
-                            case "5334": return "The Bastion of Twilight";
-                            case "5600": return "Baradin Hold";
-                            case "5638": return "Throne of the Four Winds";
+                            case "5094": return "Твердыня Крыла Тьмы";
+                            case "5334": return "Сумеречный бастион";
+                            case "5600": return "Крепость Барадин";
+                            case "5638": return "Трон Четырех Ветров";
+                            case "5723": return "Огненные Просторы";
                             #endregion
                             case "5706": return "The Steam Pools";
                             #endregion
@@ -3663,6 +3741,7 @@ namespace Rawr
                             case "5146": return "Vashj'ir";
                             case "5416": 
                             case "5630": return "The Maelstrom";
+                            case "5733": return "Molten Front";
                             #endregion
                             #region Dungeons
                             case "4926": return "Blackrock Caverns";
@@ -3672,13 +3751,13 @@ namespace Rawr
                             case "5035": return "The Vortex Pinnacle";
                             case "5088": return "The Stonecore";
                             case "5396": return "Lost City of the Tol'vir";
-                            case "5723": return "Firelands";
                             #endregion
                             #region Raids
                             case "5094": return "Blackwing Descent";
                             case "5334": return "The Bastion of Twilight";
                             case "5600": return "Baradin Hold";
                             case "5638": return "Throne of the Four Winds";
+                            case "5723": return "Firelands";
                             #endregion
                             case "5706": return "The Steam Pools";
                             #endregion
