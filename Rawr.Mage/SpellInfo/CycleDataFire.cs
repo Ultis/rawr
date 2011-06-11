@@ -94,6 +94,11 @@ namespace Rawr.Mage
             float FBc = FB.CritRate;
             float FBHSc = FB.CritRate - FB.NonHSCritRate;
             float FBk = Math.Max(-2.73f * FBHSc + 0.95f, 0f);
+            if (castingState.Solver.Mage4T12)
+            {
+                // basing on http://elitistjerks.com/f75/t110326-cataclysm_fire_mage_compendium/p21/#post1946836
+                FBk = Math.Min(0.3f + FBk, 1f);
+            }
             K = ((FBc * FBc - FBc) * FBk - FBc * FBc) / (FBc * FBk - FBc - 1);
             if (castingState.Solver.Specialization != Specialization.Fire) K = 0.0f;
 
@@ -199,6 +204,10 @@ namespace Rawr.Mage
             float FBc = FB.CritRate;
             float FBHSc = FB.CritRate - FB.NonHSCritRate;
             float FBk = Math.Max(-2.73f * FBHSc + 0.95f, 0f);
+            if (castingState.Solver.Mage4T12)
+            {
+                FBk = Math.Min(0.3f + FBk, 1f);
+            }
             K = ((FBc * FBc - FBc) * FBk - FBc * FBc) / (FBc * FBk - FBc - 1);
             if (castingState.Solver.Specialization != Specialization.Fire) K = 0.0f;
 
@@ -276,6 +285,10 @@ namespace Rawr.Mage
             float SCc = Sc.CritRate;
             float SCHSc = Sc.CritRate - Sc.NonHSCritRate;
             float SCk = Math.Max(-2.73f * SCHSc + 0.95f, 0f);
+            if (castingState.Solver.Mage4T12)
+            {
+                SCk = Math.Min(0.3f + SCk, 1f);
+            }
             K = ((SCc * SCc - SCc) * SCk - SCc * SCc) / (SCc * SCk - SCc - 1);
             if (castingState.Solver.Specialization != Specialization.Fire) K = 0.0f;
 
@@ -363,6 +376,10 @@ namespace Rawr.Mage
             float FFBc = FFB.CritRate;
             float FFBHSc = FFB.CritRate - FFB.NonHSCritRate;
             float FFBk = Math.Max(-2.73f * FFBHSc + 0.95f, 0f);
+            if (castingState.Solver.Mage4T12)
+            {
+                FFBk = Math.Min(0.3f + FFBk, 1f);
+            }
             K = ((FFBc * FFBc - FFBc) * FFBk - FFBc * FFBc) / (FFBc * FFBk - FFBc - 1);
             if (castingState.Solver.Specialization != Specialization.Fire) K = 0.0f;
 

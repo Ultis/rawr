@@ -136,8 +136,12 @@ namespace Rawr.Mage
         public bool Mage4T10 { get; set; }
         public bool Mage2T11 { get; set; }
         public bool Mage4T11 { get; set; }
+        public bool Mage2T12 { get; set; }
+        public bool Mage4T12 { get; set; }
         public bool Mage2PVP { get; set; }
         public bool Mage4PVP { get; set; }
+
+        public static readonly SpecialEffect SpecialEffect2T12 = new SpecialEffect(Trigger.MageNukeCast, new Stats() { FireDamage = 4 * 7016.5f / 15f }, 15f, 45f, 0.2f, 1);
 
         public int MaxTalents { get; set; }
         public Specialization Specialization { get; set; }
@@ -1738,6 +1742,9 @@ namespace Rawr.Mage
             Character.SetBonusCount.TryGetValue("Firelord's Vestments", out setCount);
             Mage2T11 = (setCount >= 2);
             Mage4T11 = (setCount >= 4);
+            Character.SetBonusCount.TryGetValue("Firehawk Robes of Conflagration", out setCount);
+            Mage2T12 = (setCount >= 2);
+            Mage4T12 = (setCount >= 4);
             Character.SetBonusCount.TryGetValue("Gladiator's Regalia", out setCount);
             Mage2PVP = (setCount >= 2);
             Mage4PVP = (setCount >= 4);
@@ -1750,6 +1757,10 @@ namespace Rawr.Mage
             if (Mage4PVP)
             {
                 rawStats.Intellect += 90;
+            }
+            if (Mage2T12)
+            {
+                rawStats.AddSpecialEffect(SpecialEffect2T12);
             }
 
             BaseStats = calculations.GetCharacterStats(Character, additionalItem, rawStats, CalculationOptions);

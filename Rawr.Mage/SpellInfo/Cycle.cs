@@ -510,12 +510,12 @@ namespace Rawr.Mage
                 for (int i = 0; i < CastingState.Solver.SpellPowerEffectsCount; i++)
                 {
                     SpecialEffect effect = CastingState.Solver.SpellPowerEffects[i];
-                    spellPower += effect.Stats.SpellPower * GetAverageUptime(effect);
+                    spellPower += effect.Stats.SpellPower * GetAverageFactor(effect);
                 }
                 for (int i = 0; i < CastingState.Solver.IntellectEffectsCount; i++)
                 {
                     SpecialEffect effect = CastingState.Solver.IntellectEffects[i];
-                    float uptime = GetAverageUptime(effect);
+                    float uptime = GetAverageFactor(effect);
                     effectIntellect += (effect.Stats.Intellect + effect.Stats.HighestStat) * uptime;
                     if (CastingState.Solver.Specialization == Specialization.Arcane)
                     {
@@ -525,7 +525,7 @@ namespace Rawr.Mage
                 for (int i = 0; i < CastingState.Solver.MasteryRatingEffectsCount; i++)
                 {
                     SpecialEffect effect = CastingState.Solver.MasteryRatingEffects[i];
-                    effectMasteryRating += effect.Stats.MasteryRating * GetAverageUptime(effect);
+                    effectMasteryRating += effect.Stats.MasteryRating * GetAverageFactor(effect);
                 }
                 if (DotProcs > 0)
                 {
@@ -539,7 +539,7 @@ namespace Rawr.Mage
                 for (int i = 0; i < CastingState.Solver.ResetStackingEffectsCount; i++)
                 {
                     SpecialEffect effect = CastingState.Solver.ResetStackingEffects[i];
-                    float outerUptime = GetAverageUptime(effect);
+                    float outerUptime = GetAverageFactor(effect);
                     for (int j = 0; j < effect.Stats._rawSpecialEffectDataSize; j++)
                     {
                         SpecialEffect e = effect.Stats._rawSpecialEffectData[i];
@@ -591,7 +591,7 @@ namespace Rawr.Mage
                 for (int i = 0; i < CastingState.Solver.DamageProcEffectsCount; i++)
                 {
                     SpecialEffect effect = CastingState.Solver.DamageProcEffects[i];
-                    float effectsPerSecond = GetAverageProcsPerSecond(effect);
+                    float effectsPerSecond = GetAverageFactor(effect);
                     if (effect.Stats.ArcaneDamage > 0)
                     {
                         float boltDps = CastingState.ArcaneAverageDamage * effect.Stats.ArcaneDamage * effectsPerSecond;
@@ -707,22 +707,6 @@ namespace Rawr.Mage
             return false;
         }
 
-        private float GetAverageUptime(SpecialEffect effect)
-        {
-            float triggerInterval;
-            float triggerChance;
-            if (GetTriggerData(effect, out triggerInterval, out triggerChance))
-            {
-                float durationMultiplier = 1;
-                if (effect.LimitedToExecutePhase)
-                {
-                    durationMultiplier = CastingState.CalculationOptions.MoltenFuryPercentage;
-                }
-                return durationMultiplier * effect.GetAverageUptime(triggerInterval, triggerChance, 3, durationMultiplier * CastingState.CalculationOptions.FightDuration);
-            }
-            return 0;
-        }
-
         private void CalculateManaRegen()
         {
             if (CastingState.CalculationOptions.EffectDisableManaSources) return;
@@ -731,12 +715,12 @@ namespace Rawr.Mage
             for (int i = 0; i < CastingState.Solver.ManaRestoreEffectsCount; i++)
             {
                 SpecialEffect effect = CastingState.Solver.ManaRestoreEffects[i];
-                manaRegenPerSecond += effect.Stats.ManaRestore * GetAverageProcsPerSecond(effect);
+                manaRegenPerSecond += effect.Stats.ManaRestore * GetAverageFactor(effect);
             }
             for (int i = 0; i < CastingState.Solver.Mp5EffectsCount; i++)
             {
                 SpecialEffect effect = CastingState.Solver.Mp5Effects[i];
-                manaRegenPerSecond += effect.Stats.Mp5 / 5f * GetAverageUptime(effect);
+                manaRegenPerSecond += effect.Stats.Mp5 / 5f * GetAverageFactor(effect);
             }
             //threatPerSecond += (baseStats.ManaRestoreFromBaseManaPPM * 3268 / CastTime * HitProcs) * 0.5f * (1 + baseStats.ThreatIncreaseMultiplier) * (1 - baseStats.ThreatReductionMultiplier);
         }
@@ -752,12 +736,12 @@ namespace Rawr.Mage
             for (int i = 0; i < CastingState.Solver.ManaRestoreEffectsCount; i++)
             {
                 SpecialEffect effect = CastingState.Solver.ManaRestoreEffects[i];
-                dict["Other"] += duration * effect.Stats.ManaRestore * GetAverageProcsPerSecond(effect);
+                dict["Other"] += duration * effect.Stats.ManaRestore * GetAverageFactor(effect);
             }
             for (int i = 0; i < CastingState.Solver.Mp5EffectsCount; i++)
             {
                 SpecialEffect effect = CastingState.Solver.Mp5Effects[i];
-                dict["Other"] += duration * effect.Stats.Mp5 / 5f * GetAverageUptime(effect);
+                dict["Other"] += duration * effect.Stats.Mp5 / 5f * GetAverageFactor(effect);
             }
         }
 
@@ -792,7 +776,7 @@ namespace Rawr.Mage
                 {
                     SpecialEffect effect = CastingState.Solver.DamageProcEffects[i];
                     string name = null;
-                    float effectsPerSecond = GetAverageProcsPerSecond(effect);
+                    float effectsPerSecond = GetAverageFactor(effect);
                     float boltDps = 0f;
                     if (effect.Stats.ArcaneDamage > 0)
                     {
@@ -848,7 +832,7 @@ namespace Rawr.Mage
             }
         }
 
-        private float GetAverageProcsPerSecond(SpecialEffect effect)
+        private float GetAverageFactor(SpecialEffect effect)
         {
             float triggerInterval;
             float triggerChance;
@@ -859,7 +843,14 @@ namespace Rawr.Mage
                 {
                     durationMultiplier = CastingState.CalculationOptions.MoltenFuryPercentage;
                 }
-                return durationMultiplier * effect.GetAverageProcsPerSecond(triggerInterval, triggerChance, 3f, durationMultiplier * CastingState.CalculationOptions.FightDuration);
+                if (effect.Duration > 0)
+                {
+                    return durationMultiplier * effect.GetAverageUptime(triggerInterval, triggerChance, 3f, durationMultiplier * CastingState.CalculationOptions.FightDuration);
+                }
+                else
+                {
+                    return durationMultiplier * effect.GetAverageProcsPerSecond(triggerInterval, triggerChance, 3f, durationMultiplier * CastingState.CalculationOptions.FightDuration);
+                }
             }
             return 0;
         }

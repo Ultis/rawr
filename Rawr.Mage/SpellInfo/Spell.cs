@@ -377,7 +377,17 @@ namespace Rawr.Mage
             DirectDamageModifier = template.BaseDirectDamageModifier;
             DotDamageModifier = template.BaseDotDamageModifier * castingState.Solver.DarkIntentDotDamageAmplifier;
             if (castingState.PowerInfusion) CostModifier -= 0.2f; // don't have any information on this, going by best guess
-            if (castingState.ArcanePower) CostModifier += 0.1f;
+            if (castingState.ArcanePower)
+            {
+                if (castingState.Solver.Mage4T12)
+                {
+                    CostModifier -= 0.1f;
+                }
+                else
+                {
+                    CostModifier += 0.1f;
+                }
+            }
             InterruptProtection = template.BaseInterruptProtection;
 
             SpellModifier = template.BaseSpellModifier * castingState.StateSpellModifier;

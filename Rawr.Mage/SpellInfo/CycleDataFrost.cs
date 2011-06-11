@@ -227,6 +227,50 @@ namespace Rawr.Mage
         {0.6166569f,	0f,	0.176937014f,	0.173626512f,	0.032779574f},
         {0.6166615f,	0f,	0.176908925f,	0.173647508f,	0.03278206f},
         {0.61670357f,	0f,	0.176935852f,	0.1735808f,	    0.032779768f}};
+        private static float[,] CastDistributionT12 = new float[21, 5]
+	    {{0.706252f,	0f,	0.133225f,	0.1031823f,	    0.05734068f},
+	    {0.7120382f,	0f,	0.1338209f,	0.09929287f,	0.05484801f},
+	    {0.7151474f,	0f,	0.1333017f,	0.09916303f,	0.05238784f},
+	    {0.7205276f,	0f,	0.1331322f,	0.09619394f,	0.0501462f},
+	    {0.7235046f,	0f,	0.1340708f,	0.09431984f,	0.04810472f},
+	    {0.7276107f,	0f,	0.1334465f,	0.09269033f,	0.04625241f},
+	    {0.730621f,	    0f,	0.1337644f,	0.09098524f,	0.04462929f},
+	    {0.7342333f,	0f,	0.1338861f,	0.08885222f,	0.04302839f},
+	    {0.736442f,	    0f,	0.1335555f,	0.08849932f,	0.04150319f},
+	    {0.7388258f,	0f,	0.134181f,	0.08687305f,	0.04012015f},
+	    {0.7416363f,	0f,	0.1339485f,	0.08556953f,	0.03884568f},
+	    {0.743588f,	    0f,	0.133672f,	0.08470091f,	0.03803909f},
+	    {0.7454485f,	0f,	0.1337775f,	0.08350687f,	0.03726713f},
+	    {0.7470396f,	0f,	0.1334852f,	0.08305957f,	0.03641563f},
+	    {0.748008f,	    0f,	0.1338823f,	0.08276368f,	0.03534608f},
+	    {0.7502965f,	0f,	0.1331005f,	0.08184797f,	0.03475505f},
+	    {0.7505655f,	0f,	0.1336799f,	0.08173961f,	0.03401494f},
+	    {0.7531676f,	0f,	0.1331804f,	0.08044228f,	0.03320982f},
+	    {0.7531664f,	0f,	0.1334017f,	0.08058503f,	0.03284679f},
+	    {0.7557487f,	0f,	0.133393f,	0.07909141f,	0.03176685f},
+	    {0.7557488f,	0f,	0.1333961f,	0.07908709f,	0.03176798f}};
+        private static float[,] CastDistributionT12FFO = new float[21, 5]
+	    {{0.4687241f,	0f,	0.3177885f,	0.1581333f,	0.0553541f},
+	    {0.4811813f,	0f,	0.3123612f,	0.153508f,	0.05294952f},
+	    {0.4906897f,	0f,	0.3080013f,	0.1505895f,	0.05071948f},
+	    {0.5015014f,	0f,	0.3035668f,	0.14624f,	0.0486918f},
+	    {0.510736f,	    0f,	0.298745f,	0.14373f,	0.046789f},
+	    {0.5207732f,	0f,	0.2941628f,	0.140029f,	0.04503507f},
+	    {0.5292103f,	0f,	0.2899091f,	0.1374499f,	0.0434306f},
+	    {0.5371782f,	0f,	0.2854958f,	0.1353987f,	0.04192728f},
+	    {0.5452931f,	0f,	0.2817981f,	0.1323696f,	0.04053913f},
+	    {0.5524104f,	0f,	0.2782257f,	0.1301366f,	0.03922724f},
+	    {0.5598132f,	0f,	0.2746831f,	0.1275034f,	0.03800023f},
+	    {0.5641169f,	0f,	0.2725927f,	0.125818f,	0.0374724f},
+	    {0.5681915f,	0f,	0.2703645f,	0.124596f,	0.036848f},
+	    {0.5721451f,	0f,	0.268714f,	0.1229821f,	0.03615874f},
+	    {0.5755674f,	0f,	0.2667559f,	0.1222469f,	0.03542995f},
+	    {0.5790635f,	0f,	0.2650871f,	0.120998f,	0.0348514f},
+	    {0.5828797f,	0f,	0.2634758f,	0.1192735f,	0.03437104f},
+	    {0.5854599f,	0f,	0.2617701f,	0.1191155f,	0.03365446f},
+	    {0.5891193f,	0f,	0.2601747f,	0.1171092f,	0.03359687f},
+	    {0.5922822f,	0f,	0.2586771f,	0.1165186f,	0.03252209f},
+	    {0.5942183f,	0f,	0.2571276f,	0.1161443f,	0.03250973f}};
 
         public static void SolveCycle(CastingState castingState, bool useFFO, out float KFrB, out float KFFB, out float KFFBS, out float KILS, out float KDFS)
         {
@@ -247,7 +291,7 @@ namespace Rawr.Mage
             float fof = (castingState.MageTalents.FingersOfFrost == 3 ? 0.2f : 0.07f * castingState.MageTalents.FingersOfFrost);
 
             // override this so we don't have to store so many variations (means talent graphs won't show value for this talent)
-            bf = 0.15f;
+            bf = 0.3f; // testing possible 4T12 value
             fof = 0.2f;
 
             float dfCooldown = 0;
@@ -470,6 +514,11 @@ namespace Rawr.Mage
                 castDistribution = CastDistributionT11;
                 castDistributionFFO = CastDistributionT11FFO;
             }
+            else if (castingState.Solver.Mage4T12)
+            {
+                castDistribution = CastDistributionT12;
+                castDistributionFFO = CastDistributionT12FFO;
+            }
             else
             {
                 castDistribution = CastDistribution;
@@ -488,57 +537,27 @@ namespace Rawr.Mage
                 r = 1;
             }
 
-            /*if (castDistribution[i, 0] == 0)
+            // uncomment this to get code for cast distributions to paste
+            /*lock (castDistribution)
             {
-                lock (castDistribution)
+                for (i = 0; i < 21; i++)
                 {
-                    if (castDistribution[i, 0] == 0)
-                    {
-                        CastingState state = castingState.Clone();
-                        state.CastingSpeed = 1 + i * 0.05f;
-                        state.ReferenceCastingState = castingState;
-                        SolveCycle(state, false, out castDistribution[i, 0], out castDistribution[i, 1], out castDistribution[i, 2], out castDistribution[i, 3], out castDistribution[i, 4]);
-                    }
+                    CastingState state = castingState.Clone();
+                    state.CastingSpeed = 1 + i * 0.05f;
+                    state.ReferenceCastingState = castingState;
+                    SolveCycle(state, false, out castDistribution[i, 0], out castDistribution[i, 1], out castDistribution[i, 2], out castDistribution[i, 3], out castDistribution[i, 4]);
+                    System.Diagnostics.Trace.WriteLine(string.Format("\t{{{0}f,	{1}f,	{2}f,	{3}f,	{4}f}},", castDistribution[i, 0], castDistribution[i, 1], castDistribution[i, 2], castDistribution[i, 3], castDistribution[i, 4]));
                 }
-            }
-            if (castDistribution[i + 1, 0] == 0)
-            {
-                lock (castDistribution)
+                Console.WriteLine();
+                for (i = 0; i < 21; i++)
                 {
-                    if (castDistribution[i + 1, 0] == 0)
-                    {
-                        CastingState state = castingState.Clone();
-                        state.CastingSpeed = 1 + (i + 1) * 0.05f;
-                        state.ReferenceCastingState = castingState;
-                        SolveCycle(state, false, out castDistribution[i + 1, 0], out castDistribution[i + 1, 1], out castDistribution[i + 1, 2], out castDistribution[i + 1, 3], out castDistribution[i + 1, 4]);
-                    }
+                    CastingState state = castingState.Clone();
+                    state.CastingSpeed = 1 + i * 0.05f;
+                    state.ReferenceCastingState = castingState;
+                    SolveCycle(state, true, out castDistribution[i, 0], out castDistribution[i, 1], out castDistribution[i, 2], out castDistribution[i, 3], out castDistribution[i, 4]);
+                    System.Diagnostics.Trace.WriteLine(string.Format("\t{{{0}f,	{1}f,	{2}f,	{3}f,	{4}f}},", castDistribution[i, 0], castDistribution[i, 1], castDistribution[i, 2], castDistribution[i, 3], castDistribution[i, 4]));
                 }
-            }
-            if (castDistributionFFO[i, 0] == 0)
-            {
-                lock (castDistributionFFO)
-                {
-                    if (castDistributionFFO[i, 0] == 0)
-                    {
-                        CastingState state = castingState.Clone();
-                        state.CastingSpeed = 1 + i * 0.05f;
-                        state.ReferenceCastingState = castingState;
-                        SolveCycle(state, true, out castDistributionFFO[i, 0], out castDistributionFFO[i, 1], out castDistributionFFO[i, 2], out castDistributionFFO[i, 3], out castDistributionFFO[i, 4]);
-                    }
-                }
-            }
-            if (castDistributionFFO[i + 1, 0] == 0)
-            {
-                lock (castDistributionFFO)
-                {
-                    if (castDistributionFFO[i + 1, 0] == 0)
-                    {
-                        CastingState state = castingState.Clone();
-                        state.CastingSpeed = 1 + (i + 1) * 0.05f;
-                        state.ReferenceCastingState = castingState;
-                        SolveCycle(state, false, out castDistributionFFO[i + 1, 0], out castDistributionFFO[i + 1, 1], out castDistributionFFO[i + 1, 2], out castDistributionFFO[i + 1, 3], out castDistributionFFO[i + 1, 4]);
-                    }
-                }
+                Console.WriteLine();
             }*/
 
             if (castingState.CalculationOptions.FlameOrb == 0 || (castingState.CalculationOptions.FlameOrb == 2 && !castingState.FlameOrb))
