@@ -214,7 +214,7 @@ namespace Rawr
                     return enchant.Id == 0 || 
                         ((enchant.Slot == ItemSlot.None || 
                         model.IsEnchantRelevant(enchant, character) && (slot == ItemSlot.None || enchant.FitsInSlot(slot, character)))
-                        && availableIds.Contains((-1 * (enchant.Id + ((int)AvailableItemIDModifiers.Enchants * (int)enchant.Slot))).ToString()));
+                        && availableIds.Contains((-1 * (enchant.Id + ((int)AvailableItemIDModifiers.Enchants * (int)enchant.Slot))).ToString(System.Globalization.CultureInfo.InvariantCulture)));
                 }
             ));
         }
@@ -234,7 +234,7 @@ namespace Rawr
                         }
                     }
                     return ((isRelevant || enchant.Slot == ItemSlot.None)
-                        && availableIds.Contains((-1 * (enchant.Id + ((int)AvailableItemIDModifiers.Enchants * (int)enchant.Slot))).ToString()))
+                        && availableIds.Contains((-1 * (enchant.Id + ((int)AvailableItemIDModifiers.Enchants * (int)enchant.Slot))).ToString(System.Globalization.CultureInfo.InvariantCulture)))
                         || enchant.Id == 0;
                 }
             ));

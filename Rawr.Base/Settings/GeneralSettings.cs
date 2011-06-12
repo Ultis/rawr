@@ -86,40 +86,39 @@ namespace Rawr.Properties
                 {
                     string currentVersion = getCurrentVersion;// System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
                     Match currentMatch = Regex.Match(currentVersion, @"(?<major>\d+)\.(?<minor>\d+)\.(?<build>\d+)\.?(?<revsn>\d+)?");
-                    Match lastMatch = Regex.Match(lastversion, @"(?<major>\d+)\.(?<minor>\d+)\.(?<build>\d+)\.?(?<revsn>\d+)?");
+                    Match otherMatch = Regex.Match(lastversion, @"(?<major>\d+)\.(?<minor>\d+)\.(?<build>\d+)\.?(?<revsn>\d+)?");
                     //
                     bool NewRelAvail = false;
 
-                    int valueMajorC = 0; int valueMajorL = 0;
-                    int valueMinorC = 0; int valueMinorL = 0;
-                    int valueBuildC = 0; int valueBuildL = 0;
-                    int valueRevsnC = 0; int valueRevsnL = 0;
+                    int valueMajorC = 0; int valueMajorO = 0;
+                    int valueMinorC = 0; int valueMinorO = 0;
+                    int valueBuildC = 0; int valueBuildO = 0;
+                    int valueRevsnC = 0; int valueRevsnO = 0;                    
 
-                    if (currentMatch.Groups["major"].Value != "" && lastMatch.Groups["major"].Value != "")
+                    if (currentMatch.Groups["major"].Value != "" && otherMatch.Groups["major"].Value != "")
                     {
-                        valueMajorC = int.Parse(currentMatch.Groups["major"].Value) * 100 * 100 * 100;
-                        valueMajorL = int.Parse(lastMatch.Groups["major"].Value) * 100 * 100 * 100;
+                        valueMajorC = int.Parse(currentMatch.Groups["major"].Value);
+                        valueMajorO = int.Parse(otherMatch.Groups["major"].Value);
+                        if (valueMajorO != valueMajorC) { NewRelAvail = true; }
                     }
-                    if (currentMatch.Groups["minor"].Value != "" && lastMatch.Groups["minor"].Value != "")
+                    if (currentMatch.Groups["minor"].Value != "" && otherMatch.Groups["minor"].Value != "")
                     {
-                        valueMinorC = int.Parse(currentMatch.Groups["minor"].Value) * 100 * 100;
-                        valueMinorL = int.Parse(lastMatch.Groups["minor"].Value) * 100 * 100;
+                        valueMinorC = int.Parse(currentMatch.Groups["minor"].Value);
+                        valueMinorO = int.Parse(otherMatch.Groups["minor"].Value);
+                        if (valueMinorO != valueMinorC) { NewRelAvail = true; }
                     }
-                    if (currentMatch.Groups["build"].Value != "" && lastMatch.Groups["build"].Value != "")
+                    if (currentMatch.Groups["build"].Value != "" && otherMatch.Groups["build"].Value != "")
                     {
-                        valueBuildC = int.Parse(currentMatch.Groups["build"].Value) * 100;
-                        valueBuildL = int.Parse(lastMatch.Groups["build"].Value) * 100;
+                        valueBuildC = int.Parse(currentMatch.Groups["build"].Value);
+                        valueBuildO = int.Parse(otherMatch.Groups["build"].Value);
+                        if (valueBuildO != valueBuildC) { NewRelAvail = true; }
                     }
-                    if (currentMatch.Groups["revsn"].Value != "" && lastMatch.Groups["revsn"].Value != "")
+                    if (currentMatch.Groups["revsn"].Value != "" && otherMatch.Groups["revsn"].Value != "")
                     {
                         valueRevsnC = int.Parse(currentMatch.Groups["revsn"].Value);
-                        valueRevsnL = int.Parse(lastMatch.Groups["revsn"].Value);
+                        valueRevsnO = int.Parse(otherMatch.Groups["revsn"].Value);
+                        if (valueRevsnO != valueRevsnC) { NewRelAvail = true; }
                     }
-
-                    int valueCurrent = valueMajorC + valueMinorC + valueBuildC + valueRevsnC;
-                    int valueLast = valueMajorL + valueMinorL + valueBuildL + valueRevsnL;
-
-                    NewRelAvail = valueCurrent > valueLast;
 
                     return IsNewVersionRunning = NewRelAvail;
                 }

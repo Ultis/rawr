@@ -615,15 +615,15 @@ If that is still not working for you, right-click anywhere within the web versio
                 string id = ids[i];
                 if (id != null)
                 {
-                    if (id.IndexOf('.') < 0 && ItemCache.ContainsItemId(int.Parse(id))) continue;
+                    if (id.IndexOf('.') < 0 && ItemCache.ContainsItemId(int.Parse(id, System.Globalization.CultureInfo.InvariantCulture))) continue;
                     string[] s = id.Split('.');
-                    Item newItem = Item.LoadFromId(int.Parse(s[0]), false, false, true, false); // changed to Wowhead until we have battle.net parsing working
+                    Item newItem = Item.LoadFromId(int.Parse(s[0], System.Globalization.CultureInfo.InvariantCulture), false, false, true, false); // changed to Wowhead until we have battle.net parsing working
                     if (s.Length >= 5)
                     {
                         Item gem;
-                        if (s[2] != "*" && s[2] != "0") gem = Item.LoadFromId(int.Parse(s[2]), false, false, true, false);
-                        if (s[3] != "*" && s[3] != "0") gem = Item.LoadFromId(int.Parse(s[3]), false, false, true, false);
-                        if (s[4] != "*" && s[4] != "0") gem = Item.LoadFromId(int.Parse(s[4]), false, false, true, false);
+                        if (s[2] != "*" && s[2] != "0") gem = Item.LoadFromId(int.Parse(s[2], System.Globalization.CultureInfo.InvariantCulture), false, false, true, false);
+                        if (s[3] != "*" && s[3] != "0") gem = Item.LoadFromId(int.Parse(s[3], System.Globalization.CultureInfo.InvariantCulture), false, false, true, false);
+                        if (s[4] != "*" && s[4] != "0") gem = Item.LoadFromId(int.Parse(s[4], System.Globalization.CultureInfo.InvariantCulture), false, false, true, false);
                     }
                     /*if (newItem != null)
                     {

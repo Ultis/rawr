@@ -1584,7 +1584,7 @@ namespace Rawr.Optimizer
             foreach (string xid in availableItems)
             {
                 int dot = xid.IndexOf('.');
-                int id = int.Parse((dot >= 0) ? xid.Substring(0, dot) : xid);
+                int id = int.Parse((dot >= 0) ? xid.Substring(0, dot) : xid, System.Globalization.CultureInfo.InvariantCulture);
                 if (id > 0)
                 {
                     Item availableItem;
@@ -1770,9 +1770,9 @@ namespace Rawr.Optimizer
             foreach (KeyValuePair<string, Dictionary<string, bool>> keyMap in gemmedIdMap)
             {
                 var tmp = keyMap.Key.Split('.');
-                int itemId = int.Parse(tmp[0]);
+                int itemId = int.Parse(tmp[0], System.Globalization.CultureInfo.InvariantCulture);
                 item = ItemCache.FindItemById(itemId);
-                int randomSuffixId = tmp.Length < 2 ? 0 : int.Parse(tmp[1]);
+                int randomSuffixId = tmp.Length < 2 ? 0 : int.Parse(tmp[1], System.Globalization.CultureInfo.InvariantCulture);
 
                 // make sure that any random suffix id is actually available
                 // this most often happens when item cache doesn't have accurate data
@@ -1979,7 +1979,7 @@ namespace Rawr.Optimizer
             }
             else
             {
-                possibleGem1s = new Item[] { ItemCache.FindItemById(int.Parse(ids[2])) };
+                possibleGem1s = new Item[] { ItemCache.FindItemById(int.Parse(ids[2], System.Globalization.CultureInfo.InvariantCulture)) };
             }
 
             if (ids.Length <= 3 || (ids.Length > 3 && ids[3] == "*"))
@@ -2014,7 +2014,7 @@ namespace Rawr.Optimizer
             }
             else
             {
-                possibleGem2s = new Item[] { ItemCache.FindItemById(int.Parse(ids[3])) };
+                possibleGem2s = new Item[] { ItemCache.FindItemById(int.Parse(ids[3], System.Globalization.CultureInfo.InvariantCulture)) };
             }
 
             if (ids.Length <= 4 || (ids.Length > 4 && ids[4] == "*"))
@@ -2047,7 +2047,7 @@ namespace Rawr.Optimizer
                         break;
                 }
             } else {
-                possibleGem3s = new Item[] { ItemCache.FindItemById(int.Parse(ids[4])) };
+                possibleGem3s = new Item[] { ItemCache.FindItemById(int.Parse(ids[4], System.Globalization.CultureInfo.InvariantCulture)) };
             }
 
             if (ids.Length <= 5 || (ids.Length > 5 && ids[5] == "*")) {
@@ -2056,7 +2056,7 @@ namespace Rawr.Optimizer
                     possibleEnchants = slotAvailableEnchants[slotIndex];
                 if (possibleEnchants == null) possibleEnchants = new Enchant[] { null };
             } else {
-                possibleEnchants = new Enchant[] { Enchant.FindEnchant(int.Parse(ids[5]), item.Slot, null) };
+                possibleEnchants = new Enchant[] { Enchant.FindEnchant(int.Parse(ids[5], System.Globalization.CultureInfo.InvariantCulture), item.Slot, null) };
             }
 
             if (ids.Length <= 6 || (ids.Length > 6 && ids[6] == "*")) 
@@ -2071,7 +2071,7 @@ namespace Rawr.Optimizer
                 }
             } else 
             {
-                possibleReforgings = new Reforging[] { new Reforging(item, randomSuffixId, int.Parse(ids[6])) };
+                possibleReforgings = new Reforging[] { new Reforging(item, randomSuffixId, int.Parse(ids[6], System.Globalization.CultureInfo.InvariantCulture)) };
             }
 
             if (ids.Length <= 7 || (ids.Length > 7 && ids[7] == "*"))
@@ -2083,7 +2083,7 @@ namespace Rawr.Optimizer
             }
             else
             {
-                possibleTinkerings = new Tinkering[] { Tinkering.FindTinkering(int.Parse(ids[7]), item.Slot, null) };
+                possibleTinkerings = new Tinkering[] { Tinkering.FindTinkering(int.Parse(ids[7], System.Globalization.CultureInfo.InvariantCulture), item.Slot, null) };
             }
 
             bool generative = (ids.Length <= 2 || (ids.Length > 2 && ids[2] == "*")) && (ids.Length <= 3 || (ids.Length > 3 && ids[3] == "*")) && (ids.Length <= 4 || (ids.Length > 4 && ids[4] == "*"));

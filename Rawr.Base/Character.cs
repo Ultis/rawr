@@ -1446,12 +1446,12 @@ namespace Rawr
         }
         public ItemAvailability GetItemAvailability(Enchant enchant)
         {
-            string id = (-1 * (enchant.Id + ((int)AvailableItemIDModifiers.Enchants * (int)enchant.Slot))).ToString();
+            string id = (-1 * (enchant.Id + ((int)AvailableItemIDModifiers.Enchants * (int)enchant.Slot))).ToString(System.Globalization.CultureInfo.InvariantCulture);
             return GetItemAvailability(id, string.Format("{0}.0", enchant.Id), id);
         }
         public ItemAvailability GetItemAvailability(Tinkering tinkering)
         {
-            string id = (-1 * (tinkering.Id + ((int)AvailableItemIDModifiers.Tinkerings * (int)tinkering.Slot))).ToString();
+            string id = (-1 * (tinkering.Id + ((int)AvailableItemIDModifiers.Tinkerings * (int)tinkering.Slot))).ToString(System.Globalization.CultureInfo.InvariantCulture);
             return GetItemAvailability(id, string.Format("{0}.0", tinkering.Id), id);
         }
         private ItemAvailability GetItemAvailability(string id, string suffixId, string fullId)
@@ -1555,7 +1555,7 @@ namespace Rawr
         }
         public void ToggleItemAvailability(Enchant enchant)
         {
-            string id = (-1 * (enchant.Id + ((int)AvailableItemIDModifiers.Enchants * (int)enchant.Slot))).ToString();
+            string id = (-1 * (enchant.Id + ((int)AvailableItemIDModifiers.Enchants * (int)enchant.Slot))).ToString(System.Globalization.CultureInfo.InvariantCulture);
             ItemAvailability newItemAvailability = ItemAvailability.NotAvailable;
             // all enabled toggle
             if (_availableItems.Contains(id)) {
@@ -1569,7 +1569,7 @@ namespace Rawr
         }
         public void ToggleItemAvailability(Tinkering tinkering)
         {
-            string id = (-1 * (tinkering.Id + ((int)AvailableItemIDModifiers.Tinkerings * (int)tinkering.Slot))).ToString();
+            string id = (-1 * (tinkering.Id + ((int)AvailableItemIDModifiers.Tinkerings * (int)tinkering.Slot))).ToString(System.Globalization.CultureInfo.InvariantCulture);
             ItemAvailability newItemAvailability = ItemAvailability.NotAvailable;
             // all enabled toggle
             if (_availableItems.Contains(id)) {
@@ -1769,14 +1769,14 @@ namespace Rawr
             if (thingChanging.StartsWith("-")) {
                 ItemSlot slot = ItemSlot.None;
                 // Enchants
-                if      (thingChanging.Length == ("-1"  +           "1000").Length) { slot = (ItemSlot)int.Parse(thingChanging.Substring(1, 1)); }
-                else if (thingChanging.Length == ("-10" +           "1000").Length) { slot = (ItemSlot)int.Parse(thingChanging.Substring(1, 2)); }
+                if (thingChanging.Length == ("-1" + "1000").Length) { slot = (ItemSlot)int.Parse(thingChanging.Substring(1, 1), System.Globalization.CultureInfo.InvariantCulture); }
+                else if (thingChanging.Length == ("-10" + "1000").Length) { slot = (ItemSlot)int.Parse(thingChanging.Substring(1, 2), System.Globalization.CultureInfo.InvariantCulture); }
                 // Reforges, the availabiility on these never change
                 //else if(thingChanging.Length== ("-1"  +   "000" + "1000").Length) { slot = (ItemSlot)int.Parse(thingChanging.Substring(1, 1)); }
                 //else if(thingChanging.Length== ("-10" +   "000" + "1000").Length) { slot = (ItemSlot)int.Parse(thingChanging.Substring(1, 2)); }
                 // Tinkerings
-                else if (thingChanging.Length == ("-1"  + "00000" + "1000").Length) { slot = (ItemSlot)int.Parse(thingChanging.Substring(1, 1)); }
-                else if (thingChanging.Length == ("-10" + "00000" + "1000").Length) { slot = (ItemSlot)int.Parse(thingChanging.Substring(1, 2)); }
+                else if (thingChanging.Length == ("-1" + "00000" + "1000").Length) { slot = (ItemSlot)int.Parse(thingChanging.Substring(1, 1), System.Globalization.CultureInfo.InvariantCulture); }
+                else if (thingChanging.Length == ("-10" + "00000" + "1000").Length) { slot = (ItemSlot)int.Parse(thingChanging.Substring(1, 2), System.Globalization.CultureInfo.InvariantCulture); }
                 // Wipe out the stored relevants list for this slot
                 _relevantItemInstances.Remove(GetCharacterSlotByItemSlot(slot));
             }
@@ -2179,7 +2179,7 @@ namespace Rawr
                     if (ids.Length <= 2)
                     {
                         // we have an available item that might be filtered out
-                        Item item = ItemCache.FindItemById(int.Parse(ids[0]));
+                        Item item = ItemCache.FindItemById(int.Parse(ids[0], System.Globalization.CultureInfo.InvariantCulture));
                         if (item != null)
                         {
                             if (item.FitsInSlot(slot, this))
@@ -2192,7 +2192,7 @@ namespace Rawr
                                 Enchant enchant = GetEnchantBySlot(slot);
                                 Tinkering tinkering = GetTinkeringBySlot(slot);
                                 List<ItemInstance> itemInstances = new List<ItemInstance>();
-                                int randomSuffix = ids.Length < 2 ? 0 : int.Parse(ids[1]);
+                                int randomSuffix = ids.Length < 2 ? 0 : int.Parse(ids[1], System.Globalization.CultureInfo.InvariantCulture);
                                 foreach (Reforging reforging in CurrentCalculations.GetReforgingOptions(item, randomSuffix))
                                 {
                                     foreach (GemmingTemplate template in CurrentGemmingTemplates)
@@ -2224,7 +2224,7 @@ namespace Rawr
                     string[] ids = availableItem.Split('.');
                     if (ids.Length == 8) // only support new format with random suffixes
                     {
-                        Item item = ItemCache.FindItemById(int.Parse(ids[0]));
+                        Item item = ItemCache.FindItemById(int.Parse(ids[0], System.Globalization.CultureInfo.InvariantCulture));
                         if (item.FitsInSlot(slot, this))
                         {
                             ItemInstance instance = new ItemInstance(availableItem);
