@@ -907,7 +907,7 @@ namespace Rawr {
                 // source http://elitistjerks.com/f75/t37825-rawr_mage/p42/#post1517923
                 // 5% crit rate, 1.5 crit multiplier, not affected by talents, affected only by target debuffs
                 float damage = (id == 50648) ? 30000 : 27008; // enter value for heroic when it becomes known
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast, new Stats() { ValkyrDamage = damage }, 0f, 0f, 0.02f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast, new Stats() { HolySummonedDamage = damage }, 0f, 0f, 0.02f));
             }
             else if ((match = new Regex(@"Your melee attacks have a chance to cause a (?<amount>\d+)% increase to the damage done by your melee autoattacks for (?<dur>\d+) sec").Match(line)).Success)
             {   // Unheeded Warning

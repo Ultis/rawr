@@ -628,11 +628,17 @@ namespace Rawr.Mage
                         effectDamagePerSecond += boltDps;
                         effectThreatPerSecond += boltDps * CastingState.HolyThreatMultiplier;
                     }
-                    if (effect.Stats.ValkyrDamage > 0)
+                    if (effect.Stats.HolySummonedDamage > 0)
                     {
-                        float boltDps = CastingState.ValkyrAverageDamage * effect.Stats.ValkyrDamage * effectsPerSecond;
+                        float boltDps = CastingState.HolySummonedAverageDamage * effect.Stats.HolySummonedDamage * effectsPerSecond;
                         effectDamagePerSecond += boltDps;
                         effectThreatPerSecond += boltDps * CastingState.HolyThreatMultiplier;
+                    }
+                    if (effect.Stats.FireSummonedDamage > 0)
+                    {
+                        float boltDps = CastingState.FireSummonedAverageDamage * effect.Stats.FireSummonedDamage * effectsPerSecond;
+                        effectDamagePerSecond += boltDps;
+                        effectThreatPerSecond += boltDps * CastingState.FireThreatMultiplier;
                     }
                 }
             }
@@ -664,7 +670,7 @@ namespace Rawr.Mage
                 case Trigger.SpellCast:
                     if (CastProcs > 0)
                     {
-                        if (effect.Stats.ValkyrDamage > 0)
+                        if (effect.Stats.HolySummonedDamage > 0)
                         {
                             triggerInterval = CastTime / CastProcs2;
                         }
@@ -808,17 +814,25 @@ namespace Rawr.Mage
                         boltDps = CastingState.HolyAverageDamage * effect.Stats.HolyDamage * effectsPerSecond;
                         name = "Holy Damage Proc";
                     }
-                    if (effect.Stats.ValkyrDamage > 0)
+                    if (effect.Stats.HolySummonedDamage > 0)
                     {
-                        boltDps = CastingState.ValkyrAverageDamage * effect.Stats.ValkyrDamage * effectsPerSecond;
-                        name = "Val'kyr Damage";
+                        boltDps = CastingState.HolySummonedAverageDamage * effect.Stats.HolySummonedDamage * effectsPerSecond;
+                        name = "Holy Damage";
+                    }
+                    if (effect.Stats.FireSummonedDamage > 0)
+                    {
+                        boltDps = CastingState.FireSummonedAverageDamage * effect.Stats.FireSummonedDamage * effectsPerSecond;
+                        name = "Holy Damage";
                     }
                     if (!dict.TryGetValue(name, out contrib))
                     {
                         contrib = new SpellContribution() { Name = name };
                         dict[name] = contrib;
                     }
-                    contrib.Hits += effectsPerSecond * duration;
+                    if (effect.Duration == 0)
+                    {
+                        contrib.Hits += effectsPerSecond * duration;
+                    }
                     contrib.Damage += boltDps * duration;
                 }
             }

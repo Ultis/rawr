@@ -112,7 +112,7 @@ namespace Rawr.Mage.Graphs
                                     break;
                                 case Trigger.DamageSpellCast:
                                 case Trigger.SpellCast:
-                                    if (effectList[i].Stats.ValkyrDamage > 0)
+                                    if (effectList[i].Stats.HolySummonedDamage > 0)
                                     {
                                         triggers += (float)calculations.Solution[j] * c.CastProcs2 / c.CastTime;
                                         procs += (float)calculations.Solution[j] * c.CastProcs2 / c.CastTime;

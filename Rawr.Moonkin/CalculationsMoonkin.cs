@@ -415,7 +415,7 @@ namespace Rawr.Moonkin
                 FireDamage = stats.FireDamage,
                 HolyDamage = stats.HolyDamage,
                 ArcaneDamage = stats.ArcaneDamage,
-                ValkyrDamage = stats.ValkyrDamage,
+                HolySummonedDamage = stats.HolySummonedDamage,
                 NatureSpellsManaCostReduction = stats.NatureSpellsManaCostReduction,
 
                 // -- MultiplicativeStats --
@@ -551,7 +551,7 @@ namespace Rawr.Moonkin
                 stats.ShadowDamage != 0 ||
                 stats.NatureDamage != 0 ||
                 stats.FireDamage != 0 ||
-                stats.ValkyrDamage != 0 ||
+                stats.HolySummonedDamage != 0 ||
                 stats.NatureSpellsManaCostReduction != 0 ||
 
                 // -- MultiplicativeStats --

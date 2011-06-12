@@ -1816,7 +1816,7 @@ namespace Rawr.Mage
 
         public static bool IsSupportedDamageProc(SpecialEffect effect)
         {
-            return (effect.MaxStack == 1 && (effect.Stats.ArcaneDamage + effect.Stats.FireDamage + effect.Stats.FrostDamage + effect.Stats.NatureDamage + effect.Stats.ShadowDamage + effect.Stats.HolyDamage + effect.Stats.ValkyrDamage > 0) && (IsSupportedProc(effect.Trigger) || effect.Trigger == Trigger.Use));
+            return (effect.MaxStack == 1 && (effect.Stats.ArcaneDamage + effect.Stats.FireDamage + effect.Stats.FrostDamage + effect.Stats.NatureDamage + effect.Stats.ShadowDamage + effect.Stats.HolyDamage + effect.Stats.HolySummonedDamage + effect.Stats.FireSummonedDamage > 0) && (IsSupportedProc(effect.Trigger) || effect.Trigger == Trigger.Use));
         }
 
         public static bool IsSupportedHasteProc(SpecialEffect effect)

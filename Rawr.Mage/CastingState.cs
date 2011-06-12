@@ -450,7 +450,8 @@ namespace Rawr.Mage
         public float ShadowAverageDamage { get { return Solver.ShadowDamageTemplate.GetEffectAverageDamage(this); } }
         public float NatureAverageDamage { get { return Solver.NatureDamageTemplate.GetEffectAverageDamage(this); } }
         public float HolyAverageDamage { get { return Solver.HolyDamageTemplate.GetEffectAverageDamage(this); } }
-        public float ValkyrAverageDamage { get { return Solver.ValkyrDamageTemplate.Multiplier; } }
+        public float HolySummonedAverageDamage { get { return Solver.HolySummonedDamageTemplate.Multiplier; } }
+        public float FireSummonedAverageDamage { get { return Solver.FireSummonedDamageTemplate.Multiplier; } }
 
         //private static int CycleIdCount;
         //private static int SpellIdCount;

@@ -674,12 +674,12 @@ namespace Rawr.Warlock
                 }
 
                 Stats effectStats = effect.Stats;
-                if (effectStats.ValkyrDamage > 0)
+                if (effectStats.HolySummonedDamage > 0)
                 {
                     SpellModifiers mods = new SpellModifiers();
                     mods.AddCritChance(.05f + Stats.SpellCritOnTarget);
                     mods.AddMultiplicativeMultiplier(Stats.BonusHolyDamageMultiplier);
-                    procdDamage += CalcDamageProc(effect, effect.Stats.ValkyrDamage, periods, chances, mods);
+                    procdDamage += CalcDamageProc(effect, effect.Stats.HolySummonedDamage, periods, chances, mods);
                 }
                 else if (
                          effectStats.ShadowDamage > 0

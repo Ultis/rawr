@@ -141,7 +141,7 @@ namespace Rawr.Mage
         public bool Mage2PVP { get; set; }
         public bool Mage4PVP { get; set; }
 
-        public static readonly SpecialEffect SpecialEffect2T12 = new SpecialEffect(Trigger.MageNukeCast, new Stats() { FireDamage = 4 * 7016.5f / 15f }, 15f, 45f, 0.2f, 1);
+        public static readonly SpecialEffect SpecialEffect2T12 = new SpecialEffect(Trigger.MageNukeCast, new Stats() { FireSummonedDamage = 4 * 7016.5f / 15f }, 15f, 45f, 0.2f, 1);
 
         public int MaxTalents { get; set; }
         public Specialization Specialization { get; set; }
@@ -874,20 +874,37 @@ namespace Rawr.Mage
             }
         }
 
-        private ValkyrDamageTemplate _ValkyrDamageTemplate;
-        public ValkyrDamageTemplate ValkyrDamageTemplate
+        private HolySummonedDamageTemplate _HolySummonedDamageTemplate;
+        public HolySummonedDamageTemplate HolySummonedDamageTemplate
         {
             get
             {
-                if (_ValkyrDamageTemplate == null)
+                if (_HolySummonedDamageTemplate == null)
                 {
-                    _ValkyrDamageTemplate = new ValkyrDamageTemplate();
+                    _HolySummonedDamageTemplate = new HolySummonedDamageTemplate();
                 }
-                if (_ValkyrDamageTemplate.Dirty)
+                if (_HolySummonedDamageTemplate.Dirty)
                 {
-                    _ValkyrDamageTemplate.Initialize(this);
+                    _HolySummonedDamageTemplate.Initialize(this);
                 }
-                return _ValkyrDamageTemplate;
+                return _HolySummonedDamageTemplate;
+            }
+        }
+
+        private FireSummonedDamageTemplate _FireSummonedDamageTemplate;
+        public FireSummonedDamageTemplate FireSummonedDamageTemplate
+        {
+            get
+            {
+                if (_FireSummonedDamageTemplate == null)
+                {
+                    _FireSummonedDamageTemplate = new FireSummonedDamageTemplate();
+                }
+                if (_FireSummonedDamageTemplate.Dirty)
+                {
+                    _FireSummonedDamageTemplate.Initialize(this);
+                }
+                return _FireSummonedDamageTemplate;
             }
         }
 
@@ -2839,7 +2856,8 @@ namespace Rawr.Mage
             if (_ShadowDamageTemplate != null) _ShadowDamageTemplate.Dirty = true;
             if (_NatureDamageTemplate != null) _NatureDamageTemplate.Dirty = true;
             if (_HolyDamageTemplate != null) _HolyDamageTemplate.Dirty = true;
-            if (_ValkyrDamageTemplate != null) _ValkyrDamageTemplate.Dirty = true;
+            if (_HolySummonedDamageTemplate != null) _HolySummonedDamageTemplate.Dirty = true;
+            if (_FireSummonedDamageTemplate != null) _FireSummonedDamageTemplate.Dirty = true;
         }
         #endregion
 

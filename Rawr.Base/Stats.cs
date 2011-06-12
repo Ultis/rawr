@@ -93,7 +93,6 @@ namespace Rawr
         #endregion
         #region ===== Item Proc Stats =====
         Paragon,
-        ValkyrDamage,
         TerrorProc,
         ExtractOfNecromanticPowerProc,
         DarkmoonCardDeathProc,
@@ -110,6 +109,8 @@ namespace Rawr
         ShadowDamage,
         FireDamage,
         FrostDamage,
+        HolySummonedDamage,
+        FireSummonedDamage,
         SpellArcaneDamageRating,
         SpellFireDamageRating,
         SpellFrostDamageRating,
@@ -1035,14 +1036,6 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.Paragon] = value; }
         }
         [DefaultValueAttribute(0f)]
-        [DisplayName("Valkyr Damage")]
-        [Category("Equipment Effects")]
-        public float ValkyrDamage
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ValkyrDamage]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ValkyrDamage] = value; }
-        }
-        [DefaultValueAttribute(0f)]
         [Category("Feral")]
         public float TerrorProc
         {
@@ -1154,6 +1147,22 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.FrostDamage]; }
             set { _rawAdditiveData[(int)AdditiveStat.FrostDamage] = value; }
+        }
+        [DefaultValueAttribute(0f)]
+        [DisplayName("Holy Summoned Damage")]
+        [Category("Equipment Effects")]
+        public float HolySummonedDamage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.HolySummonedDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HolySummonedDamage] = value; }
+        }
+        [DefaultValueAttribute(0f)]
+        [DisplayName("Fire Summoned Damage")]
+        [Category("Equipment Effects")]
+        public float FireSummonedDamage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.FireSummonedDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.FireSummonedDamage] = value; }
         }
         [DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]

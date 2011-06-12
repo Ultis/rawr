@@ -1249,19 +1249,36 @@ namespace Rawr.Mage
         }
     }
 
-    public class ValkyrDamageTemplate : SpellTemplate
+    public class HolySummonedDamageTemplate : SpellTemplate
     {
         public float Multiplier;
 
         public void Initialize(Solver solver)
         {
-            Name = "Valkyr Damage";
+            Name = "Holy Damage";
             // TODO recheck all buffs that apply
             float spellCrit = 0.05f + solver.TargetDebuffs.SpellCritOnTarget;
-            // Valkyr always hit
+            // summoned always hit
             RealResistance = solver.CalculationOptions.HolyResist;
             PartialResistFactor = (RealResistance == -1) ? 0 : (1 - StatConversion.GetAverageResistance(solver.CalculationOptions.PlayerLevel, solver.CalculationOptions.TargetLevel, RealResistance, 0));
             Multiplier = PartialResistFactor * (1 + solver.TargetDebuffs.BonusDamageMultiplier) * (1 + solver.TargetDebuffs.BonusHolyDamageMultiplier) * (1 + (1.5f * 1.33f - 1) * spellCrit);
+            Dirty = false;
+        }
+    }
+
+    public class FireSummonedDamageTemplate : SpellTemplate
+    {
+        public float Multiplier;
+
+        public void Initialize(Solver solver)
+        {
+            Name = "Fire Damage";
+            // TODO recheck all buffs that apply
+            float spellCrit = 0.05f + solver.TargetDebuffs.SpellCritOnTarget;
+            // summoned always hit
+            RealResistance = solver.CalculationOptions.FireResist;
+            PartialResistFactor = (RealResistance == -1) ? 0 : (1 - StatConversion.GetAverageResistance(solver.CalculationOptions.PlayerLevel, solver.CalculationOptions.TargetLevel, RealResistance, 0));
+            Multiplier = PartialResistFactor * (1 + solver.TargetDebuffs.BonusDamageMultiplier) * (1 + solver.TargetDebuffs.BonusFireDamageMultiplier) * (1 + (1.5f * 1.33f - 1) * spellCrit);
             Dirty = false;
         }
     }

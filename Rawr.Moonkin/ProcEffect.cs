@@ -26,7 +26,7 @@ namespace Rawr.Moonkin
             // Damage procs - unified code handler
             if (effect.Stats.ShadowDamage > 0 || effect.Stats.FireDamage > 0 || effect.Stats.FrostDamage > 0 ||
                 effect.Stats.NatureDamage > 0 || effect.Stats.HolyDamage > 0 || effect.Stats.ArcaneDamage > 0 ||
-                effect.Stats.ValkyrDamage > 0)
+                effect.Stats.HolySummonedDamage > 0)
             {
                 CalculateDPS = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
                 {
@@ -39,7 +39,7 @@ namespace Rawr.Moonkin
                         (effect.Stats.HolyDamage > 0 ? c.BasicStats.BonusHolyDamageMultiplier : 0) +
                         (effect.Stats.ArcaneDamage > 0 ? c.BasicStats.BonusArcaneDamageMultiplier : 0);
                     float specialDamageModifier = (1 + c.BasicStats.BonusSpellPowerMultiplier) * (1 + c.BasicStats.BonusDamageMultiplier) * schoolModifier;
-                    float baseValue = e.Stats.ShadowDamage + e.Stats.FireDamage + e.Stats.FrostDamage + e.Stats.NatureDamage + e.Stats.HolyDamage + e.Stats.ArcaneDamage + e.Stats.ValkyrDamage;
+                    float baseValue = e.Stats.ShadowDamage + e.Stats.FireDamage + e.Stats.FrostDamage + e.Stats.NatureDamage + e.Stats.HolyDamage + e.Stats.ArcaneDamage + e.Stats.HolySummonedDamage;
                     float triggerInterval = 0.0f, triggerChance = 1.0f;
                     switch (e.Trigger)
                     {
