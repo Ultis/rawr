@@ -293,7 +293,7 @@ namespace Rawr.Cat
             return calcOpts;
         }
 
-
+        private CatRotationCalculator rotationCalculator;
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
             // First things first, we need to ensure that we aren't using bad data
@@ -494,7 +494,7 @@ namespace Rawr.Cat
                 ((character.MainHand.MinDamage + character.MainHand.MaxDamage) / 2f) / character.MainHand.Speed,
                 attackSpeed, modArmor, hasteBonus, critMultiplier, chanceAvoided, chanceCritWhite, chanceCritYellow, chanceCritYellow,
                 chanceCritYellow, chanceCritYellow, chanceCritRake, chanceCritRip, chanceCritBite, chanceGlance);
-            var rotationCalculator = new CatRotationCalculator(abilities, bossOpts.BerserkTimer, mangleusage);
+            rotationCalculator = new CatRotationCalculator(abilities, bossOpts.BerserkTimer, mangleusage);
             var optimalRotation = rotationCalculator.GetOptimalRotation(); //TODO: Check for 4T11, maintain it if so
             calculatedStats.Abilities = abilities;
             calculatedStats.HighestDPSRotation = optimalRotation;
@@ -613,9 +613,13 @@ namespace Rawr.Cat
             }
             if (T12Count >= 4) {
                 // Assume that all Finishing Moves are used at 5 combo points
-                statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.FinishingMove,
+                SpecialEffect primary = new SpecialEffect(Trigger.Berserk, new Stats(), rotationCalculator.BerserkDuration(), rotationCalculator.BerserkCooldown());
+                // This is the Inner Eye stacking buff.
+                SpecialEffect secondary = new SpecialEffect(Trigger.FinishingMove,
                     new StatsCat() { BonusBerserkDuration = 2f, },
-                    0, 0, 1f));
+                    0, 0, 1f);
+                primary.Stats.AddSpecialEffect(secondary);
+                statsTotal.AddSpecialEffect(primary);
             }
             #endregion
 
@@ -674,9 +678,10 @@ namespace Rawr.Cat
                 triggerIntervals[Trigger.MangleCatAttack] = 60f;
             }
             triggerIntervals[Trigger.MangleCatOrShredHit] = usesMangle ? 3.76f : 3.87f;
-            triggerIntervals[Trigger.MangleCatOrShredorMaul] = usesMangle ? 3.76f : 3.87f;
             triggerIntervals[Trigger.MangleCatOrShredOrInfectedWoundsHit] = triggerIntervals[Trigger.MangleCatOrShredHit] / ((talents.InfectedWounds > 0) ? 2f : 1f);
             triggerIntervals[Trigger.EnergyOrFocusDropsBelow20PercentOfMax] = 4f; // doing 80% chance every 4 seconds per Astry
+            triggerIntervals[Trigger.FinishingMove] = rotationCalculator.RipBiteUptime();
+            triggerIntervals[Trigger.Berserk] = rotationCalculator.berserkUptime;
             triggerChances[Trigger.Use] = 1f;
             triggerChances[Trigger.MeleeAttack] = 1f;
             triggerChances[Trigger.MeleeHit] = Math.Max(0f, chanceHit);
@@ -693,7 +698,6 @@ namespace Rawr.Cat
                 triggerChances[Trigger.MangleCatHit] = chanceHit;
             }
             triggerChances[Trigger.MangleCatOrShredHit] = chanceHit;
-            triggerChances[Trigger.MangleCatOrShredorMaul] = chanceHit;
             triggerChances[Trigger.MangleCatOrShredOrInfectedWoundsHit] = chanceHit;
             triggerChances[Trigger.EnergyOrFocusDropsBelow20PercentOfMax] = 0.80f; // doing 80% chance every 4 seconds per Astry
 

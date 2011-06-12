@@ -132,10 +132,10 @@ namespace Rawr
         MangleBearHit,
         SwipeBearOrLacerateHit,
         MangleCatOrShredHit,
-        MangleCatOrShredorMaul,
         MangleCatOrShredOrInfectedWoundsHit,
         RakeTick,
         LacerateTick,
+        Berserk,
         FinishingMove,
         Barkskin,
         #endregion

@@ -65,6 +65,22 @@ namespace Rawr.Cat
 		public float BiteCount = 0f;
 		public float RavageCount = 0f;
 		public float RavageAbove80PercentCount = 0f;
+        public float berserkUptime = 0f;
+
+        public float RipBiteUptime() 
+        {
+            return FightDuration / (RipTickCount + BiteCount);
+        }
+
+        public float BerserkDuration()
+        {
+            return BerserkStats.Duration;
+        }
+
+        public float BerserkCooldown()
+        {
+            return BerserkStats.Cooldown;
+        }
 
 		public CatRotationCalculation CalculateRotation(int roarCP, BiteUsage biteUsage)
 		{
@@ -75,7 +91,7 @@ namespace Rawr.Cat
 				((FightDuration - 10f) / TigersFuryStats.Cooldown) * (TigersFuryStats.EnergyGenerated + TigersFuryStats.MaxEnergyIncrease / 4f) + //TF Energy
 				((FightDuration - 10f) / BerserkStats.Cooldown) * (TigersFuryStats.MaxEnergyIncrease / 4f); //Berserk Energy
 			float tfUptime = ((((FightDuration - 10f) / TigersFuryStats.Cooldown) * TigersFuryStats.Duration) / FightDuration);
-			float berserkUptime = ((((FightDuration - 10f) / BerserkStats.Cooldown) * BerserkStats.Duration) / FightDuration);
+			berserkUptime = ((((FightDuration - 10f) / BerserkStats.Cooldown) * BerserkStats.Duration) / FightDuration);
 			float energyCostMultiplier = 1f - (1f - BerserkStats.EnergyCostMultiplier) * berserkUptime; //Average energy cost reduction due to Berserk
 			float damageMultiplier = 1f + TigersFuryStats.DamageMultiplier * tfUptime;
 
