@@ -50,7 +50,7 @@ namespace Rawr.Mage
                 Cycle lastCycle = null;
                 foreach (Cycle cycle in (List<Cycle>)e.Result)
                 {
-                    sb.Append(cycle.Name + ": " + cycle.DamagePerSecond + " dps, " + cycle.ManaPerSecond + " mps");
+                    sb.Append(generator.ConvertCycleNameInternalToEasy(cycle.Name) + ": " + cycle.DamagePerSecond + " dps, " + cycle.ManaPerSecond + " mps");
                     if (lastCycle != null)
                     {
                         sb.Append(", " + (cycle.DamagePerSecond - lastCycle.DamagePerSecond) / (cycle.ManaPerSecond - lastCycle.ManaPerSecond) + " dpm tradeoff");
@@ -81,7 +81,7 @@ namespace Rawr.Mage
             {
                 return;
             }
-            string name = ControlString.Text;
+            string name = generator.ConvertCycleNameEasyToInternal(ControlString.Text);
             if (name.Length != generator.ControlOptions.Length) return;
 
             for (int i = 0; i < generator.ControlOptions.Length; i++)
@@ -98,6 +98,14 @@ namespace Rawr.Mage
                 sb.AppendLine(generic.DamagePerSecond + " Dps");
                 sb.AppendLine(generic.ManaPerSecond + " Mps");
                 sb.AppendLine(generic.ThreatPerSecond + " Tps");
+                sb.AppendLine(generic.DpsPerSpellPower + " Dps per Spell Power");
+                sb.AppendLine(generic.DpsPerMastery + " Dps per Mastery");
+                sb.AppendLine((generic.DpsPerCrit / 100) + " Dps per Crit");
+                sb.AppendLine((generic.CastProcs / generic.CastTime) + " Cast Procs / Sec");
+                sb.AppendLine((generic.HitProcs / generic.CastTime) + " Hit Procs / Sec");
+                sb.AppendLine((generic.CritProcs / generic.CastTime) + " Crit Procs / Sec");
+                sb.AppendLine((generic.DamageProcs / generic.CastTime) + " Damage Procs / Sec");
+                sb.AppendLine((generic.DotProcs / generic.CastTime) + " Dot Procs / Sec");
 
                 sb.AppendLine();
 
@@ -207,25 +215,80 @@ namespace Rawr.Mage
 
             sb.AppendLine(generator.StateDescription);
 
-            sb.AppendLine("");
+            sb.AppendLine();
             for (int i = 0; i < generator.ControlOptions.Length; i++)
             {
                 sb.Append(i);
                 sb.Append(": ");
                 sb.Append(generator.StateList[Array.IndexOf(generator.ControlIndex, i)]);
                 sb.Append(": ");
+                List<int> keys = new List<int>();
                 foreach (var kvp in generator.SpellMap[i])
                 {
-                    sb.Append(kvp.Value);
+                    keys.Add(generator.SpellList.IndexOf(kvp.Key));
+                }
+                keys.Sort();
+                foreach (var key in keys)
+                {
+                    sb.Append(key);
                     sb.Append("=");
-                    sb.Append(kvp.Key);
+                    sb.Append(generator.SpellList[key]);
                     sb.Append("  ");
                 }
                 sb.AppendLine();
             }
 
+            sb.AppendLine();
+            sb.AppendLine("Transitions:");
+            sb.AppendLine();
+
+            for (int i = 0; i < generator.ControlOptions.Length; i++)
+            {
+                foreach (var kvp in generator.SpellMap[i])
+                {
+                    sb.Append(i);
+                    sb.Append(": ");
+                    sb.Append(kvp.Key);
+                    sb.Append(" => ");
+
+                    List<int> list = new List<int>();
+                    for (int s = 0; s < generator.ControlIndex.Length; s++)
+                    {
+                        if (generator.ControlIndex[s] == i)
+                        {
+                            foreach (CycleControlledStateTransition transition in generator.StateList[s].Transitions)
+                            {
+                                string n;
+                                if (transition.Spell != null)
+                                {
+                                    n = transition.Spell.Name;
+                                }
+                                else
+                                {
+                                    n = "Pause";
+                                }
+                                if (n == kvp.Key)
+                                {
+                                    int target = generator.ControlIndex[transition.TargetState.Index];
+                                    if (!list.Contains(target))
+                                    {
+                                        list.Add(target);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    list.Sort();
+                    sb.Append(string.Join(",", list));
+
+                    sb.AppendLine();
+                }
+            }
+
+
             Description.Text = sb.ToString();
-            ControlString.Text = new string('0', generator.ControlOptions.Length);
+            ControlString.Text = generator.ConvertCycleNameInternalToEasy(new string('0', generator.ControlOptions.Length));
 
             //ControlString.SelectAll();
             ControlString.Focus();

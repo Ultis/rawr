@@ -1112,12 +1112,54 @@ namespace Rawr.Mage
         public int[] ControlValue;
         public int[] ControlIndex;
         public Dictionary<string, int>[] SpellMap;
+        public List<string> SpellList;
         public virtual string StateDescription
         {
             get
             {
                 return "";
             }
+        }
+
+        public string ConvertCycleNameInternalToEasy(string code)
+        {
+            if (code.Length > 0 && !char.IsNumber(code[0]))
+            {
+                return code;
+            }
+            string ret = "";
+            for (int i = 0; i < code.Length; i++)
+            {
+                if (i > 0 && i % 5 == 0)
+                {
+                    ret += " ";
+                }
+                int n = int.Parse("" + code[i]);
+                foreach (var kvp in SpellMap[i])
+                {
+                    if (kvp.Value == n)
+                    {
+                        n = SpellList.IndexOf(kvp.Key);
+                        ret += n;
+                        break;
+                    }
+                }
+            }
+            return ret;
+        }
+
+        public string ConvertCycleNameEasyToInternal(string code)
+        {
+            code = code.Replace(" ", "");
+            string ret = "";
+            for (int i = 0; i < code.Length; i++)
+            {
+                int n = int.Parse("" + code[i]);
+                string spell = SpellList[n];
+                n = SpellMap[i][spell];
+                ret += n;
+            }
+            return ret;
         }
 
         public void GenerateStateDescription()
@@ -1179,6 +1221,7 @@ namespace Rawr.Mage
             ControlValue = new int[controlledStates.Count];
 
             SpellMap = new Dictionary<string, int>[controlledStates.Count];
+            SpellList = new List<string>();
 
             foreach (CycleState state in StateList)
             {
@@ -1205,6 +1248,10 @@ namespace Rawr.Mage
                         SpellMap[controlIndex][n] = controlValue;
                     }
                     transition.SetControls(controlIndex, ControlValue, controlValue);
+                    if (!SpellList.Contains(n))
+                    {
+                        SpellList.Add(n);
+                    }
                 }
             }
 
