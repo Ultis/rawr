@@ -160,6 +160,126 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes()
         {
+#region Rawr 4.1.06 (June 12, 2011) [r61314]
+VNStuff.Add("Rawr 4.1.06 (June 12, 2011) [r61314]",
+@"Cataclysm Release
+
+General:
+- A complete new model for Tree
+- Fixes for Battle.Net loading
+- Many models have implemented 4.2 PTR mode
+
+Rawr.Base:
+- Gear charts will now display versions of items for all enchants marked as available
+- Fix for Paladin glyphs
+- Support for optimizer pause/resume
+
+Rawr.BossHandler:
+- Added new fields for Spell/Creature Ids. They currently are not used by anything at this point, but they are in for completion reasons. 
+- Finished documenting all of the T12 bosses
+- GetImpedancePerc now only counts if affected by your character role
+
+Rawr.Items:
+- Added most items from 4.2 PTR
+- Updated Voodoo Hexblade and Amani Scepter of Rites as Main Hand only instead of One Handed weapon as per May 11th Hotfix
+- Almost all gear below ilvl 300 is now gone. Only thing left from Wrath is the ilvl 277 T10 gear. 
+- Added missing Leatherworking Random Enchanted items and updated all with their Random Enchanted ids
+- Removed all PvP that was datamind but never made it to live
+- Added all 2200 Arena/BG rating items
+- Updated all pvp gear sources (2200 Arena gear is temporarily set to vender until the extra PvP info in the UI can be implemented)
+
+Rawr.Healadin:
+- Added Holy Radiance. Worked on options tab. Started work on rotation. Removed Str and Agi items from gear list. 
+- Lay on Hands added
+- Enllightened Judgement self heals added
+- Protector of the Innocent added
+- Illuminated Healing added (Mastery)
+- fixed crit % bug
+- updated gemming template
+- added Cleansing to rotation
+- Glyph of Cleansing
+- added Seal of Insight melee attack mana regen
+- Speed of Light haste buff added
+- Fixed bug that caused trinkets and other proc items to be calculated way wrong
+- Infusion of Light talent- HS crit gives -0.75 sec per point from next DL/HL
+- Fixed bug in Crusade talent calculations
+- added User delay to options tab to account for average lag + user delay for each cast
+- accounted for Divine Plea cast time
+- adjusted options panel to make things more clear and compact
+- Conviction talent added to model 
+
+Rawr.Bear:
+- Changing back to survival soft cap
+
+Rawr.Mage:
+- Fix for arcane solver crash
+- Numerical stability improvements
+- If you enable Boss Handler and Cooldown Segmentation you can take advantage of phase damage multiplier data, phases are also shown on sequence reconstruction chart
+- Changed frost cycle to interpolation on simulation data
+- Disabled Ignite from Flame Orb, fix for spell breakdown, incremental evocation restriction for arcane only. 
+- Fix for advanced mana gem constraint
+- Support for orc racials
+- Improved cycle generator reporting
+
+Rawr.Moonkin:
+- Remove the calculations for DoT spells generating Eclipse energy.
+- When over hit cap, displays the amount of rating over cap.
+- Fix issue with enabling reforging spirit to hit that was causing disappearing reforge options. 
+
+Rawr.Retribution:
+- HoW included in rotation
+- some work on impedances
+- New Rotation now calculates time lost through impedance of bossOptions 
+
+Rawr.TankDK:
+- Added Stats Graph
+- Luck of the draw buff not factored in
+
+Rawr.ProtPaladin:
+- Potential Veng issue
+- Added Vengeance Calc to ProtPaladin
+
+Rawr.Enhance:
+- Elemental Precision Talent not fully modelled
+- Could not locate any ties to Elemental Precision for the frost/fire/nature damage bonus. Added
+- Tweak to Lava Lash calcs
+- T11 calc typo fixed 
+- Agony and Torment EnhSim export fixed
+
+Rawr.DPSDK:
+- Update the new graphs
+- Fix from EJ Frost Post: Frost Haste (Icy Talons) doesn't translate to faster runes. (Still can't confirm that UH is the preferred presence with my gear while DW.)
+- Fix White Damage being so far, far off from tested values.
+- Fixed stat display. Wasn't applying ratings to BasicStats before displaying them. 
+- Double-Dipping for Buff/Talent Brittle Bones
+- Replaced the GetBuffsStats framework in DPSDK to what DPSWarr uses to prevent conflicting buff/talents. Set up Brittle Bones as the first.
+- Fixed the Set Bonuses implementation, was looking for > 2 not >= 2 as it should have been 
+- Fix Haste affects on RuneCD. And display value for comparison w/ in-game values.
+- Adjust rotation reporting slightly. 
+- Fix display issue w/ DPS breakdown and Damage Per Use. Some of the structures were over-lapping in usage. Now it's discrete and values should make more sense.
+- Haste fix 
+- Significant work on Rotation and ability displays has me confident to upgrading Unholy to be on-par with Frost at Mostly Cata ready.
+- Fixed Health and a few other displays.
+- Completely rebuild present Unholy priority. It's not very performant, but it's much more accurate to testing.
+- Fixed UH mastery.
+- Unittests for a new static function in rotation. 
+- Update UH numbers based on logs... Adjusting Per-hit numbers for SS that were > 5% off from what I was seeing in BWD last night. 
+- Update UH rotation to not be so expensive. :( The dynamic version is much more accurate, but also much more expensive. 
+
+Rawr.Tree:
+- Complete redesign
+
+Rawr.Warlock:
+- Mastery and Improved Corruption are additive modifiers
+- Shadow Embrace is +3/4/5%, not 9/12/15%
+- Bane of Doom is not affected by Shadow Embrace or Haunt 
+- Add some more pet calculation values to the display; relabel Bonus Damage as Spell Power.
+- Revert erroneous Shadow Embrace change.
+- Try to make displayed pet stats a little closer to in-game character sheet (for now, tested with Felhunter only).
+- Update Shadow Bite for 4.1 changes.
+- Include embedded effects when determining trinket relevancy (e.g. Heart of Ignacious). 
+");
+#endregion
 #region Rawr 4.1.05 (May 08, 2011) [r60625]
 VNStuff.Add("Rawr 4.1.05 (May 08, 2011) [r60625]",
 @"Cataclysm Release
