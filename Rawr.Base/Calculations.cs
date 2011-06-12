@@ -1872,7 +1872,8 @@ namespace Rawr
                             name.Contains("Nerubian Leg Reinforcements") ||
                             name.Contains("Draconic Embossment") ||
                             name.Contains("Charscale Leg Reinforcements") ||
-                            name.Contains("Dragonbone Leg Reinforcements"))
+                            name.Contains("Dragonbone Leg Reinforcements") ||
+                            name.Contains("Drakehide Leg Reinforcements"))
                         {
                             return false;
                         }

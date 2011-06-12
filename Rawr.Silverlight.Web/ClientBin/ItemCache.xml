@@ -91815,28 +91815,6 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
     <Name>[Downloading from Wowhead]</Name>
     <Id>0</Id>
@@ -119544,5 +119522,419 @@
     <Name>Choker of the Vanquished Lord</Name>
     <Id>71354</Id>
     <Slot>Neck</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>358</ItemLevel>
+    <DisplayId>42615</DisplayId>
+    <DisplaySlot>16</DisplaySlot>
+    <IconPath>inv_misc_cape_16</IconPath>
+    <Stats>
+      <Stamina>282</Stamina>
+      <Intellect>188</Intellect>
+      <MasteryRating>126</MasteryRating>
+      <Resilience>126</Resilience>
+      <Armor>622</Armor>
+    </Stats>
+    <Quality>Rare</Quality>
+    <SetName>Bloodthirsty Embersilk</SetName>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Tailoring</Skill>
+        <Level>500</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Bloodthirsty Embersilk Cape</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Bloodthirsty Embersilk Cape</Name>
+    <Id>70070</Id>
+    <Slot>Back</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>358</ItemLevel>
+    <DisplayId>42615</DisplayId>
+    <DisplaySlot>16</DisplaySlot>
+    <IconPath>inv_misc_cape_16</IconPath>
+    <Stats>
+      <Agility>188</Agility>
+      <Stamina>282</Stamina>
+      <CritRating>126</CritRating>
+      <Resilience>126</Resilience>
+      <Armor>622</Armor>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Leatherworking</Skill>
+        <Level>510</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Bloodthirsty Fur Cloak</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Bloodthirsty Fur Cloak</Name>
+    <Id>70068</Id>
+    <Slot>Back</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>358</ItemLevel>
+    <DisplayId>42615</DisplayId>
+    <DisplaySlot>16</DisplaySlot>
+    <IconPath>inv_misc_cape_16</IconPath>
+    <Stats>
+      <Strength>188</Strength>
+      <Stamina>282</Stamina>
+      <MasteryRating>126</MasteryRating>
+      <Resilience>126</Resilience>
+      <Armor>622</Armor>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Leatherworking</Skill>
+        <Level>510</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Bloodthirsty Hide Cloak</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Bloodthirsty Hide Cloak</Name>
+    <Id>70069</Id>
+    <Slot>Back</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>358</ItemLevel>
+    <DisplayId>49005</DisplayId>
+    <DisplaySlot>11</DisplaySlot>
+    <IconPath>inv_jewelry_ring_79</IconPath>
+    <Stats>
+      <Stamina>282</Stamina>
+      <Intellect>188</Intellect>
+      <Spirit>126</Spirit>
+      <Resilience>126</Resilience>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>515</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Bloodthirsty Amberjewel Band</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Bloodthirsty Amberjewel Band</Name>
+    <Id>70072</Id>
+    <Slot>Finger</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>358</ItemLevel>
+    <DisplayId>49005</DisplayId>
+    <DisplaySlot>11</DisplaySlot>
+    <IconPath>inv_jewelry_ring_79</IconPath>
+    <Stats>
+      <Strength>188</Strength>
+      <Stamina>282</Stamina>
+      <CritRating>126</CritRating>
+      <Resilience>126</Resilience>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>515</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Bloodthirsty Ruby Signet</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Bloodthirsty Ruby Signet</Name>
+    <Id>70073</Id>
+    <Slot>Finger</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>358</ItemLevel>
+    <DisplayId>49005</DisplayId>
+    <DisplaySlot>11</DisplaySlot>
+    <IconPath>inv_jewelry_ring_79</IconPath>
+    <Stats>
+      <Agility>188</Agility>
+      <Stamina>282</Stamina>
+      <CritRating>126</CritRating>
+      <Resilience>126</Resilience>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>515</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Bloodthirsty Sapphire Ring</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Bloodthirsty Sapphire Ring</Name>
+    <Id>70071</Id>
+    <Slot>Finger</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>358</ItemLevel>
+    <DisplayId>51913</DisplayId>
+    <DisplaySlot>28</DisplaySlot>
+    <IconPath>inv_shield_56</IconPath>
+    <Stats>
+      <Agility>106</Agility>
+      <Stamina>159</Stamina>
+      <CritRating>71</CritRating>
+      <Resilience>71</Resilience>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Relic</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoE</Bind>
+    <SocketColor1>Prismatic</SocketColor1>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Inscription</Skill>
+        <Level>520</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Bloodthirsty Charm of Triumph</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Bloodthirsty Charm of Triumph</Name>
+    <Id>70077</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>358</ItemLevel>
+    <DisplayId>51913</DisplayId>
+    <DisplaySlot>28</DisplaySlot>
+    <IconPath>inv_shield_56</IconPath>
+    <Stats>
+      <Stamina>159</Stamina>
+      <Intellect>106</Intellect>
+      <CritRating>71</CritRating>
+      <Resilience>71</Resilience>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Relic</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoE</Bind>
+    <SocketColor1>Prismatic</SocketColor1>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Inscription</Skill>
+        <Level>520</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Bloodthirsty Eyeball of Dominance</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Bloodthirsty Eyeball of Dominance</Name>
+    <Id>70078</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>358</ItemLevel>
+    <DisplayId>51913</DisplayId>
+    <DisplaySlot>28</DisplaySlot>
+    <IconPath>inv_shield_56</IconPath>
+    <Stats>
+      <Strength>106</Strength>
+      <Stamina>159</Stamina>
+      <CritRating>71</CritRating>
+      <Resilience>71</Resilience>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Relic</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoE</Bind>
+    <SocketColor1>Prismatic</SocketColor1>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Inscription</Skill>
+        <Level>520</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Bloodthirsty Jawbone of Conquest</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Bloodthirsty Jawbone of Conquest</Name>
+    <Id>70079</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>346</ItemLevel>
+    <DisplayId>82212</DisplayId>
+    <DisplaySlot>11</DisplaySlot>
+    <IconPath>inv_jewelry_ring_70</IconPath>
+    <Stats>
+      <Strength>148</Strength>
+      <Stamina>252</Stamina>
+      <MasteryRating>94</MasteryRating>
+      <CritRating>109</CritRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <MasteryRating>10</MasteryRating>
+    </SocketBonus>
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>525</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Punisher's Band</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Punisher's Band</Name>
+    <Id>69852</Id>
+    <Slot>Finger</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>358</ItemLevel>
+    <DisplayId>48509</DisplayId>
+    <DisplaySlot>2</DisplaySlot>
+    <IconPath>inv_jewelry_necklace_44</IconPath>
+    <Stats>
+      <Stamina>282</Stamina>
+      <Intellect>188</Intellect>
+      <HasteRating>126</HasteRating>
+      <Resilience>126</Resilience>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>525</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Bloodthirsty Amberjewel Pendant</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Bloodthirsty Amberjewel Pendant</Name>
+    <Id>70075</Id>
+    <Slot>Neck</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>358</ItemLevel>
+    <DisplayId>48509</DisplayId>
+    <DisplaySlot>2</DisplaySlot>
+    <IconPath>inv_jewelry_necklace_44</IconPath>
+    <Stats>
+      <Strength>188</Strength>
+      <Stamina>282</Stamina>
+      <ExpertiseRating>126</ExpertiseRating>
+      <Resilience>126</Resilience>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>525</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Bloodthirsty Ruby Choker</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Bloodthirsty Ruby Choker</Name>
+    <Id>70076</Id>
+    <Slot>Neck</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>358</ItemLevel>
+    <DisplayId>48509</DisplayId>
+    <DisplaySlot>2</DisplaySlot>
+    <IconPath>inv_jewelry_necklace_44</IconPath>
+    <Stats>
+      <Agility>188</Agility>
+      <Stamina>282</Stamina>
+      <ExpertiseRating>126</ExpertiseRating>
+      <Resilience>126</Resilience>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>525</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Bloodthirsty Sapphire Necklace</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Bloodthirsty Sapphire Necklace</Name>
+    <Id>70074</Id>
+    <Slot>Neck</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>365</ItemLevel>
+    <DisplayId>100075</DisplayId>
+    <DisplaySlot>26</DisplaySlot>
+    <IconPath>inv_weapon_rifle_44</IconPath>
+    <Stats>
+      <Agility>74</Agility>
+      <Stamina>170</Stamina>
+      <MasteryRating>73</MasteryRating>
+      <CritRating>58</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Gun</Type>
+    <Faction>Neutral</Faction>
+    <MinDamage>1291</MinDamage>
+    <MaxDamage>2400</MaxDamage>
+    <Speed>2.8</Speed>
+    <Bind>BoE</Bind>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Agility>20</Agility>
+    </SocketBonus>
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Engineering</Skill>
+        <Level>525</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Extreme-Impact Hole Puncher</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Extreme-Impact Hole Puncher</Name>
+    <Id>71077</Id>
+    <Slot>Ranged</Slot>
   </Item>
 </ArrayOfItem>

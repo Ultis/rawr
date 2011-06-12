@@ -556,6 +556,7 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(4110, "Powerful Ghostly Spellthread", ItemSlot.Legs, new Stats() { Intellect = 95, Spirit = 55 }, "spell_nature_astralrecalgroup"));
             defaultEnchants.Add(new Enchant(4111, "Enchanted Spellthread", ItemSlot.Legs, new Stats() { Intellect = 55, Stamina = 65 }, "item_spellcloththread"));
             defaultEnchants.Add(new Enchant(4109, "Ghostly Spellthread", ItemSlot.Legs, new Stats() { Intellect = 55, Spirit = 45 }, "spell_nature_astralrecal"));
+            defaultEnchants.Add(new Enchant(4270, "Drakehide Leg Armor", ItemSlot.Legs, new Stats() { DodgeRating = 55, Stamina = 145 }, "inv_misc_cataclysmarmorkit_08"));
             #endregion
             #region Level 80 (WotLK)
             defaultEnchants.Add(new Enchant(3853, "Earthen Leg Armor", ItemSlot.Legs, new Stats() { Resilience = 40, Stamina = 28 }, "inv_misc_armorkit_18"));
@@ -931,6 +932,7 @@ namespace Rawr
             #region Legs
             defaultEnchants.Add(new Enchant(4127, "Charscale Leg Reinforcements", ItemSlot.Legs, new Stats() { Agility = 55, Stamina = 145 }, "trade_leatherworking"));
             defaultEnchants.Add(new Enchant(4126, "Dragonbone Leg Reinforcements", ItemSlot.Legs, new Stats() { AttackPower = 190, CritRating = 55 }, "trade_leatherworking"));
+            defaultEnchants.Add(new Enchant(4270, "Drakehide Leg Reinforcements", ItemSlot.Legs, new Stats() { DodgeRating = 55, Stamina = 145 }, "trade_leatherworking"));
             #endregion
             #endregion
             #region Level 80 (WotLK)
