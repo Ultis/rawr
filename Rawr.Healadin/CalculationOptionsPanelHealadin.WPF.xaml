@@ -8,7 +8,7 @@
     xmlns:controls="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:Rawr="clr-namespace:Rawr;assembly=Rawr.Base.WPF"
     mc:Ignorable="d"
-    d:DesignWidth="330" d:DesignHeight="750"
+    d:DesignWidth="330" d:DesignHeight="600"
     xmlns:local="clr-namespace:Rawr.Healadin"
     x:Class="Rawr.Healadin.CalculationOptionsPanelHealadin" 
     >
@@ -45,21 +45,10 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" Grid.Column="0" Margin="2" Text="Overall Scale: *" ToolTipService.ToolTip="Fight Healing is your overall HPS.  Burst Healing is your best possible Flash of Light HPS.  \nThis scale weighs the two appropriately when calculating your overall score." />
                 <Slider Margin="2" Grid.Row="0" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=BurstScale}" />
-                <Button Margin="2 2 2 10" x:Name="btnResetBurstScale" Grid.Row="1" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset the overall scale to 25% Burst, 75% Fight." Click="btnResetBurstScale_Click" />
+                <Button Margin="2 2 2 10" x:Name="btnResetBurstScale" Grid.Row="1" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset the overall scale to 25% Burst, 75% Total Fight." Click="btnResetBurstScale_Click" />
                 <TextBlock Margin="2 2 2 10" Grid.Row="1" Grid.Column="1" Text="{Binding Mode=OneWay, Path=BurstScaleText}" />
 
                 <TextBlock Grid.Row="2" Grid.Column="0" Margin="2" Text="Activity: *" ToolTipService.ToolTip="The percent of time you are actively casting spells." />
@@ -67,42 +56,35 @@
                 <Button Margin="2 2 2 10" x:Name="btnResetActivity" Grid.Row="3" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset the activity to 85%." Click="btnResetActivity_Click" />
                 <TextBlock Margin="2 2 2 10" Grid.Row="3" Grid.Column="1" Text="{Binding Mode=OneWay, Path=Activity, StringFormat='\{0:P0\}', ConverterCulture=en-ZA}" />
                 
-        
+                <TextBlock Grid.Row="4" Grid.Column="0" Margin="2" Text="Holy Points: *" ToolTipService.ToolTip="Spend Holy Points on LoD or WoG?.  Use this slider to indicate how often you cast LoD as a percentage." />
+                <Slider Margin="2" Grid.Row="4" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=HolyPoints}" />
+                <Button Margin="2 2 2 10" x:Name="btnResetHolyPoints" Grid.Row="5" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset LoD casts to 75% of Holy Point usage." Click="btnResetHolyPoints_Click" />
+                <TextBlock Margin="2 2 2 10" Grid.Row="5" Grid.Column="1" Text="{Binding Mode=OneWay, Path=HolyPointsText}" />
 
-                <TextBlock Grid.Row="6" Grid.Column="0" Margin="2" Text="Holy Points: *" ToolTipService.ToolTip="Spend Holy Points on LoD or WoG?.  Use this slider to indicate how often you cast LoD as a percentage." />
-                <Slider Margin="2" Grid.Row="6" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=HolyPoints}" />
-                <Button Margin="2 2 2 10" x:Name="btnResetHolyPoints" Grid.Row="7" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset LoD casts to 75% of Holy Point usage." Click="btnResetHolyPoints_Click" />
-                <TextBlock Margin="2 2 2 10" Grid.Row="7" Grid.Column="1" Text="{Binding Mode=OneWay, Path=HolyPointsText}" />
+                <TextBlock Grid.Row="6" Grid.Column="0" Margin="2" Text="LoD targets: *" ToolTipService.ToolTip="Light of Dawn doesn't always hit the max number of targets.  What percent of the max does it hit? " />
+                <Slider Margin="2" Grid.Row="6" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=LoDTargets}" />
+                <Button Margin="2 2 2 10" x:Name="btnResetLoDTargets" Grid.Row="7" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset LoD targets to 60% of max targets." Click="btnResetLoDTargets_Click" />
+                <TextBlock Margin="2 2 2 10" Grid.Row="7" Grid.Column="1" Text="{Binding Mode=OneWay, Path=LoDTargets, StringFormat='\{0:P0\}', ConverterCulture=en-ZA}" />
 
-                <TextBlock Grid.Row="8" Grid.Column="0" Margin="2" Text="LoD targets: *" ToolTipService.ToolTip="Light of Dawn doesn't always hit the max number of targets.  What percent of the max does it hit? " />
-                <Slider Margin="2" Grid.Row="8" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=LoDTargets}" />
-                <Button Margin="2 2 2 10" x:Name="btnResetLoDTargets" Grid.Row="9" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset LoD targets to 60% of max targets." Click="btnResetLoDTargets_Click" />
-                <TextBlock Margin="2 2 2 10" Grid.Row="9" Grid.Column="1" Text="{Binding Mode=OneWay, Path=LoDTargets, StringFormat='\{0:P0\}', ConverterCulture=en-ZA}" />
-
-                <TextBlock Grid.Row="13" Grid.Column="0" Margin="2" Text="Replenishment: *" ToolTipService.ToolTip="The percent of time you expect Replenishment to be active on you." />
-                <Slider Margin="2" Grid.Row="13" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=Replenishment}" />
-                <Button Margin="2 2 2 10" x:Name="btnResetReplenishment" Grid.Row="14" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset Replenishment Uptime to 90%." Click="btnResetReplenishment_Click" />
-                <TextBlock Margin="2 2 2 10" Grid.Row="14" Grid.Column="1" Text="{Binding Mode=OneWay, Path=Replenishment, StringFormat='\{0:P0\}', ConverterCulture=en-ZA}" />
+                <TextBlock Grid.Row="8" Grid.Column="0" Margin="2" Text="Replenishment: *" ToolTipService.ToolTip="The percent of time you expect Replenishment to be active on you." />
+                <Slider Margin="2" Grid.Row="8" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=Replenishment}" />
+                <Button Margin="2 2 2 10" x:Name="btnResetReplenishment" Grid.Row="9" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset Replenishment Uptime to 90%." Click="btnResetReplenishment_Click" />
+                <TextBlock Margin="2 2 2 10" Grid.Row="9" Grid.Column="1" Text="{Binding Mode=OneWay, Path=Replenishment, StringFormat='\{0:P0\}', ConverterCulture=en-ZA}" />
                 
-                <TextBlock Grid.Row="15" Grid.Column="0" Margin="2" Text="Beacon of Light: *" ToolTipService.ToolTip="The percent of time Beacon of Light to be active an a target." />
-                <Slider Margin="2" Grid.Row="15" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=BoLUp}" />
-                <Button Margin="2 2 2 10" x:Name="btnResetBoLUp" Grid.Row="16" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset Beacon of Light Uptime to 100%." Click="btnResetBoLUp_Click" />
-                <TextBlock Margin="2 2 2 10" Grid.Row="16" Grid.Column="1" Text="{Binding Mode=OneWay, Path=BoLUp, StringFormat='\{0:P0\}', ConverterCulture=en-ZA}" />
+                <TextBlock Grid.Row="10" Grid.Column="0" Margin="2" Text="Beacon of Light: *" ToolTipService.ToolTip="The percent of time Beacon of Light to be active an a target." />
+                <Slider Margin="2" Grid.Row="10" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=BoLUp}" />
+                <Button Margin="2 2 2 10" x:Name="btnResetBoLUp" Grid.Row="11" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset Beacon of Light Uptime to 100%." Click="btnResetBoLUp_Click" />
+                <TextBlock Margin="2 2 2 10" Grid.Row="11" Grid.Column="1" Text="{Binding Mode=OneWay, Path=BoLUp, StringFormat='\{0:P0\}', ConverterCulture=en-ZA}" />
 
-                <TextBlock Grid.Row="19" Grid.Column="0" Margin="2" Text="HR efficiency: *" ToolTipService.ToolTip="Holy Radiance efficiency depends on tight raid stacking.  What % of the max heals actually happens?" />
-                <Slider Margin="2" Grid.Row="19" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=HREff}" />
-                <Button Margin="2 2 2 10" x:Name="btnResetHREff" Grid.Row="20" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset HR efficiency to 40%." Click="btnResetHREff_Click" />
-                <TextBlock Margin="2 2 2 10" Grid.Row="20" Grid.Column="1" Text="{Binding Mode=OneWay, Path=HREff, StringFormat='\{0:P0\}', ConverterCulture=en-ZA}" />
+                <TextBlock Grid.Row="12" Grid.Column="0" Margin="2" Text="HR efficiency: *" ToolTipService.ToolTip="Holy Radiance efficiency depends on tight raid stacking.  What % of the max heals actually happens?" />
+                <Slider Margin="2" Grid.Row="12" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=HREff}" />
+                <Button Margin="2 2 2 10" x:Name="btnResetHREff" Grid.Row="13" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset HR efficiency to 40%." Click="btnResetHREff_Click" />
+                <TextBlock Margin="2 2 2 10" Grid.Row="13" Grid.Column="1" Text="{Binding Mode=OneWay, Path=HREff, StringFormat='\{0:P0\}', ConverterCulture=en-ZA}" />
 
-                <TextBlock Grid.Row="21" Grid.Column="0" Margin="2" Text="IH efficiency: *" ToolTipService.ToolTip="Illuminated Healing often expires or is refreshed.  What % of the shields actually absorb damage?" />
-                <Slider Margin="2" Grid.Row="21" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=IHEff}" />
-                <Button Margin="2 2 2 10" x:Name="btnResetIHEff" Grid.Row="22" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset IH efficiency to 40%." Click="btnResetIHEff_Click" />
-                <TextBlock Margin="2 2 2 10" Grid.Row="22" Grid.Column="1" Text="{Binding Mode=OneWay, Path=IHEff, StringFormat='\{0:P0\}', ConverterCulture=en-ZA}" />
-
-                <TextBlock Grid.Row="23" Grid.Column="0" Margin="2" Text="Melee attacks: *" ToolTipService.ToolTip="Melee attacks generate mana.  You can do melee attacks while casting your instant spells.  What percentage of your instant cast time do you use for melee?" />
-                <Slider Margin="2" Grid.Row="23" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=Melee}" />
-                <Button Margin="2 2 2 10" x:Name="btnResetMelee" Grid.Row="24" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset melee time to 25%." Click="btnResetMelee_Click" />
-                <TextBlock Margin="2 2 2 10" Grid.Row="24" Grid.Column="1" Text="{Binding Mode=OneWay, Path=Melee, StringFormat='\{0:P0\}', ConverterCulture=en-ZA}" />
+                <TextBlock Grid.Row="14" Grid.Column="0" Margin="2" Text="Melee attacks: *" ToolTipService.ToolTip="Melee attacks generate mana.  You can do melee attacks while casting your instant spells.  What percentage of your instant cast time do you use for melee?" />
+                <Slider Margin="2" Grid.Row="14" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=Melee}" />
+                <Button Margin="2 2 2 10" x:Name="btnResetMelee" Grid.Row="15" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset melee time to 25%." Click="btnResetMelee_Click" />
+                <TextBlock Margin="2 2 2 10" Grid.Row="15" Grid.Column="1" Text="{Binding Mode=OneWay, Path=Melee, StringFormat='\{0:P0\}', ConverterCulture=en-ZA}" />
 
             </Grid>
         </StackPanel>

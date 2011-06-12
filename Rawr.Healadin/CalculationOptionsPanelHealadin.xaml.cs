@@ -125,6 +125,11 @@ namespace Rawr.Healadin
             calcOpts.IHEff = .4f;
         }
 
+        private void btnResetCritOverheals_Click(object sender, RoutedEventArgs e)
+        {
+            calcOpts.CritOverheals = .2f;
+        }
+
         private void btnResetMelee_Click(object sender, RoutedEventArgs e)
         {
             calcOpts.Melee = .25f;
@@ -141,10 +146,11 @@ namespace Rawr.Healadin
             calcOpts.Replenishment = .9f;
             calcOpts.BoLUp = 1f;
             calcOpts.Melee = .25f;
-            calcOpts.IHEff = .4f;
-            calcOpts.HREff = .4f;
+            calcOpts.IHEff = 1f;  // todo:  get rid of this
+            calcOpts.HREff = 0.4f; 
             calcOpts.HRCasts = 60f;
             calcOpts.Userdelay = 0.1f;
+            calcOpts.CritOverheals = 0f; // todo:  get rid of this
         }
     }
 }

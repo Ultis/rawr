@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Media;
 using System.Collections.Generic;
 
 namespace Rawr.Healadin
@@ -75,50 +76,6 @@ namespace Rawr.Healadin
                 return gemmingTemplate;
             }
         }
-        
-        // This was commented out already when Molotok updated Healadin for 4.1
-        //public override List<GemmingTemplate> DefaultGemmingTemplates
-        //{
-        //    get
-        //    {
-        //        ////Relevant Gem IDs
-        //        //Green
-        //        int[] dazzling = { 39984, 40094, 40175 };
-
-        //        //Yellow
-        //        int[] brilliant = { 39912, 40012, 40123, 42148 };
-
-        //        //Orange
-        //        int[] luminous = { 39946, 40047, 40151 };
-
-        //        //Meta
-        //        int insightful = 41401;
-        //        // int revitalizing = 41376;
-
-        //        return new List<GemmingTemplate>()
-        //        {
-        //            new GemmingTemplate() { Model = "Healadin", Group = "Uncommon",
-        //                RedId = brilliant[0], YellowId = brilliant[0], BlueId = brilliant[0], PrismaticId = brilliant[0], MetaId = insightful },
-        //            new GemmingTemplate() { Model = "Healadin", Group = "Uncommon",
-        //                RedId = luminous[0], YellowId = brilliant[0], BlueId = dazzling[0], PrismaticId = brilliant[0], MetaId = insightful },
-
-        //            new GemmingTemplate() { Model = "Healadin", Group = "Rare",
-        //                RedId = brilliant[1], YellowId = brilliant[1], BlueId = brilliant[1], PrismaticId = brilliant[1], MetaId = insightful },
-        //            new GemmingTemplate() { Model = "Healadin", Group = "Rare",
-        //                RedId = luminous[1], YellowId = brilliant[1], BlueId = dazzling[1], PrismaticId = brilliant[1], MetaId = insightful },
-                        
-        //            new GemmingTemplate() { Model = "Healadin", Group = "Epic", Enabled = true,
-        //                RedId = brilliant[2], YellowId = brilliant[2], BlueId = brilliant[2], PrismaticId = brilliant[2], MetaId = insightful },
-        //            new GemmingTemplate() { Model = "Healadin", Group = "Epic", Enabled = true,
-        //                RedId = luminous[2], YellowId = brilliant[2], BlueId = dazzling[2], PrismaticId = brilliant[2], MetaId = insightful },
-                        
-        //            new GemmingTemplate() { Model = "Healadin", Group = "Jeweler",
-        //                RedId = brilliant[2], YellowId = brilliant[3], BlueId = brilliant[2], PrismaticId = brilliant[2], MetaId = insightful },
-        //            new GemmingTemplate() { Model = "Healadin", Group = "Jeweler",
-        //                RedId = luminous[2], YellowId = brilliant[3], BlueId = dazzling[2], PrismaticId = brilliant[2], MetaId = insightful },
-        //        };
-        //    }
-        //}
 
         public override void SetDefaults(Character character)
         {
@@ -239,10 +196,11 @@ namespace Rawr.Healadin
             {
                 if (_customChartNames == null)
                     _customChartNames = new string[] {
-                    "Mana Pool Breakdown",
-                    "Mana Usage Breakdown",
-                    "Healing Breakdown",
-                    "Rotation Breakdown",
+                    "Mana Pool Breakdown (needs updating)",
+                    "Mana Usage Breakdown (needs updating)",
+                    "Healing Breakdown (needs updating)",
+                    "Rotation Breakdown (needs updating)",
+                    "Stats Graph",
                     };
                 return _customChartNames;
             }
@@ -457,8 +415,9 @@ namespace Rawr.Healadin
 
         #region Custom Charts
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
+
         {
-            if (chartName == "Mana Pool Breakdown")
+            if (chartName == "Mana Pool Breakdown (needs updating)")
             {
                 CharacterCalculationsHealadin calc = GetCharacterCalculations(character) as CharacterCalculationsHealadin;
                 if (calc == null) calc = new CharacterCalculationsHealadin();
@@ -481,7 +440,7 @@ namespace Rawr.Healadin
 
                 return new ComparisonCalculationBase[] { Base, Mp5, Replenishment, LoH, ArcaneTorrent, DivinePlea, Other };
             }
-            else if (chartName == "Mana Usage Breakdown")
+            else if (chartName == "Mana Usage Breakdown (needs updating)")
             {
                 CharacterCalculationsHealadin calc = GetCharacterCalculations(character) as CharacterCalculationsHealadin;
                 if (calc == null) calc = new CharacterCalculationsHealadin();
@@ -500,7 +459,7 @@ namespace Rawr.Healadin
 
                 return new ComparisonCalculationBase[] { FoL, HL, HS, JotP, BoL };
             }
-            else if (chartName == "Healing Breakdown")
+            else if (chartName == "Healing Breakdown (needs updating)")
             {
                 CharacterCalculationsHealadin calc = GetCharacterCalculations(character) as CharacterCalculationsHealadin;
                 if (calc == null) calc = new CharacterCalculationsHealadin();
@@ -519,7 +478,7 @@ namespace Rawr.Healadin
 
                 return new ComparisonCalculationBase[] { FoL, HL, HS, GHL, BoL };
             }
-            else if (chartName == "Rotation Breakdown")
+            else if (chartName == "Rotation Breakdown (needs updating)")
             {
                 CharacterCalculationsHealadin calc = GetCharacterCalculations(character) as CharacterCalculationsHealadin;
                 if (calc == null) calc = new CharacterCalculationsHealadin();
@@ -538,8 +497,43 @@ namespace Rawr.Healadin
 
                 return new ComparisonCalculationBase[] { FoL, HL, HS, JotP, BoL };
             }
+            
             return new ComparisonCalculationBase[] {};
         }
+        /*
+        public override void UpdateCustomChartData(Character character, string chartName, System.Windows.Controls.Control control)
+        {
+            Color[] statColors = new Color[] { 
+                Color.FromArgb(0xFF, 0xFF, 0, 0), 
+                Color.FromArgb(0xFF, 0xFF, 165, 0), 
+                Color.FromArgb(0xFF, 0x80, 0x80, 0x00), 
+                Color.FromArgb(0xFF, 154, 205, 50), 
+                Color.FromArgb(0xFF, 0x00, 0xFF, 0xFF), 
+                Color.FromArgb(0xFF, 0, 0, 0xFF), 
+            };
+
+            List<float> X = new List<float>();
+            List<ComparisonCalculationBase[]> Y = new List<ComparisonCalculationBase[]>();
+
+            float fMultiplier = 1;
+            Stats[] statsList = new Stats[] {
+                        new Stats() { Intellect = fMultiplier },
+                        new Stats() { SpellPower = fMultiplier },
+                        new Stats() { HasteRating = fMultiplier },
+                        new Stats() { CritRating = fMultiplier },
+                        new Stats() { Spirit = fMultiplier },
+                        new Stats() { MasteryRating = fMultiplier },
+                    };
+
+            switch (chartName)
+            {
+                case "Stats Graph":
+                    Graph.Instance.UpdateStatsGraph(character, statsList, statColors, 200, "", null);
+                    break;
+            }
+        }
+        */
+
         #endregion Custom Charts
 
         #region Relevancy Methods

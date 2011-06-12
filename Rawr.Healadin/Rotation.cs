@@ -190,7 +190,8 @@ namespace Rawr.Healadin
             calc.RotationCleanse = CalcOpts.Cleanse * ( cleanse.CastTime() + CalcOpts.Userdelay);
             calc.CleanseCasts = CalcOpts.Cleanse;
             #endregion
- 
+
+            Stats.BonusCritChanceObliterate = CalcOpts.CritOverheals;  // I really need to put some variables in Stats that are for holy pally
             calc.HasteJotP = Talents.JudgementsOfThePure * 3f;
             calc.HasteSoL = Talents.SpeedOfLight * 1f;
             calc.SpellPowerTotal = Stats.Intellect + Stats.SpellPower;

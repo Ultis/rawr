@@ -25,14 +25,15 @@ namespace Rawr.Healadin
             divinePlea = 2f;
             cleanse = 10f;
             melee = 0.25f;
+            critoverheals = 0f; // todo:  get rid of these
             boLUp = 1f;
             holyShock = 7.5f;
             holyPoints = 0.75f;
             lodtargets = 0.6f;
             judgementcasts = 10f;
             hrCasts = 60f;
-            hrEff = 0.4f;
-            ihEff = 0.4f;
+            hrEff = 0.4f;  
+            ihEff = 1f;  // todo:  get rid of these
             burstScale = .25f;
             judgement = true;
             hitIrrelevant = true;
@@ -71,6 +72,13 @@ namespace Rawr.Healadin
         {
             get { return divinePlea; }
             set { divinePlea = value; OnPropertyChanged("DivinePlea"); }
+        }
+
+        private float critoverheals;
+        public float CritOverheals
+        {
+            get { return critoverheals; }
+            set { critoverheals = value; OnPropertyChanged("CritOverheals"); }
         }
 
         private float melee;
@@ -168,7 +176,7 @@ namespace Rawr.Healadin
 
         public string BurstScaleText
         {
-            get { return string.Format("{0:P0} Burst, {1:P0} Fight", BurstScale, 1f - BurstScale).Replace(" %", "%"); }
+            get { return string.Format("{0:P0} Burst, {1:P0} Total Fight", BurstScale, 1f - BurstScale).Replace(" %", "%"); }
         }
 
         private float userdelay;

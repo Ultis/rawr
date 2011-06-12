@@ -17,9 +17,8 @@ using System.Text;
  *  Avenging Wrath
  *  Guardian of Ancient Kings
  *  T12 set bonuses
- *  Divine Plea: causes 50% heals.
- *  Haste talents - additive or multiplicative?  Assume mult for now. (Judgement of the Pure, Speed of Light)
- 
+ *  Divine Plea: causes 50% heals
+ *  
  * 
  *Done, with assumptions (which can't be changed in the options tab):
  *  Speed of Light - assumes 3 points for Holy Radiance CD reduction.
@@ -209,7 +208,11 @@ namespace Rawr.Healadin
             return AverageHealed() * (1f + StatConversion.GetMasteryFromRating(Stats.MasteryRating) * 0.1f);
         }
 
-        public float CritHealed() { return BaseHealed() * 1.5f * (1f + Stats.BonusCritHealMultiplier) * AbilityCritMultiplier(); }
+        public float CritHealed() 
+        {
+            float critmultiplier = 1f + 0.5f * (1f - Stats.BonusCritChanceObliterate);  // have to change this to a pally variable when I add them to stats    
+            return BaseHealed() * critmultiplier * (1f + Stats.BonusCritHealMultiplier) * AbilityCritMultiplier(); 
+        }
 
         public float BaseHealed()
         {
