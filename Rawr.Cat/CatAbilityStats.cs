@@ -308,7 +308,7 @@ namespace Rawr.Cat
 				{
 					_berserkStats = new BerserkStats();
 					_berserkStats.Duration = BonusBerserkDuration;
-					_berserkStats.Cooldown = 300f;
+					_berserkStats.Cooldown = 180f;
 					_berserkStats.EnergyCostMultiplier = 0.5f;
 					_berserkStats.MaxEnergyIncrease = MaxEnergyOnTigersFuryBerserk;
 				}

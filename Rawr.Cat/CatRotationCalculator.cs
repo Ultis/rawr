@@ -7,7 +7,7 @@ namespace Rawr.Cat
 	public class CatRotationCalculator
 	{
 		private CatAbilityBuilder Abilities { get; set; }
-		public int FightDuration { get; set; }
+		private int FightDuration { get; set; }
 		private MangleUsage MangleUsage { get; set; }
 
 		private BerserkStats BerserkStats { get { return Abilities.BerserkStats; } }
@@ -65,22 +65,6 @@ namespace Rawr.Cat
 		public float BiteCount = 0f;
 		public float RavageCount = 0f;
 		public float RavageAbove80PercentCount = 0f;
-        public float berserkUptime = 0f;
-
-        public float RipBiteUptime() 
-        {
-            return FightDuration / (RipTickCount + BiteCount);
-        }
-
-        public float BerserkDuration()
-        {
-            return BerserkStats.Duration;
-        }
-
-        public float BerserkCooldown()
-        {
-            return BerserkStats.Cooldown;
-        }
 
 		public CatRotationCalculation CalculateRotation(int roarCP, BiteUsage biteUsage)
 		{
@@ -91,7 +75,7 @@ namespace Rawr.Cat
 				((FightDuration - 10f) / TigersFuryStats.Cooldown) * (TigersFuryStats.EnergyGenerated + TigersFuryStats.MaxEnergyIncrease / 4f) + //TF Energy
 				((FightDuration - 10f) / BerserkStats.Cooldown) * (TigersFuryStats.MaxEnergyIncrease / 4f); //Berserk Energy
 			float tfUptime = ((((FightDuration - 10f) / TigersFuryStats.Cooldown) * TigersFuryStats.Duration) / FightDuration);
-			berserkUptime = ((((FightDuration - 10f) / BerserkStats.Cooldown) * BerserkStats.Duration) / FightDuration);
+			float berserkUptime = ((((FightDuration - 10f) / BerserkStats.Cooldown) * BerserkStats.Duration) / FightDuration);
 			float energyCostMultiplier = 1f - (1f - BerserkStats.EnergyCostMultiplier) * berserkUptime; //Average energy cost reduction due to Berserk
 			float damageMultiplier = 1f + TigersFuryStats.DamageMultiplier * tfUptime;
 
@@ -263,8 +247,6 @@ namespace Rawr.Cat
 				BiteCount = BiteCount,
 				RavageCount = RavageCount,
 				RavageAbove80PercentCount = RavageAbove80PercentCount,
-
-                fightduration = FightDuration,
 			};
 		}
 
@@ -345,8 +327,6 @@ namespace Rawr.Cat
 		public int RoarCP { get; set; }
 		public BiteUsage BiteUsage { get; set; }
 
-        public int fightduration { get; set; }
-
 		public override string ToString()
 		{
 			StringBuilder rotation = new StringBuilder();
@@ -364,15 +344,6 @@ namespace Rawr.Cat
 			
 			return rotation.ToString();
 		}
-
-        public float GetFinishingMoveUptime()
-        {
-            float TotalFinishingMoveCount = RakeInitCount + BiteCount;
-            float SavageRoarUptime = fightduration / (RoarCP * 9);
-            float RakeBiteUptime = fightduration / TotalFinishingMoveCount;
-
-            return SavageRoarUptime + RakeBiteUptime;
-        }
 	}
 
 	public enum MangleUsage

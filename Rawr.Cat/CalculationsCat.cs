@@ -293,7 +293,6 @@ namespace Rawr.Cat
             return calcOpts;
         }
 
-        private CatRotationCalculator rotationCalculator;
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
             // First things first, we need to ensure that we aren't using bad data
@@ -494,7 +493,7 @@ namespace Rawr.Cat
                 ((character.MainHand.MinDamage + character.MainHand.MaxDamage) / 2f) / character.MainHand.Speed,
                 attackSpeed, modArmor, hasteBonus, critMultiplier, chanceAvoided, chanceCritWhite, chanceCritYellow, chanceCritYellow,
                 chanceCritYellow, chanceCritYellow, chanceCritRake, chanceCritRip, chanceCritBite, chanceGlance);
-            rotationCalculator = new CatRotationCalculator(abilities, bossOpts.BerserkTimer, mangleusage);
+            var rotationCalculator = new CatRotationCalculator(abilities, bossOpts.BerserkTimer, mangleusage);
             var optimalRotation = rotationCalculator.GetOptimalRotation(); //TODO: Check for 4T11, maintain it if so
             calculatedStats.Abilities = abilities;
             calculatedStats.HighestDPSRotation = optimalRotation;
@@ -585,7 +584,7 @@ namespace Rawr.Cat
                 RipRefreshChanceOnFerociousBiteOnTargetsBelow25Percent = 0.5f * talents.BloodInTheWater,
                 ShredDamageMultiplier = talents.RendAndTear * 0.2f / 3f,
 
-                BonusBerserkDuration = (talents.Berserk > 0 ? 15f + (talents.GlyphOfBerserk ? 5f : 0f) : 0f),
+                BonusBerserkDuration = (talents.Berserk > 0 ? 15f + (talents.GlyphOfBerserk ? 10f : 0f) : 0f),
                 MangleDamageMultiplier = talents.GlyphOfMangle ? 0.1f : 0f,
                 SavageRoarDamageMultiplierIncrease = talents.GlyphOfSavageRoar ? 0.05f : 0f,
                 FeralChargeCatCooldownReduction = talents.GlyphOfFeralCharge ? 2f : 0f,
@@ -607,19 +606,20 @@ namespace Rawr.Cat
             }
             int T12Count;
             character.SetBonusCount.TryGetValue("Obsidian Arborweave Battlegarb", out T12Count);
-            if (T12Count >= 2) {
+            if (T12Count >= 2)
+            {
                 statsTotal.MangleDamageMultiplier = (1f + statsTotal.MangleDamageMultiplier) * (1f + 0.10f) - 1f;
                 statsTotal.ShredDamageMultiplier = (1f + statsTotal.ShredDamageMultiplier) * (1f + 0.10f) - 1f;
             }
-            if (T12Count >= 4) {
-                // Assume that all Finishing Moves are used at 5 combo points
-                SpecialEffect primary = new SpecialEffect(Trigger.Berserk, new Stats(), rotationCalculator.BerserkDuration(), rotationCalculator.BerserkCooldown());
-                // This is the Inner Eye stacking buff.
+            if (T12Count >= 4)
+            {
+                // Assume that all Finishing Moves are used at 5 combo points 
+                SpecialEffect primary = new SpecialEffect(Trigger.Berserk, new Stats(), statsTotal.BonusBerserkDuration, 180f);
                 SpecialEffect secondary = new SpecialEffect(Trigger.FinishingMove,
                     new StatsCat() { BonusBerserkDuration = 2f, },
                     0, 0, 1f);
                 primary.Stats.AddSpecialEffect(secondary);
-                statsTotal.AddSpecialEffect(primary);
+                statsTotal.AddSpecialEffect(primary); 
             }
             #endregion
 
@@ -680,8 +680,8 @@ namespace Rawr.Cat
             triggerIntervals[Trigger.MangleCatOrShredHit] = usesMangle ? 3.76f : 3.87f;
             triggerIntervals[Trigger.MangleCatOrShredOrInfectedWoundsHit] = triggerIntervals[Trigger.MangleCatOrShredHit] / ((talents.InfectedWounds > 0) ? 2f : 1f);
             triggerIntervals[Trigger.EnergyOrFocusDropsBelow20PercentOfMax] = 4f; // doing 80% chance every 4 seconds per Astry
-            triggerIntervals[Trigger.FinishingMove] = rotationCalculator.RipBiteUptime();
-            triggerIntervals[Trigger.Berserk] = rotationCalculator.berserkUptime;
+            triggerIntervals[Trigger.FinishingMove] = 9f; // Assume it takes 9 seconds between to perform a finishing move
+            triggerIntervals[Trigger.Berserk] = 180f;
             triggerChances[Trigger.Use] = 1f;
             triggerChances[Trigger.MeleeAttack] = 1f;
             triggerChances[Trigger.MeleeHit] = Math.Max(0f, chanceHit);
@@ -700,6 +700,8 @@ namespace Rawr.Cat
             triggerChances[Trigger.MangleCatOrShredHit] = chanceHit;
             triggerChances[Trigger.MangleCatOrShredOrInfectedWoundsHit] = chanceHit;
             triggerChances[Trigger.EnergyOrFocusDropsBelow20PercentOfMax] = 0.80f; // doing 80% chance every 4 seconds per Astry
+            triggerChances[Trigger.FinishingMove] = 1f;
+            triggerChances[Trigger.Berserk] = 1f;
 
             // Handle Trinket procs
             Stats statsProcs = new Stats();
@@ -849,7 +851,7 @@ namespace Rawr.Cat
         public override bool IsBuffRelevant(Buff buff, Character character) {
             if (buff != null
                 && !string.IsNullOrEmpty(buff.SetName)
-                && buff.SetName == "Stormrider's Battlegarb"
+                && buff.SetName == "Stormrider's Battlegarb"	
                 && buff.SetName == "Obsidian Arborweave Battlegarb")
             { return true; }
             return base.IsBuffRelevant(buff, character);
@@ -914,7 +916,7 @@ namespace Rawr.Cat
                     || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.PhysicalAttack || effect.Trigger == Trigger.DoTTick
                     || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.MangleCatHit || effect.Trigger == Trigger.MangleCatAttack || effect.Trigger == Trigger.RakeTick
                     || effect.Trigger == Trigger.MangleCatOrShredHit || effect.Trigger == Trigger.MangleCatOrShredOrInfectedWoundsHit || effect.Trigger == Trigger.DamageOrHealingDone
-                    || effect.Trigger == Trigger.EnergyOrFocusDropsBelow20PercentOfMax)
+                    || effect.Trigger == Trigger.Berserk || effect.Trigger == Trigger.FinishingMove || effect.Trigger == Trigger.EnergyOrFocusDropsBelow20PercentOfMax)
                 {
                     if (HasRelevantStats(effect.Stats))
                     {
