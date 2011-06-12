@@ -38,24 +38,28 @@ namespace Rawr.WPF
                 int valueRevsnC = 0; int valueRevsnO = 0;
 
                 if (currentMatch.Groups["major"].Value != "" && otherMatch.Groups["major"].Value != "") {
-                    valueMajorC = int.Parse(currentMatch.Groups["major"].Value) * 100000 * 100000 * 100000;
-                    valueMajorO = int.Parse(otherMatch.Groups["major"].Value)   * 100000 * 100000 * 100000;
+                    valueMajorC = int.Parse(currentMatch.Groups["major"].Value);
+                    valueMajorO = int.Parse(otherMatch.Groups["major"].Value);
                     if (valueMajorO > valueMajorC) { return true; }
+                    else if (valueMajorO < valueMajorC) { return false; }
                 }
                 if (currentMatch.Groups["minor"].Value != "" && otherMatch.Groups["minor"].Value != "") {
-                    valueMinorC = int.Parse(currentMatch.Groups["minor"].Value) * 100000 * 100000;
-                    valueMinorO = int.Parse(otherMatch.Groups["minor"].Value)   * 100000 * 100000;
+                    valueMinorC = int.Parse(currentMatch.Groups["minor"].Value);
+                    valueMinorO = int.Parse(otherMatch.Groups["minor"].Value);
                     if (valueMinorO > valueMinorC) { return true; }
+                    else if (valueMinorO < valueMinorC) { return false; }
                 }
                 if (currentMatch.Groups["build"].Value != "" && otherMatch.Groups["build"].Value != "") {
-                    valueBuildC = int.Parse(currentMatch.Groups["build"].Value) * 100000;
-                    valueBuildO = int.Parse(otherMatch.Groups["build"].Value)   * 100000;
+                    valueBuildC = int.Parse(currentMatch.Groups["build"].Value);
+                    valueBuildO = int.Parse(otherMatch.Groups["build"].Value);
                     if (valueBuildO > valueBuildC) { return true; }
+                    else if (valueBuildO < valueBuildC) { return false; }
                 }
                 if (currentMatch.Groups["revsn"].Value != "" && otherMatch.Groups["revsn"].Value != "") {
                     valueRevsnC = int.Parse(currentMatch.Groups["revsn"].Value);
                     valueRevsnO = int.Parse(otherMatch.Groups["revsn"].Value);
                     if (valueRevsnO > valueRevsnC) { return true; }
+                    else if (valueRevsnO < valueRevsnC) { return false; }
                 }
             }
             return false;
