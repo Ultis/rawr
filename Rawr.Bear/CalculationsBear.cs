@@ -734,6 +734,19 @@ the Threat Scale defined on the Options tab.",
                     30, 0, 1f, 3));*/
                 statsTotal.BonusSurvivalInstinctsDurationMultiplier = (1f + statsTotal.BonusSurvivalInstinctsDurationMultiplier) * (1f + 0.50f) - 1f;
             }
+            int T12Count;
+            character.SetBonusCount.TryGetValue("Obsidian Arborweave Battlegarb", out T12Count);
+            if (T12Count >= 2)
+                statsTotal.BonusMangleDamageMultiplier= (1f + statsTotal.BonusMangleDamageMultiplier) * (1f + 0.10f) - 1f;
+                statsTotal.BonusMaulDamageMultiplier = (1f + statsTotal.BonusMaulDamageMultiplier) * (1f + 0.10f) - 1f;
+            {
+            }
+            if (T12Count >= 4)
+            {
+                statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.Barkskin,
+                    new Stats() { Dodge = 0.10f, },
+                    12f, 60f, 1f));
+            }
             #endregion
 
             statsTotal.Accumulate(BaseStats.GetBaseStats(character.Level, character.Class, character.Race, BaseStats.DruidForm.Bear));
@@ -867,6 +880,9 @@ the Threat Scale defined on the Options tab.",
                         break;
                     case Trigger.DamageTakenPhysical:
                         effect.AccumulateAverageStats(statsProcs, TargAttackSpeed, 1f - (dodgeTotal + missTotal), fightDuration); //Assume you get hit by other things, like dots, aoes, etc, making you get targeted with damage 25% more often than the boss, and half the hits you take are unavoidable.
+                        break;
+                    case Trigger.Barkskin:
+                        effect.AccumulateAverageStats(statsProcs, 60f, 1f, 0f, fightDuration);
                         break;
                 }
             }
@@ -1263,7 +1279,8 @@ the Threat Scale defined on the Options tab.",
         public override bool IsBuffRelevant(Buff buff, Character character) {
             if (buff != null
                 && !string.IsNullOrEmpty(buff.SetName)
-                && buff.SetName == "Stormrider's Battlegarb")
+                && buff.SetName == "Stormrider's Battlegarb"
+                && buff.SetName == "Obsidian Arborweave Battlegarb")
             { return true; }
             return base.IsBuffRelevant(buff, character);
         }
@@ -1411,7 +1428,7 @@ the Threat Scale defined on the Options tab.",
                     || effect.Trigger == Trigger.MangleBearHit || effect.Trigger == Trigger.SwipeBearOrLacerateHit
                     || effect.Trigger == Trigger.DamageTaken || effect.Trigger == Trigger.DamageTakenPhysical
                     || effect.Trigger == Trigger.MangleCatOrShredOrInfectedWoundsHit || effect.Trigger == Trigger.LacerateTick
-                    || effect.Trigger == Trigger.DamageTakenPutsMeBelow35PercHealth)
+                    || effect.Trigger == Trigger.Barkskin || effect.Trigger == Trigger.DamageTakenPutsMeBelow35PercHealth)
                 {
                     relevant |= HasRelevantStats(effect.Stats);
                     if (relevant) break;

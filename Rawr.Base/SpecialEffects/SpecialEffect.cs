@@ -132,9 +132,12 @@ namespace Rawr
         MangleBearHit,
         SwipeBearOrLacerateHit,
         MangleCatOrShredHit,
+        MangleCatOrShredorMaul,
         MangleCatOrShredOrInfectedWoundsHit,
         RakeTick,
         LacerateTick,
+        FinishingMove,
+        Barkskin,
         #endregion
         #region Added by Hunter
         /// <summary>The Hunter's Auto Shot lands on the target (hit or crit)</summary>

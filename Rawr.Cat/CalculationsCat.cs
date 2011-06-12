@@ -293,6 +293,7 @@ namespace Rawr.Cat
             return calcOpts;
         }
 
+
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
             // First things first, we need to ensure that we aren't using bad data
@@ -604,6 +605,18 @@ namespace Rawr.Cat
                     30, 0, 1f, 3));
                 //statsTotal.BonusSurvivalInstinctsDurationMultiplier = (1f + statsTotal.BonusSurvivalInstinctsDurationMultiplier) * (1f + 0.50f) - 1f;
             }
+            int T12Count;
+            character.SetBonusCount.TryGetValue("Obsidian Arborweave Battlegarb", out T12Count);
+            if (T12Count >= 2) {
+                statsTotal.MangleDamageMultiplier = (1f + statsTotal.MangleDamageMultiplier) * (1f + 0.10f) - 1f;
+                statsTotal.ShredDamageMultiplier = (1f + statsTotal.ShredDamageMultiplier) * (1f + 0.10f) - 1f;
+            }
+            if (T12Count >= 4) {
+                // Assume that all Finishing Moves are used at 5 combo points
+                statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.FinishingMove,
+                    new StatsCat() { BonusBerserkDuration = 2f, },
+                    0, 0, 1f));
+            }
             #endregion
 
             statsTotal.Accumulate(BaseStats.GetBaseStats(character.Level, character.Class, character.Race, BaseStats.DruidForm.Cat));
@@ -661,6 +674,7 @@ namespace Rawr.Cat
                 triggerIntervals[Trigger.MangleCatAttack] = 60f;
             }
             triggerIntervals[Trigger.MangleCatOrShredHit] = usesMangle ? 3.76f : 3.87f;
+            triggerIntervals[Trigger.MangleCatOrShredorMaul] = usesMangle ? 3.76f : 3.87f;
             triggerIntervals[Trigger.MangleCatOrShredOrInfectedWoundsHit] = triggerIntervals[Trigger.MangleCatOrShredHit] / ((talents.InfectedWounds > 0) ? 2f : 1f);
             triggerIntervals[Trigger.EnergyOrFocusDropsBelow20PercentOfMax] = 4f; // doing 80% chance every 4 seconds per Astry
             triggerChances[Trigger.Use] = 1f;
@@ -679,6 +693,7 @@ namespace Rawr.Cat
                 triggerChances[Trigger.MangleCatHit] = chanceHit;
             }
             triggerChances[Trigger.MangleCatOrShredHit] = chanceHit;
+            triggerChances[Trigger.MangleCatOrShredorMaul] = chanceHit;
             triggerChances[Trigger.MangleCatOrShredOrInfectedWoundsHit] = chanceHit;
             triggerChances[Trigger.EnergyOrFocusDropsBelow20PercentOfMax] = 0.80f; // doing 80% chance every 4 seconds per Astry
 
@@ -830,7 +845,8 @@ namespace Rawr.Cat
         public override bool IsBuffRelevant(Buff buff, Character character) {
             if (buff != null
                 && !string.IsNullOrEmpty(buff.SetName)
-                && buff.SetName == "Stormrider's Battlegarb")
+                && buff.SetName == "Stormrider's Battlegarb"
+                && buff.SetName == "Obsidian Arborweave Battlegarb")
             { return true; }
             return base.IsBuffRelevant(buff, character);
         }
@@ -928,7 +944,7 @@ namespace Rawr.Cat
                     || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.PhysicalAttack || effect.Trigger == Trigger.RakeTick
                     || effect.Trigger == Trigger.MangleCatHit || effect.Trigger == Trigger.MangleCatAttack || effect.Trigger == Trigger.MangleCatOrShredHit 
                     || effect.Trigger == Trigger.MangleCatOrShredOrInfectedWoundsHit || effect.Trigger == Trigger.DamageOrHealingDone
-                    || effect.Trigger == Trigger.EnergyOrFocusDropsBelow20PercentOfMax)
+                    || effect.Trigger == Trigger.FinishingMove || effect.Trigger == Trigger.EnergyOrFocusDropsBelow20PercentOfMax)
                 {
                     relevant |= HasRelevantStats(effect.Stats);
                     if (relevant) break;

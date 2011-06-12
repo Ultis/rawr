@@ -7,7 +7,7 @@ namespace Rawr.Cat
 	public class CatRotationCalculator
 	{
 		private CatAbilityBuilder Abilities { get; set; }
-		private int FightDuration { get; set; }
+		public int FightDuration { get; set; }
 		private MangleUsage MangleUsage { get; set; }
 
 		private BerserkStats BerserkStats { get { return Abilities.BerserkStats; } }
@@ -247,6 +247,8 @@ namespace Rawr.Cat
 				BiteCount = BiteCount,
 				RavageCount = RavageCount,
 				RavageAbove80PercentCount = RavageAbove80PercentCount,
+
+                fightduration = FightDuration,
 			};
 		}
 
@@ -327,6 +329,8 @@ namespace Rawr.Cat
 		public int RoarCP { get; set; }
 		public BiteUsage BiteUsage { get; set; }
 
+        public int fightduration { get; set; }
+
 		public override string ToString()
 		{
 			StringBuilder rotation = new StringBuilder();
@@ -344,6 +348,15 @@ namespace Rawr.Cat
 			
 			return rotation.ToString();
 		}
+
+        public float GetFinishingMoveUptime()
+        {
+            float TotalFinishingMoveCount = RakeInitCount + BiteCount;
+            float SavageRoarUptime = fightduration / (RoarCP * 9);
+            float RakeBiteUptime = fightduration / TotalFinishingMoveCount;
+
+            return SavageRoarUptime + RakeBiteUptime;
+        }
 	}
 
 	public enum MangleUsage
