@@ -614,10 +614,10 @@ namespace Rawr.Cat
             if (T12Count >= 4)
             {
                 // Assume that all Finishing Moves are used at 5 combo points 
-                SpecialEffect primary = new SpecialEffect(Trigger.Berserk, new Stats(), statsTotal.BonusBerserkDuration, 180f);
+                SpecialEffect primary = new SpecialEffect(Trigger.Berserk, new StatsCat(), statsTotal.BonusBerserkDuration, 180f);
                 SpecialEffect secondary = new SpecialEffect(Trigger.FinishingMove,
                     new StatsCat() { BonusBerserkDuration = 2f, },
-                    0, 0, 1f);
+                    0, 5f, 1f);
                 primary.Stats.AddSpecialEffect(secondary);
                 statsTotal.AddSpecialEffect(primary); 
             }
