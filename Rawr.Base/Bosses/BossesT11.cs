@@ -1445,7 +1445,9 @@ namespace Rawr.Bosses
                     MaxNumTargets = new float[] { 1, 3, 1, 3 }[i],
                     AttackType = ATTACK_TYPES.AT_AOE,
                     // Only happens in P1 and until 23% where he stops casting it.
-                    AttackSpeed = this[i].BerserkTimer / ((((this[i].BerserkTimer * .80f) / 60f) / 2f) / 15f),
+                    // Happens about 6 times per minute, based on
+                    // http://www.worldoflogs.com/reports/rt-jjgnyvc6orry0sq0/log/?s=6131&e=6471
+                    AttackSpeed = 10f,
                 });
                 this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MeleeDPS] = true;
                 this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS] = true;
@@ -1457,7 +1459,7 @@ namespace Rawr.Bosses
                     Name =  "Caustic Slime in P1",
                     Stats = new Stats() { PhysicalHit = -0.75f, SpellHit = -0.75f },
                     Duration = 3f * 1000f,
-                    Frequency = this[i].BerserkTimer / ((((this[i].BerserkTimer * .77f) / 60f) / 2f) / 15f),
+                    Frequency = 10f,
                     Chance = new float[] { 1, 3, 1, 3 }[i] / (this[i].Max_Players - this[i].Min_Tanks),
                     Breakable = false,
                     AffectsRole = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole,
