@@ -274,7 +274,8 @@ namespace Rawr.Enhance
             {
                 if (calcOpts.PriorityInUse(EnhanceAbility.StormStrike))
                 {
-                    enhance4T12 = 0.06f;
+                    //enhance4T12 = 0.06f;
+                    enhance4T12 = 0.16f;
                 }
             }
             //
