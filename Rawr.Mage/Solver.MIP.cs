@@ -1085,15 +1085,15 @@ namespace Rawr.Mage
                 case (int)StandardEffect.VolcanicPotion:
                     ind = 7;
                     break;
-                /*case (int)StandardEffect.PotionOfWildMagic:
+                case (int)StandardEffect.FlameOrb:
                     ind = 8;
-                    break;*/
+                    break;
                 case (int)StandardEffect.MirrorImage:
                     ind = 9;
                     break;
-                /*case (int)StandardEffect.WaterElemental:
+                case (int)StandardEffect.BloodFury:
                     ind = 11;
-                    break;*/
+                    break;
                 case (int)StandardEffect.Evocation:
                     switch (cooldownType)
                     {

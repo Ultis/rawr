@@ -2402,20 +2402,27 @@ namespace Rawr
             //{
             //    c._rawNoStackData[i] = Math.Max(a._rawNoStackData[i], b._rawNoStackData[i]);
             //}
-            //int specialEffectCount = a._rawSpecialEffectDataSize + b._rawSpecialEffectDataSize;
-            //if (specialEffectCount > 0)
-            //{
-            //    c._rawSpecialEffectData = new SpecialEffect[specialEffectCount];
-            //    c._rawSpecialEffectDataSize = specialEffectCount;
-            //    if (a._rawSpecialEffectDataSize > 0)
-            //    {
-            //        Array.Copy(a._rawSpecialEffectData, c._rawSpecialEffectData, a._rawSpecialEffectDataSize);
-            //    }
-            //    if (b._rawSpecialEffectDataSize > 0)
-            //    {
-            //        Array.Copy(b._rawSpecialEffectData, 0, c._rawSpecialEffectData, a._rawSpecialEffectDataSize, b._rawSpecialEffectDataSize);
-            //    }
-            //}
+            if (a._rawSpecialEffectDataSize > 0)
+            {
+                c._rawSpecialEffectData = new SpecialEffect[a._rawSpecialEffectDataSize];
+                c._rawSpecialEffectDataSize = 0;
+                for (i = 0; i < a._rawSpecialEffectDataSize; i++)
+                {
+                    SpecialEffect se = a._rawSpecialEffectData[i];
+                    for (int j = 0; j < b._rawSpecialEffectDataSize; j++)
+                    {
+                        if (b._rawSpecialEffectData[j] == se)
+                        {
+                            se = null;
+                            break;
+                        }
+                    }
+                    if (se != null)
+                    {
+                        c._rawSpecialEffectData[c._rawSpecialEffectDataSize++] = se;
+                    }
+                }
+            }
             return c;
         }
         /// <summary>

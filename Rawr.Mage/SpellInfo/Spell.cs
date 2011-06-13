@@ -73,6 +73,7 @@ namespace Rawr.Mage
         public float InterruptProtection;
         public bool AreaEffect;
         public bool AreaEffectDot;
+        public float BasePeriodicDamage;
 
         // Variables that have to be initialized in CalculateDerivedStats and can be modified after
         public bool SpammedDot;
@@ -147,7 +148,6 @@ namespace Rawr.Mage
         public MagicSchool MagicSchool { get { return template.MagicSchool; } }
         public float BaseMinDamage { get { return template.BaseMinDamage; } }
         public float BaseMaxDamage { get { return template.BaseMaxDamage; } }
-        public float BasePeriodicDamage { get { return template.BasePeriodicDamage; } }
         public float SpellDamageCoefficient { get { return template.SpellDamageCoefficient; } }
         public float DotDamageCoefficient { get { return template.DotDamageCoefficient; } }
         public float DotDuration { get { return template.DotDuration; } }
@@ -314,6 +314,7 @@ namespace Rawr.Mage
             Spell s = New(reference.template, castingState.Solver);
             s.castingState = castingState;
 
+            s.BasePeriodicDamage = reference.BasePeriodicDamage;
             s.BaseCastTime = reference.BaseCastTime;
             s.CostModifier = reference.CostModifier;
             s.CostAmplifier = reference.CostAmplifier;
@@ -371,6 +372,7 @@ namespace Rawr.Mage
         {
             this.castingState = castingState;
 
+            BasePeriodicDamage = template.BasePeriodicDamage;
             BaseCastTime = template.BaseCastTime;
             CostModifier = template.BaseCostModifier;
             CostAmplifier = template.BaseCostAmplifier;

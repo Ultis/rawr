@@ -1511,7 +1511,7 @@ namespace Rawr
                 }
                 else
                 {
-                    return cooldown.ToString() + " Sec";
+                    return Cooldown.ToString() + " Sec";
                 }
             }
         }

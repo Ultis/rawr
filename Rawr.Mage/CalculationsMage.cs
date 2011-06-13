@@ -631,7 +631,8 @@ namespace Rawr.Mage
 
             AccumulateBuffsStats(stats, activeBuffs);
 
-            for (int i = 0; i < stats._rawSpecialEffectDataSize; i++)
+            // moving away to handling these as normal procs, reevaluate if needed
+            /*for (int i = 0; i < stats._rawSpecialEffectDataSize; i++)
             {
                 SpecialEffect effect = stats._rawSpecialEffectData[i];
                 if (effect.MaxStack > 1 && effect.Chance == 1f && effect.Cooldown == 0f && (effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit))
@@ -639,7 +640,7 @@ namespace Rawr.Mage
                     effect.Stats.GenerateSparseData();
                     stats.Accumulate(effect.Stats, effect.MaxStack);
                 }                
-            }
+            }*/
         }
 
         // required by base class, but never used
@@ -1801,12 +1802,12 @@ namespace Rawr.Mage
 
         public static bool IsSupportedSpellPowerProc(SpecialEffect effect)
         {
-            return (effect.MaxStack == 1 && effect.Stats.SpellPower > 0 && IsSupportedProc(effect.Trigger));
+            return ((effect.MaxStack == 1 || effect.Cooldown == 0f) && effect.Stats.SpellPower > 0 && IsSupportedProc(effect.Trigger));
         }
 
         public static bool IsSupportedMasteryProc(SpecialEffect effect)
         {
-            return (effect.MaxStack == 1 && effect.Stats.MasteryRating > 0 && IsSupportedProc(effect.Trigger));
+            return ((effect.MaxStack == 1 || effect.Cooldown == 0f) && effect.Stats.MasteryRating > 0 && IsSupportedProc(effect.Trigger));
         }
 
         public static bool IsSupportedIntellectProc(SpecialEffect effect)
@@ -1837,38 +1838,17 @@ namespace Rawr.Mage
 
         public static bool IsSupportedManaRestoreProc(SpecialEffect effect)
         {
-            return (effect.MaxStack == 1 && effect.Stats.ManaRestore > 0 && (IsSupportedProc(effect.Trigger) || effect.Trigger == Trigger.Use));
+            return ((effect.MaxStack == 1 || effect.Cooldown == 0f) && effect.Stats.ManaRestore > 0 && (IsSupportedProc(effect.Trigger) || effect.Trigger == Trigger.Use));
         }
 
         public static bool IsSupportedMp5Proc(SpecialEffect effect)
         {
-            return (effect.MaxStack == 1 && effect.Stats.Mp5 > 0 && (IsSupportedProc(effect.Trigger) || effect.Trigger == Trigger.Use));
+            return ((effect.MaxStack == 1 || effect.Cooldown == 0f) && effect.Stats.Mp5 > 0 && (IsSupportedProc(effect.Trigger) || effect.Trigger == Trigger.Use));
         }
 
         public static bool IsSupportedManaGemProc(SpecialEffect effect)
         {
             return (effect.MaxStack == 1 && effect.Trigger == Trigger.ManaGem);
-        }
-
-        public static bool IsSupportedStackingEffect(SpecialEffect effect)
-        {
-            if (effect.MaxStack > 1 && effect.Chance == 1f && effect.Cooldown == 0f && (effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit))
-            {
-                if (HasEffectStats(effect.Stats))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public static bool IsSupportedDotTickStackingEffect(SpecialEffect effect)
-        {
-            if (effect.MaxStack > 1 && effect.Chance == 1f && effect.Cooldown == 0f && effect.Trigger == Trigger.DoTTick && effect.Stats.SpellPower > 0)
-            {
-                return true;
-            }
-            return false;
         }
 
         public static bool IsSupportedResetStackingEffect(SpecialEffect effect)
@@ -1911,8 +1891,6 @@ namespace Rawr.Mage
                 IsSupportedManaRestoreProc(effect) ||
                 IsSupportedMp5Proc(effect) ||
                 IsSupportedManaGemProc(effect) ||
-                IsSupportedStackingEffect(effect) ||
-                IsSupportedDotTickStackingEffect(effect) ||
                 IsSupportedResetStackingEffect(effect) ||
                 IsDarkIntentEffect(effect);
         }

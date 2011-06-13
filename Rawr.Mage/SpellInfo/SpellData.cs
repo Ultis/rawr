@@ -676,10 +676,17 @@ namespace Rawr.Mage
         {
             Spell spell = Spell.New(this, castingState.Solver);
             spell.Calculate(castingState);
+            // remove overestimated part of ignite contribution from on use spell power effects
+            // let's try a fixed percentage reduction, meaning it's very unlikely that if on use effect
+            // is active during combustion that it had any effect on building ignite
+            float extraSpellPower = 0.8f * castingState.StateSpellPower;
+            spell.BasePeriodicDamage -= IgniteContributionCoefficient * extraSpellPower;
             spell.CalculateDerivedStats(castingState, false, false, false);
             spell.CastTime = 0;
             return spell;
         }
+
+        private float IgniteContributionCoefficient;
 
         public void Initialize(Solver solver)
         {
@@ -719,18 +726,25 @@ namespace Rawr.Mage
             // ignite part doesn't double-dip mastery
             // solver.IgniteFactor has flashburn and munching in, we want to remove both to get clean ignite
             // estimate ignite
+            // on use spell power for building ignite is hard to coordinate for combustion purposes
+            // assume it is no better than random proc effect
             float ignite = (0.13f * solver.MageTalents.Ignite + (solver.MageTalents.Ignite == 3 ? 0.01f : 0.0f));
             // TODO probabilistic model for rolling multiplier based on haste and crit
             float rollingMultiplier = 1f;
             FireballTemplate FB = solver.FireballTemplate;
             PyroblastTemplate Pyro = solver.PyroblastTemplate;
+            // the way we'll remove the on use spell power part will be by deducting it from the base
+            // so we'll need to remember the coefficient part associated to ignite contribution
+            IgniteContributionCoefficient = 0;
             BasePeriodicDamage += rollingMultiplier * (FB.BaseMinDamage + FB.BaseMaxDamage) / 4.0f * solver.BaseFireCritBonus * ignite / (1 + solver.IgniteFactor) / 4.0f;
-            DotDamageCoefficient += rollingMultiplier * FB.SpellDamageCoefficient / 2.0f * solver.BaseFireCritBonus * ignite / (1 + solver.IgniteFactor) / 4.0f;
+            IgniteContributionCoefficient += rollingMultiplier * FB.SpellDamageCoefficient / 2.0f * solver.BaseFireCritBonus * ignite / (1 + solver.IgniteFactor) / 4.0f;
             BasePeriodicDamage += rollingMultiplier * (Pyro.BaseMinDamage + Pyro.BaseMaxDamage) / 4.0f * solver.BaseFireCritBonus * ignite / (1 + solver.IgniteFactor) / 4.0f;
-            DotDamageCoefficient += rollingMultiplier * Pyro.SpellDamageCoefficient / 2.0f * solver.BaseFireCritBonus * ignite / (1 + solver.IgniteFactor) / 4.0f;
+            IgniteContributionCoefficient += rollingMultiplier * Pyro.SpellDamageCoefficient / 2.0f * solver.BaseFireCritBonus * ignite / (1 + solver.IgniteFactor) / 4.0f;
+            DotDamageCoefficient += IgniteContributionCoefficient;
             // extend to 10 ticks
             BasePeriodicDamage *= 10;
             DotDamageCoefficient *= 10;
+            IgniteContributionCoefficient *= 10;
             Dirty = false;
         }
     }

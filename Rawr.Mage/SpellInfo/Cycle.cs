@@ -527,15 +527,6 @@ namespace Rawr.Mage
                     SpecialEffect effect = CastingState.Solver.MasteryRatingEffects[i];
                     effectMasteryRating += effect.Stats.MasteryRating * GetAverageFactor(effect);
                 }
-                if (DotProcs > 0)
-                {
-                    for (int i = 0; i < CastingState.Solver.DotTickStackingEffectsCount; i++)
-                    {
-                        // very rough and approximate, it should only proc from some dots, but we won't go into that
-                        SpecialEffect effect = CastingState.Solver.DotTickStackingEffects[i];
-                        spellPower += effect.Stats.SpellPower * effect.GetAverageStackSize(CastTime / DotProcs, 1, 3, CastingState.CalculationOptions.FightDuration);
-                    }
-                }
                 for (int i = 0; i < CastingState.Solver.ResetStackingEffectsCount; i++)
                 {
                     SpecialEffect effect = CastingState.Solver.ResetStackingEffects[i];
@@ -857,7 +848,11 @@ namespace Rawr.Mage
                 {
                     durationMultiplier = CastingState.CalculationOptions.MoltenFuryPercentage;
                 }
-                if (effect.Duration > 0)
+                if (effect.MaxStack > 1)
+                {
+                    return durationMultiplier * effect.GetAverageStackSize(triggerInterval, triggerChance, 3f, durationMultiplier * CastingState.CalculationOptions.FightDuration);
+                }
+                else if (effect.Duration > 0)
                 {
                     return durationMultiplier * effect.GetAverageUptime(triggerInterval, triggerChance, 3f, durationMultiplier * CastingState.CalculationOptions.FightDuration);
                 }
