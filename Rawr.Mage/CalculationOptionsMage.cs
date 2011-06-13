@@ -786,6 +786,13 @@ namespace Rawr.Mage
             set { _ArcaneLight = value; OnPropertyChanged("ArcaneLight"); }
         }
 
+        private bool _ProcCombustion;
+        public bool ProcCombustion
+        {
+            get { return _ProcCombustion; }
+            set { _ProcCombustion = value; OnPropertyChanged("ProcCombustion"); }
+        }
+
         private float _MoltenFuryPercentage;
         [XmlElement("MoltenFuryPercentage")]
         public float CustomMoltenFuryPercentage

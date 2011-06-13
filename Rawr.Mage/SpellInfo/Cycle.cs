@@ -305,6 +305,11 @@ namespace Rawr.Mage
             {
                 spell.Spell.AddManaUsageContribution(dict, spell.Weight * duration / CastTime);
             }
+            if (CastingState.CalculationOptions.ProcCombustion && CastingState.MageTalents.Combustion == 1)
+            {
+                Spell combustion = CastingState.GetSpell(SpellId.Combustion);
+                combustion.AddManaUsageContribution(dict, GetAverageFactor(Solver.SpecialEffectCombustion) * duration / 10f);
+            }
         }
 
         public void Initialize(CastingState castingState)
@@ -577,6 +582,14 @@ namespace Rawr.Mage
                 Spell mirrorImage = CastingState.GetSpell(SpellId.MirrorImage);
                 effectDamagePerSecond += (mirrorImage.AverageDamage + spellPower * mirrorImage.DamagePerSpellPower) / mirrorImage.CastTime;
             }
+            if (CastingState.CalculationOptions.ProcCombustion && CastingState.MageTalents.Combustion == 1)
+            {
+                Spell combustion = CastingState.GetSpell(SpellId.Combustion);
+                float damage = (combustion.AverageDamage + combustion.DamagePerSpellPower * effectSpellPower + combustion.DamagePerMastery * effectMastery + combustion.DamagePerCrit * effectCrit) / 10f;
+                float factor = GetAverageFactor(Solver.SpecialEffectCombustion);
+                effectDamagePerSecond += damage * factor;
+                costPerSecond += combustion.AverageCost / 10f * factor;
+            }
             if (Ticks > 0)
             {
                 for (int i = 0; i < CastingState.Solver.DamageProcEffectsCount; i++)
@@ -766,6 +779,11 @@ namespace Rawr.Mage
                 }
                 contrib.Hits += 3 * (CastingState.MageTalents.GlyphOfMirrorImage ? 4 : 3) * duration / mirrorImage.CastTime;
                 contrib.Damage += (mirrorImage.AverageDamage + effectSpellPower * mirrorImage.DamagePerSpellPower) / mirrorImage.CastTime * duration;
+            }
+            if (CastingState.CalculationOptions.ProcCombustion && CastingState.MageTalents.Combustion == 1)
+            {
+                Spell combustion = CastingState.GetSpell(SpellId.Combustion);
+                combustion.AddSpellContribution(dict, GetAverageFactor(Solver.SpecialEffectCombustion) * duration / 10f, 0, effectSpellPower, effectMastery, effectCrit);
             }
             if (Ticks > 0)
             {

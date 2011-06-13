@@ -142,6 +142,7 @@ namespace Rawr.Mage
         public bool Mage4PVP { get; set; }
 
         public static readonly SpecialEffect SpecialEffect2T12 = new SpecialEffect(Trigger.MageNukeCast, new Stats() { FireSummonedDamage = 4 * 7016.5f / 15f }, 15f, 45f, 0.2f, 1);
+        public static readonly SpecialEffect SpecialEffectCombustion = new SpecialEffect(Trigger.DamageSpellCrit, new Stats() { }, 10f, 120f, 1f);
 
         public int MaxTalents { get; set; }
         public Specialization Specialization { get; set; }
@@ -1824,7 +1825,7 @@ namespace Rawr.Mage
             heroismAvailable = !CalculationOptions.DisableCooldowns && CalculationOptions.HeroismAvailable;
             arcanePowerAvailable = !CalculationOptions.DisableCooldowns && (MageTalents.ArcanePower == 1);
             icyVeinsAvailable = !CalculationOptions.DisableCooldowns && (MageTalents.IcyVeins == 1);
-            combustionAvailable = !CalculationOptions.DisableCooldowns && (MageTalents.Combustion == 1);
+            combustionAvailable = !CalculationOptions.DisableCooldowns && (MageTalents.Combustion == 1) && !CalculationOptions.ProcCombustion;
             moltenFuryAvailable = MageTalents.MoltenFury > 0;
             coldsnapAvailable = !CalculationOptions.DisableCooldowns && (MageTalents.ColdSnap == 1);
             volcanicPotionAvailable = !CalculationOptions.DisableCooldowns && CalculationOptions.VolcanicPotion;
