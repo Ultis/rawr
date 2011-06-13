@@ -305,11 +305,6 @@ namespace Rawr.Mage
             {
                 spell.Spell.AddManaUsageContribution(dict, spell.Weight * duration / CastTime);
             }
-            if (CastingState.CalculationOptions.ProcCombustion && CastingState.MageTalents.Combustion == 1)
-            {
-                Spell combustion = CastingState.GetSpell(SpellId.Combustion);
-                combustion.AddManaUsageContribution(dict, GetAverageFactor(Solver.SpecialEffectCombustion) * duration / 10f);
-            }
         }
 
         public void Initialize(CastingState castingState)
@@ -588,7 +583,6 @@ namespace Rawr.Mage
                 float damage = (combustion.AverageDamage + combustion.DamagePerSpellPower * effectSpellPower + combustion.DamagePerMastery * effectMastery + combustion.DamagePerCrit * effectCrit) / 10f;
                 float factor = GetAverageFactor(Solver.SpecialEffectCombustion);
                 effectDamagePerSecond += damage * factor;
-                costPerSecond += combustion.AverageCost / 10f * factor;
             }
             if (Ticks > 0)
             {

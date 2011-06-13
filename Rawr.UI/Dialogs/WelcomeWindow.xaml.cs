@@ -220,6 +220,7 @@ Rawr.Mage:
 - Fix for advanced mana gem constraint
 - Support for orc racials
 - Improved cycle generator reporting
+- Proc mode combustion model
 
 Rawr.Moonkin:
 - Remove the calculations for DoT spells generating Eclipse energy.

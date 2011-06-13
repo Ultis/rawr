@@ -1852,6 +1852,7 @@ namespace Rawr.Mage
             IgniteMunching = 0.35f;
             ArcaneLight = true;
             MaxRedecompose = 50;
+            ProcCombustion = true;
         }
 
         public CalculationOptionsMage(Character character)
