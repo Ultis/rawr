@@ -63,13 +63,6 @@ namespace Rawr.Retribution
         NoDD
     }
 
-    public enum RotState
-    {
-        CS,
-        FillerOne,
-        FillerTwo
-    }
-
     public enum Multiplier
     {
         Armor = 0, 

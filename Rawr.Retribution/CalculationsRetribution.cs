@@ -514,45 +514,36 @@ namespace Rawr.Retribution
             return GetCharacterRotation(character, additionalItem).Stats;
         }
 
-        public RotationCalculation CreateRotation(Character character, Stats stats)
+        public RotationCalculation CreateRotation(Character character, StatsRetri stats)
         {
             return new RotationCalculation(character, stats);
         }
 
         #region Stats conversion / calculation
-        public Stats GetCharacterStats(Character character, Item additionalItem, bool computeAverageStats)
+        public StatsRetri GetCharacterStats(Character character, Item additionalItem, bool computeAverageStats)
         {
             PaladinTalents talents = character.PaladinTalents;
             CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
 
-            Stats statsRace = BaseStats.GetBaseStats(character.Level, CharacterClass.Paladin, character.Race);
-            Stats statsBaseGear = GetItemStats(character, additionalItem);
-            Stats statsBuffs = GetBuffsStats(character, calcOpts);
-            Stats statsTalentsAndSets = new Stats();
+            StatsRetri stats = new StatsRetri();
+            stats.Accumulate(BaseStats.GetBaseStats(character.Level, CharacterClass.Paladin, character.Race)); //Race
+            stats.Accumulate(GetItemStats(character, additionalItem));                                         //Items 
+            stats.Accumulate(GetBuffsStats(character, calcOpts));                                              //Buffs 
 
             // Adjust expertise for racial passive
-            statsTalentsAndSets.Expertise += BaseStats.GetRacialExpertise(character, ItemSlot.MainHand);
+            stats.Expertise += BaseStats.GetRacialExpertise(character, ItemSlot.MainHand);
             // Judgements of the pure (Flat because it has nearly always a 100% chance.
-            statsTalentsAndSets.PhysicalHaste += PaladinConstants.JUDGEMENTS_OF_THE_PURE * talents.JudgementsOfThePure;
-            statsTalentsAndSets.SpellHaste += PaladinConstants.JUDGEMENTS_OF_THE_PURE * talents.JudgementsOfThePure;
-
+            stats.PhysicalHaste += PaladinConstants.JUDGEMENTS_OF_THE_PURE * talents.JudgementsOfThePure;
+            stats.SpellHaste += PaladinConstants.JUDGEMENTS_OF_THE_PURE * talents.JudgementsOfThePure;
+            
             //Sets
-            #region Sets
-            int T11Count;
-            character.SetBonusCount.TryGetValue("Reinforced Sapphirium Battleplate", out T11Count);
-            if (T11Count >= 2)
-                statsTalentsAndSets.BonusDamageMultiplierTemplarsVerdict = 0.1f;
-            if (T11Count >= 4)
-                statsTalentsAndSets.BonusRet_T11_4P_InqHP = 1f;
-            #endregion
-
-            // Combine stats
-            Stats stats = statsBaseGear + statsBuffs + statsRace + statsTalentsAndSets;
+            stats.SetSets(character);
+                        
             // If wanted, Average out any Proc and OnUse effects into the stats
             if (computeAverageStats)
             {
-                Stats statsTmp = stats.Clone();
-                ConvertRatings(statsTmp, talents, character, character.BossOptions.Level, character.Level);                // Convert ratings so we have right value for haste, weaponspeed and talents etc.
+                StatsRetri statsTmp = stats.Clone();
+                ConvertRatings(statsTmp, talents, character, character.BossOptions.Level, character.Level);// Convert ratings so we have right value for haste, weaponspeed and talents etc.
                 RotationCalculation rot = CreateRotation(character, statsTmp);
 
                 Dictionary<Trigger, float> triggerIntervals = new Dictionary<Trigger, float>();

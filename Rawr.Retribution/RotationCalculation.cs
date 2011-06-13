@@ -37,11 +37,11 @@ namespace Rawr.Retribution
         private Dictionary<DamageAbility, float> casts = new Dictionary<DamageAbility, float>();
         private Dictionary<DamageAbility, Skill> skills = new Dictionary<DamageAbility, Skill>();
 
-        public Stats Stats { get; private set; }
+        public StatsRetri Stats { get; private set; }
         public Character Character { get; private set; }
         public CalculationOptionsRetribution CalcOpts { get; private set; }
 
-        public RotationCalculation(Character character, Stats stats)
+        public RotationCalculation(Character character, StatsRetri stats)
         {
             Character = character;
             Stats = stats;
@@ -179,7 +179,7 @@ namespace Rawr.Retribution
                                                                                                             Stats.SnareRootDurReduc, Stats.SilenceDurReduc);
             float fightlength = Character.BossOptions.BerserkTimer;
             float fightLengthAttacking = fightlength * (1f - lostTime);
-            float timeZeal = (fightlength / PaladinConstants.ZEAL_COOLDOWN) * PaladinConstants.ZEAL_DURATION;
+            float timeZeal = (fightlength / PaladinConstants.ZEAL_COOLDOWN) * (PaladinConstants.ZEAL_DURATION + (Stats.T12_4P ? 15f : 0f));
 
             PartRotationInfo[] infos = new PartRotationInfo[] { new PartRotationInfo((fightLengthAttacking - timeZeal) * (1d - Character.BossOptions.Under20Perc), normGCD, false, false), //Above 20, no Zeal
                                                                 new PartRotationInfo(timeZeal * (1d - Character.BossOptions.Under20Perc),                          normGCD, false, true),  //Above 20, Zeal 

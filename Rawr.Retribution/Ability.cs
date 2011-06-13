@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace Rawr.Retribution
 {
-    public abstract class Ability<T> where T : TalentsBase
+    public abstract class Ability<T, K> where T : TalentsBase where K : Stats
     {
-        public Ability(Character character, Stats stats, AbilityType abilityType, DamageType damageType, bool hasGCD = true)
+        public Ability(Character character, K stats, AbilityType abilityType, DamageType damageType, bool hasGCD = true)
         {
             _character = character;
             _stats = stats;
@@ -26,8 +26,8 @@ namespace Rawr.Retribution
         public Character Character { get { return _character; } }
         protected T _talents;
         public T Talents { get { return (T)_talents; } }
-        protected Stats _stats;
-        public Stats Stats { get { return _stats; } }
+        protected K _stats;
+        public K Stats { get { return _stats; } }
 
         public virtual BaseCombatTable CT { get; protected set; }
 
