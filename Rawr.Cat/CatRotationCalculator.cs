@@ -71,7 +71,7 @@ namespace Rawr.Cat
 			float totalEnergy =
 				100f + //Starting Energy
 				FightDuration * MeleeStats.EnergyRegenPerSecond + //Passive Regen
-				(FightDuration / MeleeStats.AttackSpeed) * MeleeStats.ClearcastChance * 35f + //Clearcast Energy
+				(FightDuration / MeleeStats.AttackSpeed) * MeleeStats.ClearcastChance * 40f + //Clearcast Energy
 				((FightDuration - 10f) / TigersFuryStats.Cooldown) * (TigersFuryStats.EnergyGenerated + TigersFuryStats.MaxEnergyIncrease / 4f) + //TF Energy
 				((FightDuration - 10f) / BerserkStats.Cooldown) * (TigersFuryStats.MaxEnergyIncrease / 4f); //Berserk Energy
 			float tfUptime = ((((FightDuration - 10f) / TigersFuryStats.Cooldown) * TigersFuryStats.Duration) / FightDuration);

@@ -5912,12 +5912,12 @@ Reduces all damage taken by 50% for 12 sec.  Only useable while in Bear Form or 
 @"Increases the duration of your Rake by 6 sec and your Savage Roar and Pulverize by 8 sec.",})]
         public int EndlessCarnage { get { return _data[36]; } set { _data[36] = value; } }
         /// <summary>
-        /// Reduces damage taken while in Bear Form by [6 * Pts]%, increases your dodge while in Bear Form by [3 * Pts]%, and you generate [1 * Pts] rage every time you dodge while in Bear Form.
+        /// Reduces damage taken while in Bear Form by [9 * Pts]%, increases your dodge while in Bear Form by [3 * Pts]%, and you generate [1 * Pts] rage every time you dodge while in Bear Form.
         /// </summary>
         [TalentData(index: 37, name: "Natural Reaction", maxPoints: 2, icon: "ability_bullrush",
          tree: 1, column: 4, row: 5, prerequisite: -1, description: new[] {
-@"Reduces damage taken while in Bear Form by 6%, increases your dodge while in Bear Form by 3%, and you generate 1 rage every time you dodge while in Bear Form.",
-@"Reduces damage taken while in Bear Form by 12%, increases your dodge while in Bear Form by 6%, and you generate 3 rage every time you dodge while in Bear Form.",})]
+@"Reduces damage taken while in Bear Form by 9%, increases your dodge while in Bear Form by 3%, and you generate 1 rage every time you dodge while in Bear Form.",
+@"Reduces damage taken while in Bear Form by 18%, increases your dodge while in Bear Form by 6%, and you generate 3 rage every time you dodge while in Bear Form.",})]
         public int NaturalReaction { get { return _data[37]; } set { _data[37] = value; } }
         /// <summary>
         /// When you Ferocious Bite a target at or below 25% health, you have a [50 * Pts]% chance to instantly refresh the duration of your Rip on the target.

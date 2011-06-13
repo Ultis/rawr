@@ -140,7 +140,7 @@ namespace Rawr.Cat
 					_mangleStats.EnergyCost += (_mangleStats.EnergyCost * 0.2f) * (1f / ChanceNonAvoided - 1f); //Count avoids as an increase in energy cost
 					_mangleStats.ComboPointsGenerated = 1f + (CPOnCrit * ChanceCritMangle);
 
-					_mangleStats.DamageRaw = (BaseDamage + 316f) * 4.6f * DamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier * MangleDamageMultiplier;
+					_mangleStats.DamageRaw = (BaseDamage + 302f) * 5.4f * DamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier * MangleDamageMultiplier;
 					_mangleStats.DamageAverage = ((ChanceCritMangle) * (_mangleStats.DamageRaw * CritMultiplier)) +
 												((1f - ChanceCritMangle) * (_mangleStats.DamageRaw));
 				}
@@ -160,7 +160,7 @@ namespace Rawr.Cat
 					_shredStats.EnergyCost += (_shredStats.EnergyCost * 0.2f) * (1f / ChanceNonAvoided - 1f); //Count avoids as an increase in energy cost
 					_shredStats.ComboPointsGenerated = 1f + (CPOnCrit * ChanceCritShred);
 
-					_shredStats.DamageRaw = (BaseDamage + 330f) * 4.5f * DamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier * ShredDamageMultiplier * BleedDamageMultiplier;
+					_shredStats.DamageRaw = (BaseDamage + 302f) * 5.4f * DamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier * ShredDamageMultiplier * BleedDamageMultiplier;
 					_shredStats.DamageAverage = ((ChanceCritShred) * (_shredStats.DamageRaw * CritMultiplier)) +
 												((1f - ChanceCritShred) * (_shredStats.DamageRaw));
 				}
@@ -183,7 +183,7 @@ namespace Rawr.Cat
 					if (Stats.FreeRavageOnFeralChargeChance > 0f)
 						_ravageStats.FeralChargeCooldown = (30f - Stats.FeralChargeCatCooldownReduction) / Stats.FreeRavageOnFeralChargeChance;
 
-					_ravageStats.DamageRaw = (BaseDamage + 330f) * 8.5f * DamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier;
+					_ravageStats.DamageRaw = (BaseDamage + 532f) * 9.5f * DamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier;
 					_ravageStats.DamageAverage = ((ChanceCritRavage) * (_ravageStats.DamageRaw * CritMultiplier)) +
 												((1f - ChanceCritRavage) * (_ravageStats.DamageRaw));
 					_ravageStats.DamageAbove80PercentAverage = ((ChanceCritRavageAbove80Percent) * (_ravageStats.DamageRaw * CritMultiplier)) +
@@ -207,11 +207,11 @@ namespace Rawr.Cat
 					_rakeStats.ComboPointsGenerated = 1f + (CPOnCrit * ChanceCritRake);
 					_rakeStats.TickClearcastChance = ClearcastOnBleedChance;
 					
-					_rakeStats.DamageRaw = (274f + AttackPower * 0.0207f) * DamageMultiplier * PhysicalDamageMultiplier * BleedDamageMultiplier * NonShredBleedDamageMultiplier * RakeDamageMultiplier;
+					_rakeStats.DamageRaw = (56f + AttackPower * 0.147f) * DamageMultiplier * PhysicalDamageMultiplier * BleedDamageMultiplier * NonShredBleedDamageMultiplier * RakeDamageMultiplier;
 					_rakeStats.DamageAverage = ((ChanceCritRake) * (_rakeStats.DamageRaw * CritMultiplier)) +
 												((1f - ChanceCritRake) * (_rakeStats.DamageRaw));
 
-					_rakeStats.DamageTickRaw = (558f + AttackPower * 0.126f) * DamageMultiplier * PhysicalDamageMultiplier * BleedDamageMultiplier * NonShredBleedDamageMultiplier * RakeDamageMultiplier * RakeTickDamageMultiplier;
+					_rakeStats.DamageTickRaw = (56f + AttackPower * 0.147f) * DamageMultiplier * PhysicalDamageMultiplier * BleedDamageMultiplier * NonShredBleedDamageMultiplier * RakeDamageMultiplier * RakeTickDamageMultiplier;
 					_rakeStats.DamageTickAverage = ((ChanceCritRake) * (_rakeStats.DamageTickRaw * CritMultiplier)) +
 												((1f - ChanceCritRake) * (_rakeStats.DamageTickRaw));
 				}
@@ -248,12 +248,12 @@ namespace Rawr.Cat
 				if (_biteStats == null)
 				{
 					_biteStats = new BiteStats();
-					_biteStats.EnergyCost = 35f;
+					_biteStats.EnergyCost = 25f;
 					_biteStats.EnergyCost += (_biteStats.EnergyCost * 0.2f) * (1f / ChanceNonAvoided - 1f); //Count avoids as an increase in energy cost
 					_biteStats.MaxExtraEnergy = 35f - Stats.FerociousBiteMaxExtraEnergyReduction;
 					_biteStats.RipRefreshChanceOnTargetsBelow25Percent = Stats.RipRefreshChanceOnFerociousBiteOnTargetsBelow25Percent;
-					
-					_biteStats.DamageRaw = (2822f + AttackPower * 0.545f) * DamageMultiplier * PhysicalDamageMultiplier * FerociousBiteDamageMultiplier * ArmorDamageMultiplier;
+
+                    _biteStats.DamageRaw = (545f + AttackPower * 0.545f) * DamageMultiplier * PhysicalDamageMultiplier * FerociousBiteDamageMultiplier * ArmorDamageMultiplier;
 					_biteStats.DamageAverage = ((ChanceCritBite) * (_biteStats.DamageRaw * CritMultiplier)) +
 												((1f - ChanceCritBite) * (_biteStats.DamageRaw));
 				}
@@ -269,13 +269,13 @@ namespace Rawr.Cat
 				if (_roarStats == null)
 				{
 					_roarStats = new RoarStats();
-					_roarStats.Duration1CP = 14f + BonusSavageRoarDuration;
-					_roarStats.Duration2CP = 19f + BonusSavageRoarDuration;
-					_roarStats.Duration3CP = 24f + BonusSavageRoarDuration;
-					_roarStats.Duration4CP = 29f + BonusSavageRoarDuration;
-					_roarStats.Duration5CP = 34f + BonusSavageRoarDuration;
+					_roarStats.Duration1CP = 22f + BonusSavageRoarDuration;
+					_roarStats.Duration2CP = 27f + BonusSavageRoarDuration;
+					_roarStats.Duration3CP = 32f + BonusSavageRoarDuration;
+					_roarStats.Duration4CP = 37f + BonusSavageRoarDuration;
+					_roarStats.Duration5CP = 42f + BonusSavageRoarDuration;
 					_roarStats.EnergyCost = 25f;
-					_roarStats.MeleeDamageMultiplier = 0.5f + SavageRoarMeleeDamageMultiplierIncrease;
+					_roarStats.MeleeDamageMultiplier = 0.8f + SavageRoarMeleeDamageMultiplierIncrease;
 				}
 				return _roarStats;
 			}

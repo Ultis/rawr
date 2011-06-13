@@ -588,7 +588,7 @@ namespace Rawr.Cat
                 MangleDamageMultiplier = talents.GlyphOfMangle ? 0.1f : 0f,
                 SavageRoarDamageMultiplierIncrease = talents.GlyphOfSavageRoar ? 0.05f : 0f,
                 FeralChargeCatCooldownReduction = talents.GlyphOfFeralCharge ? 2f : 0f,
-                FerociousBiteMaxExtraEnergyReduction = talents.GlyphOfFerociousBite ? 35f : 0f,
+//                FerociousBiteMaxExtraEnergyReduction = talents.GlyphOfFerociousBite ? 25f : 0f,
             };
 
             #region Set Bonuses
@@ -630,9 +630,9 @@ namespace Rawr.Cat
             statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
             statsTotal.Strength = (float)Math.Floor(statsTotal.Strength * (1f + statsTotal.BonusStrengthMultiplier));
             statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1f + statsTotal.BonusAgilityMultiplier));
-            statsTotal.AttackPower += statsTotal.Strength * 2f + statsTotal.Agility * 2f - 20f; //-20 to account for the first 20 str and first 20 agi only giving 1ap each
+            statsTotal.AttackPower += statsTotal.Strength * 1f + (statsTotal.Agility * 2f - 20f); //-20 to account for the first 20 str and first 20 agi only giving 1ap each
             statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
-            statsTotal.Health += (float)Math.Floor((statsTotal.Stamina - 20f) * 10f + 20f);
+            statsTotal.Health += (float)Math.Floor((statsTotal.Stamina - 20f) * 14f + 20f);
             statsTotal.Health = (float)Math.Floor(statsTotal.Health * (1f + statsTotal.BonusHealthMultiplier));
             statsTotal.Armor = (float)Math.Floor(statsTotal.Armor * (1f + statsTotal.BonusArmorMultiplier));
             statsTotal.NatureResistance += statsTotal.NatureResistanceBuff;
@@ -939,7 +939,7 @@ namespace Rawr.Cat
                 stats.PhysicalHaste +
                 stats.ThreatReductionMultiplier + stats.ArcaneDamage + stats.ShadowDamage +
                 stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance + stats.BonusBleedDamageMultiplier + stats.Paragon +
-                stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff + stats.HighestStat +
+                stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff + stats.HighestStat + stats.HighestSecondaryStat +
                 stats.NatureResistanceBuff + stats.FireResistanceBuff + stats.BonusPhysicalDamageMultiplier + stats.BonusDamageMultiplierRakeTick +
                 stats.SnareRootDurReduc + stats.FearDurReduc + stats.StunDurReduc + stats.MovementSpeed +
                 stats.FrostResistanceBuff + stats.ShadowResistanceBuff) > 0 || (stats.Stamina > 0 && stats.SpellPower == 0);
@@ -1011,7 +1011,7 @@ namespace Rawr.Cat
             character.ActiveBuffsAdd("Agility Food");
             character.ActiveBuffsAdd("Heroism/Bloodlust");
 
-            character.DruidTalents.GlyphOfSavageRoar = true;
+            character.DruidTalents.GlyphOfBerserk = true;
             character.DruidTalents.GlyphOfShred = true;
             character.DruidTalents.GlyphOfRip = true;
             character.DruidTalents.GlyphOfTigersFury = true;
@@ -1030,7 +1030,7 @@ namespace Rawr.Cat
                 _relevantGlyphs.Add("Glyph of Berserk");
                 _relevantGlyphs.Add("Glyph of Savage Roar");
                 _relevantGlyphs.Add("Glyph of Tiger's Fury");
-                _relevantGlyphs.Add("Glyph of Ferocious Bite");
+//                _relevantGlyphs.Add("Glyph of Ferocious Bite");
                 _relevantGlyphs.Add("Glyph of Feral Charge");
             }
             return _relevantGlyphs;

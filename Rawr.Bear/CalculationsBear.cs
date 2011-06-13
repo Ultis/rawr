@@ -594,7 +594,7 @@ the Threat Scale defined on the Options tab.",
             #region Survivability for each Resistance Type (magical attacks)
             // Call new resistance formula and apply talent damage reduction
             // As for other survival, only use guaranteed reduction (MinimumResist), no luck
-            float naturalReactionMOD = (1f - 0.06f * character.DruidTalents.NaturalReaction);
+            float naturalReactionMOD = (1f - 0.09f * character.DruidTalents.NaturalReaction);
             calculatedStats.NatureSurvivalPoints = (float)(stats.Health / ((1f - StatConversion.GetMinimumResistance(bossOpts.Level, character.Level, stats.NatureResistance, 0)) * naturalReactionMOD));
             calculatedStats.FrostSurvivalPoints  = (float)(stats.Health / ((1f - StatConversion.GetMinimumResistance(bossOpts.Level, character.Level, stats.FrostResistance,  0)) * naturalReactionMOD));
             calculatedStats.FireSurvivalPoints   = (float)(stats.Health / ((1f - StatConversion.GetMinimumResistance(bossOpts.Level, character.Level, stats.FireResistance,   0)) * naturalReactionMOD));
@@ -756,10 +756,10 @@ the Threat Scale defined on the Options tab.",
             statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
             statsTotal.Strength = (float)Math.Floor(statsTotal.Strength * (1f + statsTotal.BonusStrengthMultiplier));
             statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1f + statsTotal.BonusAgilityMultiplier));
-            statsTotal.AttackPower += (float)Math.Floor(statsTotal.Strength - 20f) * 2f + 20f;
+            statsTotal.AttackPower += (float)Math.Floor(statsTotal.Strength - 20f) * 1f + 20f;
             statsTotal.AttackPower += (float)Math.Floor(statsTotal.Agility - 20f) * 2f + 20f;
             statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
-            statsTotal.Health += ((statsTotal.Stamina - 20f) * 10f) * 1.4f + 20f;
+            statsTotal.Health += ((statsTotal.Stamina - 20f) * 14f) + 20f;
             statsTotal.Health *= (1f + statsTotal.BonusHealthMultiplier);
             statsTotal.Armor *= 1f + statsTotal.BaseArmorMultiplier;
             statsTotal.Armor += statsTotal.BonusArmor;
@@ -884,6 +884,9 @@ the Threat Scale defined on the Options tab.",
                     case Trigger.Barkskin:
                         effect.AccumulateAverageStats(statsProcs, 60f, 1f, 0f, fightDuration);
                         break;
+                    case Trigger.Berserk:
+                        effect.AccumulateAverageStats(statsProcs, 180f, 1, 0f, fightDuration);
+                        break;
                 }
             }
 
@@ -897,6 +900,19 @@ the Threat Scale defined on the Options tab.",
             statsProcs.Health *= (1f + statsProcs.BonusHealthMultiplier);
             statsProcs.Armor += /*2f * (float)Math.Floor(statsProcs.Agility)*/ + statsProcs.BonusArmor; // Armor no longer gets bonuses from Agi in Cata
             statsProcs.Armor = (float)Math.Floor(statsProcs.Armor * (1f + statsTotal.BonusArmorMultiplier));
+            if (statsProcs.HighestSecondaryStat > 0) {
+                if (statsTotal.CritRating > statsTotal.HasteRating && statsTotal.CritRating > statsTotal.MasteryRating) {
+                    statsProcs.CritRating += statsProcs.HighestSecondaryStat; // this will be invalidated after this, but I'm at least putting it in for now
+                }
+                else if (statsTotal.HasteRating > statsTotal.CritRating && statsTotal.HasteRating > statsTotal.MasteryRating) {
+                    statsProcs.HasteRating += statsProcs.HighestSecondaryStat;
+                }
+                else if (statsTotal.MasteryRating > statsTotal.CritRating && statsTotal.MasteryRating > statsTotal.HasteRating) {
+                    statsProcs.MasteryRating += statsProcs.HighestSecondaryStat;
+                }
+                statsProcs.HighestSecondaryStat = 0;
+            }
+
             statsTotal.Accumulate(statsProcs);
         }
 
@@ -1414,7 +1430,7 @@ the Threat Scale defined on the Options tab.",
                 stats.Miss +
                 stats.CritChanceReduction +
                 stats.BattlemasterHealthProc + stats.MoteOfAnger +
-                stats.HighestStat + stats.Paragon + stats.DamageAbsorbed +
+                stats.HighestStat + stats.HighestSecondaryStat + stats.Paragon + stats.DamageAbsorbed +
                 // Specific to Bear
                 stats.BonusDamageMultiplierLacerate +
                 // Boss Handler

@@ -342,9 +342,9 @@ namespace Rawr
 
         #region Prime
         public override int GlyphTreeStartingIndexes_0 { get { return 0; } }
-        /// <summary>Increases the duration of Berserk by 5 sec.</summary>
+        /// <summary>Increases the duration of Berserk by 10 sec.</summary>
         [GlyphData( 0, 45601, 62969, "Glyph of Berserk", GlyphType.Prime,
-            @"Increases the duration of Berserk by 5 sec.")]
+            @"Increases the duration of Berserk by 10 sec.")]
         public bool GlyphOfBerserk { get { return _glyphData[0]; } set { _glyphData[0] = value; } }
         /// <summary>Increases the damage of your Insect Swarm ability by 30%.</summary>
         [GlyphData( 1, 40919, 54830, "Glyph of Insect Swarm", GlyphType.Prime,
@@ -425,9 +425,9 @@ namespace Rawr
         [GlyphData(19, 67486, 94388, "Glyph of Feral Charge", GlyphType.Major,
             @"Reduces the cooldown of yoru Feral Charge (Cat) ability by 2 sec and the cooldown of your Feral Charge (Bear) ability by 1 sec.")]
         public bool GlyphOfFeralCharge { get { return _glyphData[19]; } set { _glyphData[19] = value; } }
-        /// <summary>Your Ferocious Bite ability no longer converts extra energy into additional damage.</summary>
+        /// <summary>Your Ferocious Bite ability heals you for 1% of your maximum health for each 10 energy used.</summary>
         [GlyphData(20, 48720, 67598, "Glyph of Ferocious Bite", GlyphType.Major,
-            @"Your Ferocious Bite ability no longer converts extra energy into additional damage.")]
+            @"Your Ferocious Bite ability heals you for 1% of your maximum health for each 10 energy used.")]
         public bool GlyphOfFerociousBite { get { return _glyphData[20]; } set { _glyphData[20] = value; } }
         /// <summary>Increases the damage done by Starfall by 10%, but decreases its radius by 50%.</summary>
         [GlyphData(21, 44928, 62080, "Glyph of Focus", GlyphType.Major,
