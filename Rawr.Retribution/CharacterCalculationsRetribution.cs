@@ -19,17 +19,13 @@ namespace Rawr.Retribution
         public Skill SealSkill { get; set; }
         public Skill SealDotSkill { get; set; }
         public Skill CrusaderStrikeSkill { get; set; }
-        public Skill HandOfLightCSSkill { get; set; }
         public Skill TemplarsVerdictSkill { get; set; }
-        public Skill HandOfLightTVSkill { get; set; }
         public Skill CommandSkill { get; set; }
         public Skill JudgementSkill { get; set; }
         public Skill ConsecrationSkill { get; set; }
         public Skill ExorcismSkill { get; set; }
         public Skill HolyWrathSkill { get; set; }
         public Skill HammerOfWrathSkill { get; set; }
-        
-        public float AverageSoVStack { get; set; }
         
         public Stats BasicStats { get; set; }
         public Stats CombatStats { get; set; }
@@ -71,7 +67,6 @@ namespace Rawr.Retribution
             dictValues["Seal of Command"] = string.Format("{0:N0}*" + CommandSkill.ToString(), CommandSkill.GetDPS());
             dictValues["Crusader Strike"] = string.Format("{0:N0}*" + CrusaderStrikeSkill.ToString(), CrusaderStrikeSkill.GetDPS());
             dictValues["Templars Verdict"] = string.Format("{0:N0}*" + TemplarsVerdictSkill.ToString(), TemplarsVerdictSkill.GetDPS());
-            dictValues["Hand of Light"] = string.Format("{0:N0}*Crusaders Strike HoL\n{1}\n\nTemplar's Verdict HoL\n{2}", (HandOfLightCSSkill.GetDPS() + HandOfLightTVSkill.GetDPS()), HandOfLightCSSkill.ToString(), HandOfLightTVSkill.ToString());
             dictValues["Judgement"] = string.Format("{0:N0}*" + JudgementSkill.ToString(), JudgementSkill.GetDPS());
             dictValues["Consecration"] = string.Format("{0:N0}*" + ConsecrationSkill.ToString(), ConsecrationSkill.GetDPS());
             dictValues["Exorcism"] = string.Format("{0:N0}*" + ExorcismSkill.ToString(), ExorcismSkill.GetDPS());

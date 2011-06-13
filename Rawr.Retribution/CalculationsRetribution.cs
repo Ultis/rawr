@@ -401,7 +401,6 @@ namespace Rawr.Retribution
                         "DPS Breakdown:Seal of Command",
                         "DPS Breakdown:Crusader Strike",
                         "DPS Breakdown:Templars Verdict",
-                        "DPS Breakdown:Hand of Light", 
                         "DPS Breakdown:Exorcism",
                         "DPS Breakdown:Hammer of Wrath",
                         "DPS Breakdown:Holy Wrath",
@@ -475,12 +474,12 @@ namespace Rawr.Retribution
             calc.Character = rot.Character;
             calc.BasicStats = GetCharacterStats(character, additionalItem, false);
             //Damage procs are modeled as DPS
-            calc.OtherDPS = new MagicDamage(character, rot.Stats, DamageType.Arcane).AverageDamage
-                          + new MagicDamage(character, rot.Stats, DamageType.Fire).AverageDamage
-                          + new MagicDamage(character, rot.Stats, DamageType.Shadow).AverageDamage
-                          + new MagicDamage(character, rot.Stats, DamageType.Frost).AverageDamage
-                          + new MagicDamage(character, rot.Stats, DamageType.Nature).AverageDamage
-                          + new MagicDamage(character, rot.Stats, DamageType.Holy).AverageDamage;
+            calc.OtherDPS = new MagicDamage("", character, rot.Stats, DamageType.Arcane).AverageDamage
+                          + new MagicDamage("", character, rot.Stats, DamageType.Fire).AverageDamage
+                          + new MagicDamage("", character, rot.Stats, DamageType.Shadow).AverageDamage
+                          + new MagicDamage("", character, rot.Stats, DamageType.Frost).AverageDamage
+                          + new MagicDamage("", character, rot.Stats, DamageType.Nature).AverageDamage
+                          + new MagicDamage("", character, rot.Stats, DamageType.Holy).AverageDamage;
             rot.SetDPS(calc);
             calc.OverallPoints = calc.DPSPoints;
 

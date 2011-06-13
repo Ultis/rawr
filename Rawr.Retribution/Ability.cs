@@ -5,8 +5,9 @@ namespace Rawr.Retribution
 {
     public abstract class Ability<T, K> where T : TalentsBase where K : Stats
     {
-        public Ability(Character character, K stats, AbilityType abilityType, DamageType damageType, bool hasGCD = true)
+        public Ability(string name, Character character, K stats, AbilityType abilityType, DamageType damageType, bool hasGCD = true)
         {
+            _name = name;
             _character = character;
             _stats = stats;
             _talents = (T)character.CurrentTalents;
@@ -19,9 +20,13 @@ namespace Rawr.Retribution
                 GCD = (AbilityType == AbilityType.Spell ? 1.5f / (1 + Stats.SpellHaste) : 1.5f) + Latency;
             else
                 GCD = 0f;
+
+            _triggers = new List<Ability<T,K>>();
         }
 
         #region Base
+        protected string _name;
+        public string Name { get { return _name; } }
         protected Character _character;
         public Character Character { get { return _character; } }
         protected T _talents;
@@ -119,7 +124,7 @@ namespace Rawr.Retribution
         }
         public float GetDPS()
         {
-            return (float)(AverageDamage * UsagePerSec);
+            return (float)(AverageDamageWithTriggers * UsagePerSec);
         }
 
         protected float _AbilityDamage = 1f;
@@ -132,7 +137,8 @@ namespace Rawr.Retribution
                                        AverageDamage = value * CT.CombatTableMultiplier(); } }
         protected float _AverageDamage;
         public virtual float AverageDamage { get { return _AverageDamage; }
-                                             set { _AverageDamage = value; } }
+                                             set { _AverageDamage = value;
+                                                   AverageDamageWithTriggers = _AverageDamage + GetAverageDamageFromTriggers(); } }
         public virtual string GetDamageOutput()
         {
             string fmtString = "Damage:";
@@ -142,11 +148,13 @@ namespace Rawr.Retribution
                 addString += " / Tick";
             if (Targets() != 1f)
                 addString += " / Target";
-            
-            fmtString += "\n{0:N0} Average Damage" + addString + 
-                         "\n{1:N0} Average Hit" + addString;
+            if (_triggers.Count > 0)
+                fmtString += "\n{0:N0} Average Damage incl Trigger" + addString;
 
-            return string.Format(fmtString, (AverageDamage / TickCount() / Targets()), (HitDamage / TickCount() / Targets()));
+            fmtString += "\n{1:N0} Average Damage" + addString + 
+                         "\n{2:N0} Average Hit" + addString;
+
+            return string.Format(fmtString, (AverageDamageWithTriggers / TickCount() / Targets()), (AverageDamage / TickCount() / Targets()), (HitDamage / TickCount() / Targets()));
         }
         public virtual float Targets() { return 1f; }
         public virtual float TickCount() { return 1f; }
@@ -179,13 +187,43 @@ namespace Rawr.Retribution
         }
         #endregion
 
+        #region Triggered Abilities
+        protected List<Ability<T, K>> _triggers;
+        public void AddTrigger(Ability<T, K> ability) {
+            _triggers.Add(ability);
+            _AverageDamageWithTriggers += ability.AverageDamageWithTriggers;
+        }
+        protected float GetAverageDamageFromTriggers()
+        {
+            float damage = 0f;
+            foreach (Ability<T, K> ability in _triggers)
+                damage += ability.AverageDamageWithTriggers;
+            return damage;
+        }
+
+        protected float _AverageDamageWithTriggers;
+        public float AverageDamageWithTriggers { get { return _AverageDamageWithTriggers; }
+                                                 set { _AverageDamageWithTriggers = value; } }
+        public string GetTriggerOutput()
+        {
+            if (_triggers.Count == 0)
+                return "";
+
+            string abilityTooltip = "\n\nTriggers:";
+            foreach (Ability<T, K> ability in _triggers)
+                abilityTooltip += string.Format("\n{0:N0} Damage from {1}", ability.AverageDamage, ability.Name) + ability.GetTriggerOutput();
+            return abilityTooltip;
+        }
+        #endregion
+
         public override string ToString()
         {
             string Output = GetGeneralOutput();
             return (Output.Length > 0 ? Output + "\n\n" : "") +
                    GetDamageOutput() + "\n\n" +
                    CT.ToString() + "\n\n" +
-                   GetMultiplierOutput();
+                   GetMultiplierOutput() +
+                   GetTriggerOutput();
         }
     }
 

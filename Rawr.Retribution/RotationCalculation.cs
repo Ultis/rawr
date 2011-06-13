@@ -21,9 +21,7 @@ namespace Rawr.Retribution
     public class RotationCalculation
     {
         public Skill CS { get { return skills[DamageAbility.CrusaderStrike]; } }
-        public Skill HoLCS { get { return skills[DamageAbility.HandOfLightCS]; } }
         public Skill TV { get { return skills[DamageAbility.TemplarsVerdict]; } }
-        public Skill HoLTV { get { return skills[DamageAbility.HandOfLightTV]; } }
         public Skill Judge { get { return skills[DamageAbility.Judgement]; } }
         public Skill Exo { get { return skills[DamageAbility.Exorcism]; } }
         public Skill HW { get { return skills[DamageAbility.HolyWrath]; } }
@@ -59,9 +57,7 @@ namespace Rawr.Retribution
             casts[DamageAbility.TemplarsVerdict] = 0f;
 
             skills[DamageAbility.CrusaderStrike] = new CrusaderStrike(Character, Stats);
-            skills[DamageAbility.HandOfLightCS] = new HandofLight(Character, Stats, CS.AverageDamage);
             skills[DamageAbility.TemplarsVerdict] = new TemplarsVerdict(Character, Stats);
-            skills[DamageAbility.HandOfLightTV] = new HandofLight(Character, Stats, TV.AverageDamage);
             skills[DamageAbility.White] = new White(Character, Stats);
             skills[DamageAbility.Exorcism] = new Exorcism(Character, Stats, White.CT.ChanceToLand);
             skills[DamageAbility.Inquisition] = new Inquisition(Character, Stats, CalcOpts.HPperInq);
@@ -201,8 +197,6 @@ namespace Rawr.Retribution
                 }
             }
             
-            casts[DamageAbility.HandOfLightCS] = casts[DamageAbility.CrusaderStrike];
-            casts[DamageAbility.HandOfLightTV] = casts[DamageAbility.TemplarsVerdict];
             casts[DamageAbility.White] = fightLengthAttacking / AbilityHelper.WeaponSpeed(Character, Stats.PhysicalHaste);
             casts[DamageAbility.SoC] = casts[DamageAbility.Seal] = (float)(fightlength * SealProcsPerSec(Seal));
             casts[DamageAbility.SealDot] = (float)(fightlength * SealDotProcPerSec(Seal));
@@ -229,9 +223,7 @@ namespace Rawr.Retribution
             calc.CommandSkill = SoC;
             calc.JudgementSkill = Judge;
             calc.TemplarsVerdictSkill = TV;
-            calc.HandOfLightTVSkill = HoLTV;
             calc.CrusaderStrikeSkill = CS;
-            calc.HandOfLightCSSkill = HoLCS;
             calc.ConsecrationSkill = Cons;
             calc.ExorcismSkill = Exo;
             calc.HolyWrathSkill = HW;
@@ -243,9 +235,7 @@ namespace Rawr.Retribution
                 SoC.GetDPS() +
                 Judge.GetDPS() +
                 CS.GetDPS() +
-                HoLCS.GetDPS() +
                 TV.GetDPS() +
-                HoLTV.GetDPS() +
                 Exo.GetDPS() +
                 HW.GetDPS() +
                 Cons.GetDPS() +
