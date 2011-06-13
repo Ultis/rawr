@@ -41,7 +41,8 @@ namespace Rawr.Retribution
         White,
         SoC,
         Seal,
-        SealDot
+        SealDot,
+        GoaK
     }
 
     public enum AbilityType

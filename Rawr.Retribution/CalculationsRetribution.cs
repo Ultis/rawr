@@ -406,6 +406,7 @@ namespace Rawr.Retribution
                         "DPS Breakdown:Holy Wrath",
                         "DPS Breakdown:Judgement",
                         "DPS Breakdown:Consecration",
+                        "DPS Breakdown:GoaK",
                         "DPS Breakdown:Other*From trinket procs",
                         "Rotation Info:Inqusition Uptime",
                         "Rotation Info:Crusader Strike Usage",
@@ -415,6 +416,7 @@ namespace Rawr.Retribution
                         "Rotation Info:Judgement Usage",
                         "Rotation Info:Holy Wrath Usage",
                         "Rotation Info:Consecration Usage",
+                        "Rotation Info:GoaK Usage",
                     });
                     _characterDisplayCalculationLabels = labels.ToArray();
                 }
@@ -553,20 +555,14 @@ namespace Rawr.Retribution
                 //GoaK Strength
                 {
                     Stats statstmp = new Stats();
-                    statstmp.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusStrengthMultiplier = PaladinConstants.GOAK_STRENGTH }, PaladinConstants.GOAK_DURATION, 0f, 1f, 20));
+                    statstmp.AddSpecialEffect(new SpecialEffect(Trigger.DamageOrHealingDone, new Stats() { BonusStrengthMultiplier = PaladinConstants.GOAK_STRENGTH }, PaladinConstants.GOAK_DURATION, 0f, 1f, 20));
                     stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, statstmp, PaladinConstants.GOAK_DURATION, PaladinConstants.GOAK_COOLDOWN));
                 }
 
                 // Average out proc effects, and add to global stats.
                 Stats statsAverage = new Stats();
                 foreach (SpecialEffect effect in stats.SpecialEffects())
-                    statsAverage.Accumulate(
-                        ProcessSpecialEffect(
-                            effect,
-                            triggerIntervals,
-                            triggerChances,
-                            AbilityHelper.BaseWeaponSpeed(character),
-                            character.BossOptions.BerserkTimer));
+                    statsAverage.Accumulate(effect.GetAverageStats(triggerIntervals, triggerChances, AbilityHelper.BaseWeaponSpeed(character), character.BossOptions.BerserkTimer));
                 stats.Accumulate(statsAverage);
             }
 
@@ -620,33 +616,6 @@ namespace Rawr.Retribution
             triggerChances[Trigger.CrusaderStrikeHit] = rot.CS.CT.ChanceToLand;
             triggerIntervals[Trigger.JudgementHit] = (float) (1f / rot.Judge.UsagePerSec);
             triggerChances[Trigger.JudgementHit] = rot.Judge.CT.ChanceToLand;
-        }
-
-        private Stats ProcessSpecialEffect(SpecialEffect effect, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances, float baseWeaponSpeed, float fightLength)
-        {
-            if (!triggerIntervals.ContainsKey(effect.Trigger)) return new Stats();
-            if (effect.Trigger == Trigger.Use && effect.Stats._rawSpecialEffectData != null)
-            {
-                // Run Recursive Effects (like Victor's Call)
-                Stats SubStats = ProcessSpecialEffect(effect.Stats._rawSpecialEffectData[0], triggerIntervals, triggerChances, baseWeaponSpeed, fightLength);
-                float upTime = effect.GetAverageUptime(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger]);
-                Stats retVal = new Stats();
-                retVal.Accumulate(SubStats, upTime);
-                return retVal;
-            }
-            else if (effect.MaxStack > 1)
-            {
-                Stats tempStats = null;
-                foreach (SpecialEffect subeffect in effect.Stats.SpecialEffects())
-                {
-                    tempStats = ProcessSpecialEffect(subeffect, triggerIntervals, triggerChances, baseWeaponSpeed, effect.Duration);
-                }
-                if (tempStats != null)
-                    return tempStats * effect.GetAverageStackSize(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], baseWeaponSpeed, fightLength);
-                else
-                    return effect.Stats * effect.GetAverageStackSize(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], baseWeaponSpeed, fightLength);
-            }
-            else return effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], baseWeaponSpeed, fightLength);
         }
 
         // Combine talents and buffs into primary and secondary stats.

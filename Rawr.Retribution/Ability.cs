@@ -49,7 +49,6 @@ namespace Rawr.Retribution
                     case DamageType.Physical:
                         AbilityDamageMulitplier[Multiplier.Physical] = (1f + Stats.BonusDamageMultiplier) * (1f + Stats.BonusPhysicalDamageMultiplier);
                         AbilityDamageMulitplier[Multiplier.Armor] = 1f - StatConversion.GetArmorDamageReduction(Character.Level, _character.BossOptions.Armor, Stats.TargetArmorReduction, Stats.ArmorPenetration); ;
-                        AbilityDamageMulitplier[Multiplier.Others] = (1f + PaladinConstants.TWO_H_SPEC);
                         break;
                     case DamageType.Arcane:
                         AbilityDamageMulitplier[Multiplier.Magical] = (1f + Stats.BonusDamageMultiplier) * (1f + Stats.BonusArcaneDamageMultiplier);
@@ -106,11 +105,11 @@ namespace Rawr.Retribution
                 fmtstring += "\n{1:F2} sec Cooldown";
             if (Targets() != 1f)
                 fmtstring += "\n{2:F2} Targets";
-            if (TickCount() != 1f)
+            if (TickCount != 1f)
                 fmtstring += "\n{3:F2} Ticks";
 
             if (fmtstring.Length > 0)
-                return "General:" + string.Format(fmtstring, GCD, Cooldown, Targets(), TickCount());
+                return "General:" + string.Format(fmtstring, GCD, Cooldown, Targets(), TickCount);
             else
                 return "";
         }
@@ -129,7 +128,7 @@ namespace Rawr.Retribution
 
         protected float _AbilityDamage = 1f;
         public float AbilityDamage { get { return _AbilityDamage; } 
-                                     set { _AbilityDamage = value * TickCount() * (Meteor ? 1f : Targets());
+                                     set { _AbilityDamage = value * TickCount * (Meteor ? 1f : Targets());
                                            HitDamage = _AbilityDamage * GetMulitplier(); } }
         protected float _HitDamage;
         public float HitDamage { get { return _HitDamage; }
@@ -144,7 +143,7 @@ namespace Rawr.Retribution
             string fmtString = "Damage:";
             string addString = "";
                 
-            if (TickCount() != 1f)
+            if (TickCount != 1f)
                 addString += " / Tick";
             if (Targets() != 1f)
                 addString += " / Target";
@@ -154,10 +153,12 @@ namespace Rawr.Retribution
             fmtString += "\n{1:N0} Average Damage" + addString + 
                          "\n{2:N0} Average Hit" + addString;
 
-            return string.Format(fmtString, (AverageDamageWithTriggers / TickCount() / Targets()), (AverageDamage / TickCount() / Targets()), (HitDamage / TickCount() / Targets()));
+            return string.Format(fmtString, (AverageDamageWithTriggers / TickCount / Targets()), (AverageDamage / TickCount / Targets()), (HitDamage / TickCount / Targets()));
         }
         public virtual float Targets() { return 1f; }
-        public virtual float TickCount() { return 1f; }
+        protected float _TickCount = 1f;
+        public float TickCount { get { return _TickCount; } 
+                                 set { _TickCount = value; } }
         public bool Meteor = false;
         #endregion
 

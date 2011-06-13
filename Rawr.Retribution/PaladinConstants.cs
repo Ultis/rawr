@@ -118,7 +118,10 @@ namespace Rawr.Retribution
 
         internal const float GOAK_COOLDOWN = 300;
         internal const float GOAK_DURATION = 30f;
+        internal const float GOAK_ATTACKS_PER_CAST = 15f;
         internal const float GOAK_STRENGTH = .01f;
+        internal const float AF_BASE_DMG = 243f;
+        internal const float AF_COEFF_AP = .08456f;
 
         internal const float INQ_COEFF = .3f;
         #endregion

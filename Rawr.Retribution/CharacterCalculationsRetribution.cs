@@ -26,6 +26,7 @@ namespace Rawr.Retribution
         public Skill ExorcismSkill { get; set; }
         public Skill HolyWrathSkill { get; set; }
         public Skill HammerOfWrathSkill { get; set; }
+        public Skill GoakSkill { get; set; }
         
         public Stats BasicStats { get; set; }
         public Stats CombatStats { get; set; }
@@ -72,6 +73,7 @@ namespace Rawr.Retribution
             dictValues["Exorcism"] = string.Format("{0:N0}*" + ExorcismSkill.ToString(), ExorcismSkill.GetDPS());
             dictValues["Holy Wrath"] = string.Format("{0:N0}*" + HolyWrathSkill.ToString(), HolyWrathSkill.GetDPS());
             dictValues["Hammer of Wrath"] = string.Format("{0:N0}*" + HammerOfWrathSkill.ToString(), HammerOfWrathSkill.GetDPS());
+            dictValues["GoaK"] = string.Format("{0:N0}*" + GoakSkill.ToString(), GoakSkill.GetDPS());
             dictValues["Other"] = OtherDPS.ToString("N0");
 
             // Rotation Info:
@@ -83,6 +85,7 @@ namespace Rawr.Retribution
             dictValues["Judgement Usage"] = (JudgementSkill.UsagePerSec * Character.BossOptions.BerserkTimer).ToString("F2");
             dictValues["Holy Wrath Usage"] = (HolyWrathSkill.UsagePerSec * Character.BossOptions.BerserkTimer).ToString("F2");
             dictValues["Consecration Usage"] = (ConsecrationSkill.UsagePerSec * Character.BossOptions.BerserkTimer).ToString("F2");
+            dictValues["GoaK Usage"] = (GoakSkill.UsagePerSec * Character.BossOptions.BerserkTimer).ToString("F2");
 
             return dictValues;
         }

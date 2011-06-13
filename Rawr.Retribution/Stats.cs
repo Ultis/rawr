@@ -44,7 +44,7 @@ namespace Rawr.Retribution
             if (TCount >= 4) { T12_4P = true; }
         }
 
-        public StatsRetri Clone()
+        public new StatsRetri Clone()
         {
             StatsRetri clone = new StatsRetri();
             clone.Accumulate(base.Clone());

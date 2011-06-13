@@ -30,6 +30,7 @@ namespace Rawr.Retribution
         public Skill Seal { get { return skills[DamageAbility.Seal]; } }
         public Skill SealDot { get { return skills[DamageAbility.SealDot]; } }
         public Skill SoC { get { return skills[DamageAbility.SoC]; } }
+        public Skill GoaK { get { return skills[DamageAbility.GoaK]; } }
         public White White { get { return (White)skills[DamageAbility.White]; } }
 
         private Dictionary<DamageAbility, float> casts = new Dictionary<DamageAbility, float>();
@@ -55,6 +56,7 @@ namespace Rawr.Retribution
             casts[DamageAbility.HolyWrath] = 0f;
             casts[DamageAbility.Judgement] = 0f;
             casts[DamageAbility.TemplarsVerdict] = 0f;
+            casts[DamageAbility.GoaK] = 0f;
 
             skills[DamageAbility.CrusaderStrike] = new CrusaderStrike(Character, Stats);
             skills[DamageAbility.TemplarsVerdict] = new TemplarsVerdict(Character, Stats);
@@ -64,6 +66,7 @@ namespace Rawr.Retribution
             skills[DamageAbility.HolyWrath] = new HolyWrath(Character, Stats);
             skills[DamageAbility.HammerOfWrath] = new HammerOfWrath(Character, Stats);
             skills[DamageAbility.Consecration] = new Consecration(Character, Stats);
+            skills[DamageAbility.GoaK] = new GuardianOfTheAncientKings(Character, Stats);
             skills[DamageAbility.SoC] = new SealOfCommand(Character, Stats);
 
             switch (CalcOpts.Seal)
@@ -198,6 +201,7 @@ namespace Rawr.Retribution
             }
             
             casts[DamageAbility.White] = fightLengthAttacking / AbilityHelper.WeaponSpeed(Character, Stats.PhysicalHaste);
+            casts[DamageAbility.GoaK] = fightlength / PaladinConstants.GOAK_COOLDOWN;
             casts[DamageAbility.SoC] = casts[DamageAbility.Seal] = (float)(fightlength * SealProcsPerSec(Seal));
             casts[DamageAbility.SealDot] = (float)(fightlength * SealDotProcPerSec(Seal));
 
@@ -228,6 +232,7 @@ namespace Rawr.Retribution
             calc.ExorcismSkill = Exo;
             calc.HolyWrathSkill = HW;
             calc.HammerOfWrathSkill = HoW;
+            calc.GoakSkill = GoaK;
 
             calc.DPSPoints = White.GetDPS() +
                 Seal.GetDPS() +
@@ -240,6 +245,7 @@ namespace Rawr.Retribution
                 HW.GetDPS() +
                 Cons.GetDPS() +
                 HoW.GetDPS() +
+                GoaK.GetDPS() +
                 calc.OtherDPS;
         }
 
@@ -268,7 +274,7 @@ namespace Rawr.Retribution
                 skill.UsagePerSec *
                 skill.CT.ChanceToLand *
                 skill.Targets() *
-                skill.TickCount();
+                skill.TickCount;
         }
 
         public double GetAbilityCritsPerSecond(Skill skill)
@@ -277,7 +283,7 @@ namespace Rawr.Retribution
                 skill.UsagePerSec *
                 skill.CT.ChanceToCrit *
                 skill.Targets() *
-                skill.TickCount();
+                skill.TickCount;
         }
 
         public double GetMeleeAttacksPerSec()

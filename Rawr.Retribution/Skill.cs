@@ -227,6 +227,7 @@ namespace Rawr.Retribution
             CT = new BaseSpellCombatTable(Character.BossOptions, _stats, Attacktype.Spell);
             CT.CanCrit = false;
             Cooldown = PaladinConstants.CONS_COOLDOWN;
+            TickCount = (Talents.GlyphOfConsecration ? 12f : 10f);
             AbilityDamage = (PaladinConstants.CONS_BASE_DMG +
                              PaladinConstants.CONS_COEFF_SP * _stats.SpellPower +
                              PaladinConstants.CONS_COEFF_AP * _stats.AttackPower)
@@ -237,11 +238,29 @@ namespace Rawr.Retribution
         {
             return 1f /*//TODO: get it from Bosshandler Combats.CalcOpts.Targets*/;
         }
+    }
 
-        public override float TickCount()
+    public class GuardianOfTheAncientKings : Skill
+    {
+        public GuardianOfTheAncientKings(Character character, StatsRetri stats) : base("Guardian of the ancient Kings", character, new StatsRetri(), AbilityType.Melee, DamageType.Physical, false)
         {
-            // Every second for 10 seconds (12 seconds with glyph)
-            return Talents.GlyphOfConsecration ? 12f : 10f;
+            CT = new BasePhysicalWhiteCombatTable(character.BossOptions, _stats, Attacktype.MeleeMH);
+            TickCount = PaladinConstants.GOAK_ATTACKS_PER_CAST;
+            AbilityDamageMulitplier.Remove(Multiplier.Others); //Remove Two handed Spec
+            AbilityDamage = 7000f;
+
+            //Final Cast
+            AddTrigger(new GuardianOfTheAncientKingsFinal(character, stats));
+        }
+    }
+
+    public class GuardianOfTheAncientKingsFinal : Skill
+    {
+        public GuardianOfTheAncientKingsFinal(Character character, StatsRetri stats) : base("Ancient Fury", character, stats, AbilityType.Spell, DamageType.Holy, false)
+        {
+            CT = new BaseSpellCombatTable(character.BossOptions, _stats, Attacktype.Spell);
+            AbilityDamage = (PaladinConstants.AF_BASE_DMG * 20f) + 
+                            PaladinConstants.AF_COEFF_AP * _stats.AttackPower;
         }
     }
 
