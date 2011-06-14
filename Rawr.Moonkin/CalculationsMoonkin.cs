@@ -1019,7 +1019,7 @@ namespace Rawr.Moonkin
             if (T12Count >= 4)
             {
                 // 4 piece: Your Wrath generates +3 and your Starfire generates +5 energy when not in Eclipse.
-                statsTotal.BonusWrathEnergy = 3f;
+                statsTotal.BonusWrathEnergy = 3f + 1/3f;
                 statsTotal.BonusStarfireEnergy = 5f;
             }
             #endregion
