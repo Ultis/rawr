@@ -629,11 +629,11 @@ threat and limited threat scaled by the threat scale.",
                 float paragonValue = player.Stats.HighestSecondaryStat; // how much paragon to add
                 player.Stats.HighestSecondaryStat = 0f; // remove Paragon stat, since it's not needed
                 if (player.Stats.CritRating > player.Stats.HasteRating && player.Stats.CritRating > player.Stats.MasteryRating)
-                    player.Stats.CritRating = paragonValue;
+                    player.Stats.CritRating += paragonValue;
                 else if (player.Stats.HasteRating > player.Stats.CritRating && player.Stats.HasteRating > player.Stats.MasteryRating)
-                    player.Stats.HasteRating = paragonValue;
+                    player.Stats.HasteRating += paragonValue;
                 else 
-                        player.Stats.MasteryRating = paragonValue;
+                        player.Stats.MasteryRating += paragonValue;
             }
             // Defensive Stats, Add Difference of First-Pass and Second-Pass Block/Parry
             player.Stats.Armor = (float)Math.Ceiling(player.Stats.Armor * (1.0f + player.Stats.BaseArmorMultiplier));
