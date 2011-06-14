@@ -760,21 +760,21 @@ namespace Rawr
             #region Level 85 (Cataclysm)
             // Patch 4.0.6+ lowered the Off-hand enchant from 100 Intellect to 40 Intellect
             defaultEnchants.Add(new Enchant(4091, "Superior Intellect", ItemSlot.OffHand, new Stats() { Intellect = 40 }, "spell_holy_greaterheal"));
+            defaultEnchants.Add(new Enchant(4085, "Mastery", ItemSlot.OffHand, new Stats() { MasteryRating = 50 }, "spell_holy_greaterheal", true));
             defaultEnchants.Add(new Enchant(4073, "Protection", ItemSlot.OffHand, new Stats() { BonusArmor = 160 }, "spell_holy_greaterheal", true));
-            defaultEnchants.Add(new Enchant(4085, "Blocking", ItemSlot.OffHand, new Stats() { BlockRating = 40 }, "spell_holy_greaterheal", true));
             #endregion
             #region Level 80 (WotLK)
-            defaultEnchants.Add(new Enchant(1128, "Greater Intellect", ItemSlot.OffHand, new Stats() { Intellect = 25 }, "spell_holy_greaterheal", true));
-            defaultEnchants.Add(new Enchant(1952, "Defense", ItemSlot.OffHand, new Stats() { DodgeRating = 20 }, "spell_holy_greaterheal", true));
             defaultEnchants.Add(new Enchant(3849, "Titanium Plating", ItemSlot.OffHand, new Stats() { ParryRating = 26, DisarmDurReduc = 0.50f }, "inv_shield_19", true));
+            defaultEnchants.Add(new Enchant(1952, "Dodge", ItemSlot.OffHand, new Stats() { DodgeRating = 20 }, "spell_holy_greaterheal", true));
+            defaultEnchants.Add(new Enchant(1128, "Greater Intellect", ItemSlot.OffHand, new Stats() { Intellect = 25 }, "spell_holy_greaterheal", true));
             #endregion
             #region Level 70 (BC)
-            defaultEnchants.Add(new Enchant(2653, "Tough Shield", ItemSlot.OffHand, new Stats() { DodgeRating = 12 }, "spell_holy_greaterheal", true));
+            defaultEnchants.Add(new Enchant(1888, "Resistance", ItemSlot.OffHand, new Stats() { ShadowResistance = 5, ArcaneResistance = 5, NatureResistance = 5, FireResistance = 5, FrostResistance = 5 }, "inv_enchant_formulagood_01", true));
+            defaultEnchants.Add(new Enchant(2655, "Shield Block", ItemSlot.OffHand, new Stats() { ParryRating = 15 }, "inv_enchant_formulagood_01", true));
+            defaultEnchants.Add(new Enchant(3229, "Resilience", ItemSlot.OffHand, new Stats() { Resilience = 12 }, "spell_holy_greaterheal", true));
             defaultEnchants.Add(new Enchant(2654, "Intellect", ItemSlot.OffHand, new Stats() { Intellect = 12 }, "inv_misc_note_01", true));
             defaultEnchants.Add(new Enchant(1071, "Major Stamina", ItemSlot.OffHand, new Stats() { Stamina = 18 }, "inv_misc_note_01", true));
-            defaultEnchants.Add(new Enchant(3229, "Resilience", ItemSlot.OffHand, new Stats() { Resilience = 12 }, "spell_holy_greaterheal", true));
-            defaultEnchants.Add(new Enchant(2655, "Shield Block", ItemSlot.OffHand, new Stats() { ParryRating = 15 }, "inv_enchant_formulagood_01", true));
-            defaultEnchants.Add(new Enchant(1888, "Resistance", ItemSlot.OffHand, new Stats() { ShadowResistance = 5, ArcaneResistance = 5, NatureResistance = 5, FireResistance = 5, FrostResistance = 5 }, "inv_enchant_formulagood_01", true));
+            defaultEnchants.Add(new Enchant(2653, "Tough Shield", ItemSlot.OffHand, new Stats() { DodgeRating = 12 }, "spell_holy_greaterheal", true));
             #endregion
             // Level 60 (Vanilla)
             // Unsorted

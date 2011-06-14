@@ -1426,6 +1426,24 @@ namespace Rawr
             #region Elixirs
             defaultBuffs.Add(new Buff()
             {
+                Name = "Prismatic Elixir",
+                Group = "Elixirs and Flasks",
+                Stats =
+                {
+                    ArcaneResistance = 90,
+                    FireResistance = 90,
+                    FrostResistance = 90,
+                    ShadowResistance = 90,
+                    NatureResistance = 90
+                },
+                ConflictingBuffs = new List<string>(new string[] { "Guardian Elixir" }),
+                Improvements = { new Buff { Name = "Prismatic Elixir (Mixology)",
+                    Stats = { ArcaneResistance = 105, FireResistance = 105, FrostResistance = 105, ShadowResistance = 105, NatureResistance = 105 },
+                    ConflictingBuffs = { "Flask Mixology" },
+                    Professions = new List<Profession>() { Profession.Alchemy } } }
+            });
+            defaultBuffs.Add(new Buff()
+            {
                 Name = "Elixir of Major Agility",
                 Group = "Elixirs and Flasks",
                 Stats = { Agility = 30, CritRating = 12 },
