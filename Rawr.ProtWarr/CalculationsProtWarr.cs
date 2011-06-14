@@ -1020,7 +1020,7 @@ threat and limited threat scaled by the threat scale.",
                     buff.Name.Contains("Gladiator") ||
                     buff.Name.Contains("Earthen Battleplate") ||
                     buff.Name.Contains("Molten Giant Battleplate"))
-                ));
+                );
             if (buff.SpellId == 70843) { return true; } // T10 2P
             if (buff.SpellId == 70844) { return true; } // T10 4P
             if (buff.SpellId == 90296) { return true; } // T11 2P
