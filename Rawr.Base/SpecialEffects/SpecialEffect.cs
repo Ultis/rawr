@@ -184,6 +184,10 @@ namespace Rawr
         WWorCleaveHit,
         ///<summary>The Warrior attempts to use Overpower or Raging Blow, regardless of result</summary>
         OPorRBAttack,
+        ///<summary>The Warrior uses Battle Shout or Commanding Shout on Cooldown.</summary>
+        BattleorCommandingShout,
+        ///<summary>The Warrior uses Shield Block.</summary>
+        ShieldBlock,
         #endregion
         #region Added by Warlock
         /// <summary>The Warlock's Corruption DoT ticks</summary>

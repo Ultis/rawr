@@ -319,6 +319,8 @@ namespace Rawr.DPSWarr.Skills
             CD = (5f * 60f) * (1f - 0.10f * DPSWarrChar.Talents.IntensifyRage); // In Seconds
             Duration = 12f; // In Seconds
             StanceOkFury = true;
+            StanceOkArms = true;
+            StanceOkDef = true;
             Targets = -1;
             //Effect = new SpecialEffect(Trigger.Use, new Stats { PhysicalCrit = 1f, DamageTakenMultiplier = 0.20f, }, Duration, Cd);
             UseHitTable = false;
@@ -1245,6 +1247,8 @@ namespace Rawr.DPSWarr.Skills
             DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
             StanceOkArms = true;
+            StanceOkFury = true;
+            StanceOkDef = true;
             ReqMeleeRange = true;
             ReqMeleeWeap = true;
             CD = 5f * 60f;

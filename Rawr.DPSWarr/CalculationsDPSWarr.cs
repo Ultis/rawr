@@ -636,6 +636,7 @@ a GCD's length, you will use this while running back into place",
                     Trigger.OPorRBAttack,
                     Trigger.MortalStrikeCrit,
                     Trigger.MortalStrikeHit,
+                    Trigger.BattleorCommandingShout,
                 });
             }
         }
@@ -904,7 +905,9 @@ a GCD's length, you will use this while running back into place",
                 || buff.SpellId == 28494 // Insane Strength Potion
                 || buff.SpellId == 22738 // Disarm Duration Reduction (Old PvP Set Bonuses)
                 || buff.SpellId == 90293  // T11 2P
-                || buff.SpellId == 90295) // T11 4P
+                || buff.SpellId == 90295  // T11 4P
+                || buff.SpellId == 99233  // T12 2P
+                || buff.SpellId == 99237) // T12 4P
             { return true; }
             // Force some buffs to go away
             else if (!buff.AllowedClasses.Contains(CharacterClass.Warrior))
@@ -1052,6 +1055,18 @@ a GCD's length, you will use this while running back into place",
                 statsBuffs.AddSpecialEffect(new SpecialEffect(Trigger.OPorRBAttack,
                     new Stats() { BonusAttackPowerMultiplier = 0.01f, },
                     30, 0, 1f, 3));
+            }
+            int T12count;
+            dpswarchar.Char.SetBonusCount.TryGetValue("Molten Giant Warplate", out T12count);
+            if (T12count >= 2) {
+                statsBuffs.AddSpecialEffect(new SpecialEffect(Trigger.BattleorCommandingShout,
+                    new Stats() { BonusPhysicalDamageMultiplier = 0.10f, },
+                    6f, 30f));
+            }
+            if (T12count >= 4) {
+                statsBuffs.AddSpecialEffect(new SpecialEffect(Trigger.MortalStrikeHit,
+                    new Stats() { BonusWhiteDamageMultiplier = 1f, },
+                    0f, 0f, 0.30f));
             }
             
             foreach (Buff b in removedBuffs) { dpswarchar.Char.ActiveBuffsAdd(b); }
@@ -1780,15 +1795,18 @@ a GCD's length, you will use this while running back into place",
                 BonusDamageMultiplier = ((!dpswarchar.CombatFactors.FuryStance
                                            && dpswarchar.Char.MainHand != null
                                            && dpswarchar.Char.MainHand.Slot == ItemSlot.TwoHand
-                                         ? 1.20f : 1.00f)
+                                         ? 1.12f : 1.00f)
                                          * (dpswarchar.CombatFactors.FuryStance
                                             && talents.SingleMindedFury > 0
                                             && HelperFunctions.ValidateSMTBonus(dpswarchar)
                                          ? 1.20f : 1.00f))
                                          - 1f,
-                BonusPhysicalDamageMultiplier = (dpswarchar.CalcOpts.M_Rend // Have Rend up
+                BonusPhysicalDamageMultiplier = ((dpswarchar.CalcOpts.M_Rend // Have Rend up
                                                  || talents.DeepWounds > 0 // Have Deep Wounds
-                                                ? talents.BloodFrenzy * 0.02f : 0f),
+                                                ? talents.BloodFrenzy * 1.02f : 1.0f)
+                                                * (dpswarchar.CombatFactors.FuryStance
+                                                ? 1.05f : 1.0f))
+                                                - 1f,
                 BonusBleedDamageMultiplier = (dpswarchar.CalcOpts.M_Rend // Have Rend up
                                                  || talents.DeepWounds > 0 // Have Deep Wounds
                                                 ? talents.BloodFrenzy * 0.15f : 0f),

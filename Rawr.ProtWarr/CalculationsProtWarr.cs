@@ -624,7 +624,17 @@ threat and limited threat scaled by the threat scale.",
                 player.Stats.Strength += (float)Math.Floor((player.Stats.HighestStat + player.Stats.Paragon) * (1.0f + player.Stats.BonusStrengthMultiplier));
             else
                 player.Stats.Agility += (float)Math.Floor((player.Stats.HighestStat + player.Stats.Paragon) * (1.0f + player.Stats.BonusAgilityMultiplier));
-
+            if (player.Stats.HighestSecondaryStat > 0)
+            {
+                float paragonValue = player.Stats.HighestSecondaryStat; // how much paragon to add
+                player.Stats.HighestSecondaryStat = 0f; // remove Paragon stat, since it's not needed
+                if (player.Stats.CritRating > player.Stats.HasteRating && player.Stats.CritRating > player.Stats.MasteryRating)
+                    player.Stats.CritRating = paragonValue;
+                else if (player.Stats.HasteRating > player.Stats.CritRating && player.Stats.HasteRating > player.Stats.MasteryRating)
+                    player.Stats.HasteRating = paragonValue;
+                else 
+                        player.Stats.MasteryRating = paragonValue;
+            }
             // Defensive Stats, Add Difference of First-Pass and Second-Pass Block/Parry
             player.Stats.Armor = (float)Math.Ceiling(player.Stats.Armor * (1.0f + player.Stats.BaseArmorMultiplier));
             player.Stats.Armor += (float)Math.Ceiling(player.Stats.BonusArmor * (1.0f + player.Stats.BonusArmorMultiplier));
@@ -672,6 +682,19 @@ threat and limited threat scaled by the threat scale.",
                 statsBuffs.BonusShieldWallDurMultiplier = 0.50f;
             }
 
+            int T12count;
+            player.Character.SetBonusCount.TryGetValue("Molten Giant Battleplate", out T12count);
+            if (T12count >= 2)
+            {
+                statsBuffs.BonusShieldSlamDamageMultiplier = 0.20f;
+            }
+            if (T12count >= 4)
+            {
+                statsBuffs.AddSpecialEffect(new SpecialEffect(Trigger.ShieldBlock,
+                    new Stats() { Parry = 0.06f, },
+                    10f, 60f - (player.Talents.ShieldMastery * 0.10f)));
+            }
+
             return statsBuffs;
         }
 
@@ -704,6 +727,7 @@ threat and limited threat scaled by the threat scale.",
             triggerIntervals[Trigger.DamageAvoided]         = triggerIntervals[Trigger.DamageTaken];
             triggerIntervals[Trigger.DamageParried]         = triggerIntervals[Trigger.DamageTaken];
             triggerIntervals[Trigger.DamageTakenPutsMeBelow35PercHealth] = triggerIntervals[Trigger.DamageTaken];
+            triggerIntervals[Trigger.ShieldBlock]           = 60f - (player.Talents.ShieldMastery * 10f);
 
             triggerChances[Trigger.Use]                     = 1.0f;
             triggerChances[Trigger.MeleeAttack]             = 1.0f;
@@ -721,6 +745,7 @@ threat and limited threat scaled by the threat scale.",
             triggerChances[Trigger.DamageAvoided]           = player.DefendModel.DefendTable.AnyAvoid;
             triggerChances[Trigger.DamageParried]           = player.DefendModel.DefendTable.Parry;
             triggerChances[Trigger.DamageTakenPutsMeBelow35PercHealth] = triggerChances[Trigger.DamageTaken] * 0.35f;
+            triggerChances[Trigger.ShieldBlock]             = 1.0f;
 
             foreach (SpecialEffect effect in player.Stats.SpecialEffects()) 
             {
@@ -992,12 +1017,16 @@ threat and limited threat scaled by the threat scale.",
                     buff.Name.StartsWith("Siegebreaker") || 
                     buff.Name.StartsWith("Wrynn") ||
                     buff.Name.StartsWith("Ymirjar") ||
-                    buff.Name.Contains("Gladiator")
+                    buff.Name.Contains("Gladiator") ||
+                    buff.Name.Contains("Earthen Battleplate") ||
+                    buff.Name.Contains("Molten Giant Battleplate"))
                 ));
             if (buff.SpellId == 70843) { return true; } // T10 2P
             if (buff.SpellId == 70844) { return true; } // T10 4P
             if (buff.SpellId == 90296) { return true; } // T11 2P
             if (buff.SpellId == 90297) { return true; } // T11 4P
+            if (buff.SpellId == 99239) { return true; } // T12 2P
+            if (buff.SpellId == 99242) { return true; } // T12 4P
 
             return base.IsBuffRelevant(buff, character) && !NotClassSetBonus;
         }
@@ -1060,6 +1089,7 @@ threat and limited threat scaled by the threat scale.",
                 BossAttackSpeedReductionMultiplier = stats.BossAttackSpeedReductionMultiplier,
 
                 HighestStat = stats.HighestStat,
+                HighestSecondaryStat = stats.HighestSecondaryStat,
                 Paragon = stats.Paragon,
             };
 
@@ -1091,6 +1121,7 @@ threat and limited threat scaled by the threat scale.",
                         Trigger.DamageAvoided,
                         Trigger.DamageTaken,
                         Trigger.DamageTakenPutsMeBelow35PercHealth,
+                        Trigger.ShieldBlock,
                     };
                 }
                 return _relevantTriggers;
@@ -1151,7 +1182,7 @@ threat and limited threat scaled by the threat scale.",
                     stats.BonusCritDamageMultiplier +
                     stats.BonusDamageMultiplier + stats.BonusWhiteDamageMultiplier +
                     stats.BonusBleedDamageMultiplier + stats.BossAttackSpeedReductionMultiplier +
-                    stats.HighestStat + stats.Paragon +
+                    stats.HighestStat + stats.HighestSecondaryStat + stats.Paragon +
                     stats.MovementSpeed + stats.FearDurReduc + stats.StunDurReduc + stats.SnareRootDurReduc
                 ) != 0;
         }

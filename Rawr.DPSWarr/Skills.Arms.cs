@@ -123,7 +123,7 @@ namespace Rawr.DPSWarr.Skills
             AbilIterater = (int)Maintenance.Overpower;
             ReqMeleeWeap = ReqMeleeRange = true;
             CanBeDodged = CanBeParried = CanBeBlocked = false;
-            CD = 1f;// In Seconds
+            CD = 1.5f;// In Seconds
             GCDTime = CD;
             RageCost = 5f;
             //Targets += DPSWarrChar.StatS.BonusTargets;
