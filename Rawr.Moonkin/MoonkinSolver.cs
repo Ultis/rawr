@@ -413,12 +413,10 @@ namespace Rawr.Moonkin
                     float dragonwrathProcInterval = rot.RotationData.Duration / (rot.RotationData.CastCount - rot.RotationData.InsectSwarmCasts + rot.RotationData.DotTicks);
                     float baselineRotationDamage = rot.RotationData.InsectSwarmAvgHit * rot.RotationData.InsectSwarmCasts +
                         rot.RotationData.MoonfireAvgHit * rot.RotationData.MoonfireCasts +
-                        rot.RotationData.MushroomDamage * rot.RotationData.MushroomCasts +
-                        rot.RotationData.StarfallDamage * rot.RotationData.StarfallCasts +
                         rot.RotationData.StarfireAvgHit * rot.RotationData.StarfireCount +
                         rot.RotationData.StarSurgeAvgHit * rot.RotationData.StarSurgeCount +
                         rot.RotationData.WrathAvgHit * rot.RotationData.WrathCount;
-                    float dragonwrathAverageDamage = baselineRotationDamage / rot.RotationData.Duration * dragonwrathProcInterval;
+                    float dragonwrathAverageDamage = baselineRotationDamage / rot.RotationData.Duration * dragonwrathProcInterval * baseHit;
                     SpecialEffect dragonwrathProc = new SpecialEffect(Trigger.DamageDone, new Stats { ArcaneDamage = dragonwrathAverageDamage }, 0f, 0f, dragonwrathProcRate);
                     float procsPerSecond = dragonwrathProc.GetAverageProcsPerSecond(dragonwrathProcInterval, 1f, 3.0f, calcs.FightLength * 60f);
                     currentTrinketDPS += procsPerSecond * dragonwrathAverageDamage;
