@@ -226,7 +226,8 @@ namespace Rawr.Bosses
             Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 33497880f, 104297000f, 46895800f, 120016400f };
+            // Health values were lowered on Normal by 20% in 4.2
+            Health = new float[] { 33497880f * 0.80f, 104297000f * 0.80f, 46895800f, 120016400f };
             MobType = (int)MOB_TYPES.BEAST;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 6 * 60, 6 * 60, 6 * 60, 6 * 60 };
@@ -255,9 +256,10 @@ namespace Rawr.Bosses
                 // Magmaw will constantly cast Magma Spit at random players, as well as Lava Spew. This must be healed through
                 NotBurnExposedHeadNormal.Attacks.Add(new Attack {
                     Name = "Magma Spit",
+                    SpellID = new float[] { 78068, 91917, 91927, 91928 }[i],
                     AttackType = ATTACK_TYPES.AT_RANGED,
                     DamageType = ItemDamageType.Fire,
-                    DamagePerHit = new float[] { (30625f + 39375f), (30625f + 39375f), (39375f + 50625f), (39375f + 50625f) }[i] / 2f,
+                    DamagePerHit = new float[] { (24500f + 31500f), (24500f + 31500f), (35000f + 45000f), (39375f + 50625f) }[i] / 2f,
                     MaxNumTargets = new float[] { 2f, 8f, 2f, 8f }[i],
                     AttackSpeed = 10f,
                 });
@@ -271,9 +273,10 @@ namespace Rawr.Bosses
                 // Magmaw will constantly cast Magma Spit at random players, as well as Lava Spew. This must be healed through
                 NotBurnExposedHeadNormal.Attacks.Add(new Attack {
                     Name = "Lava Spew",
+                    SpellID = new float[] { 77690, 91919, 91931, 91932 }[i],
                     AttackType = ATTACK_TYPES.AT_AOE,
                     DamageType = ItemDamageType.Fire,
-                    DamagePerHit = new float[] { (18500f + 21500f), (18500f + 21500f), (27750f + 32250f), (27750f + 32250f) }[i] / 2f,
+                    DamagePerHit = new float[] { (14800f + 17200f), (14800f + 17200f), (20812f + 24187f), (27750f + 32250f) }[i] / 2f,
                     MaxNumTargets = Max_Players[i],
                     AttackSpeed = 26, // Verified DBM 4.74-r5279
                 });
@@ -287,6 +290,7 @@ namespace Rawr.Bosses
                 // damage, most likely leading to death.
                 NotBurnExposedHeadNormal.Attacks.Add(new Attack {
                     Name = "Pillar of Flame",
+                    SpellID = 78006,
                     AttackType = ATTACK_TYPES.AT_RANGED,
                     DamageType = ItemDamageType.Fire,
                     DamagePerHit = (24375f + 25625f) / 2f,
@@ -369,6 +373,7 @@ namespace Rawr.Bosses
                 #region Mangle
                 NotBurnExposedHeadNormal.Attacks.Add(new Attack {
                     Name = "Mangle",
+                    SpellID = new float[] { 89773, 91912, 94616, 94617 }[i],
                     AttackType = ATTACK_TYPES.AT_MELEE,
                     DamagePerTick = new float[] { (110464f + 128377f), (132557f + 154052f), (132557f + 154052f), (154649f + 179728f) }[i] / 2f,
                     DamageType = ItemDamageType.Physical,
@@ -577,7 +582,8 @@ namespace Rawr.Bosses
             Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 32209000f, 98790000f, 45080000f, 126261240f };
+            // Health values were lowered on Normal by 20% in 4.2
+            Health = new float[] { 32209000f * 0.80f, 98790000f * 0.80f, 45080000f, 126261240f };
             MobType = (int)MOB_TYPES.MECHANICAL;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
@@ -759,7 +765,8 @@ namespace Rawr.Bosses
             Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 24700000f, 86650000f, 34631000f, 121310000f };
+            // Health values were lowered on Normla by 80% in 4.2
+            Health = new float[] { 24700000f * 0.80f, 86650000f * 0.80f, 34631000f, 121310000f };
             MobType = (int)MOB_TYPES.DRAGONKIN;
             BerserkTimer = new int[] { 7 * 60, 7 * 60, 12 * 60, 12 * 60 }; // Source: http://us.battle.net/wow/en/blog/1232869
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
@@ -799,6 +806,7 @@ namespace Rawr.Bosses
                 RedVial.Attacks.Add(new Attack
                 {
                     Name = "Arcane Storm",
+                    SpellID = new float[] { 77908, 92961, 92962, 92963 }[i],
                     AttackType = ATTACK_TYPES.AT_AOE, IsDoT = true,
                     DamageType = ItemDamageType.Arcane,
                     DamagePerTick = new float[] { (14137 + 15862), (14137 + 15862), (47125 + 52875), (47125 + 52875) }[i] / 2f,
@@ -1194,7 +1202,7 @@ namespace Rawr.Bosses
             Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 32632000f, 97916880f, 45684800f, 103070400f };
+            Health = new float[] { 32632000f * 0.80f, 97916880f * 0.80f, 45684800f, 103070400f };
             MobType = (int)MOB_TYPES.DRAGONKIN;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
@@ -1402,7 +1410,8 @@ namespace Rawr.Bosses
             Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 25939000f, 90616064f, 36246000f, 126776592f };
+            // Health values were lowered on Normal by 20% in 4.2
+            Health = new float[] { 25939000f * 0.80f, 90616064f * 0.80f, 36246000f, 126776592f };
             MobType = (int)MOB_TYPES.BEAST;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 450, 450 };
             SpeedKillTimer = new int[] { 6 * 60, 6 * 60, 6 * 60, 6 * 60 };
@@ -1537,7 +1546,8 @@ namespace Rawr.Bosses
             #region Basics
             // Onyxia = 6,600,000 / 24,000,000 / 9,017,400 / 31,500,000
             // Nefarion = 28,500,000 / 98000000 / 36,316,000 / 126,815,650
-            Health = new float[] { (7043144f + 28516144f), (24736896f + 98775800f), (9240000f + 36316000f), (34786260f + 179342496f) };
+            // Health values were lowered on Normal by 20% in 4.2
+            Health = new float[] { (7043144f + 28516144f) * 0.80f, (24736896f + 98775800f) * 0.80f, (9240000f + 36316000f), (34786260f + 179342496f) };
             MobType = (int)MOB_TYPES.DRAGONKIN;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
@@ -2000,7 +2010,8 @@ namespace Rawr.Bosses
             // One of the dragons gives increased damage while stunning the boss
             // Dragons = 4,150,000 / 12,600,649 / 5,810,000 / 17,640,909
             // Halfus = 32,467,000 / 115,954,200 / 45,453,800 / 162,335,880
-            Health = new float[] { 32467000f, 115954200f, 45453800f, 184667808f };
+            // Health values were lowered on normal by 20% in 4.2
+            Health = new float[] { 32467000f * 0.80f, 115954200f * 0.80f, 45453800f, 184667808f };
             MobType = (int)MOB_TYPES.HUMANOID;
             BerserkTimer = new int[] { 6 * 60, 6 * 60, 6 * 60, 6 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
@@ -2096,7 +2107,8 @@ namespace Rawr.Bosses
             #endregion
             #region Basics
             // Health is split between both Valiona and Theralion
-            Health = new float[] { 32209500f, 97916880f, 45952000f, 164912640f };
+            // Health values was lowered on normal by 20% in 4.2
+            Health = new float[] { 32209500f * 0.80f, 97916880f * 0.80f, 45952000f, 164912640f };
             MobType = (int)MOB_TYPES.DRAGONKIN;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
@@ -2221,7 +2233,8 @@ namespace Rawr.Bosses
             // Elemental Monstrocity = Total Health between all four his "parts."
             // His current health going into P3 is whatever is the remainder of what is currently on all mobs put together
             // So for P3, it's best to keep everyone at or close to 25% as possible going into each phase.
-            Health = new float[] { ((4724000f * 2f) + (6871000f * 2f)), ((14600000f * 2f) + (21900000f * 2f)), ((6613600f * 2f) + (9619400f * 2f)), ((24600000f * 2f) + (38000000f * 2f)) };
+            // Health values were lowered on normal by 20% in patch 4.2
+            Health = new float[] { ((4724000f * 2f) + (6871000f * 2f)) * 0.80f, ((14600000f * 2f) + (21900000f * 2f)) * 0.80f, ((6613600f * 2f) + (9619400f * 2f)), ((24600000f * 2f) + (38000000f * 2f)) };
             MobType = (int)MOB_TYPES.ELEMENTAL;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
@@ -2381,7 +2394,8 @@ namespace Rawr.Bosses
             Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 33497000f, 101352560f, 47000000f, 146000000f };
+            // Health values on Normal were lowered by 20% in 4.2
+            Health = new float[] { 33497000f * 0.80f, 101352560f * 0.80f, 47000000f, 146000000f };
             MobType = (int)MOB_TYPES.HUMANOID;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
@@ -2706,7 +2720,8 @@ namespace Rawr.Bosses
             // Rohash = 4,120,000 / 14,429,856 / 5,768,000 / 20,201,799
             // Anshal = 4,120,000 / 14,429,856 / 5,768,000 / 20,201,799
             // Nezir = 7,210,000 / 25,252,248 / 10,094,000 / 35,353,148
-            Health = new float[] { (4120000f + 4120000f + 7210000f), (14429856f + 14429856f + 25252248f), (5768000f + 5768000f + 10094000f), (20201799f + 20201799f + 35353148f) };
+            // Health values were lowered on normal by 20% in 4.2
+            Health = new float[] { (4120000f + 4120000f + 7210000f) * 0.80f, (14429856f + 14429856f + 25252248f) * 0.80f, (5768000f + 5768000f + 10094000f), (20201799f + 20201799f + 35353148f) };
             MobType = (int)MOB_TYPES.ELEMENTAL;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
@@ -2824,7 +2839,8 @@ namespace Rawr.Bosses
             Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 30100000f, 105200000f, 42140000f, 168300000f };
+            // Health values were lowered on Normal by 20% in 4.2
+            Health = new float[] { 30100000f * 0.80f, 105200000f * 0.80f, 42140000f, 168300000f };
             MobType = (int)MOB_TYPES.ELEMENTAL;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };

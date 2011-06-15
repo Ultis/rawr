@@ -876,10 +876,10 @@ namespace Rawr.ShadowPriest.CataSpells
 
         private float _coeff = .9858f;
 
-        private float _min = 1277;
-        private float _max = 1349;
+        private float _min = 1431;
+        private float _max = 1511;
         private float _cast = 1500;
-        private float _cost = 12;
+        private float _cost = 17;
         private float _gcd = 1500;
         private BossHandler _target;
 
