@@ -404,6 +404,18 @@ namespace Rawr.Moonkin
                         }
                     }
                 }
+                // Dragonwrath, Tarecgosa's Rest
+                // X% chance on any spell damage to proc Arcane damage equal to the damage done.
+                // This includes DoT ticks and has no ICD.
+                if (calcs.BasicStats.DragonwrathProc > 0)
+                {
+                    float dragonwrathProcRate = 0.08f;
+                    float dragonwrathAverageDamage = rot.RotationData.BurstDPS * rot.RotationData.Duration / (rot.RotationData.CastCount - rot.RotationData.InsectSwarmCasts);
+                    float dragonwrathProcInterval = rot.RotationData.Duration / (rot.RotationData.CastCount - rot.RotationData.InsectSwarmCasts + rot.RotationData.DotTicks);
+                    SpecialEffect dragonwrathProc = new SpecialEffect(Trigger.DamageDone, new Stats { ArcaneDamage = dragonwrathAverageDamage }, 0f, 0f, dragonwrathProcRate);
+                    float procsPerSecond = dragonwrathProc.GetAverageProcsPerSecond(dragonwrathProcInterval, 1f, 3.0f, calcs.FightLength * 60f);
+                    currentTrinketDPS += procsPerSecond * dragonwrathAverageDamage;
+                }
                 // Calculate stat-boosting trinkets, taking into effect interactions with other stat-boosting procs
                 int sign = 1;
                 Dictionary<int, float> cachedDamages = new Dictionary<int, float>();

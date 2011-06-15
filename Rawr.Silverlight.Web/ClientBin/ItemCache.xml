@@ -100845,6 +100845,7 @@
       <SpellPower>2973</SpellPower>
       <HitRating>366</HitRating>
       <HasteRating>252</HasteRating>
+      <DragonwrathProc>1</DragonwrathProc>
     </Stats>
     <Quality>Legendary</Quality>
     <Type>Staff</Type>

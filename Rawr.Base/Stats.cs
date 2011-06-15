@@ -244,7 +244,8 @@ namespace Rawr
         AntiMagicShellDamageReduction,
         #endregion
     }
-    public enum NonStackingStat : int {
+    public enum NonStackingStat : int
+    {
         #region Resistances       [Verified Jothay 2011-03-29]
         ArcaneResistanceBuff,
         FireResistanceBuff,
@@ -268,6 +269,7 @@ namespace Rawr
         HighestSecondaryStat,
         ShieldFromHealed,
         BattlemasterHealthProc,
+        DragonwrathProc,
         #endregion
         #region Added by Paladins [Verified Jothay 2011-03-29]
         // Retribution
@@ -2098,6 +2100,14 @@ namespace Rawr
         {
             get { return _rawNoStackData[(int)NonStackingStat.BattlemasterHealthProc]; }
             set { _rawNoStackData[(int)NonStackingStat.BattlemasterHealthProc] = value; }
+        }
+        [DefaultValueAttribute(0f)]
+        [DisplayName("Dragonwrath Proc")]
+        [Category("Equipment Effects")]
+        public float DragonwrathProc
+        {
+            get { return _rawNoStackData[(int)NonStackingStat.DragonwrathProc]; }
+            set { _rawNoStackData[(int)NonStackingStat.DragonwrathProc] = value; }
         }
         #endregion
         #region Added by Paladins

@@ -444,6 +444,7 @@ namespace Rawr.Moonkin
                 StunDurReduc = stats.StunDurReduc,
                 BonusManaPotionEffectMultiplier = stats.BonusManaPotionEffectMultiplier,
                 HighestStat = stats.HighestStat,
+                DragonwrathProc = stats.DragonwrathProc
             };
 
             foreach (SpecialEffect effect in stats.SpecialEffects())
@@ -567,6 +568,7 @@ namespace Rawr.Moonkin
                 stats.FearDurReduc != 0 ||
                 stats.StunDurReduc != 0 ||
                 stats.BonusManaPotionEffectMultiplier != 0 ||
+                stats.DragonwrathProc != 0 ||
                 stats.HighestStat != 0;
 
             if (!SecondaryStats)
