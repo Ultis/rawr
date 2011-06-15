@@ -144,7 +144,8 @@ namespace Rawr.ProtPaladin {
                     baseDamage = Lookup.WeaponSpeed(Character, Stats) * ((0.022f * SP) + (0.011f * AP));
 
                     baseDamage *= (1.0f + 0.06f * Talents.SealsOfThePure)
-                                * (1.0f + Stats.BonusHolyDamageMultiplier);
+                                * (1.0f + Stats.BonusHolyDamageMultiplier)
+                                * (1.0f + Stats.BonusDamageShieldofRighteous);
 
                     critMultiplier = 0.0f;
                     break;

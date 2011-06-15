@@ -19,7 +19,8 @@ namespace Rawr.Base
     public enum MultiplicativeStatPaladin : int {
         // Prot
         BonusDamageMultiplierCrusaderStrike,
-        BonusDurationMultiplierGuardianOfAncientKings
+        BonusDurationMultiplierGuardianOfAncientKings,
+        BonusDamageShieldofRighteous,
         // Ret
         // Holy
         // Both
@@ -511,6 +512,15 @@ namespace Rawr.Base
         {
             get { return _rawMultiplicativePaladinData[(int)MultiplicativeStatPaladin.BonusDurationMultiplierGuardianOfAncientKings]; }
             set { _rawMultiplicativePaladinData[(int)MultiplicativeStatPaladin.BonusDurationMultiplierGuardianOfAncientKings] = value; }
+        }
+        [DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Bonus Shield of the Righteous Damage")]
+        [Category("Paladin")]
+        public float BonusDamageShieldofRighteous
+        {
+            get { return _rawMultiplicativePaladinData[(int)MultiplicativeStatPaladin.BonusDamageShieldofRighteous]; }
+            set { _rawMultiplicativePaladinData[(int)MultiplicativeStatPaladin.BonusDamageShieldofRighteous] = value; }
         }
         #endregion
         #region Ret

@@ -598,6 +598,14 @@ focus on Survival Points.",
             character.SetBonusCount.TryGetValue("Reinforced Sapphirium Battlearmor", out T11count);
             if (T11count >= 2) { statsTotal.BonusDamageMultiplierCrusaderStrike = 0.05f; }
             if (T11count >= 4) { statsTotal.BonusDurationMultiplierGuardianOfAncientKings = 0.50f; }
+            int T12count;
+            character.SetBonusCount.TryGetValue("Battlearmor of Immolation", out T12count);
+            if (T12count >= 2) { statsTotal.BonusDamageShieldofRighteous = 0.20f; }
+            if (T12count >= 4) {
+                statsBuffs.AddSpecialEffect(new SpecialEffect(Trigger.DivineProtection,
+                    new Stats() { Parry = 0.12f, },
+                    10f, 60f));
+            }
 
             statsTotal.Intellect = (float)Math.Floor(statsBase.Intellect * (1.0f + statsTalents.BonusIntellectMultiplier));
             statsTotal.Intellect += (float)Math.Floor((statsItems.Intellect + statsBuffs.Intellect) * (1.0f + statsTalents.BonusIntellectMultiplier));
@@ -683,6 +691,7 @@ focus on Survival Points.",
             triggerIntervals[Trigger.DamageTakenPhysical]                =
             triggerIntervals[Trigger.DamageTakenPutsMeBelow35PercHealth] = 
             triggerIntervals[Trigger.DamageTaken]                        = (1.0f / am.AttackerHitsPerSecond);
+            triggerIntervals[Trigger.DivineProtection] = 60f;
 
             // temporary combat table, used for the implementation of special effects.
             float hitBonusPhysical = StatConversion.GetPhysicalHitFromRating(stats.HitRating, CharacterClass.Paladin) + stats.PhysicalHit;
@@ -718,6 +727,7 @@ focus on Survival Points.",
             triggerChances[Trigger.DamageTaken] =
             triggerChances[Trigger.DamageTakenPhysical] = 1f;
             triggerChances[Trigger.DamageTakenPutsMeBelow35PercHealth] = 0.35f;
+            triggerChances[Trigger.DivineProtection] = 1f;
         }
 
         private Stats GetSpecialEffectStats(Character character, StatsPaladin stats, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts)
@@ -741,6 +751,16 @@ focus on Survival Points.",
             statsSpecialEffects.Strength += statsSpecialEffects.HighestStat + statsSpecialEffects.Paragon;
             statsSpecialEffects.HighestStat = 0;
             statsSpecialEffects.Paragon = 0;
+            if (statsSpecialEffects.HighestSecondaryStat > 0) {
+                float paragon = statsSpecialEffects.HighestSecondaryStat;
+                statsSpecialEffects.HighestSecondaryStat = 0;
+                if ((statsSpecialEffects.CritRating > statsSpecialEffects.HasteRating) && (statsSpecialEffects.CritRating > statsSpecialEffects.MasteryRating))
+                    statsSpecialEffects.CritRating += paragon;
+                else if ((statsSpecialEffects.HasteRating > statsSpecialEffects.CritRating) && (statsSpecialEffects.HasteRating > statsSpecialEffects.MasteryRating))
+                    statsSpecialEffects.HasteRating += paragon;
+                else
+                    statsSpecialEffects.MasteryRating += paragon;
+            }
 
             // Base Stats
             statsSpecialEffects.Stamina = (float)Math.Floor(statsSpecialEffects.Stamina * (1.0f + stats.BonusStaminaMultiplier));
@@ -805,6 +825,7 @@ focus on Survival Points.",
                     case Trigger.DamageTaken:
                     case Trigger.DamageTakenPhysical:
                     case Trigger.DamageTakenPutsMeBelow35PercHealth:
+                    case Trigger.DivineProtection:
                         if (effect.MaxStack != 1) {
                             uptime = effect.GetAverageStackSize(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], weaponSpeed, bossOpts.BerserkTimer);
                         } else {
@@ -1192,7 +1213,8 @@ focus on Survival Points.",
                     trigger == Trigger.JudgementHit          || trigger == Trigger.DamageParried        ||
                     trigger == Trigger.SpellCast             || trigger == Trigger.SpellHit             ||
                     trigger == Trigger.DamageSpellHit        || trigger == Trigger.DamageTaken          ||
-                    trigger == Trigger.DamageTakenPhysical   || trigger == Trigger.DamageTakenPutsMeBelow35PercHealth
+                    trigger == Trigger.DamageTakenPhysical   || trigger == Trigger.DivineProtection     ||
+                    trigger == Trigger.DamageTakenPutsMeBelow35PercHealth
             );
         }
 
@@ -1229,6 +1251,7 @@ focus on Survival Points.",
                 FrostResistanceBuff = stats.FrostResistanceBuff,
                 ShadowResistanceBuff = stats.ShadowResistanceBuff,
                 HighestStat = stats.HighestStat,
+                HighestSecondaryStat = stats.HighestSecondaryStat,
                 Paragon = stats.Paragon,
 
                 Strength = stats.Strength,
@@ -1316,6 +1339,7 @@ focus on Survival Points.",
 
                 // Special Stats
                 stats.HighestStat +
+                stats.HighestSecondaryStat +
                 stats.Paragon +
                 stats.ArcaneDamage +
                 stats.ShadowDamage +

@@ -158,6 +158,7 @@ namespace Rawr
         CrusaderStrikeHit,
         HolyRadianceActive,
         DivinePlea,
+        DivineProtection,
         #endregion
         #region Added by Shaman
         ShamanLightningBolt,
