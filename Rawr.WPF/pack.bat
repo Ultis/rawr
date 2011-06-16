@@ -1,5 +1,5 @@
 # del Rawr.zip
-7za a Rawr 4.1.05.zip ClientBin\
-7za a Rawr 4.1.05.zip images\ -r
-7za a Rawr 4.1.05.zip *.dll
-7za a Rawr 4.1.05.zip Rawr.WPF.exe
+7za a Rawr.zip ClientBin\
+7za a Rawr.zip images\ -r
+7za a Rawr.zip *.dll
+7za a Rawr.zip Rawr.WPF.exe

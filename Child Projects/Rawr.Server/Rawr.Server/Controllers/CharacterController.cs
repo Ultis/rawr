@@ -26,7 +26,8 @@ namespace Rawr.Server.Controllers
         private static int CACHE_DURATION_MIN = 2;
         private static int QUERY_FREQUENCY_MS = 2000;
         private static DateTime _queueEnd = DateTime.MinValue;
-        
+
+        [ValidateInput(false)]
         public ActionResult Index(string request)
         {
             if (string.IsNullOrWhiteSpace(request))				return View();
