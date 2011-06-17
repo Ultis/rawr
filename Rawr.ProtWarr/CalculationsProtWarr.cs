@@ -612,7 +612,7 @@ threat and limited threat scaled by the threat scale.",
 
             // First-Pass Avoidance for Accurate Special Effect Trigger Chances
             baseBonusMasteryBlockPercentage = Lookup.BonusMasteryBlockPercentage(player);
-            baseParryRatingFromStrength = (player.Stats.Strength - baseStrength) * 0.25f; // Parry Rating conversion ignores base Strength
+            baseParryRatingFromStrength = (player.Stats.Strength - baseStrength) * 0.27f; // Parry Rating conversion ignores base Strength
             player.Stats.Block += baseBonusMasteryBlockPercentage;
             player.Stats.ParryRating += baseParryRatingFromStrength; 
 

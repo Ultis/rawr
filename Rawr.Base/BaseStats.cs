@@ -89,7 +89,7 @@ namespace Rawr
                         Stats dk = new Stats() {
                             Strength = 171, Agility = 101, Stamina = 274, Intellect = 16, Spirit = 44,
                             Health = 43025f,
-                            Dodge = 0.0394f, Parry = 0.05f, Block = 0.00f,
+                            Dodge = 0.05f, Parry = 0.05f, Block = 0.00f,
                             PhysicalCrit = 0.0049f, AttackPower = 595f,
                         };
                         S.Accumulate(race);
@@ -159,7 +159,7 @@ namespace Rawr
                         Stats pal = new Stats() {
                             Strength = 144, Agility = 77, Stamina = 136, Intellect = 86, Spirit = 97,
                             Health = 43285f, Mana = 23422,
-                            Dodge = 0.0365145297f, Parry = 0.05f, Block = 0.05f,
+                            Dodge = 0.05f, Parry = 0.05f, Block = 0.05f,
                             PhysicalCrit = 0.00652f, AttackPower = 235f,
                             SpellCrit = 0.033355f,
                         };
@@ -233,7 +233,7 @@ namespace Rawr
                         Stats war = new Stats() {
                             Strength = 169, Agility = 103, Stamina = 153, Intellect = 17, Spirit = 44,
                             Health = 43285f,
-                            Dodge = 0.03758f, Parry = 0.05f, Block = 0.05f,
+                            Dodge = 0.05f, Parry = 0.05f, Block = 0.05f,
                             PhysicalCrit = 0.03192f, AttackPower = 613f,
                         };
                         S.Accumulate(race);

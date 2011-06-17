@@ -1860,7 +1860,8 @@ a GCD's length, you will use this while running back into place",
             //Stats statsProcs = new Stats();
 
             // Dodge (your dodging incoming attacks)
-            statsTotal.Dodge += StatConversion.GetDodgeFromAgility(statsTotal.Agility, dpswarchar.Char.Class);
+            // Warriors no longer gain dodge from Agility since patch 4.2
+            // statsTotal.Dodge += StatConversion.GetDodgeFromAgility(statsTotal.Agility, dpswarchar.Char.Class);
             statsTotal.Dodge += StatConversion.GetDodgeFromRating(statsTotal.DodgeRating, dpswarchar.Char.Class);
 
             // Parry (your parrying incoming attacks)

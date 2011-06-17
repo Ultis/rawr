@@ -622,7 +622,7 @@ focus on Survival Points.",
             statsTotal.Strength = (float)Math.Floor((statsBase.Strength + statsTalents.Strength) * (1.0f + statsTotal.BonusStrengthMultiplier));
             statsTotal.Strength += (float)Math.Floor((statsItems.Strength + statsBuffs.Strength) * (1.0f + statsTotal.BonusStrengthMultiplier));
 
-            statsTotal.ParryRating += (float)Math.Floor((statsTotal.Strength - statsBase.Strength) * 0.25f);
+            statsTotal.ParryRating += (float)Math.Floor((statsTotal.Strength - statsBase.Strength) * 0.27f);
 
             statsTotal.SpellPower = statsTotal.Strength * 0.60f; // Touched by the Light
             statsTotal.SpellPower += statsTotal.Intellect - 10f;
