@@ -365,8 +365,8 @@ namespace Rawr.Enhance
             float dpsSS = 0f;
             if (character.ShamanTalents.Stormstrike == 1 && calcOpts.PriorityInUse(EnhanceAbility.StormStrike) && character.MainHand != null)
             {
-                float swingDPSMH = damageMHSwing * 1.25f * cs.HitsPerSMHSS;
-                float swingDPSOH = damageOHSwing * 1.25f * cs.HitsPerSOHSS;
+                float swingDPSMH = damageMHSwing * 2.25f * cs.HitsPerSMHSS;
+                float swingDPSOH = damageOHSwing * 2.25f * cs.HitsPerSOHSS;
                 float SSnormal = (swingDPSMH * cs.YellowHitModifierMH) + (swingDPSOH * cs.YellowHitModifierOH);
                 float SScrit = ((swingDPSMH * cs.YellowCritModifierMH) + (swingDPSOH * cs.YellowCritModifierOH)) * cs.CritMultiplierMelee;
                 dpsSS = (SSnormal + SScrit) * cs.DamageReduction * /*(1f + stats.BonusStormstrikeDamageMultiplier)*/focusedStrikes * (1f + enhance2T11);
@@ -583,7 +583,7 @@ namespace Rawr.Enhance
             float dpsUW = 0f;
             if (calcOpts.PriorityInUse(EnhanceAbility.UnleashElements) && calcOpts.MainhandImbue == "Windfury" && character.MainHand != null)
             {
-                float damageUWHit = damageMHSwing * 1.25f;
+                float damageUWHit = damageMHSwing * 1.75f;
                 float UWdps = damageUWHit / cs.AbilityCooldown(EnhanceAbility.UnleashElements);
                 float UWnormal = UWdps * cs.YellowCritModifierMH;
                 float UWcrit = UWdps * cs.YellowCritModifierMH * cs.CritMultiplierMelee;
