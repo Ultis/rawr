@@ -253,15 +253,15 @@ namespace Rawr.Mage
             spell.CritProcs = spell.HitProcs * spell.CritRate;
             spell.TargetProcs = spell.HitProcs;
 
-            float damagePerSpellPower;
-            float igniteDamage;
-            float igniteDamagePerSpellPower;
-            float damagePerMastery;
-            float damagePerCrit;
-            spell.AverageDamage = spell.CalculateAverageDamage(castingState.Solver, 0, false, false, out damagePerSpellPower, out igniteDamage, out igniteDamagePerSpellPower, out damagePerMastery, out damagePerCrit);
+            spell.CalculateAverageDamage(castingState.Solver, 0, false, false);
+            spell.DamagePerSpellPower = 0;
+            spell.DamagePerMastery = 0;
+            spell.DamagePerCrit = 0;
             spell.AverageThreat = spell.AverageDamage * ThreatMultiplier;
             spell.IgniteDamage = 0;
             spell.IgniteDamagePerSpellPower = 0;
+            spell.IgniteDamagePerMastery = 0;
+            spell.IgniteDamagePerCrit = 0;
             spell.AverageCost = 0;
             spell.OO5SR = 1;
             return spell;
