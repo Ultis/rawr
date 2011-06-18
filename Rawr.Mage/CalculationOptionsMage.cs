@@ -1849,7 +1849,7 @@ namespace Rawr.Mage
             ComparisonSegmentMana = true;
             DisplaySegmentMana = true;
             IncludeManaNeutralCycleMix = true;
-            IgniteMunching = 0.35f;
+            IgniteMunching = 0.08f;
             ArcaneLight = true;
             MaxRedecompose = 50;
             ProcCombustion = true;
