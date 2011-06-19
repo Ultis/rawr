@@ -93,7 +93,7 @@ namespace Rawr
         #endregion
         #region Region
         /// <summary>Region: US, EU, KR, TW, or CN</summary>
-        [DefaultValue(CharacterRegion.US)]
+        //[DefaultValue(CharacterRegion.US)]
         public CharacterRegion Region { get { return _region; } set { _region = value; } }
         private CharacterRegion _region = CharacterRegion.US;
         /// <summary>This is a Helper variable for use with the Stats Pane UI</summary>
@@ -102,7 +102,7 @@ namespace Rawr
         #endregion
         #region Race
         /// <summary>Race, such as Night Elf</summary>
-        [XmlElement("Race")][DefaultValue(CharacterRace.NightElf)]
+        [XmlElement("Race")]//[DefaultValue(CharacterRace.NightElf)]
         public CharacterRace _race = CharacterRace.NightElf;
         [XmlIgnore]
         public CharacterRace Race { get { return _race; }
