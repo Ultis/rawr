@@ -140,7 +140,7 @@ namespace Rawr
         #endregion
         #region Class
         /// <summary>Class: Druid, Warrior, etc.</summary>
-        [DefaultValue(CharacterClass.Druid)]
+        //[DefaultValue(CharacterClass.Druid)]
         public CharacterClass Class { get { return _class; } set { _class = value; OnClassChanged(); } }
         private CharacterClass _class = CharacterClass.Druid;
         /// <summary>This is a Helper variable for use with the Stats Pane UI</summary>
