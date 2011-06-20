@@ -872,53 +872,39 @@ namespace Rawr.Enhance
         #endregion
 
         #region Buff Functions
-        /*public override void SetDefaults(Character character)
+        public override void SetDefaults(Character character)
         {
             // add shaman buffs
             character.ActiveBuffsAdd("Strength of Earth Totem");
-            character.ActiveBuffsAdd("Heroism/Bloodlust");
             character.ActiveBuffsAdd("Windfury Totem");
 
             // add other raid buffs
-            character.ActiveBuffsAdd("Blessing of Wisdom");
-            character.ActiveBuffsAdd("Improved Blessing of Wisdom");
-            character.ActiveBuffsAdd("Blessing of Might");
-            character.ActiveBuffsAdd("Improved Blessing of Might");
-            character.ActiveBuffsAdd("Sanctified Retribution");
-            character.ActiveBuffsAdd("Blessing of Sanctuary");
-            character.ActiveBuffsAdd("Swift Retribution");
-            character.ActiveBuffsAdd("Arcane Intellect");
-            character.ActiveBuffsAdd("Unleashed Rage");
+            character.ActiveBuffsAdd("Blessing of Might (AP%)");
+            character.ActiveBuffsAdd("Arcane Tactics");
             character.ActiveBuffsAdd("Commanding Shout");
-            character.ActiveBuffsAdd("Commanding Presence (Health)");
+            character.ActiveBuffsAdd("Arcane Brilliance (Mana)");
+            character.ActiveBuffsAdd("Blessing of Might (Mp5)");
+            character.ActiveBuffsAdd("Arcane Tactics");
+            character.ActiveBuffsAdd("Arcane Brilliance (SP%)");
             character.ActiveBuffsAdd("Leader of the Pack");
-            character.ActiveBuffsAdd("Elemental Oath");
-            character.ActiveBuffsAdd("Wrath of Air Totem");
-            character.ActiveBuffsAdd("Totem of Wrath (Spell Power)");
-            character.ActiveBuffsAdd("Power Word: Fortitude");
-            character.ActiveBuffsAdd("Improved Power Word: Fortitude");
+            character.ActiveBuffsAdd("Communion");
+            character.ActiveBuffsAdd("Moonkin Form");
             character.ActiveBuffsAdd("Mark of the Wild");
-            character.ActiveBuffsAdd("Improved Mark of the Wild");
-            character.ActiveBuffsAdd("Blessing of Kings");
-            character.ActiveBuffsAdd("Blessing of Kings (Str/Sta Bonus)");
-            character.ActiveBuffsAdd("Sunder Armor");
+
+            character.ActiveBuffsAdd("Flask of the Winds");
+            character.ActiveBuffsAdd("Agility Food");
+
+            // Debuffs
             character.ActiveBuffsAdd("Faerie Fire");
-            character.ActiveBuffsAdd("Heart of the Crusader");
-            character.ActiveBuffsAdd("Blood Frenzy");
-            character.ActiveBuffsAdd("Improved Scorch");
-            character.ActiveBuffsAdd("Curse of the Elements");
-            character.ActiveBuffsAdd("Hunting Party");
-            character.ActiveBuffsAdd("Flask of Endless Rage");
-            character.ActiveBuffsAdd("Potion of Speed");
-            character.ActiveBuffsAdd("Fish Feast");
+            character.ActiveBuffsAdd("Brittle Bones");
+            character.ActiveBuffsAdd("Critical Mass");
+            character.ActiveBuffsAdd("Earth and Moon");
 
             if (character.HasProfession(Profession.Alchemy))
             {
-                character.ActiveBuffsAdd(("Flask of Endless Rage (Mixology)"));
+                character.ActiveBuffsAdd(("Flask of the Winds (Mixology)"));
             }
-
-            character.EnforceGemRequirements = true; // set default to be true for Enhancement Shaman
-        }*/
+        }
 
         private Item RemoveAddedBuffs(Stats addedBuffs)
         {
