@@ -957,7 +957,7 @@ namespace Rawr
             #region Back
             {
                 enchantTemp = new Stats();
-                enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { Intellect = 580 }, 15, 60, 0.35f));
+                enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { Intellect = 580 }, 15, 64, 0.25f));
                 defaultEnchants.Add(new Enchant(4115, "Lightweave Embroidery (Rank 2)", ItemSlot.Back, enchantTemp, "spell_arcane_prismaticcloak"));
             }
             {
