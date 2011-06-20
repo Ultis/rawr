@@ -493,7 +493,7 @@ namespace Rawr.Cat
                 ((character.MainHand.MinDamage + character.MainHand.MaxDamage) / 2f) / character.MainHand.Speed,
                 attackSpeed, modArmor, hasteBonus, critMultiplier, chanceAvoided, chanceCritWhite, chanceCritYellow, chanceCritYellow,
                 chanceCritYellow, chanceCritYellow, chanceCritRake, chanceCritRip, chanceCritBite, chanceGlance);
-            var rotationCalculator = new CatRotationCalculator(abilities, bossOpts.BerserkTimer, mangleusage);
+            var rotationCalculator = new CatRotationCalculator(abilities, 450/*bossOpts.BerserkTimer*/, mangleusage);
             var optimalRotation = rotationCalculator.GetOptimalRotation(); //TODO: Check for 4T11, maintain it if so
             calculatedStats.Abilities = abilities;
             calculatedStats.HighestDPSRotation = optimalRotation;
@@ -602,6 +602,7 @@ namespace Rawr.Cat
                 statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.MangleCatAttack,
                     new Stats() { BonusAttackPowerMultiplier = 0.01f, },
                     30, 0, 1f, 3));
+                statsTotal.Tier_11_4pc = true;
                 //statsTotal.BonusSurvivalInstinctsDurationMultiplier = (1f + statsTotal.BonusSurvivalInstinctsDurationMultiplier) * (1f + 0.50f) - 1f;
             }
             int T12Count;
@@ -614,12 +615,13 @@ namespace Rawr.Cat
             if (T12Count >= 4)
             {
                 // Assume that all Finishing Moves are used at 5 combo points 
-                SpecialEffect primary = new SpecialEffect(Trigger.Berserk, new StatsCat(), statsTotal.BonusBerserkDuration, 180f);
-                SpecialEffect secondary = new SpecialEffect(Trigger.FinishingMove,
-                    new StatsCat() { BonusBerserkDuration = 2f, },
-                    0, 5f, 1f);
-                primary.Stats.AddSpecialEffect(secondary);
-                statsTotal.AddSpecialEffect(primary); 
+                // SpecialEffect primary = new SpecialEffect(Trigger.Berserk, new StatsCat(), statsTotal.BonusBerserkDuration, 180f);
+                // SpecialEffect secondary = new SpecialEffect(Trigger.FinishingMove,
+                //     new StatsCat() { BonusBerserkDuration = 2f, },
+                //     0, 5f, 1f);
+                // primary.Stats.AddSpecialEffect(secondary);
+                // statsTotal.AddSpecialEffect(primary); 
+                statsTotal.Tier_12_4pc = true;
             }
             #endregion
 

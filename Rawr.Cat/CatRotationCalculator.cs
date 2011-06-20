@@ -59,12 +59,15 @@ namespace Rawr.Cat
 		public float CPRemaining = 0f;
 		public float MangleCount = 0f;
 		public float RakeInitCount = 0f;
+        public float RipCount = 0f;
 		public float RakeTickCount = 0f;
 		public float RipTickCount = 0f;
 		public float ShredCount = 0f;
 		public float BiteCount = 0f;
 		public float RavageCount = 0f;
+        public float RoarCount = 0f;
 		public float RavageAbove80PercentCount = 0f;
+        protected int targetLevel = 88;
 
 		public CatRotationCalculation CalculateRotation(int roarCP, BiteUsage biteUsage)
 		{
@@ -75,7 +78,11 @@ namespace Rawr.Cat
 				((FightDuration - 10f) / TigersFuryStats.Cooldown) * (TigersFuryStats.EnergyGenerated + TigersFuryStats.MaxEnergyIncrease / 4f) + //TF Energy
 				((FightDuration - 10f) / BerserkStats.Cooldown) * (TigersFuryStats.MaxEnergyIncrease / 4f); //Berserk Energy
 			float tfUptime = ((((FightDuration - 10f) / TigersFuryStats.Cooldown) * TigersFuryStats.Duration) / FightDuration);
-			float berserkUptime = ((((FightDuration - 10f) / BerserkStats.Cooldown) * BerserkStats.Duration) / FightDuration);
+            float berserkUptime = 0f;
+            if (Abilities.Stats.Tier_12_4pc)
+                berserkUptime = (((FightDuration - 10f) / BerserkStats.Cooldown) * BerserkStats.Duration + derive4t12BerserkExt()) / FightDuration;
+            else
+                berserkUptime = (((FightDuration - 10f) / BerserkStats.Cooldown) * BerserkStats.Duration) / FightDuration;
 			float energyCostMultiplier = 1f - (1f - BerserkStats.EnergyCostMultiplier) * berserkUptime; //Average energy cost reduction due to Berserk
 			float damageMultiplier = 1f + TigersFuryStats.DamageMultiplier * tfUptime;
 
@@ -87,6 +94,7 @@ namespace Rawr.Cat
 			ShredCount = 0f;
 			BiteCount = 0f;
 			RavageCount = 0f;
+            RoarCount = 0f;
 			RavageAbove80PercentCount = 0f;
 			EnergyCostMultiplier = energyCostMultiplier;
 			EnergyRemaining = totalEnergy / energyCostMultiplier;
@@ -139,8 +147,8 @@ namespace Rawr.Cat
 
 			//1. Rip
 			float ripUptimeSec = FightDuration - ripLeadUpTime;
-			float ripCount = (ripUptimeSec - FightDuration * BiteStats.RipRefreshChanceOnTargetsBelow25Percent * PercentOfTimeBelow25Percent) / RipStats.Duration;
-			Rip(ripCount);
+			RipCount = (ripUptimeSec - FightDuration * BiteStats.RipRefreshChanceOnTargetsBelow25Percent * PercentOfTimeBelow25Percent) / RipStats.Duration;
+            Rip(RipCount);
 			RipTick(ripUptimeSec / 2f);
 
 			//2. Roar
@@ -153,8 +161,8 @@ namespace Rawr.Cat
 
 			float roarUptimeSec = FightDuration - roarLeadUpTime;
 			float meleeDamageMultiplier = 1f + RoarStats.MeleeDamageMultiplier * roarUptimeSec / FightDuration;
-			float roarCount = roarUptimeSec / roarDurationAverage;
-			Roar(roarCount, roarCPAverage);
+			RoarCount = roarUptimeSec / roarDurationAverage;
+            Roar(RoarCount, roarCPAverage);
 
 			//3. Rake
 			float rakeUptimeSec = FightDuration - rakeLeadUpTime;
@@ -307,7 +315,25 @@ namespace Rawr.Cat
 			CPRemaining += ShredStats.ComboPointsGenerated * count;
 			ShredCount += count;
 		}
-	}
+
+
+        /**
+         * Calculate approximate berserk extention due to 4T12.
+        */
+        private float derive4t12BerserkExt()
+        {
+            float tier_12_4pc_procRate = 0.20f;
+            float tier_12_4pc_extDuration = 2f;
+            float roarCP = 5f;
+            float cycles = FightDuration / 6f;
+
+            float nr5ptFinishers = RipCount + BiteCount;
+            float srExt = tier_12_4pc_procRate * roarCP * RoarCount;
+            float totalExtend = (srExt + nr5ptFinishers) / cycles * (BerserkStats.Cooldown / BerserkStats.Duration) * tier_12_4pc_extDuration;
+
+            return totalExtend;
+        }
+    }
 
 	public class CatRotationCalculation
 	{
@@ -359,4 +385,6 @@ namespace Rawr.Cat
 		LowEnergy,
 		HighEnergy
 	}
+
+
 }

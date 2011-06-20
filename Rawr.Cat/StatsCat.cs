@@ -22,6 +22,8 @@ namespace Rawr.Cat
 		public float FerociousBiteMaxExtraEnergyReduction { get; set; }
 		public float FreeRavageOnFeralChargeChance { get; set; }
 		public float RipRefreshChanceOnFerociousBiteOnTargetsBelow25Percent { get; set; }
+        public bool Tier_11_4pc { get; set; }
+        public bool Tier_12_4pc { get; set; }
 		
 		public WeightedStat[] TemporaryCritRatingUptimes { get; set; }
 	}

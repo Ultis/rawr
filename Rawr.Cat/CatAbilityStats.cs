@@ -6,15 +6,15 @@ namespace Rawr.Cat
 {
 	public class CatAbilityBuilder
 	{
-		protected StatsCat Stats { get; private set; }
-        protected DruidTalents Talents { get; private set; }
+		public StatsCat Stats { get; private set; }
+        public DruidTalents Talents { get; private set; }
 		protected float WeaponDPS { get; private set; }
 		protected float AttackSpeed { get; private set; }
 		protected float ArmorDamageMultiplier { get; private set; }
 		protected float HasteBonus { get; private set; }
 		protected float CritMultiplier { get; private set; }
-		protected float ChanceAvoided { get; private set; }
-		protected float ChanceCritMelee { get; private set; }
+		public float ChanceAvoided { get; private set; }
+		public float ChanceCritMelee { get; private set; }
 		protected float ChanceCritFurySwipes { get; private set; }
 		protected float ChanceCritMangle { get; private set; }
 		protected float ChanceCritRavage { get; private set; }
@@ -83,7 +83,16 @@ namespace Rawr.Cat
 		}
 
 
-		private MeleeStats _meleeStats = null;
+        public float GetCooldownUptime(float up, float down, int total)
+        {
+            float fullUses = total/down;
+            float timeLeft = total - fullUses * down;
+            float partialUp = (timeLeft >= up) ? up : timeLeft;
+            return up * fullUses + partialUp;
+        }
+
+        
+        private MeleeStats _meleeStats = null;
 		public MeleeStats MeleeStats
 		{
 			get
@@ -113,6 +122,7 @@ namespace Rawr.Cat
 																((ChanceCritFurySwipes) * (_meleeStats.DamageFurySwipesRaw * CritMultiplier)) +
 																((1f - ChanceCritFurySwipes) * (_meleeStats.DamageFurySwipesRaw))
 															);
+                    _meleeStats.FurySwipesCD = 3f;
 
 					
 					if (FurySwipesChance > 0)
@@ -214,6 +224,8 @@ namespace Rawr.Cat
 					_rakeStats.DamageTickRaw = (56f + AttackPower * 0.147f) * DamageMultiplier * PhysicalDamageMultiplier * BleedDamageMultiplier * NonShredBleedDamageMultiplier * RakeDamageMultiplier * RakeTickDamageMultiplier;
 					_rakeStats.DamageTickAverage = ((ChanceCritRake) * (_rakeStats.DamageTickRaw * CritMultiplier)) +
 												((1f - ChanceCritRake) * (_rakeStats.DamageTickRaw));
+                    _rakeStats.TickInterval = 3.0f;
+                    _rakeStats.NumberofTicks = _rakeStats.Duration / _rakeStats.TickInterval;
 				}
 				return _rakeStats;
 			}
@@ -235,6 +247,8 @@ namespace Rawr.Cat
 					_ripStats.DamageTickRaw = (861f + AttackPower * 0.1035f) * DamageMultiplier * PhysicalDamageMultiplier * BleedDamageMultiplier * NonShredBleedDamageMultiplier * RipDamageMultiplier;
 					_ripStats.DamageTickAverage = ((ChanceCritRip) * (_ripStats.DamageTickRaw * CritMultiplier)) +
 												((1f - ChanceCritRip) * (_ripStats.DamageTickRaw));
+                    _ripStats.TickInterval = 2f;
+                    _ripStats.NumberofTicks = _ripStats.Duration / _ripStats.TickInterval;
 				}
 				return _ripStats;
 			}
@@ -315,7 +329,6 @@ namespace Rawr.Cat
 				return _berserkStats;
 			}
 		}
-
 		public static string BuildTooltip(params object[] fields)
 		{
 			StringBuilder sb = new StringBuilder();
@@ -338,6 +351,7 @@ namespace Rawr.Cat
 		public float DamageRoarAverage { get; set; }
 		public float DamageFurySwipesRaw { get; set; }
 		public float DamageFurySwipesAverage { get; set; }
+        public float FurySwipesCD { get; set; }
 		public float AttackSpeed { get; set; }
 		public float DPSAverage { get; set; }
 		public float DPSRoarAverage { get; set; }
@@ -431,6 +445,8 @@ namespace Rawr.Cat
 		public float DamageTickAverage { get; set; }
 		public float ComboPointsGenerated { get; set; }
 		public float TickClearcastChance { get; set; }
+        public float TickInterval { get; set; }
+        public float NumberofTicks { get; set; }
 
 		public override string ToString()
 		{
@@ -452,6 +468,8 @@ namespace Rawr.Cat
 		public float DamageTickRaw { get; set; }
 		public float DamageTickAverage { get; set; }
 		public float TickClearcastChance { get; set; }
+        public float TickInterval { get; set; }
+        public float NumberofTicks { get; set; }
 
 		public override string ToString()
 		{
