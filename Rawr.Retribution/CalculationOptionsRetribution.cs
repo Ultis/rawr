@@ -22,6 +22,10 @@ namespace Rawr.Retribution
         [DefaultValue(3)]
         public int HPperInq { get { return hPperInq; } set { hPperInq = value; OnPropertyChanged("HPperInq"); } }
         private int hPperInq = 3;
+
+        [DefaultValue(false)]
+        public bool PTR_Mode { get { return ptr_Mode; } set { ptr_Mode = value; OnPropertyChanged("PTR_Mode"); } }
+        private bool ptr_Mode = false;
         
         #region Stat Graph
         [DefaultValue(new bool[] { true, true, true, true, true, /**/ true, true, true, })]

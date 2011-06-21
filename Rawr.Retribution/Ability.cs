@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace Rawr.Retribution
 {
-    public abstract class Ability<T, K> where T : TalentsBase where K : Stats
+    public abstract class Ability<T, S, C> where T : TalentsBase where S : Stats where C : ICalculationOptionBase
     {
-        public Ability(string name, Character character, K stats, AbilityType abilityType, DamageType damageType, bool hasGCD = true)
+        public Ability(string name, Character character, S stats, AbilityType abilityType, DamageType damageType, bool hasGCD = true)
         {
             _name = name;
             _character = character;
@@ -21,7 +21,7 @@ namespace Rawr.Retribution
             else
                 GCD = 0f;
 
-            _triggers = new List<Ability<T,K>>();
+            _triggers = new List<Ability<T,S,C>>();
         }
 
         #region Base
@@ -31,8 +31,9 @@ namespace Rawr.Retribution
         public Character Character { get { return _character; } }
         protected T _talents;
         public T Talents { get { return (T)_talents; } }
-        protected K _stats;
-        public K Stats { get { return _stats; } }
+        protected S _stats;
+        public S Stats { get { return _stats; } }
+        public C CalcOps { get { return (C)_character.CalculationOptions; } }
 
         public virtual BaseCombatTable CT { get; protected set; }
 
@@ -189,15 +190,15 @@ namespace Rawr.Retribution
         #endregion
 
         #region Triggered Abilities
-        protected List<Ability<T, K>> _triggers;
-        public void AddTrigger(Ability<T, K> ability) {
+        protected List<Ability<T, S, C>> _triggers;
+        public void AddTrigger(Ability<T, S, C> ability) {
             _triggers.Add(ability);
             _AverageDamageWithTriggers += ability.AverageDamageWithTriggers;
         }
         protected float GetAverageDamageFromTriggers()
         {
             float damage = 0f;
-            foreach (Ability<T, K> ability in _triggers)
+            foreach (Ability<T, S, C> ability in _triggers)
                 damage += ability.AverageDamageWithTriggers;
             return damage;
         }
@@ -211,7 +212,7 @@ namespace Rawr.Retribution
                 return "";
 
             string abilityTooltip = "\n\nTriggers:";
-            foreach (Ability<T, K> ability in _triggers)
+            foreach (Ability<T, S, C> ability in _triggers)
                 abilityTooltip += string.Format("\n{0:N0} Damage from {1}", ability.AverageDamage, ability.Name) + ability.GetTriggerOutput();
             return abilityTooltip;
         }

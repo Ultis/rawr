@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rawr.Retribution
 {
-    public abstract class Skill : Ability<PaladinTalents, StatsRetri>
+    public abstract class Skill : Ability<PaladinTalents, StatsRetri, CalculationOptionsRetribution>
     {
         public Skill(string name, Character character, StatsRetri stats, AbilityType abilityType, DamageType damageType, bool hasGCD = true) : base (name, character, stats, abilityType, damageType, hasGCD) 
         {
@@ -84,7 +84,7 @@ namespace Rawr.Retribution
             Cooldown = Duration;
         }
         private int HP;
-        public float Duration { get { return (HP + (_stats.T11_4P ? 1f : 0f)) * 4f * (1f + Talents.InquiryOfFaith * PaladinConstants.INQUIRY_OF_FAITH_INQ); } }
+        public float Duration { get { return (HP + (_stats.T11_4P ? 1f : 0f)) * 4f * (1f + Talents.InquiryOfFaith * PaladinConstants.INQUIRY_OF_FAITH_INQ * (CalcOps.PTR_Mode ? 4f/3f : 1)); } }
     }
 
     public class TemplarsVerdict : Skill
@@ -288,7 +288,7 @@ namespace Rawr.Retribution
         public SealOfRighteousness(Character character, StatsRetri stats) : base("Seal of Righteousness", character, stats, AbilityType.Spell) 
         {
             CT = new BaseSpellCombatTable(Character.BossOptions, _stats, Attacktype.Spell);
-            CT.CanCrit = false;
+            CT.CanCrit = (CalcOps.PTR_Mode ? true : false);
             CT.CanMiss = false;
             AbilityDamage = AbilityHelper.BaseWeaponSpeed(_character) * (PaladinConstants.SOR_COEFF_AP * _stats.AttackPower +
                                                                          PaladinConstants.SOR_COEFF_SP * _stats.SpellPower);
