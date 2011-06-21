@@ -477,7 +477,7 @@ namespace Rawr
         public Stats GetAverageStats(Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances, float attackSpeed = 3.0f, float fightDuration = 0.0f, float scale = 1.0f)
         {
             Stats stats = new Stats();
-            AccumulateAverageStats(stats, triggerIntervals, triggerChances, attackSpeed, fightDuration);
+            AccumulateAverageStats(stats, triggerIntervals, triggerChances, attackSpeed, fightDuration, scale);
             return stats;
         }
 
@@ -494,7 +494,11 @@ namespace Rawr
         /// <param name="scale">Scale factor.</param>
         public float AccumulateAverageStats(Stats stats, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances, float attackSpeed = 3.0f, float fightDuration = 0.0f, float scale = 1.0f)
         {
-            float factor = scale * GetAverageFactor(triggerIntervals[Trigger], triggerChances[Trigger], attackSpeed, fightDuration);
+            float factor = scale;
+            if (triggerIntervals.ContainsKey(Trigger) && triggerChances.ContainsKey(Trigger))
+                factor *= GetAverageFactor(triggerIntervals[Trigger], triggerChances[Trigger], attackSpeed, fightDuration);
+            else
+                factor *= 0;
 
             Stats.GenerateSparseData();
             if (Stats.ContainsSpecialEffect())

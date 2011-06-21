@@ -773,9 +773,9 @@ namespace Rawr.Retribution
             bool relevant = base.IsBuffRelevant(buff, character);
 
             // Next we use our special stat relevancy filtering on consumables. (party buffs only need filtering on relevant stats)
-            if (relevant && (buff.Group == "Elixirs and Flasks" || buff.Group == "Potion" || buff.Group == "Food" || buff.Group == "Scrolls" || buff.Group == "Temporary Buffs"))
+            if (relevant && (buff.Group == "Elixirs and Flasks" || buff.Group == "Potion" || buff.Group == "Food" || buff.Group == "Scrolls" || buff.Group == "Temporary Buffs" || buff.Group == "Dark Intent"))
                 relevant = HasPrimaryStats(buff.Stats) || (HasSecondaryStats(buff.Stats) && !HasUnwantedStats(buff.Stats));
-
+            
             return relevant;
         }
 
@@ -1013,7 +1013,7 @@ namespace Rawr.Retribution
             {
                 foreach (SpecialEffect effect in stats.SpecialEffects())
                 {
-                    if (/*RelevantTriggers.Contains(effect.Trigger) && */HasUnwantedStats(effect.Stats))    // An unwanted stat could be behind a trigger we don't model.
+                    if (!RelevantTriggers.Contains(effect.Trigger) || (_RelevantTriggers.Contains(effect.Trigger) && HasUnwantedStats(effect.Stats)))    // An unwanted stat could be behind a trigger we don't model.
                     {
                         UnwantedStats = true;
                         break;
