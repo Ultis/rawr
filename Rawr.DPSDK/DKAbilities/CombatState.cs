@@ -19,8 +19,12 @@ namespace Rawr.DK
         private uint _uDiseaseCount;
         public uint m_uDiseaseCount
         {
-            get { return Math.Min(2, _uDiseaseCount); } 
-            set{_uDiseaseCount = value;}
+            get
+            {
+                if (m_Stats.b2T12_Tank) _uDiseaseCount = 2;
+                return Math.Min(2, _uDiseaseCount); 
+            } 
+            set{ _uDiseaseCount = value; }
         }
         public int m_CurrentRP;
         public bool m_bAttackingFromBehind;

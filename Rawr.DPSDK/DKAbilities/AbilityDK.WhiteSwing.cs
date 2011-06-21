@@ -69,8 +69,12 @@ namespace Rawr.DK
 
             // Factor in max value for Crit, Hit, Glancing
             float glancedamage = iDamage * .5f * glancechance;
-            float critdamage = iDamage * (float)Math.Min(CritChance, 1f - (glancechance + 1-HitChance)) * 2;
+            float critdamage = iDamage * CritChance * 2;
             float hitdamage = iDamage * HitChance;
+#if DEBUG
+            if ((glancechance + CritChance + HitChance) > 1f)
+                throw new Exception("Over hit cap Check values.");
+#endif
             iDamage = critdamage + hitdamage + glancedamage;
             if (wMH.twohander)
                 iDamage *= (1f + .04f * CState.m_Talents.MightOfTheFrozenWastes);
@@ -124,6 +128,10 @@ namespace Rawr.DK
                 ChanceToHit -= Math.Max(0, fDodgeChanceForTarget);
                 if (CState != null && !CState.m_bAttackingFromBehind)
                     ChanceToHit -= Math.Max(0, fParryChanceForTarget);
+#if DEBUG
+                if (ChanceToHit < 0 || ChanceToHit > 1)
+                    throw new Exception("Chance to hit out of range.");
+#endif
                 return ChanceToHit;
             }
         }

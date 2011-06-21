@@ -37,6 +37,8 @@ namespace Rawr.DPSDK
         public float[] DPUthreatSub = new float[EnumHelper.GetCount(typeof(DKability))];
         public float[] DPUtpsSub = new float[EnumHelper.GetCount(typeof(DKability))];
 
+        public float WhiteHitChance;
+        public float YellowHitChance;
         public float WhiteDPS
         {
             get { return dpsSub[(int)DKability.White] + dpsSub[(int)DKability.WhiteOH]; }
@@ -342,7 +344,8 @@ namespace Rawr.DPSDK
             dictValues.Add("Avoided Attacks",   string.Format("{0:P}*{1:P} Dodged, {2:P} Missed", AvoidedAttacks, DodgedAttacks, MissedAttacks));
             dictValues.Add("Enemy Mitigation",  string.Format("{0:P}*{1:0} effective enemy armor", EnemyMitigation, EffectiveArmor));
 
-//            dictValues.Add("Blood Boil", string.Format("{0:N2}*{1:P}", dpsSub[(int)DKability.BloodBoil], (float)damSub[(int)DKability.BloodBoil] / DPSPoints));
+            dictValues.Add("White HitChance", string.Format("{0:P0.00}*Include Glance & Crit Chance", WhiteHitChance * 100));
+            dictValues.Add("Yellow HitChance", string.Format("{0:P0.00}", YellowHitChance * 100));
 
             foreach (int i in EnumHelper.GetValues(typeof(DKability)))
             {

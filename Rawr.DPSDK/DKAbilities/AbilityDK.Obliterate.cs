@@ -16,7 +16,7 @@ namespace Rawr.DK
             this.AbilityCost[(int)DKCostTypes.Frost] = 1;
             this.AbilityCost[(int)DKCostTypes.UnHoly] = 1;
             this.bWeaponRequired = true;
-            this.fWeaponDamageModifier = 1.6f;
+            this.fWeaponDamageModifier = 1.5f;
             this.bTriggersGCD = true;
             // Physical Damage * .125 * # diseases on target may consume the diseases.
             this.AbilityIndex = (int)DKability.Obliterate;
@@ -85,6 +85,13 @@ namespace Rawr.DK
             {
                 return base.CritChance + CState.m_Stats.BonusCritChanceObliterate;
             }
+        }
+
+        public override float GetTickDamage()
+        {
+            float baseTickDamage = base.GetTickDamage();
+            float FireBonusDamage = CState.m_Stats.b4T12_DPS ? baseTickDamage * .06f : 0;
+            return baseTickDamage + (FireBonusDamage * (1 + CState.m_Stats.BonusFireDamageMultiplier));
         }
     }
 }

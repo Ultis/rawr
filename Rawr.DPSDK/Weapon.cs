@@ -62,6 +62,12 @@ namespace Rawr.DK {
             }
             #endregion
 
+#if DEBUG
+            if (chanceDodged < 0
+                || chanceParried < 0
+                || chanceMissed < 0)
+                throw new Exception("Chance to hit out of range.");
+#endif
             #region White Damage
             {
                 // White damage per hit.  Basic white hits are use elsewhere.

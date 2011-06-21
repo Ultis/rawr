@@ -39,6 +39,10 @@ namespace Rawr.DK
         /// Increased raw max RP.
         /// </summary>
         public float BonusMaxRunicPower { get; set; }
+        /// <summary>
+        /// T12 4p DPS bonus damage as fire.
+        /// </summary>
+        public float BonusDamageAsFire { get; set; }
         
         public bool b2T11_Tank { get; set; }
         public bool b4T11_Tank { get; set; }

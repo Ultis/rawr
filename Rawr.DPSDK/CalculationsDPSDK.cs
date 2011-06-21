@@ -293,7 +293,9 @@ namespace Rawr.DPSDK
                         "Attack Speed",
                         "Crit Chance",
                         "Avoided Attacks",
-                        "Enemy Mitigation",};
+                        "Enemy Mitigation",
+                        "White HitChance",
+                        "Yellow HitChance"};
                     labels.AddRange(BuildLabels(szPreAdvanced, szAdvStats));
                     string szPreDPSBreakdown = "DPS Breakdown";
                     string[] szDPSBreakdown = new string[EnumHelper.GetCount(typeof(DKability))];
@@ -511,6 +513,10 @@ namespace Rawr.DPSDK
 
             #endregion
 
+            // Stats as Fire damage additive value proc.
+            if (stats.FireDamage > 1) calc.dpsSub[(int)DKability.OtherFire] += stats.FireDamage;
+            // Fire Damage Multiplier.
+
             calc.RotationTime = rot.CurRotationDuration;
             calc.Blood = rot.m_BloodRunes;
             calc.Frost = rot.m_FrostRunes;
@@ -521,7 +527,10 @@ namespace Rawr.DPSDK
 
             calc.EffectiveArmor = stats.Armor;
 
-            calc.OverallPoints = calc.DPSPoints = rot.m_DPS + calc.dpsSub[(int)DKability.Ghoul] + calc.dpsSub[(int)DKability.Gargoyle];
+            calc.OverallPoints = calc.DPSPoints = rot.m_DPS 
+                // Add in supplemental damage from other sources
+                + calc.dpsSub[(int)DKability.Ghoul] + calc.dpsSub[(int)DKability.Gargoyle]
+                + calc.dpsSub[(int)DKability.OtherArcane] + calc.dpsSub[(int)DKability.OtherFire] + calc.dpsSub[(int)DKability.OtherFrost] + calc.dpsSub[(int)DKability.OtherHoly] + calc.dpsSub[(int)DKability.OtherNature] + calc.dpsSub[(int)DKability.OtherShadow];
             float[] PetDPS = new float[(int)EnumHelper.GetCount(typeof(DKability))];
             PetDPS[(int)DKability.Army] = calc.dpsSub[(int)DKability.Army];
             PetDPS[(int)DKability.BloodParasite] = calc.dpsSub[(int)DKability.BloodParasite];
@@ -530,9 +539,22 @@ namespace Rawr.DPSDK
             if (needsDisplayCalculations)
             {
                 AbilityDK_Base a = rot.GetAbilityOfType(DKability.White);
+                if (rot.ml_Rot.Count > 1)
+                {
+                    AbilityDK_Base b;
+                    b = rot.GetAbilityOfType(DKability.ScourgeStrike);
+                    if (b == null) b = rot.GetAbilityOfType(DKability.FrostStrike);
+                    calc.YellowHitChance = b.HitChance + b.CritChance;
+                }
+                calc.WhiteHitChance = a.HitChance + a.CritChance + .23f; // + glancing
                 calc.MHWeaponDPS = (a == null ? 0 : rot.GetAbilityOfType(DKability.White).DPS);
                 calc.MHWeaponDamage = combatTable.MH.damage;
                 calc.MHAttackSpeed = combatTable.MH.hastedSpeed;
+                calc.DodgedAttacks = combatTable.MH.chanceDodged;
+                calc.AvoidedAttacks = combatTable.MH.chanceDodged;
+                if (!hBossOptions.InBack)
+                    calc.AvoidedAttacks += combatTable.MH.chanceParried;
+                calc.MissedAttacks = combatTable.MH.chanceMissed;
                 if (null != combatTable.OH)
                 {
                     a = rot.GetAbilityOfType(DKability.WhiteOH);
@@ -705,11 +727,11 @@ namespace Rawr.DPSDK
 
             #region Tank
             #region T11
-            int t11count;
-            if (character.SetBonusCount.TryGetValue("Magma Plated Battlearmor", out t11count))
+            int tierCount;
+            if (character.SetBonusCount.TryGetValue("Magma Plated Battlearmor", out tierCount))
             {
-                if (t11count >= 2) { statsBuffs.b2T11_Tank = true; }
-                if (t11count >= 4) { statsBuffs.b4T11_Tank = true; }
+                if (tierCount >= 2) { statsBuffs.b2T11_Tank = true; }
+                if (tierCount >= 4) { statsBuffs.b4T11_Tank = true; }
             }
             if (statsBuffs.b4T11_Tank)
                 statsBuffs.AddSpecialEffect(_SE_IBF[1]);
@@ -717,26 +739,34 @@ namespace Rawr.DPSDK
                 statsBuffs.AddSpecialEffect(_SE_IBF[0]);
             #endregion
             #region T12
-            // No Set names yet.
+            if (character.SetBonusCount.TryGetValue("Elementium Deathplate Battlearmor", out tierCount))
+            {
+                if (tierCount >= 2) { statsBuffs.b2T12_Tank = true; }
+                if (tierCount >= 4) { statsBuffs.b4T12_Tank = true; }
+            }
             if (statsBuffs.b2T12_Tank)
             {
                 // Your melee attacks cause Burning Blood on your target, 
                 // which deals 800 Fire damage every 2 for 6 sec and 
                 // causes your abilities to behave as if you had 2 diseases 
                 // present on the target.
+
+                // Implemented in CombatState DiseaseCount
+                statsBuffs.FireDamage = 800 / 2;
             }
             if (statsBuffs.b4T12_Tank)
             {
                 // Your Dancing Rune Weapon grants 15% additional parry chance.
+                // Implemented in DRW talent Static Special Effect.
             }
             #endregion
             #endregion
             #region DPS
             #region T11
-            if (character.SetBonusCount.TryGetValue("Magma Plated Battlegear", out t11count))
+            if (character.SetBonusCount.TryGetValue("Magma Plated Battlegear", out tierCount))
             {
-                if (t11count >= 2) { statsBuffs.b2T11_DPS = true; }
-                if (t11count >= 4) { statsBuffs.b4T11_DPS = true; }
+                if (tierCount >= 2) { statsBuffs.b2T11_DPS = true; }
+                if (tierCount >= 4) { statsBuffs.b4T11_DPS = true; }
                 if (statsBuffs.b2T11_DPS)
                 {
                     statsBuffs.BonusCritChanceDeathCoil += .05f;
@@ -754,7 +784,11 @@ namespace Rawr.DPSDK
             }
             #endregion
             #region T12
-            // No Set names yet.
+            if (character.SetBonusCount.TryGetValue("Elementium Deathplate Battlegear", out tierCount))
+            {
+                if (tierCount >= 2) { statsBuffs.b2T12_DPS = true; }
+                if (tierCount >= 4) { statsBuffs.b4T12_DPS = true; }
+            }
             if (statsBuffs.b2T12_DPS)
             {
                 // Horn of Winter also grats 3 RPp5
@@ -762,10 +796,8 @@ namespace Rawr.DPSDK
             }
             if (statsBuffs.b4T12_DPS)
             {
-                // Melee Crits grant additional +15% damage as fire.
-                statsBuffs.AddSpecialEffect(new SpecialEffect(Trigger.MeleeCrit,
-                    new Stats() { FireDamage = 0.15f, },
-                    30, 0, 1f, 3));
+                // Your Obliterate and Scourge Strike abilities instantly deal 6% additional damage as Fire damage.
+                // Implemented in Oblit and SS classes.
             }
             #endregion
             #endregion
@@ -1001,8 +1033,8 @@ namespace Rawr.DPSDK
                         // Whenever you hit with Blood strike, pestilence, or Festering strike, the runes spent will 
                         // become death runes when they activate.
                         // Unholy Might
-                        // Str +5%
-                        FullCharacterStats.BonusStrengthMultiplier += .05f;
+                        // Str +20%
+                        FullCharacterStats.BonusStrengthMultiplier += .2f;
                         // Mastery: Blightcaller.
                         // Increases shadow damage by 20% + 
                         // Each point of mastery increases shadow damage by an additional 2.5%
@@ -1309,7 +1341,7 @@ namespace Rawr.DPSDK
                 {
                     // WhiteDamage Bonus in WhiteDamage Ability.
                     if (character.MainHand != null && character.MainHand.Slot == ItemSlot.TwoHand)
-                        FullCharacterStats.BonusPhysicalDamageMultiplier += .04f * character.DeathKnightTalents.MightOfTheFrozenWastes;
+                        FullCharacterStats.BonusPhysicalDamageMultiplier += (.1f/3) * character.DeathKnightTalents.MightOfTheFrozenWastes;
                 }
 
                 // Howling Blast.
@@ -1437,7 +1469,6 @@ namespace Rawr.DPSDK
                 // TODO: To Implment in DeathCoil
 
                 // Summon Gargoyle
-                // TODO: Implement Gargoyle
             }
             #endregion
         }

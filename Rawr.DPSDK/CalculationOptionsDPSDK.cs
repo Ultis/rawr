@@ -15,7 +15,7 @@ namespace Rawr.DPSDK
             get { return _presence; }
             set
             {
-                _presence = value; /*OnPropertyChanged("PresenceByIndex")*/;
+                _presence = value; 
             }
         }
         [XmlIgnore]
@@ -28,10 +28,11 @@ namespace Rawr.DPSDK
             {
                 _presenceByIndex = value;
                 presence = (Presence)value;
-                OnPropertyChanged("PresenceByIndex"); 
+                OnPropertyChanged("PresenceByIndex");
             }
         }
 
+        [DefaultValue(1f)]
         private float _GhoulUptime = 1f;
         public float GhoulUptime
         {
@@ -39,59 +40,46 @@ namespace Rawr.DPSDK
             set { _GhoulUptime = value; OnPropertyChanged("GhoulUptime"); }
         }
 
+        [DefaultValue(1f)]
         private float _KMProcUsage = 1f;
         public float KMProcUsage
         {
             get { return _KMProcUsage; }
             set { _KMProcUsage = value; OnPropertyChanged("KMProcUsage"); }
         }
-        
+
+        [DefaultValue(true)]
         private bool _Ghoul = true;
         public bool Ghoul
         {
             get { return _Ghoul; }
             set { _Ghoul = value; OnPropertyChanged("Ghoul"); }
         }
-        
-        private bool _getRefreshForReferenceCalcs = true;
-        public bool GetRefreshForReferenceCalcs
-        {
-            get { return _getRefreshForReferenceCalcs; }
-            set { _getRefreshForReferenceCalcs = value; }
-        }
 
-        private bool _getRefreshForDisplayCalcs = true;
-        public bool GetRefreshForDisplayCalcs
-        {
-            get { return _getRefreshForDisplayCalcs; }
-            set { _getRefreshForDisplayCalcs = value; }
-        }
-
-        private bool _getRefreshForSignificantChange = false;
-        public bool GetRefreshForSignificantChange
-        {
-            get { return _getRefreshForSignificantChange; }
-            set { _getRefreshForSignificantChange = value; }
-        }
-
+        [DefaultValue(false)]
         private bool _m_bExperimental = false;
         public bool m_bExperimental
         {
             get { return _m_bExperimental; }
             set { _m_bExperimental = value; OnPropertyChanged("m_bExperimental"); }
         }
+
+        [DefaultValue(true)]
         private bool _HideBadItems_Def = true;
         public bool HideBadItems_Def
         {
             get { return _HideBadItems_Def; }
             set { _HideBadItems_Def = value; OnPropertyChanged("HideBadItems_Def"); }
         }
+
+        [DefaultValue(true)]
         private bool _HideBadItems_Spl = true;
         public bool HideBadItems_Spl
         {
             get { return _HideBadItems_Spl; }
             set { _HideBadItems_Spl = value; OnPropertyChanged("HideBadItems_Spl"); }
         }
+        [DefaultValue(false)]
         private bool _HideBadItems_PvP = false;
         public bool HideBadItems_PvP
         {

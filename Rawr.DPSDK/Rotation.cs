@@ -23,9 +23,9 @@ namespace Rawr.DK
         /// The rotation list of abilities.
         /// </summary>
         public List<AbilityDK_Base> ml_Rot;
-        private List<AbilityDK_Base> _RotCache;
-        private Type _RotCacheType = Type.Unknown;
-        private float _cachedHaste;
+//        private List<AbilityDK_Base> _RotCache;
+//        private Type _RotCacheType = Type.Unknown;
+//        private float _cachedHaste;
 
         /// <summary>
         /// Set to prioritize threat over DPS.

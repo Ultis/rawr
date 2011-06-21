@@ -337,15 +337,22 @@ namespace Rawr.DK
                     float ChanceToHit = 1 - CritChance;
                     // Determine Dodge chance
                     float fDodgeChanceForTarget = 0;
-                    fDodgeChanceForTarget = StatConversion.YELLOW_DODGE_CHANCE_CAP[3] - StatConversion.GetDodgeParryReducFromExpertise(CState.m_Stats.Expertise);
+                    if (wMH != null) fDodgeChanceForTarget = wMH.chanceDodged;
                     // Determine Parry Chance  (Only for Tank... Since only they should be in front of the target.)
-                    float fParryChanceForTarget = StatConversion.YELLOW_PARRY_CHANCE_CAP[3] - StatConversion.GetDodgeParryReducFromExpertise(CState.m_Stats.Expertise);
+                    float fParryChanceForTarget = 0;
+                    if (wMH != null) fParryChanceForTarget = wMH.chanceParried;
                     // Determine Miss Chance
-                    float fMissChance = (StatConversion.YELLOW_MISS_CHANCE_CAP[3] - CState.m_Stats.PhysicalHit);
-                    ChanceToHit -= Math.Max(0, fMissChance);
-                    ChanceToHit -= Math.Max(0, fDodgeChanceForTarget);
+                    float fMissChance = Math.Max(0, (StatConversion.YELLOW_MISS_CHANCE_CAP[3] - CState.m_Stats.PhysicalHit));
+                    ChanceToHit -= fMissChance;
+                    ChanceToHit -= fDodgeChanceForTarget;
                     if (CState != null && !CState.m_bAttackingFromBehind)
-                        ChanceToHit -= Math.Max(0, fParryChanceForTarget);
+                        ChanceToHit -= fParryChanceForTarget;
+#if DEBUG
+                    if (ChanceToHit < 0 || ChanceToHit > 1
+                        || fDodgeChanceForTarget < 0
+                        || fParryChanceForTarget < 0)
+                        throw new Exception("Chance to hit out of range.");
+#endif
                     return ChanceToHit;
                 }
                 else if (CState != null && CState.m_Stats != null)
