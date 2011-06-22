@@ -4142,6 +4142,7 @@ namespace Rawr
                 case "1174": retVal[0] = "Wildhammer Clan"; retVal[1] = ""; retVal[2] = ""; break;
                 case "1177": retVal[0] = "Baradin's Wardens"; retVal[1] = ""; retVal[2] = ""; break;
                 case "1178": retVal[0] = "Hellscream's Reach"; retVal[1] = ""; retVal[2] = ""; break;
+                case "1204": retVal[0] = "Avengers of Hyjal"; retVal[1] = ""; retVal[2] = ""; break;
                 #endregion
                 #region Other
                 case "70": retVal[0] = "Syndicate"; retVal[1] = ""; retVal[2] = ""; break;

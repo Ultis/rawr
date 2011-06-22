@@ -889,10 +889,19 @@ namespace Rawr.Cat
                     PhysicalHit = stats.PhysicalHit,
                     BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
                     PhysicalCrit = stats.PhysicalCrit,
+
                     ArcaneDamage = stats.ArcaneDamage,
                     ShadowDamage = stats.ShadowDamage,
+                    NatureDamage = stats.NatureDamage,
+                    FireDamage = stats.FireDamage,
+                    FrostDamage = stats.FrostDamage,
+                    HolyDamage = stats.HolyDamage,
+                    PhysicalDamage = stats.PhysicalDamage,
+
                     HighestStat = stats.HighestStat,
+                    HighestSecondaryStat = stats.HighestSecondaryStat,
                     Paragon = stats.Paragon,
+
                     MoteOfAnger = stats.MoteOfAnger,
                     BonusDamageMultiplierRakeTick = stats.BonusDamageMultiplierRakeTick,
 
@@ -939,7 +948,7 @@ namespace Rawr.Cat
                 stats.Strength + stats.WeaponDamage + 
                 stats.PhysicalHit + stats.MoteOfAnger +
                 stats.PhysicalHaste +
-                stats.ThreatReductionMultiplier + stats.ArcaneDamage + stats.ShadowDamage +
+                stats.ThreatReductionMultiplier + stats.ArcaneDamage + stats.ShadowDamage + stats.FireDamage + stats.FrostDamage + stats.HolyDamage + stats.NatureDamage + stats.PhysicalDamage + 
                 stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance + stats.BonusBleedDamageMultiplier + stats.Paragon +
                 stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff + stats.HighestStat + stats.HighestSecondaryStat +
                 stats.NatureResistanceBuff + stats.FireResistanceBuff + stats.BonusPhysicalDamageMultiplier + stats.BonusDamageMultiplierRakeTick +
