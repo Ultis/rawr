@@ -60,13 +60,13 @@ namespace Rawr.Retribution
         Nature,
         Frost,
         Shadow,
-        Arcane,
-        NoDD
+        Arcane
     }
 
     public enum Multiplier
     {
-        Armor = 0, 
+        General = 0,
+        Armor, 
         Magical,
         Physical,
         Talents,

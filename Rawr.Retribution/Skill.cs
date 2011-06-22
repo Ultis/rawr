@@ -6,7 +6,7 @@ namespace Rawr.Retribution
 {
     public abstract class Skill : Ability<PaladinTalents, StatsRetri, CalculationOptionsRetribution>
     {
-        public Skill(string name, Character character, StatsRetri stats, AbilityType abilityType, DamageType damageType, bool hasGCD = true) : base (name, character, stats, abilityType, damageType, hasGCD) 
+        public Skill(string name, Character character, StatsRetri stats, AbilityType abilityType, DamageType damageType, bool hasGCD = true, bool noMultiplier = false) : base (name, character, stats, abilityType, damageType, hasGCD, noMultiplier) 
         {
             AbilityDamageMultiplierOthersString = "Two-Handed Spec";
         }
@@ -22,9 +22,6 @@ namespace Rawr.Retribution
                     case DamageType.Holy:
                         AbilityDamageMulitplier[Multiplier.Magical] *= (1f + _inqUptime * PaladinConstants.INQ_COEFF);
                         break;
-                    case DamageType.NoDD:
-                        AbilityDamageMulitplier[Multiplier.Magical] = (1f + _stats.BonusHolyDamageMultiplier) * (1f + _inqUptime * PaladinConstants.INQ_COEFF);
-                        break;
                 }
             }
         }
@@ -32,11 +29,15 @@ namespace Rawr.Retribution
         private float _inqUptime = 1f;
         public float InqUptime { get { return _inqUptime; } 
             set {
-                if (DamageType == DamageType.Holy || DamageType == DamageType.NoDD) {
-                    AbilityDamageMulitplier[Multiplier.Magical] /= _inqUptime * PaladinConstants.INQ_COEFF + 1f;
-                    AbilityDamageMulitplier[Multiplier.Magical] *= value * PaladinConstants.INQ_COEFF + 1f;
+                if (DamageType == DamageType.Holy) {
+                    AbilityDamageMulitplier[Multiplier.Magical] /= _inqUptime * (PaladinConstants.INQ_COEFF + 1f);
+                    AbilityDamageMulitplier[Multiplier.Magical] *= value * (PaladinConstants.INQ_COEFF + 1f);
                 }
                 _inqUptime = value;
+                foreach (Skill ability in _triggers)
+                    ability.InqUptime = _inqUptime;
+                if (_AbilityDamage > 1f)//Update Damage 
+                    AbilityDamage = _AbilityDamage / (TickCount * (Meteor ? 1f : Targets()));
             }
         }
     }
@@ -122,7 +123,7 @@ namespace Rawr.Retribution
 
     public class CrusaderStrike : Skill
     {
-        public CrusaderStrike(Character character, StatsRetri stats) : base("Crusader Strike", character, stats, AbilityType.Melee, DamageType.Physical) 
+        public CrusaderStrike(Character character, StatsRetri stats) : base("Crusader Strike", character, stats, AbilityType.Melee, DamageType.Physical, true) 
         {
             CT = new BasePhysicalYellowCombatTable(Character.BossOptions, _stats, Attacktype.MeleeMH);
             CT.AbilityCritCorr = Talents.RuleOfLaw * PaladinConstants.RULE_OF_LAW +
@@ -134,7 +135,7 @@ namespace Rawr.Retribution
 
             if (_stats.T12_2P)
             {
-                MagicDamage spell = new MagicDamage("T12 2P Bonus", _character, new StatsRetri(), DamageType.Fire);
+                MagicDamage spell = new MagicDamage("T12 2P Bonus", _character, new StatsRetri(), DamageType.Fire, true);
                 spell.CT.CanCrit = false;
                 spell.CT.CanMiss = false;
                 spell.AbilityDamage = AverageDamage * .15f;
@@ -147,12 +148,14 @@ namespace Rawr.Retribution
 
     public class HandofLight : Skill
     {
-        public HandofLight(Character character, StatsRetri stats, float amountBefore) : base("Hand of Light", character, stats, AbilityType.Spell, DamageType.NoDD, false) 
+        public HandofLight(Character character, StatsRetri stats, float amountBefore) : base("Hand of Light", character, stats, AbilityType.Spell, DamageType.Holy, false) 
         {
             AmountBefore = amountBefore;
             CT = new BaseSpellCombatTable(Character.BossOptions, _stats, Attacktype.Spell);
             CT.CanMiss = false;
             CT.CanCrit = false;
+            AbilityDamageMulitplier.Clear(); //Only benefit from Magical
+            AbilityDamageMulitplier[Multiplier.Magical] = (1f + _stats.BonusHolyDamageMultiplier) * (1f + InqUptime * PaladinConstants.INQ_COEFF);
             AbilityDamage = AmountBefore * (8f + StatConversion.GetMasteryFromRating(_stats.MasteryRating, CharacterClass.Paladin)) * PaladinConstants.HOL_COEFF;
         }
 
@@ -366,7 +369,7 @@ namespace Rawr.Retribution
 
     public class MagicDamage : Skill
     {
-        public MagicDamage(string name, Character character, StatsRetri stats, DamageType damageType) : base(name, character, stats, AbilityType.Spell, damageType, false)
+        public MagicDamage(string name, Character character, StatsRetri stats, DamageType damageType, bool noMultiplier = false) : base(name, character, stats, AbilityType.Spell, damageType, false, noMultiplier)
         {
             CT = new BaseSpellCombatTable(Character.BossOptions, _stats, Attacktype.Spell);
             switch ((int)damageType)

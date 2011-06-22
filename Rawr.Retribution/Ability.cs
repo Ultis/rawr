@@ -5,7 +5,7 @@ namespace Rawr.Retribution
 {
     public abstract class Ability<T, S, C> where T : TalentsBase where S : Stats where C : ICalculationOptionBase
     {
-        public Ability(string name, Character character, S stats, AbilityType abilityType, DamageType damageType, bool hasGCD = true)
+        public Ability(string name, Character character, S stats, AbilityType abilityType, DamageType damageType, bool hasGCD = true, bool noMultiplier = false)
         {
             _name = name;
             _character = character;
@@ -13,6 +13,7 @@ namespace Rawr.Retribution
             _talents = (T)character.CurrentTalents;
             AbilityType = abilityType;
             DamageType = damageType;
+            NoMultiplier = noMultiplier;
 
             HasGCD = hasGCD;
             _normGCD = 1.5f + Latency;
@@ -45,32 +46,30 @@ namespace Rawr.Retribution
             set
             { 
                 _damageType = value;
+                AbilityDamageMulitplier[Multiplier.General] = 1f + Stats.BonusDamageMultiplier;
                 switch (value)
                 {
                     case DamageType.Physical:
-                        AbilityDamageMulitplier[Multiplier.Physical] = (1f + Stats.BonusDamageMultiplier) * (1f + Stats.BonusPhysicalDamageMultiplier);
-                        AbilityDamageMulitplier[Multiplier.Armor] = 1f - StatConversion.GetArmorDamageReduction(Character.Level, _character.BossOptions.Armor, Stats.TargetArmorReduction, Stats.ArmorPenetration); ;
+                        AbilityDamageMulitplier[Multiplier.Physical] = 1f + Stats.BonusPhysicalDamageMultiplier;
+                        AbilityDamageMulitplier[Multiplier.Armor] = 1f - StatConversion.GetArmorDamageReduction(Character.Level, _character.BossOptions.Armor, Stats.TargetArmorReduction, Stats.ArmorPenetration);
                         break;
                     case DamageType.Arcane:
-                        AbilityDamageMulitplier[Multiplier.Magical] = (1f + Stats.BonusDamageMultiplier) * (1f + Stats.BonusArcaneDamageMultiplier);
+                        AbilityDamageMulitplier[Multiplier.Magical] = 1f + Stats.BonusArcaneDamageMultiplier;
                         break;
                     case DamageType.Fire:
-                        AbilityDamageMulitplier[Multiplier.Magical] = (1f + Stats.BonusDamageMultiplier) * (1f + Stats.BonusFireDamageMultiplier);
+                        AbilityDamageMulitplier[Multiplier.Magical] = 1f + Stats.BonusFireDamageMultiplier;
                         break;
                     case DamageType.Frost:
-                        AbilityDamageMulitplier[Multiplier.Magical] = (1f + Stats.BonusDamageMultiplier) * (1f + Stats.BonusFrostDamageMultiplier);
+                        AbilityDamageMulitplier[Multiplier.Magical] = 1f + Stats.BonusFrostDamageMultiplier;
                         break;
                     case DamageType.Nature:
-                        AbilityDamageMulitplier[Multiplier.Magical] = (1f + Stats.BonusDamageMultiplier) * (1f + Stats.BonusNatureDamageMultiplier);
+                        AbilityDamageMulitplier[Multiplier.Magical] = 1f + Stats.BonusNatureDamageMultiplier;
                         break;
                     case DamageType.Shadow:
-                        AbilityDamageMulitplier[Multiplier.Magical] = (1f + Stats.BonusDamageMultiplier) * (1f + Stats.BonusShadowDamageMultiplier);
+                        AbilityDamageMulitplier[Multiplier.Magical] = 1f + Stats.BonusShadowDamageMultiplier;
                         break;
                     case DamageType.Holy:
-                        AbilityDamageMulitplier[Multiplier.Magical] = (1f + Stats.BonusDamageMultiplier) * (1f + Stats.BonusHolyDamageMultiplier);
-                        break;
-                    case DamageType.NoDD:
-                        AbilityDamageMulitplier[Multiplier.Magical] = 1f;
+                        AbilityDamageMulitplier[Multiplier.Magical] = 1f + Stats.BonusHolyDamageMultiplier;
                         break;
                 }
             }
@@ -164,28 +163,32 @@ namespace Rawr.Retribution
         #endregion
 
         #region Multiplier
+        public bool NoMultiplier;
         public Dictionary<Multiplier, float> AbilityDamageMulitplier = new Dictionary<Multiplier, float>();
         public string AbilityDamageMultiplierOthersString = String.Empty;
         public virtual float GetMulitplier()
         {
             float multiplier = 1f;
-            foreach (KeyValuePair<Multiplier, float> kvp in AbilityDamageMulitplier)
-            {
-                multiplier *= kvp.Value;
-            }
+            if (!NoMultiplier) 
+                foreach (KeyValuePair<Multiplier, float> kvp in AbilityDamageMulitplier)
+                    multiplier *= kvp.Value;
             return multiplier;
         }
         protected string GetMultiplierOutput()
         {
-            string Output = "Multiplier:";
-            for (Multiplier multi = Multiplier.Armor; multi <= Multiplier.Others; multi++)
-                if (AbilityDamageMulitplier.ContainsKey(multi) && (AbilityDamageMulitplier[multi] != 1f))
-                {
-                    Output += string.Format("\n{0:0.00} {1,-10}", AbilityDamageMulitplier[multi], multi);
-                }
-            if (AbilityDamageMultiplierOthersString != String.Empty) 
-                Output = Output.Replace(Multiplier.Others.ToString(), AbilityDamageMultiplierOthersString);
-            return Output + string.Format("\n{0:0.00} Total Multiplier", GetMulitplier());
+            if (!NoMultiplier)
+            {
+                string Output = "\n\nMultiplier:";
+                for (Multiplier multi = Multiplier.General; multi <= Multiplier.Others; multi++)
+                    if (AbilityDamageMulitplier.ContainsKey(multi) && (AbilityDamageMulitplier[multi] != 1f))
+                    {
+                        Output += string.Format("\n{0:0.00} {1,-10}", AbilityDamageMulitplier[multi], multi);
+                    }
+                if (AbilityDamageMultiplierOthersString != String.Empty)
+                    Output = Output.Replace(Multiplier.Others.ToString(), AbilityDamageMultiplierOthersString);
+                return Output + string.Format("\n{0:0.00} Total Multiplier", GetMulitplier());
+            }
+            return "";
         }
         #endregion
 
@@ -223,7 +226,7 @@ namespace Rawr.Retribution
             string Output = GetGeneralOutput();
             return (Output.Length > 0 ? Output + "\n\n" : "") +
                    GetDamageOutput() + "\n\n" +
-                   CT.ToString() + "\n\n" +
+                   CT.ToString() + 
                    GetMultiplierOutput() +
                    GetTriggerOutput();
         }
