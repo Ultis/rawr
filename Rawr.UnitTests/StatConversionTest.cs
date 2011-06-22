@@ -1,5 +1,7 @@
 ﻿using Rawr;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+
 namespace Rawr.UnitTests
 {
     
@@ -60,6 +62,35 @@ namespace Rawr.UnitTests
         //
         #endregion
 
+
+        /// <summary>
+        ///A test for GetDodgeFromAgility
+        ///</summary>
+        [TestMethod()]
+        public void GetDodgeFromAgilityTest()
+        {
+            float Agility = 1000F;
+            float expected = 0F;
+            float actual = 0f;
+            for (int c = 1; c <= EnumHelper.GetCount(typeof(CharacterClass)); c++)
+            {
+                if (c != 10)
+                {
+                    actual = StatConversion.GetDodgeFromAgility(Agility, (CharacterClass)c);
+                    if ((CharacterClass)c == CharacterClass.DeathKnight
+                        || (CharacterClass)c == CharacterClass.Paladin
+                        || (CharacterClass)c == CharacterClass.Warrior)
+                    {
+                        Assert.AreEqual(expected, actual);
+                    }
+                    else
+                    {
+                        // TODO: Update this to be more accurate for the non-plate classes.
+                        Assert.AreNotEqual(expected, actual);
+                    }
+                }
+            }
+        }
     }
 }
 

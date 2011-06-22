@@ -135,12 +135,12 @@ namespace Rawr
         /// Source: http://elitistjerks.com/f15/t29453-combat_ratings_level_85_cataclysm/
         /// </summary>
         public static readonly float[] AGI_PER_DODGE = { 0.0f, // Starts at 0
-            430.69289874f, // Patch 4.2 removed Agility to Dodge for Warriors //5.309f * 84.74576271f, // Warrior 1
-            304.50762639f, // Patch 4.2 removed Agility to Dodge for Paladins //5.309f * 59.88023952f, // Paladin 2
+            0, // Patch 4.2 removed Agility to Dodge for Warriors //5.309f * 84.74576271f, // Warrior 1
+            0, // Patch 4.2 removed Agility to Dodge for Paladins //5.309f * 59.88023952f, // Paladin 2
             439.99947200f, //5.309f * 86.20689655f, // Hunter 3
             243.51637648f, //5.309f * 47.84688995f, // Rogue 4
             304.00034048f, //5.309f * 59.88023952f, // Priest 5
-            430.69289874f, // Patch 4.2 removed Agility to Dodge for DKs //5.309f * 84.74576271f, // Death Knight 6
+            0, // Patch 4.2 removed Agility to Dodge for DKs //5.309f * 84.74576271f, // Death Knight 6
             304.00034048f, //5.309f * 59.88023952f, // Shaman 7
             300.16238785f, //5.309f * 58.82352941f, // Mage 8
             304.35470715f, //5.309f * 59.88023952f, // Warlock 9
@@ -475,7 +475,9 @@ namespace Rawr
         /// <returns>A Percentage (0.05 = 5% extra Dodge)</returns>
         public static float GetDodgeFromAgility(float Agility, CharacterClass Class)
         {
-            return Agility / AGI_PER_DODGE[(int)Class] * 0.01f;
+            if (AGI_PER_DODGE[(int)Class] > 0) 
+                return Agility / AGI_PER_DODGE[(int)Class] * 0.01f;
+            return 0;
         }
 
         public static float GetSpiritRegenSec(float Spirit, float Intellect, CharacterClass Class) { return GetSpiritRegenSec(Spirit, Intellect); }
