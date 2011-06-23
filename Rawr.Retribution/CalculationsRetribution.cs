@@ -833,9 +833,7 @@ namespace Rawr.Retribution
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusWhiteDamageMultiplier = stats.BonusWhiteDamageMultiplier,
                 BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
-                BonusRet_T11_4P_InqHP = stats.BonusRet_T11_4P_InqHP,
                 JudgementCDReduction = stats.JudgementCDReduction,
-                BonusDamageMultiplierTemplarsVerdict = stats.BonusDamageMultiplierTemplarsVerdict,
                 FireDamage = stats.FireDamage,
                 FrostDamage = stats.FrostDamage,
                 ArcaneDamage = stats.ArcaneDamage,
@@ -890,9 +888,6 @@ namespace Rawr.Retribution
                                 stats.BonusDamageMultiplier != 0 || 
                                 stats.BonusCritChance != 0 ||
                                 stats.BonusCritDamageMultiplier != 0 ||
-                                // Paladin specific stats (set bonusses)
-                                stats.BonusRet_T11_4P_InqHP != 0 || 
-                                stats.BonusDamageMultiplierTemplarsVerdict != 0 ||
                                 // Probably unused
                                 stats.JudgementCDReduction != 0 ||
                                 stats.ArmorPenetration != 0 ||

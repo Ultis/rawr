@@ -35,7 +35,7 @@ namespace Rawr.Retribution
             int TCount;
             //T11
             character.SetBonusCount.TryGetValue("Reinforced Sapphirium Battleplate", out TCount);
-            if (TCount >= 2) { T11_2P = true; BonusDamageMultiplierTemplarsVerdict = 0.1f; }
+            if (TCount >= 2) { T11_2P = true; }
             if (TCount >= 4) { T11_4P = true; }
 
             //T12

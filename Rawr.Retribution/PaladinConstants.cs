@@ -88,7 +88,7 @@ namespace Rawr.Retribution
         internal const float SEALS_OF_THE_PURE = .06f;
         internal const float ARBITER_OF_THE_LIGHT = .06f;
         internal const float INQUIRY_OF_FAITH_SEAL = .1f;
-        internal const float INQUIRY_OF_FAITH_INQ = .5f;
+        internal const float INQUIRY_OF_FAITH_INQ = 2f/3f;
         internal const float JUDGEMENTS_OF_THE_PURE = .03f;
 
         internal const float CRUSADE = .1f;

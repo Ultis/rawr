@@ -85,7 +85,7 @@ namespace Rawr.Retribution
             Cooldown = Duration;
         }
         private int HP;
-        public float Duration { get { return (HP + (_stats.T11_4P ? 1f : 0f)) * 4f * (1f + Talents.InquiryOfFaith * PaladinConstants.INQUIRY_OF_FAITH_INQ * (CalcOps.PTR_Mode ? 4f/3f : 1)); } }
+        public float Duration { get { return (HP + (_stats.T11_4P ? 1f : 0f)) * 4f * (1f + Talents.InquiryOfFaith * PaladinConstants.INQUIRY_OF_FAITH_INQ); } }
     }
 
     public class TemplarsVerdict : Skill
@@ -96,7 +96,7 @@ namespace Rawr.Retribution
             CT.AbilityCritCorr = Talents.ArbiterOfTheLight * PaladinConstants.ARBITER_OF_THE_LIGHT;
             AbilityDamageMulitplier[Multiplier.Talents] = (1f + PaladinConstants.CRUSADE * Talents.Crusade);
             AbilityDamageMulitplier[Multiplier.Glyphs] = (1f + (Talents.GlyphOfTemplarsVerdict ? PaladinConstants.GLYPH_OF_TEMPLARS_VERDICT : .0f)); 
-            AbilityDamageMulitplier[Multiplier.Sets] = (1f + _stats.BonusDamageMultiplierTemplarsVerdict);
+            AbilityDamageMulitplier[Multiplier.Sets] = (1f + (Stats.T11_2P ? .1f : 0f));
             AbilityDamage = AbilityHelper.WeaponDamage(Character, _stats.AttackPower) * PaladinConstants.TV_THREE_STK;
 
             //Hand of Light
@@ -291,7 +291,6 @@ namespace Rawr.Retribution
         public SealOfRighteousness(Character character, StatsRetri stats) : base("Seal of Righteousness", character, stats, AbilityType.Spell) 
         {
             CT = new BaseSpellCombatTable(Character.BossOptions, _stats, Attacktype.Spell);
-            CT.CanCrit = (CalcOps.PTR_Mode ? true : false);
             CT.CanMiss = false;
             AbilityDamage = AbilityHelper.BaseWeaponSpeed(_character) * (PaladinConstants.SOR_COEFF_AP * _stats.AttackPower +
                                                                          PaladinConstants.SOR_COEFF_SP * _stats.SpellPower);
