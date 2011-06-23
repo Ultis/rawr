@@ -273,7 +273,7 @@ namespace Rawr.Retribution
             return
                 skill.UsagePerSec *
                 skill.CT.ChanceToLand *
-                skill.Targets() *
+                skill.AvgTargets *
                 skill.TickCount;
         }
 
@@ -282,7 +282,7 @@ namespace Rawr.Retribution
             return
                 skill.UsagePerSec *
                 skill.CT.ChanceToCrit *
-                skill.Targets() *
+                skill.AvgTargets *
                 skill.TickCount;
         }
 

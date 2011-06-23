@@ -5,15 +5,16 @@ namespace Rawr.Retribution
 {
     public abstract class Ability<T, S, C> where T : TalentsBase where S : Stats where C : ICalculationOptionBase
     {
-        public Ability(string name, Character character, S stats, AbilityType abilityType, DamageType damageType, bool hasGCD = true, bool noMultiplier = false)
+        public Ability(string name, Character character, S stats, AbilityType abilityType, DamageType damageType, PLAYER_ROLES role, bool hasGCD = true, bool noMultiplier = false)
         {
             _name = name;
-            _character = character;
+            _character = character; 
             _stats = stats;
             _talents = (T)character.CurrentTalents;
             AbilityType = abilityType;
             DamageType = damageType;
             NoMultiplier = noMultiplier;
+            Role = role;
 
             HasGCD = hasGCD;
             _normGCD = 1.5f + Latency;
@@ -35,6 +36,7 @@ namespace Rawr.Retribution
         protected S _stats;
         public S Stats { get { return _stats; } }
         public C CalcOps { get { return (C)_character.CalculationOptions; } }
+        public PLAYER_ROLES Role;
 
         public virtual BaseCombatTable CT { get; protected set; }
 
@@ -103,13 +105,13 @@ namespace Rawr.Retribution
                 fmtstring += "\n{0:F2} sec GCD";
             if (Cooldown != 1f)
                 fmtstring += "\n{1:F2} sec Cooldown";
-            if (Targets() != 1f)
+            if (AvgTargets != 1f)
                 fmtstring += "\n{2:F2} Targets";
             if (TickCount != 1f)
                 fmtstring += "\n{3:F2} Ticks";
 
             if (fmtstring.Length > 0)
-                return "General:" + string.Format(fmtstring, GCD, Cooldown, Targets(), TickCount);
+                return "General:" + string.Format(fmtstring, GCD, Cooldown, AvgTargets, TickCount);
             else
                 return "";
         }
@@ -128,7 +130,7 @@ namespace Rawr.Retribution
 
         protected float _AbilityDamage = 1f;
         public float AbilityDamage { get { return _AbilityDamage; } 
-                                     set { _AbilityDamage = value * TickCount * (Meteor ? 1f : Targets());
+                                     set { _AbilityDamage = value * TickCount * (Meteor ? 1f : AvgTargets);
                                            HitDamage = _AbilityDamage * GetMulitplier(); } }
         protected float _HitDamage;
         public float HitDamage { get { return _HitDamage; }
@@ -145,7 +147,7 @@ namespace Rawr.Retribution
                 
             if (TickCount != 1f)
                 addString += " / Tick";
-            if (Targets() != 1f)
+            if (AvgTargets != 1f)
                 addString += " / Target";
             if (_triggers.Count > 0)
                 fmtString += "\n{0:N0} Average Damage incl Trigger" + addString;
@@ -153,9 +155,34 @@ namespace Rawr.Retribution
             fmtString += "\n{1:N0} Average Damage" + addString + 
                          "\n{2:N0} Average Hit" + addString;
 
-            return string.Format(fmtString, (AverageDamageWithTriggers / TickCount / Targets()), (AverageDamage / TickCount / Targets()), (HitDamage / TickCount / Targets()));
+            return string.Format(fmtString, (AverageDamageWithTriggers / TickCount / AvgTargets), (AverageDamage / TickCount / AvgTargets), (HitDamage / TickCount / AvgTargets));
         }
-        public virtual float Targets() { return 1f; }
+        public float AvgTargets = 1f;
+        private void CalcAverageTarget()
+        {
+            if (_MaxTargets != -1)
+            {
+                if (Character.BossOptions.MultiTargs && Character.BossOptions.Targets != null && Character.BossOptions.Targets.Count > 0)
+                {
+                    float value = 0;
+                    foreach (TargetGroup tg in Character.BossOptions.Targets)
+                    {
+                        if (!tg.Validate) { continue; } // Bad one, skip it
+                        if (!tg.AffectsRole[Role]) { continue; } // Doesn't apply to us
+                        float upTime = ((Character.BossOptions.BerserkTimer / tg.Frequency) * (tg.Duration / 1000f)) / Character.BossOptions.BerserkTimer
+                                       * tg.Chance // Chance it happens to us
+                                       * tg.FightUptimePercent; // The Phase uptime
+                        value += (Math.Min(10 - (tg.NearBoss ? 1 : 0), Math.Min(_MaxTargets - (tg.NearBoss ? 1 : 0), tg.NumTargs - (tg.NearBoss ? 1 : 0) + Stats.BonusTargets))) * upTime;
+                    }
+                    AvgTargets = 1f + value;
+                }
+                else { AvgTargets = 1f; }
+            }
+            else { AvgTargets = 1f; }
+        }
+        protected int _MaxTargets = 1;
+        public int MaxTargets { get { return _MaxTargets; } 
+                                set { _MaxTargets = value; CalcAverageTarget(); } }
         protected float _TickCount = 1f;
         public float TickCount { get { return _TickCount; } 
                                  set { _TickCount = value; } }

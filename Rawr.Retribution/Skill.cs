@@ -6,7 +6,8 @@ namespace Rawr.Retribution
 {
     public abstract class Skill : Ability<PaladinTalents, StatsRetri, CalculationOptionsRetribution>
     {
-        public Skill(string name, Character character, StatsRetri stats, AbilityType abilityType, DamageType damageType, bool hasGCD = true, bool noMultiplier = false) : base (name, character, stats, abilityType, damageType, hasGCD, noMultiplier) 
+        public Skill(string name, Character character, StatsRetri stats, AbilityType abilityType, DamageType damageType, bool hasGCD = true, bool noMultiplier = false)
+            : base(name, character, stats, abilityType, damageType, PLAYER_ROLES.MeleeDPS, hasGCD, noMultiplier) 
         {
             AbilityDamageMultiplierOthersString = "Two-Handed Spec";
         }
@@ -37,7 +38,7 @@ namespace Rawr.Retribution
                 foreach (Skill ability in _triggers)
                     ability.InqUptime = _inqUptime;
                 if (_AbilityDamage > 1f)//Update Damage 
-                    AbilityDamage = _AbilityDamage / (TickCount * (Meteor ? 1f : Targets()));
+                    AbilityDamage = _AbilityDamage / (TickCount * (Meteor ? 1f : AvgTargets));
             }
         }
     }
@@ -168,12 +169,8 @@ namespace Rawr.Retribution
         {
             CT = new BasePhysicalYellowCombatTable(Character.BossOptions, _stats, Attacktype.MeleeMH);
             Cooldown = PaladinConstants.DS_COOLDOWN / (Talents.SanctityOfBattle > 0 ? (1f + _stats.PhysicalHaste) : 1f);
+            MaxTargets = 100;
             AbilityDamage = AbilityHelper.WeaponDamage(_character, _stats.AttackPower, true) * PaladinConstants.DS_DMG_BONUS; 
-        }
-        
-        public override float Targets()
-        {
-            return (float)Math.Min(0f/*//TODO: Get it form Bosshandler Combats.CalcOpts.Targets*/, 3f);
         }
     }
     
@@ -213,13 +210,9 @@ namespace Rawr.Retribution
             CT.AbilityCritCorr = (Character.BossOptions.MobType == (int)MOB_TYPES.DEMON || Character.BossOptions.MobType == (int)MOB_TYPES.UNDEAD) ? 1f : 0;
             Cooldown = PaladinConstants.HOLY_WRATH_COOLDOWN;
             Meteor = true;
+            MaxTargets = 100;
             AbilityDamage = PaladinConstants.HOLY_WRATH_BASE_DMG +
                             PaladinConstants.HOLY_WRATH_COEFF * _stats.SpellPower;
-        }
-    
-        public override float Targets()
-        {
-            return 1f/*//TODO: Get it from Bosshandler Combats.CalcOpts.Targets*/;
         }
     }
 
@@ -231,15 +224,11 @@ namespace Rawr.Retribution
             CT.CanCrit = false;
             Cooldown = PaladinConstants.CONS_COOLDOWN;
             TickCount = (Talents.GlyphOfConsecration ? 12f : 10f);
+            MaxTargets = 100;
             AbilityDamage = (PaladinConstants.CONS_BASE_DMG +
                              PaladinConstants.CONS_COEFF_SP * _stats.SpellPower +
                              PaladinConstants.CONS_COEFF_AP * _stats.AttackPower)
                             / 10;
-        }
-
-        public override float Targets()
-        {
-            return 1f /*//TODO: get it from Bosshandler Combats.CalcOpts.Targets*/;
         }
     }
 
@@ -292,13 +281,9 @@ namespace Rawr.Retribution
         {
             CT = new BaseSpellCombatTable(Character.BossOptions, _stats, Attacktype.Spell);
             CT.CanMiss = false;
+            MaxTargets = 100;
             AbilityDamage = AbilityHelper.BaseWeaponSpeed(_character) * (PaladinConstants.SOR_COEFF_AP * _stats.AttackPower +
                                                                          PaladinConstants.SOR_COEFF_SP * _stats.SpellPower);
-        }
-
-        public override float Targets()
-        {
-            return 1f; //TODO: Add additional target (Talents.SealsOfCommand > 0 ? PaladinConstants.SOR_ADDTARGET : 1f);
         }
     }
 
