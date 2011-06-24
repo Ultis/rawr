@@ -87,6 +87,7 @@ namespace Rawr.ModelFramework
     public struct DiscreteAction
     {
         public double Time;
+        public double Cooldown;
         public double Mana;
         public double Direct;
         public double Periodic;
@@ -97,6 +98,7 @@ namespace Rawr.ModelFramework
     public struct ContinuousAction
     {
         public double Time;
+        public double Limit;
         public double MPS;
         public double EPS;
         public double CPS;
@@ -113,6 +115,9 @@ namespace Rawr.ModelFramework
             EPS = pa.Direct + pa.Periodic;
             CPS = pa.Casts;
             TPS = pa.Ticks;
+            Limit = Time / pa.Cooldown;
+            if(!(Limit >= 0 && Limit <= 1))
+                Limit = 1;
             if (Time != 0)
             {
                 MPS /= Time;
@@ -314,9 +319,14 @@ namespace Rawr.ModelFramework
             AddAction(action, actions[(int)action].Time / period);
         }
 
-        public void AddBestActions(int[] actions)
+        public void AddActionOnCooldown(int action)
         {
-            ActionOptimization.AddBestActions(new ActionDistribution[] { this }, new double[] { 1 }, actions);
+            AddAction(action, actions[(int)action].Limit);
+        }
+
+        public void AddBestActions(int[] candidates)
+        {
+            ActionOptimization.AddBestActions(new ActionDistribution[] { this }, new double[] { 1 }, candidates);
         }
 
         public static ActionDistribution Combine(ActionDistribution[] dists, double[] coeffs)
@@ -557,87 +567,143 @@ namespace Rawr.ModelFramework
                 selections[i] = hulls[cursors[i]] - i * l;
         }
 
-        public static void FindBestActions(ContinuousAction[][] actionSets, double[] factors, int[] actions, double mpsLeft, out int[] selectedActions, out int interpSet, out double interpT, out int interpTargetAction)
+        public static void FindBestActions(ContinuousAction[][] actionSets, double[] factors, int[] candidates, double[] timeLeft, double mpsLeft, out KeyValuePair<int, double>[][] selectedActions)
         {
-            int l = actions.Length + 1;
-            int n = actionSets.Length;
-            double[] mps = new double[n * l];
-            double[] eps = new double[n * l];
-            for (int i = 0; i < n; ++i)
+            List<int> cooldownsList = new List<int>(candidates.Length);
+            List<int> fillersList = new List<int>(candidates.Length);
+            for (int j = 0; j < candidates.Length; ++j)
             {
-                for (int j = 0; j < actions.Length; ++j)
+                bool isCooldown = false;
+                bool isUseful = false;
+                for (int i = 0; i < actionSets.Length; ++i)
                 {
-                    mps[i * l + j] = actionSets[i][actions[j]].MPS * factors[i];
-                    eps[i * l + j] = actionSets[i][actions[j]].EPS * factors[i];
+                    if (actionSets[i][candidates[j]].Limit < 1)
+                        isCooldown = true;
+                    if (actionSets[i][candidates[j]].EPS > 0)
+                        isUseful = true;
                 }
-                mps[i * l + actions.Length] = 0;
-                eps[i * l + actions.Length] = 0;
+
+                if (isUseful)
+                {
+                    if (isCooldown)
+                        cooldownsList.Add(candidates[j]);
+                    else
+                        fillersList.Add(candidates[j]);
+                }
+            }
+            int[] cooldowns = cooldownsList.ToArray();
+            int[] fillers = fillersList.ToArray();
+
+            int nsubdivs = cooldowns.Length + 1;
+            int nactions = fillers.Length + 2;
+            int ndivdivs = actionSets.Length * nsubdivs;
+            double[] mps = new double[ndivdivs * nactions];
+            double[] eps = new double[ndivdivs * nactions];
+            for (int i = 0; i < actionSets.Length; ++i)
+            {
+                double nonCooldownTime = timeLeft[i];
+                for (int j = 0; j < cooldowns.Length; ++j)
+                {
+                    nonCooldownTime -= actionSets[i][cooldowns[j]].Limit;
+                }
+                if (nonCooldownTime < 0)
+                    throw new NotSupportedException("There must be enough time to fully use all cooldowns at once");
+            
+                for (int j = 0; j <= cooldowns.Length; ++j)
+                {
+                    double factor = factors[i] * ((j < cooldowns.Length) ? actionSets[i][cooldowns[j]].Limit : nonCooldownTime);
+                    for (int k = 0; k < fillers.Length; ++k)
+                    {
+                        mps[(i * nsubdivs + j) * nactions + k] = actionSets[i][fillers[k]].MPS * factor;
+                        eps[(i * nsubdivs + j) * nactions + k] = actionSets[i][fillers[k]].EPS * factor;
+                    }
+                    if (j < cooldowns.Length)
+                    {
+                        mps[(i * nsubdivs + j + 1) * nactions - 2] = actionSets[i][cooldowns[j]].MPS * factor;
+                        eps[(i * nsubdivs + j + 1) * nactions - 2] = actionSets[i][cooldowns[j]].EPS * factor;
+                    }
+                    //mps[(i * nsubdivs + j + 1) * nactions - 1] = 0;
+                    //eps[(i * nsubdivs + j + 1) * nactions - 1] = 0;
+                }                
             }
             int[] selections;
+            int interpSet;
             int interpTarget;
+            double interpT;
 
-            FindBestBudgetSplit(mps, eps, l, n, mpsLeft, out selections, out interpSet, out interpT, out interpTarget);
+            FindBestBudgetSplit(mps, eps, nactions, ndivdivs, mpsLeft, out selections, out interpSet, out interpT, out interpTarget);
 
-            selectedActions = new int[n];
-            for (int i = 0; i < n; ++i)
+            List<KeyValuePair<int, double>> selectionList = new List<KeyValuePair<int, double>>();
+
+            selectedActions = new KeyValuePair<int, double>[ndivdivs][];
+            for (int i = 0; i < actionSets.Length; ++i)
             {
-                if (selections[i] >= actions.Length || actionSets[i][actions[selections[i]]].EPS == 0)
-                    selectedActions[i] = -1;
-                else
-                    selectedActions[i] = actions[selections[i]];
-            }
+                double nonCooldownTime = timeLeft[i];
+                for (int j = 0; j < cooldowns.Length; ++j)
+                {
+                    nonCooldownTime -= actionSets[i][cooldowns[j]].Limit;
+                }
 
-            if (interpSet < 0 || interpTarget >= actions.Length || actionSets[interpSet][actions[interpTarget]].EPS == 0)
-                interpTargetAction = -1;
-            else
-                interpTargetAction = actions[interpTarget];
+                selectionList.Clear();
+                for (int j = 0; j <= cooldowns.Length; ++j)
+                {
+                    int p = i * nsubdivs + j;
+                    double factor = (j < cooldowns.Length) ? actionSets[i][cooldowns[j]].Limit : nonCooldownTime;
+                    int limit = nactions - (j == cooldowns.Length ? 2 : 1);
+                    if (selections[p] < limit)
+                    {
+                        int actionNum = (selections[p] < fillers.Length) ? fillers[selections[p]] : cooldowns[j];
+
+                        if (actionSets[i][actionNum].EPS > 0)
+                            selectionList.Add(new KeyValuePair<int,double>(actionNum, factor * ((p == interpSet) ? (1 - interpT) : 1)));
+                    }
+                    if (p == interpSet && interpTarget < limit)
+                    {
+                        int actionNum = (interpTarget < fillers.Length) ? fillers[interpTarget] : cooldowns[j];
+                        if (actionSets[i][actionNum].EPS > 0)
+                            selectionList.Add(new KeyValuePair<int, double>(actionNum, factor * interpT));
+                    }
+                }
+                selectedActions[i] = selectionList.ToArray();
+            }
         }
 
-        public static void FindBestActions(ActionDistribution[] dists, double[] factors, int[] actions, out int[] selectedActions, out int interpSet, out double interpT, out int interpTargetAction)
+        public static void FindBestActions(ActionDistribution[] dists, double[] factors, int[] candidates, out KeyValuePair<int, double>[][] selectedActions)
         {
             int n = dists.Length;
             ContinuousAction[][] actionSets = new ContinuousAction[n][];
             double mpsLeft = 0.0;
-            double[] newFactors = new double[n];
+            double[] timeLeft = new double[n];
             for (int i = 0; i < n; ++i)
             {
                 actionSets[i] = dists[i].Actions;
-                newFactors[i] = factors[i] * (dists[i].MaxFraction - dists[i].TotalFraction);
+                timeLeft[i] = dists[i].MaxFraction - dists[i].TotalFraction;
                 mpsLeft += (dists[i].MaxMPS - dists[i].TotalMPS) * factors[i];
             }
 
-            FindBestActions(actionSets, newFactors, actions, mpsLeft, out selectedActions, out interpSet, out interpT, out interpTargetAction);
+            FindBestActions(actionSets, factors, candidates, timeLeft, mpsLeft, out selectedActions);
         }
 
-        public static void AddBestActions(ActionDistribution[] dists, double[] factors, int[] actions)
+        public static void AddBestActions(ActionDistribution[] dists, double[] factors, int[] candidates)
         {
-            int[] selectedActions;
-            int interpSet;
-            double interpT;
-            int interpTargetAction;
+            KeyValuePair<int, double>[][] selectedActions;
             
-            FindBestActions(dists, factors, actions, out selectedActions, out interpSet, out interpT, out interpTargetAction);
+            FindBestActions(dists, factors, candidates, out selectedActions);
 
             for (int i = 0; i < dists.Length; ++i)
             {
                 double maxMPS = dists[i].MaxMPS;
                 dists[i].MaxMPS = double.PositiveInfinity;
-                double fractionLeft = dists[i].MaxFraction - dists[i].TotalFraction;
-                if (i == interpSet)
+                foreach(KeyValuePair<int, double> sel in selectedActions[i])
                 {
-                    if (selectedActions[i] >= 0)
-                        dists[i].AddAction(selectedActions[i], (1 - interpT) * fractionLeft);
-                    if (interpTargetAction >= 0)
-                        dists[i].AddAction(interpTargetAction, interpT * fractionLeft);
+                    dists[i].AddAction(sel.Key, sel.Value);
                 }
-                else if (selectedActions[i] >= 0)
-                    dists[i].AddAction(selectedActions[i], fractionLeft);
                 
                 dists[i].MaxMPS = maxMPS;
             }
         }
 
-        public static void AddBestActions(ActionDistribution[] dists, double[] factors, int[] actions, double unevenPart)
+        public static void AddBestActions(ActionDistribution[] dists, double[] factors, int[] candidates, double unevenPart)
         {
             if (unevenPart < 1)
             {
@@ -645,12 +711,12 @@ namespace Rawr.ModelFramework
                 {
                     double maxMPS = dists[i].MaxMPS;
                     dists[i].MaxMPS = dists[i].TotalMPS * unevenPart + maxMPS * (1 - unevenPart);
-                    dists[i].AddBestActions(actions);
+                    dists[i].AddBestActions(candidates);
                 }
             }
 
             if(unevenPart > 0)
-                AddBestActions(dists, factors, actions);
+                AddBestActions(dists, factors, candidates);
         }
     }
 }

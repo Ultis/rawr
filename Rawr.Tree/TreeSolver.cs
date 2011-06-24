@@ -396,11 +396,11 @@ namespace Rawr.Tree
         {
             for (int model = infMana ? 1 : 0; model < 4; model += 2)
             {
-                int[] fillers;
+                int[] candidates;
                 bool isTank = (model >> 1) == 1;
-                ActionDistribution[] dists = isTank ? computeTankHealing(infMana, out fillers) : computeRaidHealing(infMana, out fillers);
+                ActionDistribution[] dists = isTank ? computeTankHealing(infMana, out candidates) : computeRaidHealing(infMana, out candidates);
 
-                ActionOptimization.AddBestActions(dists, calc.Division.Fractions, fillers, isTank ? opts.TankUnevenlyAllocatedFillerMana : opts.RaidUnevenlyAllocatedFillerMana);
+                ActionOptimization.AddBestActions(dists, calc.Division.Fractions, candidates, isTank ? opts.TankUnevenlyAllocatedFillerMana : opts.RaidUnevenlyAllocatedFillerMana);
                 calc.Solutions[model] = new ActionDistributionsByDivision(calc.Division, dists);
             }
         }
@@ -584,6 +584,12 @@ namespace Rawr.Tree
                 ++spells[(int)TreeSpell.Rejuvenation].Action.Ticks;
             }
 
+            #region Cooldowns
+            spells[(int)TreeSpell.WildGrowth].Action.Cooldown = 8 + opts.WildGrowthCastDelay;
+            spells[(int)TreeSpell.Tranquility].Action.Cooldown = 8 * 60 - (150 * Talents.MalfurionsGift) + opts.TranquilityCastDelay;
+            spells[(int)TreeSpell.Swiftmend].Action.Cooldown = 15 + opts.SwiftmendCastDelay;
+            #endregion
+
             return spells;
         }
 
@@ -758,6 +764,10 @@ namespace Rawr.Tree
             }
             #endregion
 
+            #region Rejuvenation
+            actions[(int)TreeAction.TankRejuvenation].Cooldown = spells[(int)TreeSpell.Rejuvenation].Duration;
+            #endregion
+
             #region Nature's Swiftness
             if (Talents.NaturesSwiftness > 0)
             {
@@ -769,6 +779,9 @@ namespace Rawr.Tree
 
                 actions[(int)TreeAction.RaidSwiftHT].Time = stats.Haste.HastedGCD;
                 actions[(int)TreeAction.TankSwiftHT].Time = stats.Haste.HastedGCD;
+
+                actions[(int)TreeAction.RaidSwiftHT].Cooldown = 180 + opts.NaturesSwiftnessCastDelay;
+                actions[(int)TreeAction.TankSwiftHT].Cooldown = 180 + opts.NaturesSwiftnessCastDelay;
 
                 actions[(int)TreeAction.RaidSwiftHT].Direct *= nshtMultiplier;
                 actions[(int)TreeAction.TankSwiftHT].Direct *= nshtMultiplier;
@@ -820,6 +833,7 @@ namespace Rawr.Tree
             actions[(int)TreeAction.ReLifebloom].Mana = spells[(int)TreeSpell.Lifebloom].Action.Mana;
             actions[(int)TreeAction.ReLifebloom].Direct = 0;
             actions[(int)TreeAction.ReLifebloom].Periodic = 0;
+            actions[(int)TreeAction.ReLifebloom].Cooldown = data.LifebloomRefreshInterval;
             #endregion
 
             ContinuousAction[] factions = new ContinuousAction[(int)TreeAction.Count];
@@ -831,7 +845,7 @@ namespace Rawr.Tree
         void addLifebloomRefresh(ActionDistribution dist, ContinuousAction[] actions, ComputedSpell spell, TreeComputedData data, bool automatic, bool rejuvenationUp)
         {
             if (!automatic)
-                dist.AddActionPeriodically((int)TreeAction.ReLifebloom, data.LifebloomRefreshInterval);
+                dist.AddActionOnCooldown((int)TreeAction.ReLifebloom);
             
             dist.AddPassive((int)TreePassive.RollingLifebloom, (rejuvenationUp ? spell.TankAction.Periodic : spell.RaidAction.Periodic) * 3 / spell.Duration, -data.LifebloomMPSGain);
             dist.AddPassiveTPS((int)TreePassive.RollingLifebloom, spell.TPS);
@@ -885,7 +899,7 @@ namespace Rawr.Tree
             dist.AddPassive((int)TreePassive.NaturesWard, actions[(int)TreeAction.RaidRejuvenation].EPS * actions[(int)TreeAction.RaidRejuvenation].Time / spells[(int)TreeSpell.Rejuvenation].Duration * NaturesWardUptime * weight);
         }
 
-        ActionDistribution[] computeRaidHealing(bool burst, out int[] fillers)
+        ActionDistribution[] computeRaidHealing(bool burst, out int[] candidates)
         {
             ActionDistribution[] dists = new ActionDistribution[calc.Division.Count];
 
@@ -915,38 +929,36 @@ namespace Rawr.Tree
                 addSpecialDirectHeals(dist, spells, stats, refreshLBWithDHs, !burst, minDHRate, burst);
 
                 // TODO: add option to choose when to use tranquility (maybe even model it as a division?)
-                dist.AddActionPeriodically((int)TreeAction.RaidTranquility, 8 * 60 - (150 * Talents.MalfurionsGift) + opts.TranquilityCastDelay);
+                dist.AddActionOnCooldown((int)TreeAction.RaidTranquility);
 
                 if (Restoration)
-                    dist.AddActionPeriodically((int)TreeAction.RaidSwiftmend, 15 + opts.SwiftmendCastDelay);
-
-                // Glyph of Healing Touch is handled by adding the amortized Swift HT to normal healing touches
-                if(Talents.NaturesSwiftness > 0)
-                    dist.AddActionPeriodically((int)TreeAction.RaidSwiftHT, 180.0 + opts.NaturesSwiftnessCastDelay);
+                    dist.AddActionOnCooldown((int)TreeAction.RaidSwiftmend);
 
                 if (opts.RejuvenationTankDuringRaid)
-                    dist.AddActionPeriodically((int)TreeAction.TankRejuvenation, spells[(int)TreeSpell.Rejuvenation].Duration);
+                    dist.AddActionOnCooldown((int)TreeAction.TankRejuvenation);
 
                 if (Talents.WildGrowth > 0)
-                    dist.AddActionPeriodically((int)TreeAction.RaidWildGrowth, 8 + opts.WildGrowthCastDelay);
+                    dist.AddActionOnCooldown((int)TreeAction.RaidWildGrowth);
 
                 dists[div] = dist;
             }
 
-            List<int> fillersList = new List<int>();
-            fillersList.Add((int)TreeAction.RaidRejuvenation);
-            fillersList.Add((int)TreeAction.RaidHealingTouch);
-            fillersList.Add((int)TreeAction.RaidNourish);
+            List<int> candidatesList = new List<int>();
+            if(Talents.NaturesSwiftness > 0)
+                candidatesList.Add((int)TreeAction.RaidSwiftHT);
+            candidatesList.Add((int)TreeAction.RaidRejuvenation);
+            candidatesList.Add((int)TreeAction.RaidHealingTouch);
+            candidatesList.Add((int)TreeAction.RaidNourish);
             if(character.DruidTalents.NaturesBounty > 0)
-                fillersList.Add(opts.RejuvenationTankDuringRaid ? (int)TreeAction.RaidRj2NourishNB : (int)TreeAction.RaidRj3NourishNB);
-            fillersList.Add((int)TreeAction.RaidTolLb);
-            fillersList.Add((int)TreeAction.RaidTolLbCcHt);
-            fillers = fillersList.ToArray();
+                candidatesList.Add(opts.RejuvenationTankDuringRaid ? (int)TreeAction.RaidRj2NourishNB : (int)TreeAction.RaidRj3NourishNB);
+            candidatesList.Add((int)TreeAction.RaidTolLb);
+            candidatesList.Add((int)TreeAction.RaidTolLbCcHt);
+            candidates = candidatesList.ToArray();
 
             return dists;
         }
 
-        ActionDistribution[] computeTankHealing(bool burst, out int[] fillers)
+        ActionDistribution[] computeTankHealing(bool burst, out int[] candidates)
         {
             ActionDistribution[] dists = new ActionDistribution[calc.Division.Count];
             for (int div = 0; div < calc.Division.Count; ++div)
@@ -968,28 +980,25 @@ namespace Rawr.Tree
                 // assume we will automatically heal the tank enough to refresh lifebloom if we have Empowered Touch
                 addSpecialDirectHeals(dist, spells, stats, true, !burst, 0, false);
 
-                dist.AddActionPeriodically((int)TreeAction.TankRejuvenation, spells[(int)TreeSpell.Rejuvenation].Duration);
-                
                 if (Restoration && opts.TankSwiftmend)
-                    dist.AddActionPeriodically((int)TreeAction.TankSwiftmend, 15 + opts.SwiftmendCastDelay);
-
-                // Glyph of Healing Touch is handled by adding the amortized Swift HT to normal healing touches
-                if (Talents.NaturesSwiftness > 0)
-                    dist.AddActionPeriodically((int)TreeAction.TankSwiftHT, 180.0 + opts.NaturesSwiftnessCastDelay);
+                    dist.AddActionOnCooldown((int)TreeAction.TankSwiftmend);
 
                 if (!burst && opts.TankWildGrowth && Talents.WildGrowth > 0)
-                    dist.AddActionPeriodically((int)TreeAction.TankWildGrowth, 8 + opts.WildGrowthCastDelay);
+                    dist.AddActionOnCooldown((int)TreeAction.TankWildGrowth);
 
                 dists[div] = dist;
             }
 
-            List<int> fillersList = new List<int>();
-            fillersList.Add((int)TreeAction.TankHealingTouch);
-            fillersList.Add((int)TreeAction.TankNourish);
+            List<int> candidatesList = new List<int>();
+            if (Talents.NaturesSwiftness > 0)
+                candidatesList.Add((int)TreeAction.TankSwiftHT);
+            candidatesList.Add((int)TreeAction.TankRejuvenation);
+            candidatesList.Add((int)TreeAction.TankHealingTouch);
+            candidatesList.Add((int)TreeAction.TankNourish);
             if(character.DruidTalents.NaturesBounty > 0)
-                fillersList.Add((int)TreeAction.TankRj2NourishNB);
-            fillersList.Add((int)TreeAction.TankTolLbCcHt);
-            fillers = fillersList.ToArray();
+                candidatesList.Add((int)TreeAction.TankRj2NourishNB);
+            candidatesList.Add((int)TreeAction.TankTolLbCcHt);
+            candidates = candidatesList.ToArray();
 
             return dists;
         }
