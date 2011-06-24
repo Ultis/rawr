@@ -777,12 +777,13 @@ namespace Rawr.Moonkin
             Moonfire.CriticalChanceModifier += stats.BonusCritChanceMoonfire;
             InsectSwarm.CriticalChanceModifier += stats.BonusCritChanceInsectSwarm;
 
+            // 4.2: Starfire and Wrath damage increased by 23%.
+            Starfire.BaseDamage *= 1.23f;
+            Wrath.BaseDamage *= 1.23f;
+
             // PTR changes go here
             if (calcs.PtrMode)
             {
-                // TODO: Find the exact values of this increase.
-                Starfire.BaseDamage *= 1.23f;
-                Wrath.BaseDamage *= 1.23f;
             }
         }
     }
