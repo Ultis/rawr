@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Rawr.Retribution
 {
@@ -20,46 +18,30 @@ namespace Rawr.Retribution
             set { _desc = value; }
         }
 
-        private float _overallPoints = 0f;
-        public override float OverallPoints
-        {
-            get { return _overallPoints; }
-            set { _overallPoints = value; }
-        }
+        public override float OverallPoints { get; set; }
 
-        private float[] _subPoints = new float[] { 0f };
-        public override float[] SubPoints
-        {
-            get { return _subPoints; }
-            set { _subPoints = value; }
-        }
+        public override float[] SubPoints { get; set; }
 
         public float DPSPoints
         {
-            get { return _subPoints[0]; }
-            set { _subPoints[0] = value; }
+            get { return SubPoints[0]; }
+            set { SubPoints[0] = value; }
         }
 
-        private Item _item = null;
-        public override Item Item
-        {
-            get { return _item; }
-            set {  _item = value; }
-		}
+        public override Item Item { get; set; }
 
-		private ItemInstance _itemInstance = null;
-		public override ItemInstance ItemInstance
-		{
-			get { return _itemInstance; }
-			set { _itemInstance = value; }
-		}
+        public override ItemInstance ItemInstance { get; set; }
 
-        bool _equipped = false;
-        public override bool Equipped
+        public ComparisonCalculationRetribution()
         {
-            get { return _equipped; }
-            set { _equipped = value; }
+            Equipped = false;
+            ItemInstance = null;
+            Item = null;
+            SubPoints = new float[] { 0f };
+            OverallPoints = 0f;
         }
+
+        public override bool Equipped { get; set; }
 
         public override bool PartEquipped { get; set; }
     }

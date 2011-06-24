@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Rawr.Retribution
 {
@@ -7,6 +8,7 @@ namespace Rawr.Retribution
     {
         public Ability(string name, Character character, S stats, AbilityType abilityType, DamageType damageType, PLAYER_ROLES role, bool hasGCD = true, bool noMultiplier = false)
         {
+            Meteor = false;
             _name = name;
             _character = character; 
             _stats = stats;
@@ -32,7 +34,7 @@ namespace Rawr.Retribution
         protected Character _character;
         public Character Character { get { return _character; } }
         protected T _talents;
-        public T Talents { get { return (T)_talents; } }
+        public T Talents { get { return _talents; } }
         protected S _stats;
         public S Stats { get { return _stats; } }
         public C CalcOps { get { return (C)_character.CalculationOptions; } }
@@ -112,8 +114,7 @@ namespace Rawr.Retribution
 
             if (fmtstring.Length > 0)
                 return "General:" + string.Format(fmtstring, GCD, Cooldown, AvgTargets, TickCount);
-            else
-                return "";
+            return "";
         }
         #endregion
 
@@ -186,7 +187,7 @@ namespace Rawr.Retribution
         protected float _TickCount = 1f;
         public float TickCount { get { return _TickCount; } 
                                  set { _TickCount = value; } }
-        public bool Meteor = false;
+        public bool Meteor;
         #endregion
 
         #region Multiplier
@@ -227,10 +228,7 @@ namespace Rawr.Retribution
         }
         protected float GetAverageDamageFromTriggers()
         {
-            float damage = 0f;
-            foreach (Ability<T, S, C> ability in _triggers)
-                damage += ability.AverageDamageWithTriggers;
-            return damage;
+            return _triggers.Sum(ability => ability.AverageDamageWithTriggers);
         }
 
         protected float _AverageDamageWithTriggers;
@@ -276,7 +274,7 @@ namespace Rawr.Retribution
         }
         public static float WeaponDamage(Character character, float AttackPower, bool Normalized = false)
         {
-            return BaseWeaponDamage(character.MainHand) + AttackPower * (Normalized ? 3.3f : BaseWeaponSpeed(character)) / 14f; ;
+            return BaseWeaponDamage(character.MainHand) + AttackPower * (Normalized ? 3.3f : BaseWeaponSpeed(character)) / 14f;
         }
     }
 }

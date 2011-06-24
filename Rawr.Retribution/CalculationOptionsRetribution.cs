@@ -25,18 +25,18 @@ namespace Rawr.Retribution
 
         [DefaultValue(false)]
         public bool PTR_Mode { get { return ptr_Mode; } set { ptr_Mode = value; OnPropertyChanged("PTR_Mode"); } }
-        private bool ptr_Mode = false;
+        private bool ptr_Mode;
         
         #region Stat Graph
-        [DefaultValue(new bool[] { true, true, true, true, true, /**/ true, true, true, })]
+        [DefaultValue(new bool[] { true, true, true, true, true, true, true, true })]
         public bool[] StatsList { get { return _statsList; } set { _statsList = value; OnPropertyChanged("StatsList"); } }
-        private bool[] _statsList = new bool[] { true, true, true, true, true, /**/ true, true, true, };
+        private bool[] _statsList = new bool[] { true, true, true, true, true, true, true, true };
         [DefaultValue(100)]
         public int StatsIncrement { get { return _StatsIncrement; } set { _StatsIncrement = value; OnPropertyChanged("StatsIncrement"); } }
         private int _StatsIncrement = 100;
         [DefaultValue("Overall Rating")]
         public string CalculationToGraph { get { return _calculationToGraph; } }
-        private string _calculationToGraph = "Overall Rating";
+        private readonly string _calculationToGraph = "Overall Rating";
         [XmlIgnore]
         public bool SG_Str { get { return StatsList[0]; } set { StatsList[0] = value; OnPropertyChanged("SG_STR"); } }
         [XmlIgnore]
@@ -57,12 +57,14 @@ namespace Rawr.Retribution
 
         public CalculationOptionsRetribution Clone()
         {
-            CalculationOptionsRetribution clone = new CalculationOptionsRetribution();
+            CalculationOptionsRetribution clone = new CalculationOptionsRetribution
+                                                      {
+                                                          Seal = Seal,
+                                                          InqRefresh = InqRefresh,
+                                                          SkipToCrusader = SkipToCrusader,
+                                                          HPperInq = HPperInq
+                                                      };
             // Tab - Fight Parameters
-            clone.Seal = Seal;
-            clone.InqRefresh = InqRefresh;
-            clone.SkipToCrusader = SkipToCrusader;
-            clone.HPperInq = HPperInq;
             return clone;
         }
         #region ICalculationOptionBase Members

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Rawr.Retribution
 {
@@ -31,57 +29,55 @@ namespace Rawr.Retribution
         public Attacktype Attacktype { get; set; }
 
         public bool CanMiss = true;
-        public float AbilityMissCorr = 0f;
+        public float AbilityMissCorr;
         public virtual float ChanceToMiss
         {
             get
             {
                 if (!CanMiss)
                     return 0f;
-                else
-                    switch (Attacktype)
-                    {
-                        case Attacktype.MeleeMH:
-                            return Math.Max(AbilityMissCorr + StatConversion.WHITE_MISS_CHANCE_CAP[LevelDif] - Stats.PhysicalHit, 0f);
-                        case Attacktype.MeleeOH:
-                            return Math.Max(AbilityMissCorr + StatConversion.WHITE_MISS_CHANCE_CAP_DW[LevelDif] - Stats.PhysicalHit, 0f);
-                        case Attacktype.Ranged:
-                            return Math.Max(AbilityMissCorr + StatConversion.WHITE_MISS_CHANCE_CAP[LevelDif]  - Stats.PhysicalHit - 
-                                            StatConversion.GetHitFromRating(Stats.RangedHitRating), 0f);
-                        case Attacktype.Spell:
-                            return Math.Max(AbilityMissCorr + StatConversion.GetSpellMiss(-1 * LevelDif, false) - Stats.SpellHit, 0f);
-                        default:
-                            return 0f;
-                    }
+                
+                switch (Attacktype)
+                {
+                    case Attacktype.MeleeMH:
+                        return Math.Max(AbilityMissCorr + StatConversion.WHITE_MISS_CHANCE_CAP[LevelDif] - Stats.PhysicalHit, 0f);
+                    case Attacktype.MeleeOH:
+                        return Math.Max(AbilityMissCorr + StatConversion.WHITE_MISS_CHANCE_CAP_DW[LevelDif] - Stats.PhysicalHit, 0f);
+                    case Attacktype.Ranged:
+                        return Math.Max(AbilityMissCorr + StatConversion.WHITE_MISS_CHANCE_CAP[LevelDif]  - Stats.PhysicalHit - 
+                                        StatConversion.GetHitFromRating(Stats.RangedHitRating), 0f);
+                    case Attacktype.Spell:
+                        return Math.Max(AbilityMissCorr + StatConversion.GetSpellMiss(-1 * LevelDif, false) - Stats.SpellHit, 0f);
+                    default:
+                        return 0f;
+                }
             }
         }
 
         public bool CanCrit = true;
-        public float AbilityCritCorr = 0f;
+        public float AbilityCritCorr;
         public abstract float CritBonus { get; }
         public virtual float ChanceToCrit { 
             get {
                 if (!CanCrit)
                     return 0f;
-                else
+
+                float crit;
+                switch (Attacktype)
                 {
-                    float crit;
-                    switch (Attacktype)
-                    {
-                        case Attacktype.MeleeMH: case Attacktype.MeleeOH:
-                            crit = Math.Max(Math.Min(AbilityCritCorr + Stats.PhysicalCrit + StatConversion.NPC_LEVEL_CRIT_MOD[LevelDif], 1f), 0f);
-                            break;
-                        case Attacktype.Ranged:
-                            crit = Math.Max(Math.Min(AbilityCritCorr + Stats.PhysicalCrit + StatConversion.GetRatingFromPhysicalCrit(Stats.RangedCritRating) + StatConversion.NPC_LEVEL_CRIT_MOD[LevelDif], 1f), 0f);
-                            break;
-                        case Attacktype.Spell:
-                            crit = Math.Max(Math.Min(AbilityCritCorr + Stats.SpellCrit + StatConversion.NPC_LEVEL_SPELL_CRIT_MOD[LevelDif], 1f), 0f);
-                            break;
-                        default:
-                            return 0f;
-                    }
-                    return crit * ChanceToLand;
+                    case Attacktype.MeleeMH: case Attacktype.MeleeOH:
+                        crit = Math.Max(Math.Min(AbilityCritCorr + Stats.PhysicalCrit + StatConversion.NPC_LEVEL_CRIT_MOD[LevelDif], 1f), 0f);
+                        break;
+                    case Attacktype.Ranged:
+                        crit = Math.Max(Math.Min(AbilityCritCorr + Stats.PhysicalCrit + StatConversion.GetRatingFromPhysicalCrit(Stats.RangedCritRating) + StatConversion.NPC_LEVEL_CRIT_MOD[LevelDif], 1f), 0f);
+                        break;
+                    case Attacktype.Spell:
+                        crit = Math.Max(Math.Min(AbilityCritCorr + Stats.SpellCrit + StatConversion.NPC_LEVEL_SPELL_CRIT_MOD[LevelDif], 1f), 0f);
+                        break;
+                    default:
+                        return 0f;
                 }
+                return crit * ChanceToLand;
             }
         }
 

@@ -1,14 +1,10 @@
-﻿using System;
-using System.Reflection;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Rawr.Retribution
 {
     public class CharacterCalculationsRetribution : CharacterCalculationsBase
     {
-        private float _overallPoints = 0f;
-        public override float OverallPoints { get { return _overallPoints; } set { _overallPoints = value; } }
+        public override float OverallPoints { get; set; }
         private float[] _subPoints = new float[] { 0f };
         public override float[] SubPoints { get { return _subPoints; } set { _subPoints = value; } }
         public float DPSPoints { get { return _subPoints[0]; } set { _subPoints[0] = value; } }
@@ -62,18 +58,18 @@ namespace Rawr.Retribution
 
             // DPS Breakdown
             dictValues["Total DPS"] = OverallPoints.ToString("N0");
-            dictValues["White"] = string.Format("{0:N0}*" + WhiteSkill.ToString(), WhiteSkill.GetDPS());
-            dictValues["Seal"] = string.Format("{0:N0}*" + SealSkill.ToString(), SealSkill.GetDPS());
-            dictValues["Seal (Dot)"] = string.Format("{0:N0}*" + SealDotSkill.ToString(), SealDotSkill.GetDPS());
-            dictValues["Seal of Command"] = string.Format("{0:N0}*" + CommandSkill.ToString(), CommandSkill.GetDPS());
-            dictValues["Crusader Strike"] = string.Format("{0:N0}*" + CrusaderStrikeSkill.ToString(), CrusaderStrikeSkill.GetDPS());
-            dictValues["Templars Verdict"] = string.Format("{0:N0}*" + TemplarsVerdictSkill.ToString(), TemplarsVerdictSkill.GetDPS());
-            dictValues["Judgement"] = string.Format("{0:N0}*" + JudgementSkill.ToString(), JudgementSkill.GetDPS());
-            dictValues["Consecration"] = string.Format("{0:N0}*" + ConsecrationSkill.ToString(), ConsecrationSkill.GetDPS());
-            dictValues["Exorcism"] = string.Format("{0:N0}*" + ExorcismSkill.ToString(), ExorcismSkill.GetDPS());
-            dictValues["Holy Wrath"] = string.Format("{0:N0}*" + HolyWrathSkill.ToString(), HolyWrathSkill.GetDPS());
-            dictValues["Hammer of Wrath"] = string.Format("{0:N0}*" + HammerOfWrathSkill.ToString(), HammerOfWrathSkill.GetDPS());
-            dictValues["GoaK"] = string.Format("{0:N0}*" + GoakSkill.ToString(), GoakSkill.GetDPS());
+            dictValues["White"] = string.Format("{0:N0}*" + WhiteSkill, WhiteSkill.GetDPS());
+            dictValues["Seal"] = string.Format("{0:N0}*" + SealSkill, SealSkill.GetDPS());
+            dictValues["Seal (Dot)"] = string.Format("{0:N0}*" + SealDotSkill, SealDotSkill.GetDPS());
+            dictValues["Seal of Command"] = string.Format("{0:N0}*" + CommandSkill, CommandSkill.GetDPS());
+            dictValues["Crusader Strike"] = string.Format("{0:N0}*" + CrusaderStrikeSkill, CrusaderStrikeSkill.GetDPS());
+            dictValues["Templars Verdict"] = string.Format("{0:N0}*" + TemplarsVerdictSkill, TemplarsVerdictSkill.GetDPS());
+            dictValues["Judgement"] = string.Format("{0:N0}*" + JudgementSkill, JudgementSkill.GetDPS());
+            dictValues["Consecration"] = string.Format("{0:N0}*" + ConsecrationSkill, ConsecrationSkill.GetDPS());
+            dictValues["Exorcism"] = string.Format("{0:N0}*" + ExorcismSkill, ExorcismSkill.GetDPS());
+            dictValues["Holy Wrath"] = string.Format("{0:N0}*" + HolyWrathSkill, HolyWrathSkill.GetDPS());
+            dictValues["Hammer of Wrath"] = string.Format("{0:N0}*" + HammerOfWrathSkill, HammerOfWrathSkill.GetDPS());
+            dictValues["GoaK"] = string.Format("{0:N0}*" + GoakSkill, GoakSkill.GetDPS());
             dictValues["Other"] = OtherDPS.ToString("N0");
 
             // Rotation Info:
@@ -105,7 +101,7 @@ namespace Rawr.Retribution
                 case "% Chance to Miss (Spells)": return ExorcismSkill.CT.ChanceToMiss * 100f;
                 case "% Chance to be Dodged": return ((BasePhysicalWhiteCombatTable)WhiteSkill.CT).ChanceToDodge * 100f;
                 case "% Chance to be Parried": return ((BasePhysicalWhiteCombatTable)WhiteSkill.CT).ChanceToParry * 100f;
-                case "% Chance to be Avoided (Yellow/Dodge)": return (1f - ((BasePhysicalYellowCombatTable)CrusaderStrikeSkill.CT).ChanceToLand) * 100f;
+                case "% Chance to be Avoided (Yellow/Dodge)": return (1f - CrusaderStrikeSkill.CT.ChanceToLand) * 100f;
             }
             return 0f;
         }

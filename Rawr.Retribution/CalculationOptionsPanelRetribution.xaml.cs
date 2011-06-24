@@ -1,26 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Net;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
 
 namespace Rawr.Retribution
 {
     public partial class CalculationOptionsPanelRetribution : ICalculationOptionsPanel
     {
-        public bool _loadingCalculationOptions = false;
+        public bool _loadingCalculationOptions;
 
         public UserControl PanelControl { get { return this; } }
 
         #region ICalculationOptionsPanel Members
-        CalculationOptionsRetribution calcOpts = null;
+        CalculationOptionsRetribution calcOpts;
 
         private Character character;
         public Character Character

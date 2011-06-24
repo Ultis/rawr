@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Reflection;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 
 namespace Rawr.Retribution
 {
@@ -10,197 +8,100 @@ namespace Rawr.Retribution
     public class CalculationsRetribution : CalculationsBase
     {
         #region Model Properties
-        #region DPSWarr Gemming Templates
-        // Stealing this from DPSwarr, and everything works.  THANK YOU DPSWarr folks.
-        // Ideally, Rawr.Base should handle 0's in the template w/o the special work required.
-        // Or at least so it doesn't cause a model to break.
+        #region Gemming Templates
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
             get
             {
-                // Relevant Gem IDs for DPSWarrs
+                // Relevant Gem IDs for Retribution
                 //               common uncommon rare  jewel |  fills in gaps if it can
+                int[] null_arr = { 0, 0, 0, 0 }; fixArray(null_arr);
                 // Red slots
                 int[] red_str = { 52081, 52206, 00000, 52255 }; fixArray(red_str);
-                int[] red_exp = { 52085, 52230, 00000, 52260 }; fixArray(red_exp);
-                int[] red_hit = { 00000, 00000, 00000, 00000 }; fixArray(red_hit);
-                int[] red_mst = { 00000, 00000, 00000, 00000 }; fixArray(red_mst);
-                int[] red_crt = { 00000, 00000, 00000, 00000 }; fixArray(red_crt);
-                int[] red_has = { 00000, 00000, 00000, 00000 }; fixArray(red_has);
-                // Orange slots
-                int[] org_str = { 52114, 52240, 00000, 00000 }; fixArray(org_str);
-                int[] org_exp = { 52118, 52224, 00000, 00000 }; fixArray(org_exp);
-                int[] org_hit = { 00000, 00000, 00000, 00000 }; fixArray(org_hit);
-                int[] org_mst = { 52114, 52240, 00000, 00000 }; fixArray(org_mst);
-                int[] org_crt = { 52108, 52222, 00000, 00000 }; fixArray(org_crt);
-                int[] org_has = { 52111, 52214, 00000, 00000 }; fixArray(org_has);
+                // Blue slots
+                int[] blu_hit = { 52089, 52235, 00000, 52264 }; fixArray(blu_hit);
                 // Yellow slots
-                int[] ylw_str = { 00000, 00000, 00000, 00000 }; fixArray(ylw_str);
-                int[] ylw_exp = { 00000, 00000, 00000, 00000 }; fixArray(ylw_exp);
-                int[] ylw_hit = { 00000, 00000, 00000, 00000 }; fixArray(ylw_hit);
                 int[] ylw_mst = { 52094, 52219, 00000, 52269 }; fixArray(ylw_mst);
                 int[] ylw_crt = { 52091, 52241, 00000, 52266 }; fixArray(ylw_crt);
                 int[] ylw_has = { 52093, 52232, 00000, 52268 }; fixArray(ylw_has);
+                // Orange slots
+                int[] org_mst = { 52114, 52240, 00000, 00000 }; fixArray(org_mst);
+                int[] org_crt = { 52108, 52222, 00000, 00000 }; fixArray(org_crt);
+                int[] org_has = { 52111, 52214, 00000, 00000 }; fixArray(org_has);
                 // Green slots
-                int[] grn_str = { 00000, 00000, 00000, 00000 }; fixArray(grn_str);
-                int[] grn_exp = { 00000, 00000, 00000, 00000 }; fixArray(grn_exp);
                 int[] grn_hit = { 52128, 52237, 00000, 00000 }; fixArray(grn_hit);
                 int[] grn_mst = { 52126, 52231, 00000, 00000 }; fixArray(grn_mst);
                 int[] grn_crt = { 52121, 52223, 00000, 00000 }; fixArray(grn_crt);
                 int[] grn_has = { 52124, 52218, 00000, 00000 }; fixArray(grn_has);
-                // Blue slots
-                int[] blu_str = { 00000, 00000, 00000, 00000 }; fixArray(blu_str);
-                int[] blu_exp = { 00000, 00000, 00000, 00000 }; fixArray(blu_exp);
-                int[] blu_hit = { 52089, 52235, 00000, 52264 }; fixArray(blu_hit);
-                int[] blu_mst = { 00000, 00000, 00000, 00000 }; fixArray(blu_mst);
-                int[] blu_crt = { 00000, 00000, 00000, 00000 }; fixArray(blu_crt);
-                int[] blu_has = { 00000, 00000, 00000, 00000 }; fixArray(blu_has);
                 // Purple slots
-                int[] ppl_str = { 52095, 52243, 00000, 00000 }; fixArray(ppl_str);
-                int[] ppl_exp = { 52105, 52203, 00000, 00000 }; fixArray(ppl_exp);
                 int[] ppl_hit = { 52101, 52213, 00000, 00000 }; fixArray(ppl_hit);
-                int[] ppl_mst = { 00000, 00000, 00000, 00000 }; fixArray(ppl_mst);
-                int[] ppl_crt = { 00000, 00000, 00000, 00000 }; fixArray(ppl_crt);
-                int[] ppl_has = { 00000, 00000, 00000, 00000 }; fixArray(ppl_has);
                 // Cogwheels
                 int[] cog_exp = { 59489, 59489, 59489, 59489 }; fixArray(cog_exp);
                 int[] cog_hit = { 59493, 59493, 59493, 59493 }; fixArray(cog_hit);
                 int[] cog_mst = { 59480, 59480, 59480, 59480 }; fixArray(cog_mst);
                 int[] cog_crt = { 59478, 59478, 59478, 59478 }; fixArray(cog_crt);
                 int[] cog_has = { 59479, 59479, 59479, 59479 }; fixArray(cog_has);
-                int[] cog_pry = { 59491, 59491, 59491, 59491 }; fixArray(cog_pry);
-                int[] cog_ddg = { 59477, 59477, 59477, 59477 }; fixArray(cog_ddg);
-                int[] cog_spr = { 59496, 59496, 59496, 59496 }; fixArray(cog_spr);
-
-                string group; bool enabled;
+                
+                string group;
                 List<GemmingTemplate> templates = new List<GemmingTemplate>();
 
                 #region Strength
-                enabled = true;
                 group = "Strength";
                 // Straight
                 AddTemplates(templates,
                     red_str, red_str, red_str,
                     red_str, red_str, red_str,
-                    red_str, group, enabled);
+                    group, true);
                 // Socket Bonus
                 AddTemplates(templates,
-                    red_str, ylw_str, blu_str,
-                    org_str, ppl_str, grn_str,
-                    red_str, group, enabled);
-                #endregion
-
-                #region Expertise
-                group = "Expertise";
-                enabled = true;
-                // Straight
-                AddTemplates(templates,
-                    red_exp, red_exp, red_exp,
-                    red_exp, red_exp, red_exp,
-                    red_exp, group, enabled);
-                // Socket Bonus
-                AddTemplates(templates,
-                    red_exp, ylw_exp, blu_exp,
-                    org_exp, ppl_exp, grn_exp,
-                    red_exp, group, enabled);
+                    red_str, null_arr, null_arr,
+                    null_arr, ppl_hit, grn_mst,
+                    group, true);
                 #endregion
 
                 #region Hit
                 group = "Hit";
-                enabled = true;
-                // Straight
-                AddTemplates(templates,
-                    blu_hit, blu_hit, blu_hit,
-                    blu_hit, blu_hit, blu_hit,
-                    blu_hit, group, enabled);
                 // Socket Bonus
                 AddTemplates(templates,
-                    red_hit, ylw_hit, blu_hit,
-                    org_hit, ppl_hit, grn_hit,
-                    blu_hit, group, enabled);
+                    red_str, null_arr, blu_hit,
+                    null_arr, ppl_hit, null_arr,
+                    group, true);
                 #endregion
 
                 #region Mastery
-                enabled = true;
                 group = "Mastery";
-                // Straight
-                AddTemplates(templates,
-                    ylw_mst, ylw_mst, ylw_mst,
-                    ylw_mst, ylw_mst, ylw_mst,
-                    ylw_mst, group, enabled);
                 // Socket Bonus
                 AddTemplates(templates,
-                    red_mst, ylw_mst, blu_mst,
-                    org_mst, ppl_mst, grn_mst,
-                    ylw_mst, group, enabled);
+                    red_str, ylw_mst, null_arr,
+                    null_arr, null_arr, grn_mst,
+                    group, true);
                 #endregion
 
                 #region Crit
                 group = "Crit";
-                enabled = false;
-                // Straight
-                AddTemplates(templates,
-                    ylw_crt, ylw_crt, ylw_crt,
-                    ylw_crt, ylw_crt, ylw_crt,
-                    ylw_crt, group, enabled);
                 // Socket Bonus
                 AddTemplates(templates,
-                    red_crt, ylw_crt, blu_crt,
-                    org_crt, ppl_crt, grn_crt,
-                    red_crt, group, enabled);
+                    red_str, ylw_crt, null_arr,
+                    null_arr, null_arr, grn_crt,
+                    group, false);
                 #endregion
 
                 #region Haste
                 group = "Haste";
-                enabled = false;
-                // Straight
-                AddTemplates(templates,
-                    ylw_has, ylw_has, ylw_has,
-                    ylw_has, ylw_has, ylw_has,
-                    ylw_has, group, enabled);
                 // Socket Bonus
                 AddTemplates(templates,
-                    red_has, ylw_has, blu_has,
-                    org_has, ppl_has, grn_has,
-                    red_has, group, enabled);
+                    red_str, ylw_has, null_arr,
+                    null_arr, null_arr, grn_has,
+                    group, false);
                 #endregion
 
                 #region Cogs
                 templates.AddRange(new GemmingTemplate[] {
-                        new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_hit[0], MetaId = 68779, },
-                        new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_mst[0], MetaId = 68779, },
-                        new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_crt[0], MetaId = 68779, },
-                        new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_has[0], MetaId = 68779, },
-                        //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_pry[0], MetaId = 68779, },
-                        //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_ddg[0], MetaId = 68779, },
-                        //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_spr[0], MetaId = 68779, },
-
-                        new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_mst[0], MetaId = 68779, },
-                        new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_crt[0], MetaId = 68779, },
-                        new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_has[0], MetaId = 68779, },
-                        //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_pry[0], MetaId = 68779, },
-                        //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_ddg[0], MetaId = 68779, },
-                        //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_spr[0], MetaId = 68779, },
-
-                        new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_crt[0], MetaId = 68779, },
-                        new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_has[0], MetaId = 68779, },
-                        //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_pry[0], MetaId = 68779, },
-                        //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_ddg[0], MetaId = 68779, },
-                        //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_spr[0], MetaId = 68779, },
-
-                        new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_crt[0], Cogwheel2Id = cog_has[0], MetaId = 68779, },
-                        //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_crt[0], Cogwheel2Id = cog_pry[0], MetaId = 68779, },
-                        //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_crt[0], Cogwheel2Id = cog_ddg[0], MetaId = 68779, },
-                        //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_crt[0], Cogwheel2Id = cog_spr[0], MetaId = 68779, },
-
-                        //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_pry[0], Cogwheel2Id = cog_has[0], MetaId = 68779, },
-                        //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_pry[0], Cogwheel2Id = cog_ddg[0], MetaId = 68779, },
-                        //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_pry[0], Cogwheel2Id = cog_spr[0], MetaId = 68779, },
-
-                        //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_ddg[0], Cogwheel2Id = cog_has[0], MetaId = 68779, },
-                        //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_ddg[0], Cogwheel2Id = cog_spr[0], MetaId = 68779, },
-
-                        //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_spr[0], Cogwheel2Id = cog_has[0], MetaId = 68779, },
+                        new GemmingTemplate { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_crt[0], MetaId = 68779 },
+                        new GemmingTemplate { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_has[0], MetaId = 68779 },
+                        new GemmingTemplate { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_hit[0], MetaId = 68779 },
+                        new GemmingTemplate { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_exp[0], MetaId = 68779 },
+                        new GemmingTemplate { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_exp[0], MetaId = 68779 }
                     }
                 );
                 #endregion
@@ -215,9 +116,9 @@ namespace Rawr.Retribution
             if (thearray[2] == 0) thearray[2] = thearray[1]; // There was a Blue (or Green as set above), but no Purple
             if (thearray[3] == 0) thearray[3] = thearray[2]; // There was a Purple (or Blue/Green as set above), but no Jewel
         }
-        private static void AddTemplates(List<GemmingTemplate> templates, int[] red, int[] ylw, int[] blu, int[] org, int[] prp, int[] grn, int[] pris, string group, bool enabled)
+        private static void AddTemplates(List<GemmingTemplate> templates, int[] red, int[] ylw, int[] blu, int[] org, int[] prp, int[] grn, string group, bool enabled)
         {
-            const int chaotic = 52291; // Meta
+            const int chaotic = 68779; // Meta
             const string groupFormat = "{0} {1}";
             string[] quality = new string[] { "Uncommon", "Rare", "Epic", "Jewelcrafter" };
             for (int j = 0; j < 4; j++)
@@ -279,23 +180,21 @@ namespace Rawr.Retribution
         /// </summary>
         public override List<string> GetRelevantGlyphs()
         {
-            if (_relevantGlyphs == null)
-            {
-                _relevantGlyphs = new List<string>();
-                _relevantGlyphs.Add("Glyph of Crusader Strike");
-                _relevantGlyphs.Add("Glyph of Exorcism");
-                _relevantGlyphs.Add("Glyph of Judgement");
-                _relevantGlyphs.Add("Glyph of Seal of Truth");
-                _relevantGlyphs.Add("Glyph of Templar's Verdict");
-                _relevantGlyphs.Add("Glyph of Consecration");
-                _relevantGlyphs.Add("Glyph of Hammer of Wrath");
-                _relevantGlyphs.Add("Glyph of Rebuke");
-                _relevantGlyphs.Add("Glyph of Ascetic Crusader");
-            }
-            return _relevantGlyphs;
+            return _relevantGlyphs ?? (_relevantGlyphs = new List<string>
+                                                             {
+                                                                 "Glyph of Crusader Strike",
+                                                                 "Glyph of Exorcism",
+                                                                 "Glyph of Judgement",
+                                                                 "Glyph of Seal of Truth",
+                                                                 "Glyph of Templar's Verdict",
+                                                                 "Glyph of Consecration",
+                                                                 "Glyph of Hammer of Wrath",
+                                                                 "Glyph of Rebuke",
+                                                                 "Glyph of Ascetic Crusader"
+                                                             });
         }
 
-        private string[] _optimizableCalculationLabels = null;
+        private string[] _optimizableCalculationLabels;
         /// <summary>
         /// Labels of the stats available to the Optimizer.
         /// </summary>
@@ -304,16 +203,14 @@ namespace Rawr.Retribution
         {
             get
             {
-                if (_optimizableCalculationLabels == null)
-                    _optimizableCalculationLabels = new string[] {
-                    "Health",
-                    "% Chance to Miss (Melee)",
-                    "% Chance to Miss (Spells)",
-                    "% Chance to be Dodged",
-                    "% Chance to be Parried",
-                    "% Chance to be Avoided (Melee/Dodge)",
-                    };
-                return _optimizableCalculationLabels;
+                return _optimizableCalculationLabels ?? (_optimizableCalculationLabels = new string[] {
+                                                                     "Health",
+                                                                     "% Chance to Miss (Melee)",
+                                                                     "% Chance to Miss (Spells)",
+                                                                     "% Chance to be Dodged",
+                                                                     "% Chance to be Parried",
+                                                                     "% Chance to be Avoided (Melee/Dodge)"
+                                                                  });
             }
         }
 
@@ -326,7 +223,7 @@ namespace Rawr.Retribution
         /// subPointNameColors.Add("Mitigation", System.Drawing.Colors.Red);
         /// subPointNameColors.Add("Survival", System.Drawing.Colors.Blue);
         /// </summary>
-        private Dictionary<string, System.Windows.Media.Color> _subPointNameColors = null;
+        private Dictionary<string, System.Windows.Media.Color> _subPointNameColors;
         public override Dictionary<string, System.Windows.Media.Color> SubPointNameColors
         {
             get
@@ -343,13 +240,13 @@ namespace Rawr.Retribution
         /// <summary>
         /// Creates the CalculationOptionPanel
         /// </summary>
-        private ICalculationOptionsPanel _calculationOptionsPanel = null;
+        private ICalculationOptionsPanel _calculationOptionsPanel;
         public override ICalculationOptionsPanel CalculationOptionsPanel
         {
             get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelRetribution()); }
         }
 
-        private string[] _characterDisplayCalculationLabels = null;
+        private string[] _characterDisplayCalculationLabels;
         /// <summary>
         /// An array of strings which will be used to build the calculation display.
         /// Each string must be in the format of "Heading:Label". Heading will be used as the
@@ -416,7 +313,7 @@ namespace Rawr.Retribution
                         "Rotation Info:Judgement Usage",
                         "Rotation Info:Holy Wrath Usage",
                         "Rotation Info:Consecration Usage",
-                        "Rotation Info:GoaK Usage",
+                        "Rotation Info:GoaK Usage"
                     });
                     _characterDisplayCalculationLabels = labels.ToArray();
                 }
@@ -544,12 +441,12 @@ namespace Rawr.Retribution
             if (computeAverageStats)
             {
                 StatsRetri statsTmp = stats.Clone();
-                ConvertRatings(statsTmp, talents, character, character.BossOptions.Level, character.Level);// Convert ratings so we have right value for haste, weaponspeed and talents etc.
+                ConvertRatings(statsTmp, talents, character);// Convert ratings so we have right value for haste, weaponspeed and talents etc.
                 RotationCalculation rot = CreateRotation(character, statsTmp);
 
                 Dictionary<Trigger, float> triggerIntervals = new Dictionary<Trigger, float>();
                 Dictionary<Trigger, float> triggerChances = new Dictionary<Trigger, float>();
-                CalculateTriggers(character, triggerIntervals, triggerChances, rot);
+                CalculateTriggers(triggerIntervals, triggerChances, rot);
 
                 //Talent special effects
                 //GoaK Strength
@@ -588,13 +485,13 @@ namespace Rawr.Retribution
         
             // ConvertRatings needs to be done AFTER accounting for the averaged stats, since stat multipliers 
             // should affect the averaged stats also.
-            ConvertRatings(stats, talents, character, character.BossOptions.Level, character.Level);
+            ConvertRatings(stats, talents, character);
 
             return stats;
         }
 
         
-        private static void CalculateTriggers(Character character, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances, RotationCalculation rot)
+        private static void CalculateTriggers(Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances, RotationCalculation rot)
         {
             triggerChances[Trigger.MeleeCrit] = triggerChances[Trigger.MeleeHit] = triggerChances[Trigger.MeleeAttack] = triggerChances[Trigger.PhysicalCrit] = triggerChances[Trigger.PhysicalHit] = triggerChances[Trigger.PhysicalAttack] =
                 triggerChances[Trigger.DamageDone] = triggerChances[Trigger.SpellHit] = triggerChances[Trigger.DamageSpellHit] = triggerChances[Trigger.SpellCrit] = triggerChances[Trigger.DamageSpellCrit] =
@@ -603,7 +500,7 @@ namespace Rawr.Retribution
             triggerIntervals[Trigger.Use] = 0f;
             triggerIntervals[Trigger.MeleeCrit] = (float)(1f / rot.GetMeleeCritsPerSec());
             triggerIntervals[Trigger.MeleeHit] = triggerIntervals[Trigger.MeleeAttack] = (float)(1f / rot.GetMeleeAttacksPerSec());
-            triggerIntervals[Trigger.PhysicalCrit] = (float)(1f / rot.GetPhysicalCritsPerSec());;
+            triggerIntervals[Trigger.PhysicalCrit] = (float)(1f / rot.GetPhysicalCritsPerSec());
             triggerIntervals[Trigger.PhysicalHit] = triggerIntervals[Trigger.PhysicalAttack] = (float)(1f / rot.GetPhysicalAttacksPerSec());
             triggerIntervals[Trigger.DamageDone] = triggerIntervals[Trigger.DamageOrHealingDone] = (float)(1f / rot.GetAttacksPerSec());
             triggerIntervals[Trigger.SpellHit] = triggerIntervals[Trigger.DamageSpellHit] = (float)(1f / rot.GetSpellAttacksPerSec());
@@ -620,7 +517,7 @@ namespace Rawr.Retribution
 
         // Combine talents and buffs into primary and secondary stats.
         // Convert ratings into their percentage values.
-        private void ConvertRatings(Stats stats, PaladinTalents talents, Character character, int targetLevel, int charlevel)
+        private void ConvertRatings(Stats stats, PaladinTalents talents, Character character)
         {
             // Primary stats
             stats.Strength += stats.HighestStat;
@@ -706,7 +603,7 @@ namespace Rawr.Retribution
         /// <summary>
         /// List of itemtypes that are relevant for retribution
         /// </summary>
-        private List<ItemType> _relevantItemTypes = null;
+        private List<ItemType> _relevantItemTypes;
         public override List<ItemType> RelevantItemTypes
         {
             get
@@ -728,7 +625,7 @@ namespace Rawr.Retribution
         /// Ever trigger listed here needs an implementation in ProcessSpecialEffects()
         /// A trigger not listed here should not appear in ProcessSpecialEffects()
         /// </summary>
-        internal static List<Trigger> _RelevantTriggers = null;
+        internal static List<Trigger> _RelevantTriggers;
         internal static List<Trigger> RelevantTriggers
         {
             get
@@ -996,7 +893,7 @@ namespace Rawr.Retribution
         /// </summary>
         public bool HasUnwantedStats(Stats stats)
         {
-            /// List of stats that will filter out some buffs (Flasks, Elixirs & Scrolls), Enchants and Items.
+            // List of stats that will filter out some buffs (Flasks, Elixirs & Scrolls), Enchants and Items.
             bool UnwantedStats = stats.SpellPower != 0 ||
                                  stats.Spirit != 0 ||
                                  stats.Mp5 != 0 ||
@@ -1023,23 +920,18 @@ namespace Rawr.Retribution
         // Custom charts are extra charts which can be defined per model.
         // The charts are available via the "Slot" menu of the righthand Rawr chart panel.
 
-        private string[] _customChartNames = null;
+        private string[] _customChartNames;
         public override string[] CustomChartNames
         {
             get
             {
-                if (_customChartNames == null)
-                {
-                    _customChartNames = new string[] 
-                    { 
-                        "Seals", 
-                        "Weapon Speed",
-                        "Inquisition Refresh below",
-                        "Holy Power per Inq",
-                        "Wait for Crusader"
-                    };
-                }
-                return _customChartNames;
+                return _customChartNames ?? (_customChartNames = new string[] {
+                                                                         "Seals",
+                                                                         "Weapon Speed",
+                                                                         "Inquisition Refresh below",
+                                                                         "Holy Power per Inq",
+                                                                         "Wait for Crusader"
+                                                                     });
             }
         }
 
@@ -1059,14 +951,12 @@ namespace Rawr.Retribution
                 CalculationOptionsRetribution deltaOpts = initOpts.Clone();
                 deltaChar.CalculationOptions = deltaOpts;
 
-                ComparisonCalculationBase Righteousness;
                 deltaOpts.Seal = SealOf.Righteousness;
-                Righteousness = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Seal of Righteousness", initOpts.Seal == SealOf.Righteousness);
+                ComparisonCalculationBase Righteousness = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Seal of Righteousness", initOpts.Seal == SealOf.Righteousness);
                 Righteousness.Item = null;
 
-                ComparisonCalculationBase Truth;
                 deltaOpts.Seal = SealOf.Truth;
-                Truth = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Seal of Truth", initOpts.Seal == SealOf.Truth);
+                ComparisonCalculationBase Truth = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Seal of Truth", initOpts.Seal == SealOf.Truth);
                 Truth.Item = null;
 
                 return new ComparisonCalculationBase[] { Righteousness, Truth };
@@ -1120,10 +1010,7 @@ namespace Rawr.Retribution
                     GetWaitforCSComparison(character, .7f)
                 };
             }
-            else
-            {
-                return new ComparisonCalculationBase[0];
-            }
+            return new ComparisonCalculationBase[0];
         }
         private ComparisonCalculationBase GetWaitforCSComparison(Character character, float waitforCS)
         {

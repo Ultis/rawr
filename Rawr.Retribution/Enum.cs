@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Rawr.Retribution
+﻿namespace Rawr.Retribution
 {
 
     public enum SealOf
@@ -36,8 +32,6 @@ namespace Rawr.Retribution
         HammerOfWrath,
         HolyWrath,
         Exorcism,
-        HandOfLightCS,
-        HandOfLightTV,
         White,
         SoC,
         Seal,

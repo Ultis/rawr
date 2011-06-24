@@ -93,14 +93,14 @@ namespace Rawr.Retribution
         }
 
         #region Rotation
-        private Ability[] allAb = { Ability.Consecration, Ability.CrusaderStrike, Ability.Exorcism, Ability.HammerOfWrath, Ability.HolyWrath, Ability.Inquisition, Ability.Judgement, Ability.TemplarsVerdict };
+        private readonly Ability[] allAb = { Ability.Consecration, Ability.CrusaderStrike, Ability.Exorcism, Ability.HammerOfWrath, Ability.HolyWrath, Ability.Inquisition, Ability.Judgement, Ability.TemplarsVerdict };
         private float dpChance;
 
         private void DoRotation(double fightlength, float normGCD, bool below20, bool zeal, Dictionary<DamageAbility, float> tmpCast)
         {
-            float old_holyPower = 0f; 
+            float old_holyPower; 
             float holyPower = 0f;
-            float holyPowerDP = 0f;
+            float holyPowerDP;
             double numOfGCD = fightlength / normGCD;
             
             int iterator = 0;
@@ -256,16 +256,14 @@ namespace Rawr.Retribution
                 return GetMeleeAttacksPerSec() + GetRangedAttacksPerSec() + GetAbilityHitsPerSecond(Exo);
             if (seal.GetType() == typeof(SealOfRighteousness))
                 return GetMeleeAttacksPerSec() + GetAbilityHitsPerSecond(HoW);
-            else
-                return 0d;
+            return 0d;
         }
 
         public double SealDotProcPerSec(Skill seal)
         {
             if (seal.GetType() == typeof(SealOfTruth))
                 return 1 / (3d / (1 + Stats.PhysicalHaste));
-            else
-                return 0d;
+            return 0d;
         }
 
         public double GetAbilityHitsPerSecond(Skill skill)
