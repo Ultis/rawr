@@ -391,7 +391,7 @@ namespace Rawr.Healadin
             calc.HealedIH *= CalcOpts.IHEff * (0.12f + ((8 + Stats.MasteryRating / 179.28f) * 0.015f));                   
             
             // Beacon of Light
-            calc.HealedBoL =  bol.HealingDone(calc.TotalHealed);
+            calc.HealedBoL =  bol.HealingDone(calc.TotalHealed + calc.HealedHL);  // added HL heals again to reflect 4.2 change, where HL transferes 100% to beacon target, rather than 50% for everything else
             #endregion
 
 

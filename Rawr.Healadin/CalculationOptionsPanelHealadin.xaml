@@ -48,7 +48,7 @@
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" Grid.Column="0" Margin="2" Text="Overall Scale: *" ToolTipService.ToolTip="Fight Healing is your overall HPS.  Burst Healing is your best possible Flash of Light HPS.  \nThis scale weighs the two appropriately when calculating your overall score." />
                 <Slider Margin="2" Grid.Row="0" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=BurstScale}" />
-                <Button Margin="2 2 2 10" x:Name="btnResetBurstScale" Grid.Row="1" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset the overall scale to 25% Burst, 75% Total Fight." Click="btnResetBurstScale_Click" />
+                <Button Margin="2 2 2 10" x:Name="btnResetBurstScale" Grid.Row="1" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset the overall scale to 30% Burst, 70% Total Fight." Click="btnResetBurstScale_Click" />
                 <TextBlock Margin="2 2 2 10" Grid.Row="1" Grid.Column="1" Text="{Binding Mode=OneWay, Path=BurstScaleText}" />
 
                 <TextBlock Grid.Row="2" Grid.Column="0" Margin="2" Text="Activity: *" ToolTipService.ToolTip="The percent of time you are actively casting spells." />
@@ -78,7 +78,7 @@
 
                 <TextBlock Grid.Row="12" Grid.Column="0" Margin="2" Text="HR efficiency: *" ToolTipService.ToolTip="Holy Radiance efficiency depends on tight raid stacking.  What % of the max heals actually happens?" />
                 <Slider Margin="2" Grid.Row="12" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=HREff}" />
-                <Button Margin="2 2 2 10" x:Name="btnResetHREff" Grid.Row="13" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset HR efficiency to 40%." Click="btnResetHREff_Click" />
+                <Button Margin="2 2 2 10" x:Name="btnResetHREff" Grid.Row="13" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset HR efficiency to 50%." Click="btnResetHREff_Click" />
                 <TextBlock Margin="2 2 2 10" Grid.Row="13" Grid.Column="1" Text="{Binding Mode=OneWay, Path=HREff, StringFormat='\{0:P0\}', ConverterCulture=en-ZA}" />
 
                 <TextBlock Grid.Row="14" Grid.Column="0" Margin="2" Text="Melee attacks: *" ToolTipService.ToolTip="Melee attacks generate mana.  You can do melee attacks while casting your instant spells.  What percentage of your instant cast time do you use for melee?" />
@@ -110,7 +110,7 @@
                 <TextBlock Grid.Row="2" Grid.Column="0" Margin="2" Text="Judgement: *" ToolTipService.ToolTip="The time in seconds between casting of Judgement." />
                 <inputToolkit:NumericUpDown Margin="2" Grid.Row="2" Grid.Column="1" Value="{Binding Mode=TwoWay, Path=JudgementCasts}" Maximum="60" Minimum="8" DecimalPlaces="1" Increment="0.5"/>
                 <TextBlock Grid.Row="3" Grid.Column="0" Margin="2" Text="HR: *" ToolTipService.ToolTip="The time in seconds between casting of Holy Radiance." />
-                <inputToolkit:NumericUpDown Margin="2" Grid.Row="3" Grid.Column="1" Value="{Binding Mode=TwoWay, Path=HRCasts}" Maximum="120" Minimum="30" DecimalPlaces="0" Increment="10"/>
+                <inputToolkit:NumericUpDown Margin="2" Grid.Row="3" Grid.Column="1" Value="{Binding Mode=TwoWay, Path=HRCasts}" Maximum="120" Minimum="20" DecimalPlaces="0" Increment="10"/>
 
                 <TextBlock Grid.Row="1" Grid.Column="2" Margin="2" Text="Divine Plea: *" ToolTipService.ToolTip="The time in minutes between usage of Divine Plea." />
                 <inputToolkit:NumericUpDown Margin="2" Grid.Row="1" Grid.Column="3" Value="{Binding Mode=TwoWay, Path=DivinePlea}" Maximum="30" Minimum="2" DecimalPlaces="1" Increment="0.1"/>

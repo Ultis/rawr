@@ -99,25 +99,27 @@ namespace Rawr.Healadin
 
     public static class HealadinConstants
     {
+        public static float basemana = 23422;
+
         // Spell coeficients
         // source:  http://elitistjerks.com/f76/t110847-holy_cataclysm_holy_compendium_4_0_6_a/
         public static float fol_coef = 0.8632f;
-        public static float fol_mana = 7026.6f;
+        public static float fol_mana = basemana * 0.31f; //7026.6f; updated for 4.2
         public static float fol_min = 6907f;
         public static float fol_max = 7749f;
 
         public static float hl_coef = 0.432f;
-        public static float hl_mana = 2342.2f;
+        public static float hl_mana = basemana * 0.12f; //2342.2f; updatedf for 4.2
         public static float hl_min = 4163f;
         public static float hl_max = 4637f;
 
         public static float dl_coef = 1.15306f;
-        public static float dl_mana = 7729.3f;
+        public static float dl_mana = basemana * 0.35f; //7729.3f; updated for 4.2
         public static float dl_min = 11100f;
         public static float dl_max = 12366f;
 
         public static float hs_coef = 0.2689f;
-        public static float hs_mana = 1873.8f;
+        public static float hs_mana = basemana * 0.07f; //1873.8f; updated for 4.2
         public static float hs_min = 2629f;
         public static float hs_max = 2847f;
 
@@ -131,8 +133,6 @@ namespace Rawr.Healadin
         public static float lod_coef = 0.198f;
         public static float lod_min = 605f;
         public static float lod_max = 673f;
-
-        public static float basemana = 23422;
 
         //the following spells were not listed on elitistjerks.com, I did my own testing to get them
 
@@ -210,7 +210,7 @@ namespace Rawr.Healadin
 
         public float CritHealed() 
         {
-            float critmultiplier = 1f + 0.5f * (1f - Stats.BonusCritChanceObliterate);  // have to change this to a pally variable when I add them to stats    
+            float critmultiplier = 2f; // *(1f - Stats.BonusCritChanceObliterate);  // had been temporarily using BonusCritChanceObliterate to track option for crit overheals (since removed)
             return BaseHealed() * critmultiplier * (1f + Stats.BonusCritHealMultiplier) * AbilityCritMultiplier(); 
         }
 
@@ -414,9 +414,11 @@ namespace Rawr.Healadin
             float holypower = 3f;  // assume 3 holypower for now
             float glyph_multiplier = 1f + (Talents.GlyphOfWordOfGlory ? 0.1f : 0f);
             // TODO: calculate real spellpower somewhere in Healadin module, and use that instead of Stats.SpellPower + Stats.Intellect
-            return holypower * glyph_multiplier * (HealadinConstants.wog_min + HealadinConstants.wog_max) / 2f + 
+            return holypower * glyph_multiplier * 1.3f * ( // 1.3 is for patch 4.2 update, Walk in the Light now gives that bonus 
+                                (HealadinConstants.wog_min + HealadinConstants.wog_max) / 2f + 
                                 ((Stats.SpellPower + Stats.Intellect) * HealadinConstants.wog_coef_sp) +
-                                (attackpower * HealadinConstants.wog_coef_ap);
+                                (attackpower * HealadinConstants.wog_coef_ap)
+                                );
         }
     }
 

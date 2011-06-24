@@ -76,7 +76,7 @@ namespace Rawr.Healadin
         #endregion
 
         private void btnResetBurstScale_Click(object sender, RoutedEventArgs e) {
-            calcOpts.BurstScale = .25f;
+            calcOpts.BurstScale = .30f;
         }
 
         private void btnResetActivity_Click(object sender, RoutedEventArgs e) {
@@ -117,7 +117,7 @@ namespace Rawr.Healadin
 
         private void btnResetHREff_Click(object sender, RoutedEventArgs e)
         {
-            calcOpts.HREff = .4f;
+            calcOpts.HREff = .5f;
         }
 
         private void btnResetIHEff_Click(object sender, RoutedEventArgs e)
@@ -137,7 +137,7 @@ namespace Rawr.Healadin
 
         private void btnResetAll_Click(object sender, RoutedEventArgs e)
         {
-            calcOpts.BurstScale = .25f;
+            calcOpts.BurstScale = .3f;
             calcOpts.Activity = .85f;
             calcOpts.HolyShock = 7.5f;
             calcOpts.HolyPoints = .75f;
@@ -147,7 +147,7 @@ namespace Rawr.Healadin
             calcOpts.BoLUp = 1f;
             calcOpts.Melee = .25f;
             calcOpts.IHEff = 1f;  // todo:  get rid of this
-            calcOpts.HREff = 0.4f; 
+            calcOpts.HREff = 0.5f; 
             calcOpts.HRCasts = 60f;
             calcOpts.Userdelay = 0.1f;
             calcOpts.CritOverheals = 0f; // todo:  get rid of this

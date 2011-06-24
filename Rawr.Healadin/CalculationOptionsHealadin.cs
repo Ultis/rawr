@@ -19,26 +19,26 @@ namespace Rawr.Healadin
 
         public CalculationOptionsHealadin()
         {
-            length = 7;
-            activity = .85f;
-            replenishment = .9f;
-            divinePlea = 2f;
-            cleanse = 10f;
-            melee = 0.25f;
-            critoverheals = 0f; // todo:  get rid of these
+            length = 7;            // fight length in minutes
+            activity = .85f;       // percent of fight time active
+            replenishment = .9f;   // percent of fight lenght with this buff
+            divinePlea = 2f;       // time in minutes between Divine Plea casts
+            cleanse = 10f;         // number of cleanse casts during fight
+            melee = 0.25f;         // percent of instant cast time total spent doing melee
             boLUp = 1f;
             holyShock = 7.5f;
             holyPoints = 0.75f;
             lodtargets = 0.6f;
             judgementcasts = 10f;
             hrCasts = 60f;
-            hrEff = 0.4f;  
-            ihEff = 1f;  // todo:  get rid of these
-            burstScale = .25f;
+            hrEff = 0.5f;          
+            burstScale = .3f;    // FoL spam vs total fight HPS
             judgement = true;
             hitIrrelevant = true;
             meleevsHL = false;
             userdelay = 0.1f;
+            ihEff = 1f;         // todo:  get rid of these
+            critoverheals = 0f; // todo:  get rid of these
          //   gHL_Targets = 1f;  // removing button for this
          //   infusionOfLight = true; // removing button for this
          //   ioLHolyLight = .9f;
