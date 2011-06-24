@@ -273,9 +273,7 @@ namespace Rawr
         #endregion
         #region Added by Paladins [Verified Jothay 2011-03-29]
         // Retribution
-        BonusRet_T11_4P_InqHP,
         JudgementCDReduction,
-        RighteousVengeanceCanCrit,
         #endregion
         #region Added by Rogues   [Verified Jothay 2011-03-29]
         Rogue_T11_2P,
@@ -2112,28 +2110,12 @@ namespace Rawr
         #endregion
         #region Added by Paladins
         [DefaultValueAttribute(0f)]
-        [DisplayName("Inq Holy Power")]
-        [Category("Retribution")]
-        public float BonusRet_T11_4P_InqHP
-        {
-            get { return _rawNoStackData[(int)NonStackingStat.BonusRet_T11_4P_InqHP]; }
-            set { _rawNoStackData[(int)NonStackingStat.BonusRet_T11_4P_InqHP] = value; }
-        }
-        [DefaultValueAttribute(0f)]
         [DisplayName("sec Judgement CD Reduction")]
         [Category("Retribution")]
         public float JudgementCDReduction
         {
             get { return _rawNoStackData[(int)NonStackingStat.JudgementCDReduction]; }
             set { _rawNoStackData[(int)NonStackingStat.JudgementCDReduction] = value; }
-        }
-        [DefaultValueAttribute(0f)]
-        [DisplayName("Righteous Vengeance Can Crit")]
-        [Category("Retribution")]
-        public float RighteousVengeanceCanCrit
-        {
-            get { return _rawNoStackData[(int)NonStackingStat.RighteousVengeanceCanCrit]; }
-            set { _rawNoStackData[(int)NonStackingStat.RighteousVengeanceCanCrit] = value; }
         }
         #endregion
         #region Added by Rogues
