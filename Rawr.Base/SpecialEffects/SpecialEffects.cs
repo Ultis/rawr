@@ -621,10 +621,11 @@ namespace Rawr {
             else if ((match = new Regex(@"Your melee and ranged attacks have a chance to grant you (?<amount>\d+) haste rating for (?<dur>\d+) sec").Match(line)).Success)
             {   // Prestor's Talisman of Machination. The Hungerer
                 float icd = 0f;
-                if ((id == 68927) || (id == 69112)) { icd = 60f; } else { icd = (float)int.Parse(match.Groups["dur"].Value) * 5f; }
+                float chance = 0f;
+                if ((id == 68927) || (id == 69112)) { icd = 60f; chance = 1f; } else { icd = (float)int.Parse(match.Groups["dur"].Value) * 5f; chance = 0.10f; }
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalAttack,
                     new Stats() { HasteRating = (float)int.Parse(match.Groups["amount"].Value) },
-                    (float)int.Parse(match.Groups["dur"].Value), icd, 0.10f));
+                    (float)int.Parse(match.Groups["dur"].Value), icd, chance));
             }
             else if ((match = new Regex(@"Your healing spells have a chance to grant (?<amount>\d+) haste rating for (?<dur>\d+) sec").Match(line)).Success)
             {   // Rainsong
@@ -892,11 +893,11 @@ namespace Rawr {
             #region Specialty Stat Procs
             else if ((match = new Regex(@"Your melee and ranged attacks have a chance to grant (?<amount>\d+) critical strike rating, haste rating, or mastery rating, whichever is currently highest").Match(line)).Success)
             {   // Matrix Restabilizer
-                // appears to have 100 second ICD and lasts for 30 seconds
+                // appears to have 105 second ICD and lasts for 30 seconds
                 float duration = 30f;
-                float icd = 100f;
+                float icd = 105f;
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalAttack, new Stats() { HighestSecondaryStat = int.Parse(match.Groups["amount"].Value) },
-                    duration, icd, 0.10f));
+                    duration, icd, 0.15f));
             }
             else if ((match = new Regex(@"When you heal or deal damage you have a chance to gain Greatness").Match(line)).Success)
             {   // Darkmoon Card: Greatness
