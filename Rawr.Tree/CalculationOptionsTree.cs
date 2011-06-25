@@ -291,24 +291,16 @@ namespace Rawr.Tree
             set { tankRaidHealingWeight = value; OnPropertyChanged("TankRaidHealingWeight"); }
         }
 
-        private bool harmony = false;
-        [DefaultValue(false)]
+        private bool harmony = true;
+        [DefaultValue(true)]
         public bool Harmony
         {
             get { return harmony; }
             set { harmony = value; OnPropertyChanged("Harmony"); }
         }
 
-        private float harmonyCoefficient = 0.0125f;
-        [DefaultValue(0.0125f)]
-        public float HarmonyCoefficient
-        {
-            get { return harmonyCoefficient; }
-            set { harmonyCoefficient = value; OnPropertyChanged("HarmonyCoefficient"); }
-        }
-
-        private bool crit100Bonus = false;
-        [DefaultValue(false)]
+        private bool crit100Bonus = true;
+        [DefaultValue(true)]
         public bool Crit100Bonus
         {
             get { return crit100Bonus; }

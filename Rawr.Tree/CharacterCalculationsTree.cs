@@ -97,7 +97,7 @@ namespace Rawr.Tree {
                 if(!opts.Harmony)
                     Symbiosis = mastery * 0.0145f;
                 else
-                    Harmony = mastery * opts.HarmonyCoefficient;
+                    Harmony = mastery * 0.0125f;
             }
 
             SpellsManaCostReduction = stats.SpellsManaCostReduction + stats.NatureSpellsManaCostReduction;

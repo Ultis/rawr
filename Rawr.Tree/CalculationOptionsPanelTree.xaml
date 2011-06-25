@@ -249,6 +249,7 @@
 					<RowDefinition Height="Auto" />
 					<RowDefinition Height="Auto" />
 					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
 				</Grid.RowDefinitions>
 				<Border Grid.ColumnSpan="5" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
 					<TextBlock Margin="4" FontWeight="Bold" Text="Raid healing" VerticalAlignment="Center" />
@@ -292,9 +293,13 @@
 
 				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Nourish/RG effectiveness:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="15" ToolTipService.ToolTip="Percentage of raid Nourish or Regrowth healing that is not overhealing" />
 				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="15" Value="{Binding Path=NourishEffectiveHealing, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50"  />
+
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="T12 4P extra heal effectiveness:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="16" ToolTipService.ToolTip="Percentage of the Swiftend healing to an extra target due to the T12 4P bonus that is not overhealing" />
+				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="16" Value="{Binding Path=SwiftmendExtraHealEffectiveHealing, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50"  />
+
 			</Grid>
 		</controls:TabItem>
-		<controls:TabItem Header="Experimental">
+		<controls:TabItem Header="Versions">
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="Auto"/>
@@ -309,19 +314,13 @@
 					<RowDefinition Height="Auto" />
 					<RowDefinition Height="Auto" />
 					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
 				</Grid.RowDefinitions>
 				<Border Grid.Row="0" Grid.ColumnSpan="5" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
-					<TextBlock Margin="4" FontWeight="Bold" Text="PTR changes" VerticalAlignment="Center" />
+					<TextBlock Margin="4" FontWeight="Bold" Text="WoW 4.2" VerticalAlignment="Center" />
 				</Border>
 
 				<CheckBox Grid.Column="0" Grid.Row="1" IsChecked="{Binding Path=Crit100Bonus, Mode=TwoWay}" MinWidth="50" Content="+100% crits" Margin="4,2,2,2" Grid.ColumnSpan="5" ToolTipService.ToolTip="Whether critical hits should result in a 100% bonus like on PTR rather than the 50% bonus on 4.1"/>
 				<CheckBox Grid.Column="0" Grid.Row="2" IsChecked="{Binding Path=Harmony, Mode=TwoWay}" MinWidth="50" Content="Use Harmony mastery" Margin="4,2,2,2" Grid.ColumnSpan="5" ToolTipService.ToolTip="Whether the Harmony mastery used on PTR should be used rather than the Symbiosis mastery on 4.1" />
-
-				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Harmony coefficient:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="3" ToolTipService.ToolTip="Coefficient of the Harmony mastery, if enabled (currenly 1.25 on PTR)"/>
-				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="3" Value="{Binding Path=HarmonyCoefficient, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="2" MinWidth="50" />
-				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="T12 4P extra heal effectiveness:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="4" ToolTipService.ToolTip="Percentage of the Swiftend healing to an extra target due to the T12 4P bonus that is not overhealing" />
-				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="4" Value="{Binding Path=SwiftmendExtraHealEffectiveHealing, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50"  />
 			</Grid>
 
 		</controls:TabItem>
