@@ -167,7 +167,6 @@ namespace Rawr.Mage
             {
                 InitializeCastTime(false, false, 2.5f, 0);
                 InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0, 0.328000009059906f, 0.241999998688698f, 0, 0.337999999523163f, 0, 0, 0, 0);
-                CritBonus = CritBonus / (1 + solver.IgniteFactor);
                 IgniteFactor = 0;
             }
             else
@@ -278,7 +277,6 @@ namespace Rawr.Mage
             InitializeCastTime(false, true, 0, 60);
             float explosion = solver.MageTalents.FirePower == 3 ? 1f : 0.33f * solver.MageTalents.FirePower;
             InitializeScaledDamage(solver, false, 40, solver.MageTalents.FrostfireOrb > 0 ? MagicSchool.FrostFire : MagicSchool.Fire, 0.06f, 15 * 0.277999997138977f + explosion * 1.317999958992f, 0.25f, 0, 15 * 0.13400000333786f + explosion * 0.193000003695488f, 0, 15 + explosion, 15 + explosion, 0);
-            CritBonus = CritBonus / (1 + solver.IgniteFactor); // Flame Orb doesn't generate ignite
             IgniteFactor = 0;
             BaseDirectDamageModifier *= (1f + 0.05f * solver.MageTalents.CriticalMass);
             BaseDotDamageModifier += 0.05f * solver.MageTalents.CriticalMass; // additive with mastery
@@ -710,6 +708,8 @@ namespace Rawr.Mage
             // combustion_tick*3=(.2678930839158054*spellpower+518.6158840934165) * (1+mastery)*(1+mastery+CM)
             // 0.20807229818703332038834951456311*spellpower + 402.8084536647895145631067961165
             // double dip mastery!!
+            // TODO I don't know how mastery double dip works in relation to on use mastery effects
+            // for now treat it the same as proc mastery effects which might underestimate
             float lbMult = 1 + solver.FlashburnBonus + 0.05f * solver.MageTalents.CriticalMass;
             if (solver.MageTalents.GlyphOfLivingBomb)
             {
@@ -736,10 +736,10 @@ namespace Rawr.Mage
             // the way we'll remove the on use spell power part will be by deducting it from the base
             // so we'll need to remember the coefficient part associated to ignite contribution
             IgniteContributionCoefficient = 0;
-            BasePeriodicDamage += rollingMultiplier * (FB.BaseMinDamage + FB.BaseMaxDamage) / 4.0f * solver.BaseFireCritBonus * ignite / (1 + solver.IgniteFactor) / 4.0f;
-            IgniteContributionCoefficient += rollingMultiplier * FB.SpellDamageCoefficient / 2.0f * solver.BaseFireCritBonus * ignite / (1 + solver.IgniteFactor) / 4.0f;
-            BasePeriodicDamage += rollingMultiplier * (Pyro.BaseMinDamage + Pyro.BaseMaxDamage) / 4.0f * solver.BaseFireCritBonus * ignite / (1 + solver.IgniteFactor) / 4.0f;
-            IgniteContributionCoefficient += rollingMultiplier * Pyro.SpellDamageCoefficient / 2.0f * solver.BaseFireCritBonus * ignite / (1 + solver.IgniteFactor) / 4.0f;
+            BasePeriodicDamage += rollingMultiplier * (FB.BaseMinDamage + FB.BaseMaxDamage) / 4.0f * solver.BaseFireCritBonus * ignite / 4.0f;
+            IgniteContributionCoefficient += rollingMultiplier * FB.SpellDamageCoefficient / 2.0f * solver.BaseFireCritBonus * ignite / 4.0f;
+            BasePeriodicDamage += rollingMultiplier * (Pyro.BaseMinDamage + Pyro.BaseMaxDamage) / 4.0f * solver.BaseFireCritBonus * ignite / 4.0f;
+            IgniteContributionCoefficient += rollingMultiplier * Pyro.SpellDamageCoefficient / 2.0f * solver.BaseFireCritBonus * ignite / 4.0f;
             DotDamageCoefficient += IgniteContributionCoefficient;
             // extend to 10 ticks
             BasePeriodicDamage *= 10;

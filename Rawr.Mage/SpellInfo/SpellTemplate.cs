@@ -179,6 +179,7 @@ namespace Rawr.Mage
                     HitRate = solver.BaseArcaneHitRate;
                     ThreatMultiplier = solver.ArcaneThreatMultiplier;
                     realResistance = calculationOptions.ArcaneResist;
+                    IgniteFactor = 0;
                     break;
                 case MagicSchool.Fire:
                     BaseSpellModifier = solver.BaseFireSpellModifier;
@@ -189,6 +190,7 @@ namespace Rawr.Mage
                     ThreatMultiplier = solver.FireThreatMultiplier;
                     realResistance = calculationOptions.FireResist;
                     BaseDotDamageModifier = 1.0f + solver.FlashburnBonus;
+                    IgniteFactor = solver.IgniteFactor;
                     break;
                 case MagicSchool.FrostFire:
                     BaseSpellModifier = solver.BaseFrostFireSpellModifier;
@@ -211,6 +213,7 @@ namespace Rawr.Mage
                     }
                     Range = range;
                     BaseDotDamageModifier = 1.0f + solver.FlashburnBonus;
+                    IgniteFactor = solver.IgniteFactor;
                     break;
                 case MagicSchool.Frost:
                     BaseSpellModifier = solver.BaseFrostSpellModifier;
@@ -220,6 +223,7 @@ namespace Rawr.Mage
                     HitRate = solver.BaseFrostHitRate;
                     ThreatMultiplier = solver.FrostThreatMultiplier;
                     realResistance = calculationOptions.FrostResist;
+                    IgniteFactor = 0;
                     break;
                 case MagicSchool.Nature:
                     BaseSpellModifier = solver.BaseNatureSpellModifier;
@@ -230,6 +234,7 @@ namespace Rawr.Mage
                     ThreatMultiplier = solver.NatureThreatMultiplier;
                     realResistance = calculationOptions.NatureResist;
                     Range = range;
+                    IgniteFactor = 0;
                     break;
                 case MagicSchool.Shadow:
                     BaseSpellModifier = solver.BaseShadowSpellModifier;
@@ -240,6 +245,7 @@ namespace Rawr.Mage
                     ThreatMultiplier = solver.ShadowThreatMultiplier;
                     realResistance = calculationOptions.ShadowResist;
                     Range = range;
+                    IgniteFactor = 0;
                     break;
                 case MagicSchool.Holy:
                 default:
@@ -251,11 +257,11 @@ namespace Rawr.Mage
                     ThreatMultiplier = solver.HolyThreatMultiplier;
                     realResistance = calculationOptions.HolyResist;
                     Range = range;
+                    IgniteFactor = 0;
                     break;
             }
 
             NonHSCritRate = baseStats.SpellCritOnTarget;
-            IgniteFactor = solver.IgniteFactor;
 
             int playerLevel = calculationOptions.PlayerLevel;
             int targetLevel;
@@ -332,7 +338,6 @@ namespace Rawr.Mage
                     BaseAdditiveSpellModifier = solver.BaseFireAdditiveSpellModifier;
                     BaseCritRate = solver.BaseFireCritRate;
                     CritBonus = solver.BaseFireCritBonus;
-                    CritBonus = CritBonus / (1 + solver.IgniteFactor);
                     HitRate = solver.BaseFireHitRate;
                     ThreatMultiplier = solver.FireThreatMultiplier;
                     realResistance = calculationOptions.FireResist;
@@ -343,7 +348,6 @@ namespace Rawr.Mage
                     BaseAdditiveSpellModifier = solver.BaseFrostFireAdditiveSpellModifier;
                     BaseCritRate = solver.BaseFrostFireCritRate;
                     CritBonus = solver.BaseFrostFireCritBonus;
-                    CritBonus = CritBonus / (1 + solver.IgniteFactor);
                     HitRate = solver.BaseFrostFireHitRate;
                     ThreatMultiplier = solver.FrostFireThreatMultiplier;
                     if (calculationOptions.FireResist == -1)

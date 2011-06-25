@@ -101,8 +101,13 @@ namespace Rawr.Mage
         public float FrostFireCritRate { get { return StateCritRate + Solver.BaseFrostFireCritRate; } }
         public float HolyCritRate { get { return StateCritRate + Solver.BaseHolyCritRate; } }
 
-        public float Mastery { get { return Solver.Mastery; } }
+        public float StateMastery { get; set; }
 
+        public float Mastery { get { return StateMastery + Solver.Mastery; } }
+
+        public float ManaAdeptBonus { get { return Solver.ManaAdeptMultiplier * Mastery; } }
+        public float FlashburnBonus { get { return Solver.FlashburnMultiplier * Mastery; } }
+        public float FrostburnBonus { get { return Solver.FrostburnMultiplier * Mastery; } }
 
         //public float ResilienceCritDamageReduction { get; set; }
         //public float ResilienceCritRateReduction { get; set; }
@@ -217,7 +222,7 @@ namespace Rawr.Mage
                     {
                         frozenState = Clone();
                         frozenState.Frozen = true;
-                        frozenState.StateAdditiveSpellModifier += Solver.FrostburnBonus;
+                        frozenState.StateAdditiveSpellModifier += FrostburnBonus;
                     }
                 }
                 return frozenState;
@@ -310,6 +315,7 @@ namespace Rawr.Mage
             state.StateSpellPower = StateSpellPower;
             state.SpellHasteRating = SpellHasteRating;
             state.StateCritRate = StateCritRate;
+            state.StateMastery = StateMastery;
             state.Frozen = Frozen;
             state.CastingSpeed = CastingSpeed;
             state.StateAdditiveSpellModifier = StateAdditiveSpellModifier;
@@ -352,7 +358,9 @@ namespace Rawr.Mage
             if (CalculationOptions.MaintainSnare) SnaredTime = 1.0f;
 
             float stateCritRating = 0.0f;
+            float stateMasteryRating = 0.0f;
             StateCritRate = 0.0f;
+            StateMastery = 0.0f;
             ProcHasteRating = procHasteRating;
             SpellHasteRating = BaseStats.HasteRating + procHasteRating;
 
@@ -377,6 +385,7 @@ namespace Rawr.Mage
                 {
                     StateSpellPower += effect.SpecialEffect.Stats.SpellPower;
                     SpellHasteRating += effect.SpecialEffect.Stats.HasteRating;
+                    stateMasteryRating += effect.SpecialEffect.Stats.MasteryRating;
                     if (effect.SpecialEffect.Stats.Intellect + effect.SpecialEffect.Stats.HighestStat > 0)
                     {
                         float effectIntellect = (effect.SpecialEffect.Stats.Intellect + effect.SpecialEffect.Stats.HighestStat) * (1 + BaseStats.BonusIntellectMultiplier);
@@ -397,6 +406,7 @@ namespace Rawr.Mage
             CastingSpeed = (1 + SpellHasteRating / 1000f * levelScalingFactor) * solver.CastingSpeedMultiplier;
 
             StateCritRate += stateCritRating / 1400f * levelScalingFactor;
+            StateMastery += stateMasteryRating / 14f * levelScalingFactor;
 
             // spell calculations
 
@@ -434,7 +444,7 @@ namespace Rawr.Mage
             }
             if (Frozen)
             {
-                StateAdditiveSpellModifier += solver.FrostburnBonus;
+                StateAdditiveSpellModifier += FrostburnBonus;
             }
 
             SpellsCount = 0;

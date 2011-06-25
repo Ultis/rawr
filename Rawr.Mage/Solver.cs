@@ -334,9 +334,11 @@ namespace Rawr.Mage
 
         public float Mastery { get; set; }
         public float ManaAdeptBonus { get; set; }
+        public float ManaAdeptMultiplier { get; set; }
         public float FlashburnBonus { get; set; }
         public float FlashburnMultiplier { get; set; }
         public float FrostburnBonus { get; set; }
+        public float FrostburnMultiplier { get; set; }
 
         public float ClearcastingChance { get; set; }
         public float ArcanePotencyCrit { get; set; }
@@ -2736,7 +2738,8 @@ namespace Rawr.Mage
             FrostburnBonus = 0.0f;
             if (Specialization == Specialization.Arcane)
             {
-                ManaAdeptBonus = 0.015f * Mastery;
+                ManaAdeptMultiplier = 0.015f;
+                ManaAdeptBonus = ManaAdeptMultiplier * Mastery;
                 needsQuadratic = true;
                 needsSolutionVariables = true;
             }
@@ -2748,17 +2751,18 @@ namespace Rawr.Mage
             else if (Specialization == Specialization.Frost)
             {
                 Mastery -= 6;
-                FrostburnBonus = 0.025f * Mastery;
+                FrostburnMultiplier = 0.025f;
+                FrostburnBonus = FrostburnMultiplier * Mastery;
             }
 
-            IgniteFactor = /*(1f - 0.02f * (float)Math.Max(0, targetLevel - playerLevel)) partial resist */ (0.13f * MageTalents.Ignite + (MageTalents.Ignite == 3 ? 0.01f : 0.0f)) * (1 - CalculationOptions.IgniteMunching) * (1 + FlashburnBonus);
+            IgniteFactor = /*(1f - 0.02f * (float)Math.Max(0, targetLevel - playerLevel)) partial resist */ (0.13f * MageTalents.Ignite + (MageTalents.Ignite == 3 ? 0.01f : 0.0f)) * (1 - CalculationOptions.IgniteMunching);
 
             float mult = (1.5f * 1.33f * (1 + baseStats.BonusSpellCritDamageMultiplier) - 1);
             float baseAddMult = (1 + baseStats.CritBonusDamage);
             BaseArcaneCritBonus = (1 + mult * baseAddMult);
-            BaseFireCritBonus = (1 + mult * baseAddMult) * (1 + IgniteFactor);
+            BaseFireCritBonus = (1 + mult * baseAddMult);
             BaseFrostCritBonus = (1 + mult * baseAddMult);
-            BaseFrostFireCritBonus = (1 + mult * baseAddMult) * (1 + IgniteFactor);
+            BaseFrostFireCritBonus = (1 + mult * baseAddMult);
             BaseNatureCritBonus = 
             BaseShadowCritBonus =
             BaseHolyCritBonus = (1 + mult * baseAddMult); // unknown if affected by burnout
@@ -5351,7 +5355,7 @@ namespace Rawr.Mage
             //lp[rowManaPotionManaGem, index] = (statsList[buffset].FlameCap ? 1 : 0) + (statsList[buffset].DestructionPotion ? 40.0 / 15.0 : 0);
             if (needsQuadratic)
             {
-                float dps = cycle.GetDamagePerSecond(ManaAdeptBonus);
+                float dps = cycle.GetDamagePerSecond(state.ManaAdeptBonus);
                 lp.SetElementUnsafe(rowTargetDamage, column, -dps * multiplier);
                 lp.SetCostUnsafe(column, minimizeTime ? -1 : dps * multiplier);
                 lp.SetSpellDpsUnsafe(column, cycle.GetQuadraticSpellDPS() * multiplier);

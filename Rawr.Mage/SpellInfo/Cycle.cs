@@ -403,7 +403,7 @@ namespace Rawr.Mage
             // sum_i dps[i] * (1 + mm[i] * (k + mas[i])) * x[i]  -  0.5 * sum_i sum_j dps[i] * mps[j] / M * mm[i] * (k + mas[i])) * x[i] * x[j]
             // dps[i] * mps[j] / M * k   =>  [dps[i] * mm[i] * (k + mas[i])] * mps[j] / M
 
-            return damagePerSecond * (CastingState.Solver.ManaAdeptBonus + 0.015f * effectMasteryRating / 14 * CastingState.CalculationOptions.LevelScalingFactor) * effectManaAdeptMultiplier;
+            return damagePerSecond * (CastingState.ManaAdeptBonus + CastingState.Solver.ManaAdeptMultiplier * effectMasteryRating / 14 * CastingState.CalculationOptions.LevelScalingFactor) * effectManaAdeptMultiplier;
         }
 
         internal float threatPerSecond;

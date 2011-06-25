@@ -1795,7 +1795,7 @@ namespace Rawr.Mage
                 {
                     hasteEffect = true;
                 }
-                return effect.Stats.SpellPower + effect.Stats.HasteRating + effect.Stats.Intellect + effect.Stats.HighestStat > 0;
+                return effect.Stats.SpellPower + effect.Stats.HasteRating + effect.Stats.Intellect + effect.Stats.HighestStat + effect.Stats.MasteryRating > 0;
             }
             return false;
         }
