@@ -68057,7 +68057,7 @@
       <Armor>2373</Armor>
     </Stats>
     <Quality>Rare</Quality>
-    <SetName>Bloodthirsty Gladiator's Pursuit</SetName>
+    <SetName>Gladiator's Pursuit</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Hunter</RequiredClasses>
@@ -68093,7 +68093,7 @@
       <Armor>1483</Armor>
     </Stats>
     <Quality>Rare</Quality>
-    <SetName>Bloodthirsty Gladiator's Pursuit</SetName>
+    <SetName>Gladiator's Pursuit</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Hunter</RequiredClasses>
@@ -68128,7 +68128,7 @@
       <Armor>1928</Armor>
     </Stats>
     <Quality>Rare</Quality>
-    <SetName>Bloodthirsty Gladiator's Pursuit</SetName>
+    <SetName>Gladiator's Pursuit</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Hunter</RequiredClasses>
@@ -68164,7 +68164,7 @@
       <Armor>2076</Armor>
     </Stats>
     <Quality>Rare</Quality>
-    <SetName>Bloodthirsty Gladiator's Pursuit</SetName>
+    <SetName>Gladiator's Pursuit</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Hunter</RequiredClasses>
@@ -68200,7 +68200,7 @@
       <Armor>1779</Armor>
     </Stats>
     <Quality>Rare</Quality>
-    <SetName>Bloodthirsty Gladiator's Pursuit</SetName>
+    <SetName>Gladiator's Pursuit</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Hunter</RequiredClasses>
@@ -120509,7 +120509,7 @@
       <Armor>2659</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Pursuit</SetName>
+    <SetName>Gladiator's Pursuit</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Hunter</RequiredClasses>
@@ -120545,7 +120545,7 @@
       <Armor>1869</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Sanctuary</SetName>
+    <SetName>Gladiator's Sanctuary</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Druid</RequiredClasses>
@@ -120652,7 +120652,7 @@
       <Armor>3686</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Desecration</SetName>
+    <SetName>Gladiator's Desecration</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <Bind>BoP</Bind>
@@ -120687,7 +120687,7 @@
       <Armor>1436</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Felshroud</SetName>
+    <SetName>Gladiator's Felshroud</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Warlock</RequiredClasses>
@@ -120795,7 +120795,7 @@
       <Armor>1869</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Refuge</SetName>
+    <SetName>Gladiator's Refuge</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Druid</RequiredClasses>
@@ -120867,7 +120867,7 @@
       <Armor>1869</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Vestments</SetName>
+    <SetName>Gladiator's Vestments</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Rogue</RequiredClasses>
@@ -120939,7 +120939,7 @@
       <Armor>2659</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Earthshaker</SetName>
+    <SetName>Gladiator's Earthshaker</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Shaman</RequiredClasses>
@@ -120975,7 +120975,7 @@
       <Armor>2659</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Thunderfist</SetName>
+    <SetName>Gladiator's Thunderfist</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Shaman</RequiredClasses>
@@ -121083,7 +121083,7 @@
       <Armor>1436</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Investiture</SetName>
+    <SetName>Gladiator's Investiture</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Priest</RequiredClasses>
@@ -121119,7 +121119,7 @@
       <Armor>3686</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Redemption</SetName>
+    <SetName>Gladiator's Redemption</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Paladin</RequiredClasses>
@@ -121227,7 +121227,7 @@
       <Armor>3686</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Battlegear</SetName>
+    <SetName>Gladiator's Battlegear</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Warrior</RequiredClasses>
@@ -121299,7 +121299,7 @@
       <Armor>2659</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Wartide</SetName>
+    <SetName>Gladiator's Wartide</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Shaman</RequiredClasses>
@@ -121335,7 +121335,7 @@
       <Armor>1436</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Raiment</SetName>
+    <SetName>Gladiator's Raiment</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Priest</RequiredClasses>
@@ -121407,7 +121407,7 @@
       <Armor>3686</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Vindication</SetName>
+    <SetName>Gladiator's Vindication</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Paladin</RequiredClasses>
@@ -121479,7 +121479,7 @@
       <Armor>1436</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Regalia</SetName>
+    <SetName>Gladiator's Regalia</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Mage</RequiredClasses>
@@ -121587,7 +121587,7 @@
       <Armor>1869</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Wildhide</SetName>
+    <SetName>Gladiator's Wildhide</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Druid</RequiredClasses>
@@ -123007,7 +123007,7 @@
       <Armor>1662</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Pursuit</SetName>
+    <SetName>Gladiator's Pursuit</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Hunter</RequiredClasses>
@@ -123119,7 +123119,7 @@
       <Armor>1168</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Sanctuary</SetName>
+    <SetName>Gladiator's Sanctuary</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Druid</RequiredClasses>
@@ -123195,7 +123195,7 @@
       <Armor>2304</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Desecration</SetName>
+    <SetName>Gladiator's Desecration</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <Bind>BoP</Bind>
@@ -123236,7 +123236,7 @@
       <Armor>898</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Felshroud</SetName>
+    <SetName>Gladiator's Felshroud</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Warlock</RequiredClasses>
@@ -123313,7 +123313,7 @@
       <Armor>1168</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Refuge</SetName>
+    <SetName>Gladiator's Refuge</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Druid</RequiredClasses>
@@ -123425,7 +123425,7 @@
       <Armor>1168</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Vestments</SetName>
+    <SetName>Gladiator's Vestments</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Rogue</RequiredClasses>
@@ -123502,7 +123502,7 @@
       <Armor>1662</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Earthshaker</SetName>
+    <SetName>Gladiator's Earthshaker</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Shaman</RequiredClasses>
@@ -123544,7 +123544,7 @@
       <Armor>1662</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Thunderfist</SetName>
+    <SetName>Gladiator's Thunderfist</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Shaman</RequiredClasses>
@@ -123621,7 +123621,7 @@
       <Armor>898</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Investiture</SetName>
+    <SetName>Gladiator's Investiture</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Priest</RequiredClasses>
@@ -123733,7 +123733,7 @@
       <Armor>2304</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Redemption</SetName>
+    <SetName>Gladiator's Redemption</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Paladin</RequiredClasses>
@@ -123810,7 +123810,7 @@
       <Armor>2304</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Battlegear</SetName>
+    <SetName>Gladiator's Battlegear</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Warrior</RequiredClasses>
@@ -123887,7 +123887,7 @@
       <Armor>1662</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Wartide</SetName>
+    <SetName>Gladiator's Wartide</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Shaman</RequiredClasses>
@@ -123929,7 +123929,7 @@
       <Armor>898</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Raiment</SetName>
+    <SetName>Gladiator's Raiment</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Priest</RequiredClasses>
@@ -124006,7 +124006,7 @@
       <Armor>2304</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Vindication</SetName>
+    <SetName>Gladiator's Vindication</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Paladin</RequiredClasses>
@@ -124118,7 +124118,7 @@
       <Armor>898</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Regalia</SetName>
+    <SetName>Gladiator's Regalia</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Mage</RequiredClasses>
@@ -124195,7 +124195,7 @@
       <Armor>1168</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Wildhide</SetName>
+    <SetName>Gladiator's Wildhide</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Druid</RequiredClasses>
@@ -124273,7 +124273,7 @@
       <Armor>2160</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Pursuit</SetName>
+    <SetName>Gladiator's Pursuit</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Hunter</RequiredClasses>
@@ -124345,7 +124345,7 @@
       <Armor>1519</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Sanctuary</SetName>
+    <SetName>Gladiator's Sanctuary</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Druid</RequiredClasses>
@@ -124381,7 +124381,7 @@
       <Armor>2995</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Desecration</SetName>
+    <SetName>Gladiator's Desecration</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <Bind>BoP</Bind>
@@ -124487,7 +124487,7 @@
       <Armor>1167</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Felshroud</SetName>
+    <SetName>Gladiator's Felshroud</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Warlock</RequiredClasses>
@@ -124523,7 +124523,7 @@
       <Armor>1519</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Refuge</SetName>
+    <SetName>Gladiator's Refuge</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Druid</RequiredClasses>
@@ -124595,7 +124595,7 @@
       <Armor>1519</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Vestments</SetName>
+    <SetName>Gladiator's Vestments</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Rogue</RequiredClasses>
@@ -124703,7 +124703,7 @@
       <Armor>2160</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Earthshaker</SetName>
+    <SetName>Gladiator's Earthshaker</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Shaman</RequiredClasses>
@@ -124739,7 +124739,7 @@
       <Armor>2160</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Thunderfist</SetName>
+    <SetName>Gladiator's Thunderfist</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Shaman</RequiredClasses>
@@ -124811,7 +124811,7 @@
       <Armor>1167</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Investiture</SetName>
+    <SetName>Gladiator's Investiture</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Priest</RequiredClasses>
@@ -124883,7 +124883,7 @@
       <Armor>2995</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Redemption</SetName>
+    <SetName>Gladiator's Redemption</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Paladin</RequiredClasses>
@@ -124991,7 +124991,7 @@
       <Armor>2995</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Battlegear</SetName>
+    <SetName>Gladiator's Battlegear</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Warrior</RequiredClasses>
@@ -125063,7 +125063,7 @@
       <Armor>2160</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Wartide</SetName>
+    <SetName>Gladiator's Wartide</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Shaman</RequiredClasses>
@@ -125099,7 +125099,7 @@
       <Armor>1167</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Raiment</SetName>
+    <SetName>Gladiator's Raiment</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Priest</RequiredClasses>
@@ -125207,7 +125207,7 @@
       <Armor>2995</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Vindication</SetName>
+    <SetName>Gladiator's Vindication</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Paladin</RequiredClasses>
@@ -125243,7 +125243,7 @@
       <Armor>1167</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Regalia</SetName>
+    <SetName>Gladiator's Regalia</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Mage</RequiredClasses>
@@ -125315,7 +125315,7 @@
       <Armor>1519</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Wildhide</SetName>
+    <SetName>Gladiator's Wildhide</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Druid</RequiredClasses>
@@ -125539,7 +125539,7 @@
       <Armor>2327</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Pursuit</SetName>
+    <SetName>Gladiator's Pursuit</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Hunter</RequiredClasses>
@@ -125582,7 +125582,7 @@
       <Armor>1635</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Sanctuary</SetName>
+    <SetName>Gladiator's Sanctuary</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Druid</RequiredClasses>
@@ -125696,7 +125696,7 @@
       <Armor>3225</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Desecration</SetName>
+    <SetName>Gladiator's Desecration</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <Bind>BoP</Bind>
@@ -125774,7 +125774,7 @@
       <Armor>1257</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Felshroud</SetName>
+    <SetName>Gladiator's Felshroud</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Warlock</RequiredClasses>
@@ -125853,7 +125853,7 @@
       <Armor>1635</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Refuge</SetName>
+    <SetName>Gladiator's Refuge</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Druid</RequiredClasses>
@@ -125896,7 +125896,7 @@
       <Armor>1635</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Vestments</SetName>
+    <SetName>Gladiator's Vestments</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Rogue</RequiredClasses>
@@ -125975,7 +125975,7 @@
       <Armor>2327</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Earthshaker</SetName>
+    <SetName>Gladiator's Earthshaker</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Shaman</RequiredClasses>
@@ -126054,7 +126054,7 @@
       <Armor>2327</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Thunderfist</SetName>
+    <SetName>Gladiator's Thunderfist</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Shaman</RequiredClasses>
@@ -126169,7 +126169,7 @@
       <Armor>1257</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Investiture</SetName>
+    <SetName>Gladiator's Investiture</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Priest</RequiredClasses>
@@ -126248,7 +126248,7 @@
       <Armor>3225</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Redemption</SetName>
+    <SetName>Gladiator's Redemption</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Paladin</RequiredClasses>
@@ -126291,7 +126291,7 @@
       <Armor>3225</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Battlegear</SetName>
+    <SetName>Gladiator's Battlegear</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Warrior</RequiredClasses>
@@ -126406,7 +126406,7 @@
       <Armor>2327</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Wartide</SetName>
+    <SetName>Gladiator's Wartide</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Shaman</RequiredClasses>
@@ -126485,7 +126485,7 @@
       <Armor>1257</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Raiment</SetName>
+    <SetName>Gladiator's Raiment</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Priest</RequiredClasses>
@@ -126564,7 +126564,7 @@
       <Armor>3225</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Vindication</SetName>
+    <SetName>Gladiator's Vindication</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Paladin</RequiredClasses>
@@ -126607,7 +126607,7 @@
       <Armor>1257</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Regalia</SetName>
+    <SetName>Gladiator's Regalia</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Mage</RequiredClasses>
@@ -126722,7 +126722,7 @@
       <Armor>1635</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Wildhide</SetName>
+    <SetName>Gladiator's Wildhide</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Druid</RequiredClasses>
@@ -128598,7 +128598,7 @@
       <Armor>1994</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Pursuit</SetName>
+    <SetName>Gladiator's Pursuit</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Hunter</RequiredClasses>
@@ -128633,7 +128633,7 @@
       <Armor>1402</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Sanctuary</SetName>
+    <SetName>Gladiator's Sanctuary</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Druid</RequiredClasses>
@@ -128737,7 +128737,7 @@
       <Armor>2764</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Desecration</SetName>
+    <SetName>Gladiator's Desecration</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <Bind>BoP</Bind>
@@ -128771,7 +128771,7 @@
       <Armor>1077</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Felshroud</SetName>
+    <SetName>Gladiator's Felshroud</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Warlock</RequiredClasses>
@@ -128841,7 +128841,7 @@
       <Armor>1402</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Refuge</SetName>
+    <SetName>Gladiator's Refuge</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Druid</RequiredClasses>
@@ -128911,7 +128911,7 @@
       <Armor>1402</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Vestments</SetName>
+    <SetName>Gladiator's Vestments</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Rogue</RequiredClasses>
@@ -128981,7 +128981,7 @@
       <Armor>1994</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Earthshaker</SetName>
+    <SetName>Gladiator's Earthshaker</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Shaman</RequiredClasses>
@@ -129086,7 +129086,7 @@
       <Armor>1994</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Thunderfist</SetName>
+    <SetName>Gladiator's Thunderfist</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Shaman</RequiredClasses>
@@ -129121,7 +129121,7 @@
       <Armor>1077</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Investiture</SetName>
+    <SetName>Gladiator's Investiture</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Priest</RequiredClasses>
@@ -129226,7 +129226,7 @@
       <Armor>2764</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Redemption</SetName>
+    <SetName>Gladiator's Redemption</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Paladin</RequiredClasses>
@@ -129296,7 +129296,7 @@
       <Armor>2764</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Battlegear</SetName>
+    <SetName>Gladiator's Battlegear</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Warrior</RequiredClasses>
@@ -129366,7 +129366,7 @@
       <Armor>1994</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Wartide</SetName>
+    <SetName>Gladiator's Wartide</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Shaman</RequiredClasses>
@@ -129436,7 +129436,7 @@
       <Armor>1077</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Raiment</SetName>
+    <SetName>Gladiator's Raiment</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Priest</RequiredClasses>
@@ -129506,7 +129506,7 @@
       <Armor>2764</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Vindication</SetName>
+    <SetName>Gladiator's Vindication</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Paladin</RequiredClasses>
@@ -129541,7 +129541,7 @@
       <Armor>1077</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Regalia</SetName>
+    <SetName>Gladiator's Regalia</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Mage</RequiredClasses>
@@ -129611,7 +129611,7 @@
       <Armor>1402</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Ruthless Gladiator's Wildhide</SetName>
+    <SetName>Gladiator's Wildhide</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Druid</RequiredClasses>
@@ -131945,6 +131945,7 @@
     <Faction>Neutral</Faction>
     <SocketBonus />
     <LocationInfo>
+      <ItemLocation xsi:type="UnknownItem" />
       <ItemLocation xsi:type="UnknownItem" />
       <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>

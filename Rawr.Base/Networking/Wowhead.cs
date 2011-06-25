@@ -1058,9 +1058,26 @@ namespace Rawr
                 {
                     htmlTooltip = htmlTooltip.Substring(0, htmlTooltip.IndexOf("</a> (0/"));
                     htmlTooltip = htmlTooltip.Substring(htmlTooltip.LastIndexOf(">") + 1);
-                    htmlTooltip = htmlTooltip.Replace("Wrathful ", "").Replace("Relentless ", "").Replace("Furious ", "").Replace("Deadly ", "").Replace("Hateful ", "").Replace("Savage ", "")
-                        .Replace("Brutal ", "").Replace("Vengeful ", "").Replace("Merciless ", "").Replace("Valorous ", "")
-                        .Replace("Heroes' ", "").Replace("Conqueror's ", "").Replace("Totally ", "").Replace("Triumphant ", "").Replace("Kirin'dor", "Kirin Tor").Replace("Regaila", "Regalia").Replace("Sanctified ", "");
+                    htmlTooltip = htmlTooltip
+                        #region Cataclysm PVP Set Names
+                        .Replace("Ruthless ", "")       // Season 10
+                        .Replace("Vicious ", "")        // Season 9
+                        .Replace("Bloodthirsty ", "")   // Starting set
+                        #endregion
+                        #region WotLK PVP Set Names
+                        .Replace("Wrathful ", "")   // Season 8
+                        .Replace("Relentless ", "") // Season 7
+                        .Replace("Furious ", "")    // Season 6
+                        .Replace("Deadly ", "")     // Season 5.5
+                        .Replace("Hateful ", "")    // Season 5
+                        .Replace("Savage ", "")     // Starting Gear
+                        #endregion
+                        #region BC PVP Set Names
+                        .Replace("Brutal ", "")     // Season 4
+                        .Replace("Vengeful ", "")   // Season 3
+                        .Replace("Merciless ", "")  // Season 2
+                        #endregion
+                        .Replace("Valorous ", "").Replace("Heroes' ", "").Replace("Conqueror's ", "").Replace("Totally ", "").Replace("Triumphant ", "").Replace("Kirin'dor", "Kirin Tor").Replace("Regaila", "Regalia").Replace("Sanctified ", "");
 
                     if (htmlTooltip.Contains("Sunstrider's") || htmlTooltip.Contains("Zabra's") ||
                         htmlTooltip.Contains("Gul'dan's") || htmlTooltip.Contains("Garona's") ||
@@ -1091,7 +1108,6 @@ namespace Rawr
                                              .Replace("Hellscream's", "Wrynn's") // Warrior T9
                                              .Replace("Koltira's", "Thassarian's")  // Death Knight T9
                                              .Replace("Kolitra's", "Thassarian's"); // Death Knight T9
-                    item.SetName = htmlTooltip.Replace("Vicious", "").Trim();
                 }
                 #endregion
 
