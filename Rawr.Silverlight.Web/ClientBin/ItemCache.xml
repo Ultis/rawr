@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-16"?>
-<ArrayOfItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<ArrayOfItem xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Item>
     <ItemLevel>1</ItemLevel>
     <DisplayId>33310</DisplayId>
@@ -113373,12 +113373,10 @@
     <SocketBonus>
       <Agility>10</Agility>
     </SocketBonus>
-    <AllowedRandomSuffix>131</AllowedRandomSuffix>
-    <AllowedRandomSuffix>132</AllowedRandomSuffix>
-    <AllowedRandomSuffix>134</AllowedRandomSuffix>
-    <AllowedRandomSuffix>135</AllowedRandomSuffix>
-    <AllowedRandomSuffix>136</AllowedRandomSuffix>
-    <AllowedRandomSuffix>137</AllowedRandomSuffix>
+    <AllowedRandomSuffix>233</AllowedRandomSuffix>
+    <AllowedRandomSuffix>234</AllowedRandomSuffix>
+    <AllowedRandomSuffix>235</AllowedRandomSuffix>
+    <AllowedRandomSuffix>236</AllowedRandomSuffix>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
@@ -113609,13 +113607,10 @@
     <SocketBonus>
       <MasteryRating>10</MasteryRating>
     </SocketBonus>
-    <AllowedRandomSuffix>131</AllowedRandomSuffix>
-    <AllowedRandomSuffix>132</AllowedRandomSuffix>
-    <AllowedRandomSuffix>133</AllowedRandomSuffix>
-    <AllowedRandomSuffix>134</AllowedRandomSuffix>
-    <AllowedRandomSuffix>135</AllowedRandomSuffix>
-    <AllowedRandomSuffix>136</AllowedRandomSuffix>
-    <AllowedRandomSuffix>137</AllowedRandomSuffix>
+    <AllowedRandomSuffix>233</AllowedRandomSuffix>
+    <AllowedRandomSuffix>234</AllowedRandomSuffix>
+    <AllowedRandomSuffix>235</AllowedRandomSuffix>
+    <AllowedRandomSuffix>236</AllowedRandomSuffix>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
@@ -114122,6 +114117,12 @@
     <SocketBonus>
       <Intellect>30</Intellect>
     </SocketBonus>
+    <AllowedRandomSuffix>183</AllowedRandomSuffix>
+    <AllowedRandomSuffix>184</AllowedRandomSuffix>
+    <AllowedRandomSuffix>185</AllowedRandomSuffix>
+    <AllowedRandomSuffix>186</AllowedRandomSuffix>
+    <AllowedRandomSuffix>187</AllowedRandomSuffix>
+    <AllowedRandomSuffix>188</AllowedRandomSuffix>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
@@ -114767,6 +114768,11 @@
     <SocketBonus>
       <Intellect>30</Intellect>
     </SocketBonus>
+    <AllowedRandomSuffix>129</AllowedRandomSuffix>
+    <AllowedRandomSuffix>130</AllowedRandomSuffix>
+    <AllowedRandomSuffix>131</AllowedRandomSuffix>
+    <AllowedRandomSuffix>132</AllowedRandomSuffix>
+    <AllowedRandomSuffix>133</AllowedRandomSuffix>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
@@ -115121,6 +115127,16 @@
     <Faction>Neutral</Faction>
     <Bind>BoP</Bind>
     <SocketBonus />
+    <AllowedRandomSuffix>114</AllowedRandomSuffix>
+    <AllowedRandomSuffix>129</AllowedRandomSuffix>
+    <AllowedRandomSuffix>130</AllowedRandomSuffix>
+    <AllowedRandomSuffix>131</AllowedRandomSuffix>
+    <AllowedRandomSuffix>132</AllowedRandomSuffix>
+    <AllowedRandomSuffix>133</AllowedRandomSuffix>
+    <AllowedRandomSuffix>135</AllowedRandomSuffix>
+    <AllowedRandomSuffix>136</AllowedRandomSuffix>
+    <AllowedRandomSuffix>137</AllowedRandomSuffix>
+    <AllowedRandomSuffix>138</AllowedRandomSuffix>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
@@ -115361,6 +115377,16 @@
     <Faction>Neutral</Faction>
     <Bind>BoP</Bind>
     <SocketBonus />
+    <AllowedRandomSuffix>114</AllowedRandomSuffix>
+    <AllowedRandomSuffix>129</AllowedRandomSuffix>
+    <AllowedRandomSuffix>130</AllowedRandomSuffix>
+    <AllowedRandomSuffix>131</AllowedRandomSuffix>
+    <AllowedRandomSuffix>132</AllowedRandomSuffix>
+    <AllowedRandomSuffix>133</AllowedRandomSuffix>
+    <AllowedRandomSuffix>135</AllowedRandomSuffix>
+    <AllowedRandomSuffix>136</AllowedRandomSuffix>
+    <AllowedRandomSuffix>137</AllowedRandomSuffix>
+    <AllowedRandomSuffix>138</AllowedRandomSuffix>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
@@ -116121,6 +116147,12 @@
     <SocketBonus>
       <Intellect>10</Intellect>
     </SocketBonus>
+    <AllowedRandomSuffix>227</AllowedRandomSuffix>
+    <AllowedRandomSuffix>228</AllowedRandomSuffix>
+    <AllowedRandomSuffix>229</AllowedRandomSuffix>
+    <AllowedRandomSuffix>230</AllowedRandomSuffix>
+    <AllowedRandomSuffix>231</AllowedRandomSuffix>
+    <AllowedRandomSuffix>232</AllowedRandomSuffix>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
@@ -116563,11 +116595,17 @@
     <Quality>Epic</Quality>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
-    <Bind>BoE</Bind>
+    <Bind>BoP</Bind>
     <SocketColor1>Yellow</SocketColor1>
     <SocketBonus>
       <Intellect>10</Intellect>
     </SocketBonus>
+    <AllowedRandomSuffix>227</AllowedRandomSuffix>
+    <AllowedRandomSuffix>228</AllowedRandomSuffix>
+    <AllowedRandomSuffix>229</AllowedRandomSuffix>
+    <AllowedRandomSuffix>230</AllowedRandomSuffix>
+    <AllowedRandomSuffix>231</AllowedRandomSuffix>
+    <AllowedRandomSuffix>232</AllowedRandomSuffix>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
@@ -116762,6 +116800,9 @@
     <SocketBonus>
       <Stamina>15</Stamina>
     </SocketBonus>
+    <AllowedRandomSuffix>224</AllowedRandomSuffix>
+    <AllowedRandomSuffix>225</AllowedRandomSuffix>
+    <AllowedRandomSuffix>226</AllowedRandomSuffix>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
@@ -117126,6 +117167,9 @@
     <SocketBonus>
       <Stamina>15</Stamina>
     </SocketBonus>
+    <AllowedRandomSuffix>224</AllowedRandomSuffix>
+    <AllowedRandomSuffix>225</AllowedRandomSuffix>
+    <AllowedRandomSuffix>226</AllowedRandomSuffix>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
@@ -131890,5 +131934,22 @@
     <Name>Ruthless Gladiator's Wristguards of Alacrity</Name>
     <Id>70338</Id>
     <Slot>Wrist</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>0</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <Stats />
+    <Quality>Poor</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="UnknownItem" />
+    </LocationInfo>
+    <Name>[Downloading from Wowhead]</Name>
+    <Id>0</Id>
+    <Slot>None</Slot>
   </Item>
 </ArrayOfItem>
