@@ -413,12 +413,12 @@ namespace Rawr.Server.Controllers
                                   + @"((&amp;)?(i=(?<itemId2>\d+)))?"
                                   + @"((&amp;)?(e=(?<enchantId>\d+)))?"
                                   + @"((&amp;)?(es=(\d+)))?"
+                                  + @"((&amp;)?(ee=(?<tinkeringId>\d+)))?"
                                   + @"((&amp;)?(g0=(?<gem1Id>\d+)))?"
                                   + @"((&amp;)?(g1=(?<gem2Id>\d+)))?"
                                   + @"((&amp;)?(g2=(?<gem3Id>\d+)))?"
-                                  + @"((&amp;)?(ee=(?<tinkeringId>\d+)))?"
-                                  + @"((&amp;)?(re=(?<reforgeId>\d+)))?"
-                                  + @"((&amp;)?(r=-(?<suffixId>\d+)))?");
+                                  + @"((&amp;)?(r=-(?<suffixId>\d+)))?" 
+                                  + @"((&amp;)?(re=(?<reforgeId>\d+)))?");
             Match match = regex.Match(html.Replace("\"", ""));
 
             string itemId = null;
@@ -487,7 +487,7 @@ namespace Rawr.Server.Controllers
 
             string charXml = reader.ReadToEnd();
             #region Character Weight Loss Program
-            charXml = charXml.Replace(@"
+            charXml = Regex.Replace(charXml, @"
   <Boss>
     <Targets />
     <BuffStates />
@@ -501,7 +501,7 @@ namespace Rawr.Server.Controllers
       <Attack>
         <Name>Generated Default Melee Attack</Name>
         <IsTheDefaultMelee>true</IsTheDefaultMelee>
-        <DamagePerHit>175000</DamagePerHit>
+        <DamagePerHit>\d+</DamagePerHit>
         <PhaseTimes>
           <item>
             <key>
