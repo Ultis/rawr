@@ -332,44 +332,24 @@ namespace Rawr.Moonkin
             //set { _RelevantTriggers = value; }
         }
 
-        public override bool IsItemRelevant(Item item)
-        {
-            // First we let normal rules (profession, class, relevant stats) decide
-            bool relevant = base.IsItemRelevant(item);
-
-            // Next we use our special stat relevancy filtering.
-            if (relevant)
-                relevant = HasPrimaryStats(item.Stats) || (HasSecondaryStats(item.Stats) && !HasUnwantedStats(item.Stats));
-
-            return relevant;
-        }
-
         public override bool IsBuffRelevant(Buff buff, Character character)
         {
-            // First we let normal rules (profession, class, relevant stats) decide
-            bool relevant = base.IsBuffRelevant(buff, character);
+            if (buff.SetName == "Stormrider's Regalia" || buff.SetName == "Obsidian Arborweave Regalia")
+                return true;
 
-            // Temporary FIX (?): buf.AllowedClasses is not currently being tested as part of base.IsBuffRelevant(). So we'll do it ourselves.
-            if (relevant && !buff.AllowedClasses.Contains(CharacterClass.Druid))
-                relevant = false;
+            // for buffs that are non-exclusive, allow anything that could be useful even slightly
+            if (buff.Group == "Elixirs and Flasks" || buff.Group == "Potion" || buff.Group == "Food" || buff.Group == "Scrolls")
+                return base.IsBuffRelevant(buff, character);
+            else
+            {
+                if (character != null && Rawr.Properties.GeneralSettings.Default.HideProfEnchants && !character.HasProfession(buff.Professions))
+                    return false;
+                // Class Restrictions Enforcement
+                else if (character != null && !buff.AllowedClasses.Contains(character.Class))
+                    return false;
 
-            // Next we use our special stat relevancy filtering on consumables. (party buffs only need filtering on relevant stats)
-            if (relevant && (buff.Group == "Elixirs and Flasks" || buff.Group == "Potion" || buff.Group == "Food" || buff.Group == "Scrolls" || buff.Group == "Temporary Buffs"))
-                relevant = HasPrimaryStats(buff.Stats) || (HasSecondaryStats(buff.Stats) && !HasUnwantedStats(buff.Stats));
-
-            return relevant;
-        }
-
-        public override bool IsEnchantRelevant(Enchant enchant, Character character)
-        {
-            // First we let the normal rules (profession, class, relevant stats) decide
-            bool relevant = base.IsEnchantRelevant(enchant, character);
-
-            // Next we use our special stat relevancy filtering.
-            if (relevant)
-                relevant = HasPrimaryStats(enchant.Stats) || (HasSecondaryStats(enchant.Stats) && !HasUnwantedStats(enchant.Stats));
-
-           return relevant;
+                return HasPrimaryStats(buff.Stats) || HasSecondaryStats(buff.Stats) || HasExtraStats(buff.Stats);
+            }
         }
 
         public override Stats GetRelevantStats(Stats stats)
@@ -457,9 +437,7 @@ namespace Rawr.Moonkin
 
         public override bool HasRelevantStats(Stats stats)
         {
-            // These 3 calls should amount to the same list of stats as used in GetRelevantStats()
-           // Add a null call to catch relevance for set bonuses that have no actual stats
-            return string.IsNullOrEmpty(stats.ToString()) || HasPrimaryStats(stats) || HasSecondaryStats(stats) || HasExtraStats(stats);
+            return HasPrimaryStats(stats) || (HasSecondaryStats(stats) && !HasUnwantedStats(stats));
         }
 
         /// <summary>
