@@ -218,10 +218,6 @@ namespace Rawr
         BonusPetAttackPowerMultiplier,
         BonusPetDamageMultiplier,
         #endregion
-        #region Added by Paladins      [Verified Jothay 2011-03-29]
-        // Retribution
-        BonusDamageMultiplierTemplarsVerdict, // T11
-        #endregion
         #region Added by Shamans       [Verified Jothay 2011-03-29]
         // Elemental
         BonusDamageMultiplierLavaBurst,
@@ -1859,18 +1855,6 @@ namespace Rawr
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusPetDamageMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusPetDamageMultiplier] = value; }
-        }
-        #endregion
-        #region Added by Paladins
-        /// <summary>T11</summary>
-        [DefaultValueAttribute(0f)]
-        [DisplayName("% Bonus Templar's Verdict Damage")]
-        [Percentage]
-        [Category("Retribution")]
-        public float BonusDamageMultiplierTemplarsVerdict
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusDamageMultiplierTemplarsVerdict]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusDamageMultiplierTemplarsVerdict] = value; }
         }
         #endregion
         #region Added by Shamans
