@@ -301,6 +301,8 @@ function Rawr:ExportTalents()
 		self:AddLine(2, "<ShamanTalents>"..talents.."."..string.rep("0", Rawr.talents.shaman.glyphs).."</ShamanTalents>")
 	end
 	if class == "MAGE" then
+	    -- there is erroneous talent present, remove it until fixed on Blizzard side
+		talents = string.sub(talents, 1, 14)..string.sub(talents, 16)
 		self:AddLine(2, "<MageTalents>"..talents.."."..string.rep("0", Rawr.talents.mage.glyphs).."</MageTalents>")
 	end
 	if class == "WARLOCK" then
