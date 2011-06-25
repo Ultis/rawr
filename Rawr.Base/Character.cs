@@ -823,11 +823,13 @@ namespace Rawr
             true, // 2 200-284 (Tier 07-10)
             true, // 3 285-333 (Cata Dungeons)
             true, // 4 334-358 (Cata Heroics)
-            true, // 5 359-371 (Tier 11.0)
-            true, // 6 372 - 377 (Tier 11.5)
-            true, // 7 378 - 390 (Tier 12.0)
-            true, // 8 391 - 403 (Tier 12.5)
-            true, // 9 404+      (Tier 13.0)
+            true, // 5 353-358 (Rise of Zandalar)
+            true, // 6 359-364 (Tier 11.0)
+            true, // 7 365-371 (Molten Front)
+            true, // 8 372 - 377 (Tier 11.5)
+            true, // 9 378 - 390 (Tier 12.0)
+            true, // 10 391 - 403 (Tier 12.5)
+            true, // 11 404+      (Tier 13.0)
         };
         [XmlIgnore]
         public bool[] iLvl {

@@ -2113,8 +2113,8 @@ namespace Rawr.UI
             CK_iLvl_10.IsChecked = true;
             CK_iLvl_11.IsChecked = true;
             RS_iLvl.LowerValue = 285;
-            RS_iLvl.UpperValue = 377;
-            Character.IsLoading = false;
+            RS_iLvl.UpperValue = 404;
+            Character.IsLoading = true;
             ItemCache.Instance.OnItemsChanged();
         }
         private void BT_SourceFiltersILvl_UnCheckAll_Click(object sender, RoutedEventArgs e)
