@@ -2717,14 +2717,13 @@ namespace Rawr.Mage
             MeleeMitigation = (1 - 1 / (1 + 0.1f * baseStats.Armor / (8.5f * (targetLevel + 4.5f * (targetLevel - 59)) + 40)));
             //Defense = 5 * playerLevel + baseStats.DefenseRating / 4.918498039f; // this is for level 80 only
             int molten = (armor == "Molten Armor") ? 1 : 0;
-            float resilienceFactor = 743.62040265449578572679683848523f; // approximate
             PhysicalCritReduction = (/*0.04f * (Defense - 5 * CalculationOptions.PlayerLevel) / 100 +*/ /*baseStats.Resilience / resilienceFactor * levelScalingFactor + */molten * 0.05f);
             SpellCritReduction = (/*baseStats.Resilience / resilienceFactor * levelScalingFactor + */molten * 0.05f);
             //CritDamageReduction = (baseStats.Resilience / resilienceFactor * 2.2f * levelScalingFactor);
             CritDamageReduction = 0;
             if (CalculationOptions.PVP)
             {
-                DamageTakenReduction = baseStats.Resilience / resilienceFactor * levelScalingFactor;
+                DamageTakenReduction = (float)(1 - Math.Pow(0.99, baseStats.Resilience / 79.12785)); // resilience doesn't seem to follow the normal level scaling formula from 80 to 85
             }
             else
             {
