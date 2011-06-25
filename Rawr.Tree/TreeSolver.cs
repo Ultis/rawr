@@ -752,8 +752,9 @@ namespace Rawr.Tree
             #region Lifebloom
             if (stats.TreeOfLifeUptime > 0)
             {
-                actions[(int)TreeAction.RaidTolLb].Mana -= lifebloomManaPerTick * spells[(int)TreeSpell.Lifebloom].Ticks;
-                actions[(int)TreeAction.TankTolLb].Mana -= lifebloomManaPerTick * spells[(int)TreeSpell.Lifebloom].Ticks;
+                // TODO: figure out how 2T12 works in ToL and adjust the code as needed
+                //actions[(int)TreeAction.RaidTolLb].Mana -= lifebloomManaPerTick * spells[(int)TreeSpell.Lifebloom].Ticks;
+                //actions[(int)TreeAction.TankTolLb].Mana -= lifebloomManaPerTick * spells[(int)TreeSpell.Lifebloom].Ticks;
             }
             else
             {
