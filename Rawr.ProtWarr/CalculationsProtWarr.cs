@@ -747,7 +747,7 @@ threat and limited threat scaled by the threat scale.",
             triggerChances[Trigger.DamageTakenPutsMeBelow35PercHealth] = triggerChances[Trigger.DamageTaken] * 0.35f;
             triggerChances[Trigger.ShieldBlock]             = 1.0f;
 
-            foreach (SpecialEffect effect in player.Stats.SpecialEffects()) 
+            foreach (SpecialEffect effect in player.Stats.SpecialEffects())
             {
                 if (RelevantTriggers.Contains(effect.Trigger))
                 {
@@ -756,26 +756,26 @@ threat and limited threat scaled by the threat scale.",
                     {
                         Stats cappedStats = new Stats();
                         cappedStats.Accumulate(effect.Stats);
-
                         // Assume Use Effects Bypass Shield Block Collision
                         if (effect.Trigger == Trigger.Use)
                             cappedStats.MasteryRating = effectiveMasteryRating;
                         else
                             cappedStats.MasteryRating = effectiveBuffedMasteryRating;
-
-                        SpecialEffect cappedEffect = new SpecialEffect(effect.Trigger, cappedStats, effect.Duration, effect.Cooldown, effect.LimitedToExecutePhase);
-                        
+                        // calculate average up-time of this trinket
+                        float averageUpTime = 0.0f;
                         if (effect.Trigger == Trigger.ExecuteHit)
-                            cappedEffect.AccumulateAverageStats(statsSpecialEffects, triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], player.AttackModel.WeaponSpeed, player.BossOpts.BerserkTimer * (float)player.BossOpts.Under20Perc);
+                            averageUpTime = effect.GetAverageFactor(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], player.AttackModel.WeaponSpeed, player.BossOpts.BerserkTimer * (float)player.BossOpts.Under20Perc);
                         else
-                            cappedEffect.AccumulateAverageStats(statsSpecialEffects, triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], player.AttackModel.WeaponSpeed, player.BossOpts.BerserkTimer);
+                            averageUpTime = effect.GetAverageFactor(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], player.AttackModel.WeaponSpeed, player.BossOpts.BerserkTimer);
+                        // accumulate the capped stats from the trinket into our final stats
+                        statsSpecialEffects.Accumulate(cappedStats, averageUpTime);
                     }
                     else
                     {
                         if (effect.Trigger == Trigger.ExecuteHit)
-                            effect.AccumulateAverageStats(statsSpecialEffects, triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], player.AttackModel.WeaponSpeed, player.BossOpts.BerserkTimer * (float)player.BossOpts.Under20Perc);
+                            effect.AccumulateAverageStats(statsSpecialEffects, triggerIntervals, triggerChances, player.AttackModel.WeaponSpeed, player.BossOpts.BerserkTimer * (float)player.BossOpts.Under20Perc);
                         else
-                            effect.AccumulateAverageStats(statsSpecialEffects, triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], player.AttackModel.WeaponSpeed, player.BossOpts.BerserkTimer);
+                            effect.AccumulateAverageStats(statsSpecialEffects, triggerIntervals, triggerChances, player.AttackModel.WeaponSpeed, player.BossOpts.BerserkTimer);
                     }
                 }
             }
