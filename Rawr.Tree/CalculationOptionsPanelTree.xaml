@@ -152,9 +152,9 @@
 			<CheckBox Grid.Column="0" Grid.Row="1" IsChecked="{Binding Path=TimedInnervates, Mode=TwoWay}" MinWidth="50" Content="Time Innervate with best intellect proc" Margin="4,2,2,2" Grid.ColumnSpan="5" ToolTipService.ToolTip="Whether Innervate should be timed with the best random Intellect proc (such as Power Torrent, Lightweave or Mandala of Stirring Patterns)"/>
 			<CheckBox Grid.Column="0" Grid.Row="2" IsChecked="{Binding Path=BoostIntellectBeforeInnervate, Mode=TwoWay}" MinWidth="50" Content="Boost intellect before Innervate" Margin="4,2,2,2" Grid.ColumnSpan="5" ToolTipService.ToolTip="Whether, before using Innervate, intellect-boosting on-use effects should be activated (such as Synapse Springs)"/>
 			<CheckBox Grid.Column="0" Grid.Row="3" IsChecked="{Binding Path=InnervateOther, Mode=TwoWay}" MinWidth="50" Content="Innervate someone else" Margin="4,2,2,2" Grid.ColumnSpan="5"/>
-			<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="External innervate(s) size:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="4" ToolTipService.ToolTip="If someone else is innervating you, the mana gain from each innervate they cast (enter the sum if several druids are innervating you)." />
+			<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Other druids innervating player:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="4" ToolTipService.ToolTip="If someone else is innervating you, the mana gain from each innervate they cast (enter the sum if several druids are innervating you)." />
 
-			<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="4" Value="{Binding Path=ExternalInnervateSize, Mode=TwoWay}" DecimalPlaces="0" MinWidth="50" Maximum="1000000" />
+			<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="4" Value="{Binding Path=ExternalInnervates, Mode=TwoWay}" DecimalPlaces="0" MinWidth="50" Maximum="1000000" />
 
 			<Border Grid.Row="5" Grid.ColumnSpan="5" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
 				<TextBlock Margin="4" FontWeight="Bold" Text="Special effects" VerticalAlignment="Center" />

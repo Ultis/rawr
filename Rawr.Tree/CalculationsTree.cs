@@ -346,7 +346,6 @@ namespace Rawr.Tree {
                     "Mana Regen:Replenishment Mana Regen",
                     "Mana Regen:Revitalize Mana Regen",
                     "Mana Regen:Innervate Mana Regen",
-                    "Mana Regen:Ext Innervate Mana Regen",
                     "Mana Regen:Potion Mana Regen",
                     
                     "Solution:Total Score",

@@ -237,6 +237,8 @@ namespace Rawr.Tree
             }
             else
                 innervateRatio = 0.2 + character.DruidTalents.Dreamstate * 0.15;
+            
+            innervateRatio += opts.ExternalInnervates * 0.05;
 
             if (innervateRatio > 0)
             {
@@ -326,9 +328,6 @@ namespace Rawr.Tree
                 }
             }
 
-            // TODO: estimate: might want to let the user configure it, but this is going away in 4.2 anyway, so don't really bother
-            int numExternalInnervates = (int)(calc.FightLength * 0.9 / innervateCooldown);
-
             // TODO: should estimate this properly
             double revitalizeDelay = 1.0f;
 
@@ -337,10 +336,9 @@ namespace Rawr.Tree
             calc.SpiritRegen = opts.Restoration ? (StatConversion.GetSpiritRegenSec(MeanStats.Spirit, MeanStats.Intellect) / 2) : 0;
             calc.ReplenishmentRegen = MeanStats.ManaRestoreFromMaxManaPerSecond * calc.MeanMana;
             calc.InnervateRegen = calc.Innervates * calc.InnervateSize / calc.FightLength;
-            calc.ExternalInnervateRegen = opts.ExternalInnervateSize * numExternalInnervates / calc.FightLength;
             calc.RevitalizeRegen = character.DruidTalents.Revitalize * (1.0f / (12.0f + revitalizeDelay)) * 0.01f * calc.MeanMana;
             calc.PotionRegen = MeanStats.ManaRestore / calc.FightLength;
-            calc.ManaRegen = calc.ManaPoolRegen + calc.BaseRegen + calc.SpiritRegen + calc.ReplenishmentRegen + calc.InnervateRegen + calc.ExternalInnervateRegen + calc.RevitalizeRegen + calc.PotionRegen;
+            calc.ManaRegen = calc.ManaPoolRegen + calc.BaseRegen + calc.SpiritRegen + calc.ReplenishmentRegen + calc.InnervateRegen + calc.RevitalizeRegen + calc.PotionRegen;
         }
 
         // TODO: the rejuvenation from Nature's Ward currently isn't accounted for Nature's Bounty or swiftmendability (might be a good thing...)

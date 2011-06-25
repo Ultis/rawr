@@ -67,12 +67,12 @@ namespace Rawr.Tree
             set { innervateOther = value; OnPropertyChanged("InnervateOther"); }
         }
 
-        private int externalInnervateSize = 0;
+        private int externalInnervates = 0;
         [DefaultValue(0)]
-        public int ExternalInnervateSize
+        public int ExternalInnervates
         {
-            get { return externalInnervateSize; }
-            set { externalInnervateSize = value; OnPropertyChanged("ExternalInnervateSize"); }
+            get { return externalInnervates; }
+            set { externalInnervates = value; OnPropertyChanged("ExternalInnervates"); }
         }
 
         private bool separateHasteEffects = false;

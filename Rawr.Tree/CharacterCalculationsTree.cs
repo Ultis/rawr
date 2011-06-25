@@ -234,7 +234,6 @@ namespace Rawr.Tree {
         public double PotionRegen { get; set; }
         public double SpiritRegen { get; set; }
         public double InnervateRegen { get; set; }
-        public double ExternalInnervateRegen { get; set; }
         public double ReplenishmentRegen { get; set; }
         public double RevitalizeRegen { get; set; }
 
@@ -334,7 +333,6 @@ namespace Rawr.Tree {
             retVal.Add("Initial Mana Pool Regen", String.Format("{0:F0}", ManaPoolRegen));
             retVal.Add("Spirit Mana Regen", String.Format("{0:F0}", SpiritRegen));
             retVal.Add("Innervate Mana Regen", String.Format("{0:F0}", InnervateRegen));
-            retVal.Add("Ext Innervate Mana Regen", String.Format("{0:F0}", ExternalInnervateRegen));
             retVal.Add("Replenishment Mana Regen", String.Format("{0:F0}", ReplenishmentRegen));
             retVal.Add("Revitalize Mana Regen", String.Format("{0:F0}", RevitalizeRegen));
             retVal.Add("Potion Mana Regen", String.Format("{0:F0}", PotionRegen));
