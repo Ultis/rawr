@@ -2714,7 +2714,8 @@ namespace Rawr.Mage
                 ManaRegenDrinking = ManaRegen + 640f;
                 HealthRegenEating = HealthRegen + 750f;
             }
-            MeleeMitigation = (1 - 1 / (1 + 0.1f * baseStats.Armor / (8.5f * (targetLevel + 4.5f * (targetLevel - 59)) + 40)));
+            //MeleeMitigation = (1 - 1 / (1 + 0.1f * baseStats.Armor / (8.5f * (targetLevel + 4.5f * (targetLevel - 59)) + 40)));
+            MeleeMitigation = baseStats.Armor / (baseStats.Armor + 2167.5f * targetLevel - 158167.5f);
             //Defense = 5 * playerLevel + baseStats.DefenseRating / 4.918498039f; // this is for level 80 only
             int molten = (armor == "Molten Armor") ? 1 : 0;
             PhysicalCritReduction = (/*0.04f * (Defense - 5 * CalculationOptions.PlayerLevel) / 100 +*/ /*baseStats.Resilience / resilienceFactor * levelScalingFactor + */molten * 0.05f);
@@ -2729,7 +2730,7 @@ namespace Rawr.Mage
             {
                 DamageTakenReduction = 0;
             }
-            Dodge = 0.043545f + 0.01f / (0.006650f + 0.953f / (/*(0.04f * (Defense - 5 * playerLevel)) / 100f +*/ baseStats.DodgeRating / 1200 * levelScalingFactor + (baseStats.Agility - 46f) * 0.0195f));
+            Dodge = 0.036174132823944f + 0.01f / (0.006650f + 0.9830f / (/*(0.04f * (Defense - 5 * playerLevel)) / 100f +*/ baseStats.DodgeRating / 1380 * levelScalingFactor + (baseStats.Agility - 46f) * 0.003331530f));
 
             Mastery = 8 + baseStats.MasteryRating / 14 * levelScalingFactor;
             ManaAdeptBonus = 0.0f;
