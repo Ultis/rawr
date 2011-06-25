@@ -749,12 +749,14 @@ namespace Rawr
             new RangeValue { Min = 002, Max = 199 }, // 1
             new RangeValue { Min = 200, Max = 284 }, // 2
             new RangeValue { Min = 285, Max = 333 }, // 3
-            new RangeValue { Min = 334, Max = 358 }, // 4
-            new RangeValue { Min = 359, Max = 371 }, // 5
-            new RangeValue { Min = 372, Max = 377 }, // 6
-            new RangeValue { Min = 378, Max = 390 }, // 7
-            new RangeValue { Min = 391, Max = 403 }, // 8
-            new RangeValue { Min = 404, Max = 500 }, // 9
+            new RangeValue { Min = 334, Max = 352 }, // 4
+            new RangeValue { Min = 353, Max = 358 }, // 5
+            new RangeValue { Min = 359, Max = 364 }, // 6
+            new RangeValue { Min = 365, Max = 371 }, // 7
+            new RangeValue { Min = 372, Max = 377 }, // 8
+            new RangeValue { Min = 378, Max = 390 }, // 9
+            new RangeValue { Min = 391, Max = 403 }, // 10
+            new RangeValue { Min = 404, Max = 500 }, // 11
         };
         private readonly static PercRangeValue[] DropRangeValues = new PercRangeValue[] {
             new PercRangeValue { Min = 0.00f, Max = 0.01f },

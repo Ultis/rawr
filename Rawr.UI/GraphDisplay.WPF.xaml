@@ -472,12 +472,14 @@
                                 <CheckBox x:Name="CK_iLvl_1" Margin="4,0" Content="002-199 (Tier 01-06)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
                                 <CheckBox x:Name="CK_iLvl_2" Margin="4,0" Content="200-284 (Tier 07-10)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
                                 <CheckBox x:Name="CK_iLvl_3" Margin="4,0" Content="285-333 (Cata Dungeons)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
-                                <CheckBox x:Name="CK_iLvl_4" Margin="4,0" Content="334-358 (Cata Heroics)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
-                                <CheckBox x:Name="CK_iLvl_5" Margin="4,0" Content="359-371 (Tier 11.0)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
-                                <CheckBox x:Name="CK_iLvl_6" Margin="4,0" Content="372-377 (Tier 11.5)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
-                                <CheckBox x:Name="CK_iLvl_7" Margin="4,0" Content="378-390 (Tier 12.0)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
-                                <CheckBox x:Name="CK_iLvl_8" Margin="4,0" Content="391-403 (Tier 12.5)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
-                                <CheckBox x:Name="CK_iLvl_9" Margin="4,0" Content="404+    (Tier 13.0)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_iLvl_4" Margin="4,0" Content="334-352 (Cata Heroics)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_iLvl_5" Margin="4,0" Content="353-358 (Rise of Zandalar)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_iLvl_6" Margin="4,0" Content="359-364 (Tier 11.0)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_iLvl_7" Margin="4,0" Content="365-371 (Molten Front)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_iLvl_8" Margin="4,0" Content="372-377 (Tier 11.5)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_iLvl_9" Margin="4,0" Content="378-390 (Tier 12.0)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_iLvl_10" Margin="4,0" Content="391-403 (Tier 12.5)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_iLvl_11" Margin="4,0" Content="404+    (Tier 13.0)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
                             </StackPanel>
 
                             <RadioButton Grid.ColumnSpan="3" x:Name="RB_iLvl_Sliders" Margin="4,0" Grid.Row="4" Content="By Custom Slider" IsChecked="True" GroupName="Filters_iLvL"/>

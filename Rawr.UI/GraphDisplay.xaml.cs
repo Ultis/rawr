@@ -157,6 +157,8 @@ namespace Rawr.UI
             CK_iLvl_7.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("ilvlF_7") { Mode = BindingMode.TwoWay });
             CK_iLvl_8.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("ilvlF_8") { Mode = BindingMode.TwoWay });
             CK_iLvl_9.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("ilvlF_9") { Mode = BindingMode.TwoWay });
+            CK_iLvl_10.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("ilvlF_10") { Mode = BindingMode.TwoWay });
+            CK_iLvl_11.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("ilvlF_11") { Mode = BindingMode.TwoWay });
             RS_iLvl.SetBinding(RangeSlider.LowerValueProperty, new System.Windows.Data.Binding("ilvlF_SLMin") { Mode = BindingMode.TwoWay });
             RS_iLvl.SetBinding(RangeSlider.UpperValueProperty, new System.Windows.Data.Binding("ilvlF_SLMax") { Mode = BindingMode.TwoWay });
             #endregion
@@ -2106,6 +2108,10 @@ namespace Rawr.UI
             CK_iLvl_5.IsChecked = true;
             CK_iLvl_6.IsChecked = true;
             CK_iLvl_7.IsChecked = true;
+            CK_iLvl_8.IsChecked = true;
+            CK_iLvl_9.IsChecked = true;
+            CK_iLvl_10.IsChecked = true;
+            CK_iLvl_11.IsChecked = true;
             RS_iLvl.LowerValue = 285;
             RS_iLvl.UpperValue = 377;
             Character.IsLoading = false;
@@ -2123,6 +2129,10 @@ namespace Rawr.UI
             CK_iLvl_5.IsChecked = false;
             CK_iLvl_6.IsChecked = false;
             CK_iLvl_7.IsChecked = false;
+            CK_iLvl_8.IsChecked = false;
+            CK_iLvl_9.IsChecked = false;
+            CK_iLvl_10.IsChecked = false;
+            CK_iLvl_11.IsChecked = false;
             Character.IsLoading = false;
             ItemCache.Instance.OnItemsChanged();
         }
