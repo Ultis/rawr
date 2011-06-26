@@ -37168,7 +37168,7 @@
     <Quality>Rare</Quality>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
-    <Bind>BoE</Bind>
+    <Bind>BoP</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketBonus>
       <HasteRating>10</HasteRating>
@@ -38115,7 +38115,7 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
-    <Bind>BoE</Bind>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
@@ -38226,7 +38226,7 @@
     <Quality>Rare</Quality>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
-    <Bind>BoE</Bind>
+    <Bind>BoP</Bind>
     <SocketColor1>Yellow</SocketColor1>
     <SocketColor2>Blue</SocketColor2>
     <SocketBonus>
@@ -38399,7 +38399,7 @@
     <Quality>Rare</Quality>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
-    <Bind>BoE</Bind>
+    <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketBonus>
       <ExpertiseRating>10</ExpertiseRating>
@@ -39022,7 +39022,7 @@
     <Quality>Rare</Quality>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
-    <Bind>BoE</Bind>
+    <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketColor2>Yellow</SocketColor2>
     <SocketBonus>
@@ -40298,7 +40298,7 @@
     <Quality>Rare</Quality>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
-    <Bind>BoE</Bind>
+    <Bind>BoP</Bind>
     <SocketColor1>Yellow</SocketColor1>
     <SocketBonus>
       <Intellect>10</Intellect>
@@ -111778,7 +111778,7 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="WorldDrop">
-        <Location>Hide-Bound Chains</Location>
+        <Location>Firelands</Location>
         <Heroic>false</Heroic>
       </ItemLocation>
     </LocationInfo>
@@ -113639,7 +113639,7 @@
     <Quality>Epic</Quality>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
-    <Bind>BoE</Bind>
+    <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketBonus>
       <Strength>10</Strength>
@@ -113772,7 +113772,7 @@
     <Quality>Epic</Quality>
     <Type>Shield</Type>
     <Faction>Neutral</Faction>
-    <Bind>BoE</Bind>
+    <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketBonus>
       <Intellect>10</Intellect>
@@ -114804,7 +114804,7 @@
     <MinDamage>348</MinDamage>
     <MaxDamage>648</MaxDamage>
     <Speed>1.6</Speed>
-    <Bind>BoE</Bind>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
@@ -116505,7 +116505,7 @@
     <Quality>Epic</Quality>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
-    <Bind>BoE</Bind>
+    <Bind>BoP</Bind>
     <SocketColor1>Yellow</SocketColor1>
     <SocketBonus>
       <CritRating>10</CritRating>
@@ -116537,7 +116537,7 @@
     <Quality>Epic</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
-    <Bind>BoE</Bind>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
@@ -116634,7 +116634,7 @@
     <Quality>Epic</Quality>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
-    <Bind>BoE</Bind>
+    <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketBonus>
       <Intellect>10</Intellect>
@@ -117328,7 +117328,7 @@
     <Quality>Epic</Quality>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
-    <Bind>BoE</Bind>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
@@ -118127,7 +118127,7 @@
     <Quality>Epic</Quality>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
-    <Bind>BoE</Bind>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
@@ -131945,7 +131945,6 @@
     <Faction>Neutral</Faction>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
       <ItemLocation xsi:type="UnknownItem" />
       <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
