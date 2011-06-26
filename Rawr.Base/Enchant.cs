@@ -465,7 +465,7 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(3233, "Exceptional Mana", ItemSlot.Chest, new Stats() { Mana = 250 }, "inv_misc_note_01"));
             defaultEnchants.Add(new Enchant(1144, "Major Spirit", ItemSlot.Chest, new Stats() { Spirit = 15 }, "spell_holy_greaterheal"));
             defaultEnchants.Add(new Enchant(3245, "Exceptional Resilience", ItemSlot.Chest, new Stats() { Resilience = 20 }, "inv_enchant_formulagood_01"));
-            defaultEnchants.Add(new Enchant(3150, "Restore Mana Prime", ItemSlot.Chest, new Stats() { Mp5 = 7 }, "spell_holy_greaterheal"));
+            defaultEnchants.Add(new Enchant(3150, "Restore Mana Prime", ItemSlot.Chest, new Stats() { Spirit = 14 }, "spell_holy_greaterheal"));
             #endregion
             // Level 60 (Vanilla)
             // Unsorted
@@ -501,7 +501,7 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(1891, "Stats", ItemSlot.Wrist, new Stats() { Agility = 4, Strength = 4, Stamina = 4, Intellect = 4, Spirit = 4 }, "spell_holy_greaterheal"));
             defaultEnchants.Add(new Enchant(2648, "Major Defense", ItemSlot.Wrist, new Stats() { DodgeRating = 12 }, "inv_enchant_formulagood_01"));
             defaultEnchants.Add(new Enchant(2617, "Superior Healing", ItemSlot.Wrist, new Stats() { SpellPower = 15 }, "inv_misc_note_01"));
-            defaultEnchants.Add(new Enchant(2679, "Restore Mana Prime", ItemSlot.Wrist, new Stats() { Mp5 = 8 }, "inv_enchant_formulagood_01"));
+            defaultEnchants.Add(new Enchant(2679, "Restore Mana Prime", ItemSlot.Wrist, new Stats() { Spirit = 12 }, "inv_enchant_formulagood_01"));
             defaultEnchants.Add(new Enchant(2649, "Fortitude", ItemSlot.Wrist, new Stats() { Stamina = 12 }, "inv_enchant_formulagood_01"));
             defaultEnchants.Add(new Enchant(1600, "Striking", ItemSlot.Wrist, new Stats() { AttackPower = 38 }, "spell_holy_greaterheal"));
             defaultEnchants.Add(new Enchant(2650, "Spellpower", ItemSlot.Wrist, new Stats() { SpellPower = 15 }, "inv_enchant_formulagood_01"));
@@ -596,14 +596,14 @@ namespace Rawr
             #region Level 80 (WotLK)
             defaultEnchants.Add(new Enchant(1075, "Greater Fortitude", ItemSlot.Feet, new Stats() { Stamina = 22 }, "spell_holy_greaterheal"));
             defaultEnchants.Add(new Enchant(3826, "Icewalker", ItemSlot.Feet, new Stats() { CritRating = 12, HitRating = 12 }, "spell_holy_greaterheal"));
-            defaultEnchants.Add(new Enchant(3244, "Greater Vitality", ItemSlot.Feet, new Stats() { Mp5 = 7f, Hp5 = 7f }, "spell_holy_greaterheal"));
+            defaultEnchants.Add(new Enchant(3244, "Greater Vitality", ItemSlot.Feet, new Stats() { Stamina = 14f, Spirit = 14f }, "spell_holy_greaterheal"));
             defaultEnchants.Add(new Enchant(1147, "Greater Spirit", ItemSlot.Feet, new Stats() { Spirit = 18 }, "spell_holy_greaterheal"));
             defaultEnchants.Add(new Enchant(983, "Superior Agility", ItemSlot.Feet, new Stats() { Agility = 16 }, "inv_enchant_formulagood_01"));
             defaultEnchants.Add(new Enchant(1597, "Greater Assault", ItemSlot.Feet, new Stats() { AttackPower = 32 }, "inv_enchant_formulagood_01"));
             defaultEnchants.Add(new Enchant(3232, "Tuskarr's Vitality", ItemSlot.Feet, new Stats() { Stamina = 15, MovementSpeed = 0.08f }, "inv_enchant_formulagood_01"));
             #endregion
             #region Level 70 (BC)
-            defaultEnchants.Add(new Enchant(2656, "Vitality", ItemSlot.Feet, new Stats() { Mp5 = 5f, Hp5 = 5f }, "inv_enchant_formulasuperior_01"));
+            defaultEnchants.Add(new Enchant(2656, "Vitality", ItemSlot.Feet, new Stats() { Stamina = 10f, Spirit = 10f }, "inv_enchant_formulasuperior_01"));
             defaultEnchants.Add(new Enchant(2649, "Fortitude", ItemSlot.Feet, new Stats() { Stamina = 12 }, "inv_enchant_formulasuperior_01"));
             defaultEnchants.Add(new Enchant(2657, "Dexterity", ItemSlot.Feet, new Stats() { Agility = 12 }, "inv_enchant_formulasuperior_01"));
             defaultEnchants.Add(new Enchant(2940, "Boar's Speed", ItemSlot.Feet, new Stats() { Stamina = 9, MovementSpeed = 0.08f }, "inv_enchant_formulasuperior_01"));
