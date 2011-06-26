@@ -1131,10 +1131,11 @@ threat and limited threat scaled by the threat scale.",
         public override bool HasRelevantStats(Stats stats)
         {
             bool superRelevant  = IsSuperRelevant(stats);   // Stats that will automatically mark the item as relevant
+            bool relevantEnchant= IsRelevantEnchant(stats); // Stats that appear on the Peerless Stats enchant
             bool relevant       = false;                    // Stats which are potentially relevant
             bool notRelevant    = false;                    // Stats which mark the item as irrelevant if not super-relevant
 
-            if (!superRelevant)
+            if (!superRelevant && !relevantEnchant)
             {
                 relevant    = IsRelevant(stats);
                 notRelevant = IsNotRelevant(stats);
@@ -1153,7 +1154,7 @@ threat and limited threat scaled by the threat scale.",
                 }
             }
 
-            return (superRelevant || (relevant && !notRelevant));
+            return (superRelevant || relevantEnchant || (relevant && !notRelevant));
         }
 
         private bool IsSuperRelevant(Stats stats)
@@ -1195,6 +1196,13 @@ threat and limited threat scaled by the threat scale.",
                 ) != 0;
         }
 
+        private bool IsRelevantEnchant(Stats stats)
+        {
+            return ( 
+                // Peerless Stats
+                (stats.Agility == 20 && stats.Strength == 20 && stats.Stamina == 20 && stats.Intellect == 20 && stats.Spirit == 20) 
+                );
+        }
 
     }
 }
