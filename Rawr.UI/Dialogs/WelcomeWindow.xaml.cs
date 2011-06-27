@@ -160,6 +160,50 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes()
         {
+#region Rawr 4.2.0 (June 26, 2011) [r61631]
+VNStuff.Add("Rawr 4.2.0 (June 26, 2011) [r61631]",
+@"Cataclysm Release
+
+General:
+- Most models updated for 4.2
+
+Rawr.Items:
+- Updated all Vicious (Season 9) PvP gear to be bought with Honor Points
+- Added Reckless (Season 10) PvP items
+- Added both Direbrew and Hallow's End items
+- Updated descriptions on all Seasonal item's sources
+- Updated a few trinket procs based on SimC testing
+- Updated proc on Eye of Blazing Power (now heals for over 5 times the original value)
+
+Rawr.Healadin:
+- Holy Radiance default 50% of max heals (up from 40%).
+- Burst vs Total healing changed to 30% burst (up from 25%).
+
+Rawr.Mage:
+- Fix for some proc calculations.
+- Changing ignite munching to default 8%.
+- Support for on use mastery effects.
+
+Rawr.ProtWarr:
+- Fixed a bug when trinkets (like Porcelain Crab) go over the effective mastery cap Rawr would appear to lock up.
+
+Rawr.Retribution:
+- Inq Multiplier fix.
+- AvgTargets implemented.
+
+Rawr.Enhance:
+- Enable a set of default buffs/debuffs when loading. 
+
+Rawr.DPSDK:
+- Defect 20994: Fix problem with Expertise.
+
+Rawr.Tree:
+- Add limited cooldown usage decision support to the optimizer.
+
+Rawr.Cat:
+- Added support for Fire, Holy, Nature, and Physical Damaging Proc enchants.
+");
+#endregion
 #region Rawr 4.1.06 (June 12, 2011) [r61314]
 VNStuff.Add("Rawr 4.1.06 (June 12, 2011) [r61314]",
 @"Cataclysm Release
