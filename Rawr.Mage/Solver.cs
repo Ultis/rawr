@@ -131,6 +131,7 @@ namespace Rawr.Mage
         private List<Buff> autoActivatedBuffs;
         private TargetDebuffStats targetDebuffs;
         private bool restrictThreat;
+        private int baseArmorMask;
 
         public bool Mage2T10 { get; set; }
         public bool Mage4T10 { get; set; }
@@ -170,9 +171,12 @@ namespace Rawr.Mage
         private bool manaPotionAvailable;
         private bool flameOrbAvailable;
         private bool bloodFuryAvailable;
+        private bool mageArmorAvailable;
+        private bool moltenArmorAvailable;
+        private bool frostArmorAvailable;
 
         // initialized in InitializeEffectCooldowns
-        private const int standardEffectCount = 14; // can't just compute from enum, because that counts the combined masks also
+        private const int standardEffectCount = 17; // can't just compute from enum, because that counts the combined masks also
         public List<EffectCooldown> CooldownList { get; set; }
         public Dictionary<int, EffectCooldown> EffectCooldown { get; set; }
         private int[] effectExclusionList;
@@ -1781,7 +1785,23 @@ namespace Rawr.Mage
                 rawStats.AddSpecialEffect(SpecialEffect2T12);
             }
 
-            BaseStats = calculations.GetCharacterStats(Character, additionalItem, rawStats, CalculationOptions);
+            // armor            
+            if (CalculationOptions.ArmorSwapping)
+            {
+                baseArmorMask = (int)StandardEffect.MoltenArmor;
+                moltenArmorAvailable = true;
+                mageArmorAvailable = true;
+                frostArmorAvailable = false;
+            }
+            else
+            {
+                baseArmorMask = 0;
+                mageArmorAvailable = false;
+                moltenArmorAvailable = false;
+                frostArmorAvailable = false;
+            }
+
+            BaseStats = calculations.GetCharacterStats(Character, additionalItem, rawStats, CalculationOptions, !CalculationOptions.ArmorSwapping);
 
             int[] talentData = MageTalents.Data;
             int arcane = 0;
@@ -2182,6 +2202,28 @@ namespace Rawr.Mage
             StandardEffect = StandardEffect.BloodFury,
             Color = Color.FromArgb(0xFF, 0xA5, 0x2A, 0x2A) //Brown
         };
+        EffectCooldown cachedEffectMageArmor = new EffectCooldown()
+        {
+            Mask = (int)StandardEffect.MageArmor,
+            Name = "Mage Armor",
+            StandardEffect = StandardEffect.MageArmor,
+            Color = Color.FromArgb(0xFF, 0x0, 0xFF, 0xFF)
+        };
+        EffectCooldown cachedEffectMoltenArmor = new EffectCooldown()
+        {
+            Mask = (int)StandardEffect.MoltenArmor,
+            Name = "Molten Armor",
+            StandardEffect = StandardEffect.MoltenArmor,
+            Color = Color.FromArgb(0xFF, 0x80, 0x0, 0x0)
+        };
+        EffectCooldown cachedEffectFrostArmor = new EffectCooldown()
+        {
+            Mask = (int)StandardEffect.FrostArmor,
+            Name = "Frost Armor",
+            StandardEffect = StandardEffect.FrostArmor,
+            Color = Color.FromArgb(0xFF, 0x0, 0x0, 0xFF)
+        };
+
 
         private void InitializeEffectCooldowns()
         {
@@ -2296,6 +2338,21 @@ namespace Rawr.Mage
             if (bloodFuryAvailable)
             {
                 EffectCooldown cooldown = NewStandardEffectCooldown(cachedEffectBloodFury);
+                CooldownList.Add(cooldown);
+            }
+            if (mageArmorAvailable)
+            {
+                EffectCooldown cooldown = NewStandardEffectCooldown(cachedEffectMageArmor);
+                CooldownList.Add(cooldown);
+            }
+            if (moltenArmorAvailable)
+            {
+                EffectCooldown cooldown = NewStandardEffectCooldown(cachedEffectMoltenArmor);
+                CooldownList.Add(cooldown);
+            }
+            if (frostArmorAvailable)
+            {
+                EffectCooldown cooldown = NewStandardEffectCooldown(cachedEffectFrostArmor);
                 CooldownList.Add(cooldown);
             }
 
@@ -5614,7 +5671,7 @@ namespace Rawr.Mage
 
         private void GenerateStateList()
         {
-            BaseState = CastingState.New(this, 0, false, 0);
+            BaseState = CastingState.New(this, baseArmorMask, false, 0);
 
             if (stateList == null)
             {
@@ -5652,7 +5709,7 @@ namespace Rawr.Mage
                             {
                                 if ((CalculationOptions.HeroismControl != 1 || !heroism || !mf) && (CalculationOptions.HeroismControl != 2 || !heroism || (combinedIndex == (int)StandardEffect.Heroism && index == 0)) && (CalculationOptions.HeroismControl != 3 || !moltenFuryAvailable || !heroism || mf))
                                 {
-                                    if (combinedIndex == 0)
+                                    if (combinedIndex == BaseState.Effects)
                                     {
                                         stateList.Add(BaseState);
                                     }
@@ -5681,13 +5738,26 @@ namespace Rawr.Mage
                                 break;
                             }
                         }
+                        // make sure only one armor is active, but at least one if one is available
+                        int armorCountActive = 0;
+                        if ((incrementalSetIndex & (int)StandardEffect.MageArmor) != 0) armorCountActive++;
+                        if ((incrementalSetIndex & (int)StandardEffect.MoltenArmor) != 0) armorCountActive++;
+                        if ((incrementalSetIndex & (int)StandardEffect.FrostArmor) != 0) armorCountActive++;
+                        if (armorCountActive > 1)
+                        {
+                            valid = false;
+                        }
+                        else if (armorCountActive == 0 && (mageArmorAvailable || moltenArmorAvailable || frostArmorAvailable))
+                        {
+                            valid = false;
+                        }
                         if (valid)
                         {
                             bool mf = (incrementalSetIndex & (int)StandardEffect.MoltenFury) != 0;
                             bool heroism = (incrementalSetIndex & (int)StandardEffect.Heroism) != 0;
                             if ((CalculationOptions.HeroismControl != 1 || !heroism || !mf) && (CalculationOptions.HeroismControl != 2 || !heroism || (incrementalSetIndex == (int)StandardEffect.Heroism)) && (CalculationOptions.HeroismControl != 3 || !moltenFuryAvailable || !heroism || mf))
                             {
-                                if (incrementalSetIndex == 0)
+                                if (incrementalSetIndex == BaseState.Effects)
                                 {
                                     stateList.Add(BaseState);
                                 }

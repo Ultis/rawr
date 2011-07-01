@@ -1170,6 +1170,13 @@ namespace Rawr.Mage
             set { _DisableManaRegenCycles = value; OnPropertyChanged("DisableManaRegenCycles"); }
         }
 
+        private bool _ArmorSwapping;
+        public bool ArmorSwapping
+        {
+            get { return _ArmorSwapping; }
+            set { _ArmorSwapping = value; OnPropertyChanged("ArmorSwapping"); }
+        }
+
         private float _Innervate;
         public float Innervate
         {

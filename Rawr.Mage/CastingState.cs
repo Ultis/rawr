@@ -21,8 +21,11 @@ namespace Rawr.Mage
         Evocation = 0x400,
         ManaGemEffect = 0x800,
         MirrorImage = 0x1000,
-        BloodFury = 0x2000, // make sure to update shifting of item based effects if this changes (Solver.standardEffectCount)
-        NonItemBasedMask = PowerInfusion | VolcanicPotion | ArcanePower | Combustion | Berserking | FlameCap | Heroism | IcyVeins | MoltenFury | ManaGemEffect | MirrorImage | FlameOrb | BloodFury
+        BloodFury = 0x2000,
+        MageArmor = 0x4000,
+        MoltenArmor = 0x8000,
+        FrostArmor = 0x10000, // make sure to update shifting of item based effects if this changes (Solver.standardEffectCount)
+        NonItemBasedMask = PowerInfusion | VolcanicPotion | ArcanePower | Combustion | Berserking | FlameCap | Heroism | IcyVeins | MoltenFury | ManaGemEffect | MirrorImage | FlameOrb | BloodFury | MageArmor | MoltenArmor | FrostArmor
     }
 
     public class CastingState
@@ -65,9 +68,9 @@ namespace Rawr.Mage
         public float HolySpellPower { get { return Solver.BaseHolySpellPower + StateSpellPower; } }
 
         public float SpiritRegen { get { return Solver.SpiritRegen; } }
-        public float ManaRegen { get { return Solver.ManaRegen; } }
-        public float ManaRegen5SR { get { return Solver.ManaRegen5SR; } }
-        public float ManaRegenDrinking { get { return Solver.ManaRegenDrinking; } }
+        public float ManaRegen { get { return Solver.ManaRegen + StateManaRegen; } }
+        public float ManaRegen5SR { get { return Solver.ManaRegen5SR + StateManaRegen; } }
+        public float ManaRegenDrinking { get { return Solver.ManaRegenDrinking + StateManaRegen; } }
         public float HealthRegen { get { return Solver.HealthRegen; } }
         public float HealthRegenCombat { get { return Solver.HealthRegenCombat; } }
         public float HealthRegenEating { get { return Solver.HealthRegenEating; } }
@@ -78,6 +81,7 @@ namespace Rawr.Mage
         public float CritDamageReduction { get { return Solver.CritDamageReduction; } }
         public float Dodge { get { return Solver.Dodge; } }
 
+        public float StateManaRegen { get; set; }
         public float StateSpellModifier { get; set; }
         public float StateAdditiveSpellModifier { get; set; }
         public float StateEffectMaxMana { get; set; }
@@ -134,6 +138,9 @@ namespace Rawr.Mage
         public bool MirrorImage { get; private set; }
         public bool PowerInfusion { get; private set; }
         public bool BloodFury { get; private set; }
+        public bool MageArmor { get; private set; }
+        public bool MoltenArmor { get; private set; }
+        public bool FrostArmor { get; private set; }
         public bool Frozen { get; set; }
         public bool UseMageWard { get; set; }
 
@@ -162,6 +169,9 @@ namespace Rawr.Mage
                 MirrorImage = (value & (int)StandardEffect.MirrorImage) != 0;
                 PowerInfusion = (value & (int)StandardEffect.PowerInfusion) != 0;
                 BloodFury = (value & (int)StandardEffect.BloodFury) != 0;
+                MageArmor = (value & (int)StandardEffect.MageArmor) != 0;
+                MoltenArmor = (value & (int)StandardEffect.MoltenArmor) != 0;
+                FrostArmor = (value & (int)StandardEffect.FrostArmor) != 0;
             }
         }
 
@@ -321,6 +331,7 @@ namespace Rawr.Mage
             state.StateAdditiveSpellModifier = StateAdditiveSpellModifier;
             state.StateSpellModifier = StateSpellModifier;
             state.StateEffectMaxMana = StateEffectMaxMana;
+            state.StateManaRegen = StateManaRegen;
 
             state.SpellsCount = 0;
             state.CyclesCount = 0;
@@ -445,6 +456,16 @@ namespace Rawr.Mage
             if (Frozen)
             {
                 StateAdditiveSpellModifier += FrostburnBonus;
+            }
+
+            StateManaRegen = 0;
+            if (MageArmor)
+            {
+                StateManaRegen += 0.006f * (MageTalents.GlyphOfMageArmor ? 1.2f : 1.0f) * BaseStats.Mana;
+            }
+            if (MoltenArmor)
+            {
+                StateCritRate += 0.03f + (MageTalents.GlyphOfMoltenArmor ? 0.02f : 0.0f);
             }
 
             SpellsCount = 0;

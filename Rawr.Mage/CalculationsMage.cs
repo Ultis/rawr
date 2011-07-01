@@ -457,12 +457,12 @@ namespace Rawr.Mage
             {
                 return GetCharacterCalculations(character, additionalItem, calcOpts, calcOpts.IncrementalSetArmor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet, solveCycles);
             }
-            else if (calcOpts.AutomaticArmor && !character.DisableBuffAutoActivation)
+            else if (calcOpts.AutomaticArmor && !calcOpts.ArmorSwapping && !character.DisableBuffAutoActivation)
             {
                 CharacterCalculationsMage mage = GetCharacterCalculations(character, additionalItem, calcOpts, "Mage Armor", useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet, solveCycles);
                 CharacterCalculationsMage molten = GetCharacterCalculations(character, additionalItem, calcOpts, "Molten Armor", useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet, solveCycles);
                 CharacterCalculationsMage calc = (mage.OverallPoints > molten.OverallPoints) ? mage : molten;
-                if (calcOpts.MeleeDps + calcOpts.MeleeDot + calcOpts.PhysicalDps + calcOpts.PhysicalDot + calcOpts.FrostDps + calcOpts.FrostDot > 0)
+                if (calcOpts.MeleeDps + calcOpts.MeleeDot + calcOpts.PhysicalDps + calcOpts.PhysicalDot > 0)
                 {
                     CharacterCalculationsMage ice = GetCharacterCalculations(character, additionalItem, calcOpts, "Ice Armor", useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet, solveCycles);
                     if (ice.OverallPoints > calc.OverallPoints) calc = ice;
@@ -651,10 +651,10 @@ namespace Rawr.Mage
             List<Buff> ignore2;
             Stats stats = new Stats();
             AccumulateRawStats(stats, character, additionalItem, calculationOptions, out ignore2, null, out ignore);
-            return GetCharacterStats(character, additionalItem, stats, calculationOptions);
+            return GetCharacterStats(character, additionalItem, stats, calculationOptions, true);
         }
 
-        public Stats GetCharacterStats(Character character, Item additionalItem, Stats rawStats, CalculationOptionsMage calculationOptions)
+        public Stats GetCharacterStats(Character character, Item additionalItem, Stats rawStats, CalculationOptionsMage calculationOptions, bool includeArmor)
         {
             float statsRaceHealth;
             float statsRaceMana;
@@ -1027,19 +1027,17 @@ namespace Rawr.Mage
             }
 
             float allResist = 0;
-            if (statsTotal.MageIceArmor > 0)
+            if (includeArmor)
             {
-                statsTotal.Armor += (float)Math.Floor(calculationOptions.PlayerLevel < 79 ? 645f : 940f);
-                statsTotal.FrostResistance += (float)Math.Floor((calculationOptions.PlayerLevel < 79f ? 18f : 40f));
-            }
-            if (statsTotal.MageMageArmor > 0)
-            {
-                statsTotal.ManaRestoreFromMaxManaPerSecond += 0.006f * (talents.GlyphOfMageArmor ? 1.2f : 1.0f);
-                allResist += calculationOptions.GetSpellValueRound(0.048f);
-            }
-            if (statsTotal.MageMoltenArmor > 0)
-            {
-                statsTotal.SpellCrit += 0.03f + (talents.GlyphOfMoltenArmor ? 0.02f : 0.0f);
+                if (statsTotal.MageMageArmor > 0)
+                {
+                    statsTotal.ManaRestoreFromMaxManaPerSecond += 0.006f * (talents.GlyphOfMageArmor ? 1.2f : 1.0f);
+                    allResist += calculationOptions.GetSpellValueRound(0.048f);
+                }
+                if (statsTotal.MageMoltenArmor > 0)
+                {
+                    statsTotal.SpellCrit += 0.03f + (talents.GlyphOfMoltenArmor ? 0.02f : 0.0f);
+                }
             }
             if (calculationOptions.EffectCritBonus > 0)
             {
