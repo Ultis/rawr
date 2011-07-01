@@ -1061,7 +1061,7 @@ a GCD's length, you will use this while running back into place",
             if (T12count >= 2) {
                 statsBuffs.AddSpecialEffect(new SpecialEffect(Trigger.BattleorCommandingShout,
                     new Stats() { BonusPhysicalDamageMultiplier = 0.10f, },
-                    6f, 30f));
+                    12f - (dpswarchar.Talents.BoomingVoice * 3f), 60f - (dpswarchar.Talents.BoomingVoice * 15f)));
             }
             if (T12count >= 4) {
                 statsBuffs.AddSpecialEffect(new SpecialEffect(Trigger.MortalStrikeHit,
@@ -2314,6 +2314,9 @@ a GCD's length, you will use this while running back into place",
                 float rbActs = charStruct.Rot.GetWrapper<Skills.RagingBlow>().AllNumActivates;
                 triggerIntervals[Trigger.OPorRBAttack] = (((opActs + rbActs) > 0f) ? (fightDuration / (opActs + rbActs)) : 0f);
                 triggerChances[Trigger.OPorRBAttack]   = 1f;
+
+                triggerIntervals[Trigger.BattleorCommandingShout] = 60f - charStruct.Talents.BoomingVoice * 15f;
+                triggerChances[Trigger.BattleorCommandingShout] = 1f;
 
 #if DEBUG
                 addInfo += "\r\nFinished";

@@ -246,7 +246,7 @@ namespace Rawr.Bosses
             Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T12_10, BossHandler.TierLevels.T12_25, BossHandler.TierLevels.T12_10H, BossHandler.TierLevels.T12_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 4724000f, 14600000f, 6613600f, 24600000f };
+            Health = new float[] { 20871756f, 62615268f, 29220458f, 87661375f };
             MobType = (int)MOB_TYPES.BEAST;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
@@ -451,9 +451,10 @@ namespace Rawr.Bosses
             #endregion
             #region Basics
             // Lord Rhyolith has three parts, Left Leg, Right Leg, Chest
+            // Legs health are tied together
             // All three have low health, however they start out with an 80% damage
             // reduction applied to them.
-            Health = new float[] { 4724000f, 14600000f, 6613600f, 24600000f };
+            Health = new float[] { (15500000f + 7750000f), (47000000f + 23500000f), (21700000f + 15500000f), (65800000f + 32900000f) };
             MobType = (int)MOB_TYPES.ELEMENTAL;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
@@ -600,9 +601,10 @@ namespace Rawr.Bosses
             Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T12_10, BossHandler.TierLevels.T12_25, BossHandler.TierLevels.T12_10H, BossHandler.TierLevels.T12_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 4724000f, 14600000f, 6613600f, 24600000f };
+            Health = new float[] { 51352000f, 154605600f, 71892800f, 216447840f };
             MobType = (int)MOB_TYPES.ELEMENTAL;
-            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
+            // 3 full phases or 15 minute enrage timer.
+            BerserkTimer = new int[] { 15 * 60, 15 * 60, 15 * 60, 15 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
@@ -925,7 +927,8 @@ namespace Rawr.Bosses
             Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T12_10, BossHandler.TierLevels.T12_25, BossHandler.TierLevels.T12_10H, BossHandler.TierLevels.T12_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 4724000f, 14600000f, 6613600f, 24600000f };
+            // Baleroc's health consists of both himself and his dogs Ripgut and Rageface
+            Health = new float[] { (24049760f + (9619904f * 2f)), (81597400f + (33669664f * 2f)), (33669664f + (13467866f * 2f)), (114236360f + (47137530f * 2f)) };
             MobType = (int)MOB_TYPES.HUMANOID;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
@@ -1080,7 +1083,7 @@ namespace Rawr.Bosses
             Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T12_10, BossHandler.TierLevels.T12_25, BossHandler.TierLevels.T12_10H, BossHandler.TierLevels.T12_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 4724000f, 14600000f, 6613600f, 24600000f };
+            Health = new float[] { 42087080f, 133304384f, 58921912f, 186626138f };
             MobType = (int)MOB_TYPES.ELEMENTAL;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
@@ -1218,7 +1221,7 @@ namespace Rawr.Bosses
             Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T12_10, BossHandler.TierLevels.T12_25, BossHandler.TierLevels.T12_10H, BossHandler.TierLevels.T12_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 4724000f, 14600000f, 6613600f, 24600000f };
+            Health = new float[] { 28344360f, 99205264f, 39682104f, 138887370f };
             MobType = (int)MOB_TYPES.HUMANOID;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
@@ -1374,7 +1377,10 @@ namespace Rawr.Bosses
             Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T12_10, BossHandler.TierLevels.T12_25, BossHandler.TierLevels.T12_10H, BossHandler.TierLevels.T12_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 4724000f, 14600000f, 6613600f, 24600000f };
+            // Rag "dies" at 10% on normal (goes back under the lava).
+            // need double check if he dies at 0% on heroic.
+            // Initial assumption that he dies at 0% on heroic
+            Health = new float[] { 57142855f * 0.9f, 200000000f * 0.9f, 80000000f, 280000000f };
             MobType = (int)MOB_TYPES.ELEMENTAL;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
