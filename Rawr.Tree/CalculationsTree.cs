@@ -334,7 +334,6 @@ namespace Rawr.Tree {
                     "Fight Stats:Spell Power",
                     "Fight Stats:Spell Crit",
                     "Fight Stats:Spell Haste",
-                    "Fight Stats:Symbiosis",
                     "Fight Stats:Harmony",
                     "Fight Stats:Spell Mana Cost Reduction",
                     "Fight Stats:Spell Crit Extra Bonus",

@@ -240,8 +240,6 @@
 					<RowDefinition Height="Auto" />
 					<RowDefinition Height="Auto" />
 					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto" />
 					<RowDefinition Height="Auto" />
 					<RowDefinition Height="Auto" />
 					<RowDefinition Height="Auto" />
@@ -266,63 +264,33 @@
 				<Border Grid.Row="4" Grid.ColumnSpan="5" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
 					<TextBlock Margin="4" FontWeight="Bold" Text="Multi-target raid healing" VerticalAlignment="Center" />
 				</Border>
-				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Wild Growth symbiosis rate:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="6" ToolTipService.ToolTip="Average percentage of Wild Growth targets where Rejuvenation or Lifebloom are present" />
-				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="6" Value="{Binding Path=WildGrowthSymbiosisRate, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50" />
-				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Wild Growth effectiveness:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="7" ToolTipService.ToolTip="Percentage of Wild Growth healing that is not overhealing" />
-				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="7" Value="{Binding Path=WildGrowthEffectiveHealing, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50"  />
-				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Tranquility symbiosis rate:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="8" ToolTipService.ToolTip="Average percentage of Tranquility targets where Wild Growth, Rejuvenation or Lifebloom are present" />
-				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="8" Value="{Binding Path=TranquilitySymbiosisRate, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50" />
-
-				<Border Grid.Row="9" Grid.ColumnSpan="5" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Wild Growth effectiveness:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="6" ToolTipService.ToolTip="Percentage of Wild Growth healing that is not overhealing" />
+				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="6" Value="{Binding Path=WildGrowthEffectiveHealing, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50"  />
+				<Border Grid.Row="7" Grid.ColumnSpan="5" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
 					<TextBlock Margin="4" FontWeight="Bold" Text="Single-target raid healing" VerticalAlignment="Center" />
 				</Border>
-				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Symbiosis rate:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="10" ToolTipService.ToolTip="Average percentage of target of single-target raid heals where Wild Growth or Lifebloom are present" />
-				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="10" Value="{Binding Path=RaidSTSymbiosisRate, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50" />
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Nourish hotted target rate:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="8" ToolTipService.ToolTip="Average percentage of targets of Nourish where Wild Growth, Rejuvenation or Lifebloom are present" />
+				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="8" Value="{Binding Path=NourishHoTRate, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50" />
 
-				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Living Seed effectiveness:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="11" ToolTipService.ToolTip="Average usage rate of Living Seed placed by single-target raid healing" />
-				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="11" Value="{Binding Path=LivingSeedEffectiveHealing, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50"  />
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Living Seed effectiveness:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="9" ToolTipService.ToolTip="Average usage rate of Living Seed placed by single-target raid healing" />
+				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="9" Value="{Binding Path=LivingSeedEffectiveHealing, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50"  />
 
-				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="ToL Lifebloom effectiveness:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="12" ToolTipService.ToolTip="Percentage of raid Lifebloom healing during Tree of Life that is not overhealing" />
-				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="12" Value="{Binding Path=ToLLifebloomEffectiveHealing, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50"  />
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="ToL Lifebloom effectiveness:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="10" ToolTipService.ToolTip="Percentage of raid Lifebloom healing during Tree of Life that is not overhealing" />
+				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="10" Value="{Binding Path=ToLLifebloomEffectiveHealing, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50"  />
 
-				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Rejuvenation effectiveness:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="13" ToolTipService.ToolTip="Percentage of raid Rejuvenation healing that is not overhealing" />
-				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="13" Value="{Binding Path=RejuvenationEffectiveHealing, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50"  />
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Rejuvenation effectiveness:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="11" ToolTipService.ToolTip="Percentage of raid Rejuvenation healing that is not overhealing" />
+				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="11" Value="{Binding Path=RejuvenationEffectiveHealing, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50"  />
 
-				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Healing Touch effectiveness:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="14" ToolTipService.ToolTip="Percentage of raid Healing Touch healing that is not overhealing" />
-				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="14" Value="{Binding Path=HealingTouchEffectiveHealing, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50"  />
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Healing Touch effectiveness:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="12" ToolTipService.ToolTip="Percentage of raid Healing Touch healing that is not overhealing" />
+				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="12" Value="{Binding Path=HealingTouchEffectiveHealing, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50"  />
 
-				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Nourish/RG effectiveness:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="15" ToolTipService.ToolTip="Percentage of raid Nourish or Regrowth healing that is not overhealing" />
-				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="15" Value="{Binding Path=NourishEffectiveHealing, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50"  />
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Nourish/RG effectiveness:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="13" ToolTipService.ToolTip="Percentage of raid Nourish or Regrowth healing that is not overhealing" />
+				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="13" Value="{Binding Path=NourishEffectiveHealing, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50"  />
 
-				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="T12 4P extra heal effectiveness:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="16" ToolTipService.ToolTip="Percentage of the Swiftend healing to an extra target due to the T12 4P bonus that is not overhealing" />
-				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="16" Value="{Binding Path=SwiftmendExtraHealEffectiveHealing, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50"  />
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="T12 4P extra heal effectiveness:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="14" ToolTipService.ToolTip="Percentage of the Swiftend healing to an extra target due to the T12 4P bonus that is not overhealing" />
+				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="14" Value="{Binding Path=SwiftmendExtraHealEffectiveHealing, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50"  />
 
 			</Grid>
-		</controls:TabItem>
-		<controls:TabItem Header="Versions">
-			<Grid>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="Auto"/>
-					<ColumnDefinition Width="Auto"/>
-					<ColumnDefinition Width="*" />
-				</Grid.ColumnDefinitions>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-				</Grid.RowDefinitions>
-				<Border Grid.Row="0" Grid.ColumnSpan="5" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
-					<TextBlock Margin="4" FontWeight="Bold" Text="WoW 4.2" VerticalAlignment="Center" />
-				</Border>
-
-				<CheckBox Grid.Column="0" Grid.Row="1" IsChecked="{Binding Path=Crit100Bonus, Mode=TwoWay}" MinWidth="50" Content="+100% crits" Margin="4,2,2,2" Grid.ColumnSpan="5" ToolTipService.ToolTip="Whether critical hits should result in a 100% bonus like on PTR rather than the 50% bonus on 4.1"/>
-				<CheckBox Grid.Column="0" Grid.Row="2" IsChecked="{Binding Path=Harmony, Mode=TwoWay}" MinWidth="50" Content="Use Harmony mastery" Margin="4,2,2,2" Grid.ColumnSpan="5" ToolTipService.ToolTip="Whether the Harmony mastery used on PTR should be used rather than the Symbiosis mastery on 4.1" />
-			</Grid>
-
 		</controls:TabItem>
 	</controls:TabControl>
 </UserControl>

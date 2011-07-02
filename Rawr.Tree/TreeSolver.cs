@@ -451,15 +451,10 @@ namespace Rawr.Tree
                 computeIteration();
         }
 
-        double getMasteryMultiplier(TreeStats stats, double symbiosisRate, double extraSymbiosisBonus = 0)
-        {
-            return symbiosisRate * (1.0f + stats.Symbiosis) * (1 + extraSymbiosisBonus) + (1 - symbiosisRate);
-        }
-
         double getCritMultiplier(TreeStats stats, double extraCritChance, double livingSeed)
         {
             double crit = Math.Min(1, stats.SpellCrit + extraCritChance);
-            return crit * ((opts.Crit100Bonus ? 2.0 : 1.5) + stats.BonusCritHealMultiplier) * (1 + livingSeed) + (1 - crit);
+            return crit * (2.0 + stats.BonusCritHealMultiplier) * (1 + livingSeed) + (1 - crit);
         }
 
         // cast Rejuvenation rjn times to get Nature's Bounty, then cast Nourish until it drops off
@@ -650,31 +645,9 @@ namespace Rawr.Tree
             spells[(int)TreeSpell.Regrowth].MultiplyPeriodic(getCritMultiplier(stats, regrowthExtraCrit, 0));
             #endregion
 
-            #region Mastery
-            double tankMasteryMultiplier = getMasteryMultiplier(stats, 1.0);
-            double raidSTMasteryMultiplier = getMasteryMultiplier(stats, opts.RaidSTSymbiosisRate);
-
-            spells[(int)TreeSpell.Lifebloom].MultiplyRaid(raidSTMasteryMultiplier);
-            spells[(int)TreeSpell.Lifebloom].MultiplyTank(tankMasteryMultiplier);
-
-            spells[(int)TreeSpell.Swiftmend].Multiply(tankMasteryMultiplier);
-
-            spells[(int)TreeSpell.WildGrowth].RaidAction.Periodic *= getMasteryMultiplier(stats, opts.WildGrowthSymbiosisRate);
-            spells[(int)TreeSpell.WildGrowth].TankAction.Periodic *= tankMasteryMultiplier;
-
-            spells[(int)TreeSpell.Rejuvenation].MultiplyRaid(raidSTMasteryMultiplier);
-            spells[(int)TreeSpell.Rejuvenation].MultiplyTank(tankMasteryMultiplier);
-
-            spells[(int)TreeSpell.HealingTouch].RaidAction.Direct *= raidSTMasteryMultiplier;
-            spells[(int)TreeSpell.HealingTouch].TankAction.Direct *= tankMasteryMultiplier;
-
-            spells[(int)TreeSpell.Regrowth].MultiplyRaid(raidSTMasteryMultiplier);
-            spells[(int)TreeSpell.Regrowth].MultiplyTank(tankMasteryMultiplier);
-
-            spells[(int)TreeSpell.Nourish].RaidAction.Direct *= getMasteryMultiplier(stats, opts.RaidSTSymbiosisRate, 0.2);
-            spells[(int)TreeSpell.Nourish].TankAction.Direct *= getMasteryMultiplier(stats, 1.0, 0.2);
-
-            spells[(int)TreeSpell.Tranquility].Multiply(getMasteryMultiplier(stats, opts.TranquilitySymbiosisRate));
+            #region Nourish HoTs
+            spells[(int)TreeSpell.Nourish].RaidAction.Direct *= 1.0 + opts.NourishHoTRate * 0.2;
+            spells[(int)TreeSpell.Nourish].TankAction.Direct *= 1.2;
             #endregion
         }
 
@@ -923,7 +896,7 @@ namespace Rawr.Tree
                 if (refreshLBWithDHs)
                     minDHRate = Math.Max(minDHRate, 1.0f / data.LifebloomRefreshInterval);
                 // note that 1/15 + 1/25 > 1/10, so in practice swiftmends and cchts alone should be enough to keep up Harmony, unless the Swiftmend cast delay has been set high (> 4 seconds)
-                if (opts.Restoration && opts.Harmony)
+                if (opts.Restoration)
                     minDHRate = Math.Max(minDHRate, 1.0f / 10.0f - 1.0 / (15 + opts.SwiftmendCastDelay));
                 addSpecialDirectHeals(dist, spells, stats, refreshLBWithDHs, !burst, minDHRate, burst);
 
@@ -948,6 +921,7 @@ namespace Rawr.Tree
             candidatesList.Add((int)TreeAction.RaidRejuvenation);
             candidatesList.Add((int)TreeAction.RaidHealingTouch);
             candidatesList.Add((int)TreeAction.RaidNourish);
+            candidatesList.Add((int)TreeAction.RaidRegrowth);
             if(character.DruidTalents.NaturesBounty > 0)
                 candidatesList.Add(opts.RejuvenationTankDuringRaid ? (int)TreeAction.RaidRj2NourishNB : (int)TreeAction.RaidRj3NourishNB);
             candidatesList.Add((int)TreeAction.RaidTolLb);
@@ -994,6 +968,7 @@ namespace Rawr.Tree
             candidatesList.Add((int)TreeAction.TankRejuvenation);
             candidatesList.Add((int)TreeAction.TankHealingTouch);
             candidatesList.Add((int)TreeAction.TankNourish);
+            candidatesList.Add((int)TreeAction.TankRegrowth);
             if(character.DruidTalents.NaturesBounty > 0)
                 candidatesList.Add((int)TreeAction.TankRj2NourishNB);
             candidatesList.Add((int)TreeAction.TankTolLbCcHt);

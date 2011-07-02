@@ -195,14 +195,6 @@ namespace Rawr.Tree
             set { efflorescenceTargets = value; OnPropertyChanged("EfflorescenceTargets"); }
         }
 
-        private float wildGrowthSymbiosisRate = 0.1f;
-        [DefaultValue(0.1f)]
-        public float WildGrowthSymbiosisRate
-        {
-            get { return wildGrowthSymbiosisRate; }
-            set { wildGrowthSymbiosisRate = value; OnPropertyChanged("WildGrowthSymbiosisRate"); }
-        }
-
         private float wildGrowthEffectiveHealing = 0.8f;
         [DefaultValue(0.8f)]
         public float WildGrowthEffectiveHealing
@@ -211,20 +203,12 @@ namespace Rawr.Tree
             set { wildGrowthEffectiveHealing = value; OnPropertyChanged("WildGrowthEffectiveHealing"); }
         }
 
-        private float tranquilitySymbiosisRate = 0.1f;
-        [DefaultValue(0.1f)]
-        public float TranquilitySymbiosisRate
+        private float nourishHoTRate = 0.6f;
+        [DefaultValue(0.6f)]
+        public float NourishHoTRate
         {
-            get { return tranquilitySymbiosisRate; }
-            set { tranquilitySymbiosisRate = value; OnPropertyChanged("TranquilitySymbiosisRate"); }
-        }
-
-        private float raidSTSymbiosisRate = 0.4f;
-        [DefaultValue(0.4f)]
-        public float RaidSTSymbiosisRate
-        {
-            get { return raidSTSymbiosisRate; }
-            set { raidSTSymbiosisRate = value; OnPropertyChanged("RaidSTSymbiosisRate"); }
+            get { return nourishHoTRate; }
+            set { nourishHoTRate = value; OnPropertyChanged("NourishHoTRate"); }
         }
 
         private float livingSeedEffectiveHealing = 0.2f;
@@ -289,22 +273,6 @@ namespace Rawr.Tree
         {
             get { return tankRaidHealingWeight; }
             set { tankRaidHealingWeight = value; OnPropertyChanged("TankRaidHealingWeight"); }
-        }
-
-        private bool harmony = true;
-        [DefaultValue(true)]
-        public bool Harmony
-        {
-            get { return harmony; }
-            set { harmony = value; OnPropertyChanged("Harmony"); }
-        }
-
-        private bool crit100Bonus = true;
-        [DefaultValue(true)]
-        public bool Crit100Bonus
-        {
-            get { return crit100Bonus; }
-            set { crit100Bonus = value; OnPropertyChanged("Crit100Bonus"); }
         }
 
         private float swiftmendExtraHealEffectiveHealing = 2.0f;

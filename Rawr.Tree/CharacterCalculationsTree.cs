@@ -61,7 +61,6 @@ namespace Rawr.Tree {
         public double SpellCrit;
 
         public double TreeOfLifeUptime;
-        public double Symbiosis;
         public double Harmony;
 
         public double SpellsManaCostReduction;
@@ -93,12 +92,7 @@ namespace Rawr.Tree {
             TreeOfLifeUptime = treeOfLifeUptime;
             double mastery = 8.0f + StatConversion.GetMasteryFromRating(stats.MasteryRating);
             if(Restoration)
-            {
-                if(!opts.Harmony)
-                    Symbiosis = mastery * 0.0145f;
-                else
-                    Harmony = mastery * 0.0125f;
-            }
+                Harmony = mastery * 0.0125f;
 
             SpellsManaCostReduction = stats.SpellsManaCostReduction + stats.NatureSpellsManaCostReduction;
             BonusCritHealMultiplier = stats.BonusCritHealMultiplier;
@@ -325,7 +319,6 @@ namespace Rawr.Tree {
             addSpellStatValues(retVal, "Spell Crit Extra Bonus", "{0:F0}%", x => 100 * x.BonusCritHealMultiplier);
             string masteryInfo = String.Format("{0:F0} Mastery Rating from Gear, {1:F2} Mastery from Gear",
                 BasicStats.MasteryRating, 8 + StatConversion.GetMasteryFromRating(BasicStats.MasteryRating));
-            addSpellStatValues(retVal, "Symbiosis", "{0:F}%", x => 100 * x.Symbiosis, masteryInfo);
             addSpellStatValues(retVal, "Harmony", "{0:F}%", x => 100 * x.Harmony, masteryInfo);
             
             retVal.Add("Mana Regen", String.Format("{0:F0}", ManaRegen));
