@@ -2108,7 +2108,7 @@ namespace Rawr.Bosses
             #region Basics
             // Health is split between both Valiona and Theralion
             // Health values was lowered on normal by 20% in 4.2
-            Health = new float[] { 32209500f * 0.80f, 97916880f * 0.80f, 45952000f, 164912640f };
+            Health = new float[] { 25767600f, 97916880f * 0.80f, 48099520f, 164912640f };
             MobType = (int)MOB_TYPES.DRAGONKIN;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
@@ -2234,7 +2234,7 @@ namespace Rawr.Bosses
             // His current health going into P3 is whatever is the remainder of what is currently on all mobs put together
             // So for P3, it's best to keep everyone at or close to 25% as possible going into each phase.
             // Health values were lowered on normal by 20% in patch 4.2
-            Health = new float[] { ((4724000f * 2f) + (6871000f * 2f)) * 0.80f, ((14600000f * 2f) + (21900000f * 2f)) * 0.80f, ((6613600f * 2f) + (9619400f * 2f)), ((24600000f * 2f) + (38000000f * 2f)) };
+            Health = new float[] { ((4724060f * 2f) + (6871060f * 2f)), ((14600000f * 2f) + (21900000f * 2f)), ((6613600f * 2f) + (9619400f * 2f)), ((24600000f * 2f) + (38000000f * 2f)) };
             MobType = (int)MOB_TYPES.ELEMENTAL;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
@@ -2395,7 +2395,7 @@ namespace Rawr.Bosses
             #endregion
             #region Basics
             // Health values on Normal were lowered by 20% in 4.2
-            Health = new float[] { 33497000f * 0.80f, 101352560f * 0.80f, 47000000f, 146000000f };
+            Health = new float[] { 26798304f, 101352560f * 0.80f, 47000000f, 146000000f };
             MobType = (int)MOB_TYPES.HUMANOID;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };

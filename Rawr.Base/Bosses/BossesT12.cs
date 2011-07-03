@@ -1085,7 +1085,7 @@ namespace Rawr.Bosses
             #region Basics
             Health = new float[] { 42087080f, 133304384f, 58921912f, 186626138f };
             MobType = (int)MOB_TYPES.ELEMENTAL;
-            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
+            BerserkTimer = new int[] { 6 * 60, 6 * 60, 6 * 60, 6 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
@@ -1380,7 +1380,7 @@ namespace Rawr.Bosses
             // Rag "dies" at 10% on normal (goes back under the lava).
             // need double check if he dies at 0% on heroic.
             // Initial assumption that he dies at 0% on heroic
-            Health = new float[] { 57142855f * 0.9f, 200000000f * 0.9f, 80000000f, 280000000f };
+            Health = new float[] { 57142855f * 0.9f, 200987280f * 0.9f, 80000000f, 281382192f };
             MobType = (int)MOB_TYPES.ELEMENTAL;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
