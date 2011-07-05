@@ -1436,12 +1436,13 @@ Points individually may be important.",
             AccumulateBuffsStats(statsTotal, character.ActiveBuffs);
             AccumulateSetBonusStats(statsTotal, character.SetBonusCount);
 
+            #region Tank
             #region T11
-            int t11count;
-            if (character.SetBonusCount.TryGetValue("Magma Plated Battlearmor", out t11count))
+            int tierCount;
+            if (character.SetBonusCount.TryGetValue("Magma Plated Battlearmor", out tierCount))
             {
-                if (t11count > 2) { statsTotal.b2T11_Tank = true; }
-                if (t11count > 4) { statsTotal.b4T11_Tank = true; }
+                if (tierCount >= 2) { statsTotal.b2T11_Tank = true; }
+                if (tierCount >= 4) { statsTotal.b4T11_Tank = true; }
             }
             if (statsTotal.b4T11_Tank)
                 statsTotal.AddSpecialEffect(_SE_IBF[1]);
@@ -1449,18 +1450,27 @@ Points individually may be important.",
                 statsTotal.AddSpecialEffect(_SE_IBF[0]);
             #endregion
             #region T12
-            // No Set names yet.
+            if (character.SetBonusCount.TryGetValue("Elementium Deathplate Battlearmor", out tierCount))
+            {
+                if (tierCount >= 2) { statsTotal.b2T12_Tank = true; }
+                if (tierCount >= 4) { statsTotal.b4T12_Tank = true; }
+            }
             if (statsTotal.b2T12_Tank)
             {
                 // Your melee attacks cause Burning Blood on your target, 
                 // which deals 800 Fire damage every 2 for 6 sec and 
                 // causes your abilities to behave as if you had 2 diseases 
                 // present on the target.
+                // Implemented in CombatState DiseaseCount
+
+                statsTotal.FireDamage = 800 / 2;
             }
             if (statsTotal.b4T12_Tank)
             {
-                // Your Dancing Rune Weapon grants 15% additional parry chance.
+                // Your when your Dancing Rune Weapon expires, it grants 15% additional parry chance for 12 sec.
+                // Implemented in DRW talent Static Special Effect.
             }
+            #endregion
             #endregion
             #region Filter out the duplicate Fallen Crusader Runes:
             if (character.OffHand != null

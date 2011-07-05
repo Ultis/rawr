@@ -544,9 +544,10 @@ namespace Rawr.DPSDK
                     AbilityDK_Base b;
                     b = rot.GetAbilityOfType(DKability.ScourgeStrike);
                     if (b == null) b = rot.GetAbilityOfType(DKability.FrostStrike);
+                    if (b == null) b = rot.GetAbilityOfType(DKability.DeathStrike);
                     calc.YellowHitChance = b.HitChance + b.CritChance;
                 }
-                calc.WhiteHitChance = a.HitChance + a.CritChance + .23f; // + glancing
+                calc.WhiteHitChance = (a == null ? 0 : a.HitChance + a.CritChance + .23f); // + glancing
                 calc.MHWeaponDPS = (a == null ? 0 : rot.GetAbilityOfType(DKability.White).DPS);
                 calc.MHWeaponDamage = combatTable.MH.damage;
                 calc.MHAttackSpeed = combatTable.MH.hastedSpeed;
@@ -2011,8 +2012,8 @@ namespace Rawr.DPSDK
                 new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.5f, Parry = .20f, ThreatIncreaseMultiplier = 0.50f }, 12f, 1.5f * 60f), // Glyphed
             },
             new SpecialEffect[] { // 4T12 Bonus
-                new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.5f, Parry = .20f + .15f }, 12f, 1.5f * 60f), // Normal
-                new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.5f, Parry = .20f + .15f , ThreatIncreaseMultiplier = 0.50f }, 12f, 1.5f * 60f), // Glyphed
+                new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.5f, Parry = (.20f + .15f)/2 }, 12f * 2f, 1.5f * 60f), // Normal
+                new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.5f, Parry = (.20f + .15f)/2 , ThreatIncreaseMultiplier = 0.50f }, 12f * 2f, 1.5f * 60f), // Glyphed
             }
         };
         #endregion

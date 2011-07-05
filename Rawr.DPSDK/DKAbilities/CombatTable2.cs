@@ -56,7 +56,6 @@ namespace Rawr.DK
 
     public class DKCombatTable
     {
-        // TODO: Setup individual DPS values for each ability.
         #region Member Vars
         #region Basic setup variables
         public CombatState m_CState;
@@ -111,7 +110,6 @@ namespace Rawr.DK
             if (calcOpts != null && m_Opts == null) {
                 //throw new Exception("Opts not converted properly.");
                 m_Opts = new CalculationOptionsDPSDK();
-                m_Opts.presence = Presence.Frost;
             }
             try { m_CState.m_Presence = m_Opts.presence; } catch { } // pass  stay w/ default
             m_BO = bossOpts;
@@ -149,12 +147,12 @@ namespace Rawr.DK
                     (c.MainHand.Item.Type == ItemType.OneHandAxe ||
                      c.MainHand.Item.Type == ItemType.TwoHandAxe))
                 {
-                    MHExpertise += 5f;
+                    MHExpertise += 3f;
                 }
 
                 if (c.OffHand != null && c.OffHand.Item.Type == ItemType.OneHandAxe)
                 {
-                    OHExpertise += 5f;
+                    OHExpertise += 3f;
                 }
             }
             if (c.Race == CharacterRace.Human)
@@ -181,8 +179,6 @@ namespace Rawr.DK
                 m_CState.MH = new Weapon(c.MainHand.Item, m_CState.m_Stats, m_Opts, m_BO, m_CState.m_Talents, MHExpertise, CharacterSlot.MainHand);
                 m_CState.OH = null;
                 m_Calcs.MHExpertise = m_CState.MH.effectiveExpertise;
-                //m_Calcs.MHWeaponDamage = m_CState.MH.damage;
-                //m_Calcs.MHAttackSpeed = m_CState.MH.hastedSpeed;
                 if (c.MainHand.Slot != ItemSlot.TwoHand)
                 {
                     if (c.OffHand != null && c.OffHand.Item.Type != ItemType.None)
@@ -190,8 +186,6 @@ namespace Rawr.DK
                         DW = true;
                         m_CState.OH = new Weapon(c.OffHand.Item, m_CState.m_Stats, m_Opts, m_BO, m_CState.m_Talents, OHExpertise, CharacterSlot.OffHand);
                         m_Calcs.OHExpertise = m_CState.OH.effectiveExpertise;
-                        //m_Calcs.OHWeaponDamage = m_CState.OH.damage;
-                        //m_Calcs.OHAttackSpeed = m_CState.OH.hastedSpeed;
                     }
                 }
             }

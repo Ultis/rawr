@@ -9,7 +9,7 @@ namespace Rawr.DPSDK
 {
     public class CalculationOptionsDPSDK : ICalculationOptionBase, INotifyPropertyChanged
     {
-        private Presence _presence = Presence.Frost;
+        [DefaultValue(Presence.Frost)]
         public Presence presence
         {
             get { return _presence; }
@@ -18,42 +18,17 @@ namespace Rawr.DPSDK
                 _presence = value; 
             }
         }
-        [XmlIgnore]
-        private int _presenceByIndex = (int)Presence.Frost;
+        private Presence _presence = Presence.Frost;
+
         [XmlIgnore]
         public int PresenceByIndex
         {
-            get { return _presenceByIndex; }
+            get { return (int)presence; }
             set
             {
-                _presenceByIndex = value;
                 presence = (Presence)value;
                 OnPropertyChanged("PresenceByIndex");
             }
-        }
-
-        [DefaultValue(1f)]
-        private float _GhoulUptime = 1f;
-        public float GhoulUptime
-        {
-            get { return _GhoulUptime; }
-            set { _GhoulUptime = value; OnPropertyChanged("GhoulUptime"); }
-        }
-
-        [DefaultValue(1f)]
-        private float _KMProcUsage = 1f;
-        public float KMProcUsage
-        {
-            get { return _KMProcUsage; }
-            set { _KMProcUsage = value; OnPropertyChanged("KMProcUsage"); }
-        }
-
-        [DefaultValue(true)]
-        private bool _Ghoul = true;
-        public bool Ghoul
-        {
-            get { return _Ghoul; }
-            set { _Ghoul = value; OnPropertyChanged("Ghoul"); }
         }
 
         [DefaultValue(false)]
@@ -65,27 +40,29 @@ namespace Rawr.DPSDK
         }
 
         [DefaultValue(true)]
-        private bool _HideBadItems_Def = true;
         public bool HideBadItems_Def
         {
             get { return _HideBadItems_Def; }
             set { _HideBadItems_Def = value; OnPropertyChanged("HideBadItems_Def"); }
         }
+        private bool _HideBadItems_Def = true;
 
         [DefaultValue(true)]
-        private bool _HideBadItems_Spl = true;
         public bool HideBadItems_Spl
         {
             get { return _HideBadItems_Spl; }
             set { _HideBadItems_Spl = value; OnPropertyChanged("HideBadItems_Spl"); }
         }
+        private bool _HideBadItems_Spl = true;
+
         [DefaultValue(false)]
-        private bool _HideBadItems_PvP = false;
         public bool HideBadItems_PvP
         {
             get { return _HideBadItems_PvP; }
             set { _HideBadItems_PvP = value; OnPropertyChanged("HideBadItems_PvP"); }
         }
+        private bool _HideBadItems_PvP = false;
+
         [XmlIgnore]
         private string _szRotReport = "";
         [XmlIgnore]
