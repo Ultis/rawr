@@ -770,11 +770,14 @@ namespace Rawr.DPSDK
                 if (tierCount >= 4) { statsBuffs.b4T11_DPS = true; }
                 if (statsBuffs.b2T11_DPS)
                 {
+                    // increase the crit chance of your DeathCoil & FS by 5%
                     statsBuffs.BonusCritChanceDeathCoil += .05f;
                     statsBuffs.BonusCritChanceFrostStrike += .05f;
                 }
                 if (statsBuffs.b4T11_DPS)
                 {
+                    // Each time you gain a Death Rune or trigger your Killing Machine talent, 
+                    // you also gain 1% increased attack power for 30 sec. Stacks up to 3 times.
                     statsBuffs.AddSpecialEffect(new SpecialEffect(Trigger.DeathRuneGained,
                         new Stats() { BonusAttackPowerMultiplier = 0.01f, },
                         30, 0, 1f, 3));

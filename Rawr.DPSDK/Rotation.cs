@@ -929,6 +929,8 @@ namespace Rawr.DK
             // thus 20 RSs gets us 9 extra runes.
             // Same is true for DC & FS
             AbilityDK_DeathCoil DC = new AbilityDK_DeathCoil(m_CT.m_CState);
+            AbilityDK_UnholyBlight UB = null;
+            if (DC.ml_TriggeredAbility.Length > 0) UB = DC.ml_TriggeredAbility[0] as AbilityDK_UnholyBlight;
             // AbilityDK_FrostStrike FS = new AbilityDK_FrostStrike(m_CT.m_CState);
             DarkTranformation Dark = new DarkTranformation(m_CT.m_CState);
 
@@ -1014,16 +1016,24 @@ namespace Rawr.DK
                 }
             }
 
-
-            // subsequent:
-
-
             // How much RP do we have left at this point?
             foreach (AbilityDK_Base ab in ml_Rot)
                 m_RunicPower += ab.RunicPower;
 
-
             BuildCosts();
+
+            // subsequent:
+            #region Unholy Blight
+            if (UB != null)
+            {
+                uint mSecperDC = (uint)m_RotationDuration / Count(DKability.DeathCoil);
+                uint UBCount = (uint)m_RotationDuration / Math.Max(UB.Cooldown, mSecperDC);
+                for (; UBCount > 0; UBCount--)
+                {
+                    ml_Rot.Add(UB);
+                }
+            }
+            #endregion
             /*
             _cachedHaste = m_CT.m_CState.m_Stats.PhysicalHaste;
             _RotCacheType = Type.Unholy;
@@ -1056,6 +1066,8 @@ namespace Rawr.DK
             AbilityDK_ScourgeStrike SS = new AbilityDK_ScourgeStrike(m_CT.m_CState);
             AbilityDK_FesteringStrike Fest = new AbilityDK_FesteringStrike(m_CT.m_CState);
             AbilityDK_DeathCoil DC = new AbilityDK_DeathCoil(m_CT.m_CState);
+            AbilityDK_UnholyBlight UB = null;
+            if (DC.ml_TriggeredAbility != null && DC.ml_TriggeredAbility.Length > 0) UB = DC.ml_TriggeredAbility[0] as AbilityDK_UnholyBlight;
             DarkTranformation Dark = new DarkTranformation(m_CT.m_CState);
 
             // Simple outbreak, Festx2 SSx6 & Fill w/ DCs
@@ -1116,6 +1128,20 @@ namespace Rawr.DK
             }
             m_RunicPower = -1 * AvailableResources[(int)DKCostTypes.RunicPower];
             BuildCosts();
+
+            #region Unholy Blight
+            if (UB != null)
+            {
+                uint mSecperDC = (uint)m_RotationDuration / Count(DKability.DeathCoil);
+                uint UBCount = (uint)m_RotationDuration / Math.Max(UB.uDuration, mSecperDC);
+                for (; UBCount > 0; UBCount--)
+                {
+                    ml_Rot.Add(UB);
+                }
+            }
+            #endregion
+            BuildCosts();
+
         }
 
         #endregion

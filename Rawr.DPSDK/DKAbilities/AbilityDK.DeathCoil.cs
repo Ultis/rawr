@@ -32,6 +32,7 @@ namespace Rawr.DK
             {
                 ml_TriggeredAbility = new AbilityDK_Base[1];
                 ml_TriggeredAbility[0] = new AbilityDK_UnholyBlight(CS);
+                ml_TriggeredAbility[0].uBaseDamage = (uint)((this.TotalDamage / 10) /10);
             }
 
         }
@@ -87,20 +88,7 @@ namespace Rawr.DK
             this.bWeaponRequired = false;
             this.tDamageType = ItemDamageType.Shadow;
             this.uDuration = 10 * 1000;
-        }
-
-        public override uint uBaseDamage
-        {
-            get
-            {
-                AbilityDK_DeathCoil DC = new AbilityDK_DeathCoil(CState);
-                return (uint)((float)DC.TotalDamage * .01f);
-            }
-            set
-            {
-                base.uBaseDamage = value;
-            }
+            this.uTickRate = 1000;
         }
     }
-    
 }
