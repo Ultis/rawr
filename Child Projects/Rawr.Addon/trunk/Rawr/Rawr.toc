@@ -1,6 +1,6 @@
 ## Interface: 40200
 ## Title: Rawr
-## Version: 0.67
+## Version: 0.68
 ## Author: Levva of EU Khadgar, Jothay of US Stormrage
 ## Notes: Allows import and export of character data to Rawr, the character optimising program
 ## X-Category: Data Export

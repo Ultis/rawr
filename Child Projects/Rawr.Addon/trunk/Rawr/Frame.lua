@@ -188,7 +188,7 @@ function Rawr:AddRawrTooltipData(headertext, tooltip, item, comparison)
 		end
 	end
 	if item.loc then
-		tooltip:AddLine(item.loc)
+		tooltip:AddLine(item.loc, 1, 1, 0.25, true)
 	end
 end
 
@@ -220,7 +220,7 @@ function Rawr:AddRawrUpgradeTooltipData(headertext, tooltip, item, comparison)
 		end
 	end
 	if item.loc then
-		tooltip:AddLine(item.loc)
+		tooltip:AddLine(item.loc, 1, 1, 0.25, true)
 	end
 end
 

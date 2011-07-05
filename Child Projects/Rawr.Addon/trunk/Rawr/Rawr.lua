@@ -152,7 +152,13 @@ Version 0.65
 
 Version 0.66
 	Update for 4.1.0 issues
-
+	
+Version 0.67
+	Updated for 4.2 - mage talent bug still not fixed by Blizzard.
+	
+Version 0.68
+	Tooltip item drop locations now wrap so that 
+	tooltips are not stupidly large and unreadable
 	
 --]]
 
