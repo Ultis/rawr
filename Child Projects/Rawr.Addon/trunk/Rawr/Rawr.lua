@@ -448,7 +448,7 @@ function Rawr:CheckIfItemAnUpgrade(itemId)
 end
 
 function Rawr:WarnUpgradeFound(upgrade)
-	local percent
+	local percent = 0
 	local _, loadeditem = self:GetLoadedItem(upgrade.slot)
 	self.lastwarning = GetTime()
 	local _, itemlink = GetItemInfo(upgrade.item)
@@ -458,20 +458,22 @@ function Rawr:WarnUpgradeFound(upgrade)
 	else
 		percent = 0
 	end
-	local msgtext = string.format(L["Alert %s is in your Rawr upgrade list.\nIt is a %.2f%% upgrade."], itemlink, percent * 100)
-	self:Print(msgtext)
-	self:PrintWarning(msgtext, Rawr.db.char.warning.colour, Rawr.db.char.warning.duration)
-	local sounds = Rawr.db.char.sounds
-	if sounds then
-		if percent > sounds.majorupgrade.value then
-			self:DebugPrint("Playing major upgrade sound")
-			PlaySoundFile(sounds.majorupgrade.sound)
-		elseif percent > sounds.upgrade.value then 
-			self:DebugPrint("Playing upgrade sound")
-			PlaySoundFile(sounds.upgrade.sound)
-		elseif percent > 0 then
-			self:DebugPrint("Playing minor upgrade sound")
-			PlaySoundFile(sounds.minorupgrade.sound)
+	if itemlink then
+		local msgtext = string.format(L["Alert %s is in your Rawr upgrade list.\nIt is a %.2f%% upgrade."], itemlink, percent * 100)
+		self:Print(msgtext)
+		self:PrintWarning(msgtext, Rawr.db.char.warning.colour, Rawr.db.char.warning.duration)
+		local sounds = Rawr.db.char.sounds
+		if sounds then
+			if percent > sounds.majorupgrade.value then
+				self:DebugPrint("Playing major upgrade sound")
+				PlaySoundFile(sounds.majorupgrade.sound)
+			elseif percent > sounds.upgrade.value then 
+				self:DebugPrint("Playing upgrade sound")
+				PlaySoundFile(sounds.upgrade.sound)
+			elseif percent > 0 then
+				self:DebugPrint("Playing minor upgrade sound")
+				PlaySoundFile(sounds.minorupgrade.sound)
+			end
 		end
 	end
 end
