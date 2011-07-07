@@ -450,7 +450,7 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(4070, "Stamina", ItemSlot.Chest, new Stats() { Stamina = 55 }, "spell_holy_greaterheal"));
             #endregion
             #region Level 80 (WotLK)
-            defaultEnchants.Add(new Enchant(1953, "Greater Defense", ItemSlot.Chest, new Stats() { DodgeRating = 22 }, "inv_enchant_formulagood_01"));
+            defaultEnchants.Add(new Enchant(1953, "Greater Dodge", ItemSlot.Chest, new Stats() { DodgeRating = 22 }, "inv_enchant_formulagood_01"));
             defaultEnchants.Add(new Enchant(3252, "Super Stats", ItemSlot.Chest, new Stats() { Agility = 8, Strength = 8, Stamina = 8, Intellect = 8, Spirit = 8 }, "spell_holy_greaterheal"));
             defaultEnchants.Add(new Enchant(3832, "Powerful Stats", ItemSlot.Chest, new Stats() { Agility = 10, Strength = 10, Stamina = 10, Intellect = 10, Spirit = 10 }, "inv_enchant_formulagood_01"));
             defaultEnchants.Add(new Enchant(2659, "Exceptional Health", ItemSlot.Chest, new Stats() { Health = 150 }, "spell_holy_greaterheal"));

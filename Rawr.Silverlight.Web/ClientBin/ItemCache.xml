@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-16"?>
-<ArrayOfItem xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ArrayOfItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Item>
     <ItemLevel>1</ItemLevel>
     <DisplayId>33310</DisplayId>
@@ -65613,7 +65613,9 @@
     <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketColor2>Blue</SocketColor2>
-    <SocketBonus />
+    <SocketBonus>
+      <Intellect>20</Intellect>
+    </SocketBonus>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Blackwing Descent</Area>
@@ -92138,7 +92140,9 @@
     <Bind>BoP</Bind>
     <SocketColor1>Meta</SocketColor1>
     <SocketColor2>Blue</SocketColor2>
-    <SocketBonus />
+    <SocketBonus>
+      <DodgeRating>30</DodgeRating>
+    </SocketBonus>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Zul'Aman</Area>
@@ -100724,12 +100728,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Elementium Deathplate Helmet</Name>
@@ -100942,12 +100946,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Elementium Deathplate Helmet</Name>
@@ -101253,12 +101257,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Elementium Deathplate Faceguard</Name>
@@ -101675,12 +101679,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Obsidian Arborweave Headpiece</Name>
@@ -102198,12 +102202,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Obsidian Arborweave Helm</Name>
@@ -102721,12 +102725,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Obsidian Arborweave Cover</Name>
@@ -103244,12 +103248,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Flamewaker's Headguard</Name>
@@ -103767,12 +103771,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Firehawk Hood</Name>
@@ -104021,12 +104025,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Firehawk Hood</Name>
@@ -104308,7 +104312,6 @@
       <Armor>2943</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Battleplate of Immolation</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Paladin</RequiredClasses>
@@ -104334,12 +104337,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Immolation Helmet</Name>
@@ -104603,12 +104606,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Immolation Helmet</Name>
@@ -104857,12 +104860,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Immolation Headguard</Name>
@@ -105126,12 +105129,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Immolation Headguard</Name>
@@ -105387,12 +105390,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Immolation Faceguard</Name>
@@ -105649,12 +105652,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Immolation Faceguard</Name>
@@ -105859,12 +105862,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Cowl of the Cleansing Flame</Name>
@@ -106113,12 +106116,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Cowl of the Cleansing Flame</Name>
@@ -106382,12 +106385,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Hood of the Cleansing Flame</Name>
@@ -106636,12 +106639,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Hood of the Cleansing Flame</Name>
@@ -106949,12 +106952,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Dark Phoenix Helmet</Name>
@@ -107470,12 +107473,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Erupting Volcanic Faceguard</Name>
@@ -107991,12 +107994,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Erupting Volcanic Helmet</Name>
@@ -108092,12 +108095,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Erupting Volcanic Spaulders</Name>
@@ -108512,12 +108515,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Erupting Volcanic Headpiece</Name>
@@ -108613,12 +108616,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Erupting Volcanic Shoulderwraps</Name>
@@ -108930,12 +108933,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Balespider's Hood</Name>
@@ -109184,12 +109187,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Balespider's Hood</Name>
@@ -109497,12 +109500,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Helmet of the Molten Giant</Name>
@@ -110077,12 +110080,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Faceguard of the Molten Giant</Name>
@@ -110492,7 +110495,7 @@
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
         <TokenMap />
-        <Cost>939408</Cost>
+        <Cost>1174260</Cost>
         <VendorName>Damek Bloombeard</VendorName>
         <VendorArea>Molten Front</VendorArea>
       </ItemLocation>
@@ -110556,8 +110559,8 @@
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
         <TokenMap />
-        <Cost>1023304</Cost>
-        <VendorName>Damek Bloombeard </VendorName>
+        <Cost>1279180</Cost>
+        <VendorName>Damek Bloombeard</VendorName>
         <VendorArea>Molten Front</VendorArea>
       </ItemLocation>
     </LocationInfo>
@@ -110585,7 +110588,7 @@
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
         <TokenMap />
-        <Cost>942946</Cost>
+        <Cost>1178682</Cost>
         <VendorName>Damek Bloombeard</VendorName>
         <VendorArea>Molten Front</VendorArea>
       </ItemLocation>
@@ -110617,7 +110620,7 @@
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
         <TokenMap />
-        <Cost>1309397</Cost>
+        <Cost>1636746</Cost>
         <VendorName>Damek Bloombeard</VendorName>
         <VendorArea>Molten Front</VendorArea>
       </ItemLocation>
@@ -110649,7 +110652,7 @@
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
         <TokenMap />
-        <Cost>721640</Cost>
+        <Cost>902050</Cost>
         <VendorName>Damek Bloombeard</VendorName>
         <VendorArea>Molten Front</VendorArea>
       </ItemLocation>
@@ -110681,7 +110684,7 @@
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
         <TokenMap />
-        <Cost>585522</Cost>
+        <Cost>731902</Cost>
         <VendorName>Damek Bloombeard</VendorName>
         <VendorArea>Molten Front</VendorArea>
       </ItemLocation>
@@ -110710,7 +110713,7 @@
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
         <TokenMap />
-        <Cost>811607</Cost>
+        <Cost>1014508</Cost>
         <VendorName>Damek Bloombeard</VendorName>
         <VendorArea>Molten Front</VendorArea>
       </ItemLocation>
@@ -110789,9 +110792,9 @@
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
         <TokenMap />
-        <Cost>0</Cost>
+        <Cost>982176</Cost>
         <VendorName>Ayla Shadowstorm</VendorName>
-        <VendorArea>	Globe of Moonlight</VendorArea>
+        <VendorArea>Molten Front</VendorArea>
       </ItemLocation>
     </LocationInfo>
     <Name>Globe of Moonlight</Name>
@@ -110818,7 +110821,7 @@
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
         <TokenMap />
-        <Cost>811607</Cost>
+        <Cost>1014508</Cost>
         <VendorName>Ayla Shadowstorm</VendorName>
         <VendorArea>Molten Front</VendorArea>
       </ItemLocation>
@@ -110847,7 +110850,7 @@
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
         <TokenMap />
-        <Cost>811607</Cost>
+        <Cost>1014508</Cost>
         <VendorName>Ayla Shadowstorm</VendorName>
         <VendorArea>Molten Front</VendorArea>
       </ItemLocation>
@@ -110887,7 +110890,7 @@
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
         <TokenMap />
-        <Cost>1222820</Cost>
+        <Cost>1528525</Cost>
         <VendorName>Ayla Shadowstorm</VendorName>
         <VendorArea>Molten Front</VendorArea>
       </ItemLocation>
@@ -110927,7 +110930,7 @@
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
         <TokenMap />
-        <Cost>1222820</Cost>
+        <Cost>1528525</Cost>
         <VendorName>Ayla Shadowstorm</VendorName>
         <VendorArea>Molten Front</VendorArea>
       </ItemLocation>
@@ -110956,7 +110959,7 @@
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
         <TokenMap />
-        <Cost>0</Cost>
+        <Cost>1035552</Cost>
         <VendorName>Ayla Shadowstorm</VendorName>
         <VendorArea>Molten Front</VendorArea>
       </ItemLocation>
@@ -110985,7 +110988,7 @@
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
         <TokenMap />
-        <Cost>0</Cost>
+        <Cost>1070945</Cost>
         <VendorName>Ayla Shadowstorm</VendorName>
         <VendorArea>Molten Front</VendorArea>
       </ItemLocation>
@@ -112992,12 +112995,12 @@
     <UniqueId>68925</UniqueId>
     <UniqueId>69110</UniqueId>
     <LocationInfo>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Boss>Ragnaros</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>10</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Variable Pulse Lightning Capacitor</Name>
@@ -113035,12 +113038,12 @@
     <UniqueId>68925</UniqueId>
     <UniqueId>69110</UniqueId>
     <LocationInfo>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>true</Heroic>
-        <Boss>Ragnaros</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Variable Pulse Lightning Capacitor</Name>
@@ -113373,10 +113376,10 @@
     <SocketBonus>
       <Agility>10</Agility>
     </SocketBonus>
-    <AllowedRandomSuffix>233</AllowedRandomSuffix>
-    <AllowedRandomSuffix>234</AllowedRandomSuffix>
-    <AllowedRandomSuffix>235</AllowedRandomSuffix>
-    <AllowedRandomSuffix>236</AllowedRandomSuffix>
+    <AllowedRandomSuffix>288</AllowedRandomSuffix>
+    <AllowedRandomSuffix>289</AllowedRandomSuffix>
+    <AllowedRandomSuffix>290</AllowedRandomSuffix>
+    <AllowedRandomSuffix>291</AllowedRandomSuffix>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
@@ -113607,10 +113610,10 @@
     <SocketBonus>
       <MasteryRating>10</MasteryRating>
     </SocketBonus>
-    <AllowedRandomSuffix>233</AllowedRandomSuffix>
-    <AllowedRandomSuffix>234</AllowedRandomSuffix>
-    <AllowedRandomSuffix>235</AllowedRandomSuffix>
-    <AllowedRandomSuffix>236</AllowedRandomSuffix>
+    <AllowedRandomSuffix>292</AllowedRandomSuffix>
+    <AllowedRandomSuffix>293</AllowedRandomSuffix>
+    <AllowedRandomSuffix>294</AllowedRandomSuffix>
+    <AllowedRandomSuffix>295</AllowedRandomSuffix>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
@@ -114117,12 +114120,12 @@
     <SocketBonus>
       <Intellect>30</Intellect>
     </SocketBonus>
-    <AllowedRandomSuffix>183</AllowedRandomSuffix>
-    <AllowedRandomSuffix>184</AllowedRandomSuffix>
-    <AllowedRandomSuffix>185</AllowedRandomSuffix>
-    <AllowedRandomSuffix>186</AllowedRandomSuffix>
-    <AllowedRandomSuffix>187</AllowedRandomSuffix>
-    <AllowedRandomSuffix>188</AllowedRandomSuffix>
+    <AllowedRandomSuffix>265</AllowedRandomSuffix>
+    <AllowedRandomSuffix>266</AllowedRandomSuffix>
+    <AllowedRandomSuffix>267</AllowedRandomSuffix>
+    <AllowedRandomSuffix>268</AllowedRandomSuffix>
+    <AllowedRandomSuffix>269</AllowedRandomSuffix>
+    <AllowedRandomSuffix>270</AllowedRandomSuffix>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
@@ -114768,11 +114771,12 @@
     <SocketBonus>
       <Intellect>30</Intellect>
     </SocketBonus>
-    <AllowedRandomSuffix>129</AllowedRandomSuffix>
-    <AllowedRandomSuffix>130</AllowedRandomSuffix>
-    <AllowedRandomSuffix>131</AllowedRandomSuffix>
-    <AllowedRandomSuffix>132</AllowedRandomSuffix>
-    <AllowedRandomSuffix>133</AllowedRandomSuffix>
+    <AllowedRandomSuffix>260</AllowedRandomSuffix>
+    <AllowedRandomSuffix>261</AllowedRandomSuffix>
+    <AllowedRandomSuffix>262</AllowedRandomSuffix>
+    <AllowedRandomSuffix>263</AllowedRandomSuffix>
+    <AllowedRandomSuffix>264</AllowedRandomSuffix>
+    <AllowedRandomSuffix>271</AllowedRandomSuffix>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
@@ -115127,16 +115131,10 @@
     <Faction>Neutral</Faction>
     <Bind>BoP</Bind>
     <SocketBonus />
-    <AllowedRandomSuffix>114</AllowedRandomSuffix>
-    <AllowedRandomSuffix>129</AllowedRandomSuffix>
-    <AllowedRandomSuffix>130</AllowedRandomSuffix>
-    <AllowedRandomSuffix>131</AllowedRandomSuffix>
-    <AllowedRandomSuffix>132</AllowedRandomSuffix>
     <AllowedRandomSuffix>133</AllowedRandomSuffix>
     <AllowedRandomSuffix>135</AllowedRandomSuffix>
     <AllowedRandomSuffix>136</AllowedRandomSuffix>
     <AllowedRandomSuffix>137</AllowedRandomSuffix>
-    <AllowedRandomSuffix>138</AllowedRandomSuffix>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
@@ -115377,16 +115375,10 @@
     <Faction>Neutral</Faction>
     <Bind>BoP</Bind>
     <SocketBonus />
-    <AllowedRandomSuffix>114</AllowedRandomSuffix>
-    <AllowedRandomSuffix>129</AllowedRandomSuffix>
-    <AllowedRandomSuffix>130</AllowedRandomSuffix>
-    <AllowedRandomSuffix>131</AllowedRandomSuffix>
-    <AllowedRandomSuffix>132</AllowedRandomSuffix>
     <AllowedRandomSuffix>133</AllowedRandomSuffix>
     <AllowedRandomSuffix>135</AllowedRandomSuffix>
     <AllowedRandomSuffix>136</AllowedRandomSuffix>
     <AllowedRandomSuffix>137</AllowedRandomSuffix>
-    <AllowedRandomSuffix>138</AllowedRandomSuffix>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
@@ -116147,12 +116139,12 @@
     <SocketBonus>
       <Intellect>10</Intellect>
     </SocketBonus>
-    <AllowedRandomSuffix>227</AllowedRandomSuffix>
-    <AllowedRandomSuffix>228</AllowedRandomSuffix>
-    <AllowedRandomSuffix>229</AllowedRandomSuffix>
-    <AllowedRandomSuffix>230</AllowedRandomSuffix>
-    <AllowedRandomSuffix>231</AllowedRandomSuffix>
-    <AllowedRandomSuffix>232</AllowedRandomSuffix>
+    <AllowedRandomSuffix>278</AllowedRandomSuffix>
+    <AllowedRandomSuffix>279</AllowedRandomSuffix>
+    <AllowedRandomSuffix>280</AllowedRandomSuffix>
+    <AllowedRandomSuffix>281</AllowedRandomSuffix>
+    <AllowedRandomSuffix>282</AllowedRandomSuffix>
+    <AllowedRandomSuffix>283</AllowedRandomSuffix>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
@@ -116600,12 +116592,12 @@
     <SocketBonus>
       <Intellect>10</Intellect>
     </SocketBonus>
-    <AllowedRandomSuffix>227</AllowedRandomSuffix>
-    <AllowedRandomSuffix>228</AllowedRandomSuffix>
-    <AllowedRandomSuffix>229</AllowedRandomSuffix>
-    <AllowedRandomSuffix>230</AllowedRandomSuffix>
-    <AllowedRandomSuffix>231</AllowedRandomSuffix>
-    <AllowedRandomSuffix>232</AllowedRandomSuffix>
+    <AllowedRandomSuffix>210</AllowedRandomSuffix>
+    <AllowedRandomSuffix>211</AllowedRandomSuffix>
+    <AllowedRandomSuffix>284</AllowedRandomSuffix>
+    <AllowedRandomSuffix>285</AllowedRandomSuffix>
+    <AllowedRandomSuffix>286</AllowedRandomSuffix>
+    <AllowedRandomSuffix>287</AllowedRandomSuffix>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
@@ -116800,9 +116792,9 @@
     <SocketBonus>
       <Stamina>15</Stamina>
     </SocketBonus>
-    <AllowedRandomSuffix>224</AllowedRandomSuffix>
-    <AllowedRandomSuffix>225</AllowedRandomSuffix>
-    <AllowedRandomSuffix>226</AllowedRandomSuffix>
+    <AllowedRandomSuffix>272</AllowedRandomSuffix>
+    <AllowedRandomSuffix>273</AllowedRandomSuffix>
+    <AllowedRandomSuffix>274</AllowedRandomSuffix>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
@@ -117167,9 +117159,9 @@
     <SocketBonus>
       <Stamina>15</Stamina>
     </SocketBonus>
-    <AllowedRandomSuffix>224</AllowedRandomSuffix>
-    <AllowedRandomSuffix>225</AllowedRandomSuffix>
-    <AllowedRandomSuffix>226</AllowedRandomSuffix>
+    <AllowedRandomSuffix>275</AllowedRandomSuffix>
+    <AllowedRandomSuffix>276</AllowedRandomSuffix>
+    <AllowedRandomSuffix>277</AllowedRandomSuffix>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
@@ -118405,12 +118397,12 @@
     <UniqueId>68994</UniqueId>
     <UniqueId>69150</UniqueId>
     <LocationInfo>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Boss>Ragnaros</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Matrix Restabilizer</Name>
@@ -118448,12 +118440,12 @@
     <UniqueId>68995</UniqueId>
     <UniqueId>69167</UniqueId>
     <LocationInfo>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Boss>Ragnaros</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Vessel of Acceleration</Name>
@@ -118481,12 +118473,12 @@
       <Stamina>15</Stamina>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Boss>Ragnaros</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Pauldrons of Roaring Flame</Name>
@@ -118517,12 +118509,12 @@
       <Strength>20</Strength>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Boss>Ragnaros</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Sulfuras, The Extinguished Hand</Name>
@@ -118549,12 +118541,12 @@
     <Bind>BoP</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Boss>Ragnaros</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Arathar, the Eye of Flame</Name>
@@ -118582,12 +118574,12 @@
     <Bind>BoP</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Boss>Ragnaros</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Ko'gun, Hammer of the Firelord</Name>
@@ -118616,12 +118608,12 @@
       <Intellect>30</Intellect>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Boss>Ragnaros</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Crown of Flame</Name>
@@ -118649,12 +118641,12 @@
       <Intellect>10</Intellect>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Boss>Ragnaros</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Majordomo's Chain of Office</Name>
@@ -118682,12 +118674,12 @@
       <Intellect>10</Intellect>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Boss>Ragnaros</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Fingers of Incineration</Name>
@@ -118716,12 +118708,12 @@
       <Intellect>30</Intellect>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>true</Heroic>
-        <Boss>Ragnaros</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Crown of Flame</Name>
@@ -118752,12 +118744,12 @@
       <Strength>20</Strength>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>true</Heroic>
-        <Boss>Ragnaros</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Sulfuras, The Extinguished Hand</Name>
@@ -118795,12 +118787,12 @@
     <UniqueId>68995</UniqueId>
     <UniqueId>69167</UniqueId>
     <LocationInfo>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>true</Heroic>
-        <Boss>Ragnaros</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Vessel of Acceleration</Name>
@@ -118824,12 +118816,12 @@
     <Bind>BoP</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>true</Heroic>
-        <Boss>Ragnaros</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Choker of the Vanquished Lord</Name>
@@ -118856,12 +118848,12 @@
     <Bind>BoP</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>true</Heroic>
-        <Boss>Ragnaros</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Arathar, the Eye of Flame</Name>
@@ -118889,12 +118881,12 @@
       <Stamina>15</Stamina>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>true</Heroic>
-        <Boss>Ragnaros</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Pauldrons of Roaring Flame</Name>
@@ -118922,12 +118914,12 @@
       <Intellect>10</Intellect>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>true</Heroic>
-        <Boss>Ragnaros</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Majordomo's Chain of Office</Name>
@@ -118965,12 +118957,12 @@
     <UniqueId>68994</UniqueId>
     <UniqueId>69150</UniqueId>
     <LocationInfo>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>true</Heroic>
-        <Boss>Ragnaros</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Matrix Restabilizer</Name>
@@ -118998,12 +118990,12 @@
       <Intellect>10</Intellect>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>true</Heroic>
-        <Boss>Ragnaros</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Fingers of Incineration</Name>
@@ -119031,12 +119023,12 @@
     <Bind>BoP</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>true</Heroic>
-        <Boss>Ragnaros</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Ko'gun, Hammer of the Firelord</Name>
@@ -119133,12 +119125,12 @@
       <Intellect>10</Intellect>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Boss>Ragnaros</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Sho'ravon, Greatstaff of Annihilation</Name>
@@ -119169,12 +119161,12 @@
       <Intellect>10</Intellect>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>true</Heroic>
-        <Boss>Ragnaros</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Sho'ravon, Greatstaff of Annihilation</Name>
@@ -119198,12 +119190,12 @@
     <Bind>BoP</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Boss>Ragnaros</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Choker of the Vanquished Lord</Name>
@@ -131951,5 +131943,122 @@
     <Name>[Downloading from Wowhead]</Name>
     <Id>0</Id>
     <Slot>None</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>365</ItemLevel>
+    <DisplayId>9823</DisplayId>
+    <DisplaySlot>11</DisplaySlot>
+    <IconPath>inv_jewelry_ring_13</IconPath>
+    <Stats>
+      <Agility>201</Agility>
+      <Stamina>301</Stamina>
+      <HitRating>121</HitRating>
+      <CritRating>142</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="VendorItem">
+        <TokenMap />
+        <Cost>710156</Cost>
+        <VendorName>Zen'Vorka</VendorName>
+        <VendorArea>Molten Front</VendorArea>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Matoclaw's Band</Name>
+    <Id>70105</Id>
+    <Slot>Finger</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>365</ItemLevel>
+    <DisplayId>100830</DisplayId>
+    <DisplaySlot>2</DisplaySlot>
+    <IconPath>inv_neck_hyjaldaily_01</IconPath>
+    <Stats>
+      <Stamina>301</Stamina>
+      <Intellect>201</Intellect>
+      <MasteryRating>153</MasteryRating>
+      <HasteRating>102</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="VendorItem">
+        <TokenMap />
+        <Cost>710156</Cost>
+        <VendorName>Zen'Vorka</VendorName>
+        <VendorArea>Molten Front</VendorArea>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Nightweaver's Amulet</Name>
+    <Id>70106</Id>
+    <Slot>Neck</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>365</ItemLevel>
+    <DisplayId>100829</DisplayId>
+    <DisplaySlot>2</DisplaySlot>
+    <IconPath>inv_neck_hyjaldaily_04</IconPath>
+    <Stats>
+      <Strength>201</Strength>
+      <Stamina>301</Stamina>
+      <MasteryRating>131</MasteryRating>
+      <ExpertiseRating>136</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="VendorItem">
+        <TokenMap />
+        <Cost>710156</Cost>
+        <VendorName>Zen'Vorka</VendorName>
+        <VendorArea>Molten Front</VendorArea>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Fireheart Necklace</Name>
+    <Id>70107</Id>
+    <Slot>Neck</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>365</ItemLevel>
+    <DisplayId>99759</DisplayId>
+    <DisplaySlot>8</DisplaySlot>
+    <IconPath>inv_boots_mail_02</IconPath>
+    <Stats>
+      <Strength>247</Strength>
+      <Stamina>402</Stamina>
+      <Armor>2397</Armor>
+      <ParryRating>182</ParryRating>
+      <DodgeRating>147</DodgeRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Plate</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <ParryRating>10</ParryRating>
+    </SocketBonus>
+    <LocationInfo>
+      <ItemLocation xsi:type="VendorItem">
+        <TokenMap />
+        <Cost>1261399</Cost>
+        <VendorName>Zen'Vorka</VendorName>
+        <VendorArea>Molten Front</VendorArea>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Pyrelord Greaves</Name>
+    <Id>70108</Id>
+    <Slot>Feet</Slot>
   </Item>
 </ArrayOfItem>
