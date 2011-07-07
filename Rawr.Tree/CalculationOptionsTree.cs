@@ -187,20 +187,12 @@ namespace Rawr.Tree
             set { rejuvenationTankDuringRaid = value; OnPropertyChanged("RejuvenationTankDuringRaid"); }
         }
 
-        private float efflorescenceTargets = 2.0f;
-        [DefaultValue(2.0f)]
-        public float EfflorescenceTargets
+        private float harmonyPeriodicRate = 1.0f;
+        [DefaultValue(1.0f)]
+        public float HarmonyPeriodicRate
         {
-            get { return efflorescenceTargets; }
-            set { efflorescenceTargets = value; OnPropertyChanged("EfflorescenceTargets"); }
-        }
-
-        private float wildGrowthEffectiveHealing = 0.8f;
-        [DefaultValue(0.8f)]
-        public float WildGrowthEffectiveHealing
-        {
-            get { return wildGrowthEffectiveHealing; }
-            set { wildGrowthEffectiveHealing = value; OnPropertyChanged("WildGrowthEffectiveHealing"); }
+            get { return harmonyPeriodicRate; }
+            set { harmonyPeriodicRate = value; OnPropertyChanged("HarmonyPeriodicRate"); }
         }
 
         private float nourishHoTRate = 0.6f;
@@ -211,44 +203,92 @@ namespace Rawr.Tree
             set { nourishHoTRate = value; OnPropertyChanged("NourishHoTRate"); }
         }
 
-        private float livingSeedEffectiveHealing = 0.2f;
-        [DefaultValue(0.2f)]
-        public float LivingSeedEffectiveHealing
+        private float wildGrowthEH = 0.8f;
+        [DefaultValue(0.8f)]
+        public float WildGrowthEH
         {
-            get { return livingSeedEffectiveHealing; }
-            set { livingSeedEffectiveHealing = value; OnPropertyChanged("LivingSeedEffectiveHealing"); }
+            get { return wildGrowthEH; }
+            set { wildGrowthEH = value; OnPropertyChanged("WildGrowthEH"); }
         }
 
-        private float toLLifebloomEffectiveHealing = 0.7f;
-        [DefaultValue(0.7f)]
-        public float ToLLifebloomEffectiveHealing
-        {
-            get { return toLLifebloomEffectiveHealing; }
-            set { toLLifebloomEffectiveHealing = value; OnPropertyChanged("ToLLifebloomEffectiveHealing"); }
-        }
-
-        private float rejuvenationEffectiveHealing = 0.7f;
-        [DefaultValue(0.7f)]
-        public float RejuvenationEffectiveHealing
-        {
-            get { return rejuvenationEffectiveHealing; }
-            set { rejuvenationEffectiveHealing = value; OnPropertyChanged("RejuvenationEffectiveHealing"); }
-        }
-
-        private float healingTouchEffectiveHealing = 0.85f;
-        [DefaultValue(0.85f)]
-        public float HealingTouchEffectiveHealing
-        {
-            get { return healingTouchEffectiveHealing; }
-            set { healingTouchEffectiveHealing = value; OnPropertyChanged("HealingTouchEffectiveHealing"); }
-        }
-
-        private float nourishEffectiveHealing = 1.0f;
+        private float tranquilityEH = 1.0f;
         [DefaultValue(1.0f)]
-        public float NourishEffectiveHealing
+        public float TranquilityEH
         {
-            get { return nourishEffectiveHealing; }
-            set { nourishEffectiveHealing = value; OnPropertyChanged("NourishEffectiveHealing"); }
+            get { return tranquilityEH; }
+            set { tranquilityEH = value; OnPropertyChanged("TranquilityEH"); }
+        }
+
+        private float swiftmendEH = 1.0f;
+        [DefaultValue(1.0f)]
+        public float SwiftmendEH
+        {
+            get { return swiftmendEH; }
+            set { swiftmendEH = value; OnPropertyChanged("SwiftmendEH"); }
+        }
+
+        private float swiftmendExtraHealEH = 1.0f;
+        [DefaultValue(1.0f)]
+        public float SwiftmendExtraHealEH
+        {
+            get { return swiftmendExtraHealEH; }
+            set { swiftmendExtraHealEH = value; OnPropertyChanged("SwiftmendExtraHealEH"); }
+        }
+
+        private float efflorescenceEH = 0.5f;
+        [DefaultValue(0.5f)]
+        public float EfflorescenceEH
+        {
+            get { return efflorescenceEH; }
+            set { efflorescenceEH = value; OnPropertyChanged("EfflorescenceEH"); }
+        }
+
+        private float livingSeedEH = 0.2f;
+        [DefaultValue(0.2f)]
+        public float LivingSeedEH
+        {
+            get { return livingSeedEH; }
+            set { livingSeedEH = value; OnPropertyChanged("LivingSeedEH"); }
+        }
+
+        private float tankLifebloomEH = 0.7f;
+        [DefaultValue(0.7f)]
+        public float TankLifebloomEH
+        {
+            get { return tankLifebloomEH; }
+            set { tankLifebloomEH = value; OnPropertyChanged("TankLifebloomEH"); }
+        }
+
+        private float toLLifebloomEH = 0.7f;
+        [DefaultValue(0.7f)]
+        public float ToLLifebloomEH
+        {
+            get { return toLLifebloomEH; }
+            set { toLLifebloomEH = value; OnPropertyChanged("ToLLifebloomEH"); }
+        }
+
+        private float rejuvenationEH = 0.7f;
+        [DefaultValue(0.7f)]
+        public float RejuvenationEH
+        {
+            get { return rejuvenationEH; }
+            set { rejuvenationEH = value; OnPropertyChanged("RejuvenationEH"); }
+        }
+
+        private float healingTouchEH = 0.85f;
+        [DefaultValue(0.85f)]
+        public float HealingTouchEH
+        {
+            get { return healingTouchEH; }
+            set { healingTouchEH = value; OnPropertyChanged("HealingTouchEH"); }
+        }
+
+        private float nourishEH = 1.0f;
+        [DefaultValue(1.0f)]
+        public float NourishEH
+        {
+            get { return nourishEH; }
+            set { nourishEH = value; OnPropertyChanged("NourishEH"); }
         }
 
         private float raidUnevenlyAllocatedFillerMana = 1.0f;
@@ -273,14 +313,6 @@ namespace Rawr.Tree
         {
             get { return tankRaidHealingWeight; }
             set { tankRaidHealingWeight = value; OnPropertyChanged("TankRaidHealingWeight"); }
-        }
-
-        private float swiftmendExtraHealEffectiveHealing = 2.0f;
-        [DefaultValue(2.0f)]
-        public float SwiftmendExtraHealEffectiveHealing
-        {
-            get { return swiftmendExtraHealEffectiveHealing; }
-            set { swiftmendExtraHealEffectiveHealing = value; OnPropertyChanged("SwiftmendExtraHealEffectiveHealing"); }
         }
 
         #region Stat Graph

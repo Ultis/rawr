@@ -155,7 +155,7 @@ namespace Rawr.Tree
             MeanStats.ManaRestore = 0;
 
             if (T11Count >= 4)
-                MeanStats.Spirit += 540;
+                MeanStats.Spirit += 540 * opts.HarmonyPeriodicRate;
 
             CalculationsTree.FinalizeStats(MeanStats, calc.BasicStats);
             MeanStats.Accumulate(calc.BasicStats);
@@ -604,7 +604,7 @@ namespace Rawr.Tree
                 lifebloomExtraTickCrit += 0.05f;
 
             tankLivingSeed = raidLivingSeed = 0.1f * Talents.LivingSeed;
-            raidLivingSeed *= opts.LivingSeedEffectiveHealing;
+            raidLivingSeed *= opts.LivingSeedEH;
 
             regrowthExtraCrit += 0.2f * Talents.NaturesBounty;
 
@@ -662,7 +662,7 @@ namespace Rawr.Tree
                 lifebloomManaPerTick += CalculationsTree.BaseMana * 0.01 * 0.4;
 
             if (T12Count >= 4)
-                swiftmendExtraTargets += opts.SwiftmendExtraHealEffectiveHealing;
+                swiftmendExtraTargets += opts.SwiftmendEH;
 
             if (Talents.GlyphOfSwiftmend)
                 swiftmendEatsRejuvenation = false;
@@ -681,14 +681,17 @@ namespace Rawr.Tree
             }
 
             #region Effective healing
-            actions[(int)TreeAction.RaidTolLb].Direct *= opts.ToLLifebloomEffectiveHealing;
-            actions[(int)TreeAction.RaidTolLb].Periodic *= opts.ToLLifebloomEffectiveHealing;
-            actions[(int)TreeAction.RaidRejuvenation].Periodic *= opts.RejuvenationEffectiveHealing;
-            actions[(int)TreeAction.RaidHealingTouch].Direct *= opts.HealingTouchEffectiveHealing;
-            actions[(int)TreeAction.RaidNourish].Direct *= opts.NourishEffectiveHealing;
-            actions[(int)TreeAction.RaidRegrowth].Direct *= opts.NourishEffectiveHealing;
-            actions[(int)TreeAction.RaidRegrowth].Periodic *= opts.NourishEffectiveHealing;
-            actions[(int)TreeAction.RaidWildGrowth].Periodic *= opts.WildGrowthEffectiveHealing;
+            actions[(int)TreeAction.RaidTolLb].Direct *= opts.ToLLifebloomEH;
+            actions[(int)TreeAction.RaidTolLb].Periodic *= opts.ToLLifebloomEH;
+            actions[(int)TreeAction.RaidRejuvenation].Periodic *= opts.RejuvenationEH;
+            actions[(int)TreeAction.RaidHealingTouch].Direct *= opts.HealingTouchEH;
+            actions[(int)TreeAction.RaidNourish].Direct *= opts.NourishEH;
+            actions[(int)TreeAction.RaidRegrowth].Direct *= opts.NourishEH;
+            actions[(int)TreeAction.RaidRegrowth].Periodic *= opts.NourishEH;
+            actions[(int)TreeAction.RaidWildGrowth].Periodic *= opts.WildGrowthEH;
+            actions[(int)TreeAction.RaidSwiftmend].Periodic *= opts.SwiftmendEH;
+            actions[(int)TreeAction.RaidTranquility].Direct *= opts.TranquilityEH;
+            actions[(int)TreeAction.RaidTranquility].Periodic *= opts.TranquilityEH;
             #endregion
 
             #region Targets
@@ -700,19 +703,17 @@ namespace Rawr.Tree
             actions[(int)TreeAction.TankWildGrowth].Ticks *= wgTargets;
             actions[(int)TreeAction.RaidWildGrowth].Ticks *= wgTargets;
             
-            double efflorescenceTargets = Math.Min(opts.EfflorescenceTargets, 3.0f);
-
             actions[(int)TreeAction.TankSwiftmend].Direct *= (1 + swiftmendExtraTargets * opts.TankRaidHealingWeight);
             actions[(int)TreeAction.RaidSwiftmend].Direct *= (1 + swiftmendExtraTargets);
 
             actions[(int)TreeAction.TankSwiftmend].Casts *= (1 + swiftmendExtraTargets);
             actions[(int)TreeAction.RaidSwiftmend].Casts *= (1 + swiftmendExtraTargets);
-            
-            actions[(int)TreeAction.TankSwiftmend].Periodic *= 1 + opts.TankRaidHealingWeight * (Math.Max(efflorescenceTargets, 1.0f) - 1.0f);
-            actions[(int)TreeAction.RaidSwiftmend].Periodic *= efflorescenceTargets;
 
-            actions[(int)TreeAction.TankSwiftmend].Ticks *= Math.Max(efflorescenceTargets, 1);
-            actions[(int)TreeAction.RaidSwiftmend].Ticks *= efflorescenceTargets;
+            actions[(int)TreeAction.TankSwiftmend].Periodic *= 1 + opts.TankRaidHealingWeight * Math.Max(3 * opts.EfflorescenceEH - 1.0, 0);
+            actions[(int)TreeAction.RaidSwiftmend].Periodic *= 3 * opts.EfflorescenceEH;
+
+            actions[(int)TreeAction.TankSwiftmend].Ticks *= Math.Max(3 * opts.EfflorescenceEH, 1);
+            actions[(int)TreeAction.RaidSwiftmend].Ticks *= 3 * opts.EfflorescenceEH;
             #endregion
 
             #region Swiftmend
@@ -819,7 +820,7 @@ namespace Rawr.Tree
             if (!automatic)
                 dist.AddActionOnCooldown((int)TreeAction.ReLifebloom);
             
-            dist.AddPassive((int)TreePassive.RollingLifebloom, (rejuvenationUp ? spell.TankAction.Periodic : spell.RaidAction.Periodic) * 3 / spell.Duration, -data.LifebloomMPSGain);
+            dist.AddPassive((int)TreePassive.RollingLifebloom, (rejuvenationUp ? spell.TankAction.Periodic : spell.RaidAction.Periodic) * 3 * opts.TankLifebloomEH / spell.Duration, -data.LifebloomMPSGain);
             dist.AddPassiveTPS((int)TreePassive.RollingLifebloom, spell.TPS);
         }
 

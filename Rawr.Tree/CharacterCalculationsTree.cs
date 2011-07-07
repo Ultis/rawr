@@ -97,9 +97,8 @@ namespace Rawr.Tree {
             SpellsManaCostReduction = stats.SpellsManaCostReduction + stats.NatureSpellsManaCostReduction;
             BonusCritHealMultiplier = stats.BonusCritHealMultiplier;
 
-            // according to Paragon's Anaram posting on ElitistJerks, Harmony is additive
             PassiveDirectHealBonus = (Restoration ? 1.25f : 1.0f) + Harmony;
-            PassivePeriodicHealBonus = PassiveDirectHealBonus + 0.02f * character.DruidTalents.Genesis;
+            PassivePeriodicHealBonus = (Restoration ? 1.25f : 1.0f) + opts.HarmonyPeriodicRate * Harmony + 0.02f * character.DruidTalents.Genesis;
             DirectHealMultiplier = (1 + stats.BonusHealingDoneMultiplier) * (1.0f + character.DruidTalents.MasterShapeshifter * 0.04f) * (1 + TreeOfLifeUptime * 0.15f);
             PeriodicHealMultiplier = DirectHealMultiplier * (1 + stats.BonusPeriodicHealingMultiplier);
             SpellsManaCostMultiplier = 1.0f - character.DruidTalents.Moonglow * 0.03f;
