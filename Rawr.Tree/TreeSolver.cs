@@ -164,6 +164,46 @@ namespace Rawr.Tree
 
             calc.Division = FightDivision.ComputeNaive(dividingEffectsList.ToArray(), calc.FightLength, dividingEffectBucketsList.ToArray());
 
+            if (opts.ActivityRate < 1.0f)
+            {                                
+                SpecialEffect[] newEffects = new SpecialEffect[calc.Division.Effects.Length + 1];
+                Array.Copy(calc.Division.Effects, newEffects, calc.Division.Effects.Length);
+                newEffects[calc.Division.Effects.Length] = CalculationsTree.InactiveEffect;
+
+                int[] newEffectMasks = new int[calc.Division.Count + 1];
+                Array.Copy(calc.Division.EffectMasks, newEffectMasks, calc.Division.Count);
+                newEffectMasks[calc.Division.Count] = 1 << calc.Division.Effects.Length;
+
+                double[] newFractions = new double[calc.Division.Count + 1];
+                Array.Copy(calc.Division.Fractions, newFractions, calc.Division.Count);
+
+                double curActivityRate = 1;
+                for (int i = 0; i < calc.Division.Count; ++i)
+                {
+                    if (calc.Division.EffectMasks[i] == 0)
+                    {
+                        double t = Math.Min(1 - opts.ActivityRate, newFractions[i]);
+                        curActivityRate -= t;
+                        newFractions[i] -= t;
+                    }
+                }
+
+                if (curActivityRate > opts.ActivityRate)
+                {
+                    for (int i = 0; i < calc.Division.Count; ++i)
+                    {
+                        newFractions[i] *= opts.ActivityRate;
+                    }
+                }
+
+                newFractions[calc.Division.Count] = 1 - opts.ActivityRate;
+
+                calc.Division.Fractions = newFractions;
+                calc.Division.Effects = newEffects;
+                calc.Division.EffectMasks = newEffectMasks;
+                ++calc.Division.Count;
+            }
+
             double baseSpellPower = (float)(MeanStats.SpellPower + Math.Max(0f, calc.BasicStats.Intellect - 10));
             // TODO: does nurturing instinct actually work like this?
             baseSpellPower += Talents.NurturingInstinct * 0.5 * calc.BasicStats.Agility;
@@ -211,7 +251,10 @@ namespace Rawr.Tree
                 DivisionData[div] = new TreeComputedData();
                 calc.Spells[div] = computeDivisionSpells(calc.Stats[div], DivisionData[div]);
                 computeDivisionSpellActions(calc.Stats[div], DivisionData[div], calc.Spells[div]);
-                calc.Actions[div] = computeDivisionActions(calc.Stats[div], DivisionData[div], calc.Spells[div]);
+                if (opts.ActivityRate == 1.0f || (div + 1) != calc.Division.Fractions.Length)
+                    calc.Actions[div] = computeDivisionActions(calc.Stats[div], DivisionData[div], calc.Spells[div]);
+                else
+                    calc.Actions[div] = new ContinuousAction[(int)TreeAction.Count];
             }
         }
 

@@ -577,10 +577,12 @@ namespace Rawr.ModelFramework
                 bool isUseful = false;
                 for (int i = 0; i < actionSets.Length; ++i)
                 {
-                    if (actionSets[i][candidates[j]].Limit < 1)
-                        isCooldown = true;
                     if (actionSets[i][candidates[j]].EPS > 0)
+                    {
                         isUseful = true;
+                        if (actionSets[i][candidates[j]].Limit < 1)
+                            isCooldown = true;
+                    }
                 }
 
                 if (isUseful)

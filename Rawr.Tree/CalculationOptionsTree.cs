@@ -315,6 +315,14 @@ namespace Rawr.Tree
             set { tankRaidHealingWeight = value; OnPropertyChanged("TankRaidHealingWeight"); }
         }
 
+        private float activityRate = 1.0f;
+        [DefaultValue(1.0f)]
+        public float ActivityRate
+        {
+            get { return activityRate; }
+            set { activityRate = value; OnPropertyChanged("ActivityRate"); }
+        }
+
         #region Stat Graph
         [DefaultValue(new bool[] { true, true, true, true, true, true })]
         public bool[] StatsList { get { return _statsList; } set { _statsList = value; OnPropertyChanged("StatsList"); } }

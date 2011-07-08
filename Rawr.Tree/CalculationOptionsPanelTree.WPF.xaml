@@ -26,6 +26,7 @@
 					<RowDefinition Height="Auto"/>
 					<RowDefinition Height="Auto"/>
 					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="29" />
 					<RowDefinition Height="Auto" />
 					<RowDefinition Height="Auto" />
 					<RowDefinition Height="Auto" />
@@ -71,16 +72,19 @@
 					<inputToolkit:NumericUpDown Margin="2" Grid.Column="4" Grid.Row="2" Value="{Binding Path=TankBurstRatio, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50" />
 				</Grid>
 
-				<Border Grid.Row="4" Grid.ColumnSpan="5" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
+				<TextBlock Grid.ColumnSpan="1" Margin="4,2,2,2" Text="Activity rate:" TextWrapping="NoWrap" VerticalAlignment="Center" Grid.Row="4" ToolTipService.ToolTip="Percentage of fight time where any damage is happening" />
+				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="4" Value="{Binding Path=ActivityRate, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Maximum="100" DecimalPlaces="0" MinWidth="50" />
+
+				<Border Grid.Row="5" Grid.ColumnSpan="5" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
 					<TextBlock Margin="4" FontWeight="Bold" Text="General" VerticalAlignment="Center" />
 				</Border>
 
-				<CheckBox Grid.Row="5" IsChecked="{Binding Path=Restoration, Mode=TwoWay}" MinWidth="50" Content="Restoration specialization" Grid.ColumnSpan="3" Margin="4,2,2,2" ToolTipService.ToolTip="Whether the druid is a restoration druid as opposed to a moonkin or feral; if you unselect this, you should also unselect all deep Restoration talents and ideally fully specify the feral or balance spec." />
+				<CheckBox Grid.Row="6" IsChecked="{Binding Path=Restoration, Mode=TwoWay}" MinWidth="50" Content="Restoration specialization" Grid.ColumnSpan="3" Margin="4,2,2,2" ToolTipService.ToolTip="Whether the druid is a restoration druid as opposed to a moonkin or feral; if you unselect this, you should also unselect all deep Restoration talents and ideally fully specify the feral or balance spec." />
 
-				<Border Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="4" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
+				<Border Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="4" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
 					<TextBlock Margin="4" FontWeight="Bold" Text="Stat Graph Options" VerticalAlignment="Center" />
 				</Border>
-				<Grid Grid.Row="10" Grid.ColumnSpan="4">
+				<Grid Grid.Row="11" Grid.ColumnSpan="4">
 					<Grid.RowDefinitions>
 						<RowDefinition Height="Auto" />
 						<RowDefinition Height="Auto" />

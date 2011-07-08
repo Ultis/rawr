@@ -852,6 +852,24 @@ namespace Rawr.Tree {
             }
         }
 
+        public class InactiveStats : Stats
+        {
+            public override string ToString() { return "Inactive"; }
+        }
+
+        private static SpecialEffect inactiveEffect = null;
+        public static SpecialEffect InactiveEffect
+        {
+            get
+            {
+                if (inactiveEffect == null)
+                {
+                    inactiveEffect = new SpecialEffect(Trigger.Use, new InactiveStats(), 0, 0.0f);
+                }
+                return inactiveEffect;
+            }
+        }
+
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
             CalculationOptionsTree opts = character.CalculationOptions as CalculationOptionsTree;
