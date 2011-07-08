@@ -552,11 +552,6 @@ namespace Rawr.Tree
             for (int i = 0; i < (int)TreeSpell.Count; ++i)
                 spells[i] = new ComputedSpell(CalculationsTree.SpellData[i], stats);
 
-            // from http://elitistjerks.com/f73/t110354-resto_cataclysm_release_updated_4_1_a/
-            // Gift of Nature: doesn't seem to affect Wild Growth. Unclear whether this is intended.
-            if (Restoration)
-                spells[(int)TreeSpell.WildGrowth].ExtraTickBonus -= 0.25;
-
             spells[(int)TreeSpell.Tranquility].DirectMultiplier *= 4 * 5;
             spells[(int)TreeSpell.Tranquility].TickMultiplier *= 4 * 5;
 
