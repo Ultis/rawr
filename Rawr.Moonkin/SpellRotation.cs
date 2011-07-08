@@ -157,6 +157,8 @@ namespace Rawr.Moonkin
         {
             float hitDamageModifier = (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier) * (1 + calcs.BasicStats.BonusNatureDamageMultiplier);
             float critDamageModifier = 1.5f * (1 + calcs.BasicStats.BonusCritDamageMultiplier);
+            // Patch 4.2: Wild Mushroom affected by Moonfury.
+            critDamageModifier += critDamageModifier - 1;
             // 845-1022 damage
             float baseDamage = (845 + 1022) / 2;
             float damagePerHit = (baseDamage + effectiveNatureDamage * 0.6032f) * hitDamageModifier;

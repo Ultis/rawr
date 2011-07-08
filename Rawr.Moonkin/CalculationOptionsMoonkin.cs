@@ -53,9 +53,9 @@ namespace Rawr.Moonkin
         private bool ptrMode = false;
 
         #region Stat Graph
-        [DefaultValue(new bool[] { true, true, true, true, true, /**/ true, true, true, true, })]
+        [DefaultValue(new bool[] { true, true, true, true, true, /**/ true, true, })]
         public bool[] StatsList { get { return _statsList; } set { _statsList = value; OnPropertyChanged("StatsList"); } }
-        private bool[] _statsList = new bool[] { true, true, true, true, true, /**/ true, true, true, true, };
+        private bool[] _statsList = new bool[] { true, true, true, true, true, /**/ true, true, };
         [DefaultValue(100)]
         public int StatsIncrement { get { return _StatsIncrement; } set { _StatsIncrement = value; OnPropertyChanged("StatsIncrement"); } }
         private int _StatsIncrement = 100;
@@ -73,13 +73,9 @@ namespace Rawr.Moonkin
         [XmlIgnore]
         public bool SG_Hit { get { return StatsList[4]; } set { StatsList[4] = value; OnPropertyChanged("SG_Hit"); } }
         [XmlIgnore]
-        public bool SG_Exp { get { return StatsList[5]; } set { StatsList[5] = value; OnPropertyChanged("SG_Exp"); } }
-        [XmlIgnore]
         public bool SG_Haste { get { return StatsList[6]; } set { StatsList[6] = value; OnPropertyChanged("SG_Haste"); } }
         [XmlIgnore]
         public bool SG_Mstr { get { return StatsList[7]; } set { StatsList[7] = value; OnPropertyChanged("SG_Mstr"); } }
-        [XmlIgnore]
-        public bool SG_SpPen { get { return StatsList[8]; } set { StatsList[8] = value; OnPropertyChanged("SG_SpPen"); } }
         #endregion
 
         #region ICalculationOptionBase Overrides
