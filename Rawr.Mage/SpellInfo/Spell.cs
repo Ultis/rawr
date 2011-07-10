@@ -380,6 +380,10 @@ namespace Rawr.Mage
             CostAmplifier = template.BaseCostAmplifier;
             DirectDamageModifier = template.BaseDirectDamageModifier;
             DotDamageModifier = template.BaseDotDamageModifier * castingState.Solver.DarkIntentDotDamageAmplifier;
+            if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire)
+            {
+                DotDamageModifier *= (1 + castingState.FlashburnBonus);
+            }
             if (castingState.PowerInfusion) CostModifier -= 0.2f; // don't have any information on this, going by best guess
             if (castingState.ArcanePower)
             {
@@ -730,12 +734,13 @@ namespace Rawr.Mage
                 }
                 averageDamage += BasePeriodicDamage * dotFactor;
                 DamagePerSpellPower += DotDamageCoefficient * dotFactor;
-                if (solver.Specialization == Specialization.Fire)
+                float periodicDamage = (BasePeriodicDamage + DotDamageCoefficient * spellPower) * dotFactor;
+                if (solver.Specialization == Specialization.Fire && (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire))
                 {
-                    DamagePerMastery += (BasePeriodicDamage * dotFactor) / template.BaseDotDamageModifier * solver.FlashburnMultiplier;
+                    DamagePerMastery += periodicDamage / (1 + castingState.FlashburnBonus) * solver.FlashburnMultiplier;
                 }
                 totalDamage = averageDamage + DamagePerSpellPower * spellPower;
-                DamagePerCrit += (BasePeriodicDamage + DotDamageCoefficient * spellPower) * dotFactor / dotCritMultiplier * (critBonus - 1); // part from dot damage
+                DamagePerCrit += periodicDamage / dotCritMultiplier * (critBonus - 1); // part from dot damage
             }
             if (solver.Specialization == Specialization.Frost && castingState.Frozen)
             {
@@ -815,15 +820,15 @@ namespace Rawr.Mage
                 dotFactor *= (1 + DotExtraTicks * DotTickInterval / DotDuration);
                 averageDamage = BasePeriodicDamage * dotFactor;
                 DotDamagePerSpellPower = DotDamageCoefficient * dotFactor;
-                if (solver.Specialization == Specialization.Fire)
-                {
-                    DotDamagePerMastery += (BasePeriodicDamage * dotFactor) / template.BaseDotDamageModifier * solver.FlashburnMultiplier;
-                }
             }
             float totalDamage = averageDamage + DotDamagePerSpellPower * spellPower;
             if (solver.Specialization == Specialization.Frost && castingState.Frozen)
             {
                 DotDamagePerMastery = totalDamage / AdditiveSpellModifier * solver.FrostburnMultiplier;
+            }
+            if (solver.Specialization == Specialization.Fire && (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire))
+            {
+                DotDamagePerMastery += totalDamage / (1 + castingState.FlashburnBonus) * solver.FlashburnMultiplier;
             }
             DotDamagePerCrit = totalDamage / critMultiplier * (critBonus - 1);
             DotAverageDamage = totalDamage;

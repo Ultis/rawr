@@ -189,7 +189,6 @@ namespace Rawr.Mage
                     HitRate = solver.BaseFireHitRate;
                     ThreatMultiplier = solver.FireThreatMultiplier;
                     realResistance = calculationOptions.FireResist;
-                    BaseDotDamageModifier = 1.0f + solver.FlashburnBonus;
                     IgniteFactor = solver.IgniteFactor;
                     break;
                 case MagicSchool.FrostFire:
@@ -212,7 +211,6 @@ namespace Rawr.Mage
                         realResistance = Math.Min(calculationOptions.FireResist, calculationOptions.FrostResist);
                     }
                     Range = range;
-                    BaseDotDamageModifier = 1.0f + solver.FlashburnBonus;
                     IgniteFactor = solver.IgniteFactor;
                     break;
                 case MagicSchool.Frost:
