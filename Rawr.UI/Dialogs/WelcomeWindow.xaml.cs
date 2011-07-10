@@ -160,6 +160,50 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes()
         {
+#region Rawr 4.2.1 (July 10, 2011) [r61908]
+VNStuff.Add("Rawr 4.2.1 (July 10, 2011) [r61908]",
+@"Cataclysm Release
+
+Rawr.Items:
+- Added 4.2 Random Suffix information. 
+- Added missing Molten Front items (I blame MMO-C for not mentioning the vender)
+- Fixed Circuit Design Breastplate and Spiritshield Mask for not having a socket Bonus.
+- Corrected all Fireland's Flickering Random enchants (Helm will not longer be OP)
+
+Rawr.BossHandler:
+- Updated Normal health values for all T12 bosses 
+- Alysrazor has a 15 minute enrage timer
+- Baleroc has a 6 minute Berserk timer
+
+Rawr.Mage:
+- Advanced armor swapping mode, doesn't take into account gcd loss from swapping. 
+- Fix for proc calculations.
+
+Rawr.ProtWarr:
+- Fixed an issue where T12 2-piece was not providing any value
+- Updated T12 2-piece to be affected by Booming Voice. 
+
+Rawr.Bear:
+- Fix for 4T12 slowdown. 
+
+Rawr.DPSDK:
+- Defect 21071: Presence wasn't properly being handled in all cases. Even if UH spec should always be in UH presence, it's best to give th option to see the difference.
+- Defect 21074: Orc racial too high.
+- Defect 21076: Exception on Load/create new character.
+- Update status to fully supported. 
+- Defect 21069: Unholy Blight wasn't actually plugged into the rotation. 
+
+Rawr.Tree:
+- Rework and improve effective healing options 
+- Add activity rate
+- Wild Growth is now affected by Gift of Nature according to the EJ thread
+
+Rawr.Moonkin:
+- Wild Mushroom is affected by Moonfury, per EJ testing.
+- Relabel stat graph options to correct names and remove irrelevant stats Expertise and Spell Pen. 
+- Wild Mushroom not affected by the crit part of Moonfury. 
+");
+#endregion
 #region Rawr 4.2.0 (June 26, 2011) [r61631]
 VNStuff.Add("Rawr 4.2.0 (June 26, 2011) [r61631]",
 @"Cataclysm Release
