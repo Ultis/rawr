@@ -318,7 +318,7 @@ namespace Rawr.Mage
                         CastingState state = SolutionVariable[i].State;
                         if (state != null && !state.EffectsActive((int)StandardEffect.ManaGemEffect))
                         {
-                            float burn = SolutionVariable[i].Cycle.ManaPerSecond;
+                            float burn = (float)SolutionVariable[i].Cycle.ManaPerSecond;
                             if (burn > manaBurn) manaBurn = burn;
                         }
                     }

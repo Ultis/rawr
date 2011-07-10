@@ -5412,7 +5412,7 @@ namespace Rawr.Mage
             //lp[rowManaPotionManaGem, index] = (statsList[buffset].FlameCap ? 1 : 0) + (statsList[buffset].DestructionPotion ? 40.0 / 15.0 : 0);
             if (needsQuadratic)
             {
-                float dps = cycle.GetDamagePerSecond(state.ManaAdeptBonus);
+                double dps = cycle.GetDamagePerSecond(state.ManaAdeptBonus);
                 lp.SetElementUnsafe(rowTargetDamage, column, -dps * multiplier);
                 lp.SetCostUnsafe(column, minimizeTime ? -1 : dps * multiplier);
                 lp.SetSpellDpsUnsafe(column, cycle.GetQuadraticSpellDPS() * multiplier);

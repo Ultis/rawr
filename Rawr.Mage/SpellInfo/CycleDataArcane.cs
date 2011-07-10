@@ -2887,11 +2887,11 @@ namespace Rawr.Mage
             int i = 0;
             while (i < cycles.Count)
             {
-                float maxDpm = 0;
+                double maxDpm = 0;
                 int maxj = -1;
                 for (int j = i + 1; j < cycles.Count; j++)
                 {
-                    float dpm = (cycles[j].DamagePerSecond - cycles[i].DamagePerSecond) / (cycles[j].ManaPerSecond - cycles[i].ManaPerSecond);
+                    double dpm = (cycles[j].DamagePerSecond - cycles[i].DamagePerSecond) / (cycles[j].ManaPerSecond - cycles[i].ManaPerSecond);
                     if (dpm > maxDpm)
                     {
                         maxDpm = dpm;
@@ -2903,7 +2903,7 @@ namespace Rawr.Mage
                     if (cycles[maxj].ManaPerSecond >= 0)
                     {
                         // mps1 + k * (mps2 - mps1)
-                        float k = -cycles[i].ManaPerSecond / (cycles[maxj].ManaPerSecond - cycles[i].ManaPerSecond);
+                        double k = -cycles[i].ManaPerSecond / (cycles[maxj].ManaPerSecond - cycles[i].ManaPerSecond);
                         Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
                         cycle.Name = "ArcaneManaNeutral";
                         cycle.Note = string.Format("Mix {0:F}% {1} and {2:F}% {3}", 100 * (1 - k), cycles[i].Name, 100 * k, cycles[maxj].Name);

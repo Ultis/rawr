@@ -98,43 +98,43 @@ namespace Rawr.Mage.Graphs
                             {
                                 case Trigger.DamageSpellCrit:
                                 case Trigger.SpellCrit:
-                                    triggers += (float)calculations.Solution[j] * c.Ticks / c.CastTime;
-                                    procs += (float)calculations.Solution[j] * c.CritProcs / c.CastTime;
+                                    triggers += (float)(calculations.Solution[j] * c.Ticks / c.CastTime);
+                                    procs += (float)(calculations.Solution[j] * c.CritProcs / c.CastTime);
                                     break;
                                 case Trigger.DamageSpellHit:
                                 case Trigger.SpellHit:
-                                    triggers += (float)calculations.Solution[j] * c.Ticks / c.CastTime;
-                                    procs += (float)calculations.Solution[j] * c.HitProcs / c.CastTime;
+                                    triggers += (float)(calculations.Solution[j] * c.Ticks / c.CastTime);
+                                    procs += (float)(calculations.Solution[j] * c.HitProcs / c.CastTime);
                                     break;
                                 case Trigger.SpellMiss:
-                                    triggers += (float)calculations.Solution[j] * c.Ticks / c.CastTime;
-                                    procs += (float)calculations.Solution[j] * (1 - c.HitProcs) / c.CastTime;
+                                    triggers += (float)(calculations.Solution[j] * c.Ticks / c.CastTime);
+                                    procs += (float)(calculations.Solution[j] * (1 - c.HitProcs) / c.CastTime);
                                     break;
                                 case Trigger.DamageSpellCast:
                                 case Trigger.SpellCast:
                                     if (effectList[i].Stats.HolySummonedDamage > 0)
                                     {
-                                        triggers += (float)calculations.Solution[j] * c.CastProcs2 / c.CastTime;
-                                        procs += (float)calculations.Solution[j] * c.CastProcs2 / c.CastTime;
+                                        triggers += (float)(calculations.Solution[j] * c.CastProcs2 / c.CastTime);
+                                        procs += (float)(calculations.Solution[j] * c.CastProcs2 / c.CastTime);
                                     }
                                     else
                                     {
-                                        triggers += (float)calculations.Solution[j] * c.CastProcs / c.CastTime;
-                                        procs += (float)calculations.Solution[j] * c.CastProcs / c.CastTime;
+                                        triggers += (float)(calculations.Solution[j] * c.CastProcs / c.CastTime);
+                                        procs += (float)(calculations.Solution[j] * c.CastProcs / c.CastTime);
                                     }
                                     break;
                                 case Trigger.MageNukeCast:
-                                    triggers += (float)calculations.Solution[j] * c.NukeProcs / c.CastTime;
-                                    procs += (float)calculations.Solution[j] * c.NukeProcs / c.CastTime;
+                                    triggers += (float)(calculations.Solution[j] * c.NukeProcs / c.CastTime);
+                                    procs += (float)(calculations.Solution[j] * c.NukeProcs / c.CastTime);
                                     break;
                                 case Trigger.DamageDone:
                                 case Trigger.DamageOrHealingDone:
-                                    triggers += (float)calculations.Solution[j] * c.DamageProcs / c.CastTime;
-                                    procs += (float)calculations.Solution[j] * c.DamageProcs / c.CastTime;
+                                    triggers += (float)(calculations.Solution[j] * c.DamageProcs / c.CastTime);
+                                    procs += (float)(calculations.Solution[j] * c.DamageProcs / c.CastTime);
                                     break;
                                 case Trigger.DoTTick:
-                                    triggers += (float)calculations.Solution[j] * c.DotProcs / c.CastTime;
-                                    procs += (float)calculations.Solution[j] * c.DotProcs / c.CastTime;
+                                    triggers += (float)(calculations.Solution[j] * c.DotProcs / c.CastTime);
+                                    procs += (float)(calculations.Solution[j] * c.DotProcs / c.CastTime);
                                     break;
                             }
                         }
