@@ -677,6 +677,8 @@ the Threat Scale defined on the Options tab.",
             calculatedStats.ThreatPoints = calculatedStats.HighestTPSRotation.TPS * calcOpts.ThreatScale / 10f;
         }
 
+        private static readonly SpecialEffect SpecialEffect4T12 = new SpecialEffect(Trigger.Barkskin, new Stats() { Dodge = 0.10f, }, 12f, 60f, 1f);
+
         /// <summary>
         /// Gets the total Stats of the Character
         /// </summary>
@@ -743,9 +745,7 @@ the Threat Scale defined on the Options tab.",
             }
             if (T12Count >= 4)
             {
-                statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.Barkskin,
-                    new Stats() { Dodge = 0.10f, },
-                    12f, 60f, 1f));
+                statsTotal.AddSpecialEffect(SpecialEffect4T12);
             }
             #endregion
 
