@@ -160,8 +160,8 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes()
         {
-#region Rawr 4.2.1 (July 10, 2011) [r61908]
-VNStuff.Add("Rawr 4.2.1 (July 10, 2011) [r61908]",
+#region Rawr 4.2.1 (July 10, 2011) [r61914]
+VNStuff.Add("Rawr 4.2.1 (July 10, 2011) [r61914]",
 @"Cataclysm Release
 
 Rawr.Items:
@@ -169,6 +169,11 @@ Rawr.Items:
 - Added missing Molten Front items (I blame MMO-C for not mentioning the vender)
 - Fixed Circuit Design Breastplate and Spiritshield Mask for not having a socket Bonus.
 - Corrected all Fireland's Flickering Random enchants (Helm will not longer be OP)
+- All 371 Vicious Gladiator gear is added
+- All Bloodthirsty and all non-weapon 352 and 365Vicious gear has had it's Honor removed. I'll leave all of the depreciated gear in the database for the next month so that people can transition to the new 371 Vicious gear.
+- Added loot that drops from all bosses in Firelands except from Rag. (7 weapons, both normal and heroic)
+- Necromatic Focus, Matrix Restabalizer, Vessel of Acceleration, and Apparatus of Khazgoroth all are using proc amounts on live that are different than what is being posted on the tooltip. Corrected all with the correct normal amounts and estimated heroic amounts.
+- So apparently the Stage 1 and Stage 2 versions of the Dragonwrath, Tarecgosa's Rest staff did make it to live dispite what Wowhead and MMO-C's databases say otherwise. Added both staffs to the databases. 
 
 Rawr.BossHandler:
 - Updated Normal health values for all T12 bosses 

@@ -40,8 +40,8 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Row="0" Height="auto" Text="Presence:" VerticalAlignment="Center" Width="auto" Margin="2" />
                 <ComboBox Grid.Row="0" Grid.Column="1" Height="Auto" SelectedIndex="{Binding PresenceByIndex, Mode=TwoWay}" Margin="2">
-                    <ComboBoxItem Content="None" />
-                    <ComboBoxItem Content="Blood" IsSelected="True" />
+                    <ComboBoxItem Content="None" IsSelected="True"/>
+                    <ComboBoxItem Content="Blood" />
                     <ComboBoxItem Content="Frost" />
                     <ComboBoxItem Content="Unholy" />
                 </ComboBox>
