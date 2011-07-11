@@ -131292,10 +131292,6 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
     <Name>[Downloading from Wowhead]</Name>
     <Id>0</Id>
@@ -132267,6 +132263,7 @@
       <Armor>2539</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Pursuit</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Hunter</RequiredClasses>
@@ -132302,6 +132299,7 @@
       <Armor>1587</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Pursuit</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Hunter</RequiredClasses>
@@ -132336,6 +132334,7 @@
       <Armor>2063</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Pursuit</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Hunter</RequiredClasses>
@@ -132371,6 +132370,7 @@
       <Armor>2222</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Pursuit</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Hunter</RequiredClasses>
@@ -132406,6 +132406,7 @@
       <Armor>1905</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Pursuit</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Hunter</RequiredClasses>
@@ -132829,6 +132830,7 @@
       <Armor>1102</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Sanctuary</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Druid</RequiredClasses>
@@ -132863,6 +132865,7 @@
       <Armor>1433</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Sanctuary</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Druid</RequiredClasses>
@@ -132898,6 +132901,7 @@
       <Armor>1543</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Sanctuary</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Druid</RequiredClasses>
@@ -132933,6 +132937,7 @@
       <Armor>1763</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Sanctuary</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Druid</RequiredClasses>
@@ -132968,6 +132973,7 @@
       <Armor>1322</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Sanctuary</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Druid</RequiredClasses>
@@ -133098,6 +133104,7 @@
       <Armor>3548</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Desecration</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <Bind>BoP</Bind>
@@ -133132,6 +133139,7 @@
       <Armor>2218</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Desecration</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <Bind>BoP</Bind>
@@ -133165,6 +133173,7 @@
       <Armor>2883</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Desecration</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <Bind>BoP</Bind>
@@ -133199,6 +133208,7 @@
       <Armor>3105</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Desecration</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <Bind>BoP</Bind>
@@ -133233,6 +133243,7 @@
       <Armor>2661</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Desecration</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <Bind>BoP</Bind>
@@ -133386,6 +133397,7 @@
       <Armor>1004</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Felshroud</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Warlock</RequiredClasses>
@@ -133420,6 +133432,7 @@
       <Armor>1087</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Felshroud</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Warlock</RequiredClasses>
@@ -133455,6 +133468,7 @@
       <Armor>836</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Felshroud</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Warlock</RequiredClasses>
@@ -133489,6 +133503,7 @@
       <Armor>1338</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Felshroud</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Warlock</RequiredClasses>
@@ -133524,6 +133539,7 @@
       <Armor>1171</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Felshroud</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Warlock</RequiredClasses>
@@ -133869,6 +133885,7 @@
       <Armor>1102</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Refuge</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Druid</RequiredClasses>
@@ -133903,6 +133920,7 @@
       <Armor>1433</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Refuge</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Druid</RequiredClasses>
@@ -133938,6 +133956,7 @@
       <Armor>1543</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Refuge</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Druid</RequiredClasses>
@@ -133973,6 +133992,7 @@
       <Armor>1763</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Refuge</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Druid</RequiredClasses>
@@ -134008,6 +134028,7 @@
       <Armor>1322</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Refuge</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Druid</RequiredClasses>
@@ -134042,6 +134063,7 @@
       <Armor>1102</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Vestments</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Rogue</RequiredClasses>
@@ -134076,6 +134098,7 @@
       <Armor>1433</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Vestments</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Rogue</RequiredClasses>
@@ -134111,6 +134134,7 @@
       <Armor>1543</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Vestments</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Rogue</RequiredClasses>
@@ -134146,6 +134170,7 @@
       <Armor>1322</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Vestments</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Rogue</RequiredClasses>
@@ -134180,6 +134205,7 @@
       <Armor>1763</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Vestments</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Rogue</RequiredClasses>
@@ -134215,6 +134241,7 @@
       <Armor>2539</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Earthshaker</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Shaman</RequiredClasses>
@@ -134250,6 +134277,7 @@
       <Armor>1587</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Earthshaker</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Shaman</RequiredClasses>
@@ -134284,6 +134312,7 @@
       <Armor>2063</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Earthshaker</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Shaman</RequiredClasses>
@@ -134319,6 +134348,7 @@
       <Armor>2222</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Earthshaker</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Shaman</RequiredClasses>
@@ -134354,6 +134384,7 @@
       <Armor>1905</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Earthshaker</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Shaman</RequiredClasses>
@@ -134456,6 +134487,7 @@
       <Armor>2539</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Thunderfist</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Shaman</RequiredClasses>
@@ -134491,6 +134523,7 @@
       <Armor>1587</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Thunderfist</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Shaman</RequiredClasses>
@@ -134525,6 +134558,7 @@
       <Armor>2063</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Thunderfist</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Shaman</RequiredClasses>
@@ -134560,6 +134594,7 @@
       <Armor>2222</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Thunderfist</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Shaman</RequiredClasses>
@@ -134595,6 +134630,7 @@
       <Armor>1905</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Thunderfist</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Shaman</RequiredClasses>
@@ -134797,6 +134833,7 @@
       <Armor>836</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Investiture</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Priest</RequiredClasses>
@@ -134831,6 +134868,7 @@
       <Armor>1087</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Investiture</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Priest</RequiredClasses>
@@ -134866,6 +134904,7 @@
       <Armor>1171</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Investiture</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Priest</RequiredClasses>
@@ -134901,6 +134940,7 @@
       <Armor>1004</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Investiture</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Priest</RequiredClasses>
@@ -134935,6 +134975,7 @@
       <Armor>1338</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Investiture</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Priest</RequiredClasses>
@@ -135032,6 +135073,7 @@
       <Armor>3548</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Redemption</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Paladin</RequiredClasses>
@@ -135067,6 +135109,7 @@
       <Armor>2218</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Redemption</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Paladin</RequiredClasses>
@@ -135101,6 +135144,7 @@
       <Armor>2883</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Redemption</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Paladin</RequiredClasses>
@@ -135136,6 +135180,7 @@
       <Armor>3105</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Redemption</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Paladin</RequiredClasses>
@@ -135171,6 +135216,7 @@
       <Armor>2661</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Redemption</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Paladin</RequiredClasses>
@@ -135298,6 +135344,7 @@
       <Armor>3548</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Battlegear</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Warrior</RequiredClasses>
@@ -135333,6 +135380,7 @@
       <Armor>2218</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Battlegear</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Warrior</RequiredClasses>
@@ -135367,6 +135415,7 @@
       <Armor>2883</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Battlegear</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Warrior</RequiredClasses>
@@ -135402,6 +135451,7 @@
       <Armor>3105</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Battlegear</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Warrior</RequiredClasses>
@@ -135437,6 +135487,7 @@
       <Armor>2661</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Battlegear</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Warrior</RequiredClasses>
@@ -135661,6 +135712,7 @@
       <Armor>2539</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Wartide</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Shaman</RequiredClasses>
@@ -135696,6 +135748,7 @@
       <Armor>1587</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Wartide</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Shaman</RequiredClasses>
@@ -135730,6 +135783,7 @@
       <Armor>2063</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Wartide</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Shaman</RequiredClasses>
@@ -135765,6 +135819,7 @@
       <Armor>2222</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Wartide</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Shaman</RequiredClasses>
@@ -135800,6 +135855,7 @@
       <Armor>1905</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Wartide</SetName>
     <Type>Mail</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Shaman</RequiredClasses>
@@ -135970,6 +136026,7 @@
       <Armor>836</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Raiment</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Priest</RequiredClasses>
@@ -136004,6 +136061,7 @@
       <Armor>1087</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Raiment</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Priest</RequiredClasses>
@@ -136039,6 +136097,7 @@
       <Armor>1171</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Raiment</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Priest</RequiredClasses>
@@ -136074,6 +136133,7 @@
       <Armor>1004</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Raiment</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Priest</RequiredClasses>
@@ -136108,6 +136168,7 @@
       <Armor>1338</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Raiment</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Priest</RequiredClasses>
@@ -136143,6 +136204,7 @@
       <Armor>3548</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Vindication</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Paladin</RequiredClasses>
@@ -136178,6 +136240,7 @@
       <Armor>2218</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Vindication</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Paladin</RequiredClasses>
@@ -136212,6 +136275,7 @@
       <Armor>2883</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Vindication</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Paladin</RequiredClasses>
@@ -136247,6 +136311,7 @@
       <Armor>3105</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Vindication</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Paladin</RequiredClasses>
@@ -136282,6 +136347,7 @@
       <Armor>2661</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Vindication</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Paladin</RequiredClasses>
@@ -136378,6 +136444,7 @@
       <Armor>1004</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Regalia</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Mage</RequiredClasses>
@@ -136412,6 +136479,7 @@
       <Armor>1087</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Regalia</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Mage</RequiredClasses>
@@ -136447,6 +136515,7 @@
       <Armor>836</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Regalia</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Mage</RequiredClasses>
@@ -136481,6 +136550,7 @@
       <Armor>1338</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Regalia</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Mage</RequiredClasses>
@@ -136516,6 +136586,7 @@
       <Armor>1171</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Regalia</SetName>
     <Type>Cloth</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Mage</RequiredClasses>
@@ -136919,6 +136990,7 @@
       <Armor>1102</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Wildhide</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Druid</RequiredClasses>
@@ -136953,6 +137025,7 @@
       <Armor>1433</Armor>
     </Stats>
     <Quality>Epic</Quality>
+    <SetName>Gladiator's Wildhide</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Druid</RequiredClasses>
@@ -136976,52 +137049,111 @@
     <Slot>Head</Slot>
   </Item>
   <Item>
-    <ItemLevel>0</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
-    <Stats />
-    <Quality>Poor</Quality>
-    <Type>None</Type>
+    <ItemLevel>371</ItemLevel>
+    <DisplayId>94045</DisplayId>
+    <DisplaySlot>7</DisplaySlot>
+    <IconPath>inv_pants_leather_pvpdruid_c_01</IconPath>
+    <Stats>
+      <Stamina>573</Stamina>
+      <Intellect>342</Intellect>
+      <MasteryRating>215</MasteryRating>
+      <Resilience>255</Resilience>
+      <Armor>1543</Armor>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Wildhide</SetName>
+    <Type>Leather</Type>
     <Faction>Neutral</Faction>
-    <SocketBonus />
+    <RequiredClasses>Druid</RequiredClasses>
+    <Bind>BoP</Bind>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Resilience>20</Resilience>
+    </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>2200</Points>
+        <TokenType />
+        <TokenCount>0</TokenCount>
+        <ArenaRating>0</ArenaRating>
+      </ItemLocation>
     </LocationInfo>
-    <Name>[Downloading from Wowhead]</Name>
+    <Name>Vicious Gladiator's Wyrmhide Legguards</Name>
     <Id>70673</Id>
-    <Slot>None</Slot>
+    <Slot>Legs</Slot>
   </Item>
   <Item>
-    <ItemLevel>0</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
-    <Stats />
-    <Quality>Poor</Quality>
-    <Type>None</Type>
+    <ItemLevel>371</ItemLevel>
+    <DisplayId>94129</DisplayId>
+    <DisplaySlot>20</DisplaySlot>
+    <IconPath>inv_chest_leather_pvpdruid_c_01</IconPath>
+    <Stats>
+      <Stamina>573</Stamina>
+      <Intellect>342</Intellect>
+      <CritRating>215</CritRating>
+      <Resilience>255</Resilience>
+      <Armor>1763</Armor>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Wildhide</SetName>
+    <Type>Leather</Type>
     <Faction>Neutral</Faction>
-    <SocketBonus />
+    <RequiredClasses>Druid</RequiredClasses>
+    <Bind>BoP</Bind>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <Resilience>20</Resilience>
+    </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>2200</Points>
+        <TokenType />
+        <TokenCount>0</TokenCount>
+        <ArenaRating>0</ArenaRating>
+      </ItemLocation>
     </LocationInfo>
-    <Name>[Downloading from Wowhead]</Name>
+    <Name>Vicious Gladiator's Wyrmhide Robes</Name>
     <Id>70674</Id>
-    <Slot>None</Slot>
+    <Slot>Chest</Slot>
   </Item>
   <Item>
-    <ItemLevel>0</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
-    <Stats />
-    <Quality>Poor</Quality>
-    <Type>None</Type>
+    <ItemLevel>371</ItemLevel>
+    <DisplayId>94047</DisplayId>
+    <DisplaySlot>3</DisplaySlot>
+    <IconPath>inv_shoulder_leather_pvpdruid_c_01</IconPath>
+    <Stats>
+      <Stamina>425</Stamina>
+      <Intellect>263</Intellect>
+      <HasteRating>169</HasteRating>
+      <Resilience>189</Resilience>
+      <Armor>1322</Armor>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Wildhide</SetName>
+    <Type>Leather</Type>
     <Faction>Neutral</Faction>
-    <SocketBonus />
+    <RequiredClasses>Druid</RequiredClasses>
+    <Bind>BoP</Bind>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Intellect>10</Intellect>
+    </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Honor</PointType>
+        <Points>1650</Points>
+        <TokenType />
+        <TokenCount>0</TokenCount>
+        <ArenaRating>0</ArenaRating>
+      </ItemLocation>
     </LocationInfo>
-    <Name>[Downloading from Wowhead]</Name>
+    <Name>Vicious Gladiator's Wyrmhide Spaulders</Name>
     <Id>70675</Id>
-    <Slot>None</Slot>
+    <Slot>Shoulders</Slot>
   </Item>
   <Item>
     <ItemLevel>391</ItemLevel>
