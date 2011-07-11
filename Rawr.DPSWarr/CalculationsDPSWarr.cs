@@ -1803,7 +1803,7 @@ a GCD's length, you will use this while running back into place",
                                          - 1f,
                 BonusPhysicalDamageMultiplier = ((dpswarchar.CalcOpts.M_Rend // Have Rend up
                                                  || talents.DeepWounds > 0 // Have Deep Wounds
-                                                ? talents.BloodFrenzy * 1.02f : 1.0f)
+                                                ? (1.0f + talents.BloodFrenzy * 0.02f) : 1.0f)
                                                 * (dpswarchar.CombatFactors.FuryStance
                                                 ? 1.05f : 1.0f))
                                                 - 1f,
