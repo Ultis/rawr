@@ -232,6 +232,8 @@ namespace Rawr.Hunter.Skills
 //            CanBeParried = true;
 //            CanBeBlocked = true;
             CanCrit = true;
+            CRITBONUS = 0.5f;
+            CRITBONUSMULTIPLIER = 1.0f;
             Talent2ChksValue = 0;
             AbilIterater = -1;
             ReqRangedWeap = false;
@@ -252,6 +254,7 @@ namespace Rawr.Hunter.Skills
             HealingBonus = 1f;
             BonusCritChance = 0.00f;
             UseSpellHit = false;
+            Consumes_Tier12_4pc = false;
         }
         public static Ability NULL = new NullAbility();
         #region Variables
@@ -265,6 +268,8 @@ namespace Rawr.Hunter.Skills
 //        private bool CANBEPARRIED;
 //        private bool CANBEBLOCKED;
         private bool CANCRIT;
+        private float CRITBONUS;
+        private float CRITBONUSMULTIPLIER;
         private bool REQTALENT;
         private int TALENT2CHKSVALUE;
         private bool REQRANGEDWEAP;
@@ -310,6 +315,8 @@ namespace Rawr.Hunter.Skills
         private bool USEHITTABLE = true;
         public int AbilIterater;
         public float Mastery = 0f;
+        public bool RefreshesSS = false; // Refreshes Serpent Sting
+        public bool Consumes_Tier12_4pc = false;
         #endregion
         #region Get/Set
         public string Name { get { return NAME; } set { NAME = value; } }

@@ -33,6 +33,7 @@ namespace Rawr.Hunter.Skills
             CastTime = 2.9f;
             FocusCost = 50f;
             DamageBase = (combatFactors.AvgRwWeaponDmgUnhasted + (StatS.RangedAttackPower * 0.724f) + 776) * 1.60f + 100;
+            Consumes_Tier12_4pc = true;
             Initialize();
         }
     }
@@ -70,6 +71,8 @@ namespace Rawr.Hunter.Skills
             DamageBase = cf.AvgRwWeaponDmgUnhasted + (StatS.RangedAttackPower * 0.0483f) + 289f;
             DamageBonus = (Talents.GlyphOfArcaneShot ? 0.12f : 0f);
 
+            Consumes_Tier12_4pc = true;
+
             Initialize();
         }
         public float GainedThrilloftheHuntFocus() { return basefocuscost * 0.40f; }
@@ -102,10 +105,25 @@ namespace Rawr.Hunter.Skills
             ReqSkillsRange = true;
             //Targets += StatS.BonusTargets;
             Cd = 10f - (Talents.GlyphOfChimeraShot ? 1f : 0f); // In Seconds
-            FocusCost = 50f;
+            FocusCost = 50f - (Talents.Efficiency * 2f);
             DamageBase = combatFactors.AvgRwWeaponDmgUnhasted + StatS.RangedAttackPower * 0.732f + 1620;
+            RefreshesSS = true;
             //
             Initialize();
+        }
+
+        public float piercingShots_TickSize () {
+            float damage = Damage * Talents.PiercingShots * 0.10f;
+            float NumTicks = 8f;
+            return damage * DamageBonus * (1f + StatS.BonusDamageMultiplier) * (1f + StatS.BonusNatureDamageMultiplier) / NumTicks;
+        }
+
+        public float piercingShots_GetDPS(float acts)
+        {
+            float dmgonuse = piercingShots_TickSize();
+            float numticks = 8f * acts;
+            float result = (dmgonuse * numticks) / FightDuration;
+            return result;
         }
     }
     public class CobraShot : Ability
@@ -128,11 +146,11 @@ namespace Rawr.Hunter.Skills
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
-            Name = "Steady Shot";
+            Name = "Cobra Shot";
             //AbilIterater = (int)CalculationOptionsHunter.Maintenances.MortalStrike_;
             ReqRangedWeap = true;
             ReqSkillsRange = true;
-            CastTime = 1.5f;
+            CastTime = 2f;
             //Targets += StatS.BonusTargets;
             DamageBase = combatFactors.AvgRwWeaponDmgUnhasted + (StatS.RangedAttackPower * 0.017f) + 277.21f;
             Initialize();
@@ -187,7 +205,7 @@ namespace Rawr.Hunter.Skills
             ReqSkillsRange = true;
             Targets = 10f; // TODO Zhok: 10?
             FocusCost = 40f;
-            DamageBase = cf.AvgRwWeaponDmgUnhasted * 0.55f;
+            DamageBase = cf.AvgRwWeaponDmgUnhasted * 1.20f;
             //
             Initialize();
         }
@@ -262,8 +280,9 @@ namespace Rawr.Hunter.Skills
             TimeBtwnTicks = 1f; // TODO Zhok: Haste?
             FocusCost = basefocuscost;
             // 47.35% RAP + 2035 (total damage)
-            DamageBase = (StatS.RangedAttackPower * 0.4735f) + 2035f;
-            DamageBonus = 1f + (Talents.TrapMastery * .10f);
+            // 4.2 Increased the damage by 40%
+            DamageBase = /*(StatS.RangedAttackPower * 0.4735f) +*/ 2850f;
+            DamageBonus = 1f + (Talents.TrapMastery * 0.10f);
 
             Initialize();
         }
@@ -282,7 +301,7 @@ namespace Rawr.Hunter.Skills
         }
         public float GainedThrilloftheHuntFocus() { return basefocuscost * 0.40f; }
     }
-    public class BlackArrowBuff : BuffEffect
+/*    public class BlackArrowBuff : BuffEffect
     {
         /// <summary>
         /// TODO Zhok: Thrill of the Hunt, Toxicology, Trap Mastery
@@ -309,6 +328,7 @@ namespace Rawr.Hunter.Skills
             Initialize();
         }
     }
+*/
     public class ExplosiveShot : DoT
     {
         private float basefocuscost = 50f;
@@ -359,7 +379,7 @@ namespace Rawr.Hunter.Skills
         }
         public float GainedThrilloftheHuntFocus() { return basefocuscost * 0.40f; }
     }
-    public class PiercingShots : DoT
+/*    public class PiercingShots : DoT
     {
         /// <summary>
         /// <b>Piercing Shots</b>
@@ -407,7 +427,7 @@ namespace Rawr.Hunter.Skills
 
                 float TheDamage = (damageUnder75 + damageOver75) * DmgMod;
 
-                float TickSize = (TheDamage * GlyphMOD) / NumTicks;*/
+                float TickSize = (TheDamage * GlyphMOD) / NumTicks;
 
                 return Damage * DamageBonus * (1f + StatS.BonusDamageMultiplier) * (1f + StatS.BonusShadowDamageMultiplier) / NumTicks;
             }
@@ -415,11 +435,12 @@ namespace Rawr.Hunter.Skills
         public override float GetDPS(float acts)
         {
             float dmgonuse = TickSize;
-            float numticks = NumTicks * (acts /*- addMisses - addDodges - addParrys*/);
+            float numticks = NumTicks * (acts /*- addMisses - addDodges - addParrys);
             float result = GetDmgOverTickingTime(acts) / FightDuration;
             return result;
         }
     }
+*/
     #endregion
 
     #region Stings
