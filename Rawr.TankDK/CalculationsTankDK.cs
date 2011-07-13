@@ -1472,29 +1472,8 @@ Points individually may be important.",
             }
             #endregion
             #endregion
-            #region Filter out the duplicate Fallen Crusader Runes:
-            if (character.OffHand != null
-                && character.OffHandEnchant != null
-                && character.OffHandEnchant == Enchant.FindEnchant(3368, ItemSlot.OneHand, character)
-                && character.MainHandEnchant == character.OffHandEnchant)
-            {
-                bool bFC1Found = false;
-                bool bFC2Found = false;
-                foreach (SpecialEffect se1 in statsTotal.SpecialEffects())
-                {
-                    // if we've already found them, and we're seeing them again, then remove these repeats.
-                    if (bFC1Found && se1.Equals(_SE_FC1))
-                        statsTotal.RemoveSpecialEffect(se1);
-                    else if (bFC2Found && se1.Equals(_SE_FC2))
-                        statsTotal.RemoveSpecialEffect(se1);
-                    else if (se1.Equals(_SE_FC1))
-                        bFC1Found = true;
-                    else if (se1.Equals(_SE_FC2))
-                        bFC2Found = true;
-                }
-            }
-            #endregion
 
+            Rawr.DPSDK.CalculationsDPSDK.RemoveDuplicateRunes(statsTotal, character, statsTotal.bDW);
             Rawr.DPSDK.CalculationsDPSDK.AccumulateTalents(statsTotal, character);
             Rawr.DPSDK.CalculationsDPSDK.AccumulatePresenceStats(statsTotal, Presence.Blood, character.DeathKnightTalents);
 

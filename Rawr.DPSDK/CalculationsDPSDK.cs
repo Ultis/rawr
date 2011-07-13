@@ -549,13 +549,16 @@ namespace Rawr.DPSDK
                 }
                 calc.WhiteHitChance = (a == null ? 0 : a.HitChance + a.CritChance + .23f); // + glancing
                 calc.MHWeaponDPS = (a == null ? 0 : rot.GetAbilityOfType(DKability.White).DPS);
-                calc.MHWeaponDamage = combatTable.MH.damage;
-                calc.MHAttackSpeed = combatTable.MH.hastedSpeed;
-                calc.DodgedAttacks = combatTable.MH.chanceDodged;
-                calc.AvoidedAttacks = combatTable.MH.chanceDodged;
-                if (!hBossOptions.InBack)
-                    calc.AvoidedAttacks += combatTable.MH.chanceParried;
-                calc.MissedAttacks = combatTable.MH.chanceMissed;
+                if (null != combatTable.MH)
+                {
+                    calc.MHWeaponDamage = combatTable.MH.damage;
+                    calc.MHAttackSpeed = combatTable.MH.hastedSpeed;
+                    calc.DodgedAttacks = combatTable.MH.chanceDodged;
+                    calc.AvoidedAttacks = combatTable.MH.chanceDodged;
+                    if (!hBossOptions.InBack)
+                        calc.AvoidedAttacks += combatTable.MH.chanceParried;
+                    calc.MissedAttacks = combatTable.MH.chanceMissed;
+                }
                 if (null != combatTable.OH)
                 {
                     a = rot.GetAbilityOfType(DKability.WhiteOH);
@@ -642,7 +645,8 @@ namespace Rawr.DPSDK
         /// This is used for gems, which don't have a slot on the character to fit in, so are just
         /// added onto the character, in order to get gem calculations.</param>
         /// <returns>A Stats object containing the final totaled values of all character stats.</returns>
-        public override Stats GetCharacterStats(Character character, Item additionalItem) {
+        public override Stats GetCharacterStats(Character character, Item additionalItem) 
+        {
             StatsDK statsTotal = new StatsDK();
             if (null == character)
             {
@@ -655,51 +659,24 @@ namespace Rawr.DPSDK
             CalculationOptionsDPSDK calcOpts = character.CalculationOptions as CalculationOptionsDPSDK;
             if (null == calcOpts) { calcOpts = new CalculationOptionsDPSDK(); }
             DeathKnightTalents talents = character.DeathKnightTalents;
-            if (null == talents)
-            {
-#if DEBUG
-                throw new Exception("talents is Null");
-#else
-                return statsTotal;
-#endif
-            }
-            Stats statsRace = GetRaceStats(character);
-            Stats statsBaseGear = GetItemStats(character, additionalItem);
+            if (null == talents) { return statsTotal; }
 
-            #region Filter out the duplicate Fallen Crusader Runes:
-            if (character.OffHand != null
-                && character.OffHandEnchant != null
-                && character.OffHandEnchant == Enchant.FindEnchant(3368, ItemSlot.OneHand, character)
-                && character.MainHandEnchant == character.OffHandEnchant)
-            {
-                bool bFC1Found = false;
-                bool bFC2Found = false;
-                foreach (SpecialEffect se1 in statsBaseGear.SpecialEffects())
-                {
-                    // if we've already found them, and we're seeing them again, then remove these repeats.
-                    if (bFC1Found && se1.Equals(_SE_FC1))
-                        statsBaseGear.RemoveSpecialEffect(se1);
-                    else if (bFC2Found && se1.Equals(_SE_FC2))
-                        statsBaseGear.RemoveSpecialEffect(se1);
-                    else if (se1.Equals(_SE_FC1))
-                        bFC1Found = true;
-                    else if (se1.Equals(_SE_FC2))
-                        bFC2Found = true;
-                }
-            }
-            #endregion
+            statsTotal.Accumulate(GetRaceStats(character));
+            AccumulateItemStats(statsTotal, character, additionalItem);
 
-            StatsDK statsBuffs = GetBuffsStats(character);
+            statsTotal.bDW = false;
+            if (character.MainHand != null && character.OffHand != null) statsTotal.bDW = true;
+            RemoveDuplicateRunes(statsTotal, character, statsTotal.bDW);
 
-            statsTotal.Accumulate(statsBaseGear);
-            statsTotal.Accumulate(statsBuffs);
-            statsTotal.Accumulate(statsRace);
+            AccumulateBuffsStats(statsTotal, character.ActiveBuffs);
+
             statsTotal = GetRelevantStats(statsTotal) as StatsDK; // GetRel removes any stats specific to the StatsDK object.
             AccumulateTalents(statsTotal, character);
             AccumulatePresenceStats(statsTotal, calcOpts.presence, talents);
 
             return (statsTotal);
         }
+
         public StatsDK GetBuffsStats(Character character)
         {
             List<Buff> removedBuffs = new List<Buff>();
@@ -1963,10 +1940,67 @@ namespace Rawr.DPSDK
             character.BossOptions.InBackPerc_Melee = 1.00d;
         }
 
+        public static void RemoveDuplicateRunes(Stats statsBaseGear, Character character, bool bDW)
+        {
+            if (bDW // Check for DW.
+                && (character.MainHandEnchant != null && character.OffHandEnchant != null) // Check that both weapons have enchants.
+                && character.MainHandEnchant == character.OffHandEnchant) // check that we have duplicate enchants.
+            {
+                bool bEffect1Found = false;
+                bool bEffect2Found = false;
+                switch (character.MainHandEnchant.Id)
+                {
+                    case 3368: // FC
+                        foreach (SpecialEffect se1 in statsBaseGear.SpecialEffects())
+                        {
+                            // if we've already found them, and we're seeing them again, then remove these repeats.
+                            if (bEffect1Found && se1.Equals(_SE_FC1))
+                                statsBaseGear.RemoveSpecialEffect(se1);
+                            else if (bEffect2Found && se1.Equals(_SE_FC2))
+                                statsBaseGear.RemoveSpecialEffect(se1);
+                            else if (se1.Equals(_SE_FC1))
+                                bEffect1Found = true;
+                            else if (se1.Equals(_SE_FC2))
+                                bEffect2Found = true;
+                        }
+                        break;
+                    case 3369: // Cinder
+                        foreach (SpecialEffect se1 in statsBaseGear.SpecialEffects())
+                        {
+                            // if we've already found them, and we're seeing them again, then remove these repeats.
+                            if (bEffect1Found && se1.Equals(_SE_CG))
+                                statsBaseGear.RemoveSpecialEffect(se1);
+                            else if (se1.Equals(_SE_CG))
+                                bEffect1Found = true;
+                        }
+                        break;
+                    case 3370: // RazorIce
+                        foreach (SpecialEffect se1 in statsBaseGear.SpecialEffects())
+                        {
+                            // if we've already found them, and we're seeing them again, then remove these repeats.
+                            if (bEffect1Found && se1.Equals(_SE_RI))
+                            {
+                                statsBaseGear.BonusFrostWeaponDamage -= .02f;
+                                statsBaseGear.RemoveSpecialEffect(se1);
+                            }
+                            else if (se1.Equals(_SE_RI))
+                                bEffect1Found = true;
+                        }
+                        break;
+                }
+
+            }
+        }
+
         #region Static SpecialEffects
         // Enchant: Rune of Fallen Crusader
         public static readonly SpecialEffect _SE_FC1 = new SpecialEffect(Trigger.DamageDone, new Stats() { BonusStrengthMultiplier = .15f }, 15f, 0f, -2f, 1, false);
         public static readonly SpecialEffect _SE_FC2 = new SpecialEffect(Trigger.DamageDone, new Stats() { HealthRestoreFromMaxHealth = .03f }, 0, 0f, -2f, 1, false);
+        // Enchant: Rune of Razorice
+        public static readonly SpecialEffect _SE_RI = new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusFrostDamageMultiplier = 0.02f }, 20f, 0f, 1f, 5);
+        // Enchant: Rune of Cinderglacier
+        public static readonly SpecialEffect _SE_CG = new SpecialEffect(Trigger.DamageDone, new Stats() { CinderglacierProc = 2f }, 0f, 0f, -1.5f);
+        // Icebound Fort
         private static readonly SpecialEffect[] _SE_IBF = new SpecialEffect[] {
             new SpecialEffect(Trigger.Use, new Stats() { StunDurReduc = 1f, DamageTakenReductionMultiplier = 0.20f }, 12 * 1.0f, 3 * 60  ), // Default IBF
             new SpecialEffect(Trigger.Use, new Stats() { StunDurReduc = 1f, DamageTakenReductionMultiplier = 0.20f }, 12 * 1.5f, 3 * 60  ), // IBF w/ 4T11
