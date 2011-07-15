@@ -836,9 +836,12 @@ Points individually may be important.",
             double survivalRaw = origValue / 1000f;
 
             //Implement Survival Soft Cap
-            if (survivalRaw <= survivalCap) {
+            if (survivalRaw <= survivalCap) 
+            {
                 cappedValue = 1000f * (float)survivalRaw;
-            } else {
+            }
+            else 
+            {
                 double x = survivalRaw;
                 double cap = survivalCap;
                 double fourToTheNegativeFourThirds = Math.Pow(4d, -4d / 3d);
@@ -1089,6 +1092,12 @@ Points individually may be important.",
                 return 0;
         }
 
+        /// <summary>
+        /// Get Damage Per Second
+        /// </summary>
+        /// <param name="fPerUnitDamage">Damage per incident</param>
+        /// <param name="fDamFrequency">Damage Frequency in Seconds</param>
+        /// <returns></returns>
         private float GetDPS(float fPerUnitDamage, float fDamFrequency)
         {
             if (fDamFrequency > 0)
@@ -1160,7 +1169,7 @@ Points individually may be important.",
 
             calcs = GetCharacterCalculations(TDK, stats, rot, true, needsDisplayCalculations);
 
-            // Burst
+            // Burst as On-Use Abilties.
             calcs.Burst = calcs.Survivability - basecalcs.Survivability;
             if (calcs.Burst < 0) { calcs.Burst = 0; } // This should never happen but just in case
             calcs.Burst += calcs.Mitigation - basecalcs.Mitigation;
@@ -1201,8 +1210,6 @@ Points individually may be important.",
                 float.IsNaN(calcs.Survivability) ||
                 float.IsNaN(calcs.Burst) ||
                 float.IsNaN(calcs.Mitigation) ||
-                //				float.IsNaN(calcs.BurstTime) ||
-                //				float.IsNaN(calcs.ReactionTime) ||
                 float.IsNaN(calcs.OverallPoints))
             {
 #if DEBUG
@@ -1269,40 +1276,57 @@ Points individually may be important.",
             // How much of what kind of damage does this boss deal with?
             #region ** Incoming Boss Damage **
             // Let's make sure this is even valid
-            foreach (Attack a in TDK.bo.Attacks) {
+            float DPHit = 0;
+            float DPTick = 0;
+            foreach (Attack a in TDK.bo.Attacks)
+            {
                 // PlayerRole on calcOpts is MT=0, OT=1, TT=2, Any Tank = 3
                 // Any Tank means it should be affected by anything that affects a tanking role
                 if (a.AffectsRole[PLAYER_ROLES.MainTank] && (TDK.calcOpts.PlayerRole == 0 || TDK.calcOpts.PlayerRole == 3)
                     || a.AffectsRole[PLAYER_ROLES.OffTank] && (TDK.calcOpts.PlayerRole == 1 || TDK.calcOpts.PlayerRole == 3)
                     || a.AffectsRole[PLAYER_ROLES.TertiaryTank] && (TDK.calcOpts.PlayerRole == 2 || TDK.calcOpts.PlayerRole == 3))
                 {
+                    // TODO: Figure out a way to get the phase changes handled.
+                    DPHit = a.DamagePerHit;
+                    DPTick = a.DamagePerTick;
+                    if (a.DamageIsPerc)
+                    {
+#if DEBUG
+                        if ((a.DamagePerHit >= 1f) || (a.DamagePerTick >= 1f))
+                            throw new Exception("Percentage Damage is >= 100%.");
+#endif
+                        DPHit = a.DamagePerHit * stats.Health;
+                        DPTick = a.DamagePerTick * stats.Health;
+                    }
+
                     // Bleeds vs Magic vs Physical
-                    if (a.DamageType == ItemDamageType.Physical) {
+                    if (a.DamageType == ItemDamageType.Physical) 
+                    {
                         // Bleed or Physical
                         // Need to figure out how to determine bleed vs. physical hits.
                         // Also need to balance out the physical hits and balance the hit rate.
                         // JOTHAY NOTE: Bleeds are DoTs
                         if (a.IsDoT) {
-                            fCurrentDTPS[(int)SurvivalSub.Bleed] += GetDPS(a.DamagePerHit, a.AttackSpeed);
-                            if (fCurrentDmgBiggestHit[(int)SurvivalSub.Bleed] < a.DamagePerHit + (a.DamagePerTick * a.NumTicks)) {
-                                fCurrentDmgBiggestHit[(int)SurvivalSub.Bleed] = a.DamagePerHit + (a.DamagePerTick * a.NumTicks);
-                            }
-                        } else {
-                            fCurrentDTPS[(int)SurvivalSub.Physical] += GetDPS(a.DamagePerHit, a.AttackSpeed);
-                            if (fCurrentDmgBiggestHit[(int)SurvivalSub.Physical] < a.DamagePerHit) {
-                                fCurrentDmgBiggestHit[(int)SurvivalSub.Physical] = a.DamagePerHit;
-                            }
+                            fCurrentDTPS[(int)SurvivalSub.Bleed] += GetDPS(DPHit, a.AttackSpeed) + GetDPS(DPTick, a.TickInterval);
+                            if (fCurrentDmgBiggestHit[(int)SurvivalSub.Bleed] < DPHit + (DPTick * a.NumTicks))
+                                fCurrentDmgBiggestHit[(int)SurvivalSub.Bleed] = DPHit + (DPTick * a.NumTicks);
+                        } 
+                        else 
+                        {
+                            fCurrentDTPS[(int)SurvivalSub.Physical] += GetDPS(DPHit, a.AttackSpeed);
+                            if (fCurrentDmgBiggestHit[(int)SurvivalSub.Physical] < DPHit)
+                                fCurrentDmgBiggestHit[(int)SurvivalSub.Physical] = DPHit;
                         }
-                    } else {
-                        // Magic
-                        fCurrentDTPS[(int)SurvivalSub.Magic] += GetDPS(a.DamagePerHit, a.AttackSpeed);
-                        if (fCurrentDmgBiggestHit[(int)SurvivalSub.Magic] < a.DamagePerHit) {
-                            fCurrentDmgBiggestHit[(int)SurvivalSub.Magic] = a.DamagePerHit;
-                        }
+                    } 
+                    else 
+                    {
+                        // Magic now covering magical dots.
+                        fCurrentDTPS[(int)SurvivalSub.Magic] += GetDPS(DPHit, a.AttackSpeed) + GetDPS(DPTick, a.TickInterval);
+                        if (fCurrentDmgBiggestHit[(int)SurvivalSub.Magic] < DPHit + (DPTick * a.NumTicks))
+                            fCurrentDmgBiggestHit[(int)SurvivalSub.Magic] = DPHit + (DPTick * a.NumTicks);
                     }
                 }
             }
-            fTotalDTPS = 0;
             fTotalDTPS += fCurrentDTPS[(int)SurvivalSub.Physical];
             fTotalDTPS += fCurrentDTPS[(int)SurvivalSub.Bleed];
             fTotalDTPS += fCurrentDTPS[(int)SurvivalSub.Magic];
@@ -1378,12 +1402,8 @@ Points individually may be important.",
                 // Assuming we are just 100% absorbing the attack, no damage
                 if (f > 0) { calcs.DTPS += f; }
             }
-//#if DEBUG
             // Have to ensure we don't divide by 0
             calcs.Mitigation = StatConversion.MitigationScaler / (Math.Max(1f, calcs.DTPS) / fTotalDTPS);
-//#else
-            //foreach (float f in fCurrentMitigation) calcs.Mitigation += f;
-//#endif
             #endregion
 
             return calcs;
