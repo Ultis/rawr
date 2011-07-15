@@ -389,7 +389,7 @@ namespace Rawr.Mage
             {
                 if (castingState.Solver.Mage4T12)
                 {
-                    CostModifier -= 0.1f;
+                    CostAmplifier *= 0.9f;
                 }
                 else
                 {
