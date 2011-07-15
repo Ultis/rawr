@@ -904,6 +904,11 @@ namespace Rawr.Tree
             }
         }
 
+        void addPassiveHealing(ActionDistribution dist, TreeStats stats)
+        {
+            dist.AddPassive((int)TreePassive.HealingTrinkets, stats.Healed * stats.DirectHealMultiplier * getCritMultiplier(stats, 0, 0));
+        }
+
         void addSelfHealing(ActionDistribution dist, ContinuousAction[] actions, ComputedSpell[] spells, double weight)
         {
             dist.AddPassive((int)TreePassive.Perserverance, PerseveranceHPS * weight);
@@ -926,7 +931,7 @@ namespace Rawr.Tree
                 if (!burst)
                     dist.MaxMPS = calc.ManaRegen;
 
-                dist.AddPassive((int)TreePassive.HealingTrinkets, stats.Healed);
+                addPassiveHealing(dist, stats);
                 addSelfHealing(dist, actions, spells, 1);
 
                 addLifebloomRefresh(dist, actions, spells[(int)TreeSpell.Lifebloom], data, refreshLBWithDHs, opts.RejuvenationTankDuringRaid);
@@ -984,7 +989,7 @@ namespace Rawr.Tree
                 if (!burst)
                     dist.MaxMPS = calc.ManaRegen;
 
-                dist.AddPassive((int)TreePassive.HealingTrinkets, opts.TankRaidHealingWeight * stats.Healed);
+                addPassiveHealing(dist, stats);
                 addSelfHealing(dist, actions, spells, opts.TankRaidHealingWeight);
 
                 addLifebloomRefresh(dist, actions, spells[(int)TreeSpell.Lifebloom], data, Talents.EmpoweredTouch != 0, true);
