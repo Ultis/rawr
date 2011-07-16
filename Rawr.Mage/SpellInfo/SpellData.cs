@@ -907,7 +907,20 @@ namespace Rawr.Mage
         {
             MageTalents mageTalents = solver.MageTalents;
             float weight = weight0 + weight1 + weight2 + weight3;
-            cycle.CastTime += weight * rawSpell.CastTime - castTimeMultiplier * (weight1 * 0.1f + weight2 * 0.2f + weight3 * 0.3f) * rawSpell.CastTime / rawSpell.BaseCastTime;
+            float hasteMultiplier = (rawSpell.CastTime - rawSpell.Latency) / (rawSpell.BaseCastTime);
+            // if some are below gcd then we have to use different calculations
+            if (hasteMultiplier * (rawSpell.BaseCastTime - castTimeMultiplier * 0.3f) <= Math.Max(hasteMultiplier * rawSpell.GlobalCooldown, Spell.GlobalCooldownLimit))
+            {
+                float channelReduction;
+                cycle.CastTime += weight0 * CalculateCastTime(cycle.CastingState, rawSpell.InterruptProtection, rawSpell.CritRate, false, rawSpell.BaseCastTime, out channelReduction);
+                cycle.CastTime += weight1 * CalculateCastTime(cycle.CastingState, rawSpell.InterruptProtection, rawSpell.CritRate, false, rawSpell.BaseCastTime - castTimeMultiplier * 0.1f, out channelReduction);
+                cycle.CastTime += weight2 * CalculateCastTime(cycle.CastingState, rawSpell.InterruptProtection, rawSpell.CritRate, false, rawSpell.BaseCastTime - castTimeMultiplier * 0.2f, out channelReduction);
+                cycle.CastTime += weight3 * CalculateCastTime(cycle.CastingState, rawSpell.InterruptProtection, rawSpell.CritRate, false, rawSpell.BaseCastTime - castTimeMultiplier * 0.3f, out channelReduction);
+            }
+            else
+            {
+                cycle.CastTime += weight * rawSpell.CastTime - castTimeMultiplier * (weight1 * 0.1f + weight2 * 0.2f + weight3 * 0.3f) * hasteMultiplier;
+            }
             cycle.CastProcs += weight * rawSpell.CastProcs;
             cycle.CastProcs2 += weight * rawSpell.CastProcs2;
             cycle.NukeProcs += weight * rawSpell.NukeProcs;
@@ -924,6 +937,7 @@ namespace Rawr.Mage
 
             float multiplier = (weight * rawSpell.AdditiveSpellModifier + arcaneBlastDamageMultiplier * (weight1 + 2 * weight2 + 3 * weight3)) / rawSpell.AdditiveSpellModifier;
             cycle.DpsPerSpellPower += multiplier * rawSpell.DamagePerSpellPower;
+            cycle.DpsPerCrit += multiplier * rawSpell.DamagePerCrit;
             //cycle.DpsPerMastery += multiplier * rawSpell.DamagePerMastery;
             cycle.damagePerSecond += multiplier * rawSpell.AverageDamage;
             cycle.threatPerSecond += multiplier * rawSpell.AverageThreat;
@@ -933,7 +947,21 @@ namespace Rawr.Mage
         {
             MageTalents mageTalents = solver.MageTalents;
             float weight = weight0 + weight1 + weight2 + weight3 + weight4;
-            cycle.CastTime += weight * rawSpell.CastTime - castTimeMultiplier * (weight1 * 0.1f + weight2 * 0.2f + weight3 * 0.3f + weight4 * 0.4f) * rawSpell.CastTime / rawSpell.BaseCastTime;
+            float hasteMultiplier = (rawSpell.CastTime - rawSpell.Latency) / (rawSpell.BaseCastTime);
+            // if some are below gcd then we have to use different calculations
+            if (hasteMultiplier * (rawSpell.BaseCastTime - castTimeMultiplier * 0.4f) <= Math.Max(hasteMultiplier * rawSpell.GlobalCooldown, Spell.GlobalCooldownLimit))
+            {
+                float channelReduction;
+                cycle.CastTime += weight0 * CalculateCastTime(cycle.CastingState, rawSpell.InterruptProtection, rawSpell.CritRate, false, rawSpell.BaseCastTime, out channelReduction);
+                cycle.CastTime += weight1 * CalculateCastTime(cycle.CastingState, rawSpell.InterruptProtection, rawSpell.CritRate, false, rawSpell.BaseCastTime - castTimeMultiplier * 0.1f, out channelReduction);
+                cycle.CastTime += weight2 * CalculateCastTime(cycle.CastingState, rawSpell.InterruptProtection, rawSpell.CritRate, false, rawSpell.BaseCastTime - castTimeMultiplier * 0.2f, out channelReduction);
+                cycle.CastTime += weight3 * CalculateCastTime(cycle.CastingState, rawSpell.InterruptProtection, rawSpell.CritRate, false, rawSpell.BaseCastTime - castTimeMultiplier * 0.3f, out channelReduction);
+                cycle.CastTime += weight4 * CalculateCastTime(cycle.CastingState, rawSpell.InterruptProtection, rawSpell.CritRate, false, rawSpell.BaseCastTime - castTimeMultiplier * 0.4f, out channelReduction);
+            }
+            else
+            {
+                cycle.CastTime += weight * rawSpell.CastTime - castTimeMultiplier * (weight1 * 0.1f + weight2 * 0.2f + weight3 * 0.3f + weight4 * 0.4f) * hasteMultiplier;
+            }
             cycle.CastProcs += weight * rawSpell.CastProcs;
             cycle.CastProcs2 += weight * rawSpell.CastProcs2;
             cycle.NukeProcs += weight * rawSpell.NukeProcs;
@@ -950,6 +978,7 @@ namespace Rawr.Mage
 
             float multiplier = (weight * rawSpell.AdditiveSpellModifier + arcaneBlastDamageMultiplier * (weight1 + 2 * weight2 + 3 * weight3 + 4 * weight4)) / rawSpell.AdditiveSpellModifier;
             cycle.DpsPerSpellPower += multiplier * rawSpell.DamagePerSpellPower;
+            cycle.DpsPerCrit += multiplier * rawSpell.DamagePerCrit;
             //cycle.DpsPerMastery += multiplier * rawSpell.DamagePerMastery;
             cycle.damagePerSecond += multiplier * rawSpell.AverageDamage;
             cycle.threatPerSecond += multiplier * rawSpell.AverageThreat;
