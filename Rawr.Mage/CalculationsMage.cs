@@ -499,6 +499,7 @@ namespace Rawr.Mage
             List<int> segmentList = new List<int>();
             List<int> manaSegmentList = new List<int>();
             List<VariableType> variableTypeList = new List<VariableType>();
+            List<CycleId> manaNeutralMixList = new List<CycleId>();
             for (int i = 0; i < calculations.SolutionVariable.Count; i++)
             {
                 if (calculations.Solution[i] > 0)
@@ -521,6 +522,17 @@ namespace Rawr.Mage
                     else
                     {
                         spellId = CycleId.None;
+                    }
+                    if (spellId == CycleId.ArcaneManaNeutral)
+                    {
+                        if (!manaNeutralMixList.Contains(calculations.SolutionVariable[i].Cycle.Mix1))
+                        {
+                            manaNeutralMixList.Add(calculations.SolutionVariable[i].Cycle.Mix1);
+                        }
+                        if (!manaNeutralMixList.Contains(calculations.SolutionVariable[i].Cycle.Mix2))
+                        {
+                            manaNeutralMixList.Add(calculations.SolutionVariable[i].Cycle.Mix2);
+                        }
                     }
                     int segment = calculations.SolutionVariable[i].Segment;
                     int manaSegment = calculations.SolutionVariable[i].ManaSegment;
@@ -548,6 +560,7 @@ namespace Rawr.Mage
             calculationOptions.IncrementalSetSegments = segmentList.ToArray();
             calculationOptions.IncrementalSetVariableType = variableTypeList.ToArray();
             calculationOptions.IncrementalSetManaSegment = manaSegmentList.ToArray();
+            calculationOptions.IncrementalSetManaNeutralMix = manaNeutralMixList.ToArray();
             if (calculationOptions.AutomaticArmor)
             {
                 calculationOptions.IncrementalSetArmor = calculations.MageArmor;

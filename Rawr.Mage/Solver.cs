@@ -106,7 +106,7 @@ namespace Rawr.Mage
         private int advancedConstraintsLevel;
         private bool integralMana;
         private string armor;
-        private bool useIncrementalOptimizations;
+        public bool UseIncrementalOptimizations { get; private set; }
         private bool useGlobalOptimizations;
         public bool NeedsDisplayCalculations { get; private set; }
         public bool SolveCycles { get; private set; }
@@ -1130,7 +1130,7 @@ namespace Rawr.Mage
             this.advancedConstraintsLevel = advancedConstraintsLevel;
             this.integralMana = integralMana;
             this.armor = armor;
-            this.useIncrementalOptimizations = useIncrementalOptimizations;
+            this.UseIncrementalOptimizations = useIncrementalOptimizations;
             this.useGlobalOptimizations = useGlobalOptimizations;
             this.NeedsDisplayCalculations = needsDisplayCalculations;
             this.SolveCycles = solveCycles;
@@ -1167,7 +1167,7 @@ namespace Rawr.Mage
 
         public CharacterCalculationsMage GetCharacterCalculations(Item additionalItem)
         {
-            ArraySet = ArrayPool.RequestArraySet(!useIncrementalOptimizations && NeedsDisplayCalculations && segmentCooldowns);
+            ArraySet = ArrayPool.RequestArraySet(!UseIncrementalOptimizations && NeedsDisplayCalculations && segmentCooldowns);
 
             Initialize(additionalItem);
 
@@ -1862,7 +1862,7 @@ namespace Rawr.Mage
 
             // if we're using incremental optimizations it's possible we know some effects won't be used
             // in that case we can skip them and possible save some constraints
-            if (useIncrementalOptimizations)
+            if (UseIncrementalOptimizations)
             {
                 int[] sortedStates = CalculationOptions.IncrementalSetSortedStates;
                 bool usesVolcanicPotion = false;
@@ -3092,7 +3092,7 @@ namespace Rawr.Mage
         private void ConstructSpells()
         {
             int column = 0;
-            if (useIncrementalOptimizations)
+            if (UseIncrementalOptimizations)
             {
                 int lastSegment = -1;
                 for (int index = 0; index < CalculationOptions.IncrementalSetStateIndexes.Length; index++)
@@ -3435,7 +3435,7 @@ namespace Rawr.Mage
                 {
                     scratchStateList.Add(CastingState.New(this, (int)StandardEffect.MirrorImage, false, 0));
                 }
-                if (useIncrementalOptimizations)
+                if (UseIncrementalOptimizations)
                 {
                     for (int index = 0; index < CalculationOptions.IncrementalSetStateIndexes.Length; index++)
                     {
@@ -3631,7 +3631,7 @@ namespace Rawr.Mage
                         upperBound = Math.Min(3, CalculationOptions.AverageCooldowns ? CalculationOptions.FightDuration / 120.0 : MaxManaGem);
                     }
                 }
-                if (useIncrementalOptimizations)
+                if (UseIncrementalOptimizations)
                 {
                     for (int index = 0; index < CalculationOptions.IncrementalSetStateIndexes.Length; index++)
                     {
@@ -3705,7 +3705,7 @@ namespace Rawr.Mage
                 double mps = -(1 + baseStats.BonusManaPotionEffectMultiplier) * ManaPotionValue;
                 double dps = 0;
                 double tps = (1 + baseStats.BonusManaPotionEffectMultiplier) * ManaPotionValue * 0.5f * threatFactor;
-                if (useIncrementalOptimizations)
+                if (UseIncrementalOptimizations)
                 {
                     for (int index = 0; index < CalculationOptions.IncrementalSetStateIndexes.Length; index++)
                     {
@@ -3844,7 +3844,7 @@ namespace Rawr.Mage
                         evoStateIVHero = CastingState.NewRaw(this, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins | (int)StandardEffect.Heroism | mask);
                     }
                 }
-                if (useIncrementalOptimizations && segmentMana && Specialization == Specialization.Arcane)
+                if (UseIncrementalOptimizations && segmentMana && Specialization == Specialization.Arcane)
                 {
                     for (int index = 0; index < CalculationOptions.IncrementalSetStateIndexes.Length; index++)
                     {
@@ -4091,7 +4091,7 @@ namespace Rawr.Mage
         {
             if (Character.Ranged != null && Character.Ranged.Item != null && Character.Ranged.Item.Type == ItemType.Wand)
             {
-                if (useIncrementalOptimizations)
+                if (UseIncrementalOptimizations)
                 {
                     bool first = true;
                     Cycle wand = null;
@@ -4194,7 +4194,7 @@ namespace Rawr.Mage
             double dps = 0.0f;
             double tps = 0.0f;
             double mps = -(BaseState.ManaRegen * (1 - CalculationOptions.Fragmentation) + BaseState.ManaRegen5SR * CalculationOptions.Fragmentation);
-            if (useIncrementalOptimizations)
+            if (UseIncrementalOptimizations)
             {
                 for (int index = 0; index < CalculationOptions.IncrementalSetStateIndexes.Length; index++)
                 {
@@ -4963,7 +4963,7 @@ namespace Rawr.Mage
                             {
                                 // if we're using incremental optimizations and both are non-item based then we can
                                 // remove the constraint if they won't be used together
-                                if (useIncrementalOptimizations && cooli.StandardEffect != StandardEffect.None && coolj.StandardEffect != StandardEffect.None)
+                                if (UseIncrementalOptimizations && cooli.StandardEffect != StandardEffect.None && coolj.StandardEffect != StandardEffect.None)
                                 {
                                     int mask = (cooli.Mask | coolj.Mask);
                                     int[] sortedStates = CalculationOptions.IncrementalSetSortedStates;
@@ -5681,7 +5681,7 @@ namespace Rawr.Mage
             {
                 stateList.Clear();
             }
-            if (useIncrementalOptimizations)
+            if (UseIncrementalOptimizations)
             {
                 int[] sortedStates = CalculationOptions.IncrementalSetSortedStates;
                 for (int incrementalSortedIndex = 0; incrementalSortedIndex < sortedStates.Length; incrementalSortedIndex++)
@@ -5817,7 +5817,7 @@ namespace Rawr.Mage
                 return vx.Mps.CompareTo(vy.Mps);
             });
 
-            lp.SolvePrimalQuadratic(rowManaRegen, sort, 1 / (BaseStats.Mana * ManaRegenLPScaling), useIncrementalOptimizations, CalculationOptions.TargetDamage > 0 ? lp.Columns + rowFightDuration : -1, CalculationOptions.TargetDamage);
+            lp.SolvePrimalQuadratic(rowManaRegen, sort, 1 / (BaseStats.Mana * ManaRegenLPScaling), UseIncrementalOptimizations, CalculationOptions.TargetDamage > 0 ? lp.Columns + rowFightDuration : -1, CalculationOptions.TargetDamage);
         }
         #endregion
 

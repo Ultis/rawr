@@ -144,6 +144,8 @@ namespace Rawr.Mage
         public string Name;
         public string Note;
         public double DpmConversion; // used by mana neutral cycle to improve numerical stability of solver
+        public CycleId Mix1;
+        public CycleId Mix2;
         public CycleId CycleId;
 
         public override string ToString()
@@ -311,6 +313,8 @@ namespace Rawr.Mage
         {
             Note = null;
             DpmConversion = 0;
+            Mix1 = CycleId.None;
+            Mix2 = CycleId.None;
 
             CastingState = castingState;
             calculated = false;

@@ -2810,24 +2810,16 @@ namespace Rawr.Mage
 
     public static class ArcaneManaNeutral
     {
+        private static readonly CycleId[] globalCycleIds = new CycleId[] { CycleId.ArcaneBlastSpam, CycleId.ABSpam4AM, CycleId.ABSpam34AM, CycleId.ABSpam234AM, CycleId.AB3ABar123AM, CycleId.AB4ABar1234AM, CycleId.AB4ABar34AM, CycleId.AB4ABar4AM, CycleId.AB3ABar023AM, CycleId.AB23ABar023AM, CycleId.AB2ABar02AMABABar, CycleId.ABSpam0234AMABar, CycleId.ABSpam0234AMABABar, CycleId.AB2ABar2AMABar0AMABABar, CycleId.ABABar1AM };
+
         public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
+            CycleId[] cycleIds = castingState.Solver.UseIncrementalOptimizations ? castingState.CalculationOptions.IncrementalSetManaNeutralMix : globalCycleIds;
             List<Cycle> cycles = new List<Cycle>();
-            cycles.Add(castingState.GetCycle(CycleId.ArcaneBlastSpam));
-            cycles.Add(castingState.GetCycle(CycleId.ABSpam4AM));
-            cycles.Add(castingState.GetCycle(CycleId.ABSpam34AM));
-            cycles.Add(castingState.GetCycle(CycleId.ABSpam234AM));
-            cycles.Add(castingState.GetCycle(CycleId.AB3ABar123AM));
-            cycles.Add(castingState.GetCycle(CycleId.AB4ABar1234AM));
-            cycles.Add(castingState.GetCycle(CycleId.AB4ABar34AM));
-            cycles.Add(castingState.GetCycle(CycleId.AB4ABar4AM));
-            cycles.Add(castingState.GetCycle(CycleId.AB3ABar023AM));
-            cycles.Add(castingState.GetCycle(CycleId.AB23ABar023AM));
-            cycles.Add(castingState.GetCycle(CycleId.AB2ABar02AMABABar));
-            cycles.Add(castingState.GetCycle(CycleId.ABSpam0234AMABar));
-            cycles.Add(castingState.GetCycle(CycleId.ABSpam0234AMABABar));
-            cycles.Add(castingState.GetCycle(CycleId.AB2ABar2AMABar0AMABABar));
-            cycles.Add(castingState.GetCycle(CycleId.ABABar1AM));
+            foreach (var cid in cycleIds)
+            {
+                cycles.Add(castingState.GetCycle(cid));
+            }
 
             cycles.Sort((c1, c2) => c1.ManaPerSecond.CompareTo(c2.ManaPerSecond));
 
@@ -2859,6 +2851,8 @@ namespace Rawr.Mage
                         Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
                         cycle.Name = "ArcaneManaNeutral";
                         cycle.Note = string.Format("Mix {0:F}% {1} and {2:F}% {3}", 100 * (1 - k), cycles[i].Name, 100 * k, cycles[maxj].Name);
+                        cycle.Mix1 = cycles[i].CycleId;
+                        cycle.Mix2 = cycles[maxj].CycleId;
                         cycle.AddCycle(needsDisplayCalculations, cycles[i], (1 - k) / cycles[i].CastTime);
                         cycle.AddCycle(needsDisplayCalculations, cycles[maxj], k / cycles[maxj].CastTime);
                         cycle.DpmConversion = maxDpm;

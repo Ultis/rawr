@@ -909,6 +909,8 @@ namespace Rawr.Mage
         [XmlIgnore]
         public int[] IncrementalSetManaSegment;
         [XmlIgnore]
+        public CycleId[] IncrementalSetManaNeutralMix;
+        [XmlIgnore]
         public Rawr.Mage.SequenceReconstruction.Sequence SequenceReconstruction;
         [XmlIgnore]
         public bool AdviseAdvancedSolver;
