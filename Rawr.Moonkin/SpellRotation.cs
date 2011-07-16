@@ -180,8 +180,9 @@ namespace Rawr.Moonkin
             float attackSpeed = baseAttackSpeed / (1 + calcs.BasicStats.PhysicalHaste);
             // 580 = base DPS
             float damagePerHit = (580f + attackPower / 14.0f) * baseAttackSpeed;
-            // 5% base crit rate, inherit crit debuffs, and add melee crit depression
-            float critRate = 0.05f + StatConversion.NPC_LEVEL_CRIT_MOD[bossLevel - playerLevel];
+            // 5% base crit rate, inherit crit debuffs
+            // Remove crit depression, as it doesn't appear to have an effect (unless it's base ~10% crit rate)
+            float critRate = 0.05f;
             // White hit glancing rate
             float glancingRate = StatConversion.WHITE_GLANCE_CHANCE_CAP[bossLevel - playerLevel];
             // Hit rate determined by the amount of melee hit, not by spell hit
@@ -271,8 +272,12 @@ namespace Rawr.Moonkin
             RotationData.TreantDamage = talents.ForceOfNature == 0 ? 0 : DoTreeCalcs(calcs, spellPower, treantLifespan);
             // T12 2-piece: 2-sec cast, 5192-6035 damage, affected by hit, 15-sec duration
             // For now, hard-code the 8% multiplier from Earth and Moon
-            // Hard-coded 4.5 casts/proc because they never get off the full 7 casts, and sometimes don't even get 5 off
-            float T122PieceBaseDamage = (5192 + 6035) / 2f * 4.5f * spellHit * 1.08f;
+            // Hard-code 3.5 casts/proc based on EJ testing
+            float T122PieceHitDamage = (5192 + 6035) / 2f * 3.5f * spellHit * 1.08f;
+            // I'm going to assume a 150% crit modifier on the 2T12 proc until I'm told otherwise
+            float T122PieceCritDamage = T122PieceHitDamage * 1.5f;
+            // Use 2.5% crit rate based on EJ testing
+            float T122PieceBaseDamage = 0.975f * T122PieceHitDamage + 0.025f * T122PieceCritDamage;
             float mushroomBaseDamage = RotationData.WildMushroomCastMode == MushroomMode.Unused ? 0 : DoMushroomCalcs(calcs, spellPower, spellHit, spellCrit);
             float mushroomEclipseDamage = mushroomBaseDamage * eclipseBonus;
 
