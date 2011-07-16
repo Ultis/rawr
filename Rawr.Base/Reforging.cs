@@ -221,7 +221,7 @@ namespace Rawr
             return options;
         }
 
-        private static float CurrentStatValue(Item baseItem, int randomSuffixId, AdditiveStat stat)
+        public static float CurrentStatValue(Item baseItem, int randomSuffixId, AdditiveStat stat)
         {
             if (randomSuffixId == 0)
             {

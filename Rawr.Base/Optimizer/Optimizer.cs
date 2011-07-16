@@ -2399,6 +2399,15 @@ namespace Rawr.Optimizer
             public ItemSlot Socket;
         }
 
+        private struct ReforgingInformation
+        {
+            public CharacterSlot Slot;
+            public Item Item;
+            public int RandomSuffixId;
+            public Reforging Reforging;
+            public ItemInstance ItemInstance;
+        }
+
         private OptimizerCharacter BuildReplaceGemMutantCharacter(OptimizerCharacter parent, OptimizerCharacter recycledIndividual, out bool successful)
         {
             object[] items = GetRecycledItems(recycledIndividual) ?? new object[slotCount];
@@ -2552,6 +2561,90 @@ namespace Rawr.Optimizer
             return null;
         }
 
+        private OptimizerCharacter BuildSwapReforgeMutantCharacter(OptimizerCharacter parent, OptimizerCharacter recycledIndividual, out bool successful)
+        {
+            object[] items = GetRecycledItems(recycledIndividual) ?? new object[slotCount];
+            //object[] items = new object[slotCount];
+            Array.Copy(parent.Items, items, slotCount);
+            successful = false;
+
+            // do the work
+
+            // build a list of possible mutation points
+            List<ReforgingInformation> locationList = new List<ReforgingInformation>();
+            for (int slot = 0; slot < characterSlots; slot++)
+            {
+                if ((object)items[slot] != null)
+                {
+                    var item = (ItemInstance)items[slot];
+                    if (item.Reforging != null)
+                    {
+                        locationList.Add(new ReforgingInformation() { Slot = (CharacterSlot)slot, Reforging = item.Reforging, Item = item.Item, RandomSuffixId = item.RandomSuffixId, ItemInstance = item });
+                    }
+                }
+            }
+
+            Random rand = Rnd;
+            if (locationList.Count > 1)
+            {
+                ReforgingInformation mutation1;
+                ReforgingInformation mutation2;
+                int tries = 0;
+                // randomly select mutation point
+                bool promising;
+                do
+                {
+                    promising = true;
+                    int mutationIndex1 = rand.Next(locationList.Count);
+                    int mutationIndex2 = rand.Next(locationList.Count);
+                    mutation1 = locationList[mutationIndex1];
+                    mutation2 = locationList[mutationIndex2];
+                    if (mutation1.Reforging.Id == mutation2.Reforging.Id) promising = false;
+
+                    if (tries < 50)
+                    {
+                        if (mutation1.Reforging.ReforgeTo != mutation2.Reforging.ReforgeTo) promising = false;
+                        // if there are no reforges to same stat then try something random
+                    }
+                    // make sure that a reforge swap is actually valid
+                    float currentFrom1 = Reforging.CurrentStatValue(mutation1.Item, mutation1.RandomSuffixId, mutation2.Reforging.ReforgeFrom);
+                    float currentTo1 = Reforging.CurrentStatValue(mutation1.Item, mutation1.RandomSuffixId, mutation2.Reforging.ReforgeTo);
+                    if (!(currentFrom1 > 0 && currentTo1 == 0))
+                    {
+                        promising = false;
+                    }
+                    float currentFrom2 = Reforging.CurrentStatValue(mutation2.Item, mutation2.RandomSuffixId, mutation1.Reforging.ReforgeFrom);
+                    float currentTo2 = Reforging.CurrentStatValue(mutation2.Item, mutation2.RandomSuffixId, mutation1.Reforging.ReforgeTo);
+                    if (!(currentFrom2 > 0 && currentTo2 == 0))
+                    {
+                        promising = false;
+                    }
+                    tries++;
+                } while (tries < 100 && !promising);
+
+                if (promising)
+                {
+                    // mutate
+                    ItemInstance item1 = new ItemInstance(mutation1.ItemInstance.Item, mutation1.ItemInstance.RandomSuffixId, mutation1.ItemInstance.Gem1, mutation1.ItemInstance.Gem2, mutation1.ItemInstance.Gem3, mutation1.ItemInstance.Enchant, new Reforging(mutation1.Item, mutation1.RandomSuffixId, mutation2.Reforging.Id), mutation1.ItemInstance.Tinkering);
+                    ItemInstance item2 = new ItemInstance(mutation2.ItemInstance.Item, mutation2.ItemInstance.RandomSuffixId, mutation2.ItemInstance.Gem1, mutation2.ItemInstance.Gem2, mutation2.ItemInstance.Gem3, mutation2.ItemInstance.Enchant, new Reforging(mutation2.Item, mutation2.RandomSuffixId, mutation1.Reforging.Id), mutation2.ItemInstance.Tinkering);
+                    if (((lockedSlot == mutation1.Slot && lockedItems.Contains(item1)) || (lockedSlot != mutation1.Slot && itemAvailable.ContainsKey(item1.GemmedId))) && ((lockedSlot == mutation2.Slot && lockedItems.Contains(item2)) || (lockedSlot != mutation2.Slot && itemAvailable.ContainsKey(item2.GemmedId))))
+                    {
+                        successful = true;
+                        items[(int)mutation1.Slot] = item1;
+                        items[(int)mutation2.Slot] = item2;
+                    }
+                }
+            }
+
+            // create character
+
+            if (successful)
+            {
+                return GenerateIndividual(items, true, recycledIndividual);
+            }
+            return null;
+        }
+
         protected override OptimizerCharacter BuildMutantIndividual(OptimizerCharacter parent, OptimizerCharacter recycledIndividual)
         {
             bool successful;
@@ -2565,7 +2658,7 @@ namespace Rawr.Optimizer
             {
                 return base.BuildMutantIndividual(parent, recycledIndividual);
             }
-            else if (rand.NextDouble() < 0.5)
+            else if (rand.NextDouble() < 0.33)
             {
                 mutant = BuildReplaceGemMutantCharacter(parent, recycledIndividual, out successful);
                 if (!successful)
@@ -2573,9 +2666,17 @@ namespace Rawr.Optimizer
                     return base.BuildMutantIndividual(parent, recycledIndividual);
                 }
             }
-            else
+            else if (rand.NextDouble() < 0.5)
             {
                 mutant = BuildSwapGemMutantCharacter(parent, recycledIndividual, out successful);
+                if (!successful)
+                {
+                    return base.BuildMutantIndividual(parent, recycledIndividual);
+                }
+            }
+            else
+            {
+                mutant = BuildSwapReforgeMutantCharacter(parent, recycledIndividual, out successful);
                 if (!successful)
                 {
                     return base.BuildMutantIndividual(parent, recycledIndividual);
