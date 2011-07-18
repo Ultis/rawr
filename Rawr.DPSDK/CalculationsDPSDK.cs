@@ -514,7 +514,12 @@ namespace Rawr.DPSDK
             #endregion
 
             // Stats as Fire damage additive value proc.
+            if (stats.ArcaneDamage > 1) calc.dpsSub[(int)DKability.OtherArcane] += stats.ArcaneDamage;
             if (stats.FireDamage > 1) calc.dpsSub[(int)DKability.OtherFire] += stats.FireDamage;
+            if (stats.FrostDamage > 1) calc.dpsSub[(int)DKability.OtherFrost] += stats.FrostDamage;
+            if (stats.HolyDamage > 1) calc.dpsSub[(int)DKability.OtherHoly] += stats.HolyDamage;
+            if (stats.NatureDamage > 1) calc.dpsSub[(int)DKability.OtherNature] += stats.NatureDamage;
+            if (stats.ShadowDamage > 1) calc.dpsSub[(int)DKability.OtherShadow] += stats.ShadowDamage;
             // Fire Damage Multiplier.
 
             calc.RotationTime = rot.CurRotationDuration;

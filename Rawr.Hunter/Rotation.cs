@@ -106,11 +106,11 @@ namespace Rawr.Hunter {
         // Buffs.
         public Skills.BestialWrath Bestial;
         public Skills.RapidFire Rapid;
-        public Skills.BlackArrowBuff BlackArrowB;
+//        public Skills.BlackArrowBuff BlackArrowB;
         public Skills.Readiness Ready;
 
         // DoTs.
-        public Skills.PiercingShots Piercing;
+//        public Skills.PiercingShots Piercing;
         public Skills.BlackArrowDoT BlackArrowD;
 
         public Skills.SerpentSting Serpent;
@@ -215,17 +215,17 @@ namespace Rawr.Hunter {
             
             // Generic
             //calcs.CL = CL;
-            calcs.Piercing = Piercing;
+//            calcs.Piercing = Piercing;
             //calcs.HS = HS;
             calcs.Kill = Kill;
             //calcs.Volley = Volley;
 
             calcs.Bestial = Bestial;
             calcs.Rapid = Rapid;
-            calcs.BlackArrowB = BlackArrowB;
+//            calcs.BlackArrowB = BlackArrowB;
             calcs.Ready = Ready;
 
-            calcs.Piercing = Piercing;
+//            calcs.Piercing = Piercing;
             calcs.BlackArrowD = BlackArrowD;
             calcs.Serpent = Serpent;
             calcs.Chimera = Chimera;
@@ -300,7 +300,7 @@ namespace Rawr.Hunter {
             //AddAbility(new AbilWrapper(BT));
             //AddAbility(new AbilWrapper(new Skills.BloodSurge(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, SL, WW, BT)));
 
-            Piercing = new Skills.PiercingShots(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+//            Piercing = new Skills.PiercingShots(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
 
         }
 

@@ -192,6 +192,9 @@ namespace Rawr.Bosses
                     AttackSpeed = EntireFight.LastTarget.Frequency,
                     IsFromAnAdd = true,
                 });
+                EntireFight.LastAttack.SetAffectsRoles_Tanks(); // will affect the tank not currently tanking.
+                EntireFight.LastAttack.SetAffectsRoles_DPS();
+                EntireFight.LastAttack.SetAffectsRoles_Healers();
 
                 /* Occu'thar's Destruction
                  * After 10 sec, the Eye of Occu'thar is able to fully bore into the target and causes Occu'thar's
@@ -210,6 +213,9 @@ namespace Rawr.Bosses
                     Interruptable = true,
                     IsFromAnAdd = true,
                 });
+                EntireFight.LastAttack.SetAffectsRoles_Tanks(); // will affect the tank not currently tanking.
+                EntireFight.LastAttack.SetAffectsRoles_DPS();
+                EntireFight.LastAttack.SetAffectsRoles_Healers();
                 #endregion
 
                 #region Apply Phases
@@ -244,6 +250,7 @@ namespace Rawr.Bosses
             Name = "Beth'tilac";
             Instance = "Firelands";
             Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T12_10, BossHandler.TierLevels.T12_25, BossHandler.TierLevels.T12_10H, BossHandler.TierLevels.T12_25H, };
+            Comment = "Main Tank is tanking Beth'tilac, Off Tank is tanking adds during Cinderweb phase.";
             #endregion
             #region Basics
             Health = new float[] { 20871756f, 62615268f, 29220458f, 87661375f };
@@ -257,18 +264,27 @@ namespace Rawr.Bosses
             Min_Healers = new int[] { 3, 5, 3, 5 };
             #endregion
             #region Offensive
-            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
-            #region Attacks
             for (int i = 0; i < 4; i++)
             {
-
                 Phase TheCinderweb = new Phase() { Name = "The Cinderweb" };
                 Phase TheFrenzy = new Phase() { Name = "The Frenzy!" };
-                
-                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+
+                Attack Melee = new Attack
+                {
+                    Name = "Default Melee",
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    DamagePerHit = new float[]{ 88000, 88000, 
+                        88000 * 1.5f, 88000 * 1.5f, }[i], // Heroic values are a guess.
+                    AttackSpeed = 2f,
+                };
+                Melee.AffectsRole[PLAYER_ROLES.MainTank] = true;
+                TheCinderweb.Attacks.Add(Melee);
+                Attack MeleeP2 = Melee.Clone();
+                Melee.AffectsRole[PLAYER_ROLES.OffTank] = true;
+                TheFrenzy.Attacks.Add(MeleeP2);
 
                 #region The Cinderweb
+                #region Boss Effects
                 // Beth'tilac retreats to her web at the beginning of the battle. Beneath her web
                 // scurry her brood.
 
@@ -286,27 +302,71 @@ namespace Rawr.Bosses
                 // 25 man - http://ptr.wowhead.com/spell=100648; alt - http://ptr.wowhead.com/spell=100649
                 // 10 man heroic - http://ptr.wowhead.com/spell=100834; alt - http://ptr.wowhead.com/spell=100935
                 // 25 man heroic - http://ptr.wowhead.com/spell=100835; alt - http://ptr.wowhead.com/spell=100936
+                Attack EmberFlare = new Attack
+                {
+                    Name = "Ember Flare",
+                    DamagePerHit = new float[]{ 20000, 23000, 
+                        20000 * 1.5f, 23000 * 1.5f, }[i], // Heroic values are a guess.
+                    AttackSpeed = 2f,
+                    MaxNumTargets = 25,
+                };
+                EmberFlare.AffectsRole[PLAYER_ROLES.MainTank] = true;
+                EmberFlare.AffectsRole[PLAYER_ROLES.MainTankHealer] = true;
+                TheCinderweb.Attacks.Add(EmberFlare);
 
                 /* Meteor Burn
                  * Meteors crash down onto the web, dealing 37000 to 43000 Fire damage to those who stand beneath
                  * them. Additionally, they burn a hole in the web through which players may fall. */
                 // http://ptr.wowhead.com/spell=99076
+                Impedance Move_MeteorBurn = new Impedance
+                {
+                    Chance = .25f,
+                    Name = "Meteor Burn",
+                    Duration = 4f * 1000f,
+                    Frequency = 10, // Guess
+                };
+                Move_MeteorBurn.AffectsRole[PLAYER_ROLES.MainTank] = true;
+                Move_MeteorBurn.AffectsRole[PLAYER_ROLES.MainTankHealer] = true;
+                TheCinderweb.Moves.Add(Move_MeteorBurn);
 
                 /* Consume
                  * Beth'tilac consumes Cinderweb Spiderlings healing for 10% of her life. */
                 // 2 spell ids with similar wording, providing both
                 // http://ptr.wowhead.com/spell=99332; alt - http://ptr.wowhead.com/spell=99857
 
+
                 /* Smoldering Devastation
                  * When Beth'tilac is depleted of Fire Energy she will set herself ablaze, obliterating those who
                  * are not shielded by her web. */
                 // http://ptr.wowhead.com/spell=99052
+                Impedance Move_SmolderingDevastion = new Impedance
+                {
+                    Chance = 1,
+                    Name = "Smoldering Devastation",
+                    Duration = 12f * 1000f, // 8 sec cast + a few secs to get a new line to climb.
+                    Frequency = 82, // Max freq. is once every 82 secs.
+                };
+                Move_SmolderingDevastion.AffectsRole[PLAYER_ROLES.MainTank] = true;
+                Move_SmolderingDevastion.AffectsRole[PLAYER_ROLES.MainTankHealer] = true;
+                TheCinderweb.Moves.Add(Move_SmolderingDevastion);
+                #endregion
 
                 #region Cinderweb Spinner
                 /* These spiders dangle from the web above. Using Taunt or a similar ability on them will cause
                  * them to drop to the ground. Once killed, their filaments remain allowing players to climb up
                  * to the Cinderweb. */
                 // http://ptr.wowhead.com/npc=52981; Beast
+                TargetGroup CinderwebSpinner = new TargetGroup
+                {
+                    Name = "Cinderweb Spinner",
+                    NearBoss = false,
+                    NumTargs = 1,
+                    Frequency = 15 * 1000f,
+                    Duration = 5, // Assuming they last for only a few seconds since it's a taunt, and a couple swings.
+                    TargetID = 52981,
+                };
+                CinderwebSpinner.SetAffectsRoles_All();
+                TheCinderweb.Targets.Add(CinderwebSpinner);
 
                 /* Burning Acid
                  * The Cinderweb Spinner spits burning venom at a random enemy, dealing 19016 to 21316 Fire damage. */
@@ -318,16 +378,69 @@ namespace Rawr.Bosses
                 /* Others
                  * http://ptr.wowhead.com/spell=100830; http://ptr.wowhead.com/spell=100827
                  * http://ptr.wowhead.com/spell=99647; http://ptr.wowhead.com/spell=99974; http://ptr.wowhead.com/spell=100127 */
+                Attack BurningAcid = new Attack
+                {
+                    Name = "Burning Acid",
+                    DamagePerHit = new float[]{ 20000, 23000, 40000, 46000, }[i],
+                    DamageType = ItemDamageType.Fire,
+                    AttackSpeed = 2f,
+                    IsFromAnAdd = true,
+                    MaxNumTargets = 1,
+                    Dodgable = false,
+                    Parryable = false,
+                    Blockable = false,
+                    Missable = false,
+                };
+                BurningAcid.SetAffectsRoles_All();
+                TheCinderweb.Attacks.Add(BurningAcid);
 
                 /* Fiery Web Spin [Heroic Only]
                  * The Cinderweb Spinner channels a web onto a random player, stunning them.*/
                 // http://ptr.wowhead.com/spell=97202
+                if (i > 2) 
+                {
+                    Impedance WebSpin = new Impedance
+                    {
+                        Name = "Web Spin",
+                        Breakable = false,
+                        Duration = 25,
+                        Frequency = 15,
+                    };
+                    WebSpin.SetAffectsRoles_All();
+                    WebSpin.AffectsRole[PLAYER_ROLES.MainTank] = false;
+                    WebSpin.AffectsRole[PLAYER_ROLES.OffTank] = false;
+                    TheCinderweb.Stuns.Add(WebSpin);
+                }
                 #endregion
 
                 #region Cinderweb Drone
                 /* These large spiders climb out of caves below the Cinderweb. When they are depleted of Fire
-                 * Endergy, they will climb up to Beth'tilac and siphon Fire Energy from her. */
-                // http://db.mmo-champion.com/c/52581/cinderweb-drone/
+                 * Energy, they will climb up to Beth'tilac and siphon Fire Energy from her. */
+                // http://www.wowhead.com/npc=52581#abilities:mode=normal10
+                TargetGroup CinderwebDrone = new TargetGroup
+                {
+                    Name = "Cinderweb Drone",
+                    NearBoss = false,
+                    NumTargs = 1,
+                    Duration = 85, // Max duration
+                    TargetID = 52581,
+                    Frequency = 60,
+                };
+                CinderwebDrone.AffectsRole[PLAYER_ROLES.OffTank] = true;
+                CinderwebDrone.AffectsRole[PLAYER_ROLES.MeleeDPS] = true;
+                CinderwebDrone.AffectsRole[PLAYER_ROLES.RangedDPS] = true;
+                TheCinderweb.Targets.Add(CinderwebDrone);
+
+                Attack DroneMelee = new Attack
+                {
+                    Name = "Melee from Drones",
+                    DamagePerHit = new float[] { 28000, 56000, 28000*1.5f, 56000*1.5f, }[i],
+                    AttackSpeed = 2f,
+                    IsFromAnAdd = true,
+                    MaxNumTargets = 1,
+                };
+                DroneMelee.AffectsRole[PLAYER_ROLES.OffTank] = true;
+                TheCinderweb.Attacks.Add(DroneMelee);
 
                 /* Consume
                  * Cinderweb Drones consume Spinderweb Spiderlings for 20% of their maximum life and provide
@@ -337,6 +450,22 @@ namespace Rawr.Bosses
                 /* Boiling Splatter
                  * The Cinderweb Drone spits burning venom at enemies in a 60 degree cone, dealing 58968 to
                  * 68531 Fire damage.*/
+                Attack BoilingSplatter = new Attack
+                {
+                    Name = "Boiling Splatter",
+                    DamagePerHit = new float[] { 65000, 75000, 82000, 95000, }[i],
+                    DamageType = ItemDamageType.Fire,
+                    AttackSpeed = 2f,
+                    IsFromAnAdd = true,
+                    MaxNumTargets = 1,
+                    Dodgable = false,
+                    Parryable = false,
+                    Blockable = false,
+                    Missable = false,
+                    SpellID = 99463, // Normal10
+                };
+                BoilingSplatter.SetAffectsRoles_All();
+                TheCinderweb.Attacks.Add(BoilingSplatter);
 
                 /* Burning Acid
                  * The Cinderweb Drone spits burning venom at a random enemy, dealing 19016 to 21316 Fire damage. */
@@ -348,28 +477,75 @@ namespace Rawr.Bosses
                 /* Others
                  * http://ptr.wowhead.com/spell=100830; http://ptr.wowhead.com/spell=100827
                  * http://ptr.wowhead.com/spell=99647; http://ptr.wowhead.com/spell=99974; http://ptr.wowhead.com/spell=100127 */
+                // Already added above... note that they continue throughout the phase. 
+
 
                 /* Fixate [Heroic Only]
                  * The Cinderweb Drone fixates on a random player, ignoring all others.*/
                 // Two different ids used
-                // http://ptr.wowhead.com/spell=99526
-                // http://ptr.wowhead.com/spell=99559
+                // http://www.wowhead.com/spell=99526
+                if (i > 2) { }
                 #endregion
 
                 #region Cinderweb Spiderling
                 /* These tiny spiders climb out of caves below the Cinderweb. They instinctively move towards
                  * Cinderweb Drones for protection. Cinderweb Spiderlings can be consumed by larger spiders in order
                  * to restore some of their health.*/
-                // http://ptr.wowhead.com/npc=53765
+                // http://www.wowhead.com/npc=52447
+                TargetGroup CinderwebSpiderling = new TargetGroup
+                {
+                    Name = "Cinderweb Spiderling",
+                    NearBoss = false,
+                    NumTargs = 10,
+                    Duration = 30,
+                    TargetID = 53765,
+                    Frequency = 30,
+                };
+                CinderwebSpiderling.AffectsRole[PLAYER_ROLES.RangedDPS] = true;
+                TheCinderweb.Targets.Add(CinderwebSpiderling);
+                TheFrenzy.Targets.Add(CinderwebSpiderling);
 
                 /* Seeping venom
                  * The Cinderweb Spiderling leaps onto a random enemy within 5 yards, injecting them with venom,
                  * which sears them for 6937 to 8062 Fire damage every 2 seconds for 10 sec.*/
-                // http://ptr.wowhead.com/spell=97079
+                // http://www.wowhead.com/spell=97079
+                Attack SeepingVenom = new Attack
+                {
+                    Name = "Seeping Venom",
+                    DamagePerHit = new float[] { 7500, 7500, 7500, 7500, }[i],
+                    DamageType = ItemDamageType.Nature,
+                    AttackSpeed = 20f,
+                    IsFromAnAdd = true,
+                    MaxNumTargets = 1,
+                    Dodgable = false,
+                    Parryable = false,
+                    Blockable = false,
+                    Missable = false,
+                    SpellID = 97079,
+                };
+                SeepingVenom.SetAffectsRoles_DPS();
+                SeepingVenom.SetAffectsRoles_Healers();
+                TheCinderweb.Attacks.Add(SeepingVenom);
+                TheFrenzy.Attacks.Add(SeepingVenom);
+
                 #endregion
 
                 #region Cinderweb Broodling [Heroic Only]
                 // These unstable spiders fixate on a random player and explode when they reach their target.
+                if (i > 2)
+                {
+                    TargetGroup CinderwebBroodling = new TargetGroup
+                    {
+                        Name = "Cinderweb Broodling",
+                        NearBoss = false,
+                        NumTargs = 1,
+                        Duration = 10,
+                        TargetID = 53765,
+                        Frequency = 30,
+                    };
+                    CinderwebBroodling.SetAffectsRoles_All();
+                    TheCinderweb.Targets.Add(CinderwebBroodling);
+                }
 
                 /* Volatile Burst [Heroic Only]
                  * Upon contact with any enemy, Cinderweb Broodling explode dealing 55500 to 64500 Fire damage
@@ -383,10 +559,22 @@ namespace Rawr.Bosses
                  * emerges from the safety of her Cinderweb canopy and no longer calls for aid from her brood.*/
 
                 /* Frenzy
-                 * Parsing Error */
+                 * a stacking buff which increases Beth'tilac's damage done by 5% per stack. A stack is added 
+                 * every 5 seconds. It acts as a soft enrage timer and this is the reason you want to have 
+                 * the boss as low on health as possible when entering this phase. */
                 // Two possible ids
                 // http://ptr.wowhead.com/spell=99497 (10% increase damage)
                 // http://ptr.wowhead.com/spell=100522 (30% increase damage)
+                BuffState Frenzy = new BuffState
+                {
+                    Name = "Frenzy",
+                    Breakable = false,
+                    Frequency = 5,
+                    Duration = this[i].BerserkTimer,
+                    Stats = new Stats { BonusDamageMultiplier = 0.05f },
+                };
+                // Affects boss.
+                //TheFrenzy.BuffStates.Add(Frenzy);
 
                 /* The Widow's Kiss
                  * Beth'tilac's deadly kiss boils the blood of her current target, reducing the amount that they
@@ -395,6 +583,16 @@ namespace Rawr.Bosses
                 // Two possible ids
                 // http://ptr.wowhead.com/spell=99476
                 // http://ptr.wowhead.com/spell=99506
+                BuffState WidowsKiss = new BuffState
+                {
+                    Name = "Widow's Kiss",
+                    Breakable = false,
+                    Frequency = 2,
+                    Duration = 20,
+                    Stats = new Stats { HealingReceivedMultiplier = -0.1f },
+                };
+                WidowsKiss.SetAffectsRoles_Tanks();
+                TheFrenzy.BuffStates.Add(WidowsKiss);
 
                 /* Ember Flare
                 * Intense heat burns enemies near Beth'tilac dealing 18500 to 21500 Fire damage to those on the
@@ -405,14 +603,26 @@ namespace Rawr.Bosses
                 // 25 man - http://ptr.wowhead.com/spell=100648; alt - http://ptr.wowhead.com/spell=100649
                 // 10 man heroic - http://ptr.wowhead.com/spell=100834; alt - http://ptr.wowhead.com/spell=100935
                 // 25 man heroic - http://ptr.wowhead.com/spell=100835; alt - http://ptr.wowhead.com/spell=100936
+                Attack EFp2 = EmberFlare.Clone();
+                EFp2.Name = "EmberFlare P2";
+                EFp2.SetAffectsRoles_All();
+                TheFrenzy.Attacks.Add(EFp2);
 
                 /* Consume
                  * Beth'tilac consumes Cinderweb Spiderlings healing for 10% of her life. */
                 // 2 spell ids with similar wording, providing both
                 // http://ptr.wowhead.com/spell=99332; alt - http://ptr.wowhead.com/spell=99857
+
+                #endregion
+
+                #region Apply Phases
+                float p1duration = (Move_SmolderingDevastion.Frequency * 3);
+                ApplyAPhasesValues(ref TheCinderweb, i, 0, 0, p1duration, this[i].BerserkTimer);
+                AddAPhase(TheCinderweb, i);
+                ApplyAPhasesValues(ref TheFrenzy, i, 1, p1duration, this[i].BerserkTimer - p1duration, this[i].BerserkTimer);
+                AddAPhase(TheFrenzy, i);
                 #endregion
             }
-            #endregion
             #endregion
             #region Defensive
             Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
@@ -423,19 +633,7 @@ namespace Rawr.Bosses
             Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
             Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
             #endregion
-            #region Impedances
-            for (int i = 0; i < 2; i++)
-            {
-                //Moves;
-                //Stuns;
-                //Fears;
-                //Roots;
-                //Disarms;
-            }
             TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
-            #endregion
-            /* TODO:
-             */
         }
     }
 
@@ -461,19 +659,18 @@ namespace Rawr.Bosses
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
             Max_Players = new int[] { 10, 25, 10, 25 };
-            Min_Tanks = new int[] { 2, 2, 2, 2 };
+            Min_Tanks = new int[] { 1, 1, 1, 1 }; // Most guilds will only use 1 tank for the adds.
             Min_Healers = new int[] { 3, 5, 3, 5 };
             #endregion
             #region Offensive
-            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 4; i++)
             {
                 Phase ObsidianForm = new Phase() { Name = "Obsidian Form" };
                 Phase LiquidForm = new Phase() { Name = "Liquid Form" };
 
-                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+                // He doesn't have a default melee attack during Obsidian Form (p1)
+                // this[i].Attacks.Add(GenAStandardMelee(this[i].Content)); 
 
                 #region Obsidian Form
                 /* Lord Rhyolith ignores players while his armor is intact, but they can attack his feet to
@@ -492,6 +689,16 @@ namespace Rawr.Bosses
                 /* The Liquid Obsidian attempts to move within 5 yards of Lord Rhyolith, then use the Fuse
                  * ability on him.*/
                 // http://db.mmo-champion.com/c/52619/liquid-obsidian/ (Elemental)
+                TargetGroup LiquidObsidian = new TargetGroup 
+                {
+                    Name = "Liquid Obsidian",
+                    NumTargs = 5,
+                    LevelOfTargets = 85,
+                    Frequency = 20,
+                    Duration = 5,
+                };
+                LiquidObsidian.SetAffectsRoles_DPS();
+                ObsidianForm.Targets.Add(LiquidObsidian);
 
                 /* Fuse
                  * The Liquid Obsidian fuses to Lord Rhyolith granting him an additional 1% of damage reduction.*/
@@ -506,6 +713,17 @@ namespace Rawr.Bosses
                 // 25 man - http://ptr.wowhead.com/spell=100411
                 // 10 man heroic - http://ptr.wowhead.com/spell=100968
                 // 25 man heroic - http://ptr.wowhead.com/spell=100969
+                Attack ConcussiveStomp = new Attack
+                {
+                    Name = "Concussive Stomp",
+                    DamagePerHit = new float[] {32375, 37625, 32375, 37625 }[i],
+                    AttackSpeed = 30,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamageType = ItemDamageType.Fire,
+                };
+                ConcussiveStomp.SetUnavoidable();
+                ConcussiveStomp.SetAffectsRoles_All();
+                ObsidianForm.Attacks.Add(ConcussiveStomp);
 
                 /* Drink Magma
                  * If Lord Rhyolith is ever permitted to reach the edge of his plateau, he will drink from the
@@ -518,20 +736,6 @@ namespace Rawr.Bosses
                  * and forms part of himself into an elemental. Lord Rhyolith alternates between bringing multiple
                  * Fragments of Lord Rhyolith and single Sparks of Rhyolith to life.*/
 
-                /* Fragment of Rhyolith
-                 * Fragments of Rhyolith have low health. If not slain withing 30 sec, they will deal their current
-                 * health to a random player.*/
-                // http://db.mmo-champion.com/c/52620/fragment-of-rhyolith/
-
-                #region Spark of Rhyolith
-                /* Sparks of Rhyolith deal 8078 to 8929 Fire damage to all players within 12 yards. Sparks should
-                 * be pulled away from the raid as long as possible, then quickly destroyed.*/
-                // http://db.mmo-champion.com/c/53211/spark-of-rhyolith/
-
-                /* Infernal Rage
-                 * Sparks of Rhyolith increase their damage dealt by 10% and damage taken by 10% every 5 seconds.*/
-                // http://ptr.wowhead.com/spell=98596
-                #endregion
                 #endregion
 
                 /* Volcano
@@ -547,20 +751,151 @@ namespace Rawr.Bosses
                  * Rhyolith will cause streams of lava to flow from a crater. The streams will deal 75000*2]
                  * Fire damage to anyone who stands on them for too long.*/
                 // Crater - http://db.mmo-champion.com/c/52866/crater/
+
+                #region Adds
+                // Summon 
+                Attack SummonAdds = new Attack
+                {
+                    Name = "Summon Adds",
+                    DamagePerHit = new float[] { 15000, 15000, 15000, 15000 }[i],
+                    AttackSpeed = 25,
+                    IsDoT = false,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamageType = ItemDamageType.Fire,
+                    IsFromAnAdd = true,
+                };
+                SummonAdds.SetUnavoidable();
+                SummonAdds.AffectsRole[PLAYER_ROLES.MeleeDPS] = true;
+                ObsidianForm.Attacks.Add(SummonAdds);
+                
+                #region Fragments of Rhyolith
+                // 5 x Fragments to be tanked & DPS'd down
+                TargetGroup Fragments = new TargetGroup
+                {
+                    Name = "Fragments of Rhyolith",
+                    NumTargs = 5,
+                    LevelOfTargets = 85,
+                    Frequency = 60,
+                    Duration = 25,
+                };
+                Fragments.SetAffectsRoles_DPS();
+                Fragments.SetAffectsRoles_Tanks();
+                ObsidianForm.Targets.Add(Fragments);
+
+                Attack FragmentMelee = new Attack
+                {
+                    Name = "Melee from Fragment Adds",
+                    DamagePerHit = new float[] { 10000, 20000,
+                        10000 * 1.5f, 20000 * 1.5f, }[i], // Heroic Unknown
+                    AttackSpeed = 2f / 5f, // 5 mobs hitting every 2 secs.
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    DamageType = ItemDamageType.Physical,
+                    IsFromAnAdd = true,
+                };
+                FragmentMelee.SetAffectsRoles_Tanks();
+                ObsidianForm.Attacks.Add(FragmentMelee);
+
+                #endregion
+                #region Spark of Rhyolith
+                // 1 x Spark to be tanked & DPS'd down.
+                TargetGroup Spark = new TargetGroup
+                {
+                    Name = "Spark of Rhyolith",
+                    NumTargs = 1,
+                    LevelOfTargets = 85,
+                    Frequency = 60,
+                    Duration = 25 * 1000,
+                };
+                Spark.SetAffectsRoles_DPS();
+                Spark.SetAffectsRoles_Tanks();
+                ObsidianForm.Targets.Add(Spark);
+
+                Attack SparkMelee = new Attack
+                {
+                    Name = "Melee from Spark Add",
+                    DamagePerHit = new float[] { 30000, 70000,
+                        30000 * 1.5f, 70000 * 1.5f, }[i], // Heroic Unknown
+                    AttackSpeed = 2, 
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    DamageType = ItemDamageType.Physical,
+                };
+                SparkMelee.SetAffectsRoles_Tanks();
+                ObsidianForm.Attacks.Add(SparkMelee);
+
+                Attack SparkImmolation = new Attack
+                {
+                    Name = "Immolation from Spark",
+                    DamagePerTick = new float[] {8500, 8500, 
+                        8500 * 1.5f, 8500 * 1.5f, }[i], // Heroic damage is a guess.
+                    IsDoT = true,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamageType = ItemDamageType.Fire,
+                    TickInterval = 1,
+                    Duration = SummonAdds.AttackSpeed, // Max length is how long it takes to drop him.  Let's assume just as long until the next add pack.
+                    Missable = false,
+                    Dodgable = false,
+                    Parryable = false,
+                    Blockable = false,
+                };
+                SparkImmolation.SetAffectsRoles_Tanks();
+                SparkImmolation.AffectsRole[PLAYER_ROLES.MeleeDPS] = true;
+                ObsidianForm.Attacks.Add(SparkImmolation);
+
+                #endregion
+                #endregion
                 #endregion
 
                 #region Liquid Form
                 /* When Lord Rhyolith reaches 25% health, his armor shatters. He becomes attackable and
                  * no longer ignores players.*/
+                Attack BasicMeleeMT = new Attack
+                {
+                    Name = "Default Melee",
+                    AttackSpeed = 2f,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    DamagePerHit = new float[] { 60000, 75000, 
+                        60000*1.5f, 75000*1.5f, }[i], // Heroic values are unkonwn at this point.
+                    Missable = true,
+                    Dodgable = true,
+                    Parryable = true,
+                    Blockable = true,
+                };
+                BasicMeleeMT.AffectsRole[PLAYER_ROLES.MainTank] = true;
+                LiquidForm.Attacks.Add(BasicMeleeMT);
 
                 /* Immolation
                  * Lord Rhyolith's fiery presence deals 7003 to 9004 Fire damage to all players every second.*/
                 // http://ptr.wowhead.com/spell=99845
+                Attack Immolation = new Attack
+                {
+                    Name = "Immolation",
+                    DamagePerTick = new float[] {7003, 9004, 
+                        7003 * 1.5f, 9004 * 1.5f, }[i], // Heroic damage is a guess.
+                    IsDoT = true,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamageType = ItemDamageType.Fire,
+                    TickInterval = 1,
+                    Duration = this[i].BerserkTimer * .25f, // for the duration of this phase.
+                };
+                Immolation.SetUnavoidable();
+                Immolation.SetAffectsRoles_All();
+                LiquidForm.Attacks.Add(Immolation);
 
                 /* Unleashed Flame
                  * Lord Rhyolithunleashes beams of fire which pursue random players, dealing 10000 Fire damage
                  * to all players within 5 yards.*/
                 // http://ptr.wowhead.com/spell=100974
+                #endregion
+
+                #region Add Phases
+                int phaseStartTime = 0;
+                int phaseDuration = (int)((float)this[i].BerserkTimer * (1 - .25f));  // Phase change at 25% health when the armor is gone.
+                ApplyAPhasesValues(ref ObsidianForm, i, 1, phaseStartTime, phaseDuration, this[i].BerserkTimer);
+                AddAPhase(ObsidianForm, i);
+                phaseStartTime = phaseStartTime + phaseDuration;
+                phaseDuration = this[i].BerserkTimer - phaseDuration;
+                ApplyAPhasesValues(ref LiquidForm, i, 1, phaseStartTime, phaseDuration, this[i].BerserkTimer);
+                AddAPhase(LiquidForm, i);
                 #endregion
             }
             #endregion
@@ -939,14 +1274,28 @@ namespace Rawr.Bosses
             Min_Healers = new int[] { 3, 5, 3, 5 };
             #endregion
             #region Offensive
-            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 4; i++)
             {
-                Phase EntireFight = new Phase() { Name = "Entire Fight" };
+                Phase Before30Pct = new Phase() { Name = "Before Shannox reaches 30% Health" };
+                Phase After30Pct = new Phase() { Name = "After Shannox reaches 30% Health" };
 
-                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+                Attack BasicMeleeMT = new Attack
+                {
+                    Name = "Melee Shannox",
+                    AttackSpeed = 2.5f,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    DamagePerHit = new float[] { 62000, 128000, 
+                        62000*1.5f, 128000*1.5f, }[i], // Heroic values are unkonwn at this point.
+                    Missable=true,
+                    Dodgable=true,
+                    Parryable=true,
+                    Blockable=true,
+                    IsTheDefaultMelee=true,
+                };
+                BasicMeleeMT.AffectsRole[PLAYER_ROLES.MainTank] = true;
+                Before30Pct.Attacks.Add(BasicMeleeMT);
+                After30Pct.Attacks.Add(BasicMeleeMT);
 
                 /* Immolation Trap
                  * Shannox launches a fiery trap at the feet of a player. The trap takes 2 seconds to arm, and 
@@ -965,11 +1314,38 @@ namespace Rawr.Bosses
                 /* Shannox causes 125% of normal melee damage in a wide arc up to 1 yards in front of him, and
                  * inflicts Jagged Tear on those he strikes.*/
                 // http://ptr.wowhead.com/spell=99931
+                Attack ArcingSlash = new Attack
+                {
+                    Name = "Arcing Slash",
+                    AttackSpeed = 12.5f,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    DamagePerHit = BasicMeleeMT.DamagePerHit * 1.25f,
+                    SpellID = 99931,
+                };
+                ArcingSlash.AffectsRole[PLAYER_ROLES.MeleeDPS] = true;
+                ArcingSlash.AffectsRole[PLAYER_ROLES.MainTank] = true;
+                Before30Pct.Attacks.Add(ArcingSlash);
+                After30Pct.Attacks.Add(ArcingSlash);
 
                 /* Jagged Tear
                  * Shannox's Arcing Slash leaves a Jagged Tear that deals 3000 physical damage every 3 sec for 30
                  * sec. Stacks.*/
                 // http://ptr.wowhead.com/spell=99937
+                Attack JaggedTear = new Attack
+                {
+                    Name = "Jagged Tear MT",
+                    AttackSpeed = 12.5f,
+                    AttackType = ATTACK_TYPES.AT_DOT,
+                    IsDoT = true,
+                    SpellID = 99937,
+                    DamagePerTick = 3000,
+                    TickInterval = 3,
+                    Duration = 30,
+                };
+                JaggedTear.AffectsRole[PLAYER_ROLES.MainTank] = true;
+                JaggedTear.AffectsRole[PLAYER_ROLES.OffTank] = false;
+                Before30Pct.Attacks.Add(JaggedTear);
+                After30Pct.Attacks.Add(JaggedTear);
                 #endregion
 
                 /* Hurl Spear
@@ -980,6 +1356,29 @@ namespace Rawr.Bosses
                  * 
                  * Riplimb will then break off from combat, fetch the spear, and return it to Shannox.*/
                 // http://ptr.wowhead.com/spell=100002
+                Attack HurlSpear = new Attack
+                {
+                    Name = "Hurl Spear",
+                    AttackSpeed = 25f, // Timing is a rough estimate currently.
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamagePerHit = new float[] { 50000, 50000, 
+                        50000*1.5f, 50000*1.5f, }[i], // Heroic values are unkonwn at this point.
+                };
+                HurlSpear.SetUnavoidable();
+                HurlSpear.SetAffectsRoles_All();
+                Before30Pct.Attacks.Add(HurlSpear);
+
+                Attack MagmaRapture = new Attack
+                {
+                    Name = "Magma Rapture",
+                    AttackSpeed = 15f,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamagePerHit = new float[] { 50000, 50000, 
+                        50000*1.5f, 50000*1.5f, }[i], // Heroic values are unkonwn at this point.
+                };
+                MagmaRapture.SetUnavoidable();
+                MagmaRapture.SetAffectsRoles_All();
+                After30Pct.Attacks.Add(MagmaRapture);
 
                 /* Frenzy
                  * When both of Shannox's hounds are defeated, he goes into a frenzy, increasing physical damage
@@ -989,22 +1388,72 @@ namespace Rawr.Bosses
                 // http://ptr.wowhead.com/spell=100522
 
                 #region Riplimb
+                TargetGroup Riplimb = new TargetGroup 
+                { 
+                    Name="Riplimb",
+                    Duration = this[i].BerserkTimer * 1000f,
+                    Frequency = 1,
+                    LevelOfTargets = 88,
+                    NearBoss = false,
+                    NumTargs = 1,
+                    TargetID = 53694,
+                };
+                Riplimb.AffectsRole[PLAYER_ROLES.OffTank] = true;
+                Before30Pct.Targets.Add(Riplimb);
+
+                Attack BasicMeleeOT = new Attack
+                {
+                    Name = "Melee Riplimb",
+                    AttackSpeed = 2.5f,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    DamagePerHit = new float[] { 40000, 74000, 
+                        40000*1.5f, 74000*1.5f, }[i], // Heroic values are unkonwn at this point.
+                    Missable = true,
+                    Dodgable = true,
+                    Parryable = true,
+                    Blockable = true,
+                };
+                BasicMeleeOT.AffectsRole[PLAYER_ROLES.MainTank] = false;
+                BasicMeleeOT.AffectsRole[PLAYER_ROLES.OffTank] = true;
+                Before30Pct.Attacks.Add(BasicMeleeOT);
+
                 /* Shannox has two hounds. Riplimb will attack the target with the most threat.
                  * 
                  * *Warning* In Heroic Difficulty, Riplimb cannot be permanently slain while his master lives. When
-                 * his healther reaches zero, he will collapse for up to 30 seconds, and the reanimate at full health to
+                 * his healthe reaches zero, he will collapse for up to 30 seconds, and the reanimate at full health to
                  * resume fighting.*/
                 // http://db.mmo-champion.com/c/53694/
+                if (i > 2) After30Pct.Attacks.Add(BasicMeleeOT);
 
                 /* Limb Rip
                  * Riplimb bites savagely, dealing 175% of normal melee damage to an enemy and inflicting
                  * Jagged Tear on those he strikes.*/
                 // http://ptr.wowhead.com/spell=99832
+                Attack LimbRipOT = new Attack
+                {
+                    Name = "Limb Rip",
+                    AttackSpeed = 10f,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    DamagePerHit = BasicMeleeOT.DamagePerHit * 1.75f, // Heroic values are unkonwn at this point.
+                    Missable = false,
+                    Dodgable = false,
+                    Parryable = false,
+                    Blockable = false,
+                };
+                LimbRipOT.AffectsRole[PLAYER_ROLES.MainTank] = false;
+                LimbRipOT.AffectsRole[PLAYER_ROLES.OffTank] = true;
+                Before30Pct.Attacks.Add(LimbRipOT);
 
                 /* Jagged Tear
                  * Riplimb's Limb Rip leaves a Jagged Tear that deals 3000 physical damage every 3 sec for 30
                  * sec. Stacks.*/
                 // http://ptr.wowhead.com/spell=99937
+                Attack JaggedTearRL = JaggedTear.Clone();
+                JaggedTearRL.Name = "Jagged Tear OT";
+                JaggedTearRL.AttackSpeed = LimbRipOT.AttackSpeed;
+                JaggedTearRL.AffectsRole[PLAYER_ROLES.MainTank] = false;
+                JaggedTearRL.AffectsRole[PLAYER_ROLES.OffTank] = true;
+                Before30Pct.Attacks.Add(JaggedTearRL);
 
                 /* Frenzied Devotion
                  * Riplimb goes into an unstoppable rage if he is alive to sitness Shannox's health reach 30%.
@@ -1015,12 +1464,39 @@ namespace Rawr.Bosses
                  * Riplimb's successful melee attacks grant a stacking 10% bonus to physical damage dealt
                  * for 20sec.*/
                 // http://ptr.wowhead.com/spell=100656
+                if (i > 2) // Heroic only
+                {
+                    BuffState FeedingFrenzy = new BuffState
+                    {
+                        Name = "Feeding Frenzy",
+                        Breakable = false,
+                        Chance = 1,
+                        Duration = 20 * 1000,
+                        Frequency = BasicMeleeOT.AttackSpeed,
+                        Stats = new Stats { BonusPhysicalDamageMultiplier = .1f },
+                    };
+                    FeedingFrenzy.AffectsRole[PLAYER_ROLES.OffTank] = true;
+                }
                 #endregion
 
                 #region Rageface
                 /* Shannox has two hounds, Rageface cannot be controlled, and will dart about from enemy to 
                  * enemy, changing targets periodically.*/
                 // http://db.mmo-champion.com/c/53695/
+
+                TargetGroup Rageface = new TargetGroup
+                {
+                    Name = "Rageface",
+                    Duration = this[i].BerserkTimer * 1000f / 2,
+                    Frequency = 1,
+                    LevelOfTargets = 88,
+                    NearBoss = false,
+                    NumTargs = 1,
+                    TargetID = 53695,
+                };
+                Rageface.SetAffectsRoles_DPS();
+                Rageface.SetAffectsRoles_Healers();
+                Before30Pct.Targets.Add(Rageface);
 
                 /* Face Rage
                  * Rageface leaps at a random target, stunning and knockign them to the ground, and bgins to
@@ -1042,6 +1518,17 @@ namespace Rawr.Bosses
                  * This effect increases damage dealth by 200% and attack and movement speed by 100%.*/
                 // http://ptr.wowhead.com/spell=100064
                 #endregion
+
+                #region Apply Phases
+                int phaseStartTime = 0;
+                int phaseDuration = (int)((float)this[i].BerserkTimer * (1 - .3f));
+                ApplyAPhasesValues(ref Before30Pct, i, 1, phaseStartTime, phaseDuration, this[i].BerserkTimer);
+                phaseStartTime = phaseStartTime + phaseDuration;
+                phaseDuration = this[i].BerserkTimer - phaseDuration;
+                ApplyAPhasesValues(ref After30Pct, i, 1, phaseStartTime, phaseDuration, this[i].BerserkTimer);
+                AddAPhase(Before30Pct, i);
+                AddAPhase(After30Pct, i);
+                #endregion
             }
             #endregion
             #endregion
@@ -1058,6 +1545,10 @@ namespace Rawr.Bosses
             for (int i = 0; i < 2; i++)
             {
                 //Moves;
+                // TODO: OT Always moves for Hurl Spear.
+                // DPS Moves for Traps
+                // DPS Moves for Hurl Spear
+
                 //Stuns;
                 //Fears;
                 //Roots;
@@ -1094,14 +1585,15 @@ namespace Rawr.Bosses
             Min_Healers = new int[] { 3, 5, 3, 5 };
             #endregion
             #region Offensive
-            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 4; i++)
             {
-                Phase EntireFight = new Phase() { Name = "Entire Fight" };
+                Phase Normal = new Phase() { Name = "Normal Phase" };
+                Phase EmpoweredBlade = new Phase() { Name = "EmpoweredBlade" };
 
-                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+                Attack Melee = GenAStandardMelee(this[i].Content);
+                Melee.IsDualWielding = true;
+                Normal.Attacks.Add(Melee);
 
                 /* Blaze of Glory
                  * Baleroc's assault periodically awakens a burning spark within his primary target, increasing the
@@ -1111,10 +1603,32 @@ namespace Rawr.Bosses
                  * damage done by 20%.*/
                 // http://ptr.wowhead.com/spell=99252
 
+                BuffState BlazeGlory = new BuffState
+                {
+                    Name = "Blaze of Glory",
+                    Chance = 1,
+                    Frequency = 10,
+                    Stats = new Stats { BonusHealthMultiplier = .2f, DamageTakenReductionMultiplier = -.2f, },
+                    Breakable = false,
+                    Duration = this[i].BerserkTimer,
+                };
+                BlazeGlory.SetAffectsRoles_Tanks();
+
                 /* Incendiary Soul
                  * Every time Baleroc applies Blaze of Glory, he gains an application of Incendiary Soul, increasing Fire
                  * damage done by 20%.*/
                 // http://ptr.wowhead.com/spell=99369
+                BuffState IncendiarySoul = new BuffState
+                {
+                    Name = "Incendiary Soul",
+                    Chance = 1,
+                    Frequency = 10,
+                    Stats = new Stats { BonusFireDamageMultiplier = .2f },
+                    Breakable = false,
+                    Duration = this[i].BerserkTimer,
+                };
+                // IncendiarySoul.AffectsRole[Boss];
+
 
                 #region Shards of Torment
                 /* Baleroc summons *warning* two chrystals *end warning* amonst his foes, which continually channel
@@ -1168,12 +1682,47 @@ namespace Rawr.Bosses
                  * normal means.*/
                 // http://ptr.wowhead.com/spell=99352
                 // http://ptr.wowhead.com/spell=99353
+                Attack DecimatingStrike = new Attack
+                {
+                    Name = "Decimating Strike",
+                    AttackSpeed = 5f,
+                    DamagePerHit = .9f,
+                    DamageType = ItemDamageType.Shadow,
+                    DamageIsPerc = true,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    SpellID = 99353,
+                    Blockable = false,
+                    Dodgable = true,
+                    Parryable = true,
+                    Missable = true,
+                    IsDualWielding = false,
+                };
+                DecimatingStrike.AffectsRole[PLAYER_ROLES.OffTank] = true;
+                EmpoweredBlade.Attacks.Add(DecimatingStrike);
 
                 /* Inferno Blade
                  * Baleroc's melee strikes deal 102999 to 103000 Fire damage to the target, instead of their
                  * normal physical damage, while this effect is active.*/
                 // http://ptr.wowhead.com/spell=99350
                 // http://ptr.wowhead.com/spell=99351
+                Attack InfernoStrike = new Attack
+                {
+                    Name = "Inferno Strike",
+                    AttackSpeed = 4f,
+                    DamagePerHit = 103000,
+                    DamageType = ItemDamageType.Fire,
+                    DamageIsPerc = false,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    SpellID = 99351,
+                    Blockable = true,
+                    Dodgable = true,
+                    Parryable = true,
+                    Missable = true,
+                    IsDualWielding = false,
+                };
+                InfernoStrike.AffectsRole[PLAYER_ROLES.MainTank] = true;
+                EmpoweredBlade.Attacks.Add(InfernoStrike);
+
                 #endregion
 
                 /* Countdown [Heroic Only]
@@ -1182,6 +1731,27 @@ namespace Rawr.Bosses
                  * explode, dealing 128749 to 128750 Fire damage to all allies within 45 yards.*/
                 // http://ptr.wowhead.com/spell=99516
                 // possible explosion id: http://ptr.wowhead.com/spell=99518
+
+                #region Apply Phases
+                // Pull then at 35 Sec, Empower Blade w/ 50/50 chance for which blade type.
+                // 15 secs of empowered blade
+                // Return to normal mode.
+                int phasestart = 0;
+                int EBdur = 15;
+                int NormalDur = 60;
+                int phasenum = 0;
+                ApplyAPhasesValues(ref Normal, i, phasenum, phasestart, 35, this[i].BerserkTimer); // OT builds stacks
+                phasestart += 35;
+                do
+                {
+                    ApplyAPhasesValues(ref EmpoweredBlade, i, ++phasenum, phasestart, EBdur, this[i].BerserkTimer);
+                    phasestart += EBdur;
+                    ApplyAPhasesValues(ref Normal, i, ++phasenum, phasestart, NormalDur, this[i].BerserkTimer);
+                    phasestart += NormalDur;
+                } while (phasestart < this[i].BerserkTimer);
+                AddAPhase(Normal, i);
+                AddAPhase(EmpoweredBlade, i);
+                #endregion
             }
             #endregion
             #endregion

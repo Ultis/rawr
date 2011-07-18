@@ -30,14 +30,19 @@ namespace Rawr.DPSDK
         public StatsDK getSpecialEffects(SpecialEffect effect)
         {
             StatsDK statsAverage = new StatsDK();
+            Dictionary<Trigger, float> triggerIntervals = new Dictionary<Trigger,float>();
+            Dictionary<Trigger, float> triggerChances = new Dictionary<Trigger, float>();
+            triggerIntervals.Add(Trigger.Use, 0);
+            triggerChances.Add(Trigger.Use, 1);
+
             if (effect.Trigger == Trigger.Use)
             {
                 foreach (SpecialEffect e in effect.Stats.SpecialEffects())
                 {
                     statsAverage.Accumulate(this.getSpecialEffects(e), (effect.Duration / effect.Cooldown));
                 }
-
-                statsAverage.Accumulate(effect.GetAverageStats(0, 1, 3, m_bo.BerserkTimer));
+                // Trying to make the warning go away, but can't say I know what I'm doing.  
+                statsAverage.Accumulate(effect.GetAverageStats(triggerIntervals, triggerChances, 3, m_bo.BerserkTimer));
             }
             else
             {
@@ -177,7 +182,7 @@ namespace Rawr.DPSDK
                         break;
                     case Trigger.DamageParried:
                         chance *= Math.Min(1f, m_Rot.m_CT.m_CState.m_Stats.EffectiveParry);
-                        trigger = m_bo.DynamicCompiler_FilteredAttacks(m_bo.GetFilteredAttackList(ItemDamageType.Physical)).AttackSpeed;
+                        trigger = m_bo.DynamicCompiler_FilteredAttacks(m_bo.GetFilteredAttackList(AVOIDANCE_TYPES.Parry)).AttackSpeed;
                         break;
                 }
                 if (effect.Chance < 0)
@@ -209,6 +214,29 @@ namespace Rawr.DPSDK
                 }
             }
             return statsAverage;
+        }
+
+        private void CalculateTriggers(Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances)
+        {
+            triggerChances[Trigger.MeleeCrit] = triggerChances[Trigger.MeleeHit] = triggerChances[Trigger.MeleeAttack] = triggerChances[Trigger.PhysicalCrit] = triggerChances[Trigger.PhysicalHit] = triggerChances[Trigger.PhysicalAttack] =
+                triggerChances[Trigger.DamageDone] = triggerChances[Trigger.SpellHit] = triggerChances[Trigger.DamageSpellHit] = triggerChances[Trigger.SpellCrit] = triggerChances[Trigger.DamageSpellCrit] =
+                triggerChances[Trigger.DamageOrHealingDone] = triggerChances[Trigger.DoTTick] = triggerChances[Trigger.Use] = 1f;
+
+            triggerIntervals[Trigger.Use] = 0f;
+            //triggerIntervals[Trigger.MeleeCrit] = (float)(1f / m_Rot.GetMeleeCritsPerSec());
+            //triggerIntervals[Trigger.MeleeHit] = triggerIntervals[Trigger.MeleeAttack] = (float)(1f / m_Rot.GetMeleeAttacksPerSec());
+            //triggerIntervals[Trigger.PhysicalCrit] = (float)(1f / m_Rot.GetPhysicalCritsPerSec());
+            //triggerIntervals[Trigger.PhysicalHit] = triggerIntervals[Trigger.PhysicalAttack] = (float)(1f / m_Rot.GetPhysicalAttacksPerSec());
+            //triggerIntervals[Trigger.DamageDone] = triggerIntervals[Trigger.DamageOrHealingDone] = (float)(1f / m_Rot.GetAttacksPerSec());
+            //triggerIntervals[Trigger.SpellHit] = triggerIntervals[Trigger.DamageSpellHit] = (float)(1f / m_Rot.GetSpellAttacksPerSec());
+            //triggerIntervals[Trigger.SpellCrit] = triggerIntervals[Trigger.DamageSpellCrit] = (float)(1f / m_Rot.GetSpellCritsPerSec());
+            //triggerIntervals[Trigger.DoTTick] = (float)(1f / m_Rot.GetAbilityHitsPerSecond(m_Rot.SealDot));
+
+            //triggerIntervals[Trigger.WhiteHit] = (float)(1f / m_Rot.White.UsagePerSec);
+            //triggerChances[Trigger.WhiteHit] = m_Rot.White.CT.ChanceToLand;
+            //triggerChances[Trigger.CrusaderStrikeHit] = m_Rot.CS.CT.ChanceToLand;
+            //triggerIntervals[Trigger.JudgementHit] = (float)(1f / m_Rot.Judge.UsagePerSec);
+            //triggerChances[Trigger.JudgementHit] = m_Rot.Judge.CT.ChanceToLand;
         }
     }
 }

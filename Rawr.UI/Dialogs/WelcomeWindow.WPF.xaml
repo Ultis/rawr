@@ -139,9 +139,9 @@
                                ToolTipService.ToolTip="Fully means that every model-able method relevant to this Model has&#x0a;been implemented. The model is in Maintenance mode and will only change&#x0a;if a Bug is identified or the Theorycrafting Community discovers new&#x0a;information that will impact calculations, such as a more powerful&#x0a;rotation or a Blizzard Ability Bugfix."/>
                     <TextBlock TextWrapping="Wrap" Grid.Row="6" Grid.ColumnSpan="1" Grid.Column="0" Margin="4,0,4,2" FontWeight="Normal" Text="- Elemental&#x0a;- Hunter"/>
                     <TextBlock TextWrapping="Wrap" Grid.Row="8" Grid.ColumnSpan="1" Grid.Column="0" Margin="4,0,4,0" FontWeight="Normal" Text="- ShadowPriest&#x0a;- Warlock.Demo&#x0a;- Warlock.Destro"/>
-                    <TextBlock TextWrapping="Wrap" Grid.Row="6" Grid.ColumnSpan="1" Grid.Column="1" Margin="4,0,4,0" FontWeight="Normal" Text="- DPSDK&#x0a;- DPSWarr.Fury&#x0a;- Enhance&#x0a;- Healadin&#x0a;- HealPriest&#x0a;- ProtPaladin" Grid.RowSpan="3" />
+                    <TextBlock TextWrapping="Wrap" Grid.Row="6" Grid.ColumnSpan="1" Grid.Column="1" Margin="4,0,4,0" FontWeight="Normal" Text="- DPSWarr.Fury&#x0a;- Enhance&#x0a;- Healadin&#x0a;- HealPriest&#x0a;- ProtPaladin" Grid.RowSpan="3" />
                     <TextBlock TextWrapping="Wrap" Grid.Row="6" Grid.ColumnSpan="1" Grid.Column="2" Margin="4,0,4,0" FontWeight="Normal" Text="- ProtWarr&#x0a;- RestoSham&#x0a;- Retribution&#x0a;- Rogue&#x0a;- Tree&#x0a;- Warlock.Affl" Grid.RowSpan="3" />
-                    <TextBlock TextWrapping="Wrap" Grid.Row="6" Grid.ColumnSpan="1" Grid.Column="3" Margin="4,0,4,0" FontWeight="Normal" Text="- Bear&#x0a;- Cat&#x0a;- DPSWarr.Arms&#x0a;- Mage&#x0a;- Moonkin&#x0a;- TankDK" Grid.RowSpan="3" />
+                    <TextBlock TextWrapping="Wrap" Grid.Row="6" Grid.ColumnSpan="1" Grid.Column="3" Margin="4,0,4,0" FontWeight="Normal" Text="- Bear&#x0a;- Cat&#x0a;- DPSDK&#x0a;- DPSWarr.Arms&#x0a;- Mage&#x0a;- Moonkin&#x0a;- TankDK" Grid.RowSpan="3" />
                 </Grid>
             </basics:TabItem>
             <basics:TabItem Header="Tips" Name="tabItem5">

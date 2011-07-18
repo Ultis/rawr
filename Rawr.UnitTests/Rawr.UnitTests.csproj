@@ -78,6 +78,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AttackTest.cs" />
     <Compile Include="CalculationsBaseTest.cs" />
     <Compile Include="CalculationsTest.cs" />
     <Compile Include="DK\AbilityDKTest.cs" />

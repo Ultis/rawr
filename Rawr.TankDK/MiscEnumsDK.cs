@@ -12,6 +12,7 @@ namespace Rawr.TankDK
         public Character Char;
         public CalculationOptionsTankDK calcOpts;
         public BossOptions bo;
+        public PLAYER_ROLES role;
         //public CombatTable ct;
         //public Rotation Rot;
     }
