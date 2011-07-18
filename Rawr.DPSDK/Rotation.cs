@@ -1129,6 +1129,41 @@ namespace Rawr.DK
             m_RunicPower = -1 * AvailableResources[(int)DKCostTypes.RunicPower];
             BuildCosts();
 
+            if (m_CT.m_CState.m_Talents.SuddenDoom > 0)
+            {
+                AbilityDK_Base ability;
+                float fRimeMod = this.Count(DKability.White) * (.05f * (float)m_CT.m_CState.m_Talents.SuddenDoom);
+                if (fRimeMod > 1)
+                {
+                    for (; fRimeMod > 1; fRimeMod--)
+                    {
+                        ability = new AbilityDK_DeathCoil(m_CT.m_CState);
+                        ability.szName = "DC (SuddenDoom)";
+                        // These are free DCs.
+                        ability.AbilityCost[(int)DKCostTypes.Blood] = 0;
+                        ability.AbilityCost[(int)DKCostTypes.Frost] = 0;
+                        ability.AbilityCost[(int)DKCostTypes.UnHoly] = 0;
+                        ability.AbilityCost[(int)DKCostTypes.Death] = 0;
+                        ability.AbilityCost[(int)DKCostTypes.RunicPower] = 0;
+                        ml_Rot.Add(ability);
+                    }
+                }
+                if (fRimeMod > 0 && fRimeMod < 1)
+                {
+                    // we want 1 full use, and then any sub values.
+                    ability = new AbilityDK_DeathCoil(m_CT.m_CState);
+                    ability.szName = "DC (SD_Partial)";
+                    // These are free DCs.
+                    ability.AbilityCost[(int)DKCostTypes.Blood] = 0;
+                    ability.AbilityCost[(int)DKCostTypes.Frost] = 0;
+                    ability.AbilityCost[(int)DKCostTypes.UnHoly] = 0;
+                    ability.AbilityCost[(int)DKCostTypes.Death] = 0;
+                    ability.AbilityCost[(int)DKCostTypes.RunicPower] = 0;
+                    ability.uBaseDamage = (uint)Math.Floor(ability.uBaseDamage * fRimeMod);
+                    ml_Rot.Add(ability);
+                }
+            }
+
             #region Unholy Blight
             if (UB != null)
             {

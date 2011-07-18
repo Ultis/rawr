@@ -26,7 +26,9 @@ namespace Rawr.DK
         {
             base.UpdateCombatState(CS);
             float RPCost = 40 - (CS.m_Talents.RunicCorruption * 3);
-            RPCost /= (1f + (.05f * (float)CS.m_Talents.SuddenDoom));
+            //RPCost /= (1f + (.05f * (float)CS.m_Talents.SuddenDoom));  
+            // Moving SD procs to be extra DCs in the rotation rather than reduced cost.
+            // This makes it more like Rime.
             this.AbilityCost[(int)DKCostTypes.RunicPower] = (int)Math.Floor(RPCost);
             if (CS.m_Talents.UnholyBlight > 0)
             {
