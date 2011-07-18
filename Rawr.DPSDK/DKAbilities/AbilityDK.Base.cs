@@ -334,13 +334,13 @@ namespace Rawr.DK
             {
                 if (this.bWeaponRequired)
                 {
-                    float ChanceToHit = 1 - CritChance;
+                    float ChanceToHit = 1 - Math.Max(CritChance, 0); // Ensure that crit is no lower than 0.
                     // Determine Dodge chance
                     float fDodgeChanceForTarget = 0;
-                    if (wMH != null) fDodgeChanceForTarget = wMH.chanceDodged;
+                    if (wMH != null) fDodgeChanceForTarget = Math.Max(wMH.chanceDodged, 0);
                     // Determine Parry Chance  (Only for Tank... Since only they should be in front of the target.)
                     float fParryChanceForTarget = 0;
-                    if (wMH != null) fParryChanceForTarget = wMH.chanceParried;
+                    if (wMH != null) fParryChanceForTarget = Math.Max(wMH.chanceParried,0);
                     // Determine Miss Chance
                     float fMissChance = Math.Max(0, (StatConversion.YELLOW_MISS_CHANCE_CAP[3] - CState.m_Stats.PhysicalHit));
                     ChanceToHit -= fMissChance;
