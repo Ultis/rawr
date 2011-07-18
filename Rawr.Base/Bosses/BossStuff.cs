@@ -18,7 +18,15 @@ namespace Rawr {
     public enum ImpedanceTypes { Fear, Root, Stun, Move, Silence, Disarm };
     /// <summary>Enumerator for attack types, this mostly is for raid members that aren't being directly attacked to know when AoE damage is coming from the boss</summary>
     public enum ATTACK_TYPES { AT_MELEE = 0, AT_RANGED, AT_AOE, AT_DOT }
-
+    [Flags]
+    public enum AVOIDANCE_TYPES
+    {
+        None = 0,
+        Miss = 1,
+        Dodge = 2,
+        Parry = 4,
+        Block = 8,
+    }
     /// <summary>A single Attack of various types</summary>
     public class Attack {
         public Attack Clone() {
@@ -135,21 +143,64 @@ namespace Rawr {
 
         #region Player Avoidance
         /// <summary>Missable = Dodgable = Parryable = Blockable = false</summary>
-        public void SetUnavoidable() { Missable = Dodgable = Parryable = Blockable = false; }
+        public void SetUnavoidable() { _AvoidanceFlags = AVOIDANCE_TYPES.None; }
         /// <summary>Returns True if any of the Avoidance types are true</summary>
         public bool Avoidable { get { return Missable || Dodgable || Parryable || Blockable; } }
+        /// <summary>
+        /// Returns True if ALL of the Specified avoidance types are true.
+        /// But not limited to just the specified avoidance types. 
+        /// EG: if you want all Blockable then pass in AVOIDANCE_TYPE.Block.
+        /// It will return true for Blockable no matter the value of Miss,Parry,Dodge.
+        /// </summary>
+        /// <param name="AvoidanceFlags">Mask for ALL Types you want to be valid.</param>
+        /// <returns></returns>
+        public bool AvoidableBy(AVOIDANCE_TYPES AvoidanceFlags)
+        {
+            if (AvoidanceFlags == AVOIDANCE_TYPES.None && _AvoidanceFlags != AVOIDANCE_TYPES.None) return false;
+            else return (_AvoidanceFlags & AvoidanceFlags) == AvoidanceFlags;
+        }
+        [DefaultValue(AVOIDANCE_TYPES.Block | AVOIDANCE_TYPES.Dodge | AVOIDANCE_TYPES.Miss | AVOIDANCE_TYPES.Parry)]
+        private AVOIDANCE_TYPES _AvoidanceFlags = AVOIDANCE_TYPES.Block | AVOIDANCE_TYPES.Dodge | AVOIDANCE_TYPES.Miss | AVOIDANCE_TYPES.Parry;
         /// <summary>Can this attack Miss the player</summary>
-        [DefaultValue(true)]
-        public bool Missable = true;
+        public bool Missable
+        {
+            get { return (_AvoidanceFlags & AVOIDANCE_TYPES.Miss) == AVOIDANCE_TYPES.Miss; }
+            set
+            {
+                if (value == true) { _AvoidanceFlags |= AVOIDANCE_TYPES.Miss; }
+                else { _AvoidanceFlags ^= AVOIDANCE_TYPES.Miss; }
+            }
+        }
         /// <summary>Can this attack be Dodged by the player</summary>
-        [DefaultValue(true)]
-        public bool Dodgable = true;
+        public bool Dodgable
+        {
+            get { return (_AvoidanceFlags & AVOIDANCE_TYPES.Dodge) == AVOIDANCE_TYPES.Dodge; }
+            set
+            {
+                if (value == true) { _AvoidanceFlags |= AVOIDANCE_TYPES.Dodge; }
+                else { _AvoidanceFlags ^= AVOIDANCE_TYPES.Dodge; }
+            }
+        }
         /// <summary>Can this attack be Parried by the player</summary>
-        [DefaultValue(true)]
-        public bool Parryable = true;
+        public bool Parryable
+        {
+            get { return (_AvoidanceFlags & AVOIDANCE_TYPES.Parry) == AVOIDANCE_TYPES.Parry; }
+            set
+            {
+                if (value == true) { _AvoidanceFlags |= AVOIDANCE_TYPES.Parry; }
+                else { _AvoidanceFlags ^= AVOIDANCE_TYPES.Parry; }
+            }
+        }
         /// <summary>Can this attack be Blocked by the player</summary>
-        [DefaultValue(true)]
-        public bool Blockable = true;
+        public bool Blockable
+        {
+            get { return (_AvoidanceFlags & AVOIDANCE_TYPES.Block) == AVOIDANCE_TYPES.Block; }
+            set
+            {
+                if (value == true) { _AvoidanceFlags |= AVOIDANCE_TYPES.Block; }
+                else { _AvoidanceFlags ^= AVOIDANCE_TYPES.Block; }
+            }
+        }
         #endregion
         #region Player Targeting
         private SerializableDictionary<PLAYER_ROLES, bool> _affectsRole = null;
@@ -570,7 +621,7 @@ namespace Rawr {
         }
         #endregion
         #region Variables
-        /// <summary>The Name of the Attack</summary>
+        /// <summary>The Name of the Target Group</summary>
         public string Name = "Unnamed";
         /// <summary>Target mobs IDs</summary>
         [DefaultValue(0)]

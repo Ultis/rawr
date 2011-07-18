@@ -209,7 +209,7 @@ namespace Rawr {
             }
         }
         #endregion
-
+        
         public BossOptions() { }
         public new BossOptions Clone() {
             BossOptions clone = (BossOptions)this.MemberwiseClone();
@@ -788,25 +788,21 @@ namespace Rawr {
         }
         // ==== Methods for Pulling Boss DPS ==========
         public List<Attack> GetFilteredAttackList(ATTACK_TYPES type, bool includeDoTs = false) {
-            //List<Attack> attacks = new List<Attack>();
-            //if (Attacks.Count <= 0) { return attacks; } // make sure there were some TO put in there
-            //foreach (Attack a in Attacks) { if (a.AttackType == type) { attacks.Add(a); } }
-            //return attacks;
             return Attacks.FindAll(attack => attack.AttackType == type);
         }
         public List<Attack> GetFilteredAttackList(ItemDamageType type) {
-            //List<Attack> attacks = new List<Attack>();
-            //if (Attacks.Count <= 0) { return attacks; } // make sure there were some TO put in there
-            //foreach (Attack a in Attacks) { if (a.DamageType == type) { attacks.Add(a); } }
-            //return attacks;
             return Attacks.FindAll(attack => attack.DamageType == type);
         }
         public List<Attack> GetFilteredAttackList(Type type) {
-            //List<Attack> attacks = new List<Attack>();
-            //if (Attacks.Count <= 0) { return attacks; } // make sure there were some TO put in there
-            //foreach (Attack a in Attacks) { if (a.DamageType == type) { attacks.Add(a); } }
-            //return attacks;
             return Attacks.FindAll(attack => (attack.GetType() == type));
+        }
+        public List<Attack> GetFilteredAttackList(AVOIDANCE_TYPES AV)
+        {
+            return Attacks.FindAll(attack => (attack.AvoidableBy(AV)));
+        }
+        public List<Attack> GetFilteredAttackList(PLAYER_ROLES PR)
+        {
+            return Attacks.FindAll(attack => (attack.AffectsRole[PR] == true));
         }
         /// <summary>Public function for the DPS Gets so we can re-use code. Includes a full player defend table.</summary>
         /// <param name="type">The type of attack to check: AT_MELEE, AT_RANGED, AT_AOE</param>
@@ -920,15 +916,91 @@ namespace Rawr {
                 damage = a.DamagePerHit * (1f + BossDamageBonus) * (1f - BossDamagePenalty);
                 swing = a.AttackSpeed * (1f - BossAttackSpeedAcceleration) * (1f + BossAttackSpeedReduction);
                 damageOnUse = damage;
+                // This works for physical attacks that actually trigger the attack/defend table.
+                // We're now seeing non-physical damage type attacks that ALSO use the combat table.
+                if (a.Dodgable) damageOnUse *= (1f - p_dodgePerc); // takes out the player's defend table
+                if (a.Parryable) damageOnUse *= (1f - p_parryPerc); // takes out the player's defend table
+                if (a.Missable) damageOnUse *= (1f - p_missPerc); // takes out the player's defend table
+                if (a.Blockable) damageOnUse += (damage - p_blockVal) * p_blockPerc; // Adds reduced damage from blocks back in
+
                 switch (a.DamageType)
                 {
                     case ItemDamageType.Physical:
                         {
-                            // This works for physical attacks that actually trigger the attack/defend table.
-                            if (a.Dodgable) damageOnUse *= (1f - p_dodgePerc); // takes out the player's defend table
-                            if (a.Parryable) damageOnUse *= (1f - p_parryPerc); // takes out the player's defend table
-                            if (a.Missable) damageOnUse *= (1f - p_missPerc); // takes out the player's defend table
-                            if (a.Blockable) damageOnUse += (damage - p_blockVal) * p_blockPerc; // Adds reduced damage from blocks back in
+                            break;
+                        }
+                    case ItemDamageType.Arcane:
+                        {
+                            damageOnUse *= (1f - p_ArcaneResist); break;
+                        }
+                    case ItemDamageType.Fire:
+                        {
+                            damageOnUse *= (1f - p_FireResist); break;
+                        }
+                    case ItemDamageType.Frost:
+                        {
+                            damageOnUse *= (1f - p_FrostResist); break;
+                        }
+                    case ItemDamageType.Nature:
+                        {
+                            damageOnUse *= (1f - p_NatureResist); break;
+                        }
+                    case ItemDamageType.Shadow:
+                        {
+                            damageOnUse *= (1f - p_ShadowResist); break;
+                        }
+                }
+                acts = BerserkTimer / swing;
+                avgDmg = damageOnUse * acts;
+                dps = avgDmg / BerserkTimer;
+                retDPS += dps;
+
+            }
+            return retDPS;
+        }
+
+        /// <summary>Public function for the DPS Gets so we can re-use code. Includes a full player defend table.</summary>
+        /// <param name="type">The Role of the Player involved to check: MainTank, OffHealer, RangedDPS, etc.</param>
+        /// <param name="BossDamageBonus">Perc value (0.10f = 110% Base damage)</param>
+        /// <param name="BossDamagePenalty">Perc value (0.10f = 90% Base damage)</param>
+        /// <param name="BossAttackSpeedAcceleration">Perc value (0.10f = 110% Base attack speed)</param>
+        /// <param name="BossAttackSpeedReduction">Perc value (0.10f = 90% Base attack speed)</param>
+        /// <param name="p_missPerc">Perc value (0.08f = 8% Chance for Boss to Miss Player)</param>
+        /// <param name="p_dodgePerc">Perc value (0.201f = 20.10% Chance for Player to Dodge Boss Attack)</param>
+        /// <param name="p_parryPerc">Perc value (0.1375f = 13.75% Chance for Player to Parry Boss Attack)</param>
+        /// <param name="p_blockPerc">Perc value (0.065f = 6.5% Chance for Player to Block Boss Attack)</param>
+        /// <param name="p_blockVal">How much Damage is absorbed by player's Shield in Block Value</param>
+        /// <param name="p_ArcaneResist">Perc value (0.08f = 8% Avg Arcane Resistance)</param>
+        /// <param name="p_FireResist">Perc value (0.201f = 20.10% Avg Fire Resistance)</param>
+        /// <param name="p_FrostResist">Perc value (0.1375f = 13.75% Avg Frost Resistance)</param>
+        /// <param name="p_NatureResist">Perc value (0.065f = 6.5% Avg Nature Resistance)</param>
+        /// <param name="p_ShadowResist">Perc value (0.065f = 6.5% Avg Shadow Resistance)</param>
+        /// <returns>The DPS value requested, returns zero if no Attacks have been created for the Boss or there are no Attacks of that Type.</returns>
+        public float GetDPSByType(PLAYER_ROLES type, float BossDamageBonus, float BossDamagePenalty, float BossAttackSpeedAcceleration, float BossAttackSpeedReduction,
+                                  float p_missPerc, float p_dodgePerc, float p_parryPerc, float p_blockPerc, float p_blockVal,
+                                  float p_ArcaneResist, float p_FireResist, float p_FrostResist, float p_NatureResist, float p_ShadowResist)
+        {
+            List<Attack> attacks = GetFilteredAttackList(type);
+            if (attacks.Count <= 0) { return 0f; } // make sure there were some put in there
+
+            float retDPS = 0f;
+            foreach (Attack a in attacks)
+            {
+                float damage, damageOnUse, swing, acts, avgDmg, dps;
+                damage = a.DamagePerHit * (1f + BossDamageBonus) * (1f - BossDamagePenalty);
+                swing = a.AttackSpeed * (1f - BossAttackSpeedAcceleration) * (1f + BossAttackSpeedReduction);
+                damageOnUse = damage;
+                // This works for physical attacks that actually trigger the attack/defend table.
+                // We're now seeing non-physical damage type attacks that ALSO use the combat table.
+                if (a.Dodgable) damageOnUse *= (1f - p_dodgePerc); // takes out the player's defend table
+                if (a.Parryable) damageOnUse *= (1f - p_parryPerc); // takes out the player's defend table
+                if (a.Missable) damageOnUse *= (1f - p_missPerc); // takes out the player's defend table
+                if (a.Blockable) damageOnUse += (damage - p_blockVal) * p_blockPerc; // Adds reduced damage from blocks back in
+
+                switch (a.DamageType)
+                {
+                    case ItemDamageType.Physical:
+                        {
                             break;
                         }
                     case ItemDamageType.Arcane:
