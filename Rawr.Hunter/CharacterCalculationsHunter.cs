@@ -32,8 +32,8 @@ namespace Rawr.Hunter
         public Skills.KillShot Kill { get; set; }
         //public Skills.Volley Volley { get; set; }
         public Skills.BlackArrowDoT BlackArrowD { get; set; }
-//        public Skills.BlackArrowBuff BlackArrowB { get; set; }
-//        public Skills.PiercingShots Piercing { get; set; }
+        public Skills.BlackArrowBuff BlackArrowB { get; set; }
+        public Skills.PiercingShots Piercing { get; set; }
         public Skills.SerpentSting Serpent { get; set; }
         public Skills.ChimeraShot_Serpent Chimera { get; set; }
         public Skills.ImmolationTrap Immolation { get; set; }

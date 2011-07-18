@@ -155,15 +155,22 @@ namespace Rawr.UnitTests.DK
             float[] SValueDodge2 = calcs.SubPoints;
             additionalItem.Stats.DodgeRating = 0;
             Assert.IsTrue(OValueDodge < OValueDodge2, "Dodge2");
-            Assert.IsTrue(SValueBase[0] < SValueDodge[0], "Dodge1"); // Due to inverse scaling between Burst & Avoidance, only check Mitigation improvement.
+            Assert.IsTrue(OValueBase < OValueDodge, "Dodge1");
 
             additionalItem.Stats.ParryRating = 5000;
             calcs = CalcTankDK.GetCharacterCalculations(m_char, additionalItem) as CharacterCalculationsTankDK;
             float OValueParry = calcs.OverallPoints;
             float[] SValueParry = calcs.SubPoints;
             additionalItem.Stats.ParryRating = 0;
-            Assert.IsTrue(SValueBase[0] < SValueParry[0], "Parry"); // Due to inverse scaling between Burst & Avoidance, only check Mitigation improvement.
+            Assert.IsTrue(OValueBase < OValueParry, "Parry");
             
+            additionalItem.Stats.Agility = 5000;
+            calcs = CalcTankDK.GetCharacterCalculations(m_char, additionalItem) as CharacterCalculationsTankDK;
+            float OValueAgility = calcs.OverallPoints;
+            float[] SValueAgility = calcs.SubPoints;
+            additionalItem.Stats.Agility = 0;
+            Assert.IsTrue(OValueBase < OValueAgility, "Agility");
+
             additionalItem.Stats.MasteryRating = 5000;
             calcs = CalcTankDK.GetCharacterCalculations(m_char, additionalItem) as CharacterCalculationsTankDK;
             float OValueMastery = calcs.OverallPoints;
