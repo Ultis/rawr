@@ -89,7 +89,6 @@ namespace Rawr.DK
         public float dodgedSpecial { get; set; }
         public float parriedSpecial { get; set; }
         public float totalMHMiss { get; set; }
-        public float spellResist { get; set; }
         public bool DW { get; set; }
         #endregion
         #endregion

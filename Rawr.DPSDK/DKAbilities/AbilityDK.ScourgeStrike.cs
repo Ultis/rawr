@@ -58,7 +58,11 @@ namespace Rawr.DK
             float baseTickDamage = base.GetTickDamage();
             float ShadowTickDamage = baseTickDamage * (Math.Min(2, CState.m_uDiseaseCount) * .18f + (CState.m_Talents.GlyphofScourgeStrike ? .3f : 0));
             ShadowTickDamage *= 1 + CState.m_Stats.BonusShadowDamageMultiplier - CState.m_Stats.PhysicalCrit; // Shadow aspect doesn't crit... So let's pull crit chance value out of this part.
-            float FireBonusDamage = CState.m_Stats.b4T12_DPS ? (baseTickDamage + ShadowTickDamage) * .06f : 0;
+            float FireBonusDamage = 0;
+            if (CState.m_Stats.b4T12_DPS)
+            {
+                FireBonusDamage = (baseTickDamage + ShadowTickDamage) * .06f;
+            }
             return baseTickDamage + ShadowTickDamage + (FireBonusDamage * (1 + CState.m_Stats.BonusFireDamageMultiplier));
         }
     }

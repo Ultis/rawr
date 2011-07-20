@@ -12,6 +12,9 @@ namespace Rawr.DPSDK
         public DKCombatTable combatTable;
         public Rotation m_Rot;
         private BossOptions m_bo;
+        private Dictionary<Trigger, float> triggerIntervals;
+        private Dictionary<Trigger, float> triggerChances;
+        private float unhastedAttackSpeed;
 
         public StatsSpecialEffects(DKCombatTable t, Rotation rot, BossOptions bo)
         {
@@ -24,190 +27,172 @@ namespace Rawr.DPSDK
             combatTable = t;
             m_Rot = rot;
             m_bo = bo;
+
+            triggerIntervals = new Dictionary<Trigger, float>();
+            // Chance that trigger of correct type is produced (for example for
+            /// SpellCrit trigger you would set triggerInterval to average time between hits and set
+            /// triggerChance to crit chance)
+            triggerChances = new Dictionary<Trigger, float>();
+            unhastedAttackSpeed = (combatTable.MH != null ? combatTable.MH.baseSpeed : 2.0f);
+            float unhastedAttackSpeedOH = (combatTable.OH != null ? combatTable.OH.baseSpeed : 2.0f);
+            float unhastedAttackSpeedSpells = (combatTable.OH != null ? combatTable.OH.baseSpeed : 2.0f);
+
+            #region Use
+            triggerIntervals.Add(Trigger.Use, 0);
+            triggerChances.Add(Trigger.Use, 1);
+            #endregion
+            #region Basic Hit
+            float fMeleeHitTriggerInterval = (1f / ((m_Rot.getMeleeSpecialsPerSecond() * (combatTable.DW ? 2f : 1f)) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f)));
+            float fMeleeHitTriggerInterval1ofDW = (1f / ((m_Rot.getMeleeSpecialsPerSecond()) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f)));
+            float fPhysicalHitChance = 1f - (combatTable.missedSpecial + combatTable.dodgedSpecial) * (1f - combatTable.totalMHMiss);
+            triggerIntervals.Add(Trigger.MeleeHit, fMeleeHitTriggerInterval);
+            triggerIntervals.Add(Trigger.PhysicalHit, fMeleeHitTriggerInterval);
+            triggerIntervals.Add(Trigger.MeleeAttack, fMeleeHitTriggerInterval);
+            triggerIntervals.Add(Trigger.PhysicalAttack, fMeleeHitTriggerInterval);
+            triggerChances.Add(Trigger.MeleeHit, fPhysicalHitChance);
+            triggerChances.Add(Trigger.PhysicalHit, fPhysicalHitChance);
+            triggerChances.Add(Trigger.MeleeAttack, fPhysicalHitChance);
+            triggerChances.Add(Trigger.PhysicalAttack, fPhysicalHitChance);
+            // TODO: interval would be quicker since it should include DOTTick interval.
+            triggerIntervals.Add(Trigger.DamageDone, fMeleeHitTriggerInterval);
+            triggerChances.Add(Trigger.DamageDone, fPhysicalHitChance);
+            triggerIntervals.Add(Trigger.DamageOrHealingDone, fMeleeHitTriggerInterval);
+            triggerChances.Add(Trigger.DamageOrHealingDone, fPhysicalHitChance);
+            #endregion
+            #region Special Hit
+            triggerIntervals.Add(Trigger.CurrentHandHit, fMeleeHitTriggerInterval1ofDW);
+            triggerChances.Add(Trigger.CurrentHandHit, fPhysicalHitChance);
+            triggerIntervals.Add(Trigger.MainHandHit, fMeleeHitTriggerInterval1ofDW);
+            triggerChances.Add(Trigger.MainHandHit, fPhysicalHitChance);
+            float fMeleeHitTriggerIntervalOH = (combatTable.OH == null ? 0 : fMeleeHitTriggerInterval1ofDW);
+            triggerIntervals.Add(Trigger.OffHandHit, fMeleeHitTriggerIntervalOH);
+            triggerChances.Add(Trigger.OffHandHit, fPhysicalHitChance);
+            #endregion
+            #region Basic Crit
+            triggerIntervals.Add(Trigger.MeleeCrit, fMeleeHitTriggerInterval);
+            triggerChances.Add(Trigger.MeleeCrit, combatTable.physCrits);
+            triggerIntervals.Add(Trigger.PhysicalCrit, fMeleeHitTriggerInterval);
+            triggerChances.Add(Trigger.PhysicalCrit, combatTable.physCrits);
+            #endregion
+
+            #region Spell Hit
+            float fSpellHitInterval = 0;
+            fSpellHitInterval = 1f / m_Rot.getSpellSpecialsPerSecond();
+            float fSpellHitChance = 0;
+            float fSpellCritChance = 0;
+            try
+            {
+                // Unholy
+                fSpellHitChance = m_Rot.GetAbilityOfType(DKability.DeathCoil).HitChance;
+                fSpellCritChance = m_Rot.GetAbilityOfType(DKability.DeathCoil).CritChance;
+            }
+            catch
+            {
+                try
+                {
+                    // Frost
+                    fSpellHitChance = m_Rot.GetAbilityOfType(DKability.HowlingBlast).HitChance;
+                    fSpellCritChance = m_Rot.GetAbilityOfType(DKability.HowlingBlast).CritChance;
+                }
+                catch
+                {
+                    // Blood
+                    fSpellHitChance = m_Rot.GetAbilityOfType(DKability.IcyTouch).HitChance;
+                    fSpellCritChance = m_Rot.GetAbilityOfType(DKability.IcyTouch).CritChance;
+                }
+            }
+            triggerIntervals.Add(Trigger.DamageSpellCast, fSpellHitInterval);
+            triggerChances.Add(Trigger.DamageSpellCast, fSpellHitChance);
+            triggerIntervals.Add(Trigger.SpellCast, fSpellHitInterval);
+            triggerChances.Add(Trigger.SpellCast, fSpellHitChance);
+            triggerIntervals.Add(Trigger.DamageSpellHit, fSpellHitInterval);
+            triggerChances.Add(Trigger.DamageSpellHit, fSpellHitChance);
+            triggerIntervals.Add(Trigger.SpellHit, fSpellHitInterval);
+            triggerChances.Add(Trigger.SpellHit, fSpellHitChance);
+            #endregion
+            #region Spell Crit
+            triggerIntervals.Add(Trigger.SpellCrit, fSpellHitInterval);
+            triggerChances.Add(Trigger.SpellCrit, fSpellCritChance);
+            triggerIntervals.Add(Trigger.DamageSpellCrit, fSpellHitInterval);
+            triggerChances.Add(Trigger.DamageSpellCrit, fSpellCritChance);
+            #endregion
+
+            #region Specific Strikes
+            triggerIntervals.Add(Trigger.BloodStrikeHit, m_Rot.CurRotationDuration / (m_Rot.CountTrigger(Trigger.BloodStrikeHit) * (combatTable.DW ? 2f : 1f)));
+            try { triggerChances.Add(Trigger.BloodStrikeHit, m_Rot.GetAbilityOfType(DKability.BloodStrike).HitChance); }
+            catch { }
+            triggerIntervals.Add(Trigger.HeartStrikeHit, m_Rot.CurRotationDuration / m_Rot.CountTrigger(Trigger.HeartStrikeHit));
+            try { triggerChances.Add(Trigger.HeartStrikeHit, m_Rot.GetAbilityOfType(DKability.HeartStrike).HitChance); }
+            catch { }
+            triggerIntervals.Add(Trigger.ObliterateHit, m_Rot.CurRotationDuration / (m_Rot.CountTrigger(Trigger.ObliterateHit) * (combatTable.DW ? 2f : 1f)));
+            try { triggerChances.Add(Trigger.ObliterateHit, m_Rot.GetAbilityOfType(DKability.Obliterate).HitChance);}
+            catch { }
+            triggerIntervals.Add(Trigger.ScourgeStrikeHit, m_Rot.CurRotationDuration / (m_Rot.CountTrigger(Trigger.ScourgeStrikeHit) * (combatTable.DW ? 2f : 1f)));
+            try { triggerChances.Add(Trigger.ScourgeStrikeHit, m_Rot.GetAbilityOfType(DKability.ScourgeStrike).HitChance);}
+            catch { }
+            triggerIntervals.Add(Trigger.DeathStrikeHit, m_Rot.CurRotationDuration / (m_Rot.CountTrigger(Trigger.DeathStrikeHit) * (combatTable.DW ? 2f : 1f)));
+            try { triggerChances.Add(Trigger.DeathStrikeHit, m_Rot.GetAbilityOfType(DKability.DeathStrike).HitChance);}
+            catch { }
+            triggerIntervals.Add(Trigger.PlagueStrikeHit, m_Rot.CurRotationDuration / (m_Rot.CountTrigger(Trigger.PlagueStrikeHit) * (combatTable.DW ? 2f : 1f)));
+            try { triggerChances.Add(Trigger.PlagueStrikeHit, m_Rot.GetAbilityOfType(DKability.PlagueStrike).HitChance);}
+            catch { }
+            triggerIntervals.Add(Trigger.IcyTouchHit, m_Rot.CurRotationDuration / (m_Rot.CountTrigger(Trigger.IcyTouchHit) * (combatTable.DW ? 2f : 1f)));
+            try { triggerChances.Add(Trigger.IcyTouchHit, m_Rot.GetAbilityOfType(DKability.IcyTouch).HitChance);}
+            catch { }
+            triggerIntervals.Add(Trigger.RuneStrikeHit, m_Rot.CurRotationDuration / (m_Rot.CountTrigger(Trigger.RuneStrikeHit) * (combatTable.DW ? 2f : 1f)));
+            try { triggerChances.Add(Trigger.RuneStrikeHit, m_Rot.GetAbilityOfType(DKability.RuneStrike).HitChance); }
+            catch { }
+            #endregion
+
+            #region Misc Offensive
+            triggerIntervals.Add(Trigger.DeathRuneGained, (m_Rot.m_DeathRunes > 0) ? m_Rot.CurRotationDuration / (m_Rot.m_DeathRunes) : 0);
+            triggerChances.Add(Trigger.DeathRuneGained, 1);
+            triggerIntervals.Add(Trigger.KillingMachine, (combatTable.m_CState.m_Talents.KillingMachine > 0) ? ( 60 / (5 * combatTable.m_CState.m_Talents.KillingMachine / 3 ) ) : 0); // KM is a PPM
+            triggerChances.Add(Trigger.KillingMachine, 1);
+            triggerIntervals.Add(Trigger.DoTTick, 1); // TODO: assumes 2 diseases.  but w/ Blood & unholy's chance for a 3rd plus UB could also tick.... should be dynamic.
+            triggerChances.Add(Trigger.DoTTick, 1);
+            #endregion
+
+            #region Defensive
+            triggerChances.Add(Trigger.DamageParried, Math.Min(1f, m_Rot.m_CT.m_CState.m_Stats.EffectiveParry));
+            triggerIntervals.Add(Trigger.DamageParried, m_bo.DynamicCompiler_FilteredAttacks(m_bo.GetFilteredAttackList(AVOIDANCE_TYPES.Parry)).AttackSpeed);
+            float fAvoidance = (m_Rot.m_CT.m_CState.m_Stats.EffectiveParry
+                + m_Rot.m_CT.m_CState.m_Stats.Dodge
+                + m_Rot.m_CT.m_CState.m_Stats.Miss);
+            triggerChances.Add(Trigger.DamageAvoided, Math.Min(1f, fAvoidance));
+            triggerIntervals.Add(Trigger.DamageAvoided, m_bo.DynamicCompiler_FilteredAttacks(m_bo.GetFilteredAttackList(
+                AVOIDANCE_TYPES.Parry | AVOIDANCE_TYPES.Block | AVOIDANCE_TYPES.Dodge | AVOIDANCE_TYPES.Miss)).AttackSpeed);
+            triggerChances.Add(Trigger.DamageTaken, Math.Min(1f, 1f - fAvoidance));
+            triggerIntervals.Add(Trigger.DamageTaken, m_bo.DynamicCompiler_Attacks.AttackSpeed);
+            triggerChances.Add(Trigger.DamageTakenPhysical, Math.Min(1f, 1f - fAvoidance));
+            triggerIntervals.Add(Trigger.DamageTakenPhysical, m_bo.DynamicCompiler_FilteredAttacks(m_bo.GetFilteredAttackList(ItemDamageType.Physical)).AttackSpeed);
+            triggerChances.Add(Trigger.DamageTakenPutsMeBelow35PercHealth, 0.35f);
+            triggerIntervals.Add(Trigger.DamageTakenPutsMeBelow35PercHealth, m_bo.DynamicCompiler_Attacks.AttackSpeed);
+            triggerChances.Add(Trigger.DamageTakenMagical, 1);
+            List<Attack> attacks = new List<Attack>();
+            foreach (ItemDamageType i in EnumHelper.GetValues(typeof(ItemDamageType)))
+            {
+                if (i != ItemDamageType.Physical)
+                {
+                    foreach (Attack a in m_bo.GetFilteredAttackList(i))
+                        attacks.Add(a);
+                }
+            }
+            triggerIntervals.Add(Trigger.DamageTakenMagical, m_bo.DynamicCompiler_FilteredAttacks(attacks).AttackSpeed);
+
+
+            #endregion
+
         }
 
 
         public StatsDK getSpecialEffects(SpecialEffect effect)
         {
             StatsDK statsAverage = new StatsDK();
-            if (effect.Trigger == Trigger.Use)
-            {
-                foreach (SpecialEffect e in effect.Stats.SpecialEffects())
-                {
-                    statsAverage.Accumulate(this.getSpecialEffects(e), (effect.Duration / effect.Cooldown));
-                }
+            triggerIntervals[Trigger.Use] = effect.Cooldown;
+            if (float.IsInfinity(effect.Cooldown)) triggerIntervals[Trigger.Use] = m_bo.BerserkTimer;
 
-                statsAverage.Accumulate(effect.GetAverageStats(0, 1, 3, m_bo.BerserkTimer));
-            }
-            else
-            {
-                double trigger = 0f;
-                float chance = 1f;
-                float unhastedAttackSpeed = 2f;
-                switch (effect.Trigger)
-                {
-                    case Trigger.MeleeCrit:
-                    case Trigger.PhysicalCrit:
-                        trigger = (1f / ((m_Rot.getMeleeSpecialsPerSecond() * (combatTable.DW ? 2f : 1f)) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f)));
-                        chance *= combatTable.physCrits;
-                        unhastedAttackSpeed = (combatTable.MH != null ? combatTable.MH.baseSpeed : 2.0f);
-                        break;
-                    case Trigger.MeleeAttack:
-                    case Trigger.PhysicalAttack:
-                        trigger = (1f / ((m_Rot.getMeleeSpecialsPerSecond() * (combatTable.DW ? 2f : 1f)) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f)));
-                        chance *= 1f;
-                        unhastedAttackSpeed = (combatTable.MH != null ? combatTable.MH.baseSpeed : 2.0f);
-                        break;
-                    case Trigger.MeleeHit:
-                    case Trigger.PhysicalHit:
-                        trigger = (1f / ((m_Rot.getMeleeSpecialsPerSecond() * (combatTable.DW ? 2f : 1f)) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f)));
-                        chance *= 1f - (combatTable.missedSpecial + combatTable.dodgedSpecial) * (1f - combatTable.totalMHMiss);
-                        unhastedAttackSpeed = (combatTable.MH != null ? combatTable.MH.baseSpeed : 2.0f);
-                        break;
-                    case Trigger.CurrentHandHit:
-                        trigger = (1f / (m_Rot.getMeleeSpecialsPerSecond()) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f));
-                        chance *= 1f - (combatTable.missedSpecial + combatTable.dodgedSpecial) * (1f - combatTable.totalMHMiss);
-                        // TODO: need to know if this is MH or OH.
-                        unhastedAttackSpeed = (combatTable.MH != null ? combatTable.MH.baseSpeed : 2.0f);
-                        break;
-                    case Trigger.MainHandHit:
-                        trigger = (1f / (m_Rot.getMeleeSpecialsPerSecond()) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f));
-                        chance *= 1f - (combatTable.missedSpecial + combatTable.dodgedSpecial) * (1f - combatTable.totalMHMiss);
-                        unhastedAttackSpeed = (combatTable.MH != null ? combatTable.MH.baseSpeed : 2.0f);
-                        break;
-                    case Trigger.OffHandHit:
-                        trigger = (1f / (m_Rot.getMeleeSpecialsPerSecond()) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f));
-                        chance *= 1f - (combatTable.missedSpecial + combatTable.dodgedSpecial) * (1f - combatTable.totalMHMiss);
-                        unhastedAttackSpeed = (combatTable.OH != null ? combatTable.OH.baseSpeed : 2.0f);
-                        break;
-                    case Trigger.DamageDone:
-                        trigger = 1f / (((m_Rot.getMeleeSpecialsPerSecond() * (combatTable.DW ? 2f : 1f)) + m_Rot.getSpellSpecialsPerSecond()) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f));
-                        chance *= (1f - (combatTable.missedSpecial + combatTable.dodgedSpecial)) * (1f - combatTable.totalMHMiss);
-                        unhastedAttackSpeed = (combatTable.MH != null ? combatTable.MH.baseSpeed : 2.0f);
-                        break;
-                    case Trigger.DamageOrHealingDone:
-                        // Need to add Self Healing
-                        trigger = 1f / (((m_Rot.getMeleeSpecialsPerSecond() * (combatTable.DW ? 2f : 1f)) + m_Rot.getSpellSpecialsPerSecond()) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f));
-                        chance *= (1f - (combatTable.missedSpecial + combatTable.dodgedSpecial)) * (1f - combatTable.totalMHMiss);
-                        unhastedAttackSpeed = (combatTable.MH != null ? combatTable.MH.baseSpeed : 2.0f);
-                        break;
-                    case Trigger.DamageSpellCast:
-                    case Trigger.SpellCast:
-                    case Trigger.DamageSpellHit:
-                    case Trigger.SpellHit:
-                        trigger = 1f / m_Rot.getSpellSpecialsPerSecond();
-                        chance *= 1f - combatTable.spellResist;
-                        unhastedAttackSpeed = m_Rot.getSpellSpecialsPerSecond();
-                        break;
-                    case Trigger.DamageSpellCrit:
-                    case Trigger.SpellCrit:
-                        trigger = 1f / m_Rot.getSpellSpecialsPerSecond();
-                        chance *= combatTable.spellCrits;
-                        unhastedAttackSpeed = m_Rot.getSpellSpecialsPerSecond();
-                        break;
-                    case Trigger.BloodStrikeHit:
-                        trigger = m_Rot.CurRotationDuration / (m_Rot.CountTrigger(Trigger.BloodStrikeHit) * (combatTable.DW ? 2f : 1f));
-                        chance *= m_Rot.GetAbilityOfType(DKability.BloodStrike).HitChance; 
-                        break;
-                    case Trigger.HeartStrikeHit:
-                        trigger = m_Rot.CurRotationDuration / m_Rot.CountTrigger(Trigger.HeartStrikeHit);
-                        chance *= m_Rot.GetAbilityOfType(DKability.BloodStrike).HitChance; 
-                        break;
-                    case Trigger.ObliterateHit:
-                        trigger = m_Rot.CurRotationDuration / (m_Rot.CountTrigger(Trigger.ObliterateHit) * (combatTable.DW ? 2f : 1f));
-                        chance *= m_Rot.GetAbilityOfType(DKability.BloodStrike).HitChance; 
-                        break;
-                    case Trigger.ScourgeStrikeHit:
-                        trigger = m_Rot.CurRotationDuration / m_Rot.CountTrigger(Trigger.ScourgeStrikeHit);
-                        chance *= m_Rot.GetAbilityOfType(DKability.BloodStrike).HitChance; 
-                        break;
-                    case Trigger.DeathStrikeHit:
-                        trigger = m_Rot.CurRotationDuration / m_Rot.CountTrigger(Trigger.DeathStrikeHit);
-                        chance *= m_Rot.GetAbilityOfType(DKability.BloodStrike).HitChance; 
-                        break;
-                    case Trigger.PlagueStrikeHit:
-                        trigger = m_Rot.CurRotationDuration / (m_Rot.CountTrigger(Trigger.PlagueStrikeHit) * (combatTable.DW ? 2f : 1f));
-                        chance *= m_Rot.GetAbilityOfType(DKability.BloodStrike).HitChance; 
-                        break;
-                    case Trigger.DeathRuneGained:
-                        if (m_Rot.m_DeathRunes > 0)
-                            trigger = m_Rot.CurRotationDuration / (m_Rot.m_DeathRunes);
-                        chance *= 1f;
-                        break;
-                    case Trigger.KillingMachine:
-                        trigger = (1f / ((m_Rot.getMeleeSpecialsPerSecond() * (combatTable.DW ? 2f : 1f)) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f)));
-                        chance = -5 * (combatTable.m_CState.m_Talents.KillingMachine / 3);
-                        unhastedAttackSpeed = (combatTable.MH != null ? combatTable.MH.baseSpeed : 2.0f);
-                        break;
-                    case Trigger.DoTTick:
-                        // TODO: check the tick rate from the specific FF & BP instances in Rot.
-//                        trigger = m_Rot.NumDisease;
-                        chance *= 1f;
-                        break;
-                    // TankDK triggers:
-                    case Trigger.DamageAvoided:
-                        chance *= Math.Min(1f, m_Rot.m_CT.m_CState.m_Stats.EffectiveParry + m_Rot.m_CT.m_CState.m_Stats.Miss + m_Rot.m_CT.m_CState.m_Stats.Dodge);
-                        trigger = m_bo.DynamicCompiler_FilteredAttacks(m_bo.GetFilteredAttackList(ItemDamageType.Physical)).AttackSpeed;
-                        break;
-                    case Trigger.DamageTaken:
-                        chance *= 1f - Math.Min(1f, m_Rot.m_CT.m_CState.m_Stats.EffectiveParry + m_Rot.m_CT.m_CState.m_Stats.Miss + m_Rot.m_CT.m_CState.m_Stats.Dodge);
-                        trigger = m_bo.DynamicCompiler_Attacks.AttackSpeed;
-                        break;
-                    case Trigger.DamageTakenMagical:
-                        chance *= 1f;
-                        List<Attack> attacks = new List<Attack>();
-                        foreach (ItemDamageType i in EnumHelper.GetValues(typeof(ItemDamageType)))
-                        {
-                            if (i != ItemDamageType.Physical)
-                            {
-                                foreach (Attack a in m_bo.GetFilteredAttackList(i))
-                                    attacks.Add(a);
-                            }
-                        }
-                        trigger = m_bo.DynamicCompiler_FilteredAttacks(attacks).AttackSpeed;
-                        break;
-                    case Trigger.DamageTakenPhysical:
-                        chance *= (1f - Math.Min(1f, m_Rot.m_CT.m_CState.m_Stats.EffectiveParry + m_Rot.m_CT.m_CState.m_Stats.Miss + m_Rot.m_CT.m_CState.m_Stats.Dodge));
-                        trigger = m_bo.DynamicCompiler_FilteredAttacks(m_bo.GetFilteredAttackList(ItemDamageType.Physical)).AttackSpeed;
-                        break;
-                    case Trigger.DamageTakenPutsMeBelow35PercHealth:
-                        // TODO: Update this to use BossOptions.  Fights like Chimeron, this woul be HUGE.
-                        chance *= (1f - Math.Min(1f, m_Rot.m_CT.m_CState.m_Stats.EffectiveParry + m_Rot.m_CT.m_CState.m_Stats.Miss + m_Rot.m_CT.m_CState.m_Stats.Dodge)) * .35f;
-                        trigger = m_bo.DynamicCompiler_Attacks.AttackSpeed;
-                        break;
-                    case Trigger.DamageParried:
-                        chance *= Math.Min(1f, m_Rot.m_CT.m_CState.m_Stats.EffectiveParry);
-                        trigger = m_bo.DynamicCompiler_FilteredAttacks(m_bo.GetFilteredAttackList(ItemDamageType.Physical)).AttackSpeed;
-                        break;
-                }
-                if (effect.Chance < 0)
-                {
-                    chance *= effect.GetChance(unhastedAttackSpeed);
-                }
-                foreach (SpecialEffect e in effect.Stats.SpecialEffects())
-                {
-                    statsAverage.Accumulate(this.getSpecialEffects(e));
-                }
-
-                if (effect.MaxStack > 1)
-                {
-                    float timeToMax = (float)Math.Min(m_bo.BerserkTimer, effect.GetChance(unhastedAttackSpeed) * trigger * effect.MaxStack);
-                    float buffDuration = m_bo.BerserkTimer;
-                    if (effect.Stats.AttackPower == 250f || effect.Stats.AttackPower == 215f || effect.Stats.HasteRating == 57f || effect.Stats.HasteRating == 64f)
-                    {
-                        buffDuration = 20f;
-                    }
-                    if (timeToMax * .5f > buffDuration)
-                    {
-                        timeToMax = 2 * buffDuration;
-                    }
-                    statsAverage.Accumulate(effect.Stats, effect.GetAverageStackSize((float)trigger, chance, unhastedAttackSpeed, buffDuration));
-                }
-                else
-                {
-                    effect.AccumulateAverageStats(statsAverage, (float)trigger, chance, unhastedAttackSpeed, m_bo.BerserkTimer);
-                }
-            }
+            effect.AccumulateAverageStats(statsAverage, triggerIntervals, triggerChances, unhastedAttackSpeed, m_bo.BerserkTimer);
             return statsAverage;
         }
     }

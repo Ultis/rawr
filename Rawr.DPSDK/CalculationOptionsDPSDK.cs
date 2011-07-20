@@ -63,6 +63,14 @@ namespace Rawr.DPSDK
         }
         private bool _HideBadItems_PvP = false;
 
+        [DefaultValue(.75f)]
+        public float EffectiveRE
+        {
+            get { return _EffectiveRE; }
+            set { _EffectiveRE = value; OnPropertyChanged("EffectiveRE"); }
+        }
+        private float _EffectiveRE = .75f;
+
         [XmlIgnore]
         private string _szRotReport = "";
         [XmlIgnore]

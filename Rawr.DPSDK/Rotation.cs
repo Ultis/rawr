@@ -57,20 +57,6 @@ namespace Rawr.DK
             set { _KMFS = value; }
         }
 
-        private double _dancingRuneWeapon = 0f;
-        public double DancingRuneWeapon
-        {
-            get { return _dancingRuneWeapon; }
-            set { _dancingRuneWeapon = value; }
-        }
-
-        private double _ghoulFrenzy = 0f;
-        public double GhoulFrenzy
-        {
-            get { return _ghoulFrenzy; }
-            set { _ghoulFrenzy = value; }
-        }
-
         string m_szRotationName = "Rotation by Solver";
         #endregion
 
@@ -175,16 +161,12 @@ namespace Rawr.DK
         // Total length of Cast times.
         public float m_CastDuration { get; set; }
         public int m_BloodRunes { get; set; }
+        private float m_BonusRunicCorruptionHaste = 0;
         public int m_SingleRuneCD 
         { 
             get
-            { 
-                // According to EJ, Frost Spec haste doesn't help rune regen.
-                // This is HACKY by the way.
-                float fHasteMod = 0;
-                if (GetRotationType(m_CT.m_CState.m_Talents) == Rotation.Type.Frost)
-                    fHasteMod = -.2f;
-                return (int)(10000 / (1f + m_CT.m_CState.m_Stats.PhysicalHaste + fHasteMod + m_CT.m_CState.m_Stats.BonusRuneRegeneration));
+            {
+                return (int)(10000 / Math.Max(1f, (1f + m_CT.m_CState.m_Stats.PhysicalHaste + m_CT.m_CState.m_Stats.BonusRuneRegeneration + m_BonusRunicCorruptionHaste)));
             }
         }
         public int m_FrostRunes { get; set; }
@@ -195,11 +177,11 @@ namespace Rawr.DK
         /// Total RP generated/Spent for rotation.
         /// </summary>
         public int m_RunicPower { get; set; }
-        public uint m_CountREAbilities
+        public float m_CountREAbilities
         {
             get
             {
-                uint count = 0;
+                float count = 0;
                 if (null != ml_Rot)
                 {
                     foreach (AbilityDK_Base ab in ml_Rot)
@@ -207,7 +189,7 @@ namespace Rawr.DK
                         if (ab.AbilityIndex == (int)DKability.RuneStrike
                             || ab.AbilityIndex == (int)DKability.DeathCoil
                             || ab.AbilityIndex == (int)DKability.FrostStrike)
-                            ++count;
+                            count += ab.fPartialValue;
                     }
                 }
                 return count;
@@ -240,13 +222,13 @@ namespace Rawr.DK
             }
         }
         
-        private int _GCDs = 0;
-        public int m_GCDs
+        private float _GCDs = 0;
+        public float m_GCDs
         {
             get { return _GCDs; }
             set { _GCDs = value; }
         }
-        public int GetGCDs
+        public float GetGCDs
         {
             get { return _GCDs; }
         }
@@ -258,9 +240,9 @@ namespace Rawr.DK
             get
             {
                 if (m_CT.m_Opts.presence == Presence.Unholy)
-                    return (int)((float)_GCDs * MIN_GCD_MS_UH);
+                    return (int)(m_GCDs * MIN_GCD_MS_UH);
                 else
-                    return (int)((float)_GCDs * MIN_GCD_MS);
+                    return (int)(m_GCDs * MIN_GCD_MS);
             }
         }
 
@@ -376,6 +358,7 @@ namespace Rawr.DK
 
         public void Solver()
         {
+            return; // Short circuit this for now.
             ResetRotation();
             // Let's do some basic rune tracking internal to the function before doing the heavy cost building.
             int[] ResourcesAvailable = new int[EnumHelper.GetCount(typeof(DKCostTypes))];
@@ -816,12 +799,26 @@ namespace Rawr.DK
                 m_RunicPower -= (int)((CurRotationDuration / 5) * m_CT.m_CState.m_Stats.RPp5);
 
             // Burn what we can.
-            for (int RSCount = Math.Abs(m_RunicPower / FS.RunicPower); RSCount > 0; RSCount--)
+            for (float RSCount = Math.Abs((float)m_RunicPower / (float)FS.RunicPower); RSCount > 0; RSCount--)
             {
-                ml_Rot.Add(FS);
-                m_RunicPower += FS.RunicPower;
+                if (RSCount >= 1)
+                {
+                    ml_Rot.Add(FS);
+                    m_RunicPower += FS.RunicPower;
+                }
+                else
+                {
+                    AbilityDK_FrostStrike FSPartial = new AbilityDK_FrostStrike(m_CT.m_CState);
+                    FSPartial.fPartialValue = RSCount;
+                    FSPartial.bPartial = true;
+                    FSPartial.szName = "FS (partial)";
+                    FSPartial.RunicPower = (int)((float)FS.AbilityCost[(int)DKCostTypes.RunicPower] * RSCount);
+                    m_RunicPower += FSPartial.RunicPower;
+                    ml_Rot.Add(FSPartial);
+                }
             }
 
+            #region Talent: Rime
             if (m_CT.m_CState.m_Talents.Rime > 0)
             {
                 AbilityDK_Base ability;
@@ -870,11 +867,23 @@ namespace Rawr.DK
                     ability.AbilityCost[(int)DKCostTypes.UnHoly] = 0;
                     ability.AbilityCost[(int)DKCostTypes.Death] = 0;
                     ability.AbilityCost[(int)DKCostTypes.RunicPower] = 0;
+                    ability.bPartial = true;
+                    ability.fPartialValue = fRimeMod;
                     ability.szName += " (Rime_partial)";
-                    ability.uBaseDamage = (uint)Math.Floor(ability.uBaseDamage * fRimeMod);
                     ml_Rot.Add(ability);
                 }
             }
+            #endregion
+            BuildCosts();
+            #region Talent: Killing Machine
+            float fRotInMins = CurRotationDuration / 60;
+            float fKMPPM = 5 * (m_CT.m_CState.m_Talents.KillingMachine / 3);
+            float KMProcCount = fKMPPM * fRotInMins;
+            float fOBFSCount = Count(DKability.FrostStrike) + Count(DKability.Obliterate);
+            float fPctOBFSCrit = KMProcCount / fOBFSCount;
+            OB.SetKMCritChance(fPctOBFSCrit);
+            FS.SetKMCritChance(fPctOBFSCrit);
+            #endregion
             BuildCosts();
 
         }
@@ -1042,7 +1051,7 @@ namespace Rawr.DK
         }
 
         /// <summary>
-        /// This a basic rotation
+        /// This a basic preset rotation consuming the full CD of Dark Transformation.
         /// </summary>
         public void PRE_Unholy()
         {
@@ -1099,36 +1108,43 @@ namespace Rawr.DK
                 // 1 GCDs
 
                 // Fill the disease.
-                float MaxRP = 100 + m_CT.m_CState.m_Stats.BonusMaxRunicPower;
                 for (uint i = 3; i > 0; i--)
                 {
                     ml_Rot.Add(SS); diseaseGCDs--;
-                    ProcessRunningRunes(AvailableResources, SS.AbilityCost);
                     ml_Rot.Add(SS); diseaseGCDs--;
-                    ProcessRunningRunes(AvailableResources, SS.AbilityCost);
                     ml_Rot.Add(Fest); diseaseGCDs--;
-                    ProcessRunningRunes(AvailableResources, Fest.AbilityCost);
                     ml_Rot.Add(Fest); diseaseGCDs--;
-                    ProcessRunningRunes(AvailableResources, Fest.AbilityCost);
                     ml_Rot.Add(SS); diseaseGCDs--;
-                    ProcessRunningRunes(AvailableResources, SS.AbilityCost);
                     ml_Rot.Add(SS); diseaseGCDs--;
-                    ProcessRunningRunes(AvailableResources, SS.AbilityCost);
                     ml_Rot.Add(SS); diseaseGCDs--;
-                    ProcessRunningRunes(AvailableResources, SS.AbilityCost);
                     ml_Rot.Add(SS); diseaseGCDs--;
-                    ProcessRunningRunes(AvailableResources, SS.AbilityCost);
-                    while (AvailableResources[(int)DKCostTypes.RunicPower] > DC.RunicPower
-                        && diseaseGCDs > 0)
-                    {
-                        ml_Rot.Add(DC); diseaseGCDs--;
-                        ProcessRunningRunes(AvailableResources, DC.AbilityCost);
-                    }
+                    AvailableResources[(int)DKCostTypes.RunicPower] += SS.RunicPower * 6;
+                    AvailableResources[(int)DKCostTypes.RunicPower] += Fest.RunicPower * 2;
                 }
             }
             m_RunicPower = -1 * AvailableResources[(int)DKCostTypes.RunicPower];
+            // Burn All of the RP we can.
+            for (float RSCount = Math.Abs((float)m_RunicPower / (float)DC.RunicPower); RSCount > 0; RSCount--)
+            {
+                if (RSCount >= 1)
+                {
+                    ml_Rot.Add(DC);
+                    m_RunicPower += DC.RunicPower;
+                }
+                else
+                {
+                    AbilityDK_DeathCoil DCPartial = new AbilityDK_DeathCoil(m_CT.m_CState);
+                    DCPartial.fPartialValue = RSCount;
+                    DCPartial.bPartial = true;
+                    DCPartial.szName = "DC (partial)";
+                    DCPartial.RunicPower = (int)((float)DC.RunicPower * DCPartial.fPartialValue);
+                    m_RunicPower += DCPartial.RunicPower;
+                    ml_Rot.Add(DCPartial);
+                }
+            }
             BuildCosts();
 
+            #region Sudden Doom
             if (m_CT.m_CState.m_Talents.SuddenDoom > 0)
             {
                 AbilityDK_Base ability;
@@ -1153,16 +1169,18 @@ namespace Rawr.DK
                     // we want 1 full use, and then any sub values.
                     ability = new AbilityDK_DeathCoil(m_CT.m_CState);
                     ability.szName = "DC (SD_Partial)";
+                    ability.bPartial = true;
+                    ability.fPartialValue = fRimeMod;
                     // These are free DCs.
                     ability.AbilityCost[(int)DKCostTypes.Blood] = 0;
                     ability.AbilityCost[(int)DKCostTypes.Frost] = 0;
                     ability.AbilityCost[(int)DKCostTypes.UnHoly] = 0;
                     ability.AbilityCost[(int)DKCostTypes.Death] = 0;
                     ability.AbilityCost[(int)DKCostTypes.RunicPower] = 0;
-                    ability.uBaseDamage = (uint)Math.Floor(ability.uBaseDamage * fRimeMod);
                     ml_Rot.Add(ability);
                 }
             }
+            #endregion
 
             #region Unholy Blight
             if (UB != null)
@@ -1178,6 +1196,148 @@ namespace Rawr.DK
             BuildCosts();
 
         }
+
+        /// <summary>
+        /// This a more basic rotation that assumes Dark Tranformations will be rolled in
+        /// </summary>
+        public void PRE_Unholy_short()
+        {
+            ResetRotation();
+
+            m_szRotationName = "Unholy Rotation";
+            // Because, really, Unholy should be in Unholy Presence. 
+            if (m_CT.m_Opts.presence != Presence.Unholy)
+            {
+                m_szRotationName += "\nYou should be in Unholy Presence.";
+            }
+            // Setup an instance of each ability.
+            // No runes:
+            AbilityDK_Outbreak Outbreak = new AbilityDK_Outbreak(m_CT.m_CState);
+            // Single Runes:
+            //            AbilityDK_IcyTouch IT = new AbilityDK_IcyTouch(m_CT.m_CState);
+            AbilityDK_FrostFever FF = new AbilityDK_FrostFever(m_CT.m_CState);
+            //            AbilityDK_PlagueStrike PS = new AbilityDK_PlagueStrike(m_CT.m_CState);
+            AbilityDK_BloodPlague BP = new AbilityDK_BloodPlague(m_CT.m_CState);
+            // AbilityDK_BloodStrike BS = new AbilityDK_BloodStrike(m_CT.m_CState);
+            AbilityDK_ScourgeStrike SS = new AbilityDK_ScourgeStrike(m_CT.m_CState);
+            AbilityDK_FesteringStrike Fest = new AbilityDK_FesteringStrike(m_CT.m_CState);
+            AbilityDK_DeathCoil DC = new AbilityDK_DeathCoil(m_CT.m_CState);
+            AbilityDK_UnholyBlight UB = null;
+            if (DC.ml_TriggeredAbility != null && DC.ml_TriggeredAbility.Length > 0) UB = DC.ml_TriggeredAbility[0] as AbilityDK_UnholyBlight;
+
+            // Simple outbreak, Festx2 SSx6 & Fill w/ DCs
+            int[] AvailableResources = new int[EnumHelper.GetCount(typeof(DKCostTypes))];
+            uint subrotDuration = 0;
+            uint GCDdur = MIN_GCD_MS;
+            // Fill the 3 mins duration 
+            if (m_CT.m_Opts.presence == Presence.Unholy)
+                GCDdur = MIN_GCD_MS_UH;
+
+            subrotDuration = Outbreak.Cooldown;
+            uint diseaseGCDs = Outbreak.Cooldown / GCDdur;
+            if (m_CT.m_CState.m_Stats.RPp5 > 0)
+                AvailableResources[(int)DKCostTypes.RunicPower] += (int)((subrotDuration / 5000) * m_CT.m_CState.m_Stats.RPp5);
+            // TODO: This still assumes that we're filling every GCD w/ an ability. 
+            // We know that's not the case in most situations.
+            ml_Rot.Add(Outbreak); // 60 sec CD.
+            ProcessRunningRunes(AvailableResources, Outbreak.AbilityCost);
+            ml_Rot.Add(FF);
+            ml_Rot.Add(BP);
+            // 1 GCDs
+
+            // Fill the disease.
+            for (uint i = 3; i > 0; i--)
+            {
+                ml_Rot.Add(SS); diseaseGCDs--;
+                ProcessRunningRunes(AvailableResources, SS.AbilityCost);
+                ml_Rot.Add(SS); diseaseGCDs--;
+                ProcessRunningRunes(AvailableResources, SS.AbilityCost);
+                ml_Rot.Add(Fest); diseaseGCDs--;
+                ProcessRunningRunes(AvailableResources, Fest.AbilityCost);
+                ml_Rot.Add(Fest); diseaseGCDs--;
+                ProcessRunningRunes(AvailableResources, Fest.AbilityCost);
+                ml_Rot.Add(SS); diseaseGCDs--;
+                ProcessRunningRunes(AvailableResources, SS.AbilityCost);
+                ml_Rot.Add(SS); diseaseGCDs--;
+                ProcessRunningRunes(AvailableResources, SS.AbilityCost);
+                ml_Rot.Add(SS); diseaseGCDs--;
+                ProcessRunningRunes(AvailableResources, SS.AbilityCost);
+                ml_Rot.Add(SS); diseaseGCDs--;
+                ProcessRunningRunes(AvailableResources, SS.AbilityCost);
+                while (AvailableResources[(int)DKCostTypes.RunicPower] > DC.RunicPower
+                    && diseaseGCDs > 0)
+                {
+                    ml_Rot.Add(DC); diseaseGCDs--;
+                    ProcessRunningRunes(AvailableResources, DC.AbilityCost);
+                }
+                BuildCosts();
+            }
+            m_RunicPower = -1 * AvailableResources[(int)DKCostTypes.RunicPower];
+            if (m_RunicPower < 0)
+            {
+                AbilityDK_DeathCoil DCP = new AbilityDK_DeathCoil(m_CT.m_CState);
+                DCP.szName = "DC (RP_Partial)";
+                DCP.bPartial = true;
+                DCP.fPartialValue = (float)Math.Abs(m_RunicPower) / (float)DCP.RunicPower;
+                DCP.RunicPower = (int)((float)DCP.RunicPower * DCP.fPartialValue);
+                ml_Rot.Add(DCP);
+                m_RunicPower += DCP.RunicPower;
+            }
+            BuildCosts();
+
+            #region Sudden Doom
+            if (m_CT.m_CState.m_Talents.SuddenDoom > 0)
+            {
+                AbilityDK_Base ability;
+                float fRimeMod = this.Count(DKability.White) * (.05f * (float)m_CT.m_CState.m_Talents.SuddenDoom);
+                if (fRimeMod > 1)
+                {
+                    for (; fRimeMod > 1; fRimeMod--)
+                    {
+                        ability = new AbilityDK_DeathCoil(m_CT.m_CState);
+                        ability.szName = "DC (SuddenDoom)";
+                        // These are free DCs.
+                        ability.AbilityCost[(int)DKCostTypes.Blood] = 0;
+                        ability.AbilityCost[(int)DKCostTypes.Frost] = 0;
+                        ability.AbilityCost[(int)DKCostTypes.UnHoly] = 0;
+                        ability.AbilityCost[(int)DKCostTypes.Death] = 0;
+                        ability.AbilityCost[(int)DKCostTypes.RunicPower] = 0;
+                        ml_Rot.Add(ability);
+                    }
+                }
+                if (fRimeMod > 0 && fRimeMod < 1)
+                {
+                    // we want 1 full use, and then any sub values.
+                    ability = new AbilityDK_DeathCoil(m_CT.m_CState);
+                    ability.szName = "DC (SD_Partial)";
+                    ability.bPartial = true;
+                    ability.fPartialValue = fRimeMod;
+                    // These are free DCs.
+                    ability.AbilityCost[(int)DKCostTypes.Blood] = 0;
+                    ability.AbilityCost[(int)DKCostTypes.Frost] = 0;
+                    ability.AbilityCost[(int)DKCostTypes.UnHoly] = 0;
+                    ability.AbilityCost[(int)DKCostTypes.Death] = 0;
+                    ability.AbilityCost[(int)DKCostTypes.RunicPower] = 0;
+                    ml_Rot.Add(ability);
+                }
+            }
+            #endregion
+
+            #region Unholy Blight
+            if (UB != null)
+            {
+                uint mSecperDC = (uint)m_RotationDuration / Count(DKability.DeathCoil);
+                uint UBCount = (uint)m_RotationDuration / Math.Max(UB.uDuration, mSecperDC);
+                for (; UBCount > 0; UBCount--)
+                {
+                    ml_Rot.Add(UB);
+                }
+            }
+            #endregion
+            BuildCosts();
+
+        }
+
 
         #endregion
 
@@ -1195,11 +1355,12 @@ namespace Rawr.DK
             m_TotalRuneCD = 0;
         }
 
-        public static bool ProcessRunningRunes(int[] CurrentAbilityStatus, int[] Update)
+        public static bool ProcessRunningRunes(int[] CurrentAbilityStatus, int[] U)
         {
             bool r = true;
             bool bDeathRunes = false;
             int[] _cachedCurrentAbilityStatus = CurrentAbilityStatus.Clone() as int[];
+            int[] Update = U.Clone() as int[];
             int[] NewUpdate = new int[EnumHelper.GetCount(typeof(DKCostTypes))];
             foreach (int i in EnumHelper.GetValues(typeof(DKCostTypes)))
             {
@@ -1257,7 +1418,12 @@ namespace Rawr.DK
                     // Populate the costs here.
                     // GCD count.
                     if (ability.bTriggersGCD)
-                        m_GCDs++;
+                    {
+                        if (ability.bPartial)
+                            m_GCDs += ability.fPartialValue;
+                        else
+                            m_GCDs++;
+                    }
 
                     // Melee v. SpellSpecial count.
                     if (ability.uRange == AbilityDK_Base.MELEE_RANGE)
@@ -1287,12 +1453,32 @@ namespace Rawr.DK
                     TotalThreat += ability.GetTotalThreat();
                 }
             }
+            #region Talent: Runic Corruption
+            // For each death coil, improve the Rune Regen by 50% per point for 3 sec.
+            uint RCRegenDur = 0;
+            float RCHaste = 0;
+            if (m_CT.m_CState.m_Talents.RunicCorruption > 0)
+            {
+                RCRegenDur = Count(DKability.DeathCoil) * 3 * 1000;
+                RCHaste = (m_CT.m_CState.m_Talents.RunicCorruption * .5f);
+                float RCPpct = RCRegenDur / (Math.Min (GCDTime, RCRegenDur));
+                RCHaste *= RCPpct * m_CT.m_Opts.EffectiveRE;
+                m_BonusRunicCorruptionHaste = RCHaste;
+            }
+            #endregion
             // spend the death runes available:
             int[] abCost = new int[EnumHelper.GetCount(typeof(DKCostTypes))];
             abCost[(int)DKCostTypes.Blood] = m_BloodRunes;
             abCost[(int)DKCostTypes.Frost] = m_FrostRunes;
             abCost[(int)DKCostTypes.UnHoly] = m_UnholyRunes;
-            abCost[(int)DKCostTypes.Death] = m_DeathRunes;
+            if (curRotationType == Type.Frost)
+            {
+                m_DeathRunes =  m_FrostRunes / -3;
+                m_DeathRunes += m_UnholyRunes / -3;
+                abCost[(int)DKCostTypes.Death] = m_DeathRunes;
+            }
+            else
+                abCost[(int)DKCostTypes.Death] = m_DeathRunes;
             int hiRuneIndex = DKCombatTable.GetHighestRuneCountIndex(abCost);
             int DeathRunesSpent = 0;
             DeathRunesSpent = DKCombatTable.SpendDeathRunes(abCost, DeathRunesSpent);
@@ -1303,31 +1489,21 @@ namespace Rawr.DK
             int BRCD = m_BloodRunes * m_SingleRuneCD;
             int FRCD = m_FrostRunes * m_SingleRuneCD;
             int URCD = m_UnholyRunes * m_SingleRuneCD;
+            int DRCD = m_DeathRunes * m_SingleRuneCD;
+            if (curRotationType == Type.Unholy) DRCD /= 2;
             //What about multi-rune abilities?
-            m_TotalRuneCD = Math.Max(Math.Max(BRCD, FRCD), URCD); // Max CD of the runes.
+//            m_TotalRuneCD = Math.Max(Math.Max(BRCD, FRCD), Math.Max(URCD, DRCD)); // Max CD of the runes.
+            m_TotalRuneCD = (BRCD + FRCD + URCD + DRCD)/3; // Max CD of the runes.
             // Assume that we can't get a full CD renewed from Runic Empowerment.
             // So we'll distribute the RE procs over all Rune types and bleed some time off as well.
-            m_TotalRuneCD -= (int)(m_FreeRunesFromRE * m_SingleRuneCD/ 4); 
+            m_TotalRuneCD -= (int)(m_FreeRunesFromRE * m_CT.m_Opts.EffectiveRE * m_SingleRuneCD / 6); 
 #if DEBUG
             // Ensure that m_TotalRuneCD != 0
             if (m_TotalRuneCD == 0)
                 throw new Exception("TotalRuneCD == 0");
 #endif
 
-            // Runic Corruption:
-            // For each death coil, improve the Rune Regen by 50% per point for 3 sec.
-            uint RCRegenDur = 0;
-            float RCHaste = 0;
-            if (m_CT.m_CState.m_Talents.RunicCorruption > 0)
-            {
-                RCRegenDur = Count(DKability.DeathCoil) * 3 * 1000;
-                RCHaste = (m_CT.m_CState.m_Talents.RunicCorruption * .5f);
-            }
-            float RCperc = 0;
-            if (m_TotalRuneCD > 0)
-                RCperc = (RCRegenDur / m_TotalRuneCD) * RCHaste;
-            m_TotalRuneCD = (int)(m_TotalRuneCD / (1 + RCperc));
-            // Add White damage
+            #region White damage
             int iWhiteCount = 0;
             if (null != m_CT.MH)
             {
@@ -1363,6 +1539,7 @@ namespace Rawr.DK
                     }
                 }
             }
+            #endregion
         }
 
         public static string ReportRotation(List<AbilityDK_Base> l_Openning, string szReportName = "")
@@ -1389,7 +1566,7 @@ namespace Rawr.DK
         public string ReportRotation()
         {
             string szReport = m_szRotationName + "\n";
-            string szFormat = "{0,-15}|{1,7}|{2,7:0.0}|{3,7:0}|{4,7:0.0}\n";
+            string szFormat = "{0,-15}|{1,7:0}|{2,7:0.0}|{3,7:0}|{4,7:0.0}\n";
 
             szReport += string.Format(szFormat, "Name", "Damage", "DPS", "Threat", "TPS");
             if (null != ml_Rot)
@@ -1399,8 +1576,17 @@ namespace Rawr.DK
                     szReport += string.Format(szFormat, ability.szName, ability.GetTotalDamage(), ability.GetDPS(), ability.GetTotalThreat(), ability.GetTPS());
                 }
             }
-            szReport += string.Format("Duration(sec): {0,6}\n", CurRotationDuration);
-            szReport += string.Format("GCDs:          {0,6}\n", m_GCDs);
+            szReport += string.Format("Duration(sec): {0,6:0.0}\n", CurRotationDuration);
+            szReport += string.Format("GCDs:          {0,6:0.0} ({1} ms) \n", m_GCDs, GCDTime);
+            if (m_FreeRunesFromRE > 0)
+                szReport += string.Format("Total RuneCD:  {0,6:0.0} *Including procs from RE\n", (float)m_TotalRuneCD / 1000f);
+            else
+                szReport += string.Format("Total RuneCD:  {0,6:0.0}\n", (float)m_TotalRuneCD / 1000f);
+            szReport += string.Format("Blood:         {0,6} ({1} ms) \n", m_BloodRunes, m_SingleRuneCD * m_BloodRunes);
+            szReport += string.Format("Frost:         {0,6} ({1} ms) \n", m_FrostRunes, m_SingleRuneCD * m_FrostRunes);
+            szReport += string.Format("Unholy:        {0,6} ({1} ms) \n", m_UnholyRunes, m_SingleRuneCD * m_UnholyRunes);
+            szReport += string.Format("Death:         {0,6} ({1} ms)\n", m_DeathRunes, m_SingleRuneCD * m_DeathRunes);
+            szReport += string.Format("RP:            {0,6} *Neg value means RP left over\n", m_RunicPower);
             return szReport;
         }
 

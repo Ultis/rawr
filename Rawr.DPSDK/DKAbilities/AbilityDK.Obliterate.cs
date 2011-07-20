@@ -79,12 +79,17 @@ namespace Rawr.DK
             }
         }
 
+        private float _BonusCritChance = 0;
         public override float CritChance
         {
             get
             {
-                return base.CritChance + CState.m_Stats.BonusCritChanceObliterate;
+                return Math.Min(1, base.CritChance + CState.m_Stats.BonusCritChanceObliterate + _BonusCritChance);
             }
+        }
+        public void SetKMCritChance(float value)
+        {
+            _BonusCritChance = value;
         }
 
         public override float GetTickDamage()

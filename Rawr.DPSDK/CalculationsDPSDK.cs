@@ -668,66 +668,33 @@ namespace Rawr.DPSDK
 
             statsTotal.Accumulate(GetRaceStats(character));
             AccumulateItemStats(statsTotal, character, additionalItem);
+            statsTotal = GetRelevantStats(statsTotal) as StatsDK; // GetRel removes any stats specific to the StatsDK object.
 
             statsTotal.bDW = false;
             if (character.MainHand != null && character.OffHand != null) statsTotal.bDW = true;
             RemoveDuplicateRunes(statsTotal, character, statsTotal.bDW);
-
             AccumulateBuffsStats(statsTotal, character.ActiveBuffs);
-
-            statsTotal = GetRelevantStats(statsTotal) as StatsDK; // GetRel removes any stats specific to the StatsDK object.
-            AccumulateTalents(statsTotal, character);
-            AccumulatePresenceStats(statsTotal, calcOpts.presence, talents);
-
-            return (statsTotal);
-        }
-
-        public StatsDK GetBuffsStats(Character character)
-        {
-            List<Buff> removedBuffs = new List<Buff>();
-            List<Buff> addedBuffs = new List<Buff>();
-
-            List<Buff> buffGroup = new List<Buff>();
-            #region Passive Ability Auto-Fixing
-            if (character.DeathKnightTalents.BrittleBones > 0)
-            {
-                buffGroup.Clear();
-                buffGroup.Add(Buff.GetBuffByName("Blood Frenzy"));
-                buffGroup.Add(Buff.GetBuffByName("Savage Combat"));
-                buffGroup.Add(Buff.GetBuffByName("Brittle Bones"));
-                buffGroup.Add(Buff.GetBuffByName("Ravage"));
-                buffGroup.Add(Buff.GetBuffByName("Acid Spit"));
-                MaintBuffHelper(buffGroup, character, removedBuffs);
-            }
-            #endregion
-
-            StatsDK statsBuffs = new StatsDK();
-            statsBuffs.Accumulate(GetBuffsStats(character.ActiveBuffs));
-            AccumulateSetBonusStats(statsBuffs, character.SetBonusCount);
-
-            foreach (Buff b in removedBuffs) { character.ActiveBuffsAdd(b); }
-            foreach (Buff b in addedBuffs) { character.ActiveBuffs.Remove(b); }
 
             #region Tank
             #region T11
             int tierCount;
             if (character.SetBonusCount.TryGetValue("Magma Plated Battlearmor", out tierCount))
             {
-                if (tierCount >= 2) { statsBuffs.b2T11_Tank = true; }
-                if (tierCount >= 4) { statsBuffs.b4T11_Tank = true; }
+                if (tierCount >= 2) { statsTotal.b2T11_Tank = true; }
+                if (tierCount >= 4) { statsTotal.b4T11_Tank = true; }
             }
-            if (statsBuffs.b4T11_Tank)
-                statsBuffs.AddSpecialEffect(_SE_IBF[1]);
+            if (statsTotal.b4T11_Tank)
+                statsTotal.AddSpecialEffect(_SE_IBF[1]);
             else
-                statsBuffs.AddSpecialEffect(_SE_IBF[0]);
+                statsTotal.AddSpecialEffect(_SE_IBF[0]);
             #endregion
             #region T12
             if (character.SetBonusCount.TryGetValue("Elementium Deathplate Battlearmor", out tierCount))
             {
-                if (tierCount >= 2) { statsBuffs.b2T12_Tank = true; }
-                if (tierCount >= 4) { statsBuffs.b4T12_Tank = true; }
+                if (tierCount >= 2) { statsTotal.b2T12_Tank = true; }
+                if (tierCount >= 4) { statsTotal.b4T12_Tank = true; }
             }
-            if (statsBuffs.b2T12_Tank)
+            if (statsTotal.b2T12_Tank)
             {
                 // Your melee attacks cause Burning Blood on your target, 
                 // which deals 800 Fire damage every 2 for 6 sec and 
@@ -735,9 +702,9 @@ namespace Rawr.DPSDK
                 // present on the target.
 
                 // Implemented in CombatState DiseaseCount
-                statsBuffs.FireDamage = 800 / 2;
+                statsTotal.FireDamage = 800 / 2;
             }
-            if (statsBuffs.b4T12_Tank)
+            if (statsTotal.b4T12_Tank)
             {
                 // Your Dancing Rune Weapon grants 15% additional parry chance.
                 // Implemented in DRW talent Static Special Effect.
@@ -748,22 +715,25 @@ namespace Rawr.DPSDK
             #region T11
             if (character.SetBonusCount.TryGetValue("Magma Plated Battlegear", out tierCount))
             {
-                if (tierCount >= 2) { statsBuffs.b2T11_DPS = true; }
-                if (tierCount >= 4) { statsBuffs.b4T11_DPS = true; }
-                if (statsBuffs.b2T11_DPS)
+                if (tierCount >= 2)
+                {
+                    statsTotal.b2T11_DPS = true;
+                    if (tierCount >= 4) { statsTotal.b4T11_DPS = true; }
+                }
+                if (statsTotal.b2T11_DPS)
                 {
                     // increase the crit chance of your DeathCoil & FS by 5%
-                    statsBuffs.BonusCritChanceDeathCoil += .05f;
-                    statsBuffs.BonusCritChanceFrostStrike += .05f;
+                    statsTotal.BonusCritChanceDeathCoil += .05f;
+                    statsTotal.BonusCritChanceFrostStrike += .05f;
                 }
-                if (statsBuffs.b4T11_DPS)
+                if (statsTotal.b4T11_DPS)
                 {
                     // Each time you gain a Death Rune or trigger your Killing Machine talent, 
                     // you also gain 1% increased attack power for 30 sec. Stacks up to 3 times.
-                    statsBuffs.AddSpecialEffect(new SpecialEffect(Trigger.DeathRuneGained,
+                    statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.DeathRuneGained,
                         new Stats() { BonusAttackPowerMultiplier = 0.01f, },
                         30, 0, 1f, 3));
-                    statsBuffs.AddSpecialEffect(new SpecialEffect(Trigger.KillingMachine,
+                    statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.KillingMachine,
                         new Stats() { BonusAttackPowerMultiplier = 0.01f, },
                         30, 0, 1f, 3));
                 }
@@ -772,15 +742,22 @@ namespace Rawr.DPSDK
             #region T12
             if (character.SetBonusCount.TryGetValue("Elementium Deathplate Battlegear", out tierCount))
             {
-                if (tierCount >= 2) { statsBuffs.b2T12_DPS = true; }
-                if (tierCount >= 4) { statsBuffs.b4T12_DPS = true; }
+                if (tierCount >= 2)
+                {
+                    statsTotal.b2T12_DPS = true;
+                    if (tierCount >= 4)
+                    {
+                        
+                        statsTotal.b4T12_DPS = true;
+                    }
+                }
             }
-            if (statsBuffs.b2T12_DPS)
+            if (statsTotal.b2T12_DPS)
             {
                 // Horn of Winter also grats 3 RPp5
-                statsBuffs.RPp5 += 3;
+                statsTotal.RPp5 += 3;
             }
-            if (statsBuffs.b4T12_DPS)
+            if (statsTotal.b4T12_DPS)
             {
                 // Your Obliterate and Scourge Strike abilities instantly deal 6% additional damage as Fire damage.
                 // Implemented in Oblit and SS classes.
@@ -788,8 +765,12 @@ namespace Rawr.DPSDK
             #endregion
             #endregion
 
-            return statsBuffs;
+            AccumulateTalents(statsTotal, character);
+            AccumulatePresenceStats(statsTotal, calcOpts.presence, talents);
+
+            return (statsTotal);
         }
+
         private static void MaintBuffHelper(List<Buff> buffGroup, Character character, List<Buff> removedBuffs)
         {
             foreach (Buff b in buffGroup)
@@ -841,22 +822,13 @@ namespace Rawr.DPSDK
         {
             StatsSpecialEffects se = new StatsSpecialEffects(t, rot, c.BossOptions );
             StatsDK statSE = new StatsDK();
-            foreach (SpecialEffect e in s.SpecialEffects())
-            {
-                // There are some multi-level special effects that need to be factored in.
-                foreach (SpecialEffect ee in e.Stats.SpecialEffects())
-                {
-                    e.Stats = se.getSpecialEffects(ee);
-                }
-                statSE.Accumulate(se.getSpecialEffects(e));
-            }
 
             foreach (SpecialEffect effect in s.SpecialEffects())
             {
                 if (HasRelevantStats(effect.Stats))
                 {
-                    se = new StatsSpecialEffects(t, rot, c.BossOptions);
-                    s.Accumulate(se.getSpecialEffects(effect));
+                    statSE = se.getSpecialEffects(effect);
+                    s.Accumulate(statSE);
                 }
             }
         }
@@ -1000,6 +972,8 @@ namespace Rawr.DPSDK
                         // Icy Talons
                         // Melee Attack speed +20%
                         FullCharacterStats.PhysicalHaste += .2f;
+                        FullCharacterStats.BonusRuneRegeneration -= .2f; // Only this haste doesn't affect Rune Regen.  
+
                         // Blood of the North
                         // Blood runes are death runes.
                         // Mastery: Frozen Heart
@@ -1255,7 +1229,8 @@ namespace Rawr.DPSDK
                 // Research Suggests 5 PPM at 3/3
                 if (character.DeathKnightTalents.KillingMachine > 0)
                 {
-                    FullCharacterStats.AddSpecialEffect(_KM[character.DeathKnightTalents.KillingMachine]);
+//                    FullCharacterStats.AddSpecialEffect(_KM[character.DeathKnightTalents.KillingMachine]);
+                    // Implemented in Frost Rotation
                 }
 
 
@@ -1263,7 +1238,7 @@ namespace Rawr.DPSDK
                 // Oblit has a 15% per point your next IT or HB consumes no runes
                 if (character.DeathKnightTalents.Rime > 0)
                 {
-                    // TODO: may need to refactor Rune costs to 100 or 1000 base to deal w/ partial rune costs.
+                    // Implemented in FrostRotation.
                 }
 
                 // Pillar of Frost
@@ -1376,7 +1351,7 @@ namespace Rawr.DPSDK
                 // rune, but instead to increase your rune regeneration rate by 50/100% for 3 sec.
                 if (character.DeathKnightTalents.RunicCorruption > 0)
                 {
-                    // implemented in rotation & abilities.
+                    // Implmented in rotation.
                 }
 
                 // Unholy Frenzy
@@ -1755,6 +1730,7 @@ namespace Rawr.DPSDK
                         effect.Trigger == Trigger.IcyTouchHit ||
                         effect.Trigger == Trigger.PlagueStrikeHit ||
                         effect.Trigger == Trigger.DeathRuneGained ||
+                        effect.Trigger == Trigger.KillingMachine ||
                         effect.Trigger == Trigger.RuneStrikeHit
                     )
                 { bRelevant = true; }
@@ -2017,12 +1993,14 @@ namespace Rawr.DPSDK
         // Talent: Rune Tap
         public static readonly SpecialEffect _SE_RuneTap = new SpecialEffect(Trigger.Use, new Stats() { HealthRestoreFromMaxHealth = .1f }, 0, 30f);
         // Talent: Killing Machine
+        /*
         public static readonly SpecialEffect[] _KM = new SpecialEffect[] {
             null,
             new SpecialEffect(Trigger.MeleeAttack, new Stats() { BonusCritChanceObliterate = 1f, BonusCritChanceFrostStrike = 1f }, 3f, 0f, (-5f * 1/3), false),
             new SpecialEffect(Trigger.MeleeAttack, new Stats() { BonusCritChanceObliterate = 1f, BonusCritChanceFrostStrike = 1f }, 3f, 0f, (-5f * 2/3), false),
             new SpecialEffect(Trigger.MeleeAttack, new Stats() { BonusCritChanceObliterate = 1f, BonusCritChanceFrostStrike = 1f }, 3f, 0f, (-5f * 3/3), false),
         };
+         * */
         public static SpecialEffect[] _SE_Bloodworms = new SpecialEffect[3];
         /// <summary>
         /// When a damaging attack brings you below 30% of your maximum health, the cooldown on your Rune Tap
@@ -2058,6 +2036,7 @@ namespace Rawr.DPSDK
                 new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.5f, Parry = (.20f + .15f)/2 , ThreatIncreaseMultiplier = 0.50f }, 12f * 2f, 1.5f * 60f), // Glyphed
             }
         };
+
         #endregion
     }
 }

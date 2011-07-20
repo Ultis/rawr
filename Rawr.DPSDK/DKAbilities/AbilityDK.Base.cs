@@ -243,6 +243,31 @@ namespace Rawr.DK
         /// </summary>
         public bool bTriggersGCD { get; set; }
         /// <summary>
+        /// Is this Ability a Partial to average out values or left over resources?
+        /// </summary>
+        public bool bPartial { get; set; }
+        private float _fPartialValue = 1f;
+        public float fPartialValue 
+        { 
+            get
+            {
+                if (bPartial) return _fPartialValue;
+                else return 1;
+            }
+            set
+            {
+                if (value == 1)
+                {
+                    bPartial = false;
+                }
+                else
+                {
+                    bPartial = true;
+                }
+                _fPartialValue = value;
+            } 
+        }
+        /// <summary>
         /// How long does the effect last?
         /// This is in millisecs.
         /// </summary>
@@ -377,6 +402,7 @@ namespace Rawr.DK
                 // Apply modifiers.
                 _tickDamage += this.DamageAdditiveModifer;
                 _tickDamage *= (1f + DamageMultiplierModifer);
+                if (bPartial) { _tickDamage *= fPartialValue; }
             }
             return _tickDamage;
         }
