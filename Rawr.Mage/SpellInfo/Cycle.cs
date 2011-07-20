@@ -599,37 +599,37 @@ namespace Rawr.Mage
                     if (effect.Stats.ArcaneDamage > 0)
                     {
                         float boltDps = CastingState.ArcaneAverageDamage * effect.Stats.ArcaneDamage * effectsPerSecond;
-                        effectDamagePerSecondProc += boltDps;
+                        effectDamagePerSecondSpell += boltDps;
                         effectThreatPerSecond += boltDps * CastingState.ArcaneThreatMultiplier;
                     }
                     if (effect.Stats.FireDamage > 0)
                     {
                         float boltDps = CastingState.FireAverageDamage * effect.Stats.FireDamage * effectsPerSecond;
-                        effectDamagePerSecondProc += boltDps;
+                        effectDamagePerSecondSpell += boltDps;
                         effectThreatPerSecond += boltDps * CastingState.FireThreatMultiplier;
                     }
                     if (effect.Stats.FrostDamage > 0)
                     {
                         float boltDps = CastingState.FrostAverageDamage * effect.Stats.FrostDamage * effectsPerSecond;
-                        effectDamagePerSecondProc += boltDps;
+                        effectDamagePerSecondSpell += boltDps;
                         effectThreatPerSecond += boltDps * CastingState.FrostThreatMultiplier;
                     }
                     if (effect.Stats.ShadowDamage > 0)
                     {
                         float boltDps = CastingState.ShadowAverageDamage * effect.Stats.ShadowDamage * effectsPerSecond;
-                        effectDamagePerSecondProc += boltDps;
+                        effectDamagePerSecondSpell += boltDps;
                         effectThreatPerSecond += boltDps * CastingState.ShadowThreatMultiplier;
                     }
                     if (effect.Stats.NatureDamage > 0)
                     {
                         float boltDps = CastingState.NatureAverageDamage * effect.Stats.NatureDamage * effectsPerSecond;
-                        effectDamagePerSecondProc += boltDps;
+                        effectDamagePerSecondSpell += boltDps;
                         effectThreatPerSecond += boltDps * CastingState.NatureThreatMultiplier;
                     }
                     if (effect.Stats.HolyDamage > 0)
                     {
                         float boltDps = CastingState.HolyAverageDamage * effect.Stats.HolyDamage * effectsPerSecond;
-                        effectDamagePerSecondProc += boltDps;
+                        effectDamagePerSecondSpell += boltDps;
                         effectThreatPerSecond += boltDps * CastingState.HolyThreatMultiplier;
                     }
                     if (effect.Stats.HolySummonedDamage > 0)

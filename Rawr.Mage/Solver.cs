@@ -2401,7 +2401,10 @@ namespace Rawr.Mage
                                     cooldown.SpecialEffect = effect;
                                     cooldown.HasteEffect = hasteEffect;
                                     cooldown.Mask = mask;
-                                    itemBasedMask |= mask;
+                                    if (item.Id != 70142) // Moonwell Chalice bypasses item based cooldown stacking restrictions
+                                    {
+                                        itemBasedMask |= mask;
+                                    }
                                     mask <<= 1;
                                     cooldownCount++;
                                     cooldown.ItemBased = true;

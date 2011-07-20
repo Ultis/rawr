@@ -2850,7 +2850,10 @@ namespace Rawr.Mage
                         double k = -cycles[i].ManaPerSecond / (cycles[maxj].ManaPerSecond - cycles[i].ManaPerSecond);
                         Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
                         cycle.Name = "ArcaneManaNeutral";
-                        cycle.Note = string.Format("Mix {0:F}% {1} and {2:F}% {3}", 100 * (1 - k), cycles[i].Name, 100 * k, cycles[maxj].Name);
+                        if (needsDisplayCalculations)
+                        {
+                            cycle.Note = string.Format("Mix {0:F}% {1} and {2:F}% {3}", 100 * (1 - k), cycles[i].Name, 100 * k, cycles[maxj].Name);
+                        }
                         cycle.Mix1 = cycles[i].CycleId;
                         cycle.Mix2 = cycles[maxj].CycleId;
                         cycle.AddCycle(needsDisplayCalculations, cycles[i], (1 - k) / cycles[i].CastTime);
