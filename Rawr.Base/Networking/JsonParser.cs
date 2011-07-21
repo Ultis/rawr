@@ -142,7 +142,14 @@ namespace Rawr
             }
             else
             {
-                return int.Parse(num, CultureInfo.InvariantCulture);
+                try
+                {
+                    return int.Parse(num, CultureInfo.InvariantCulture);
+                }
+                catch (OverflowException)
+                {
+                    return Int64.Parse(num, CultureInfo.InvariantCulture);
+                }
             }
         }
 
@@ -293,6 +300,7 @@ namespace Rawr
 
             do
             {
+                ConsumeWhitespace(json, ref index);
                 string key = ParseString(json, ref index);
                 ConsumeWhitespace(json, ref index);
                 ConsumeChar(json, ref index, ':');
@@ -320,10 +328,17 @@ namespace Rawr
             } while (true);
         }
 
-        public static Dictionary<string, object> Parse(string json)
+        public static Dictionary<string, object> Parse(string json, bool bodyOnly = true)
         {
             int index = 0;
-            return ParseObjectBody(json, ref index, true);
+            if (bodyOnly)
+            {
+                return ParseObjectBody(json, ref index, true);
+            }
+            else
+            {
+                return ParseObject(json, ref index);
+            }
         }
 
         public static Dictionary<string, object> Merge(Dictionary<string, object> obj1, Dictionary<string, object> obj2)

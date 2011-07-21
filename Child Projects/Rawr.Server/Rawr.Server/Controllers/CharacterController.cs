@@ -15,6 +15,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Configuration;
 using System.Text.RegularExpressions;
+using System.Security.Cryptography;
 
 namespace Rawr.Server.Controllers
 {
@@ -23,6 +24,8 @@ namespace Rawr.Server.Controllers
     {
         private static string _loadedChars = "";
         private static string STATS_KEY = ConfigurationManager.AppSettings["StatsKey"];
+        private static string API_PUBLIC_KEY = ConfigurationManager.AppSettings["APIPublicKey"];
+        private static byte[] API_PRIVATE_KEY = System.Text.Encoding.UTF8.GetBytes(ConfigurationManager.AppSettings["APIPrivateKey"]);
         private static int CACHE_DURATION_MIN = 2;
         private static int QUERY_FREQUENCY_MS = 2000;
         private static DateTime _queueEnd = DateTime.MinValue;
@@ -75,35 +78,37 @@ namespace Rawr.Server.Controllers
             if (string.IsNullOrEmpty(characterName) || string.IsNullOrEmpty(region) || string.IsNullOrEmpty(realm))
                 return View();
 
-            string charXml = null;
-            if (forceRefresh || (charXml = GetCachedCharacterXml(characterName, region, realm)) == null)
+            DateTime lastRefreshed;
+            string charXml = GetCachedCharacterXml(characterName, region, realm, out lastRefreshed);
+            if (forceRefresh)
             {
-                string html = GetBattleNetHtml(characterName, region, realm);
-                try { 
-                    if (html.Contains("It’s a busy day for Battle.net!")) {
-                        Response.Write(string.Format("<Error>The {0} Battle.Net Server is {1}</Error>", region.ToUpper(), "Overloaded"));
-                        return View();
-                    } else if (html.Contains("<div id=\"continue\">")) {
-                        Response.Write(string.Format("<Error>The {0} Battle.Net Server has an advertisement on it. Unfortunately, the server cannot press \"Continue\" to get the data it needs. Until the advertisement is removed, you will have to utilize an alternative means of importing your character.</Error>", region.ToUpper()));
-                        return View();
-                    /*} else if (html.Contains("Maintenance")) {
-                        // TODO: Need a better check for this before implementing. Normal pages do have the word Maintenance on them.
-                        Response.Write(string.Format("{0} Battle.Net Server is {1}", region, "down for Maintenance"));
-                        return View();*/
-                    } else {
-                        try {
-                            Character character = ConvertBattleNetHtmlToCharacter(html, region);
+                charXml = null;
+                lastRefreshed = DateTime.MinValue;
+            }
+            if (charXml == null || lastRefreshed < DateTime.Now.AddMinutes(-CACHE_DURATION_MIN))
+            {
+                try
+                {
+                    string json = GetBattleNetJson(characterName, region, realm, lastRefreshed);
+                    if (json != null)
+                    {
+                        try
+                        {
+                            Character character = ConvertBattleNetJsonToCharacter(json, region);
                             charXml = ConvertCharacterToXml(character);
 
-                            using (RawrDBDataContext context = new RawrDBDataContext()) {
+                            using (RawrDBDataContext context = new RawrDBDataContext())
+                            {
                                 var characterXML = context.CharacterXMLs
                                                     .Where(cxml =>
                                                         cxml.CharacterName == characterName &&
                                                         cxml.Region == region &&
                                                         cxml.Realm == realm)
                                                     .FirstOrDefault();
-                                if (characterXML == null) {
-                                    characterXML = new CharacterXML() {
+                                if (characterXML == null)
+                                {
+                                    characterXML = new CharacterXML()
+                                    {
                                         CharacterName = characterName,
                                         Region = region,
                                         Realm = realm
@@ -117,12 +122,30 @@ namespace Rawr.Server.Controllers
                             }
 
                             _loadedChars += string.Format("{3}: Loaded {0}@{1}-{2} ({4})\r\n", characterName, region, realm, DateTime.Now, character.CurrentModel);
-                        } catch {
+                        }
+                        catch (Exception ex)
+                        {
                             _loadedChars += string.Format("{3}: ERROR PARSING - {0}@{1}-{2}\r\n", characterName, region, realm, DateTime.Now);
+                            Response.Write(string.Format("<Error>{0}</Error>", ex));
+                            return View();
                         }
                     }
-                } catch {
+                }
+                catch (Exception ex)
+                {
                     _loadedChars += string.Format("{3}: ERROR PARSING - {0}@{1}-{2}\r\n", characterName, region, realm, DateTime.Now);
+
+                    WebException wex = ex as WebException;
+                    if (wex != null)
+                    {
+                        Response.Write(string.Format("<Error>{0}</Error>", new StreamReader(wex.Response.GetResponseStream()).ReadToEnd()));
+                        return View();
+                    }
+                    else
+                    {
+                        Response.Write(string.Format("<Error>{0}</Error>", ex));
+                        return View();
+                    }
                 }
             }
 
@@ -130,59 +153,92 @@ namespace Rawr.Server.Controllers
             return View();
         }
 
-        private string GetCachedCharacterXml(string characterName, string region, string realm)
+        private string GetCachedCharacterXml(string characterName, string region, string realm, out DateTime lastRefreshed)
         {
             string xml = null;
+            lastRefreshed = DateTime.MinValue;
             using (RawrDBDataContext context = new RawrDBDataContext())
             {
                 var cxml = context.CharacterXMLs
                     .Where(chtml =>
                         chtml.CharacterName == characterName &&
                         chtml.Region == region &&
-                        chtml.Realm == realm &&
-                        chtml.LastRefreshed > DateTime.Now.AddMinutes(-CACHE_DURATION_MIN))
+                        chtml.Realm == realm)
                     .FirstOrDefault();
                 if (cxml != null)
                 {
                     _loadedChars += string.Format("{3}: Loaded {0}@{1}-{2} (Cached, {4})\r\n", characterName, region, realm, DateTime.Now, cxml.CurrentModel);
                     xml = cxml.XML;
+                    lastRefreshed = cxml.LastRefreshed;
                 }
             }
             return xml;
         }
 
-        public class CookieAwareWebClient : WebClient
-        {
-            private CookieContainer m_container = new CookieContainer();
-            
-            protected override WebRequest GetWebRequest(Uri address) 
-            { 
-                WebRequest request = base.GetWebRequest(address);
-                if (request is HttpWebRequest) 
-                { 
-                    (request as HttpWebRequest).CookieContainer = m_container;
-                }
-                return request; 
-            }
-        }
-
-        private string GetBattleNetHtml(string characterName, string region, string realm)
+        private string GetBattleNetJson(string characterName, string region, string realm, DateTime lastRefreshed)
         {
             double secWaited = WaitInQueryQueue();
             _loadedChars += string.Format("{3}: Loading {0}@{1}-{2} ({4:N1}s delay)\r\n", characterName, region, realm, DateTime.Now, secWaited);
-            WebClient client = new CookieAwareWebClient();
-            client.Encoding = Encoding.UTF8;
-            client.Headers["User-Agent"] = "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/525.13 (KHTML, like Gecko) Chrome/0.A.B.C Safari/525.13";
-            client.Headers["Accept-Language"] = "en-US";
-            string html = client.DownloadString(string.Format("http://{1}.battle.net/wow/en/character/{2}/{0}/advanced", characterName, region, realm));
-            if (html.Contains("<div id=\"continue\">"))
+
+            string apiserver;
+            switch (region)
             {
-                // advertisement, click continue
-                // cookie stored, let's try again
-                html = client.DownloadString(string.Format("http://{1}.battle.net/wow/en/character/{2}/{0}/advanced", characterName, region, realm));
+                case "eu":
+                    apiserver = "eu.battle.net";
+                    break;
+                case "kr":
+                    apiserver = "kr.battle.net";
+                    break;
+                case "tw":
+                    apiserver = "tw.battle.net";
+                    break;
+                case "cn":
+                    apiserver = "battlenet.com.cn";
+                    break;
+                case "us":
+                default:
+                    apiserver = "us.battle.net";
+                    break;
             }
-            html += "\r\n\r\n|||\r\n\r\n" + client.DownloadString(string.Format("http://{1}.battle.net/wow/en/character/{2}/{0}/talent/", characterName, region, realm));
-            return html;
+            string url = string.Format("http://{1}/api/wow/character/{2}/{0}?fields=talents,items,professions,pets", characterName, apiserver, realm);
+
+            HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+
+            if (lastRefreshed != DateTime.MinValue)
+            {
+                req.IfModifiedSince = lastRefreshed;
+            }
+
+            req.Date = DateTime.Now;
+
+            string date = req.Date.ToUniversalTime().ToString("r");
+            string stringToSign = req.Method + "\n" + date + "\n" + req.RequestUri.AbsolutePath + "\n";
+
+            byte[] buffer = Encoding.UTF8.GetBytes(stringToSign);
+            HMACSHA1 hmac = new HMACSHA1(API_PRIVATE_KEY);
+            byte[] hash = hmac.ComputeHash(buffer);
+            string sig = Convert.ToBase64String(hash);
+
+            string auth = "BNET " + API_PUBLIC_KEY + ":" + sig;
+
+            req.Headers["Authorization"] = auth;
+
+            try
+            {
+                using (WebResponse res = req.GetResponse())
+                {
+                    return new StreamReader(res.GetResponseStream()).ReadToEnd();
+                }
+            }
+            catch (WebException ex)
+            {
+                HttpWebResponse h = ex.Response as HttpWebResponse;
+                if (h.StatusCode != HttpStatusCode.NotModified)
+                {
+                    throw ex;
+                }
+                return null;
+            }
         }
 
         private static double WaitInQueryQueue()
@@ -202,43 +258,42 @@ namespace Rawr.Server.Controllers
             }
         }
 
-        private Character ConvertBattleNetHtmlToCharacter(string html, string region)
+        private Character ConvertBattleNetJsonToCharacter(string json, string region)
         {
-            //NOTE: Since this code is going to be completely rewritten when the xml services come out, 
-            //I'm just using string manipulation; Regexes would eventually be better, but not worth the dev time right now.
-
             Character character = new Character();
 
-            //Name/Region/Realm <title>Созерцающий @ Вечная Песня - Game - World of Warcraft</title>
+            // TODO consider replacing with DataContractJsonSerializer
+            var dict = JsonParser.Parse(json, false);
+
             {
-                string name = html.EverythingBetween("<title>", "-");
-                string[] def = name.EverythingBetween("/character/", "/\"").Split('/');
-                character.Name = name.EverythingBefore("@").Trim();
-                character.Realm = name.EverythingBetween("@", " - ").Replace("&#39;", "\'").Trim();
+                character.Name = (string)dict["name"];
+                character.Realm = (string)dict["realm"];
                 character.Region = (CharacterRegion)Enum.Parse(typeof(CharacterRegion), region.ToUpperInvariant());
             }
             
             //Race
             {
-                character.Race = (CharacterRace)Enum.Parse(typeof(CharacterRace), html.EverythingBetween("/game/race/", "\"").Replace("forsaken", "undead").Replace("-", ""), true);
+                character.Race = (CharacterRace)dict["race"];
             }
 
             //Class
             {
-                character.Class = (CharacterClass)Enum.Parse(typeof(CharacterClass), html.EverythingBetween("/game/class/", "\"").Replace("-", ""), true);
+                character.Class = (CharacterClass)dict["class"];
             }
 
             //Talents
             {
-                string spec = character.Class.ToString() + "." + html.EverythingBetween("class=\"spec tip\">", "</a>");
-                string talents = html.EverythingAfter(@"new TalentCalculator({
-				id: ""character""").EverythingBetween("\"", "\"");
-                string glyphsAll = html.EverythingBetween("<h3 class=\"category\">Glyphs</h3>", "<script type=\"text/javascript\">");
-                List<string> glyphNames = new List<string>();
-                while (glyphsAll.Contains("<span class=\"name\">"))
+                var talent = (Dictionary<string, object>)((object[])dict["talents"])[0];
+                string spec = character.Class.ToString() + "." + talent["name"];
+                string talents = (string)talent["build"];
+                var glyphs = (Dictionary<string, object>)talent["glyphs"];
+                List<int> glyphIds = new List<int>();
+                foreach (var group in glyphs)
                 {
-                    glyphNames.Add(glyphsAll.EverythingBetween("<span class=\"name\">", "</span>").Replace("&#39;", "\'"));
-                    glyphsAll = glyphsAll.EverythingAfter("<span class=\"name\">");
+                    foreach (Dictionary<string, object> glyph in (object[])group.Value)
+                    {
+                        glyphIds.Add((int)glyph["item"]);
+                    }
                 }
 
                 switch (character.Class)
@@ -319,18 +374,18 @@ namespace Rawr.Server.Controllers
                     case "Druid.Restoration":		character.CurrentModel = "Tree"; break;
                 }
 
-                Dictionary<string, PropertyInfo> glyphProperty = new Dictionary<string, PropertyInfo>();
+                Dictionary<int, PropertyInfo> glyphProperty = new Dictionary<int, PropertyInfo>();
                 foreach (PropertyInfo pi in character.CurrentTalents.GetType().GetProperties())
                 {
                     GlyphDataAttribute[] glyphDatas = pi.GetCustomAttributes(typeof(GlyphDataAttribute), true) as GlyphDataAttribute[];
                     if (glyphDatas.Length > 0)
                     {
                         GlyphDataAttribute glyphData = glyphDatas[0];
-                        glyphProperty[glyphData.Name] = pi;
+                        glyphProperty[glyphData.SpellID] = pi;
                     }
                 }
 
-                foreach (string glyph in glyphNames)
+                foreach (int glyph in glyphIds)
                 {
                     PropertyInfo pi;
                     if (glyphProperty.TryGetValue(glyph, out pi))
@@ -344,8 +399,10 @@ namespace Rawr.Server.Controllers
             //Professions
             try
             {
-                string profession1 = html.EverythingAfter("<a class=\"profession-details\"").EverythingBetween("<span class=\"name\">", "</span>");
-                string profession2 = html.EverythingAfter("<a class=\"profession-details\"").EverythingAfter("<a class=\"profession-details\"").EverythingBetween("<span class=\"name\">", "</span>");
+                var professions = (object[])((Dictionary<string, object>)dict["professions"])["primary"];
+
+                string profession1 = (string)((Dictionary<string, object>)professions[0])["name"];
+                string profession2 = (string)((Dictionary<string, object>)professions[1])["name"];
                 character.PrimaryProfession = (Profession)Enum.Parse(typeof(Profession), profession1);
                 character.SecondaryProfession = (Profession)Enum.Parse(typeof(Profession), profession2);
             }
@@ -353,128 +410,86 @@ namespace Rawr.Server.Controllers
             
             //Items
             {
-                string itemsAll = html.EverythingBetween("<div id=\"summary-inventory\"", "<script type=\"text/javascript\">");
+                var items = (Dictionary<string, object>)dict["items"];                
 
-                character._head = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"0\" data-type=","<div data-id"));
-                character._neck = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"1\" data-type=","<div data-id"));
-                character._shoulders = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"2\" data-type=","<div data-id"));
-                character._back = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"14\" data-type=","<div data-id"));
-                character._chest = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"4\" data-type=","<div data-id"));
-                character._shirt = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"3\" data-type=","<div data-id"));
-                character._tabard = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"18\" data-type=","<div data-id"));
-                character._wrist = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"8\" data-type=","<div data-id"));
-                character._hands = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"9\" data-type=","<div data-id"));
-                character._waist = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"5\" data-type=","<div data-id"));
-                character._legs = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"6\" data-type=","<div data-id"));
-                character._feet = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"7\" data-type=","<div data-id"));
-                character._finger1 = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"10\" data-type=","<div data-id"));
-                character._finger2 = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"11\" data-type=","<div data-id"));
-                character._trinket1 = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"12\" data-type=","<div data-id"));
-                character._trinket2 = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"13\" data-type=","<div data-id"));
-                character._mainHand = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"15\" data-type=","<div data-id"));
-                character._offHand = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"16\" data-type=","<div data-id"));
-                character._ranged = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"17\" data-type=","<div data-id"));
+                character._head = ParseItemJson(items["head"]);
+                character._neck = ParseItemJson(items["neck"]);
+                character._shoulders = ParseItemJson(items["shoulder"]);
+                character._back = ParseItemJson(items["back"]);
+                character._chest = ParseItemJson(items["chest"]);
+                character._shirt = ParseItemJson(items["shirt"]);
+                character._tabard = ParseItemJson(items["tabard"]);
+                character._wrist = ParseItemJson(items["wrist"]);
+                character._hands = ParseItemJson(items["hands"]);
+                character._waist = ParseItemJson(items["waist"]);
+                character._legs = ParseItemJson(items["legs"]);
+                character._feet = ParseItemJson(items["feet"]);
+                character._finger1 = ParseItemJson(items["finger1"]);
+                character._finger2 = ParseItemJson(items["finger2"]);
+                character._trinket1 = ParseItemJson(items["trinket1"]);
+                character._trinket2 = ParseItemJson(items["trinket2"]);
+                character._mainHand = ParseItemJson(items["mainHand"]);
+                character._offHand = ParseItemJson(items["offHand"]);
+                character._ranged = ParseItemJson(items["ranged"]);
 
-                character.WristBlacksmithingSocketEnabled = itemsAll.EverythingBetween("<div data-id=\"8\" data-type=", "<div data-id").Contains("socket-14");
-                character.HandsBlacksmithingSocketEnabled = itemsAll.EverythingBetween("<div data-id=\"9\" data-type=", "<div data-id").Contains("socket-14");
-                character.WaistBlacksmithingSocketEnabled = itemsAll.EverythingBetween("<div data-id=\"5\" data-type=", "<div data-id").Contains("socket-14");
-                
-                /*
-                 * 0/1 = Head
-                 * 1/2 = Neck
-                 * 2/3 = Shoulders
-                 * 14/16 = Back
-                 * 4/5 = Chest
-                 * 3/4 = Shirt
-                 * 18/19 = Tabard
-                 * 8/9 = Wrist
-                 * 9/10 = Hands
-                 * 5/6 = Waist
-                 * 6/7 = Legs
-                 * 7/8 = Feet
-                 * 10/11 = Ring1
-                 * 11/11 = Ring2
-                 * 12/12 = Trinket1
-                 * 13/12 = Trinket2
-                 * 15/21 = Mainhand
-                 * 16/22 = Offhand
-                 * 17/28 = Ranged
-                 */
+                var i = ((Dictionary<string, object>)((Dictionary<string, object>)items["wrist"])["tooltipParams"]);
+                if (i.ContainsKey("extraSocket"))
+                {
+                    character.WristBlacksmithingSocketEnabled = (bool)i["extraSocket"];
+                }
+                i = ((Dictionary<string, object>)((Dictionary<string, object>)items["hands"])["tooltipParams"]);
+                if (i.ContainsKey("extraSocket"))
+                {
+                    character.HandsBlacksmithingSocketEnabled = (bool)i["extraSocket"];
+                }
+                i = ((Dictionary<string, object>)((Dictionary<string, object>)items["waist"])["tooltipParams"]);
+                if (i.ContainsKey("extraSocket"))
+                {
+                    character.WaistBlacksmithingSocketEnabled = (bool)i["extraSocket"];
+                }
             }
     
             return character;
         }
 
-        private string ParseItemHtml(string html)
+        private string ParseItemJson(object json)
         {
-            if (html.EverythingBefore(" class=\"sockets\"").Contains("class=\"empty\"")) return null;
+            var item = (Dictionary<string, object>)json;
 
-            Regex regex = new Regex(@"/wow/en/item/(?<itemId>\d+)"
-                                  + @" class=item data-item="
-                                  + @"((&amp;)?(i=(?<itemId2>\d+)))?"
-                                  + @"((&amp;)?(e=(?<enchantId>\d+)))?"
-                                  + @"((&amp;)?(es=(\d+)))?"
-                                  + @"((&amp;)?(ee=(?<tinkeringId>\d+)))?"
-                                  + @"((&amp;)?(g0=(?<gem1Id>\d+)))?"
-                                  + @"((&amp;)?(g1=(?<gem2Id>\d+)))?"
-                                  + @"((&amp;)?(g2=(?<gem3Id>\d+)))?"
-                                  + @"((&amp;)?(r=-(?<suffixId>\d+)))?" 
-                                  + @"((&amp;)?(re=(?<reforgeId>\d+)))?");
-            Match match = regex.Match(html.Replace("\"", ""));
+            int itemId = 0;
+            int enchantId = 0;
+            int reforgeId = 0;
+            int tinkeringId = 0;
+            int suffixId = 0;
+            int gem1Id = 0;
+            int gem2Id = 0;
+            int gem3Id = 0;
 
-            string itemId = null;
-            string enchantId = null;
-            string reforgeId = null;
-            string tinkeringId = null;
-            string suffixId = null;
-            string gem1Id = null;
-            string gem2Id = null;
-            string gem3Id = null;
-
-            if (match.Success)
+            if (item.ContainsKey("id"))
             {
-                itemId = !string.IsNullOrEmpty(match.Groups["itemId"].Value) ? match.Groups["itemId"].Value : null;
-                enchantId = !string.IsNullOrEmpty(match.Groups["enchantId"].Value) ? match.Groups["enchantId"].Value : null;
-                reforgeId = !string.IsNullOrEmpty(match.Groups["reforgeId"].Value) ? match.Groups["reforgeId"].Value : null;
-                tinkeringId = !string.IsNullOrEmpty(match.Groups["tinkeringId"].Value) ? match.Groups["tinkeringId"].Value : null;
-                suffixId = !string.IsNullOrEmpty(match.Groups["suffixId"].Value) ? match.Groups["suffixId"].Value : null;
-                //gem1Id = !string.IsNullOrEmpty(match.Groups["gem1Id"].Value) ? match.Groups["gem1Id"].Value : null;
-                //gem2Id = !string.IsNullOrEmpty(match.Groups["gem2Id"].Value) ? match.Groups["gem2Id"].Value : null;
-                //gem3Id = !string.IsNullOrEmpty(match.Groups["gem3Id"].Value) ? match.Groups["gem3Id"].Value : null;
+                itemId = (int)item["id"];
             }
-            else
+            if (item.ContainsKey("tooltipParams"))
             {
-                itemId = html.EverythingBetween("/wow/en/item/", "\"").EverythingBefore("\"");
-                enchantId = html.Contains("\"e=") ? html.EverythingBetween("\"e=", "&").EverythingBefore("\"") : null;
-                reforgeId = html.Contains("&amp;re=") ? (int.Parse(html.EverythingBetween("&amp;re=", "&").EverythingBefore("\"")) - 56).ToString() : null;
-                tinkeringId = html.Contains("&amp;ee=") ? (int.Parse(html.EverythingBetween("&amp;ee=", "&").EverythingBefore("\""))).ToString() : null;
-                suffixId = html.Contains("&amp;r=-") ? html.EverythingBetween("&amp;r=-", "&").EverythingBefore("\"") : null;
-                //gem1Id = null;
-                //gem2Id = null;
-                //gem3Id = null;
-            }
-
-            if (html.Contains("<span class=\"sockets\">"))
-            {
-                string sockets = html.EverythingAfter("<span class=\"sockets\">");
-                while (sockets.Contains("/wow/en/item/"))
-                {
-                    sockets = sockets.EverythingAfter("/wow/en/item/");
-                    if (gem1Id == null) gem1Id = sockets.EverythingBefore("\"");
-                    else if (gem2Id == null) gem2Id = sockets.EverythingBefore("\"");
-                    else if (gem3Id == null) gem3Id = sockets.EverythingBefore("\"");
-                }
+                var param = (Dictionary<string, object>)item["tooltipParams"];
+                if (param.ContainsKey("enchant")) enchantId = (int)param["enchant"];
+                if (param.ContainsKey("reforge")) reforgeId = (int)param["reforge"];
+                if (param.ContainsKey("tinker")) tinkeringId = (int)param["tinker"];
+                if (param.ContainsKey("suffix")) suffixId = -(int)param["suffix"];
+                if (param.ContainsKey("gem0")) gem1Id = (int)param["gem0"];
+                if (param.ContainsKey("gem1")) gem2Id = (int)param["gem1"];
+                if (param.ContainsKey("gem2")) gem3Id = (int)param["gem2"];
             }
 
             string retVal = string.Format("{0}.{1}.{2}.{3}.{4}.{5}.{6}.{7}",
                 itemId,
-                suffixId ?? "0",
-                gem1Id ?? "0",
-                gem2Id ?? "0",
-                gem3Id ?? "0",
-                enchantId ?? "0",
-                reforgeId ?? "0",
-                tinkeringId ?? "0");
+                suffixId,
+                gem1Id,
+                gem2Id,
+                gem3Id,
+                enchantId,
+                reforgeId,
+                tinkeringId);
             return retVal;
         }
 
@@ -516,6 +531,10 @@ namespace Rawr.Server.Controllers
             </value>
           </item>
         </PhaseTimes>
+        <Missable>true</Missable>
+        <Dodgable>true</Dodgable>
+        <Parryable>true</Parryable>
+        <Blockable>true</Blockable>
         <AffectsRole>
           <item>
             <key>
