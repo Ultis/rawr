@@ -412,25 +412,25 @@ namespace Rawr.Server.Controllers
             {
                 var items = (Dictionary<string, object>)dict["items"];                
 
-                character._head = ParseItemJson(items["head"]);
-                character._neck = ParseItemJson(items["neck"]);
-                character._shoulders = ParseItemJson(items["shoulder"]);
-                character._back = ParseItemJson(items["back"]);
-                character._chest = ParseItemJson(items["chest"]);
-                character._shirt = ParseItemJson(items["shirt"]);
-                character._tabard = ParseItemJson(items["tabard"]);
-                character._wrist = ParseItemJson(items["wrist"]);
-                character._hands = ParseItemJson(items["hands"]);
-                character._waist = ParseItemJson(items["waist"]);
-                character._legs = ParseItemJson(items["legs"]);
-                character._feet = ParseItemJson(items["feet"]);
-                character._finger1 = ParseItemJson(items["finger1"]);
-                character._finger2 = ParseItemJson(items["finger2"]);
-                character._trinket1 = ParseItemJson(items["trinket1"]);
-                character._trinket2 = ParseItemJson(items["trinket2"]);
-                character._mainHand = ParseItemJson(items["mainHand"]);
-                character._offHand = ParseItemJson(items["offHand"]);
-                character._ranged = ParseItemJson(items["ranged"]);
+                if (items.ContainsKey("head")) character._head = ParseItemJson(items["head"]);
+                if (items.ContainsKey("neck")) character._neck = ParseItemJson(items["neck"]);
+                if (items.ContainsKey("shoulder")) character._shoulders = ParseItemJson(items["shoulder"]);
+                if (items.ContainsKey("back")) character._back = ParseItemJson(items["back"]);
+                if (items.ContainsKey("chest")) character._chest = ParseItemJson(items["chest"]);
+                if (items.ContainsKey("shirt")) character._shirt = ParseItemJson(items["shirt"]);
+                if (items.ContainsKey("tabard")) character._tabard = ParseItemJson(items["tabard"]);
+                if (items.ContainsKey("wrist")) character._wrist = ParseItemJson(items["wrist"]);
+                if (items.ContainsKey("hands")) character._hands = ParseItemJson(items["hands"]);
+                if (items.ContainsKey("waist")) character._waist = ParseItemJson(items["waist"]);
+                if (items.ContainsKey("legs")) character._legs = ParseItemJson(items["legs"]);
+                if (items.ContainsKey("feet")) character._feet = ParseItemJson(items["feet"]);
+                if (items.ContainsKey("finger1")) character._finger1 = ParseItemJson(items["finger1"]);
+                if (items.ContainsKey("finger2")) character._finger2 = ParseItemJson(items["finger2"]);
+                if (items.ContainsKey("trinket1")) character._trinket1 = ParseItemJson(items["trinket1"]);
+                if (items.ContainsKey("trinket2")) character._trinket2 = ParseItemJson(items["trinket2"]);
+                if (items.ContainsKey("mainHand")) character._mainHand = ParseItemJson(items["mainHand"]);
+                if (items.ContainsKey("offHand")) character._offHand = ParseItemJson(items["offHand"]);
+                if (items.ContainsKey("ranged")) character._ranged = ParseItemJson(items["ranged"]);
 
                 var i = ((Dictionary<string, object>)((Dictionary<string, object>)items["wrist"])["tooltipParams"]);
                 if (i.ContainsKey("extraSocket"))
