@@ -843,7 +843,6 @@ namespace Rawr.UI
             Character = null;
             this.Show();
             OKButton_Click(null, null);
-            BT_OK.IsEnabled = false;
         }
 
         public BNetLoadDialog()
@@ -1013,6 +1012,11 @@ namespace Rawr.UI
             ProgressBarStatus.Value = ProgressBarStatus.Maximum;
             Character = e.Value;
             if (!isReload) { this.DialogResult = true; }
+            else 
+            {
+                BT_CancelProcessing.IsEnabled = false;
+                BT_Cancel.Content = "Done"; 
+            }
         }
 
         void _armoryService_GetCharacterErrored(object sender, EventArgs<String> e)
