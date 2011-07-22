@@ -283,7 +283,11 @@ namespace Rawr.Server.Controllers
 
             //Talents
             {
-                var talent = (Dictionary<string, object>)((object[])dict["talents"])[0];
+                var talent = (Dictionary<string, object>)((object[])dict["talents"]).FirstOrDefault(t =>
+                {
+                    object selected;
+                    return ((Dictionary<string, object>)t).TryGetValue("selected", out selected) && (bool)selected;
+                });
                 string spec = character.Class.ToString() + "." + talent["name"];
                 string talents = (string)talent["build"];
                 var glyphs = (Dictionary<string, object>)talent["glyphs"];
