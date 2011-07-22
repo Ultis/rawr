@@ -1538,11 +1538,22 @@ namespace Rawr.Optimizer
 
         public ItemAvailabilityInformation GenerateItemAvailabilityInformation(Item item, int randomSuffixId)
         {
+            int index = 0;
             if (item.AvailabilityInformation == null)
             {
                 item.AvailabilityInformation = new ItemAvailabilityInformation[(item.AllowedRandomSuffixes == null || item.AllowedRandomSuffixes.Count == 0) ? 1 : item.AllowedRandomSuffixes.Count];
             }
-            int index = 0;
+            else
+            {
+                // Defect 21159: IndexOutOfRange because AllowedRandomSuffixes can have a count > than item.AvailabilityInformation.Length
+                if (item.AvailabilityInformation.Length < item.AllowedRandomSuffixes.Count)
+                {
+                    index = item.AllowedRandomSuffixes.Count - item.AvailabilityInformation.Length;
+                    Array.Resize(ref item.AvailabilityInformation, item.AllowedRandomSuffixes.Count);
+                    Array.Copy(new ItemAvailabilityInformation[index], item.AvailabilityInformation, index);
+                }
+            }
+            index = 0;
             if (randomSuffixId != 0)
             {
                 index = item.AllowedRandomSuffixes.IndexOf(randomSuffixId);

@@ -225,7 +225,18 @@ namespace Rawr
         {
             if (randomSuffixId == 0)
             {
-                return baseItem.Stats._rawAdditiveData[(int)stat];
+                if ((int)stat >= 0 && (int)stat < baseItem.Stats._rawAdditiveData.Length)
+                {
+                        return baseItem.Stats._rawAdditiveData[(int)stat];
+                }
+                else 
+                {
+#if DEBUG
+                    throw new IndexOutOfRangeException(string.Format("Invalid Stat index"));
+#else
+                    return 0f;
+#endif
+                }
             }
             else
             {
