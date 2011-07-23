@@ -60,18 +60,34 @@ namespace Rawr.Enhance
             sb.AppendLine("mh_crit                         " + chanceCrit.ToString("F2", CultureInfo.InvariantCulture));
             chanceCrit = cs.ExportMeleeCritOH * 100f;
             sb.AppendLine("oh_crit                         " + chanceCrit.ToString("F2", CultureInfo.InvariantCulture));
-            float hitBonus = StatConversion.GetHitFromRating(stats.HitRating) * 100f;
+            float hitBonus = StatConversion.GetHitFromRating(stats.HitRating) * 100f + 6f;
+            if (character.Race == CharacterRace.Draenei)
+            {
+                hitBonus += 1f;
+            }
             sb.AppendLine("mh_hit                          " + hitBonus.ToString("F2", CultureInfo.InvariantCulture));
             sb.AppendLine("oh_hit                          " + hitBonus.ToString("F2", CultureInfo.InvariantCulture));
             sb.AppendLine("mh_expertise_rating             " + stats.ExpertiseRating.ToString("F0", CultureInfo.InvariantCulture));
             sb.AppendLine("oh_expertise_rating             " + stats.ExpertiseRating.ToString("F0", CultureInfo.InvariantCulture));
-            sb.AppendLine("ap                              " + stats.AttackPower.ToString("F0", CultureInfo.InvariantCulture));
+            float unleashedRage = 0f;
+            switch (character.ShamanTalents.UnleashedRage)
+            {
+                case 1: unleashedRage = .05f; break;
+                case 2: unleashedRage = .10f; break;
+            }
+            sb.AppendLine("ap                              " + (stats.AttackPower * (1f + unleashedRage)).ToString("F0", CultureInfo.InvariantCulture));
             float hasteBonus = StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.Shaman) * 100f;
             sb.AppendLine("melee_haste                     " + hasteBonus.ToString("F2", CultureInfo.InvariantCulture));
-            sb.AppendLine("spellpower                      " + stats.SpellPower.ToString("F0", CultureInfo.InvariantCulture));
+            float MQUnleashedRageSpellpower = stats.AttackPower * unleashedRage * 0.50f;
+            sb.AppendLine("spellpower                      " + (stats.SpellPower + MQUnleashedRageSpellpower).ToString("F0", CultureInfo.InvariantCulture));
             float chanceSpellCrit = cs.DisplaySpellCrit * 100f;
             sb.AppendLine("spell_crit                      " + chanceSpellCrit.ToString("F2", CultureInfo.InvariantCulture));
-            hitBonus = StatConversion.GetSpellHitFromRating(stats.HitRating) * 100f;
+            float elemPrec = character.ShamanTalents.ElementalPrecision > 0 ? (stats.Spirit - BaseStats.GetBaseStats(character).Spirit) * (character.ShamanTalents.ElementalPrecision / 3f) : 0f;
+            hitBonus = StatConversion.GetSpellHitFromRating(stats.HitRating + elemPrec) * 100f;
+            if (character.Race == CharacterRace.Draenei)
+            {
+                hitBonus += 1f;
+            }
             sb.AppendLine("spell_hit                       " + hitBonus.ToString("F2", CultureInfo.InvariantCulture));
             hasteBonus = StatConversion.GetSpellHasteFromRating(stats.HasteRating) * 100f;
             sb.AppendLine("spell_haste                     " + hasteBonus.ToString("F2", CultureInfo.InvariantCulture));
@@ -192,12 +208,12 @@ namespace Rawr.Enhance
 #else
         public void copyToClipboard()
         {
-			try
-			{
+            try
+            {
                 System.Windows.Clipboard.SetText(_configText);
-			}
-			catch { }
-            if(_calcOpts.ShowExportMessageBox)  
+            }
+            catch { }
+            if (_calcOpts.ShowExportMessageBox)
                 System.Windows.MessageBox.Show("EnhSim config data copied to clipboard.\n" +
                     "Use the 'Copy from Clipboard' option in EnhSimGUI v1.9.6.0 or higher, to import it\n" +
                     "Or paste the config data into your EnhSim config file in a decent text editor (not Notepad)!",
@@ -214,35 +230,35 @@ namespace Rawr.Enhance
             sb.AppendLine();
             List<Buff> buffs = character.ActiveBuffs;
 
-            if (_character.ActiveBuffsContains("Corrosive Spit") || _character.ActiveBuffsContains("Expose Armor") || 
-                _character.ActiveBuffsContains("Sunder Armor") || _character.ActiveBuffsContains("Faerie Fire") || 
+            if (_character.ActiveBuffsContains("Corrosive Spit") || _character.ActiveBuffsContains("Expose Armor") ||
+                _character.ActiveBuffsContains("Sunder Armor") || _character.ActiveBuffsContains("Faerie Fire") ||
                 _character.ActiveBuffsContains("Tear Armor"))
                 sb.AppendLine("armor_debuff                    12.0/12.0");
             else
                 sb.AppendLine("armor_debuff                    0.0/12.0");
-            if (_character.ActiveBuffsContains("Blood Frenzy") || _character.ActiveBuffsContains("Savage Combat") || 
-                _character.ActiveBuffsContains("Brittle Bones") || _character.ActiveBuffsContains("Ravage") || 
+            if (_character.ActiveBuffsContains("Blood Frenzy") || _character.ActiveBuffsContains("Savage Combat") ||
+                _character.ActiveBuffsContains("Brittle Bones") || _character.ActiveBuffsContains("Ravage") ||
                 _character.ActiveBuffsContains("Acid Spit"))
                 sb.AppendLine("physical_vulnerability_debuff   4.0/4.0");
             else
                 sb.AppendLine("physical_vulnerability_debuff   0.0/4.0");
-            if (_character.ActiveBuffsContains("Windfury Totem") || _character.ActiveBuffsContains("Improved Icy Talons") || 
+            if (_character.ActiveBuffsContains("Windfury Totem") || _character.ActiveBuffsContains("Improved Icy Talons") ||
                 _character.ActiveBuffsContains("Hunting Party"))
                 sb.AppendLine("melee_haste_buff                10.0/10.0");
             else
                 sb.AppendLine("melee_haste_buff                0.0/10.0");
-            if (_character.ActiveBuffsContains("Leader of the Pack") || _character.ActiveBuffsContains("Rampage") || 
-                _character.ActiveBuffsContains("Honor Among Thieves") || _character.ActiveBuffsContains("Elemental Oath") || 
+            if (_character.ActiveBuffsContains("Leader of the Pack") || _character.ActiveBuffsContains("Rampage") ||
+                _character.ActiveBuffsContains("Honor Among Thieves") || _character.ActiveBuffsContains("Elemental Oath") ||
                 _character.ActiveBuffsContains("Furious Howl") || _character.ActiveBuffsContains("Terrifying Roar"))
                 sb.AppendLine("crit_chance_buff                5.0/5.0");
             else
                 sb.AppendLine("crit_chance_buff                0.0/5.0");
-            if (_character.ActiveBuffsContains("Trueshot Aura") || _character.ActiveBuffsContains("Unleashed Rage") || 
+            if (_character.ActiveBuffsContains("Trueshot Aura") || _character.ActiveBuffsContains("Unleashed Rage") ||
                 _character.ActiveBuffsContains("Abomination's Might") || _character.ActiveBuffsContains("Blessing of Might (AP%)"))
                 sb.AppendLine("attack_power_buff_multiplier    10.0/10.0");
             else
                 sb.AppendLine("attack_power_buff_multiplier    0.0/10.0");
-            if (_character.ActiveBuffsContains("Wrath of Air Totem") || _character.ActiveBuffsContains("Moonkin Form") || 
+            if (_character.ActiveBuffsContains("Wrath of Air Totem") || _character.ActiveBuffsContains("Moonkin Form") ||
                 _character.ActiveBuffsContains("Mind Quickening"))
                 sb.AppendLine("spell_haste_buff                5.0/5.0");
             else
@@ -251,8 +267,8 @@ namespace Rawr.Enhance
                 sb.AppendLine("spell_crit_chance_debuff        5.0/5.0");
             else
                 sb.AppendLine("spell_crit_chance_debuff        0.0/5.0");
-            if (_character.ActiveBuffsContains("Ebon Plaguebringer") || _character.ActiveBuffsContains("Earth and Moon") || 
-                _character.ActiveBuffsContains("Curse of the Elements") || _character.ActiveBuffsContains("Master Poisner") || 
+            if (_character.ActiveBuffsContains("Ebon Plaguebringer") || _character.ActiveBuffsContains("Earth and Moon") ||
+                _character.ActiveBuffsContains("Curse of the Elements") || _character.ActiveBuffsContains("Master Poisner") ||
                 _character.ActiveBuffsContains("Fire Breath") || _character.ActiveBuffsContains("Lightning Breath"))
                 sb.AppendLine("spell_damage_debuff             8.0/8.0");
             else
@@ -263,7 +279,7 @@ namespace Rawr.Enhance
                 sb.AppendLine("spellpower_buff                 10.0/10.0");
             else
                 sb.AppendLine("spellpower_buff                 0/10.0");
-            if (_character.ActiveBuffsContains("Ferocious Inspiration") || _character.ActiveBuffsContains("Sanctified Retribution") || 
+            if (_character.ActiveBuffsContains("Ferocious Inspiration") || _character.ActiveBuffsContains("Sanctified Retribution") ||
                 _character.ActiveBuffsContains("Arcane Tactics"))
                 sb.AppendLine("percentage_damage_increase      3.0/3.0");
             else
@@ -273,7 +289,7 @@ namespace Rawr.Enhance
                 sb.AppendLine("stat_multiplier                 5.0/5.0");
             else
                 sb.AppendLine("stat_multiplier                 0.0/5.0");
-            if (_character.ActiveBuffsContains("Strength of Earth Totem") || _character.ActiveBuffsContains("Horn of Winter") || 
+            if (_character.ActiveBuffsContains("Strength of Earth Totem") || _character.ActiveBuffsContains("Horn of Winter") ||
                 _character.ActiveBuffsContains("Battle Shout") || _character.ActiveBuffsContains("Roar of Courage"))
                 sb.AppendLine("agi_and_strength_buff           549/549");
             else
@@ -282,14 +298,14 @@ namespace Rawr.Enhance
                 sb.AppendLine("mana_buff                       2126/2126");
             else
                 sb.AppendLine("mana_buff                       0/2126");
-            if (_character.ActiveBuffsContains("Blessing of Might (Mp5)") || _character.ActiveBuffsContains("Mana Spring Totem") || 
+            if (_character.ActiveBuffsContains("Blessing of Might (Mp5)") || _character.ActiveBuffsContains("Mana Spring Totem") ||
                 _character.ActiveBuffsContains("Fel Intelligence (Mp5)"))
                 sb.AppendLine("mana_regen_buff                 326/326");
             else
                 sb.AppendLine("mana_regen_buff                 0/326");
             sb.AppendLine();
-            if (_character.ActiveBuffsContains("Revitalize") || _character.ActiveBuffsContains("Communion") || 
-                _character.ActiveBuffsContains("Vampiric Touch") || _character.ActiveBuffsContains("Soul Leech") || 
+            if (_character.ActiveBuffsContains("Revitalize") || _character.ActiveBuffsContains("Communion") ||
+                _character.ActiveBuffsContains("Vampiric Touch") || _character.ActiveBuffsContains("Soul Leech") ||
                 _character.ActiveBuffsContains("Enduring Winter"))
                 sb.AppendLine("replenishment             1");
             else
@@ -328,7 +344,7 @@ namespace Rawr.Enhance
             if (_character.ActiveBuffsContains("Elixir of the Naga"))
                 return "elixir_of_the_naga";
             if (_character.ActiveBuffsContains("Elixir of Mighty Speed"))
-                return "elixir_of_mighty_speed";;
+                return "elixir_of_mighty_speed"; ;
             return "-";
         }
 
@@ -500,18 +516,6 @@ namespace Rawr.Enhance
                 {
                     switch (kvp.Key)
                     {
-                        case "Frost Witch's Battlegear":
-                            if (kvp.Value >= 4)
-                            {
-                                bonusCount++;
-                                sb.AppendLine("set_bonus" + bonusCount + "                      t10_battlegear_4");
-                            }
-                            else if (kvp.Value >= 2)
-                            {
-                                bonusCount++;
-                                sb.AppendLine("set_bonus" + bonusCount + "                      t10_battlegear_2");
-                            }
-                            break;
                         case "Battlegear of the Raging Elements":
                             if (kvp.Value >= 4)
                             {
@@ -522,6 +526,18 @@ namespace Rawr.Enhance
                             {
                                 bonusCount++;
                                 sb.AppendLine("set_bonus" + bonusCount + "                      t11_battlegear_2");
+                            }
+                            break;
+                        case "Volcanic Battlegear":
+                            if (kvp.Value >= 4)
+                            {
+                                bonusCount++;
+                                sb.AppendLine("set_bonus" + bonusCount + "                      t12_battlegear_4");
+                            }
+                            else if (kvp.Value >= 2)
+                            {
+                                bonusCount++;
+                                sb.AppendLine("set_bonus" + bonusCount + "                      t12_battlegear_2");
                             }
                             break;
                     }
