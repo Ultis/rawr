@@ -193,7 +193,7 @@ namespace Rawr.Server.Controllers
                     apiserver = "tw.battle.net";
                     break;
                 case "cn":
-                    apiserver = "battlenet.com.cn";
+                    apiserver = "www.battlenet.com.cn";
                     break;
                 case "us":
                 default:
