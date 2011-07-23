@@ -639,7 +639,7 @@ threat and limited threat scaled by the threat scale.",
             player.Stats.Armor = (float)Math.Ceiling(player.Stats.Armor * (1.0f + player.Stats.BaseArmorMultiplier));
             player.Stats.Armor += (float)Math.Ceiling(player.Stats.BonusArmor * (1.0f + player.Stats.BonusArmorMultiplier));
             player.Stats.Block += (Lookup.BonusMasteryBlockPercentage(player) - baseBonusMasteryBlockPercentage);
-            player.Stats.ParryRating += (((player.Stats.Strength - baseStrength) * 0.25f) - baseParryRatingFromStrength); // Parry Rating conversion ignores base Strength
+            player.Stats.ParryRating += (((player.Stats.Strength - baseStrength) * 0.27f) - baseParryRatingFromStrength); // Parry Rating conversion ignores base Strength
 
             player.Stats.NatureResistance += player.Stats.NatureResistanceBuff;
             player.Stats.FireResistance += player.Stats.FireResistanceBuff;

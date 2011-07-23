@@ -1654,7 +1654,7 @@ namespace Rawr
                 Group = "Elixirs and Flasks",
                 Stats = { MasteryRating = 225f },
                 ConflictingBuffs = new List<string>(new string[] { "Battle Elixir" }),
-                Improvements = { new Buff { Name = "Elixir of the Master (Mixology)", Stats = { MasteryRating = 90f },
+                Improvements = { new Buff { Name = "Elixir of the Master (Mixology)", Stats = { MasteryRating = 40f },
                     Professions = new List<Profession>() { Profession.Alchemy }, ConflictingBuffs = new List<string>(new string[] { "Battle Elixir Mixology" }), } }
             });
             defaultBuffs.Add(new Buff()
@@ -1663,7 +1663,7 @@ namespace Rawr
                 Group = "Elixirs and Flasks",
                 Stats = { Spirit = 225f },
                 ConflictingBuffs = new List<string>(new string[] { "Battle Elixir" }),
-                Improvements = { new Buff { Name = "Ghost Elixir (Mixology)", Stats = { Spirit = 90f },
+                Improvements = { new Buff { Name = "Ghost Elixir (Mixology)", Stats = { Spirit = 40f },
                     Professions = new List<Profession>() { Profession.Alchemy }, ConflictingBuffs = new List<string>(new string[] { "Battle Elixir Mixology" }), } }
             });
             defaultBuffs.Add(new Buff()
@@ -1672,7 +1672,7 @@ namespace Rawr
                 Group = "Elixirs and Flasks",
                 Stats = { ExpertiseRating = 225f },
                 ConflictingBuffs = new List<string>(new string[] { "Battle Elixir" }),
-                Improvements = { new Buff { Name = "Elixir of the Naga (Mixology)", Stats = { ExpertiseRating = 90f },
+                Improvements = { new Buff { Name = "Elixir of the Naga (Mixology)", Stats = { ExpertiseRating = 40f },
                     Professions = new List<Profession>() { Profession.Alchemy }, ConflictingBuffs = new List<string>(new string[] { "Battle Elixir Mixology" }), } }
             });
             defaultBuffs.Add(new Buff()
@@ -1681,7 +1681,7 @@ namespace Rawr
                 Group = "Elixirs and Flasks",
                 Stats = { CritRating = 225f },
                 ConflictingBuffs = new List<string>(new string[] { "Battle Elixir" }),
-                Improvements = { new Buff { Name = "Elixir of the Cobra (Mixology)", Stats = { CritRating = 90f },
+                Improvements = { new Buff { Name = "Elixir of the Cobra (Mixology)", Stats = { CritRating = 40f },
                     Professions = new List<Profession>() { Profession.Alchemy }, ConflictingBuffs = new List<string>(new string[] { "Battle Elixir Mixology" }), } }
             });
             defaultBuffs.Add(new Buff()
@@ -1690,7 +1690,7 @@ namespace Rawr
                 Group = "Elixirs and Flasks",
                 Stats = { HasteRating = 225f },
                 ConflictingBuffs = new List<string>(new string[] { "Battle Elixir" }),
-                Improvements = { new Buff { Name = "Elixir of Mighty Speed (Mixology)", Stats = { HasteRating = 90f },
+                Improvements = { new Buff { Name = "Elixir of Mighty Speed (Mixology)", Stats = { HasteRating = 40f },
                     Professions = new List<Profession>() { Profession.Alchemy }, ConflictingBuffs = new List<string>(new string[] { "Battle Elixir Mixology" }), } }
             });
             defaultBuffs.Add(new Buff()
@@ -1699,7 +1699,7 @@ namespace Rawr
                 Group = "Elixirs and Flasks",
                 Stats = { HitRating = 225f },
                 ConflictingBuffs = new List<string>(new string[] { "Battle Elixir" }),
-                Improvements = { new Buff { Name = "Elixir of Impossible Accuracy (Mixology)", Stats = { HitRating = 90f },
+                Improvements = { new Buff { Name = "Elixir of Impossible Accuracy (Mixology)", Stats = { HitRating = 40f },
                     Professions = new List<Profession>() { Profession.Alchemy }, ConflictingBuffs = new List<string>(new string[] { "Battle Elixir Mixology" }), } }
             });
             #endregion
