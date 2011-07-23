@@ -55,9 +55,10 @@ namespace Rawr.Mage
         [Description("Frostfire Bolt")]
         FrostfireBolt,
         FrostfireBoltFC,
-        //[Description("Pyroblast")]
-        //Pyroblast,
-        [Description("POM+Pyroblast")]
+        [Description("Pyroblast")]        
+        PyroblastSpammed,
+        PyroblastDotUptime,
+        [Description("Pyroblast!")]
         PyroblastPOM,
         PyroblastPOMSpammed,
         PyroblastPOMDotUptime,
@@ -605,6 +606,43 @@ namespace Rawr.Mage
             Name = "Pyroblast!";
             InitializeCastTime(false, false, /*3.5f*/0, 0);
             InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0f, 1.57500004768372f, 0.238000005483627f, 4 * 0.234999999403954f, 1.30499994754791f /*1.25f*/, 4 * 0.0869999974966049f, 1, 1, 12);
+            DotDuration = 12;
+            DotTickInterval = 3;
+            if (solver.MageTalents.GlyphOfPyroblast)
+            {
+                BaseCritRate += 0.05f;
+            }
+            if (solver.Mage2T11)
+            {
+                BaseCritRate += 0.05f;
+            }
+            Dirty = false;
+        }
+    }
+
+    public class PyroblastHardCastTemplate : SpellTemplate
+    {
+        public Spell GetSpell(CastingState castingState, bool pom, bool spammedDot)
+        {
+            Spell spell = Spell.New(this, castingState.Solver);
+            spell.Calculate(castingState);
+            spell.CalculateDerivedStats(castingState, false, pom, spammedDot);
+            return spell;
+        }
+
+        public Spell GetSpell(CastingState castingState, bool pom)
+        {
+            Spell spell = Spell.New(this, castingState.Solver);
+            spell.Calculate(castingState);
+            spell.CalculateDerivedStats(castingState, false, pom, false, false, false, false, true);
+            return spell;
+        }
+
+        public void Initialize(Solver solver)
+        {
+            Name = "Pyroblast";
+            InitializeCastTime(false, false, 3.5f, 0);
+            InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0.17f, 1.57500004768372f, 0.238000005483627f, 4 * 0.234999999403954f, 1.30499994754791f /*1.25f*/, 4 * 0.0869999974966049f, 1, 1, 12);
             DotDuration = 12;
             DotTickInterval = 3;
             if (solver.MageTalents.GlyphOfPyroblast)

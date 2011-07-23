@@ -522,6 +522,23 @@ namespace Rawr.Mage
             }
         }
 
+        private PyroblastHardCastTemplate _PyroblastHardCastTemplate;
+        public PyroblastHardCastTemplate PyroblastHardCastTemplate
+        {
+            get
+            {
+                if (_PyroblastHardCastTemplate == null)
+                {
+                    _PyroblastHardCastTemplate = new PyroblastHardCastTemplate();
+                }
+                if (_PyroblastHardCastTemplate.Dirty)
+                {
+                    _PyroblastHardCastTemplate.Initialize(this);
+                }
+                return _PyroblastHardCastTemplate;
+            }
+        }
+
         private ScorchTemplate _ScorchTemplate;
         public ScorchTemplate ScorchTemplate
         {
@@ -2888,6 +2905,7 @@ namespace Rawr.Mage
             if (_ArcaneMissilesTemplate != null) _ArcaneMissilesTemplate.Dirty = true;
             if (_FireballTemplate != null) _FireballTemplate.Dirty = true;
             if (_PyroblastTemplate != null) _PyroblastTemplate.Dirty = true;
+            if (_PyroblastHardCastTemplate != null) _PyroblastHardCastTemplate.Dirty = true;
             if (_ScorchTemplate != null) _ScorchTemplate.Dirty = true;
             if (_CombustionTemplate != null) _CombustionTemplate.Dirty = true;
             if (_ArcaneBarrageTemplate != null) _ArcaneBarrageTemplate.Dirty = true;

@@ -1102,9 +1102,12 @@ namespace Rawr.Mage
                     case SpellId.FrostfireBoltBF:
                         s = Solver.FrostfireBoltTemplate.GetSpell(this, false, true);
                         break;
-                    /*case SpellId.Pyroblast:
-                        s = Solver.PyroblastTemplate.GetSpell(this, false, false);
-                        break;*/
+                    case SpellId.PyroblastSpammed:
+                        s = Solver.PyroblastHardCastTemplate.GetSpell(this, false, true);
+                        break;
+                    case SpellId.PyroblastDotUptime:
+                        s = Solver.PyroblastHardCastTemplate.GetSpell(this, false);
+                        break;
                     case SpellId.FireBlast:
                         s = Solver.FireBlastTemplate.GetSpell(this);
                         break;

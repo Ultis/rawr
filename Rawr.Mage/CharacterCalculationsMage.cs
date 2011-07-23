@@ -454,7 +454,7 @@ namespace Rawr.Mage
             dictValues.Add("Chance to Die", String.Format("{0:F}%", 100 * ChanceToDie));
             dictValues.Add("Mean Incoming Dps", String.Format("{0:F}", MeanIncomingDps));
             List<CycleId> cycleList = new List<CycleId>() { CycleId.FBLBPyro, CycleId.ScLBPyro, CycleId.FFBLBPyro, CycleId.ABSpam234AM, CycleId.AB3ABar023AM, CycleId.AB23ABar023AM, CycleId.AB2ABar02AMABABar, CycleId.AB2ABar12AMABABar, CycleId.FrBDFFFBIL, CycleId.ArcaneManaNeutral, CycleId.ABSpam0234AMABar, CycleId.ABSpam0234AMABABar, CycleId.AB2ABar2AMABar0AMABABar, CycleId.ABABar1AM, CycleId.FBPyro, CycleId.AB3ABar123AM, CycleId.AB4ABar1234AM, CycleId.AE4AB, CycleId.AERampAB, CycleId.FBLB3Pyro, CycleId.FFBLB3Pyro, CycleId.ABSpam34AM, CycleId.ABSpam4AM, CycleId.AB4ABar34AM, CycleId.AB4ABar4AM };
-            List<SpellId> spellList = new List<SpellId>() { SpellId.ArcaneMissiles, SpellId.ArcaneBarrage, SpellId.Scorch, SpellId.Fireball, SpellId.PyroblastPOM, SpellId.Frostbolt, SpellId.FireBlast, SpellId.ArcaneExplosion0, SpellId.FlamestrikeSingle, SpellId.Blizzard, SpellId.BlastWave, SpellId.DragonsBreath, SpellId.ConeOfCold, SpellId.FrostfireBolt, SpellId.LivingBomb, SpellId.IceLance, SpellId.FlameOrb, SpellId.Combustion };
+            List<SpellId> spellList = new List<SpellId>() { SpellId.ArcaneMissiles, SpellId.ArcaneBarrage, SpellId.Scorch, SpellId.Fireball, SpellId.PyroblastPOM, SpellId.Frostbolt, SpellId.FireBlast, SpellId.ArcaneExplosion0, SpellId.FlamestrikeSingle, SpellId.Blizzard, SpellId.BlastWave, SpellId.DragonsBreath, SpellId.ConeOfCold, SpellId.FrostfireBolt, SpellId.LivingBomb, SpellId.IceLance, SpellId.FlameOrb, SpellId.Combustion, SpellId.PyroblastSpammed };
             foreach (CycleId cycle in cycleList)
             {
                 Cycle s = BaseState.GetCycle(cycle);
@@ -886,8 +886,16 @@ namespace Rawr.Mage
 
         private string GetSpellTooltip(Spell bs, bool abcost = false)
         {
-            string spellFormatString = "{0:F} Dps*{1:F} Mps\r\n{2:F} Tps\r\n{3:F} sec\r\n{13:F} Mana\r\n{8:F} - {9:F} Hit\r\n{10:F} - {11:F} Crit\r\n{12}{4:F}x Amplify\r\n{5:F}% Crit Rate\r\n{6:F}% Hit Rate\r\n{7:F} Crit Multiplier";
-            return string.Format(spellFormatString, ((Cycle)bs).DamagePerSecond, ((Cycle)bs).ManaPerSecond, bs.ThreatPerSecond, bs.CastTime - bs.Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, bs.MinHitDamage * (1 + ManaAdeptBonus), bs.MaxHitDamage * (1 + ManaAdeptBonus), bs.MinCritDamage * (1 + ManaAdeptBonus), bs.MaxCritDamage * (1 + ManaAdeptBonus), ((bs.DotTickHitDamage > 0) ? ((bs.DotTickHitDamage * (1 + ManaAdeptBonus)).ToString("F") + " Dot Tick Hit\r\n" + (bs.DotTickCritDamage * (1 + ManaAdeptBonus)).ToString("F") + " Dot Tick Crit\r\n") : ""), abcost ? bs.ABCost : bs.Cost);
+            if (bs.CastTime == 0)
+            {
+                string spellFormatString = "{0:F} Damage*{13:F} Mana\r\n{8:F} - {9:F} Hit\r\n{10:F} - {11:F} Crit\r\n{12}{4:F}x Amplify\r\n{5:F}% Crit Rate\r\n{6:F}% Hit Rate\r\n{7:F} Crit Multiplier";
+                return string.Format(spellFormatString, bs.AverageDamage, ((Cycle)bs).ManaPerSecond, bs.ThreatPerSecond, bs.CastTime - bs.Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, bs.MinHitDamage * (1 + ManaAdeptBonus), bs.MaxHitDamage * (1 + ManaAdeptBonus), bs.MinCritDamage * (1 + ManaAdeptBonus), bs.MaxCritDamage * (1 + ManaAdeptBonus), ((bs.DotTickHitDamage > 0) ? ((bs.DotTickHitDamage * (1 + ManaAdeptBonus)).ToString("F") + " Dot Tick Hit\r\n" + (bs.DotTickCritDamage * (1 + ManaAdeptBonus)).ToString("F") + " Dot Tick Crit\r\n") : ""), abcost ? bs.ABCost : bs.Cost);
+            }
+            else
+            {
+                string spellFormatString = "{0:F} Dps*{1:F} Mps\r\n{2:F} Tps\r\n{3:F} sec\r\n{13:F} Mana\r\n{8:F} - {9:F} Hit\r\n{10:F} - {11:F} Crit\r\n{12}{4:F}x Amplify\r\n{5:F}% Crit Rate\r\n{6:F}% Hit Rate\r\n{7:F} Crit Multiplier";
+                return string.Format(spellFormatString, ((Cycle)bs).DamagePerSecond, ((Cycle)bs).ManaPerSecond, bs.ThreatPerSecond, bs.CastTime - bs.Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, bs.MinHitDamage * (1 + ManaAdeptBonus), bs.MaxHitDamage * (1 + ManaAdeptBonus), bs.MinCritDamage * (1 + ManaAdeptBonus), bs.MaxCritDamage * (1 + ManaAdeptBonus), ((bs.DotTickHitDamage > 0) ? ((bs.DotTickHitDamage * (1 + ManaAdeptBonus)).ToString("F") + " Dot Tick Hit\r\n" + (bs.DotTickCritDamage * (1 + ManaAdeptBonus)).ToString("F") + " Dot Tick Crit\r\n") : ""), abcost ? bs.ABCost : bs.Cost);
+            }
         }
     }
 
