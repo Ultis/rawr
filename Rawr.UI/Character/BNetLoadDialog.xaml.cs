@@ -855,15 +855,13 @@ namespace Rawr.UI
             this.ResizeMode = System.Windows.ResizeMode.NoResize;
 #endif
 
-            RegionCombo.ItemsSource = new List<string>() { "US", "EU", "KR", /*"TW", "CN"*/ };
+            RegionCombo.ItemsSource = new List<string>() { "US", "EU", "KR", "TW", "CN" };
 
             _armoryService.ProgressChanged += new EventHandler<EventArgs<string>>(_armoryService_ProgressChanged);
             _armoryService.GetCharacterCompleted += new EventHandler<EventArgs<Character>>(_armoryService_GetCharacterCompleted);
             _armoryService.GetCharacterErrored += new EventHandler<EventArgs<String>>(_armoryService_GetCharacterErrored);
 
-            if (Rawr.Properties.RecentSettings.Default.RecentRegion == null
-                || Rawr.Properties.RecentSettings.Default.RecentRegion == "TW"
-                || Rawr.Properties.RecentSettings.Default.RecentRegion == "CN")
+            if (Rawr.Properties.RecentSettings.Default.RecentRegion == null)
             {
                 Rawr.Properties.RecentSettings.Default.RecentRegion = "US";
             }
