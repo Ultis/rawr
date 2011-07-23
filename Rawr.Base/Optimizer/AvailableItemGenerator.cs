@@ -1183,7 +1183,7 @@ namespace Rawr.Optimizer
             if (!valid)
             {
                 s.AppendLine();
-                s.AppendLine("Do you want to continue with the optimization?");
+                s.AppendLine("Would you like to make them available and continue with the optimization?");
                 warning = s.ToString();
             }
             else
@@ -1191,6 +1191,117 @@ namespace Rawr.Optimizer
                 warning = null;
             }
             return valid;
+        }
+
+        /// <summary>
+        /// Adds missing items/enchants/gems as available. This requires recreation of the item generator.
+        /// </summary>
+        public void MakeCharacterValid(Character character)
+        {
+            // if item is not available pick the one that is available
+            for (int slot = 0; slot < Character.OptimizableSlotCount; slot++)
+            {
+                ItemInstance item = character._item[slot];
+                if (item != null && item.Item != null)
+                {
+                    if (item.Item.AvailabilityInformation != null)
+                    {
+                        if (!itemAvailable.ContainsKey(item.GemmedId))
+                        {
+                            // gemming/enchant is not available
+                            // try to determine what they have to do to make it available
+                            switch (character.GetItemAvailability(item))
+                            {
+                                case ItemAvailability.Available:
+                                    // shouldn't happen
+                                    break;
+                                case ItemAvailability.AvailableWithEnchantRestrictions:
+                                    // they have marked this specific gemmming available, but it doesn't allow this enchant
+                                    // warn about the enchant
+                                    if (item.EnchantId != 0)
+                                    {
+                                        if (character.GetItemAvailability(item.Enchant) != ItemAvailability.Available)
+                                        {
+                                            character.ToggleItemAvailability(item.Enchant);
+                                        }
+                                    }
+                                    break;
+                                case ItemAvailability.RegemmingAllowed:
+                                    // all gemmings/enchants are available so the ones that are available must not be sufficient
+                                    for (int gem = 1; gem <= 3; gem++)
+                                    {
+                                        Item g = item.GetGem(gem);
+                                        if (g != null)
+                                        {
+                                            // ignore if we have something strictly better marked
+                                            if ((g.Slot == ItemSlot.Meta && !ArrayContains(MetaGemItems, gg => gg != null && gg.Stats >= g.Stats)) ||
+                                                (g.Slot == ItemSlot.Cogwheel && !ArrayContains(Cogwheeltems, gg => gg != null && gg.Stats >= g.Stats)) ||
+                                                (g.Slot == ItemSlot.Hydraulic && !ArrayContains(HydraulicItems, gg => gg != null && gg.Stats >= g.Stats)) ||
+                                                (g.Slot != ItemSlot.Meta && g.Slot != ItemSlot.Cogwheel && g.Slot != ItemSlot.Hydraulic &&
+                                                !ArrayContains(GemItems, gg => gg != null && (gg.Id == g.Id || (gg.Stats >= g.Stats && !gg.IsLimitedGem)))))
+                                            {
+                                                // gem is not available
+                                                if (character.GetItemAvailability(g) != ItemAvailability.Available)
+                                                {
+                                                    character.ToggleItemAvailability(g, true);
+                                                }
+                                            }
+                                        }
+                                    }
+                                    Enchant enchant = item.Enchant;
+                                    if (enchant != null && enchant.Id != 0)
+                                    {
+                                        // ignore if we have something strictly better marked
+                                        if (!ArrayContains(SlotEnchants[slot], e => e.Id == enchant.Id || e.Stats >= enchant.Stats))
+                                        {
+                                            // enchant is not available
+                                            if (character.GetItemAvailability(item.Enchant) != ItemAvailability.Available)
+                                            {
+                                                character.ToggleItemAvailability(item.Enchant);
+                                            }
+                                        }
+                                    }
+                                    break;
+                                case ItemAvailability.RegemmingAllowedWithEnchantRestrictions:
+                                    // all gemmings are available so the ones that are available must not be sufficient
+                                    for (int gem = 1; gem <= 3; gem++)
+                                    {
+                                        Item g = item.GetGem(gem);
+                                        if (g != null)
+                                        {
+                                            // ignore if we have something strictly better marked
+                                            if ((g.Slot == ItemSlot.Meta && !ArrayContains(MetaGemItems, gg => gg.Stats >= g.Stats)) ||
+                                                (g.Slot != ItemSlot.Meta && !ArrayContains(GemItems, gg => gg.Id == g.Id || (gg.Stats >= g.Stats && !gg.IsLimitedGem))))
+                                            {
+                                                // gem is not available
+                                                if (character.GetItemAvailability(g) != ItemAvailability.Available)
+                                                {
+                                                    character.ToggleItemAvailability(g, true);
+                                                }
+                                            }
+                                        }
+                                    }
+                                    if (item.EnchantId != 0 && !character.AvailableItems.Contains(item.Id + ".*.*.*." + item.EnchantId))
+                                    {
+                                        // this specific enchant is not valid                                        
+                                        if (character.GetItemAvailability(item.Enchant) != ItemAvailability.Available)
+                                        {
+                                            character.ToggleItemAvailability(item.Enchant);
+                                        }
+                                    }
+                                    break;
+                                case ItemAvailability.NotAvailable:
+                                    // they could have some other gemming/enchant marked as available, but not in general
+                                    if (character.GetItemAvailability(item.Item) != ItemAvailability.RegemmingAllowed)
+                                    {
+                                        character.ToggleItemAvailability(item.Item, true);
+                                    }
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         public void AddItemRestrictions(ItemInstance[] items, bool includeOffHand)

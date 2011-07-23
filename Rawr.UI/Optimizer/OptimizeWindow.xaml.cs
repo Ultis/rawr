@@ -504,6 +504,7 @@ namespace Rawr.UI
             optimizer.OptimizationMethod = OptimizerSettings.Default.OptimizationMethod;
             optimizer.GreedyOptimizationMethod = OptimizerSettings.Default.GreedyOptimizationMethod;
 
+            CREATE_ITEM_GENERATOR:
             optimizer.InitializeItemCache(character, character.AvailableItems, overrideRegem, overrideReenchant, overrideReforge,
                 OptimizerSettings.Default.TemplateGemsEnabled, Calculations.Instance,
                 CK_Food.IsChecked.GetValueOrDefault(), CK_ElixirsFlasks.IsChecked.GetValueOrDefault(),
@@ -511,17 +512,30 @@ namespace Rawr.UI
 
             if (OptimizerSettings.Default.WarningsEnabled)
             {
-                string prompt = optimizer.GetWarningPromptIfNeeded();
+                string prompt;
+                if (!optimizer.ItemGenerator.IsCharacterValid(character, out prompt, true))
+                {
+                    switch (MessageBox.Show(prompt, "Optimizer Warning", MessageBoxButton.YesNoCancel))
+                    {
+                        case MessageBoxResult.Yes:
+                            // fix errors and recreate item generator
+                            optimizer.ItemGenerator.MakeCharacterValid(character);
+                            goto CREATE_ITEM_GENERATOR;
+                        case MessageBoxResult.No:
+                            // pass through
+                            break;
+                        case MessageBoxResult.Cancel:
+                            ControlsEnabled(true);
+                            return;
+                    }
+                }
+                prompt = optimizer.GetWarningPromptIfNeeded();
                 if (prompt != null)
                 {
                     if (MessageBox.Show(prompt, "Optimizer Warning", MessageBoxButton.OKCancel) != MessageBoxResult.OK) { ControlsEnabled(true); return; }
                 }
                 prompt = optimizer.CheckOneHandedWeaponUniqueness();
                 if (prompt != null)
-                {
-                    if (MessageBox.Show(prompt, "Optimizer Warning", MessageBoxButton.OKCancel) != MessageBoxResult.OK) { ControlsEnabled(true); return; }
-                }
-                if (!optimizer.ItemGenerator.IsCharacterValid(character, out prompt, true))
                 {
                     if (MessageBox.Show(prompt, "Optimizer Warning", MessageBoxButton.OKCancel) != MessageBoxResult.OK) { ControlsEnabled(true); return; }
                 }
