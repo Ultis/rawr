@@ -125,6 +125,7 @@
     <Compile Include="Pet\PetTalentTree.xaml.cs">
       <DependentUpon>PetTalentTree.xaml</DependentUpon>
     </Compile>
+    <Compile Include="StatsHunter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="CalculationOptionsPanelHunter.xaml">
