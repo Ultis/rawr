@@ -227,7 +227,7 @@ namespace Rawr.Bosses
             #endregion
             #region Basics
             // Health values were lowered on Normal by 20% in 4.2
-            Health = new float[] { 33497880f * 0.80f, 104297000f * 0.80f, 46895800f, 120016400f };
+            Health = new float[] { 33497880f * 0.80f, 81082048f, 46895800f, 120016400f };
             MobType = (int)MOB_TYPES.BEAST;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 6 * 60, 6 * 60, 6 * 60, 6 * 60 };
@@ -583,7 +583,7 @@ namespace Rawr.Bosses
             #endregion
             #region Basics
             // Health values were lowered on Normal by 20% in 4.2
-            Health = new float[] { 32209000f * 0.80f, 98790000f * 0.80f, 45080000f, 126261240f };
+            Health = new float[] { 32209000f * 0.80f, 79364208f, 45080000f, 126261240f };
             MobType = (int)MOB_TYPES.MECHANICAL;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
@@ -766,7 +766,7 @@ namespace Rawr.Bosses
             #endregion
             #region Basics
             // Health values were lowered on Normla by 80% in 4.2
-            Health = new float[] { 24700000f * 0.80f, 86650000f * 0.80f, 34631000f, 121310000f };
+            Health = new float[] { 24700000f * 0.80f, 68713600f, 34631000f, 121310000f };
             MobType = (int)MOB_TYPES.DRAGONKIN;
             BerserkTimer = new int[] { 7 * 60, 7 * 60, 12 * 60, 12 * 60 }; // Source: http://us.battle.net/wow/en/blog/1232869
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
@@ -1202,7 +1202,7 @@ namespace Rawr.Bosses
             Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 32632000f * 0.80f, 97916880f * 0.80f, 45684800f, 103070400f };
+            Health = new float[] { 32632000f * 0.80f, 78333504f, 45684800f, 103070400f };
             MobType = (int)MOB_TYPES.DRAGONKIN;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
@@ -1547,7 +1547,7 @@ namespace Rawr.Bosses
             // Onyxia = 6,600,000 / 24,000,000 / 9,017,400 / 31,500,000
             // Nefarion = 28,500,000 / 98000000 / 36,316,000 / 126,815,650
             // Health values were lowered on Normal by 20% in 4.2
-            Health = new float[] { (7043144f + 28516144f) * 0.80f, (24736896f + 98775800f) * 0.80f, (9240000f + 36316000f), (34786260f + 179342496f) };
+            Health = new float[] { (5582980f + 22761380f), (19755160f + 79707776f), (9240000f + 36316000f), (34786260f + 179342496f) };
             MobType = (int)MOB_TYPES.DRAGONKIN;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };

@@ -1003,8 +1003,8 @@ namespace Rawr
                 Name = "Hunter's Mark",
                 Source = "Hunter",
                 Group = "Ranged Attack Power",
-                Stats = { RangedAttackPower = 500f },
-                Improvements = { 
+                Stats = { RangedAttackPower = 1772f },
+/*                Improvements = { 
                     new Buff {
                         Name = "Glyphed Hunter's Mark",
                         Stats = { RangedAttackPower = 100f },
@@ -1021,7 +1021,7 @@ namespace Rawr
                         ConflictingBuffs = { "Hunter's Mark Improvements" } 
                     }
                 },
-                IsTargetDebuff = true,
+*/                IsTargetDebuff = true,
             });
             #endregion
 
@@ -2052,7 +2052,7 @@ namespace Rawr
             // The new feasts are 90 Stam + 90 [Other Useful Stat]. No reason to keep this like that and just make them do the other appropriate food instead
             //defaultBuffs.Add(new Buff() { Group = "Food", Name = "Fish Feast", Stats = { AttackPower = 80, SpellPower = 46, Stamina = 40 } });
             #endregion
-            #region Pet Food
+/*            #region Pet Food
             defaultBuffs.Add(new Buff()
             {
                 Name = "Spiced Mammoth Treats",
@@ -2075,6 +2075,7 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { "Pet Food" }),
             });
             #endregion
+*/
 
             #region Scrolls
             defaultBuffs.Add(new Buff()

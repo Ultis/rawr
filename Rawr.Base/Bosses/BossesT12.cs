@@ -253,7 +253,7 @@ namespace Rawr.Bosses
             Comment = "Main Tank is tanking Beth'tilac, Off Tank is tanking adds during Cinderweb phase.";
             #endregion
             #region Basics
-            Health = new float[] { 20871756f, 62615268f, 29220458f, 87661375f };
+            Health = new float[] { 20871756f, 62615268f, 29220458f, 89500000f };
             MobType = (int)MOB_TYPES.BEAST;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 7 * 60, 7 * 60, 7 * 60, 7 * 60 };
@@ -273,9 +273,8 @@ namespace Rawr.Bosses
                 {
                     Name = "Default Melee",
                     AttackType = ATTACK_TYPES.AT_MELEE,
-                    DamagePerHit = new float[]{ 88000, 88000, 
-                        88000 * 1.5f, 88000 * 1.5f, }[i], // Heroic values are a guess.
-                    AttackSpeed = 2f,
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)Content[i]] * 1.2f,
+                    AttackSpeed = 2.4f,
                 };
                 Melee.AffectsRole[PLAYER_ROLES.MainTank] = true;
                 TheCinderweb.Attacks.Add(Melee);
@@ -652,7 +651,7 @@ namespace Rawr.Bosses
             // Legs health are tied together
             // All three have low health, however they start out with an 80% damage
             // reduction applied to them.
-            Health = new float[] { (15500000f + 7750000f), (47000000f + 23500000f), (21700000f + 15500000f), (65800000f + 32900000f) };
+            Health = new float[] { 15500000f, 47000000f, 21700000f, 70000000f};
             MobType = (int)MOB_TYPES.ELEMENTAL;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 7 * 60, 7 * 60, 7 * 60, 7 * 60 };
@@ -938,7 +937,7 @@ namespace Rawr.Bosses
             Comment = "Not modeled in detail yet.";
             #endregion
             #region Basics
-            Health = new float[] { 51352000f, 154605600f, 71892800f, 216447840f };
+            Health = new float[] { 51352000f, 154605600f, 71892800f, 231900000f };
             MobType = (int)MOB_TYPES.ELEMENTAL;
             // 3 full phases or 15 minute enrage timer.
             BerserkTimer = new int[] { 15 * 60, 15 * 60, 15 * 60, 15 * 60 };
@@ -1264,7 +1263,8 @@ namespace Rawr.Bosses
             #endregion
             #region Basics
             // Baleroc's health consists of both himself and his dogs Ripgut and Rageface
-            Health = new float[] { (24049760f + (9619904f * 2f)), (81597400f + (33669664f * 2f)), (33669664f + (13467866f * 2f)), (114236360f + (47137530f * 2f)) };
+            // On heroic mode, you do not kill the dogs. Instead you burn Shannox instead
+            Health = new float[] { (24049760f + (9619904f * 2f)), (81597400f + (33669664f * 2f)), 33669664f, 114236360f };
             MobType = (int)MOB_TYPES.HUMANOID;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 7 * 60, 7 * 60, 7 * 60, 7 * 60 };
@@ -1572,7 +1572,7 @@ namespace Rawr.Bosses
             Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T12_10, BossHandler.TierLevels.T12_25, BossHandler.TierLevels.T12_10H, BossHandler.TierLevels.T12_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 42087080f, 133304384f, 58921912f, 186626138f };
+            Health = new float[] { 42087080f, 133304384f, 58921912f, 217306752f };
             MobType = (int)MOB_TYPES.ELEMENTAL;
             BerserkTimer = new int[] { 6 * 60, 6 * 60, 6 * 60, 6 * 60 };
             SpeedKillTimer = new int[] { 5 * 60, 5 * 60, 5 * 60, 5 * 60 };
@@ -1791,14 +1791,14 @@ namespace Rawr.Bosses
             Comment = "Not modeled in detail yet.";
             #endregion
             #region Basics
-            Health = new float[] { 51019848f, 178569472f, 39682104f, 249997261f };
+            Health = new float[] { 51019848f, 178569472f, 124714283f, 436500000f };
             MobType = (int)MOB_TYPES.HUMANOID;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 5 * 60, 5 * 60, 5 * 60, 5 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
             Max_Players = new int[] { 10, 25, 10, 25 };
-            Min_Tanks = new int[] { 2, 2, 2, 2 };
+            Min_Tanks = new int[] { 1, 1, 1, 1 };
             Min_Healers = new int[] { 3, 5, 3, 5 };
             #endregion
             #region Offensive
@@ -1950,11 +1950,11 @@ namespace Rawr.Bosses
             #endregion
             #region Basics
             // Rag "dies" at 10% on normal (goes back under the lava).
-            // need double check if he dies at 0% on heroic.
-            // Initial assumption that he dies at 0% on heroic
-            Health = new float[] { 66995760f * 0.9f, 200987280f * 0.9f, 93794064f, 281382192f };
+            // Apparently Rag heals to about 50% once he hits phase 4 and starts moving around the platform
+            // So for heroic his health is 90% to phase 4 and 50% while in Phase 4 so 140% health
+            Health = new float[] { 66995760f * 0.9f, 200987280f * 0.9f, 87300000f * 1.4f, 264100000f * 1.4f };
             MobType = (int)MOB_TYPES.ELEMENTAL;
-            BerserkTimer = new int[] { 15 * 60, 15 * 60, 15 * 60, 15 * 60 };
+            BerserkTimer = new int[] { 18 * 60, 18 * 60, 18 * 60, 18 * 60 };
             SpeedKillTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };

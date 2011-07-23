@@ -459,8 +459,15 @@ namespace Rawr {
             }
             else if ((match = new Regex(@"Grants (?<amount>\d+) critical strike rating for (?<dur>\d+) sec each time you deal a melee critical strike, stacking up to (?<stack>\d+) times").Match(line)).Success)
             {   // Vessel of Acceleration
+                int crt = 0;
+                if (id == 68995)
+                    crt = 82;
+                else if (id == 69167)
+                    crt = 93;
+                else
+                    crt = int.Parse(match.Groups["amount"].Value);
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeCrit,
-                    new Stats() { CritRating = (float)int.Parse(match.Groups["amount"].Value) },
+                    new Stats() { CritRating = (float)crt },
                     (float)int.Parse(match.Groups["dur"].Value), 0, 1f, 5));
             }
             else if ((match = new Regex(@"Chance on hit to increase your critical strike rating by (?<amount>\d+) for (?<dur>\d+) sec").Match(line)).Success)
@@ -671,8 +678,13 @@ namespace Rawr {
             #region Mastery Rating
             else if ((match = new Regex(@"Grants (?<amount>\d+) mastery rating for (?<dur>\d+) sec each time you deal periodic spell damage, stacking up to (?<stack>\d+) times").Match(line)).Success)
             {   // Necromantic Focus
+                float amount = int.Parse(match.Groups["amount"].Value);
+                if (ilvl == 378)
+                    amount = 39f;
+                else if (ilvl == 391)
+                    amount = 44f;
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DoTTick,
-                    new Stats() { MasteryRating = int.Parse(match.Groups["amount"].Value) },
+                    new Stats() { MasteryRating = amount },
                     int.Parse(match.Groups["dur"].Value), 0f, 1f, int.Parse(match.Groups["stack"].Value)));
             }
             else if ((match = new Regex(@"Your harmful spells have a chance to grant (?<amount>\d+) mastery rating for (?<dur>\d+) sec").Match(line)).Success)
@@ -894,9 +906,16 @@ namespace Rawr {
             else if ((match = new Regex(@"Your melee and ranged attacks have a chance to grant (?<amount>\d+) critical strike rating, haste rating, or mastery rating, whichever is currently highest").Match(line)).Success)
             {   // Matrix Restabilizer
                 // appears to have 105 second ICD and lasts for 30 seconds
+                int HSS = 0;
+                if (id == 68994)
+                    HSS = 1624;
+                else if (id == 69150)
+                    HSS = 1834;
+                else
+                    HSS = int.Parse(match.Groups["amount"].Value);
                 float duration = 30f;
                 float icd = 105f;
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalAttack, new Stats() { HighestSecondaryStat = int.Parse(match.Groups["amount"].Value) },
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalAttack, new Stats() { HighestSecondaryStat = HSS },
                     duration, icd, 0.15f));
             }
             else if ((match = new Regex(@"When you heal or deal damage you have a chance to gain Greatness").Match(line)).Success)
@@ -1026,7 +1045,7 @@ namespace Rawr {
             #endregion
             #endregion
 
-            else if (line.StartsWith("Increases your pet's critical strike chance by "))
+/*            else if (line.StartsWith("Increases your pet's critical strike chance by "))
             {
                 string critChance = line.Substring("Increases your pet's critical strike chance by ".Length).Trim();
                 if (critChance.EndsWith("%"))
@@ -1034,6 +1053,7 @@ namespace Rawr {
                     stats.BonusPetCritChance = float.Parse(critChance.Substring(0, critChance.Length - 2)) / 100f;
                 }
             }
+*/
             else if ((match = Regex.Match(line, @"Reduces the base mana cost of your spells by (?<amount>\d+)")).Success)
             {
                 stats.SpellsManaCostReduction = int.Parse(match.Groups["amount"].Value);
@@ -2236,8 +2256,15 @@ namespace Rawr {
             else if ((match = new Regex(@"Consume all Titanic Power to increase your critical strike rating, haste rating, or mastery rating by (?<amount>\d+) per Titanic Power accumulated, lasting (?<duration>\d+) sec").Match(line.Replace("  ", " "))).Success)
             {   // Apparatus of Khaz'goroth
                 // Stacks up to 5 times
+                int HSS = 0;
+                if (id == 68972)
+                    HSS = 508;
+                else if (id == 69113)
+                    HSS = 573;
+                else
+                    HSS = int.Parse(match.Groups["amount"].Value);
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use,
-                    new Stats() { HighestSecondaryStat = int.Parse(match.Groups["amount"].Value) * 5f, },
+                    new Stats() { HighestSecondaryStat = HSS * 5f, },
                     int.Parse(match.Groups["duration"].Value), 120f));
             }
 
