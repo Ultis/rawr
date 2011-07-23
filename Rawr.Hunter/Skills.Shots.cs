@@ -301,7 +301,7 @@ namespace Rawr.Hunter.Skills
         }
         public float GainedThrilloftheHuntFocus() { return basefocuscost * 0.40f; }
     }
-/*    public class BlackArrowBuff : BuffEffect
+    public class BlackArrowBuff : BuffEffect
     {
         /// <summary>
         /// TODO Zhok: Thrill of the Hunt, Toxicology, Trap Mastery
@@ -328,7 +328,7 @@ namespace Rawr.Hunter.Skills
             Initialize();
         }
     }
-*/
+
     public class ExplosiveShot : DoT
     {
         private float basefocuscost = 50f;
@@ -379,7 +379,7 @@ namespace Rawr.Hunter.Skills
         }
         public float GainedThrilloftheHuntFocus() { return basefocuscost * 0.40f; }
     }
-/*    public class PiercingShots : DoT
+    public class PiercingShots : DoT
     {
         /// <summary>
         /// <b>Piercing Shots</b>
@@ -427,7 +427,7 @@ namespace Rawr.Hunter.Skills
 
                 float TheDamage = (damageUnder75 + damageOver75) * DmgMod;
 
-                float TickSize = (TheDamage * GlyphMOD) / NumTicks;
+                float TickSize = (TheDamage * GlyphMOD) / NumTicks;*/
 
                 return Damage * DamageBonus * (1f + StatS.BonusDamageMultiplier) * (1f + StatS.BonusShadowDamageMultiplier) / NumTicks;
             }
@@ -435,12 +435,12 @@ namespace Rawr.Hunter.Skills
         public override float GetDPS(float acts)
         {
             float dmgonuse = TickSize;
-            float numticks = NumTicks * (acts /*- addMisses - addDodges - addParrys);
+            float numticks = NumTicks * (acts /*- addMisses - addDodges - addParrys*/);
             float result = GetDmgOverTickingTime(acts) / FightDuration;
             return result;
         }
     }
-*/
+
     #endregion
 
     #region Stings

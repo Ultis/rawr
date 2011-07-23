@@ -746,13 +746,13 @@ namespace Rawr.Hunter.Skills
         public SpecialEffect Effect { get { return EFFECT; } set { EFFECT = value; } }
         public SpecialEffect Effect2 { get { return EFFECT2; } set { EFFECT2 = value; } }
         // Functions
-        public virtual Stats AverageStats
+        public virtual StatsHunter AverageStats
         {
             get
             {
-                if (!Validated) { return new Stats(); }
-                Stats bonus = (Effect == null) ? new Stats() { AttackPower = 0f, } : Effect.GetAverageStats(0f, RWAtkTable.Hit + RWAtkTable.Crit, Whiteattacks.RwEffectiveSpeed, FightDuration);
-                bonus += (Effect2 == null) ? new Stats() { AttackPower = 0f, } : Effect2.GetAverageStats(0f, RWAtkTable.Hit + RWAtkTable.Crit, Whiteattacks.RwEffectiveSpeed, FightDuration);
+                if (!Validated) { return new StatsHunter(); }
+                StatsHunter bonus = (Effect == null) ? new StatsHunter() { AttackPower = 0f, } : Effect.GetAverageStats(0f, RWAtkTable.Hit + RWAtkTable.Crit, Whiteattacks.RwEffectiveSpeed, FightDuration) as StatsHunter;
+                bonus.Accumulate((Effect2 == null) ? new StatsHunter() { AttackPower = 0f, } : Effect2.GetAverageStats(0f, RWAtkTable.Hit + RWAtkTable.Crit, Whiteattacks.RwEffectiveSpeed, FightDuration) as StatsHunter);
                 return bonus;
             }
         }
