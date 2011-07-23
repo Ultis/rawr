@@ -275,6 +275,11 @@ namespace Rawr.Optimizer
         protected TValuation bestValuation;
         protected TIndividual bestIndividual;
 
+        public TIndividual GetBestIndividual()
+        {
+            return PostProcess(bestIndividual);
+        }
+
         protected TIndividual[] population;
         private float[] values;
         int islandSize;

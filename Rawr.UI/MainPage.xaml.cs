@@ -1208,7 +1208,7 @@ If that is still not working for you, right-click anywhere within the web versio
             if ((sender as DG_ItemSetNameToCompare).DialogResult.GetValueOrDefault(false)) {
                 Character newCharacter = Character.Clone();
                 newCharacter.EquipItemSetByName((sender as DG_ItemSetNameToCompare).SetNameToEquip);
-                OptimizerResults or = new OptimizerResults(Character, newCharacter);
+                OptimizerResults or = new OptimizerResults(Character, newCharacter, false);
                 // Set up the Dialog, its not supposed to look the same as an actual Optimizer Results
                 or.BT_StoreIt.Visibility = Visibility.Collapsed;
                 or.Title = "Comparing Currently Equipped Set to Other Set";
@@ -1250,7 +1250,7 @@ If that is still not working for you, right-click anywhere within the web versio
 #endif
                 {
                     Character newCharacter = Character.LoadFromXml(reader.ReadToEnd());
-                    OptimizerResults or = new OptimizerResults(Character, newCharacter);
+                    OptimizerResults or = new OptimizerResults(Character, newCharacter, false);
                     // Set up the Dialog, its not supposed to look the same as an actual Optimizer Results
                     or.BT_StoreIt.Visibility = Visibility.Collapsed;
                     or.Title = "Comparing Current Character to Another";

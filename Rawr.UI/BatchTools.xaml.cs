@@ -500,7 +500,7 @@ namespace Rawr.UI
 #endif
 			Character after = character.Character;
 
-			OptimizerResults results = new OptimizerResults(before, after);
+			OptimizerResults results = new OptimizerResults(before, after, false);
 			results.Closed += (object csender, EventArgs ce) =>
 				{
 					if (!results.DialogResult.GetValueOrDefault())

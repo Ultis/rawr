@@ -24,6 +24,15 @@ namespace Rawr.UI
         private SuffixItem itemToEvaluate;
         private bool doSlot = false;
 
+        private enum Operation
+        {
+            Optimize,
+            UpgradeList
+        }
+
+        private Operation lastOperation;
+        private bool canClose;
+
         private string[] talentList;
 
         public void EvaluateUpgrades(SuffixItem itemToEvaluate)
@@ -127,7 +136,7 @@ namespace Rawr.UI
 
         private void WindowClosing(object sender, CancelEventArgs e)
         {
-            e.Cancel = optimizer.IsBusy;
+            e.Cancel = optimizer.IsBusy && !canClose;
         }
 
         private void AddRequirement_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -327,7 +336,6 @@ namespace Rawr.UI
             {
                 DoneButton.Visibility = Visibility.Collapsed;
                 CancelButton.Visibility = Visibility.Visible;
-                PauseButton.Visibility = Visibility.Visible;
             }
             foreach (UIElement requirementGrid in RequirementsStack.Children)
             {
@@ -400,8 +408,69 @@ namespace Rawr.UI
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            if (optimizer.IsBusy) optimizer.CancelAsync();
-            PauseButton.Content = "Pause";
+            if (optimizer.IsBusy)
+            {
+                if (lastOperation == Operation.Optimize)
+                {
+                    optimizer.PauseAsync();
+                    var opt = optimizer.GetBestIndividual();
+                    if (opt != null)
+                    {
+                        Character bestCharacter = opt.Character;
+                        if (bestCharacter == null)
+                        {
+                            ControlsEnabled(true);
+                            MessageBox.Show("Sorry, Rawr was unable to find a gearset to meet your requirements.", "Rawr Optimizer Results", MessageBoxButton.OK);
+                        }
+
+                        if (character != null)
+                        {
+                            OptimizerResults results = new OptimizerResults(character, bestCharacter, true);
+                            results.Closed += new EventHandler(resultsCancel_Closed);
+                            results.Show();
+                        }
+                        else ControlsEnabled(true);
+                    }
+                }
+                else
+                {
+                    optimizer.CancelAsync();
+                    PauseButton.Content = "Pause";
+                }
+            }
+        }
+
+        private void resultsCancel_Closed(object sender, EventArgs e)
+        {
+            OptimizerResults results = sender as OptimizerResults;
+            if (results.DialogResult.GetValueOrDefault())
+            {
+                if (results.WeWantToStoreIt) // continue
+                {
+                    optimizer.ResumeAsync();
+                }
+                else
+                {
+                    character.IsLoading = true;
+                    character.SetItems(results.BestCharacter);
+                    character.ActiveBuffs = results.BestCharacter.ActiveBuffs;
+                    if (CK_Talents_Points.IsChecked.GetValueOrDefault())
+                    {
+                        character.CurrentTalents = results.BestCharacter.CurrentTalents;
+                        MainPage.Instance.TalentPicker.RefreshSpec();
+                    }
+                    character.IsLoading = false;
+                    character.OnCalculationsInvalidated();
+                    optimizer.CancelAsync();
+                    canClose = true;
+                    DialogResult = true;
+                }
+            }
+            else
+            {
+                optimizer.CancelAsync();
+                ControlsEnabled(true);
+            }
         }
 
         private void PauseButton_Click(object sender, RoutedEventArgs e)
@@ -461,6 +530,7 @@ namespace Rawr.UI
             CancelButton.Visibility = Visibility.Visible;
             DoneButton.Visibility = Visibility.Collapsed;
 
+            lastOperation = Operation.Optimize;
             ControlsEnabled(false);
 
             // store the optimization parameters, used by optimizer results to display the relevant calculation score
@@ -490,7 +560,7 @@ namespace Rawr.UI
 
                 if (character != null)
                 {
-                    OptimizerResults results = new OptimizerResults(character, bestCharacter);
+                    OptimizerResults results = new OptimizerResults(character, bestCharacter, false);
                     results.Closed += new EventHandler(results_Closed);
                     results.Show();
                 }
@@ -563,7 +633,9 @@ namespace Rawr.UI
                 }
             }
 
+            lastOperation = Operation.UpgradeList;
             ControlsEnabled(false);
+            PauseButton.Visibility = Visibility.Visible;
 
             if (doSlot)
             {

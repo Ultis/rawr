@@ -18,7 +18,7 @@ namespace Rawr.UI
         public Character BestCharacter { get; private set; }
         public bool WeWantToStoreIt = false;
 
-        public OptimizerResults(Character oldCharacter, Character newCharacter)
+        public OptimizerResults(Character oldCharacter, Character newCharacter, bool cancelOptimization)
         {
             InitializeComponent();
 
@@ -26,6 +26,12 @@ namespace Rawr.UI
             this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
             this.WindowState = System.Windows.WindowState.Normal;
 #endif
+
+            if (cancelOptimization)
+            {
+                CancelButton.Content = "Cancel";
+                BT_StoreIt.Content = "Continue";
+            }
 
             CurrentCharacter = oldCharacter;
             BestCharacter = newCharacter;
