@@ -82,13 +82,15 @@ namespace Rawr.UI
             }
 
             currentCalc = oldCharacter.CurrentCalculations.GetCharacterCalculations(oldCharacter, null, false, true, true);
-            CurrentScoreLabel.Text = string.Format("Current: {0}", Optimizer.ItemInstanceOptimizer.GetOptimizationValue(oldCharacter, currentCalc));
+            var oldValue = Optimizer.ItemInstanceOptimizer.GetOptimizationValue(oldCharacter, currentCalc);
+            CurrentScoreLabel.Text = string.Format("Current: {0}", oldValue);
             CurrentCalculations.SetCalculations(currentCalc.GetCharacterDisplayCalculationValues());
             CurrentTalents.Character = oldCharacter; //CurrentTalents.IsEnabled = false;
             CurrentBuffs.Character = oldCharacter; //CurrentBuffs.IsEnabled = false;
 
             optimizedCalc = newCharacter.CurrentCalculations.GetCharacterCalculations(newCharacter, null, false, true, true);
-            OptimizedScoreLabel.Text = string.Format("Optimized: {0}", Optimizer.ItemInstanceOptimizer.GetOptimizationValue(newCharacter, optimizedCalc));
+            var newValue = Optimizer.ItemInstanceOptimizer.GetOptimizationValue(newCharacter, optimizedCalc);
+            OptimizedScoreLabel.Text = string.Format("Optimized: {0} ({1:P} change)", newValue, (newValue - oldValue) / oldValue);
             OptimizedCalculations.SetCalculations(optimizedCalc.GetCharacterDisplayCalculationValues());
             OptimizedTalents.Character = newCharacter; //OptimizedTalents.IsEnabled = false;
             OptimizedBuffs.Character = newCharacter; //OptimizedBuffs.IsEnabled = false;
