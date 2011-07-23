@@ -405,10 +405,16 @@ namespace Rawr.Server.Controllers
             {
                 var professions = (object[])((Dictionary<string, object>)dict["professions"])["primary"];
 
-                string profession1 = (string)((Dictionary<string, object>)professions[0])["name"];
-                string profession2 = (string)((Dictionary<string, object>)professions[1])["name"];
-                character.PrimaryProfession = (Profession)Enum.Parse(typeof(Profession), profession1);
-                character.SecondaryProfession = (Profession)Enum.Parse(typeof(Profession), profession2);
+                string profession1 = professions.Length >= 1 ? (string)((Dictionary<string, object>)professions[0])["name"] : null;
+                string profession2 = professions.Length >= 2 ? (string)((Dictionary<string, object>)professions[1])["name"]: null;
+                if (profession1 != null)
+                {
+                    character.PrimaryProfession = (Profession)Enum.Parse(typeof(Profession), profession1);
+                }
+                if (profession2 != null)
+                {
+                    character.SecondaryProfession = (Profession)Enum.Parse(typeof(Profession), profession2);
+                }
             }
             catch { }
             
