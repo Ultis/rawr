@@ -104,7 +104,7 @@ namespace Rawr.Hunter
         public virtual Stats GetItemStats(Character character, Item additionalItem)
         {
             StatsHunter stats = new StatsHunter();
-            AccumulateItemStats(stats, character, additionalItem);
+            //AccumulateItemStats(stats, character, additionalItem);
             return stats;
         }
     }

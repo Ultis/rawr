@@ -1183,7 +1183,12 @@ namespace Rawr.Optimizer
             if (!valid)
             {
                 s.AppendLine();
+#if SILVERLIGHT
+                // In Silverlight the only real blocking option only gives two options, so deal with it
+                s.AppendLine("Would you like to continue with the optimization?");
+#else
                 s.AppendLine("Would you like to make them available and continue with the optimization?");
+#endif
                 warning = s.ToString();
             }
             else
@@ -1298,6 +1303,14 @@ namespace Rawr.Optimizer
                                     }
                                     break;
                             }
+                        }
+                    }
+                    else
+                    {
+                        // if it doesn't have availability information it means it wasn't available in any form
+                        if (character.GetItemAvailability(item.Item) != ItemAvailability.RegemmingAllowed)
+                        {
+                            character.ToggleItemAvailability(item.Item, true);
                         }
                     }
                 }

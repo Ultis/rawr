@@ -1550,6 +1550,7 @@ If that is still not working for you, right-click anywhere within the web versio
         private void ResetAllCaches(object sender, RoutedEventArgs e)
         {
             ConfirmationWindow.ShowDialog("Are you sure you'd like to clear and redownload all caches?\r\n\r\nWARNING: This will also unload the current character, so be sure to save first!",
+                "Are you sure?",
                 new EventHandler(ResetAllCaches_Confirmation));
         }
 
@@ -1588,7 +1589,7 @@ If that is still not working for you, right-click anywhere within the web versio
 #if SILVERLIGHT
             if (!Rawr.Properties.GeneralSettings.Default.IsNewVersionRunning) { return; }
             ConfirmationWindow.ShowDialog("We detected that you are running a New Version for the first time. Would you like to Reset the Item Cache?"
-                + "\r\n\r\nThis is generally a good idea for new releases as we provide many updates to Item Sources, Stat Numbers and other fixes.",
+                + "\r\n\r\nThis is generally a good idea for new releases as we provide many updates to Item Sources, Stat Numbers and other fixes.", "Are you sure?",
                 new EventHandler(ResetItemCaches_Confirmation));
 #endif
         }
@@ -1596,6 +1597,7 @@ If that is still not working for you, right-click anywhere within the web versio
         private void ResetItemCache(object sender, RoutedEventArgs e)
         {
             ConfirmationWindow.ShowDialog("Are you sure you'd like to clear and redownload the item cache?\r\n\r\nWARNING: This will also unload the current character, so be sure to save first!",
+                "Are you sure?",
                 new EventHandler(ResetItemCaches_Confirmation));
         }
 

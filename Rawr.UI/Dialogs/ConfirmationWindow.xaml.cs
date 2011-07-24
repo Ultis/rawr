@@ -9,17 +9,21 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using System.Threading;
 
 namespace Rawr.UI
 {
     public partial class ConfirmationWindow : ChildWindow
     {
-		public static void ShowDialog(string message, EventHandler callback)
+		public static void ShowDialog(string message, string title, EventHandler callback, bool cancelButton = false)
 		{
-			ConfirmationWindow window = new ConfirmationWindow() { Message = message };
+			ConfirmationWindow window = new ConfirmationWindow() { Message = message, Title = title };
+            if (cancelButton) window.CancelButton.Visibility = Visibility.Visible;
 			if (callback != null) window.Closed += callback;
 			window.Show();
 		}
+
+        public MessageBoxResult MessageBoxResult { get; set; }
 
 		public string Message
         {
@@ -40,12 +44,20 @@ namespace Rawr.UI
 
         private void YesButton_Click(object sender, RoutedEventArgs e)
         {
+            MessageBoxResult = MessageBoxResult.Yes;
             this.DialogResult = true;
         }
 
         private void NoButton_Click(object sender, RoutedEventArgs e)
         {
+            MessageBoxResult = MessageBoxResult.No;
             this.DialogResult = false;
+        }
+
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult = MessageBoxResult.Cancel;
+            this.Close();
         }
     }
 }

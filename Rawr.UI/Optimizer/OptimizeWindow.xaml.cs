@@ -515,12 +515,17 @@ namespace Rawr.UI
                 string prompt;
                 if (!optimizer.ItemGenerator.IsCharacterValid(character, out prompt, true))
                 {
+#if SILVERLIGHT
+                    switch (MessageBox.Show(prompt, "Optimizer Warning", MessageBoxButton.OKCancel))
+#else
                     switch (MessageBox.Show(prompt, "Optimizer Warning", MessageBoxButton.YesNoCancel))
+#endif
                     {
                         case MessageBoxResult.Yes:
                             // fix errors and recreate item generator
                             optimizer.ItemGenerator.MakeCharacterValid(character);
                             goto CREATE_ITEM_GENERATOR;
+                        case MessageBoxResult.OK:
                         case MessageBoxResult.No:
                             // pass through
                             break;

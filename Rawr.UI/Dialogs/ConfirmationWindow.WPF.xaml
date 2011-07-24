@@ -17,6 +17,7 @@
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
             <Button x:Name="YesButton" Content="Yes" Click="YesButton_Click" Width="75" Height="23" HorizontalAlignment="Center" Margin="2,2,2,4" />
             <Button x:Name="NoButton" Content="No" Click="NoButton_Click" Width="75" Height="23" HorizontalAlignment="Center" Margin="2,2,2,4" />
+            <Button x:Name="CancelButton" Content="Cancel" Click="CancelButton_Click" Width="75" Height="23" HorizontalAlignment="Center" Margin="2,2,2,4" Visibility="Collapsed"/>
         </StackPanel>
     </StackPanel>
 </basics2:ChildWindow>
