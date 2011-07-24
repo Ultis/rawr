@@ -402,6 +402,13 @@ threat and limited threat scaled by the threat scale.",
             new SpecialEffect(Trigger.DamageAvoided, new StatsWarrior() { BonusPhysicalDamageMultiplier = 0.05f }, 12, 0, 0.1f),
             new SpecialEffect(Trigger.DamageAvoided, new StatsWarrior() { BonusPhysicalDamageMultiplier = 0.1f }, 12, 0, 0.2f),
         };
+
+        private static SpecialEffect[] _SE_4T12 = {
+            new SpecialEffect(Trigger.ShieldBlock, new Stats() { Parry = 0.06f, }, 10f, 60f - (0 * 0.10f)),
+            new SpecialEffect(Trigger.ShieldBlock, new Stats() { Parry = 0.06f, }, 10f, 60f - (1 * 0.10f)),
+            new SpecialEffect(Trigger.ShieldBlock, new Stats() { Parry = 0.06f, }, 10f, 60f - (2 * 0.10f)),
+            new SpecialEffect(Trigger.ShieldBlock, new Stats() { Parry = 0.06f, }, 10f, 60f - (3 * 0.10f)),
+        };
         #endregion
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
@@ -690,9 +697,7 @@ threat and limited threat scaled by the threat scale.",
             }
             if (T12count >= 4)
             {
-                statsBuffs.AddSpecialEffect(new SpecialEffect(Trigger.ShieldBlock,
-                    new Stats() { Parry = 0.06f, },
-                    10f, 60f - (player.Talents.ShieldMastery * 0.10f)));
+                statsBuffs.AddSpecialEffect(_SE_4T12[player.Talents.ShieldMastery]);
             }
 
             return statsBuffs;
