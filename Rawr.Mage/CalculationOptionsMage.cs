@@ -1609,6 +1609,13 @@ namespace Rawr.Mage
             set { _BurstImpacts = value; OnPropertyChanged("BurstImpacts"); }
         }
 
+        private float _PassiveHealing;
+        public float PassiveHealing
+        {
+            get { return _PassiveHealing; }
+            set { _PassiveHealing = value; OnPropertyChanged("PassiveHealing"); }
+        }
+
         //public float ChanceToLiveLimit { get; set; }
         private float _ChanceToLiveScore;
         public float ChanceToLiveScore

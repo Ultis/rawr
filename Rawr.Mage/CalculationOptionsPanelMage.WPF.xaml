@@ -448,6 +448,7 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
@@ -462,14 +463,16 @@
                         <TextBox Height="20" Margin="0,2,0,2" Grid.Column="1" Text="{Binding Mode=TwoWay, Path=AbsorptionPerSecond, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.Row="0"/>
                         <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,0" VerticalAlignment="Top" Width="Auto" Text="Healing Response: *" TextWrapping="Wrap" ToolTipService.ToolTip="Average time in seconds needed for healing to respond to the burst damage defined above." Grid.Row="1"/>
                         <TextBox Height="20" Margin="0,2,0,2" Grid.Column="1" Text="{Binding Mode=TwoWay, Path=BurstWindow, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.Row="1"/>
-                        <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,0" VerticalAlignment="Top" Width="Auto" Text="Damage Granularity: *" TextWrapping="Wrap" ToolTipService.ToolTip="Defines the number of impacts that the above damage profile consists of, higher values result in lower crit variance." Grid.Row="2"/>
-                        <TextBox Height="20" Margin="0,2,0,2" Grid.Column="1" Text="{Binding Mode=TwoWay, Path=BurstImpacts, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.Row="2"/>
-                        <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,0" VerticalAlignment="Top" Width="Auto" Text="Survivability Score: *" TextWrapping="Wrap" ToolTipService.ToolTip="Survivability rating that results from maximum chance to live." Grid.Row="3"/>
-                        <TextBox Height="20" Margin="0,2,0,2" Grid.Column="1" Text="{Binding Mode=TwoWay, Path=ChanceToLiveScore, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.Row="3"/>
-                        <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,0" VerticalAlignment="Top" Width="Auto" Text="Survivability Attenuation: *" TextWrapping="Wrap" ToolTipService.ToolTip="Final Survivability value is calculated as Survivability Score * Chance To Live ^ Survivability Attenuation." Grid.Row="4"/>
-                        <TextBox Height="20" Margin="0,2,0,2" Grid.Column="1" Text="{Binding Mode=TwoWay, Path=ChanceToLiveAttenuation, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.Row="4"/>
-                        <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,0" VerticalAlignment="Top" Width="Auto" Text="Use Mage Ward: *" TextWrapping="Wrap" ToolTipService.ToolTip="Allows use of Mage Ward every 30 seconds." Grid.Row="5"/>
-                        <CheckBox Margin="0,2,0,2" Content="" Grid.Column="1" Grid.Row="5" IsChecked="{Binding Mode=TwoWay, Path=UseMageWard, UpdateSourceTrigger=Default}" d:LayoutOverrides="Height"/>
+                        <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,0" VerticalAlignment="Top" Width="Auto" Text="Passive Healing: *" TextWrapping="Wrap" ToolTipService.ToolTip="Passive healing received while waiting for healing response in healing per second." Grid.Row="2"/>
+                        <TextBox Height="20" Margin="0,2,0,2" Grid.Column="1" Text="{Binding Mode=TwoWay, Path=PassiveHealing, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.Row="2"/>
+                        <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,0" VerticalAlignment="Top" Width="Auto" Text="Damage Granularity: *" TextWrapping="Wrap" ToolTipService.ToolTip="Defines the number of impacts that the above damage profile consists of, higher values result in lower crit variance." Grid.Row="3"/>
+                        <TextBox Height="20" Margin="0,2,0,2" Grid.Column="1" Text="{Binding Mode=TwoWay, Path=BurstImpacts, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.Row="3"/>
+                        <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,0" VerticalAlignment="Top" Width="Auto" Text="Survivability Score: *" TextWrapping="Wrap" ToolTipService.ToolTip="Survivability rating that results from maximum chance to live." Grid.Row="4"/>
+                        <TextBox Height="20" Margin="0,2,0,2" Grid.Column="1" Text="{Binding Mode=TwoWay, Path=ChanceToLiveScore, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.Row="4"/>
+                        <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,0" VerticalAlignment="Top" Width="Auto" Text="Survivability Attenuation: *" TextWrapping="Wrap" ToolTipService.ToolTip="Final Survivability value is calculated as Survivability Score * Chance To Live ^ Survivability Attenuation." Grid.Row="5"/>
+                        <TextBox Height="20" Margin="0,2,0,2" Grid.Column="1" Text="{Binding Mode=TwoWay, Path=ChanceToLiveAttenuation, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.Row="5"/>
+                        <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,0" VerticalAlignment="Top" Width="Auto" Text="Use Mage Ward: *" TextWrapping="Wrap" ToolTipService.ToolTip="Allows use of Mage Ward every 30 seconds." Grid.Row="6"/>
+                        <CheckBox Margin="0,2,0,2" Content="" Grid.Column="1" Grid.Row="6" IsChecked="{Binding Mode=TwoWay, Path=UseMageWard, UpdateSourceTrigger=Default}" d:LayoutOverrides="Height"/>
                     </Grid>
                 </Grid>
             </controls:TabItem>
