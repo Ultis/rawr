@@ -22,6 +22,7 @@ namespace Rawr.ProtPaladin
         public float DamagePerSecond { get; set; }
         public float GuaranteedReduction { get; set; }
         public float Mitigation { get; set; }
+        public float CTCovered { get; set; }
         public float DamageTaken { get; set; }
         public float[] ResistanceTable { get; set; }
         public float TankPoints { get; set; }
@@ -52,6 +53,7 @@ namespace Rawr.ProtPaladin
             DamagePerSecond     = AverageDamagePerAttack / attackSpeed;
             DamageTaken         = DamagePerSecond / baseDamagePerSecond;
             Mitigation          = (1.0f - (DamagePerSecond / baseDamagePerSecond));
+            CTCovered          = (DefendTable.AnyMiss + DefendTable.Block);
             TankPoints          = (Stats.Health / (1.0f - Mitigation));
             EffectiveHealth     = (Stats.Health / guaranteedReduction);
             GuaranteedReduction = (1.0f - guaranteedReduction);

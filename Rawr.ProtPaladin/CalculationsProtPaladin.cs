@@ -19,7 +19,7 @@ namespace Rawr.ProtPaladin
                 // Relevant Gem IDs for ProtPaladin
                 // Red
                 int[] bold = { 52081, 52176, 52206, 52255 };        // Strength
-                int[] delicate = { 52082, 52175, 52212, 52258 };    // Agility
+                //int[] delicate = { 52082, 52175, 52212, 52258 };    // Agility
                 int[] flashing = { 52083, 52174, 52216, 52259 };    // Parry
                 int[] precise = { 52085, 52172, 52230, 52260 };     // Expertise
 
@@ -27,10 +27,10 @@ namespace Rawr.ProtPaladin
                 int[] accurate = { 52105, 52152, 52203, 52203 };    // Expertise + Hit
                 int[] defender = { 52097, 52160, 52210, 52210 };    // Parry + Stamina
                 int[] etched = { 52101, 52156, 52213, 52213 };      // Strength + Hit
-                int[] glinting = { 52102, 52155, 52220, 52220 };    // Agility + Hit
+                //int[] glinting = { 52102, 52155, 52220, 52220 };    // Agility + Hit
                 int[] guardian = { 52099, 52158, 52221, 52221 };    // Expertise + Stamina
                 int[] retaliating = { 52103, 52154, 52234, 52234 }; // Parry + Hit
-                int[] shifting = { 52096, 52161, 52238, 52238 };    // Agility + Stamina
+                //int[] shifting = { 52096, 52161, 52238, 52238 };    // Agility + Stamina
                 int[] sovereign = { 52095, 52162, 52243, 52243 };   // Strength + Stamina
 
                 // Blue
@@ -48,10 +48,10 @@ namespace Rawr.ProtPaladin
                 int[] subtle = { 52090, 52167, 52247, 52265 };      // Dodge
 
                 // Orange
-                int[] adept = { 52115, 52142, 52204, 52204 };      // Agility + Mastery
+                //int[] adept = { 52115, 52142, 52204, 52204 };      // Agility + Mastery
                 int[] fine = { 52116, 52141, 52215, 52215 };       // Parry + Mastery
                 int[] keen = { 52118, 52139, 52224, 52224 };       // Expertise + Mastery
-                int[] polished = { 52106, 52151, 52229, 52229 };   // Agility + Dodge
+                //int[] polished = { 52106, 52151, 52229, 52229 };   // Agility + Dodge
                 int[] resolute = { 52107, 52150, 52249, 52249 };   // Expertise + Dodge
                 int[] skillful = { 52114, 52143, 52240, 52240 };   // Strength + Mastery
 
@@ -68,7 +68,7 @@ namespace Rawr.ProtPaladin
                 //int cog_subtle = 59477;                            // Dodge
 
                 string[] qualityGroupNames = new string[] { "Uncommon", "Perfect Uncommon", "Rare", "Jeweler" };
-                string[] typeGroupNames = new string[] { "Survivability", "Mitigation (Agility)", "Mitigation (Dodge)", "Mitigation (Parry)", "Threat" };
+                string[] typeGroupNames = new string[] { "Survivability", "Mitigation (Dodge)", "Mitigation (Parry)", "Mitigation (Mastery)", "Threat" };
                 
                 int[] metaTemplates = new int[] { austere, eternal, fleet };
 
@@ -78,13 +78,13 @@ namespace Rawr.ProtPaladin
                     { solid,        solid,      solid,      solid },
                 };
 
-                int[,][] agilityTemplates = new int[,][]
+                /*int[,][] agilityTemplates = new int[,][]
                 { // Mitigation (Agility)
                     { delicate,     delicate,   delicate,   delicate },
                     { delicate,     polished,   shifting,   delicate },
                     { polished,     subtle,     regal,      delicate },
                     { shifting,     regal,      solid,      delicate },
-                };
+                };*/
 
                 int[,][] dodgeTemplates = new int[,][]
                 { // Mitigation (Dodge)
@@ -105,9 +105,10 @@ namespace Rawr.ProtPaladin
                 int[,][] masteryTemplates = new int[,][]
                 { // Mitigation (Mastery)
                     { fractured,    fractured,  fractured,  fractured },
-                    { flashing,     fine,       defender,   fractured },
+                    //{ flashing,     fine,       defender,   fractured },
                     { fine,         fractured,  puissant,   fractured },
-                    { defender,     puissant,   solid,      fractured },
+                    { defender,     fractured,   puissant,      solid },
+                    { fine,     fractured,   puissant,      solid },
                 };
 
                 int[,][] threatTemplates = new int[,][]
@@ -119,7 +120,8 @@ namespace Rawr.ProtPaladin
                 };
 
                 int[][,][] gemmingTemplates = new int[][,][]
-                { survivabilityTemplates, agilityTemplates, dodgeTemplates, parryTemplates, masteryTemplates, threatTemplates };
+                //{ survivabilityTemplates, agilityTemplates, dodgeTemplates, parryTemplates, masteryTemplates, threatTemplates };
+                { survivabilityTemplates, dodgeTemplates, parryTemplates, masteryTemplates, threatTemplates };
 
                 // Generate List of Gemming Templates
                 List<GemmingTemplate> gemmingTemplate = new List<GemmingTemplate>();
@@ -480,12 +482,21 @@ focus on Survival Points.",
                     calc.ThreatPoints = 0.0f; // Math.Min((calc.ThreatPoints / threatScale) * 2.0f, VALUE_CAP);
                     calc.OverallPoints = calc.MitigationPoints + calc.SurvivabilityPoints + calc.ThreatPoints;
                     break;
-                case 2:
+                case 3:
                     // Damage Output Mode
                     calc.SurvivabilityPoints = 0.0f;
                     calc.MitigationPoints = 0.0f;
                     calc.ThreatPoints = Math.Min(calc.TotalDamagePerSecond, VALUE_CAP);
                     calc.OverallPoints = calc.MitigationPoints + calc.SurvivabilityPoints + calc.ThreatPoints;
+                    break;
+                case 2:
+                    calc.SurvivabilityPoints = 0.0f;
+                    calc.MitigationPoints = 0.0f;
+                    calc.ThreatPoints = 0.0f;
+                    //calc.CTCPoints = StatConversion.MitigationScaler / (1f - dm.CTCCovered);
+                    calc.CTCPoints = dm.CTCovered * 10000f;
+                    calc.MitigationPoints = calc.CTCPoints;
+                    calc.OverallPoints = calc.CTCPoints;
                     break;
                 #endregion
                 case 0:

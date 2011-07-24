@@ -17,7 +17,7 @@ namespace Rawr.ProtPaladin
             set { _overallPoints = value; }
         }
 
-        private float[] _subPoints = new float[] { 0f, 0f, 0f };
+        private float[] _subPoints = new float[] { 0f, 0f, 0f, 0f };
         public override float[] SubPoints
         {
             get { return _subPoints; }
@@ -42,6 +42,11 @@ namespace Rawr.ProtPaladin
             set { _subPoints[2] = value; }
         }
 
+        public float CTCPoints
+        {
+            get { return _subPoints[3]; }
+            set { _subPoints[3] = value; }
+        }
         // Target Info
         public int TargetLevel { get; set; }
         public int TargetArmor { get; set; }
@@ -229,6 +234,7 @@ namespace Rawr.ProtPaladin
             dictValues.Add("Overall Points", string.Format("{0:0}", OverallPoints));
             dictValues.Add("Mitigation Points", string.Format("{0:0}", MitigationPoints));
             dictValues.Add("Threat Points", string.Format("{0:0}", ThreatPoints));
+            dictValues.Add("CTC Points", string.Format("{0:0}", CTCPoints));
 
             return dictValues;
         }

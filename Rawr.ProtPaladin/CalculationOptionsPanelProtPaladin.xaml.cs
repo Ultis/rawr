@@ -91,7 +91,7 @@ namespace Rawr.ProtPaladin
             if (calcOpts == null) return; // can be null while loading xaml in WPF
 
             // Set the default ThreatScale
-            if (selectedIndex == 2)
+            if (selectedIndex == 2 || selectedIndex == 3)
                 calcOpts.ThreatScale = 0f;
             else
                 calcOpts.ThreatScale = 10f;

@@ -20,6 +20,7 @@ namespace Rawr.ProtPaladin
         public float Resist { get; protected set; }
         public float Critical { get; protected set; }
         public float Hit { get; protected set; }
+        public float BlockOverCap { get; protected set; }
 
         public float AnyHit
         {
@@ -64,7 +65,16 @@ namespace Rawr.ProtPaladin
             // Block
             if (Character.OffHand != null && Character.OffHand.Type == ItemType.Shield)
             {
-                Block = Math.Min(1.0f - tableSize, Lookup.AvoidanceChance(Character, Stats, HitResult.Block, targetLevel));
+                //Block = Math.Min(1.0f - tableSize, Lookup.AvoidanceChance(Character, Stats, HitResult.Block, targetLevel));
+                Block = Lookup.AvoidanceChance(Character, Stats, HitResult.Block, targetLevel);
+                if (Block > (1.0f - tableSize))
+                {
+                    BlockOverCap = Block - 1.0f + tableSize;
+                }
+                else
+                {
+                    BlockOverCap = 0.0f;
+                }
                 tableSize += Block;
             }
             // Critical Hit
