@@ -47261,7 +47261,7 @@
       </ItemLocation>
       <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Area>Unknown Zone</Area>
+        <Area>Throne of the Four Winds</Area>
         <Container>Heart of Wind</Container>
         <MinLevel>85</MinLevel>
         <Party>5</Party>
@@ -99855,16 +99855,16 @@
     <Slot>Trinket</Slot>
   </Item>
   <Item>
-    <ItemLevel>404</ItemLevel>
+    <ItemLevel>397</ItemLevel>
     <DisplayId>99788</DisplayId>
     <DisplaySlot>17</DisplaySlot>
     <IconPath>stave_2h_tarecgosa_e_01stagefinal</IconPath>
     <Stats>
-      <Stamina>779</Stamina>
-      <Intellect>459</Intellect>
-      <SpellPower>2973</SpellPower>
-      <HitRating>366</HitRating>
-      <HasteRating>252</HasteRating>
+      <Stamina>730</Stamina>
+      <Intellect>426</Intellect>
+      <SpellPower>2786</SpellPower>
+      <HitRating>314</HitRating>
+      <HasteRating>271</HasteRating>
       <DragonwrathProc>1</DragonwrathProc>
     </Stats>
     <Quality>Legendary</Quality>
@@ -100135,7 +100135,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -100194,7 +100194,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Alysrazor</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -100252,7 +100252,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Baleroc</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -100362,7 +100362,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Shannox</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -100412,7 +100412,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -100462,7 +100462,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -100717,7 +100717,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Alysrazor</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -100775,7 +100775,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Baleroc</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -100823,12 +100823,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Elementium Deathplate Faceguard</Name>
@@ -100885,7 +100885,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Shannox</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -100935,7 +100935,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -101181,7 +101181,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -101240,7 +101240,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Alysrazor</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -101298,7 +101298,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Baleroc</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -101346,12 +101346,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Obsidian Arborweave Headpiece</Name>
@@ -101408,7 +101408,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Shannox</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -101458,7 +101458,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -101704,7 +101704,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -101762,7 +101762,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Baleroc</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -101810,12 +101810,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Obsidian Arborweave Helm</Name>
@@ -101872,7 +101872,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Shannox</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -101931,7 +101931,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Alysrazor</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -101981,7 +101981,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -102227,7 +102227,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -102285,7 +102285,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Baleroc</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -102333,12 +102333,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Obsidian Arborweave Cover</Name>
@@ -102395,7 +102395,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Shannox</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -102454,7 +102454,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Alysrazor</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -102504,7 +102504,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -102706,7 +102706,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -102809,7 +102809,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Alysrazor</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -102867,7 +102867,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Baleroc</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -102915,12 +102915,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Flamewaker's Headguard</Name>
@@ -102977,7 +102977,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Shannox</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -103027,7 +103027,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -103273,7 +103273,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -103331,7 +103331,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Baleroc</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -103441,7 +103441,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Shannox</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -103500,7 +103500,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Alysrazor</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -103550,7 +103550,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -103795,7 +103795,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -103854,7 +103854,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Alysrazor</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -103912,7 +103912,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Baleroc</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -104022,7 +104022,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Shannox</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -104072,7 +104072,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -104318,7 +104318,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -104377,7 +104377,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Alysrazor</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -104435,7 +104435,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Baleroc</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -104545,7 +104545,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Shannox</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -104595,7 +104595,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -104645,7 +104645,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -104900,7 +104900,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Alysrazor</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -104958,7 +104958,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Baleroc</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -105068,7 +105068,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Shannox</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -105118,7 +105118,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -105364,7 +105364,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -105422,7 +105422,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Baleroc</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -105532,7 +105532,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Shannox</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -105591,7 +105591,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Alysrazor</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -105641,7 +105641,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -105887,7 +105887,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -105945,7 +105945,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Baleroc</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -106055,7 +106055,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Shannox</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -106114,7 +106114,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Alysrazor</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -106164,7 +106164,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -106410,7 +106410,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -106469,7 +106469,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Alysrazor</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -106527,7 +106527,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Baleroc</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -106575,12 +106575,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Dark Phoenix Helmet</Name>
@@ -106637,7 +106637,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Shannox</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -106687,7 +106687,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -106931,7 +106931,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -106988,7 +106988,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Alysrazor</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -107046,7 +107046,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Baleroc</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -107094,12 +107094,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Erupting Volcanic Faceguard</Name>
@@ -107156,7 +107156,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Shannox</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -107206,7 +107206,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -107438,7 +107438,7 @@
         <TokenMap>
           <item>
             <key>
-              <string>Helm of the Fiery Protector</string>
+              <string>Mantle of the Fiery Protector</string>
             </key>
             <value>
               <int>1</int>
@@ -107449,12 +107449,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="ContainerItem">
-        <Heroic>false</Heroic>
+      <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
-        <Container>Cache of the Fire Lord</Container>
-        <MinLevel>85</MinLevel>
-        <Party>5</Party>
+        <Heroic>false</Heroic>
+        <Boss>Majordomo Staghelm</Boss>
+        <Count>0</Count>
+        <OutOf>0</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Erupting Volcanic Spaulders</Name>
@@ -107511,7 +107511,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Alysrazor</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -107569,7 +107569,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Baleroc</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -107617,12 +107617,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Erupting Volcanic Helmet</Name>
@@ -107679,7 +107679,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Shannox</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -107729,7 +107729,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -107959,7 +107959,7 @@
         <TokenMap>
           <item>
             <key>
-              <string>Helm of the Fiery Protector</string>
+              <string>Mantle of the Fiery Protector</string>
             </key>
             <value>
               <int>1</int>
@@ -107970,12 +107970,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="ContainerItem">
-        <Heroic>false</Heroic>
+      <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
-        <Container>Cache of the Fire Lord</Container>
-        <MinLevel>85</MinLevel>
-        <Party>5</Party>
+        <Heroic>false</Heroic>
+        <Boss>Majordomo Staghelm</Boss>
+        <Count>0</Count>
+        <OutOf>0</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Erupting Volcanic Shoulderwraps</Name>
@@ -108030,7 +108030,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Alysrazor</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -108088,7 +108088,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Baleroc</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -108136,12 +108136,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Erupting Volcanic Headpiece</Name>
@@ -108189,7 +108189,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -108435,7 +108435,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -108493,7 +108493,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Baleroc</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -108603,7 +108603,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Shannox</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -108662,7 +108662,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Alysrazor</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -108712,7 +108712,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -108958,7 +108958,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -109006,12 +109006,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Helmet of the Molten Giant</Name>
@@ -109068,7 +109068,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Alysrazor</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -109126,7 +109126,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Baleroc</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -109185,7 +109185,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Shannox</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -109235,7 +109235,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -109285,7 +109285,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>false</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -109540,7 +109540,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Alysrazor</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -109598,7 +109598,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Baleroc</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -109646,12 +109646,12 @@
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Firelands</Area>
+      <ItemLocation xsi:type="ContainerItem">
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Area>Firelands</Area>
+        <Container>Cache of the Fire Lord</Container>
+        <MinLevel>85</MinLevel>
+        <Party>5</Party>
       </ItemLocation>
     </LocationInfo>
     <Name>Faceguard of the Molten Giant</Name>
@@ -109708,7 +109708,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Shannox</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -109758,7 +109758,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Majordomo Staghelm</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -109817,7 +109817,7 @@
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
         <Heroic>true</Heroic>
-        <Boss>Unknown Boss</Boss>
+        <Boss>Shannox</Boss>
         <Count>0</Count>
         <OutOf>0</OutOf>
       </ItemLocation>
@@ -116767,7 +116767,7 @@
         <SpecialEffect>
           <Trigger>DoTTick</Trigger>
           <Stats>
-            <MasteryRating>45</MasteryRating>
+            <MasteryRating>44</MasteryRating>
           </Stats>
           <Duration>10</Duration>
           <Cooldown>0</Cooldown>
@@ -131292,6 +131292,9 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
     <Name>[Downloading from Wowhead]</Name>
     <Id>0</Id>
@@ -137663,7 +137666,7 @@
         <OutOf>0</OutOf>
       </ItemLocation>
       <ItemLocation xsi:type="StaticDrop">
-        <Area>Unknown Instance</Area>
+        <Area>Firelands</Area>
         <Heroic>false</Heroic>
         <Boss>Lord Rhyolith</Boss>
         <Count>0</Count>
