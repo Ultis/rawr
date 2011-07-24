@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-16"?>
-<ItemFilterData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<ItemFilterData xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <RelevantItemTypes>
     <item>
       <key>
@@ -2136,7 +2136,7 @@
         </ItemFilterRegex>
         <ItemFilterRegex>
           <Name>Occuthar</Name>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
           <Pattern>Occuthar</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
@@ -2923,7 +2923,7 @@
       <RegexList>
         <ItemFilterRegex>
           <Name>Arena or Battleground Rating</Name>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
           <Pattern>Arena|Battleground</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
