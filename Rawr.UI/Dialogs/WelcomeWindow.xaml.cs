@@ -160,6 +160,70 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes()
         {
+#region Rawr 4.2.2 (July 24, 2011) [r62169]
+VNStuff.Add("Rawr 4.2.2 (July 24, 2011) [r62169]",
+@"Cataclysm Release
+
+Rawr.Base:
+- Implemented Blizzard API and readded support for TW and CN realms.
+
+Rawr.Items:
+- Finally got around to finish updating the Tier token drop location info.
+
+Rawr.Buffs:
+- Removed Hunter pet food
+- Fixed Hunter's mark Buffs 
+- All Cata Elixirs provide 40 additional stats instead of 90 
+
+Rawr.BossHandler:
+- First pass to implement Initial 4 bosses in Firelands raid. 
+
+Rawr.Optimizer:
+- Reforging swap mutation. 
+- Defect 21159: IndexOutOfRange because AllowedRandomSuffixes can have a count > than item.AvailabilityInformation.Length
+- Defect 21065: Sometimes reforge ID is -1 when passed into CurrentStatValue(), but that condition was not being handled. 
+- Display percent change in optimizer results. 
+- When you cancel optimization you will now be presented with the best result so far with an option to cancel, continue or load current best. 
+- When optimizer determines your currently equipped items are not marked available you will now have an option to automatically mark them available and continue with optimization, leave as it is and continue or cancel. 
+
+Rawr.Mage:
+- Changing 4T12 to multiplicative mana reduction. 
+- Fix for comparison calculations. 
+- Performance improvements. 
+- Nonsummon damage procs benefit from mana adept, Moonwell Chalice can stack with other item based cooldowns. 
+- Adding hard cast Pyro to spell info. 
+- Passive healing parameter for survivability model. 
+
+Rawr.ProtWarr:
+- Fixed missed Strength->Parry calc in ProtWarrior
+- Fix for performance issues
+
+Rawr.DPSDK:
+- Defect 21131: Reduce problems with stacking Razorice, Cinderglacier, and Fallen Crusader
+- Reduce issue with creating a new character. 
+- Partial fix for defect 21185: A bug where a possible negative crit chance could cause issues in Hit and therefore translate to Expertise being worth more than it should. 
+- Fix for 21069: Switch SD procs from cheaper DCs to be like Rime, which means extra DCs. 
+- Fix for 21173: DMC:Hurricane was not properly handling the proc. Now it does and it's scary for DWFrost! 
+- Improve rotation calculations to include partial valued spells. This should smooth out some Haste issues, but not all.
+- Little bit of cleanup.
+- Switch SpecialEffect handling to use the new dictionary methods.
+- Improve KM handling
+- Improve Runic Corruption handling.
+
+Rawr.TankDK:
+- Update DPS from Boss values to ensure proper handling of non-physical dots as well as % of health values in the DPH numbers. 
+
+Rawr.Tree:
+- Fix Eye of Blazing Power to be affected by crit, Master Shapeshifter and Tree of Life 
+
+Rawr.Moonkin:
+- Remove treant melee crit depression, because my testing showed a flat 5% crit rate on a boss-level dummy.
+- Modify 2T12 set bonus down to 3.5 casts/proc, and a 2.5% crit rate. 
+
+Rawr.Enhance:
+- Partially apply Patch 9898: Tweaks to EnhSim Export 
+");
+#endregion
 #region Rawr 4.2.1 (July 10, 2011) [r61914]
 VNStuff.Add("Rawr 4.2.1 (July 10, 2011) [r61914]",
 @"Cataclysm Release
