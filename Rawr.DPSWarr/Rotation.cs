@@ -1713,7 +1713,7 @@ namespace Rawr.DPSWarr {
                         }
                         statsTotal.AddSpecialEffect(_SE_ShatteringThrow[value]);
                     } catch (Exception) { } // Do nothing, this is a Silverlight retard bug*/
-                    statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { TargetArmorReduction = 0.20f, }, ST.Duration, ST.CD, ST.MHAtkTable.AnyLand));
+                    statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { TargetArmorReduction = 0.20f, }, ST.Duration, ST.CD, ST.MHAtkTable.AnyLand) { BypassCache = true });
                 }
                 if (TH.Validated) {
                     /*try {
@@ -1725,7 +1725,7 @@ namespace Rawr.DPSWarr {
                         }
                         statsTotal.AddSpecialEffect(_SE_ThunderClap[value]);
                     } catch (Exception) { } // Do nothing, this is a Silverlight retard bug*/
-                    statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BossAttackSpeedReductionMultiplier = 0.10f, }, TH.Duration, TH.CD, TH.MHAtkTable.AnyLand));
+                    statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BossAttackSpeedReductionMultiplier = 0.10f, }, TH.Duration, TH.CD, TH.MHAtkTable.AnyLand) { BypassCache = true });
                 }
                 if (SN.Validated) {
                     /*try {

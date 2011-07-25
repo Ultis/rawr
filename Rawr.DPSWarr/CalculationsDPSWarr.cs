@@ -465,6 +465,16 @@ a GCD's length, you will use this while running back into place",
             return calcOpts;
         }
 
+        // cached special effects
+        private static readonly SpecialEffect _SE_4T11 = new SpecialEffect(Trigger.OPorRBAttack, new Stats() { BonusAttackPowerMultiplier = 0.01f, }, 30, 0, 1f, 3);
+
+        private static readonly SpecialEffect[] _SE_2T12 = { 
+            new SpecialEffect(Trigger.BattleorCommandingShout, new Stats() { BonusPhysicalDamageMultiplier = 0.10f, }, 12f - (0 * 3f), 60f - (0 * 15f)),
+            new SpecialEffect(Trigger.BattleorCommandingShout, new Stats() { BonusPhysicalDamageMultiplier = 0.10f, }, 12f - (1 * 3f), 60f - (1 * 15f)),
+            new SpecialEffect(Trigger.BattleorCommandingShout, new Stats() { BonusPhysicalDamageMultiplier = 0.10f, }, 12f - (2 * 3f), 60f - (2 * 15f)),
+        };
+
+        private static readonly SpecialEffect _SE_4T12 = new SpecialEffect(Trigger.MortalStrikeHit, new Stats() { BonusWhiteDamageMultiplier = 1f, }, 0f, 0f, 0.30f);
         #endregion
 
         #region Relevancy
@@ -1052,21 +1062,15 @@ a GCD's length, you will use this while running back into place",
                 statsBuffs.BonusBloodthirstDamageMultiplier = 0.05f;
             }
             if (T11count >= 4) {//dpswarchar.Char.ActiveBuffs.Find<Buff>(x => x.SpellId == 90295) != null) {
-                statsBuffs.AddSpecialEffect(new SpecialEffect(Trigger.OPorRBAttack,
-                    new Stats() { BonusAttackPowerMultiplier = 0.01f, },
-                    30, 0, 1f, 3));
+                statsBuffs.AddSpecialEffect(_SE_4T11);
             }
             int T12count;
             dpswarchar.Char.SetBonusCount.TryGetValue("Molten Giant Warplate", out T12count);
             if (T12count >= 2) {
-                statsBuffs.AddSpecialEffect(new SpecialEffect(Trigger.BattleorCommandingShout,
-                    new Stats() { BonusPhysicalDamageMultiplier = 0.10f, },
-                    12f - (dpswarchar.Talents.BoomingVoice * 3f), 60f - (dpswarchar.Talents.BoomingVoice * 15f)));
+                statsBuffs.AddSpecialEffect(_SE_2T12[dpswarchar.Talents.BoomingVoice]);
             }
             if (T12count >= 4) {
-                statsBuffs.AddSpecialEffect(new SpecialEffect(Trigger.MortalStrikeHit,
-                    new Stats() { BonusWhiteDamageMultiplier = 1f, },
-                    0f, 0f, 0.30f));
+                statsBuffs.AddSpecialEffect(_SE_4T12);
             }
             
             foreach (Buff b in removedBuffs) { dpswarchar.Char.ActiveBuffsAdd(b); }
@@ -2388,7 +2392,7 @@ a GCD's length, you will use this while running back into place",
                         // effect.Duration = 0, so GetAverageStats won't work
                         float value1 = effect.Stats.ManaorEquivRestore;
                         float value2 = effect.Stats.HealthRestoreFromMaxHealth;
-                        SpecialEffect dummy = new SpecialEffect(effect.Trigger, new Stats() { ManaorEquivRestore = value1, HealthRestoreFromMaxHealth = value2 }, effect.Duration, effect.Cooldown, effect.Chance);
+                        SpecialEffect dummy = new SpecialEffect(effect.Trigger, new Stats() { ManaorEquivRestore = value1, HealthRestoreFromMaxHealth = value2 }, effect.Duration, effect.Cooldown, effect.Chance) { BypassCache = true };
                         numProcs = dummy.GetAverageProcsPerSecond(dmgTakenInterval, originalStats.Dodge + originalStats.Parry, 0f, 0f) * fightDuration;
                         statsProcs.ManaorEquivRestore += dummy.Stats.ManaorEquivRestore * numProcs;
                         dummy.Stats.ManaorEquivRestore = 0f;

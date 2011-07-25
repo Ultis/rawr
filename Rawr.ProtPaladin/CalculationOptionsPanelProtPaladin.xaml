@@ -63,7 +63,7 @@
                         <ComboBoxItem>
                             <TextBlock Text="Burst Time *" ToolTipService.ToolTip="Scale based on the average time an event will occur which has a chance to burst down the player." />
                         </ComboBoxItem>
-						<ComboBoxItem>
+                        <ComboBoxItem>
                             <TextBlock Text="CT Covered *" ToolTipService.ToolTip="Scale based on your combat table coverage." />
                         </ComboBoxItem>
                     </ComboBox>

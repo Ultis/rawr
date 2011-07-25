@@ -546,11 +546,12 @@ namespace Rawr.DPSWarr.Skills
         {
             // This attack doesn't consume GCDs and doesn't affect the swing timer
             //float effectActs = _SE_StrikesOfOpportunity[DPSWarrChar.StatS.MasteryRating].GetAverageProcsPerSecond(
-            float effectActs = new SpecialEffect(Trigger.MeleeAttack, null, 0f, 0.5f,
+            var se = new SpecialEffect(Trigger.MeleeAttack, null, 0f, 0.5f,
                             (float)Math.Min(Skills.StrikesOfOpportunity.BaseChance
                                 + (float)Math.Max(0f, Skills.StrikesOfOpportunity.BonusChance
                                     * StatConversion.GetMasteryFromRating(DPSWarrChar.StatS.MasteryRating, CharacterClass.Warrior)), 1f)
-                    ).GetAverageProcsPerSecond((FightDuration * perc) / meleeAttemptsOverDur, 1f, DPSWarrChar.CombatFactors.CMHItemSpeed, FightDuration * perc);
+                    ) { BypassCache = true };
+            float effectActs = se.GetAverageProcsPerSecond((FightDuration * perc) / meleeAttemptsOverDur, 1f, DPSWarrChar.CombatFactors.CMHItemSpeed, FightDuration * perc);
             effectActs *= FightDuration * perc;
             return effectActs;
         }

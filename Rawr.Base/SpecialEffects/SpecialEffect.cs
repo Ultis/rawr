@@ -207,6 +207,7 @@ namespace Rawr
         public float Chance { get; set; }
         public int MaxStack { get; set; }
         public bool LimitedToExecutePhase { get; set; }
+        public bool BypassCache { get; set; }
 
         private class UptimeInterpolator : Interpolator
         {
@@ -928,7 +929,7 @@ namespace Rawr
                     // AvgTotalUptime(x) = sum_r=0..inf integrate_t=(x-duration)..x Ibeta(r+1, t - r*cooldown, p) dt
 
                     bool needsBeta = fightDuration < 10 * Cooldown;
-                    if (triggerInterval > 0 && Mode == CalculationMode.Advanced && needsBeta)
+                    if (triggerInterval > 0 && (Mode == CalculationMode.Advanced || (Mode == CalculationMode.Interpolation && BypassCache)) && needsBeta)
                     {
                         // old calcs based on approximation from procs per second
                         /*if (fightDuration <= Duration)
@@ -1389,7 +1390,8 @@ namespace Rawr
             }
 
             bool needsBeta = fightDuration < Cooldown * 10;
-            if (Mode == CalculationMode.Advanced && triggerInterval > 0 && needsBeta) {
+            if ((Mode == CalculationMode.Advanced || (Mode == CalculationMode.Interpolation && BypassCache)) && triggerInterval > 0 && needsBeta)
+            {
                 double c = Cooldown / triggerInterval;
                 if (discretizationCorrection)
                 {

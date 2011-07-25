@@ -160,8 +160,8 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes()
         {
-#region Rawr 4.2.2 (July 24, 2011) [r62169]
-VNStuff.Add("Rawr 4.2.2 (July 24, 2011) [r62169]",
+#region Rawr 4.2.2 (July 24, 2011) [r62174]
+VNStuff.Add("Rawr 4.2.2 (July 24, 2011) [r62174]",
 @"Cataclysm Release
 
 Rawr.Base:
@@ -184,7 +184,7 @@ Rawr.Optimizer:
 - Defect 21065: Sometimes reforge ID is -1 when passed into CurrentStatValue(), but that condition was not being handled. 
 - Display percent change in optimizer results. 
 - When you cancel optimization you will now be presented with the best result so far with an option to cancel, continue or load current best. 
-- When optimizer determines your currently equipped items are not marked available you will now have an option to automatically mark them available and continue with optimization, leave as it is and continue or cancel. 
+- When optimizer determines your currently equipped items are not marked available you will now have an option to automatically mark them available and continue with optimization, leave as it is and continue or cancel. (WPF only)
 
 Rawr.Mage:
 - Changing 4T12 to multiplicative mana reduction. 
@@ -197,6 +197,12 @@ Rawr.Mage:
 Rawr.ProtWarr:
 - Fixed missed Strength->Parry calc in ProtWarrior
 - Fix for performance issues
+
+Rawr.DPSWarr:
+- Fix for performance problems
+
+Rawr.ProtPaladin:
+- New ranking mode based solely on combat table coverage. 
 
 Rawr.DPSDK:
 - Defect 21131: Reduce problems with stacking Razorice, Cinderglacier, and Fallen Crusader
