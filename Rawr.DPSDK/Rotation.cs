@@ -268,7 +268,7 @@ namespace Rawr.DK
         }
         public float getTotalSpecialsPerSecond()
         {
-            return m_MeleeSpecials + m_SpellSpecials / (m_RotationDuration / 1000);
+            return (m_MeleeSpecials + m_SpellSpecials) / (m_RotationDuration / 1000);
         }
 
         public uint m_FrostSpecials
