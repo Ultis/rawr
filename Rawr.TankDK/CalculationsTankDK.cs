@@ -1278,6 +1278,22 @@ Points individually may be important.",
             // Let's make sure this is even valid
             float DPHit = 0;
             float DPTick = 0;
+            switch (TDK.calcOpts.PlayerRole)
+            {
+                case 0:
+                    TDK.role = PLAYER_ROLES.MainTank;
+                    break;
+                case 1:
+                    TDK.role = PLAYER_ROLES.OffTank;
+                    break;
+                case 2:
+                    TDK.role = PLAYER_ROLES.TertiaryTank;
+                    break;
+                default:
+                    TDK.role = PLAYER_ROLES.MainTank;
+                    break;
+            }
+            TDK.role = PLAYER_ROLES.MainTank;
             foreach (Attack a in TDK.bo.Attacks)
             {
                 // PlayerRole on calcOpts is MT=0, OT=1, TT=2, Any Tank = 3
@@ -1456,7 +1472,7 @@ Points individually may be important.",
             AccumulateBuffsStats(statsTotal, character.ActiveBuffs);
             AccumulateSetBonusStats(statsTotal, character.SetBonusCount);
 
-            #region Tank
+            #region Tier Bonuses: Tank
             #region T11
             int tierCount;
             if (character.SetBonusCount.TryGetValue("Magma Plated Battlearmor", out tierCount))
@@ -1542,7 +1558,7 @@ Points individually may be important.",
                 // Vengence has the chance to increase AP.
                 int iVengenceMax = (int)(statsTotal.Stamina + (BaseStats.GetBaseStats(character).Health) * .1);
                 int iAttackPowerMax = (int)statsTotal.AttackPower + iVengenceMax;
-                float mitigatedDPS = TDK.bo.GetDPSByType(ATTACK_TYPES.AT_MELEE, 0, statsTotal.DamageTakenReductionMultiplier,
+                float mitigatedDPS = TDK.bo.GetDPSByType(TDK.role, 0, statsTotal.DamageTakenReductionMultiplier,
                     0, .14f, statsTotal.Miss, statsTotal.Dodge, statsTotal.EffectiveParry, 0, 0,
                     0, 0, 0, 0, 0);
                     //statsTotal.ArcaneResistance, statsTotal.FireResistance, statsTotal.FrostResistance, statsTotal.NatureResistance, statsTotal.ShadowResistance);
@@ -1555,6 +1571,10 @@ Points individually may be important.",
                     0,
                     1,
                     APStackCountMax);
+//                Dictionary<Trigger, float> triggerInterval;
+//                Dictionary<Trigger, float> triggerChance;
+//                triggerInterval[Trigger.DamageTaken] = TDK.bo.DynamicCompiler_Attacks.AttackSpeed;
+//                triggerChance[Trigger.DamageTaken] = 1f; // MitigatedDPS already factors in avoidance.
                 statsTotal.VengenceAttackPower = seVeng.GetAverageStats().AttackPower;
                 statsTotal.AttackPower += statsTotal.VengenceAttackPower * TDK.calcOpts.VengeanceWeight;
                 #endregion
