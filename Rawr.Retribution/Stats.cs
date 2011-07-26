@@ -18,10 +18,25 @@
         /// Increases the duration of your Zealotry ability by 15 sec.
         /// </summary>
         public bool T12_4P { get; set; }
+        /// <summary>
+        /// +400 resilience rating
+        /// Increases Strength by 70
+        /// </summary>
+        public bool PVP_2P { get; set; }
+        /// <summary>
+        /// Reduces the cooldown of your Judgements by 1 sec.
+        /// Increases Strength by 90.
+        /// </summary>
+        public bool PVP_4P { get; set; }
 
         public void SetSets(Character character)
         {
             int TCount;
+            // Gladiator
+            character.SetBonusCount.TryGetValue("Gladiator's Vindication", out TCount);
+            if (TCount >= 2) { PVP_2P = true; Resilience += 400; Strength += 70; }
+            if (TCount >= 4) { PVP_4P = true; JudgementCDReduction = 1; Strength += 90; }
+
             //T11
             character.SetBonusCount.TryGetValue("Reinforced Sapphirium Battleplate", out TCount);
             if (TCount >= 2) { T11_2P = true; }

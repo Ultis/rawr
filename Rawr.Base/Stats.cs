@@ -3015,6 +3015,13 @@ namespace Rawr
             return clone;
         }
 
+        public Stats() { }
+
+        public Stats(SpecialEffect SE) : this()
+        {
+            AddSpecialEffect(SE);
+        }
+
         #region Multiplicative Handling
         [XmlIgnore]
         public static PropertyInfo[] _propertyInfoCache = null;

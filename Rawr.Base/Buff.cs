@@ -3397,7 +3397,6 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Reinforced Sapphirium Battleplate",
-                Stats = {},
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
             });
@@ -3407,7 +3406,6 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Reinforced Sapphirium Battleplate",
-                Stats = {},
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
             });
@@ -3463,7 +3461,6 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Battleplate of Immolation",
-                Stats = { },
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
             });
@@ -3473,7 +3470,6 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Battleplate of Immolation",
-                Stats = { },
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
             });
@@ -3506,7 +3502,6 @@ namespace Rawr
                 Name = "Gladiator's Vindication (PvP) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Resilience = 400, Strength = 70, },
                 SetName = "Gladiator's Vindication",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
@@ -3516,7 +3511,6 @@ namespace Rawr
                 Name = "Gladiator's Vindication (PvP) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { JudgementCDReduction = 1, Strength = 90, },
                 SetName = "Gladiator's Vindication",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },

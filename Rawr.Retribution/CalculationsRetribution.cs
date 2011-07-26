@@ -418,6 +418,9 @@ namespace Rawr.Retribution
         }
 
         #region Stats conversion / calculation
+        private static readonly SpecialEffect _GoakStrengthSE = new SpecialEffect(Trigger.DamageOrHealingDone, new Stats() { BonusStrengthMultiplier = PaladinConstants.GOAK_STRENGTH }, PaladinConstants.GOAK_DURATION, 0f, 1f, 20);
+        private static readonly SpecialEffect _GoakSE = new SpecialEffect(Trigger.Use, new Stats(_GoakStrengthSE), PaladinConstants.GOAK_DURATION, PaladinConstants.GOAK_COOLDOWN);
+        
         public StatsRetri GetCharacterStats(Character character, Item additionalItem, bool computeAverageStats)
         {
             PaladinTalents talents = character.PaladinTalents;
@@ -450,12 +453,8 @@ namespace Rawr.Retribution
 
                 //Talent special effects
                 //GoaK Strength
-                {
-                    Stats statstmp = new Stats();
-                    statstmp.AddSpecialEffect(new SpecialEffect(Trigger.DamageOrHealingDone, new Stats() { BonusStrengthMultiplier = PaladinConstants.GOAK_STRENGTH }, PaladinConstants.GOAK_DURATION, 0f, 1f, 20));
-                    stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, statstmp, PaladinConstants.GOAK_DURATION, PaladinConstants.GOAK_COOLDOWN));
-                }
-
+                stats.AddSpecialEffect(_GoakSE);
+                
                 // Average out proc effects, and add to global stats.
                 Stats statsAverage = new Stats();
                 foreach (SpecialEffect effect in stats.SpecialEffects())
