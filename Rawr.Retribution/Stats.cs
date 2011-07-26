@@ -56,6 +56,8 @@
             clone.T11_4P = T11_4P;
             clone.T12_2P = T12_2P;
             clone.T12_4P = T12_4P;
+            clone.PVP_2P = PVP_2P;
+            clone.PVP_4P = PVP_4P;
             return clone;
         }
 
@@ -66,6 +68,8 @@
             T11_4P = data.T11_4P || T11_4P;
             T12_2P = data.T12_2P || T12_2P;
             T12_4P = data.T12_4P || T12_4P;
+            PVP_2P = data.PVP_2P || PVP_2P;
+            PVP_4P = data.PVP_4P || PVP_4P;
         }
     }
 }
