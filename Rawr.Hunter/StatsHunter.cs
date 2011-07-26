@@ -635,42 +635,5 @@ namespace Rawr.Hunter
         internal float[] _rawMultiplicativeData = new float[MultiplicativeStatCount];
         internal float[] _rawInverseMultiplicativeData = new float[InverseMultiplicativeStatCount];
         internal float[] _rawNoStackData = new float[NonStackingStatCount];
-
-        public static StatsHunter operator *(StatsHunter a, float b)
-        {
-            StatsHunter c = new StatsHunter();
-
-            int i = c._rawAdditiveData.Length;
-            while (--i >= 0)
-            {
-                c._rawAdditiveData[i] = a._rawAdditiveData[i] * b;
-            }
-            i = c._rawMultiplicativeData.Length;
-            while (--i >= 0)
-            {
-                c._rawMultiplicativeData[i] = a._rawMultiplicativeData[i] * b;
-            }
-            i = c._rawInverseMultiplicativeData.Length;
-            while (--i >= 0)
-            {
-                c._rawInverseMultiplicativeData[i] = a._rawInverseMultiplicativeData[i] * b;
-            }
-
-            i = c._rawNoStackData.Length;
-            while (--i >= 0)
-            {
-                c._rawNoStackData[i] = a._rawNoStackData[i] * b;
-            }
-            // undefined for special effects
-            return c;
-        }
-
-
-        public virtual Stats GetItemStats(Character character, Item additionalItem)
-        {
-            StatsHunter stats = new StatsHunter();
-            AccumulateItemStats(stats, character, additionalItem);
-            return stats;
-        }
     }
 }
