@@ -4,6 +4,14 @@ using System.Text;
 
 namespace Rawr.Hunter
 {
+    public enum Specialization
+    {
+        None,
+        BeastMastery,
+        Marksmanship,
+        Survival
+    }
+
     public enum Aspect
     {
         Hawk,

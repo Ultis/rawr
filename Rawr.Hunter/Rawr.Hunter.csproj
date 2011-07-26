@@ -91,6 +91,41 @@
     <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abilites\AimedShot.cs" />
+    <Compile Include="Abilites\ArcaneShot.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Abilites\BestialWrath.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Abilites\BlackArrow.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Abilites\ChimeraShot.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Abilites\CobraShot.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Abilites\ExplosiveShot.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Abilites\KillShot.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Abilites\PiercingShots.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Abilites\RapidFire.cs" />
+    <Compile Include="Abilites\Readiness.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Abilites\SerpentSting.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Abilites\SteadyShot.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Pet\PetCalculations.cs" />
     <Compile Include="Pet\PetSkill.cs" />
@@ -105,10 +140,10 @@
     <Compile Include="HunterEnums.cs" />
     <Compile Include="Rotation.cs" />
     <Compile Include="RotationTest.cs" />
-    <Compile Include="ShotData.cs" />
+    <Compile Include="Abilites\ShotData.cs" />
     <Compile Include="ShotPriority.cs" />
-    <Compile Include="Skills.Base.cs" />
-    <Compile Include="Skills.Shots.cs" />
+    <Compile Include="Abilites\Skills.Base.cs" />
+    <Compile Include="Abilites\Skills.Shots.cs" />
     <Compile Include="HunterConverters.cs" />
     <Compile Include="CalculationOptionsPanelHunter.xaml.cs">
       <DependentUpon>CalculationOptionsPanelHunter.xaml</DependentUpon>
