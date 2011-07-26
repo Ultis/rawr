@@ -106,6 +106,22 @@
   </ItemGroup>
   <ItemGroup>
     <AppDesigner Include="Properties\" />
+    <Compile Include="Abilites\AimedShot.cs" />
+    <Compile Include="Abilites\ArcaneShot.cs" />
+    <Compile Include="Abilites\BestialWrath.cs" />
+    <Compile Include="Abilites\BlackArrow.cs" />
+    <Compile Include="Abilites\ChimeraShot.cs" />
+    <Compile Include="Abilites\CobraShot.cs" />
+    <Compile Include="Abilites\ExplosiveShot.cs" />
+    <Compile Include="Abilites\KillShot.cs" />
+    <Compile Include="Abilites\PiercingShots.cs" />
+    <Compile Include="Abilites\RapidFire.cs" />
+    <Compile Include="Abilites\Readiness.cs" />
+    <Compile Include="Abilites\SerpentSting.cs" />
+    <Compile Include="Abilites\ShotData.cs" />
+    <Compile Include="Abilites\Skills.Base.cs" />
+    <Compile Include="Abilites\Skills.Shots.cs" />
+    <Compile Include="Abilites\SteadyShot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Pet\PetCalculations.cs" />
     <Compile Include="Pet\PetSkill.cs" />
@@ -120,10 +136,7 @@
     <Compile Include="HunterEnums.cs" />
     <Compile Include="Rotation.cs" />
     <Compile Include="RotationTest.cs" />
-    <Compile Include="ShotData.cs" />
     <Compile Include="ShotPriority.cs" />
-    <Compile Include="Skills.Base.cs" />
-    <Compile Include="Skills.Shots.cs" />
     <Compile Include="HunterConverters.cs" />
     <Compile Include="CalculationOptionsPanelHunter.xaml.cs">
       <DependentUpon>CalculationOptionsPanelHunter.WPF.xaml</DependentUpon>
@@ -140,6 +153,8 @@
     <Compile Include="Pet\PetTalentTree.xaml.cs">
       <DependentUpon>PetTalentTree.WPF.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ShotRotations.cs" />
+    <Compile Include="StatsHunter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rawr.Base\Rawr.Base.WPF.csproj">
@@ -292,6 +307,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>..\..\..\sgen4.exe $(TargetFileName)</PostBuildEvent>

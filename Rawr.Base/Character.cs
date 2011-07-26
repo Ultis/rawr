@@ -3242,7 +3242,7 @@ namespace Rawr
             SaveItemFilterEnabledOverride();
             _activeBuffsXml = new List<string>(_activeBuffs.ConvertAll(buff => buff.Name));
             _itemSetListXML = new List<string>(itemSetList.ConvertAll(ItemSet => ItemSet.ToGemmedIDList()));
-            //if(ArmoryPets!=null) ArmoryPetsXml = new List<string>(ArmoryPets.ConvertAll(ArmoryPet => ArmoryPet.ToString()));
+            if(ArmoryPets!=null) ArmoryPetsXml = new List<string>(ArmoryPets.ConvertAll(ArmoryPet => ArmoryPet.ToString()));
 
             XmlSerializer serializer = new XmlSerializer(typeof(Character));
             serializer.Serialize(stream, this);
@@ -3454,38 +3454,170 @@ namespace Rawr
 
     public class ArmoryPet
     {
-        public ArmoryPet(string family, string name, string speckey, string spec)
+        public enum FAMILYTREE : int
         {
-            Family = PetFamilyIdToPetFamilyName(family);
+            None = 0,
+            Cunning,
+            Tenacity,
+            Ferocity,
+        }
+
+        public enum FAMILY : int
+        {
+            None = 0,
+            // Sorted by Tree, then Alpha
+            #region Cunning
+            Bat = 24,
+            BirdOfPrey = 26,
+            Chimaera = 38,
+            Dragonhawk = 30, 
+            NetherRay = 34, 
+            Ravager = 31,
+            Serpent= 35,
+            Silithid = 41,
+            Spider = 3,
+            SporeBat = 33, 
+            WindSerpent = 27,
+            #endregion
+            #region Tenacity
+            Bear = 4,
+            Boar = 5,
+            Crab = 8,
+            Crocolisk = 6,
+            Gorilla = 9, 
+            Rhino = 43, 
+            Scorpid = 20, 
+            Turtle = 21, 
+            WarpStalker = 32,
+            Worm = 42,
+            #endregion
+            #region Ferocity
+            CarrionBird = 7,
+            Cat = 2, 
+            CoreHound = 45,
+            Devilsaur = 39, 
+            Hyena = 25,
+            Moth = 37, 
+            Raptor = 11, 
+            SpiritBeast = 46, 
+            Tallstrider = 12, 
+            Wasp = 44, 
+            Wolf = 1
+            #endregion
+        }
+
+        public static readonly Dictionary<FAMILY, FAMILYTREE> FamilyToTree = new Dictionary<FAMILY, FAMILYTREE>
+        {
+            {FAMILY.None, FAMILYTREE.None},
+            #region Cunning
+            {FAMILY.Bat, FAMILYTREE.Cunning},
+            {FAMILY.BirdOfPrey, FAMILYTREE.Cunning},
+            {FAMILY.Chimaera, FAMILYTREE.Cunning},
+            {FAMILY.Dragonhawk, FAMILYTREE.Cunning},
+            {FAMILY.NetherRay, FAMILYTREE.Cunning},
+            {FAMILY.Ravager, FAMILYTREE.Cunning},
+            {FAMILY.Serpent, FAMILYTREE.Cunning},
+            {FAMILY.Silithid, FAMILYTREE.Cunning},
+            {FAMILY.Spider, FAMILYTREE.Cunning},
+            {FAMILY.SporeBat, FAMILYTREE.Cunning},
+            {FAMILY.WindSerpent, FAMILYTREE.Cunning},
+            #endregion 
+            #region Tenacity
+            {FAMILY.Bear, FAMILYTREE.Tenacity},
+            {FAMILY.Boar, FAMILYTREE.Tenacity},
+            {FAMILY.Crab, FAMILYTREE.Tenacity},
+            {FAMILY.Crocolisk, FAMILYTREE.Tenacity},
+            {FAMILY.Gorilla, FAMILYTREE.Tenacity},
+            {FAMILY.Rhino, FAMILYTREE.Tenacity},
+            {FAMILY.Scorpid, FAMILYTREE.Tenacity},
+            {FAMILY.Turtle, FAMILYTREE.Tenacity},
+            {FAMILY.WarpStalker, FAMILYTREE.Tenacity},
+            {FAMILY.Worm, FAMILYTREE.Tenacity},
+            #endregion
+            #region Ferocity
+            {FAMILY.CarrionBird, FAMILYTREE.Ferocity},
+            {FAMILY.Cat, FAMILYTREE.Ferocity},
+            {FAMILY.CoreHound, FAMILYTREE.Ferocity},
+            {FAMILY.Devilsaur, FAMILYTREE.Ferocity},
+            {FAMILY.Hyena, FAMILYTREE.Ferocity},
+            {FAMILY.Moth, FAMILYTREE.Ferocity},
+            {FAMILY.Raptor, FAMILYTREE.Ferocity},
+            {FAMILY.SpiritBeast, FAMILYTREE.Ferocity},
+            {FAMILY.Tallstrider, FAMILYTREE.Ferocity},
+            {FAMILY.Wasp, FAMILYTREE.Ferocity},
+            {FAMILY.Wolf, FAMILYTREE.Ferocity},
+            #endregion
+        };
+
+        public ArmoryPet()
+        {
+            // want to have a null pet option;
+            Name = "null";
+            Family = "Wolf"; // 1 
+        }
+        public ArmoryPet(string family, string name, string spec)
+        {
+            Family = family; // Now handled by the Set method.
             Name = name;
             Spec = spec;
-            SpecKey = speckey;
         }
-        public string Family;
-        public string Name;
-        private string _SpecKey = "";
-        public string SpecKey {
-            get {
-                if (_SpecKey == "") { _SpecKey = PetFamilyToPetFamilyTree(Family); }
-                return _SpecKey;
+
+        public ArmoryPet(string family, string name, string speckey, string spec)
+        {
+            Family = family; // Now handled by the Set method.
+            Name = name;
+            Spec = spec;
+            // SpecKey is really determined by family. 
+        }
+        public FAMILY FamilyID;
+        public string Family
+        {
+            get { return Enum.GetName(typeof(FAMILY), FamilyID); }
+            set 
+            { 
+                // value could either be string number or string name.
+                FamilyID = (FAMILY)Enum.Parse(typeof(FAMILY), value);
             }
-            set {
-                if (value == "") { _SpecKey = PetFamilyToPetFamilyTree(Family); }
-                else { _SpecKey = value; }
+        }
+            
+        public string Name;
+        public FAMILYTREE FamilyTree = FAMILYTREE.None;
+        public string SpecKey {
+            get 
+            {
+                if (FamilyTree == FAMILYTREE.None) { FamilyTree = ArmoryPet.FamilyToTree[FamilyID]; }
+                return Enum.GetName(typeof(FAMILYTREE),FamilyTree);
             }
         }
         public string Spec;
 
+        public int CreatureID;
+        public int SlotID; // Slot 0-4 are active while the others are in the stable.
+        /// <summary>
+        /// Use this Pet for Calculations.
+        /// </summary>
+        public bool Selected;
+
+        /// <summary>
+        /// Used for serializing to the CharacterXML.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return Family + ": [" + Name + "] Spec: " + SpecKey + " '" + Spec + "'";
         }
+        /// <summary>
+        /// Inverse of ToString()
+        /// </summary>
+        /// <param name="input">string as saved in the XML</param>
+        /// <returns>new ArmoryPet() object</returns>
         public static ArmoryPet GetPetByString(string input) {
             string family = "";
             string name = "";
             string specKey = "";
             string spec = "";
             try {
+                // TODO: Might want to update this to use something more RegExy.
                 int start = 0, end = input.IndexOf(':');
                 family = input.Substring(start, end);
                 start = input.IndexOf('[') + 1; end = input.IndexOf(']', start) - start;
@@ -3502,139 +3634,7 @@ namespace Rawr
                     TheException = ex,
                 }.Show();
             }
-
-            return new ArmoryPet(family, name, specKey, spec);
-        }
-
-        public static string PetFamilyToPetFamilyTree(string family)
-        {
-            switch (family)
-            {
-                case "Bat": case "24":
-                case "BirdOfPrey": case "26":
-                case "Chimaera": case "38":
-                case "Dragonhawk": case "30":
-                case "NetherRay": case "34":
-                case "Ravager": case "31":
-                case "Serpent": case "35":
-                case "Silithid": case "41":
-                case "Spider": case "3":
-                case "SporeBat": case "33":
-                case "WindSerpent": case "27":
-                    return "Cunning";
-
-                case "Bear": case "4":
-                case "Boar": case "5":
-                case "Crab": case "8":
-                case "Crocolisk": case "6":
-                case "Gorilla": case "9":
-                case "Rhino": case "43":
-                case "Scorpid": case "20":
-                case "Turtle": case "21":
-                case "WarpStalker": case "32":
-                case "Worm": case "42":
-                    return "Tenacity";
-
-                case "CarrionBird": case "7":
-                case "Cat": case "2":
-                case "CoreHound": case "45":
-                case "Devilsaur": case "39":
-                case "Hyena": case "25":
-                case "Moth": case "37":
-                case "Raptor": case "11":
-                case "SpiritBeast": case "46":
-                case "Tallstrider": case "12":
-                case "Wasp": case "44":
-                case "Wolf": case "1":
-                    return "Ferocity";
-            }
-
-            // hmmm!
-            return "None";
-        }
-        public static string PetFamilyIdToPetFamilyName(string familyid)
-        {
-            switch (familyid)
-            {
-                case "Bat": case "24": return "Bat";
-                case "BirdOfPrey": case "26": return "BirdOfPrey";
-                case "Chimaera": case "38": return "Chimaera";
-                case "Dragonhawk": case "30": return "Dragonhawk";
-                case "NetherRay": case "34": return "NetherRay";
-                case "Ravager": case "31": return "Ravager";
-                case "Serpent": case "35": return "Serpent";
-                case "Silithid": case "41": return "Silithid";
-                case "Spider": case "3": return "Spider";
-                case "SporeBat": case "33": return "SporeBat";
-                case "WindSerpent": case "27": return "WindSerpent";
-
-                case "Bear": case "4": return "Bear";
-                case "Boar": case "5": return "Boar";
-                case "Crab": case "8": return "Crab";
-                case "Crocolisk": case "6": return "Crocolisk";
-                case "Gorilla": case "9": return "Gorilla";
-                case "Rhino": case "43": return "Rhino";
-                case "Scorpid": case "20": return "Scorpid";
-                case "Turtle": case "21": return "Turtle";
-                case "WarpStalker": case "32": return "WarpStalker";
-                case "Worm": case "42": return "Worm";
-
-                case "CarrionBird": case "7": return "CarrionBird";
-                case "Cat": case "2": return "Cat";
-                case "CoreHound": case "45": return "CoreHound";
-                case "Devilsaur": case "39": return "Devilsaur";
-                case "Hyena": case "25": return "Hyena";
-                case "Moth": case "37": return "Moth";
-                case "Raptor": case "11": return "Raptor";
-                case "SpiritBeast": case "46": return "SpiritBeast";
-                case "Tallstrider": case "12": return "Tallstrider";
-                case "Wasp": case "44": return "Wasp";
-                case "Wolf": case "1": return "Wolf";
-            }
-
-            return familyid; // it's already a name
-        }
-        public static string PetFamilyNameToPetFamilyId(string familyname)
-        {
-            switch (familyname)
-            {
-                case "Bat": case "24": return "24";
-                case "BirdOfPrey": case "26": return "26";
-                case "Chimaera": case "38": return "38";
-                case "Dragonhawk": case "30": return "30";
-                case "NetherRay": case "34": return "34";
-                case "Ravager": case "31": return "31";
-                case "Serpent": case "35": return "35";
-                case "Silithid": case "41": return "41";
-                case "Spider": case "3": return "3";
-                case "SporeBat": case "33": return "33";
-                case "WindSerpent": case "27": return "27";
-
-                case "Bear": case "4": return "4";
-                case "Boar": case "5": return "5";
-                case "Crab": case "8": return "8";
-                case "Crocolisk": case "6": return "6";
-                case "Gorilla": case "9": return "9";
-                case "Rhino": case "43": return "43";
-                case "Scorpid": case "20": return "20";
-                case "Turtle": case "21": return "21";
-                case "WarpStalker": case "32": return "32";
-                case "Worm": case "42": return "42";
-
-                case "CarrionBird": case "7": return "7";
-                case "Cat": case "2": return "2";
-                case "CoreHound": case "45": return "45";
-                case "Devilsaur": case "39": return "39";
-                case "Hyena": case "25": return "25";
-                case "Moth": case "37": return "37";
-                case "Raptor": case "11": return "11";
-                case "SpiritBeast": case "46": return "46";
-                case "Tallstrider": case "12": return "12";
-                case "Wasp": case "44": return "44";
-                case "Wolf": case "1": return "1";
-            }
-
-            return familyname; // it's already an id
+            return new ArmoryPet(family, name, spec);
         }
     }
 }
