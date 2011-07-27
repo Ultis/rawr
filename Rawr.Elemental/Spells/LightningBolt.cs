@@ -29,7 +29,7 @@ namespace Rawr.Elemental.Spells
         public override void Initialize(ISpellArgs args)
         {
             castTime -= .5f;
-            spCoef += .2f;
+            spCoef += .32f;
             loCoef += .2f;
             loChance = LOChance(args.Stats.MasteryRating);
 

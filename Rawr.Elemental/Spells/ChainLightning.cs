@@ -50,7 +50,7 @@ public class ChainLightning : Spell, ILightningOverload
             manaCost -= ((args.Stats.Mana * (.01f * args.Talents.RollingThunder)) * .6f) * (additionalTargets + 1);
             manaCost -= args.Stats.NatureSpellsManaCostReduction;
             totalCoef += .02f * args.Talents.Concussion;
-            spCoef += .2f;
+            spCoef += .32f;
             loCoef += .2f;
             crit += .01f * args.Talents.Acuity;
             totalCoef += .01f * args.Talents.ElementalPrecision;

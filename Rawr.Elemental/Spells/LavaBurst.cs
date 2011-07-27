@@ -32,7 +32,7 @@ namespace Rawr.Elemental.Spells
         public void Initialize(ISpellArgs args, float fs)
         {
             castTime -= .5f;
-            spCoef += .2f;
+            spCoef += .32f;
             crit += args.Talents.Acuity;            
             manaCost *= 1f - .05f * args.Talents.Convection;
             manaCost -= args.Stats.NatureSpellsManaCostReduction;
