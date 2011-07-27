@@ -1453,7 +1453,7 @@ namespace Rawr.Hunter {
             calculatedStats.readiness.Cd = 180;
 
             calculatedStats.bestialWrath.Cd = (talents.GlyphOfBestialWrath ? 100f : 120f) * (1f - talents.Longevity * 0.10f);
-            calculatedStats.bestialWrath.Duration = calcOpts.PetFamily == ArmoryPet.FAMILY.None ? 0 : 10;
+            calculatedStats.bestialWrath.Duration = calcOpts.PetFamily == PETFAMILY.None ? 0 : 10;
 
             // We can calculate the rough frequencies now
             calculatedStats.priorityRotation.initializeTimings();
@@ -2701,7 +2701,7 @@ namespace Rawr.Hunter {
                         20f, (5f * 60f) * (1f - talents.Longevity * 0.10f));
                     statsTalents.AddSpecialEffect(callofthewild);
                 }
-                if (calcOpts.PetFamily != ArmoryPet.FAMILY.None
+                if (calcOpts.PetFamily != PETFAMILY.None
                     && calculatedStats.priorityRotation.containsShot(Shots.BestialWrath)
                     && talents.BestialWrath > 0)
                 {
@@ -2801,7 +2801,7 @@ namespace Rawr.Hunter {
 
                 CalculateTriggers(character, calculatedStats, statsTotal, calcOpts, bossOpts, triggerIntervals, triggerChances);
 
-                if (calcOpts.PetFamily == ArmoryPet.FAMILY.Wolf
+                if (calcOpts.PetFamily == PETFAMILY.Wolf
                     && calculatedStats.pet.priorityRotation.getSkillFrequency(PetAttacks.FuriousHowl) > 0)
                 {
                     statsTotal.AddSpecialEffect(FuriousHowl);

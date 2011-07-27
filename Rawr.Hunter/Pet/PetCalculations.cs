@@ -51,54 +51,54 @@ namespace Rawr.Hunter
                 switch (CalcOpts.PetFamily)
                 {
                     #region Need Testing
-                    case ArmoryPet.FAMILY.SpiritBeast:
+                    case PETFAMILY.SpiritBeast:
                     #endregion
-                    case ArmoryPet.FAMILY.Moth:
+                    case PETFAMILY.Moth:
                         _health = 30610;
                         break;
-                    case ArmoryPet.FAMILY.CarrionBird:
-                    case ArmoryPet.FAMILY.Cat:
-                    case ArmoryPet.FAMILY.CoreHound:
-                    case ArmoryPet.FAMILY.Devilsaur:
-                    case ArmoryPet.FAMILY.Dog:
-                    case ArmoryPet.FAMILY.Hyena:
-                    case ArmoryPet.FAMILY.Raptor:
-                    case ArmoryPet.FAMILY.Tallstrider:
-                    case ArmoryPet.FAMILY.Wasp:
-                    case ArmoryPet.FAMILY.Wolf:
+                    case PETFAMILY.CarrionBird:
+                    case PETFAMILY.Cat:
+                    case PETFAMILY.CoreHound:
+                    case PETFAMILY.Devilsaur:
+                    case PETFAMILY.Dog:
+                    case PETFAMILY.Hyena:
+                    case PETFAMILY.Raptor:
+                    case PETFAMILY.Tallstrider:
+                    case PETFAMILY.Wasp:
+                    case PETFAMILY.Wolf:
                         _health = 30673;
                         break;
-                    case ArmoryPet.FAMILY.Bat:
-                    case ArmoryPet.FAMILY.BirdOfPrey:
-                    case ArmoryPet.FAMILY.Chimaera:
-                    case ArmoryPet.FAMILY.Dragonhawk:
-                    case ArmoryPet.FAMILY.Fox:
-                    case ArmoryPet.FAMILY.Monkey:
-                    case ArmoryPet.FAMILY.NetherRay:
-                    case ArmoryPet.FAMILY.Ravager:
-                    case ArmoryPet.FAMILY.Serpent:
-                    case ArmoryPet.FAMILY.Spider:
-                    case ArmoryPet.FAMILY.SporeBat:
-                    case ArmoryPet.FAMILY.WindSerpent:
+                    case PETFAMILY.Bat:
+                    case PETFAMILY.BirdOfPrey:
+                    case PETFAMILY.Chimaera:
+                    case PETFAMILY.Dragonhawk:
+                    case PETFAMILY.Fox:
+                    case PETFAMILY.Monkey:
+                    case PETFAMILY.NetherRay:
+                    case PETFAMILY.Ravager:
+                    case PETFAMILY.Serpent:
+                    case PETFAMILY.Spider:
+                    case PETFAMILY.SporeBat:
+                    case PETFAMILY.WindSerpent:
                         _health = 32838;
                         break;
-                    case ArmoryPet.FAMILY.Bear:
-                    case ArmoryPet.FAMILY.Beetle:
-                    case ArmoryPet.FAMILY.Boar:
-                    case ArmoryPet.FAMILY.Crab:
-                    case ArmoryPet.FAMILY.Crocolisk:
-                    case ArmoryPet.FAMILY.Gorilla:
-                    case ArmoryPet.FAMILY.Rhino:
-                    case ArmoryPet.FAMILY.Scorpid:
-                    case ArmoryPet.FAMILY.Turtle:
-                    case ArmoryPet.FAMILY.WarpStalker:
-                    case ArmoryPet.FAMILY.Worm:
+                    case PETFAMILY.Bear:
+                    case PETFAMILY.Beetle:
+                    case PETFAMILY.Boar:
+                    case PETFAMILY.Crab:
+                    case PETFAMILY.Crocolisk:
+                    case PETFAMILY.Gorilla:
+                    case PETFAMILY.Rhino:
+                    case PETFAMILY.Scorpid:
+                    case PETFAMILY.Turtle:
+                    case PETFAMILY.WarpStalker:
+                    case PETFAMILY.Worm:
                         _health = 35003;
                         break;
-                    case ArmoryPet.FAMILY.ShaleSpider:
+                    case PETFAMILY.ShaleSpider:
                         _health = 35331;
                         break;
-                    case ArmoryPet.FAMILY.Silithid:
+                    case PETFAMILY.Silithid:
                         _health = 40594;
                         break;
                     default:
@@ -213,7 +213,7 @@ namespace Rawr.Hunter
         private float compositeSpeed = 2f;
         public float PetClawBiteSmackInterval = 0f;
         protected float PetAttackSpeed(Stats currentStats) {
-            float attackSpeedBase = CalcOpts.PetFamily == ArmoryPet.FAMILY.None ? 0.0f : 2.0f;
+            float attackSpeedBase = CalcOpts.PetFamily == PETFAMILY.None ? 0.0f : 2.0f;
             float attackSpeedAdjust = (1f + currentStats.PhysicalHaste);
             float attackSpeedAdjusted = attackSpeedBase / attackSpeedAdjust;
 
@@ -656,7 +656,7 @@ namespace Rawr.Hunter
             // (Same as above)
             calculatedStats.ferociousInspirationDamageAdjust = 1;
             if (character.HunterTalents.FerociousInspiration > 0) {
-                if (CalcOpts.PetFamily != ArmoryPet.FAMILY.None)
+                if (CalcOpts.PetFamily != PETFAMILY.None)
                 {
                     float ferociousInspirationSpecialsEffect = priorityRotation.petSpecialFrequency == 0 ? 0 : 10f / priorityRotation.petSpecialFrequency;
                     float ferociousInspirationUptime = 1f - (float)Math.Pow(1f - calculatedStats.petCritTotalSpecials, (10f / attackSpeedEffective) + ferociousInspirationSpecialsEffect);
@@ -708,7 +708,7 @@ namespace Rawr.Hunter
 
         public void calculateDPS()
         {
-            if (CalcOpts.PetFamily == ArmoryPet.FAMILY.None) return;
+            if (CalcOpts.PetFamily == PETFAMILY.None) return;
 
             int levelDifference = BossOpts.Level - character.Level;
 

@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using System.Reflection;
 using System.Xml.Serialization;
 using System.Text;
+using Rawr;
 
 namespace Rawr.Hunter {
     public partial class CalculationOptionsPanelHunter : ICalculationOptionsPanel
@@ -983,38 +984,38 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
 
             switch (CalcOpts.PetFamily)
             {
-                case ArmoryPet.FAMILY.Bat:         familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dive, PetAttacks.None, PetAttacks.SonicBlast }; break;
-                case ArmoryPet.FAMILY.Bear:        familyList = new PetAttacks[] { PetAttacks.Claw, PetAttacks.None, PetAttacks.Charge, PetAttacks.Swipe }; break;
-                case ArmoryPet.FAMILY.BirdOfPrey:  familyList = new PetAttacks[] { PetAttacks.Claw, PetAttacks.Dive, PetAttacks.None, PetAttacks.Snatch }; break;
-                case ArmoryPet.FAMILY.Boar:        familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.None, PetAttacks.Charge, PetAttacks.Gore }; break;
-                case ArmoryPet.FAMILY.CarrionBird: familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dive, PetAttacks.Swoop, PetAttacks.DemoralizingScreech }; break;
-                case ArmoryPet.FAMILY.Cat:         familyList = new PetAttacks[] { PetAttacks.Claw, PetAttacks.Dash, PetAttacks.Charge, PetAttacks.Rake, PetAttacks.Prowl }; break;
-                case ArmoryPet.FAMILY.Chimaera:    familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dive, PetAttacks.None, PetAttacks.FroststormBreath }; break;
-                case ArmoryPet.FAMILY.CoreHound:   familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dash, PetAttacks.Charge, PetAttacks.LavaBreath }; break;
-                case ArmoryPet.FAMILY.Crab:        familyList = new PetAttacks[] { PetAttacks.Claw, PetAttacks.None, PetAttacks.Charge, PetAttacks.Pin }; break;
-                case ArmoryPet.FAMILY.Crocolisk:   familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.None, PetAttacks.Charge, PetAttacks.BadAttitude }; break;
-                case ArmoryPet.FAMILY.Devilsaur:   familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dash, PetAttacks.Charge, PetAttacks.MonstrousBite }; break;
-                case ArmoryPet.FAMILY.Dragonhawk:  familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dive, PetAttacks.None, PetAttacks.FireBreath }; break;
-                case ArmoryPet.FAMILY.Gorilla:     familyList = new PetAttacks[] { PetAttacks.Smack, PetAttacks.None, PetAttacks.Charge, PetAttacks.Pummel }; break;
-                case ArmoryPet.FAMILY.Hyena:       familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dash, PetAttacks.Charge, PetAttacks.TendonRip }; break;
-                case ArmoryPet.FAMILY.Moth:        familyList = new PetAttacks[] { PetAttacks.Smack, PetAttacks.Dive, PetAttacks.Swoop, PetAttacks.SerenityDust }; break;
-                case ArmoryPet.FAMILY.NetherRay:   familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dive, PetAttacks.None, PetAttacks.NetherShock }; break;
-                case ArmoryPet.FAMILY.Raptor:      familyList = new PetAttacks[] { PetAttacks.Claw, PetAttacks.Dash, PetAttacks.Charge, PetAttacks.SavageRend }; break;
-                case ArmoryPet.FAMILY.Ravager:     familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dash, PetAttacks.None, PetAttacks.Ravage }; break;
-                case ArmoryPet.FAMILY.Rhino:       familyList = new PetAttacks[] { PetAttacks.Smack, PetAttacks.None, PetAttacks.Charge, PetAttacks.Stampede }; break;
-                case ArmoryPet.FAMILY.Scorpid:     familyList = new PetAttacks[] { PetAttacks.Claw, PetAttacks.None, PetAttacks.Charge, PetAttacks.ScorpidPoison }; break;
-                case ArmoryPet.FAMILY.Serpent:     familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dash, PetAttacks.None, PetAttacks.PoisonSpit }; break;
-                case ArmoryPet.FAMILY.Silithid:    familyList = new PetAttacks[] { PetAttacks.Claw, PetAttacks.Dash, PetAttacks.None, PetAttacks.VenomWebSpray }; break;
-                case ArmoryPet.FAMILY.Spider:      familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dash, PetAttacks.None, PetAttacks.Web }; break;
-                case ArmoryPet.FAMILY.SpiritBeast: familyList = new PetAttacks[] { PetAttacks.Claw, PetAttacks.Dash, PetAttacks.Charge, PetAttacks.SpiritStrike, PetAttacks.Prowl }; break;
-                case ArmoryPet.FAMILY.SporeBat:    familyList = new PetAttacks[] { PetAttacks.Smack, PetAttacks.Dive, PetAttacks.None, PetAttacks.SporeCloud }; break;
-                case ArmoryPet.FAMILY.Tallstrider: familyList = new PetAttacks[] { PetAttacks.Claw, PetAttacks.Dash, PetAttacks.Charge, PetAttacks.DustCloud }; break;
-                case ArmoryPet.FAMILY.Turtle:      familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.None, PetAttacks.Charge, PetAttacks.ShellShield }; break;
-                case ArmoryPet.FAMILY.WarpStalker: familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dash, PetAttacks.Charge, PetAttacks.Warp }; break;
-                case ArmoryPet.FAMILY.Wasp:        familyList = new PetAttacks[] { PetAttacks.Smack, PetAttacks.Dive, PetAttacks.Swoop, PetAttacks.Sting }; break;
-                case ArmoryPet.FAMILY.WindSerpent: familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dive, PetAttacks.None, PetAttacks.LightningBreath }; break;
-                case ArmoryPet.FAMILY.Wolf:        familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dash, PetAttacks.Charge, PetAttacks.FuriousHowl }; break;
-                case ArmoryPet.FAMILY.Worm:        familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.None, PetAttacks.Charge, PetAttacks.AcidSpit }; break;
+                case PETFAMILY.Bat:         familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dive, PetAttacks.None, PetAttacks.SonicBlast }; break;
+                case PETFAMILY.Bear:        familyList = new PetAttacks[] { PetAttacks.Claw, PetAttacks.None, PetAttacks.Charge, PetAttacks.Swipe }; break;
+                case PETFAMILY.BirdOfPrey:  familyList = new PetAttacks[] { PetAttacks.Claw, PetAttacks.Dive, PetAttacks.None, PetAttacks.Snatch }; break;
+                case PETFAMILY.Boar:        familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.None, PetAttacks.Charge, PetAttacks.Gore }; break;
+                case PETFAMILY.CarrionBird: familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dive, PetAttacks.Swoop, PetAttacks.DemoralizingScreech }; break;
+                case PETFAMILY.Cat:         familyList = new PetAttacks[] { PetAttacks.Claw, PetAttacks.Dash, PetAttacks.Charge, PetAttacks.Rake, PetAttacks.Prowl }; break;
+                case PETFAMILY.Chimaera:    familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dive, PetAttacks.None, PetAttacks.FroststormBreath }; break;
+                case PETFAMILY.CoreHound:   familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dash, PetAttacks.Charge, PetAttacks.LavaBreath }; break;
+                case PETFAMILY.Crab:        familyList = new PetAttacks[] { PetAttacks.Claw, PetAttacks.None, PetAttacks.Charge, PetAttacks.Pin }; break;
+                case PETFAMILY.Crocolisk:   familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.None, PetAttacks.Charge, PetAttacks.BadAttitude }; break;
+                case PETFAMILY.Devilsaur:   familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dash, PetAttacks.Charge, PetAttacks.MonstrousBite }; break;
+                case PETFAMILY.Dragonhawk:  familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dive, PetAttacks.None, PetAttacks.FireBreath }; break;
+                case PETFAMILY.Gorilla:     familyList = new PetAttacks[] { PetAttacks.Smack, PetAttacks.None, PetAttacks.Charge, PetAttacks.Pummel }; break;
+                case PETFAMILY.Hyena:       familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dash, PetAttacks.Charge, PetAttacks.TendonRip }; break;
+                case PETFAMILY.Moth:        familyList = new PetAttacks[] { PetAttacks.Smack, PetAttacks.Dive, PetAttacks.Swoop, PetAttacks.SerenityDust }; break;
+                case PETFAMILY.NetherRay:   familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dive, PetAttacks.None, PetAttacks.NetherShock }; break;
+                case PETFAMILY.Raptor:      familyList = new PetAttacks[] { PetAttacks.Claw, PetAttacks.Dash, PetAttacks.Charge, PetAttacks.SavageRend }; break;
+                case PETFAMILY.Ravager:     familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dash, PetAttacks.None, PetAttacks.Ravage }; break;
+                case PETFAMILY.Rhino:       familyList = new PetAttacks[] { PetAttacks.Smack, PetAttacks.None, PetAttacks.Charge, PetAttacks.Stampede }; break;
+                case PETFAMILY.Scorpid:     familyList = new PetAttacks[] { PetAttacks.Claw, PetAttacks.None, PetAttacks.Charge, PetAttacks.ScorpidPoison }; break;
+                case PETFAMILY.Serpent:     familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dash, PetAttacks.None, PetAttacks.PoisonSpit }; break;
+                case PETFAMILY.Silithid:    familyList = new PetAttacks[] { PetAttacks.Claw, PetAttacks.Dash, PetAttacks.None, PetAttacks.VenomWebSpray }; break;
+                case PETFAMILY.Spider:      familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dash, PetAttacks.None, PetAttacks.Web }; break;
+                case PETFAMILY.SpiritBeast: familyList = new PetAttacks[] { PetAttacks.Claw, PetAttacks.Dash, PetAttacks.Charge, PetAttacks.SpiritStrike, PetAttacks.Prowl }; break;
+                case PETFAMILY.SporeBat:    familyList = new PetAttacks[] { PetAttacks.Smack, PetAttacks.Dive, PetAttacks.None, PetAttacks.SporeCloud }; break;
+                case PETFAMILY.Tallstrider: familyList = new PetAttacks[] { PetAttacks.Claw, PetAttacks.Dash, PetAttacks.Charge, PetAttacks.DustCloud }; break;
+                case PETFAMILY.Turtle:      familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.None, PetAttacks.Charge, PetAttacks.ShellShield }; break;
+                case PETFAMILY.WarpStalker: familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dash, PetAttacks.Charge, PetAttacks.Warp }; break;
+                case PETFAMILY.Wasp:        familyList = new PetAttacks[] { PetAttacks.Smack, PetAttacks.Dive, PetAttacks.Swoop, PetAttacks.Sting }; break;
+                case PETFAMILY.WindSerpent: familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dive, PetAttacks.None, PetAttacks.LightningBreath }; break;
+                case PETFAMILY.Wolf:        familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dash, PetAttacks.Charge, PetAttacks.FuriousHowl }; break;
+                case PETFAMILY.Worm:        familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.None, PetAttacks.Charge, PetAttacks.AcidSpit }; break;
             }
 
             List<PetAttacks> toPost = new List<PetAttacks>();
@@ -1023,7 +1024,7 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
 
             int family_mod = 0;
 
-            if (CalcOpts.PetFamily != ArmoryPet.FAMILY.None)
+            if (CalcOpts.PetFamily != PETFAMILY.None)
             {
                 toPost.Add(PetAttacks.Growl);
                 toPost.Add(PetAttacks.Cower);
@@ -1038,22 +1039,22 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                     }
                 }
 
-                ArmoryPet.FAMILYTREE family = getPetFamilyTree();
+                PETFAMILYTREE family = getPetFamilyTree();
 
-                if (family == ArmoryPet.FAMILYTREE.Cunning) {
+                if (family == PETFAMILYTREE.Cunning) {
                     //toPost.Add(PetAttacks.RoarOfRecovery);
                     toPost.Add(PetAttacks.RoarOfSacrifice);
                     toPost.Add(PetAttacks.WolverineBite);
                     //toPost.Add(PetAttacks.Bullheaded);
                 }
 
-                if (family == ArmoryPet.FAMILYTREE.Ferocity) {
+                if (family == PETFAMILYTREE.Ferocity) {
                     toPost.Add(PetAttacks.LickYourWounds);
                     //toPost.Add(PetAttacks.CallOfTheWild);
                     //toPost.Add(PetAttacks.Rabid);
                 }
 
-                if (family == ArmoryPet.FAMILYTREE.Tenacity) {
+                if (family == PETFAMILYTREE.Tenacity) {
                     toPost.Add(PetAttacks.Thunderstomp);
                     toPost.Add(PetAttacks.LastStand);
                     toPost.Add(PetAttacks.Taunt);
@@ -1069,7 +1070,7 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             CB_PetPrio_06.ItemsSource = toPost;
             CB_PetPrio_07.ItemsSource = toPost;
 
-            if (CalcOpts.PetFamily != ArmoryPet.FAMILY.None)
+            if (CalcOpts.PetFamily != PETFAMILY.None)
             {
                 CB_PetPrio_01.SelectedIndex = 6 - family_mod; // family skill 1
                 CB_PetPrio_02.SelectedIndex = 3; // focus dump
@@ -1097,29 +1098,29 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                 Character.OnCalculationsInvalidated();
             }
         }
-        private ArmoryPet.FAMILYTREE getPetFamilyTree()
+        private PETFAMILYTREE getPetFamilyTree()
         {
-            if (CB_PetFamily.SelectedItem == null) return ArmoryPet.FAMILYTREE.None;
-            return ArmoryPet.FamilyToTree[(ArmoryPet.FAMILY)CB_PetFamily.SelectedItem];
+            if (CB_PetFamily.SelectedItem == null) return PETFAMILYTREE.None;
+            return ArmoryPet.FamilyToTree[(PETFAMILY)CB_PetFamily.SelectedItem];
         }
         private void updateTalentDisplay() { if (CalcOpts != null) updateTalentDisplay(CalcOpts.PetTalents); } // this can get called before Character is set while loading xaml
         private void updateTalentDisplay(PetTalents newtalents)
         {
-            ArmoryPet.FAMILYTREE tree = getPetFamilyTree();
+            PETFAMILYTREE tree = getPetFamilyTree();
             //if (newtalents != CalcOpts.PetTalents) {
                 ThePetTalentPicker.Tree1.Talents = newtalents;
                 ThePetTalentPicker.Tree2.Talents = newtalents;
                 ThePetTalentPicker.Tree3.Talents = newtalents;
                 ThePetTalentPicker.RefreshSpec();
             //}
-            ThePetTalentPicker.TreeTab1.Visibility = (tree == ArmoryPet.FAMILYTREE.None || tree == ArmoryPet.FAMILYTREE.Cunning ? Visibility.Visible : Visibility.Collapsed);
-            ThePetTalentPicker.TreeTab2.Visibility = (tree == ArmoryPet.FAMILYTREE.None || tree == ArmoryPet.FAMILYTREE.Ferocity ? Visibility.Visible : Visibility.Collapsed);
-            ThePetTalentPicker.TreeTab3.Visibility = (tree == ArmoryPet.FAMILYTREE.None || tree == ArmoryPet.FAMILYTREE.Tenacity ? Visibility.Visible : Visibility.Collapsed);
+            ThePetTalentPicker.TreeTab1.Visibility = (tree == PETFAMILYTREE.None || tree == PETFAMILYTREE.Cunning ? Visibility.Visible : Visibility.Collapsed);
+            ThePetTalentPicker.TreeTab2.Visibility = (tree == PETFAMILYTREE.None || tree == PETFAMILYTREE.Ferocity ? Visibility.Visible : Visibility.Collapsed);
+            ThePetTalentPicker.TreeTab3.Visibility = (tree == PETFAMILYTREE.None || tree == PETFAMILYTREE.Tenacity ? Visibility.Visible : Visibility.Collapsed);
 
             switch(tree){
-                case ArmoryPet.FAMILYTREE.Cunning : { ThePetTalentPicker.TreeTab1.IsSelected = true; break; }
-                case ArmoryPet.FAMILYTREE.Ferocity: { ThePetTalentPicker.TreeTab2.IsSelected = true; break; }
-                case ArmoryPet.FAMILYTREE.Tenacity: { ThePetTalentPicker.TreeTab3.IsSelected = true; break; }
+                case PETFAMILYTREE.Cunning : { ThePetTalentPicker.TreeTab1.IsSelected = true; break; }
+                case PETFAMILYTREE.Ferocity: { ThePetTalentPicker.TreeTab2.IsSelected = true; break; }
+                case PETFAMILYTREE.Tenacity: { ThePetTalentPicker.TreeTab3.IsSelected = true; break; }
                 default: { ThePetTalentPicker.TreeTab1.IsSelected = true; break; }
             }
         }

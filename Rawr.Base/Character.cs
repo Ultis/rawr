@@ -9,6 +9,62 @@ using System.Xml.Serialization;
 
 namespace Rawr
 {
+    public enum PETFAMILYTREE : int
+    {
+        None = 0,
+        Cunning,
+        Tenacity,
+        Ferocity,
+    }
+    public enum PETFAMILY : int
+    {
+        None = 0,
+        // Sorted by Tree, then Alpha
+        #region Cunning
+        Bat = 24,
+        BirdOfPrey = 26,
+        Chimaera = 38,
+        Dragonhawk = 30,
+        Monkey = 51,
+        NetherRay = 34,
+        Ravager = 31,
+        Serpent = 35,
+        Silithid = 41,
+        Spider = 3,
+        SporeBat = 33,
+        WindSerpent = 27,
+        #endregion
+        #region Tenacity
+        Bear = 4,
+        Beetle = 53,
+        Boar = 5,
+        Crab = 8,
+        Crocolisk = 6,
+        Gorilla = 9,
+        Rhino = 43,
+        Scorpid = 20,
+        ShaleSpider = 55,
+        Turtle = 21,
+        WarpStalker = 32,
+        Worm = 42,
+        #endregion
+        #region Ferocity
+        CarrionBird = 7,
+        Cat = 2,
+        CoreHound = 45,
+        Devilsaur = 39,
+        Dog = 52,
+        Fox = 50,
+        Hyena = 25,
+        Moth = 37,
+        Raptor = 11,
+        SpiritBeast = 46,
+        Tallstrider = 12,
+        Wasp = 44,
+        Wolf = 1,
+        #endregion
+    }
+
     [GenerateSerializer]
     public class Character
     {
@@ -3454,108 +3510,51 @@ namespace Rawr
 
     public class ArmoryPet
     {
-        public enum FAMILYTREE : int
+        public static readonly Dictionary<PETFAMILY, PETFAMILYTREE> FamilyToTree = new Dictionary<PETFAMILY, PETFAMILYTREE>
         {
-            None = 0,
-            Cunning,
-            Tenacity,
-            Ferocity,
-        }
-
-        public enum FAMILY : int
-        {
-            None = 0,
-            // Sorted by Tree, then Alpha
+            {PETFAMILY.None, PETFAMILYTREE.None},
             #region Cunning
-            Bat = 24,
-            BirdOfPrey = 26,
-            Chimaera = 38,
-            Dragonhawk = 30, 
-            Monkey = 51,
-            NetherRay = 34, 
-            Ravager = 31,
-            Serpent= 35,
-            Silithid = 41,
-            Spider = 3,
-            SporeBat = 33, 
-            WindSerpent = 27,
-            #endregion
-            #region Tenacity
-            Bear = 4,
-            Beetle = 53,
-            Boar = 5,
-            Crab = 8,
-            Crocolisk = 6,
-            Gorilla = 9, 
-            Rhino = 43, 
-            Scorpid = 20, 
-            ShaleSpider = 55,
-            Turtle = 21, 
-            WarpStalker = 32,
-            Worm = 42,
-            #endregion
-            #region Ferocity
-            CarrionBird = 7,
-            Cat = 2, 
-            CoreHound = 45,
-            Devilsaur = 39,
-            Dog = 52,
-            Fox = 50,
-            Hyena = 25,
-            Moth = 37, 
-            Raptor = 11, 
-            SpiritBeast = 46, 
-            Tallstrider = 12, 
-            Wasp = 44, 
-            Wolf = 1,
-            #endregion
-        }
-
-        public static readonly Dictionary<FAMILY, FAMILYTREE> FamilyToTree = new Dictionary<FAMILY, FAMILYTREE>
-        {
-            {FAMILY.None, FAMILYTREE.None},
-            #region Cunning
-            {FAMILY.Bat, FAMILYTREE.Cunning},
-            {FAMILY.BirdOfPrey, FAMILYTREE.Cunning},
-            {FAMILY.Chimaera, FAMILYTREE.Cunning},
-            {FAMILY.Dragonhawk, FAMILYTREE.Cunning},
-            {FAMILY.Monkey, FAMILYTREE.Cunning},
-            {FAMILY.NetherRay, FAMILYTREE.Cunning},
-            {FAMILY.Ravager, FAMILYTREE.Cunning},
-            {FAMILY.Serpent, FAMILYTREE.Cunning},
-            {FAMILY.Silithid, FAMILYTREE.Cunning},
-            {FAMILY.Spider, FAMILYTREE.Cunning},
-            {FAMILY.SporeBat, FAMILYTREE.Cunning},
-            {FAMILY.WindSerpent, FAMILYTREE.Cunning},
+            {PETFAMILY.Bat, PETFAMILYTREE.Cunning},
+            {PETFAMILY.BirdOfPrey, PETFAMILYTREE.Cunning},
+            {PETFAMILY.Chimaera, PETFAMILYTREE.Cunning},
+            {PETFAMILY.Dragonhawk, PETFAMILYTREE.Cunning},
+            {PETFAMILY.Monkey, PETFAMILYTREE.Cunning},
+            {PETFAMILY.NetherRay, PETFAMILYTREE.Cunning},
+            {PETFAMILY.Ravager, PETFAMILYTREE.Cunning},
+            {PETFAMILY.Serpent, PETFAMILYTREE.Cunning},
+            {PETFAMILY.Silithid, PETFAMILYTREE.Cunning},
+            {PETFAMILY.Spider, PETFAMILYTREE.Cunning},
+            {PETFAMILY.SporeBat, PETFAMILYTREE.Cunning},
+            {PETFAMILY.WindSerpent, PETFAMILYTREE.Cunning},
             #endregion 
             #region Tenacity
-            {FAMILY.Bear, FAMILYTREE.Tenacity},
-            {FAMILY.Beetle, FAMILYTREE.Tenacity},
-            {FAMILY.Boar, FAMILYTREE.Tenacity},
-            {FAMILY.Crab, FAMILYTREE.Tenacity},
-            {FAMILY.Crocolisk, FAMILYTREE.Tenacity},
-            {FAMILY.Gorilla, FAMILYTREE.Tenacity},
-            {FAMILY.Rhino, FAMILYTREE.Tenacity},
-            {FAMILY.Scorpid, FAMILYTREE.Tenacity},
-            {FAMILY.ShaleSpider, FAMILYTREE.Tenacity},
-            {FAMILY.Turtle, FAMILYTREE.Tenacity},
-            {FAMILY.WarpStalker, FAMILYTREE.Tenacity},
-            {FAMILY.Worm, FAMILYTREE.Tenacity},
+            {PETFAMILY.Bear, PETFAMILYTREE.Tenacity},
+            {PETFAMILY.Beetle, PETFAMILYTREE.Tenacity},
+            {PETFAMILY.Boar, PETFAMILYTREE.Tenacity},
+            {PETFAMILY.Crab, PETFAMILYTREE.Tenacity},
+            {PETFAMILY.Crocolisk, PETFAMILYTREE.Tenacity},
+            {PETFAMILY.Gorilla, PETFAMILYTREE.Tenacity},
+            {PETFAMILY.Rhino, PETFAMILYTREE.Tenacity},
+            {PETFAMILY.Scorpid, PETFAMILYTREE.Tenacity},
+            {PETFAMILY.ShaleSpider, PETFAMILYTREE.Tenacity},
+            {PETFAMILY.Turtle, PETFAMILYTREE.Tenacity},
+            {PETFAMILY.WarpStalker, PETFAMILYTREE.Tenacity},
+            {PETFAMILY.Worm, PETFAMILYTREE.Tenacity},
             #endregion
             #region Ferocity
-            {FAMILY.CarrionBird, FAMILYTREE.Ferocity},
-            {FAMILY.Cat, FAMILYTREE.Ferocity},
-            {FAMILY.CoreHound, FAMILYTREE.Ferocity},
-            {FAMILY.Devilsaur, FAMILYTREE.Ferocity},
-            {FAMILY.Dog, FAMILYTREE.Ferocity},
-            {FAMILY.Fox, FAMILYTREE.Ferocity},
-            {FAMILY.Hyena, FAMILYTREE.Ferocity},
-            {FAMILY.Moth, FAMILYTREE.Ferocity},
-            {FAMILY.Raptor, FAMILYTREE.Ferocity},
-            {FAMILY.SpiritBeast, FAMILYTREE.Ferocity},
-            {FAMILY.Tallstrider, FAMILYTREE.Ferocity},
-            {FAMILY.Wasp, FAMILYTREE.Ferocity},
-            {FAMILY.Wolf, FAMILYTREE.Ferocity},
+            {PETFAMILY.CarrionBird, PETFAMILYTREE.Ferocity},
+            {PETFAMILY.Cat, PETFAMILYTREE.Ferocity},
+            {PETFAMILY.CoreHound, PETFAMILYTREE.Ferocity},
+            {PETFAMILY.Devilsaur, PETFAMILYTREE.Ferocity},
+            {PETFAMILY.Dog, PETFAMILYTREE.Ferocity},
+            {PETFAMILY.Fox, PETFAMILYTREE.Ferocity},
+            {PETFAMILY.Hyena, PETFAMILYTREE.Ferocity},
+            {PETFAMILY.Moth, PETFAMILYTREE.Ferocity},
+            {PETFAMILY.Raptor, PETFAMILYTREE.Ferocity},
+            {PETFAMILY.SpiritBeast, PETFAMILYTREE.Ferocity},
+            {PETFAMILY.Tallstrider, PETFAMILYTREE.Ferocity},
+            {PETFAMILY.Wasp, PETFAMILYTREE.Ferocity},
+            {PETFAMILY.Wolf, PETFAMILYTREE.Ferocity},
             #endregion
         };
 
@@ -3579,28 +3578,28 @@ namespace Rawr
             Spec = spec;
             // SpecKey is really determined by family. 
         }
-        public FAMILY FamilyID;
+        public PETFAMILY FamilyID;
         public string Family
         {
-            get { return Enum.GetName(typeof(FAMILY), FamilyID); }
+            get { return Enum.GetName(typeof(PETFAMILY), FamilyID); }
             set 
             { 
                 // value could either be string number or string name.
 #if SILVERLIGHT
-                FamilyID = (FAMILY)Enum.Parse(typeof(FAMILY), value, true);
+                FamilyID = (PETFAMILY)Enum.Parse(typeof(PETFAMILY), value, true);
 #else
-                FamilyID = (FAMILY)Enum.Parse(typeof(FAMILY), value);
+                FamilyID = (PETFAMILY)Enum.Parse(typeof(PETFAMILY), value);
 #endif
             }
         }
             
         public string Name;
-        public FAMILYTREE FamilyTree = FAMILYTREE.None;
+        public PETFAMILYTREE FamilyTree = PETFAMILYTREE.None;
         public string SpecKey {
             get 
             {
-                if (FamilyTree == FAMILYTREE.None) { FamilyTree = ArmoryPet.FamilyToTree[FamilyID]; }
-                return Enum.GetName(typeof(FAMILYTREE),FamilyTree);
+                if (FamilyTree == PETFAMILYTREE.None) { FamilyTree = ArmoryPet.FamilyToTree[FamilyID]; }
+                return Enum.GetName(typeof(PETFAMILYTREE),FamilyTree);
             }
         }
         public string Spec;

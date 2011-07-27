@@ -35,6 +35,9 @@ namespace Rawr.Hunter.Skills
    #endregion
 
     #region DoTs
+    public class BlackArrowDoT : DoT
+    { }
+
     public class BlackArrowBuff : BuffEffect
     {
         /// <summary>

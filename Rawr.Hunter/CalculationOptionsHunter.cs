@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Text;
 using System.Xml.Serialization;
+using Rawr;
 
 namespace Rawr.Hunter
 {
@@ -243,10 +244,10 @@ namespace Rawr.Hunter
             }
             set { _petTalents = value; }
         }
-        private ArmoryPet.FAMILY _petFamily = ArmoryPet.FAMILY.Cat;
-        public ArmoryPet.FAMILY PetFamily {
+        private PETFAMILY _petFamily = PETFAMILY.Cat;
+        public PETFAMILY PetFamily {
             get { return _petFamily; }
-            set { _petFamily = value; OnPropertyChanged("ArmoryPet.FAMILY"); }
+            set { _petFamily = value; OnPropertyChanged("ArmoryPet.PETFAMILY"); }
         }
         #region Skill Priorities
         public PetAttacks _PetPriority1 = PetAttacks.Growl;

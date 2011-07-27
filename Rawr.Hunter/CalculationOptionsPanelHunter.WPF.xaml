@@ -20,7 +20,7 @@
         <local:PercentConverter x:Key="PercentConverter" />
         <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type System:Enum}" x:Key="PossibleValuesFamily">
             <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="Rawr:ArmoryPet.FAMILY"/>
+                <x:Type TypeName="Rawr:PETFAMILY"/>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
 

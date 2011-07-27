@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using Rawr;
 
 namespace Rawr.Hunter
 {
@@ -16,9 +17,9 @@ namespace Rawr.Hunter
     {
         private PetTalentsBase PetTalents;
         private int Tree;
-        private ArmoryPet.FAMILYTREE Class;
+        private PETFAMILYTREE Class;
 
-        public FormSavePetTalentSpec(PetTalentsBase spec, ArmoryPet.FAMILYTREE newClass, int tree)
+        public FormSavePetTalentSpec(PetTalentsBase spec, PETFAMILYTREE newClass, int tree)
         {
             InitializeComponent();
             PetTalents = spec;
@@ -41,12 +42,12 @@ namespace Rawr.Hunter
             {
                 SavedPetTalentSpec spec = CB_TalentSpecs.SelectedItem as SavedPetTalentSpec;
                 spec.Spec = PetTalents.ToString();
-                spec.Class = (ArmoryPet.FAMILYTREE)CB_Trees.SelectedItem;
+                spec.Class = (PETFAMILYTREE)CB_Trees.SelectedItem;
                 spec.Tree = Tree;
             }
             else
             {
-                SavedPetTalentSpec.AllSpecs.Add(new SavedPetTalentSpec(TB_NewSpecName.Text, PetTalents, (ArmoryPet.FAMILYTREE)CB_Trees.SelectedItem, Tree));
+                SavedPetTalentSpec.AllSpecs.Add(new SavedPetTalentSpec(TB_NewSpecName.Text, PetTalents, (PETFAMILYTREE)CB_Trees.SelectedItem, Tree));
             }
             this.DialogResult = true;
         }

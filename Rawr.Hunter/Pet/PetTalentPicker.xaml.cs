@@ -101,10 +101,10 @@ namespace Rawr.Hunter
             }
             else
             {
-                ArmoryPet.FAMILYTREE ftree = ArmoryPet.FamilyToTree[CalcOpts.PetFamily];
-                int treepts = (ftree == ArmoryPet.FAMILYTREE.Cunning  ? Tree1.Points() :
-                              (ftree == ArmoryPet.FAMILYTREE.Ferocity ? Tree2.Points() :
-                              (ftree == ArmoryPet.FAMILYTREE.Tenacity ? Tree3.Points() :
+                PETFAMILYTREE ftree = ArmoryPet.FamilyToTree[CalcOpts.PetFamily];
+                int treepts = (ftree == PETFAMILYTREE.Cunning  ? Tree1.Points() :
+                              (ftree == PETFAMILYTREE.Ferocity ? Tree2.Points() :
+                              (ftree == PETFAMILYTREE.Tenacity ? Tree3.Points() :
                                Tree1.Points() + Tree2.Points() + Tree3.Points())));
                 HasCustomSpec = true;
                 current = new SavedPetTalentSpec("Custom", CalcOpts.PetTalents, ftree, treepts);
@@ -123,10 +123,10 @@ namespace Rawr.Hunter
         {
             SavedPetTalentSpec currentSpec = SavedCombo.SelectedItem as SavedPetTalentSpec;
             if (HasCustomSpec) {
-                ArmoryPet.FAMILYTREE ftree = ArmoryPet.FamilyToTree[CalcOpts.PetFamily];
-                int treepts = (ftree == ArmoryPet.FAMILYTREE.Cunning ? Tree1.Points() :
-                              (ftree == ArmoryPet.FAMILYTREE.Ferocity ? Tree2.Points() :
-                              (ftree == ArmoryPet.FAMILYTREE.Tenacity ? Tree3.Points() :
+                PETFAMILYTREE ftree = ArmoryPet.FamilyToTree[CalcOpts.PetFamily];
+                int treepts = (ftree == PETFAMILYTREE.Cunning ? Tree1.Points() :
+                              (ftree == PETFAMILYTREE.Ferocity ? Tree2.Points() :
+                              (ftree == PETFAMILYTREE.Tenacity ? Tree3.Points() :
                                Tree1.Points() + Tree2.Points() + Tree3.Points())));
                 FormSavePetTalentSpec dialog = new FormSavePetTalentSpec(CalcOpts.PetTalents, ftree, treepts);
                 dialog.Closed += new EventHandler(dialog_Closed);
