@@ -1791,7 +1791,7 @@ namespace Rawr.Bosses
             Comment = "Not modeled in detail yet.";
             #endregion
             #region Basics
-            Health = new float[] { 51019848f, 178569472f, 124714283f, 392850000f };
+            Health = new float[] { 51019848f, 178569472f, 124714283f, 432500000f };
             MobType = (int)MOB_TYPES.HUMANOID;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 5 * 60, 5 * 60, 5 * 60, 5 * 60 };
