@@ -93,7 +93,7 @@ namespace Rawr.Hunter
             bool UseKillShot = calculatedStats.priorityRotation.containsShot(Shots.KillShot);
             bool BMSpec = character.HunterTalents.BestialWrath + character.HunterTalents.TheBeastWithin > 0;
 
-            if (CalcOpts.PetFamily == PetFamily.None) BMSpec = false;
+            if (CalcOpts.PetFamily == ArmoryPet.FAMILY.None) BMSpec = false;
 
             int currentShot;
             float currentTime;

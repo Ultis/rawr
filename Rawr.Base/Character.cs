@@ -3471,6 +3471,7 @@ namespace Rawr
             BirdOfPrey = 26,
             Chimaera = 38,
             Dragonhawk = 30, 
+            Monkey = 51,
             NetherRay = 34, 
             Ravager = 31,
             Serpent= 35,
@@ -3481,12 +3482,14 @@ namespace Rawr
             #endregion
             #region Tenacity
             Bear = 4,
+            Beetle = 53,
             Boar = 5,
             Crab = 8,
             Crocolisk = 6,
             Gorilla = 9, 
             Rhino = 43, 
             Scorpid = 20, 
+            ShaleSpider = 55,
             Turtle = 21, 
             WarpStalker = 32,
             Worm = 42,
@@ -3495,14 +3498,16 @@ namespace Rawr
             CarrionBird = 7,
             Cat = 2, 
             CoreHound = 45,
-            Devilsaur = 39, 
+            Devilsaur = 39,
+            Dog = 52,
+            Fox = 50,
             Hyena = 25,
             Moth = 37, 
             Raptor = 11, 
             SpiritBeast = 46, 
             Tallstrider = 12, 
             Wasp = 44, 
-            Wolf = 1
+            Wolf = 1,
             #endregion
         }
 
@@ -3514,6 +3519,7 @@ namespace Rawr
             {FAMILY.BirdOfPrey, FAMILYTREE.Cunning},
             {FAMILY.Chimaera, FAMILYTREE.Cunning},
             {FAMILY.Dragonhawk, FAMILYTREE.Cunning},
+            {FAMILY.Monkey, FAMILYTREE.Cunning},
             {FAMILY.NetherRay, FAMILYTREE.Cunning},
             {FAMILY.Ravager, FAMILYTREE.Cunning},
             {FAMILY.Serpent, FAMILYTREE.Cunning},
@@ -3524,12 +3530,14 @@ namespace Rawr
             #endregion 
             #region Tenacity
             {FAMILY.Bear, FAMILYTREE.Tenacity},
+            {FAMILY.Beetle, FAMILYTREE.Tenacity},
             {FAMILY.Boar, FAMILYTREE.Tenacity},
             {FAMILY.Crab, FAMILYTREE.Tenacity},
             {FAMILY.Crocolisk, FAMILYTREE.Tenacity},
             {FAMILY.Gorilla, FAMILYTREE.Tenacity},
             {FAMILY.Rhino, FAMILYTREE.Tenacity},
             {FAMILY.Scorpid, FAMILYTREE.Tenacity},
+            {FAMILY.ShaleSpider, FAMILYTREE.Tenacity},
             {FAMILY.Turtle, FAMILYTREE.Tenacity},
             {FAMILY.WarpStalker, FAMILYTREE.Tenacity},
             {FAMILY.Worm, FAMILYTREE.Tenacity},
@@ -3539,6 +3547,8 @@ namespace Rawr
             {FAMILY.Cat, FAMILYTREE.Ferocity},
             {FAMILY.CoreHound, FAMILYTREE.Ferocity},
             {FAMILY.Devilsaur, FAMILYTREE.Ferocity},
+            {FAMILY.Dog, FAMILYTREE.Ferocity},
+            {FAMILY.Fox, FAMILYTREE.Ferocity},
             {FAMILY.Hyena, FAMILYTREE.Ferocity},
             {FAMILY.Moth, FAMILYTREE.Ferocity},
             {FAMILY.Raptor, FAMILYTREE.Ferocity},

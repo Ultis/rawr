@@ -6,11 +6,21 @@
     xmlns:basics2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+    xmlns:System="clr-namespace:System;assembly=mscorlib"
     xmlns:local="clr-namespace:Rawr.Hunter"
+    xmlns:Rawr="clr-namespace:Rawr;assembly=Rawr.Base"
     x:Class="Rawr.Hunter.FormSavePetTalentSpec"
     d:SizeToContent="WidthAndHeight"
     Title="Save Pet Talent Spec...">
-    
+
+    <basics2:ChildWindow.Resources>
+        <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type System:Enum}" x:Key="PossibleValuesTree">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="Rawr:ArmoryPet.FAMILYTREE"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </basics2:ChildWindow.Resources>
+
     <Grid x:Name="LayoutRoot" Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -27,12 +37,9 @@
         <TextBlock Text="Overwrite Talent Spec:" Grid.Row="1" VerticalAlignment="Center" Grid.Column="0" Padding="0,2,0,0" Margin="4,2" />
         <ComboBox x:Name="CB_TalentSpecs" Grid.Row="1" Margin="4,2" MinWidth="200" SelectionChanged="Update_SelectionChanged" Grid.Column="1" />
         <TextBlock Text="Family Tree:" Grid.Row="2" VerticalAlignment="Center" Grid.Column="0" Padding="0,2,0,0" Margin="4,2" />
-        <ComboBox x:Name="CB_Trees" Grid.Row="2" Grid.Column="1" Margin="4,2" MinWidth="200" SelectedIndex="3">
-            <local:PetFamilyTree>Cunning</local:PetFamilyTree>
-            <local:PetFamilyTree>Ferocity</local:PetFamilyTree>
-            <local:PetFamilyTree>Tenacity</local:PetFamilyTree>
-            <local:PetFamilyTree>None</local:PetFamilyTree>
-        </ComboBox>
+        <ComboBox x:Name="CB_Trees" Grid.Row="2" Grid.Column="1" Margin="4,2" MinWidth="200" ItemsSource="{Binding Source={StaticResource PossibleValuesTree}}" 
+                  SelectedValue="{Binding Source={StaticResource PossibleValuesTree}, Path=[0]}" />
+
         <Button x:Name="BT_OK" Grid.Row="3" Grid.Column="2" MinWidth="75" Content="OK" Margin="4,8,4,4" Click="BT_OK_Click" MaxWidth="75" HorizontalAlignment="Right" />
         <Button x:Name="BT_Cancel" Grid.Row="3" Grid.Column="1" MinWidth="75" Content="Cancel" Margin="4,8,83,4" Click="BT_Cancel_Click" MaxWidth="75" HorizontalAlignment="Right" />
     </Grid>

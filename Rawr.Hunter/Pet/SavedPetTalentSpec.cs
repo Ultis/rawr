@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Xml.Serialization;
+using Rawr;
 
 namespace Rawr.Hunter
 {
@@ -16,12 +17,12 @@ namespace Rawr.Hunter
     public class SavedPetTalentSpec
     {
         public string Name { get; set; }
-        public PetFamilyTree Class { get; set; }
+        public ArmoryPet.FAMILYTREE Class { get; set; }
         public string Spec { get; set; }
 
         public int Tree { get; set; }
 
-        public SavedPetTalentSpec() : this("", null, PetFamilyTree.None, 0) { ; }
+        public SavedPetTalentSpec() : this("", null, ArmoryPet.FAMILYTREE.None, 0) { ; }
 
         public static SavedPetTalentSpecList AllSpecs { get; private set; }
         public static void Load(TextReader reader)
@@ -47,7 +48,7 @@ namespace Rawr.Hunter
             writer.Close();
         }
 
-        public static SavedPetTalentSpecList SpecsFor(PetFamilyTree petClass)
+        public static SavedPetTalentSpecList SpecsFor(Rawr.ArmoryPet.FAMILYTREE petClass)
         {
             SavedPetTalentSpecList ret = new SavedPetTalentSpecList();
             foreach (SavedPetTalentSpec sts in AllSpecs)
@@ -57,7 +58,7 @@ namespace Rawr.Hunter
             return ret;
         }
 
-        public SavedPetTalentSpec(String name, PetTalentsBase talentSpec, PetFamilyTree tree, int pts)
+        public SavedPetTalentSpec(String name, PetTalentsBase talentSpec, ArmoryPet.FAMILYTREE tree, int pts)
         {
             Name = name;
             Tree = pts;

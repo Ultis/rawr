@@ -80,7 +80,7 @@ namespace Rawr.Hunter
         private bool updating;
         private void UpdateSavedSpecs()
         {
-            SavedPetTalentSpecList savedSpecs = SavedPetTalentSpec.SpecsFor(CalculationOptionsHunter.PetFamilyToPetFamilyTree(CalcOpts.PetFamily));
+            SavedPetTalentSpecList savedSpecs = SavedPetTalentSpec.SpecsFor(ArmoryPet.FamilyToTree[CalcOpts.PetFamily]);
             SavedPetTalentSpec current = null;
             updating = true;
             foreach (SavedPetTalentSpec sts in savedSpecs)
@@ -101,10 +101,10 @@ namespace Rawr.Hunter
             }
             else
             {
-                PetFamilyTree ftree = CalculationOptionsHunter.PetFamilyToPetFamilyTree(CalcOpts.PetFamily);
-                int treepts = (ftree == PetFamilyTree.Cunning  ? Tree1.Points() :
-                              (ftree == PetFamilyTree.Ferocity ? Tree2.Points() :
-                              (ftree == PetFamilyTree.Tenacity ? Tree3.Points() :
+                ArmoryPet.FAMILYTREE ftree = ArmoryPet.FamilyToTree[CalcOpts.PetFamily];
+                int treepts = (ftree == ArmoryPet.FAMILYTREE.Cunning  ? Tree1.Points() :
+                              (ftree == ArmoryPet.FAMILYTREE.Ferocity ? Tree2.Points() :
+                              (ftree == ArmoryPet.FAMILYTREE.Tenacity ? Tree3.Points() :
                                Tree1.Points() + Tree2.Points() + Tree3.Points())));
                 HasCustomSpec = true;
                 current = new SavedPetTalentSpec("Custom", CalcOpts.PetTalents, ftree, treepts);
@@ -123,10 +123,10 @@ namespace Rawr.Hunter
         {
             SavedPetTalentSpec currentSpec = SavedCombo.SelectedItem as SavedPetTalentSpec;
             if (HasCustomSpec) {
-                PetFamilyTree ftree = CalculationOptionsHunter.PetFamilyToPetFamilyTree(CalcOpts.PetFamily);
-                int treepts = (ftree == PetFamilyTree.Cunning ? Tree1.Points() :
-                              (ftree == PetFamilyTree.Ferocity ? Tree2.Points() :
-                              (ftree == PetFamilyTree.Tenacity ? Tree3.Points() :
+                ArmoryPet.FAMILYTREE ftree = ArmoryPet.FamilyToTree[CalcOpts.PetFamily];
+                int treepts = (ftree == ArmoryPet.FAMILYTREE.Cunning ? Tree1.Points() :
+                              (ftree == ArmoryPet.FAMILYTREE.Ferocity ? Tree2.Points() :
+                              (ftree == ArmoryPet.FAMILYTREE.Tenacity ? Tree3.Points() :
                                Tree1.Points() + Tree2.Points() + Tree3.Points())));
                 FormSavePetTalentSpec dialog = new FormSavePetTalentSpec(CalcOpts.PetTalents, ftree, treepts);
                 dialog.Closed += new EventHandler(dialog_Closed);
