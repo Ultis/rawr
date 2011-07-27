@@ -3576,7 +3576,11 @@ namespace Rawr
             set 
             { 
                 // value could either be string number or string name.
+#if SILVERLIGHT
+                FamilyID = (FAMILY)Enum.Parse(typeof(FAMILY), value, true);
+#else
                 FamilyID = (FAMILY)Enum.Parse(typeof(FAMILY), value);
+#endif
             }
         }
             
