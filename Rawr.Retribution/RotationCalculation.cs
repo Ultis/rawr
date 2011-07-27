@@ -128,47 +128,44 @@ namespace Rawr.Retribution
                 }
 
                 //Do Holy Power TV
-                if (old_holyPower > 0f) {
-                    tmpCast[DamageAbility.TemplarsVerdict] = (old_holyPower / 3f);
-                    remainingNumOfGCD -= skills[DamageAbility.TemplarsVerdict].GCDPercentage * tmpCast[DamageAbility.TemplarsVerdict];
-                }
-
+                tmpCast[DamageAbility.TemplarsVerdict] = ExecuteSkill(DamageAbility.TemplarsVerdict, ref remainingNumOfGCD, old_holyPower / 3f);
                 //Do CS
-                tmpCast[DamageAbility.CrusaderStrike] = (float)fightlength / skills[DamageAbility.CrusaderStrike].CooldownWithLatency;
-                remainingNumOfGCD -= skills[DamageAbility.CrusaderStrike].GCDPercentage * tmpCast[DamageAbility.CrusaderStrike];
+                tmpCast[DamageAbility.CrusaderStrike] = ExecuteSkill(DamageAbility.CrusaderStrike, fightlength, ref remainingNumOfGCD);
                 holyPower += tmpCast[DamageAbility.CrusaderStrike] * (zeal ? 3f : 1f) * skills[DamageAbility.CrusaderStrike].CT.ChanceToLand;
 
                 //Do HoW
                 if (below20) {
-                    tmpCast[DamageAbility.HammerOfWrath] = (float)fightlength / skills[DamageAbility.HammerOfWrath].CooldownWithLatency;
-                    remainingNumOfGCD -= skills[DamageAbility.HammerOfWrath].GCDPercentage * tmpCast[DamageAbility.HammerOfWrath];
+                    tmpCast[DamageAbility.HammerOfWrath] = ExecuteSkill(DamageAbility.HammerOfWrath, fightlength, ref remainingNumOfGCD);                    
                 }
-
                 //Do DP TV
-                if (holyPowerDP > 0f) {
-                    tmpCast[DamageAbility.TemplarsVerdict] += holyPowerDP;
-                    remainingNumOfGCD -= skills[DamageAbility.TemplarsVerdict].GCDPercentage * holyPowerDP;
-                }
-
+                tmpCast[DamageAbility.TemplarsVerdict] += ExecuteSkill(DamageAbility.TemplarsVerdict, ref remainingNumOfGCD, holyPowerDP);
                 //Do Exo
-                if (remainingNumOfGCD > 0f) {
-                    tmpCast[DamageAbility.Exorcism] = (float)fightlength / skills[DamageAbility.Exorcism].CooldownWithLatency;
-                    remainingNumOfGCD -= skills[DamageAbility.Exorcism].GCDPercentage * tmpCast[DamageAbility.Exorcism];
-                }
-
+                tmpCast[DamageAbility.Exorcism] = ExecuteSkill(DamageAbility.Exorcism, fightlength, ref remainingNumOfGCD);
                 //Do Judge
-                if (remainingNumOfGCD > 0f) {
-                    tmpCast[DamageAbility.Judgement] = (float)Math.Min(remainingNumOfGCD, fightlength / skills[DamageAbility.Judgement].CooldownWithLatency);
-                    remainingNumOfGCD -= skills[DamageAbility.Judgement].GCDPercentage * tmpCast[DamageAbility.Judgement];
-                }
-
-                //Do HW
-                if (remainingNumOfGCD > 0f) {
-                    tmpCast[DamageAbility.HolyWrath] = (float)Math.Min(remainingNumOfGCD, fightlength / skills[DamageAbility.HolyWrath].CooldownWithLatency);
-                    remainingNumOfGCD -= skills[DamageAbility.HolyWrath].GCDPercentage * tmpCast[DamageAbility.HolyWrath];
-                }
+                tmpCast[DamageAbility.Judgement] = ExecuteSkill(DamageAbility.Judgement, fightlength, ref remainingNumOfGCD);
+                //Do HW 
+                tmpCast[DamageAbility.HolyWrath] = ExecuteSkill(DamageAbility.HolyWrath, fightlength, ref remainingNumOfGCD);
+                //Do Cons
+                tmpCast[DamageAbility.Consecration] = ExecuteSkill(DamageAbility.Consecration, fightlength, ref remainingNumOfGCD);
+                
                 iterator++;
             }
+        }
+
+        private float ExecuteSkill(DamageAbility abil, double fightlength, ref double remainingNumOfGCD)
+        {
+            return ExecuteSkill(abil, ref remainingNumOfGCD, fightlength / skills[abil].CooldownWithLatency);
+        }
+
+        private float ExecuteSkill(DamageAbility abil, ref double remainingNumOfGCD, double count)
+        {
+            if (remainingNumOfGCD > 0d && count > 0d)
+            {
+                double usedGCD = Math.Min(remainingNumOfGCD, skills[abil].GCDPercentage * count);
+                remainingNumOfGCD -= usedGCD;
+                return (float)(usedGCD / skills[abil].GCDPercentage);
+            }
+            return 0f;
         }
 
         public void CalcRotation()
