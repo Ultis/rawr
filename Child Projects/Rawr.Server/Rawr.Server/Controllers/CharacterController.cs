@@ -458,7 +458,25 @@ namespace Rawr.Server.Controllers
                     character.WaistBlacksmithingSocketEnabled = (bool)i["extraSocket"];
                 }
             }
-    
+
+            #region Pets
+            try
+            {
+                var pets = (object[])dict["pets"];
+                character.ArmoryPets = new List<ArmoryPet>();
+                foreach (Dictionary<string, object> pet in pets)
+                {
+                    ArmoryPet p = new ArmoryPet();
+                    p.Name = (string)pet["name"];
+                    p.CreatureID = (int)pet["creature"];
+                    p.SlotID = (int)pet["slot"];
+                    if (pet.ContainsKey("selected")) p.Selected = true;
+                    character.ArmoryPets.Add(p);
+                }
+            }
+            catch { }
+            #endregion
+
             return character;
         }
 

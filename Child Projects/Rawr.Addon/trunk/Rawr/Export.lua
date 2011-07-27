@@ -116,6 +116,7 @@ function Rawr:ExportToRawr()
 	outputText = ""
 	self:WriteXMLHeader()
 	self:ExportBasics()
+	self:ExportPets()
 	self:ExportBags()
 	self:ExportBank()
 	self:ExportEquipped()
@@ -265,8 +266,8 @@ function Rawr:DebugTalents()
 	for t=1, numTabs do
 		local numTalents = GetNumTalents(t)
 		for i=1, numTalents do
-			name = GetTalentInfo(t,i) or "not specified"
-			self:Print("tab:"..t.." talent:"..i..": "..name)
+			name, _, _, _, currRank = GetTalentInfo(t,i) or "not specified"
+			self:Print("tab:"..t.." talent:"..i..": "..name .. ": " .. (currRank or "nil"))
 		end
 	end
 end
@@ -384,6 +385,48 @@ function Rawr:ExportBank()
 		Rawr:WriteAvailableItem(3, self.db.char.BankItems[index])
 	end
 	self:AddLine(2, "</Bank>")
+end
+
+function Rawr:ExportPets()
+	-- ArmoryPet String format in character.cs:
+	-- Family + ": [" + Name + "] Spec: " + SpecKey + " '" + Spec + "'";
+	-- This is the info on the armory JS parse:
+	-- 10129815: { name: "Bootsie", level: 85, familyId: 6, familyName: "Crocolisk", icon: "ability_hunter_pet_crocolisk", build: "00000 00000 00000 00000 0 21300 02032 00200 00010 00000 00000 00000 00000 00", skinName: "crocodileskinswamp" },
+	-- 10129816: { name: "FleaCircus", level: 85, familyId: 1, familyName: "Wolf", icon: "ability_hunter_pet_wolf", build: "2100 0 0130 300 0 030101 11 000000000000000000000000000000000000000000", skinName: "wolfskinblack" },
+	-- 10129818: { name: "Boneheh", level: 80, familyId: 3, familyName: "Spider", icon: "ability_hunter_pet_spider", build: "00000 00000 00000 00000 0 00000 00000 00000 00000 21000 00003 30102 20110 00", skinName: "bonespider_grey" },
+	-- 10129817: { name: "Fabulous", level: 80, familyId: 39, familyName: "Devilsaur", icon: "ability_hunter_pet_devilsaur", build: "210000230300003010122000000000000000000000000000000000000000000", skinName: "trexskinwhite" },
+	-- 10129819: { name: "Pushkin", level: 80, familyId: 1, familyName: "Wolf", icon: "ability_hunter_pet_wolf", build: "210000130300003010101000000000000000000000000000000000000000000", skinName: "direwolfskindarkgrey" }
+    -- <ArmoryPets>Wolf: [Boostie] Spec: Ferocity ''</ArmoryPets>
+    -- <ArmoryPets>Wolf: [FleaCircus] Spec: Ferocity '210000130300003010111000000000000000000000000000000000000000000'</ArmoryPets>
+	local petIcon, petName, petLevel, petType, petSpec, szXML
+	local talents = ""
+	--local numTalents = GetNumTalents(1, false, true)
+	--local lenFerocity = 21 -- there's some extra slots. 19 in game.
+	--local lenTenacity = 20
+	--local lenCunning = 22 -- There's some extra slots 20 in game.
+	--for i=1, numTalents do
+	--	_, _, _, _, currRank = GetTalentInfo(1,i,false,true)
+	--	talents = talents .. (currRank or 0)
+	--end
+	for index = 0, 25 do -- index values 0 - 25
+		petIcon, petName, petLevel, petType, petSpec = GetStablePetInfo(index);
+		if petName ~= nil then 
+			szXML = "<ArmoryPets>" .. petType .. ": [" .. petName .. "] Spec: " .. petSpec .. " '"..talents.."'</ArmoryPets>";
+			self:AddLine(2, szXML)
+		end
+	end
+end
+
+function Rawr:DebugPetTalents()
+	self:Print("Rawr:DebugPetTalents()")
+	for t=0, 2 do
+		local numTalents = GetNumTalents(t, false, true)
+		self:Print(t)
+		for i=1, numTalents do
+			name, iconPath, tier, column, currentRank, maxRank, isExceptional, meetsPrereq = GetTalentInfo(1,i,false,true, t) or "not specified"
+			self:Print((name or "nil") .. ", " .. (iconPath or "nil") .. ", " .. (tier or "nil") .. ", " .. (column or "nil") .. ", " .. (currentRank or "nil") .. "," .. (maxRank or "nil") .. ", " .. (isExceptional or "nil") .. ", " .. (meetsPrereq or "nil"))
+		end
+	end
 end
 
 function Rawr:WriteAvailableItem(indent, slotLink)
