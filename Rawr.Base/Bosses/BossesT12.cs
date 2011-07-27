@@ -1572,7 +1572,7 @@ namespace Rawr.Bosses
             Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T12_10, BossHandler.TierLevels.T12_25, BossHandler.TierLevels.T12_10H, BossHandler.TierLevels.T12_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 42087080f, 133304384f, 58921912f, 217306752f };
+            Health = new float[] { 42087080f, 133304384f, 58921912f, 195600000f };
             MobType = (int)MOB_TYPES.ELEMENTAL;
             BerserkTimer = new int[] { 6 * 60, 6 * 60, 6 * 60, 6 * 60 };
             SpeedKillTimer = new int[] { 5 * 60, 5 * 60, 5 * 60, 5 * 60 };
@@ -1791,7 +1791,7 @@ namespace Rawr.Bosses
             Comment = "Not modeled in detail yet.";
             #endregion
             #region Basics
-            Health = new float[] { 51019848f, 178569472f, 124714283f, 436500000f };
+            Health = new float[] { 51019848f, 178569472f, 124714283f, 392850000f };
             MobType = (int)MOB_TYPES.HUMANOID;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 5 * 60, 5 * 60, 5 * 60, 5 * 60 };
@@ -1950,9 +1950,9 @@ namespace Rawr.Bosses
             #endregion
             #region Basics
             // Rag "dies" at 10% on normal (goes back under the lava).
-            // Apparently Rag heals to about 50% once he hits phase 4 and starts moving around the platform
+            // Apparently Rag heals to about 48% once he hits phase 4 and starts moving around the platform
             // So for heroic his health is 90% to phase 4 and 50% while in Phase 4 so 140% health
-            Health = new float[] { 66995760f * 0.9f, 200987280f * 0.9f, 87300000f * 1.4f, 264100000f * 1.4f };
+            Health = new float[] { 66995760f * 0.9f, 200987280f * 0.9f, 87300000f * 1.38f, 290500000f * 1.40f };
             MobType = (int)MOB_TYPES.ELEMENTAL;
             BerserkTimer = new int[] { 18 * 60, 18 * 60, 18 * 60, 18 * 60 };
             SpeedKillTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
