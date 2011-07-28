@@ -4599,6 +4599,7 @@ w = remaining time on 2T10 effect";
         private class State : CycleState
         {
             public bool ArcaneMissilesRegistered { get; set; }
+            public bool ArcaneMissilesDelayedProcced { get; set; }
             public bool ArcaneMissilesProcced { get; set; }
             public float ArcaneBarrageCooldown { get; set; }
             public int ArcaneBlastStack { get; set; }
@@ -4608,6 +4609,7 @@ w = remaining time on 2T10 effect";
         public Spell ABar, AM;
 
         private float AMProc;
+        private float DelayProc;
         private int maxStack;
         private float channelLatency;
 
@@ -4639,13 +4641,14 @@ w = remaining time on 2T10 effect";
 
             channelLatency = castingState.CalculationOptions.LatencyChannel;
             AMProc = 0.4f;
+            DelayProc = AMProc * castingState.MageTalents.NetherVortex;
 
             GenerateStateDescription();
         }
 
         protected override CycleState GetInitialState()
         {
-            return GetState(0.0f, 0, false, false);
+            return GetState(0.0f, 0, false, false, false);
         }
 
         protected override List<CycleControlledStateTransition> GetStateTransitions(CycleState state)
@@ -4661,27 +4664,56 @@ w = remaining time on 2T10 effect";
             {
                 AM = this.AM;
             }
+            if (DelayProc > 0)
+            {
+                list.Add(new CycleControlledStateTransition()
+                {
+                    Spell = AB,
+                    TargetState = GetState(
+                        Math.Max(0.0f, s.ArcaneBarrageCooldown - AB.CastTime),
+                        Math.Min(maxStack, s.ArcaneBlastStack + 1),
+                        s.ArcaneMissilesProcced || s.ArcaneMissilesDelayedProcced,
+                        true,
+                        true),
+                    TransitionProbability = DelayProc
+                });
+            }
             if (AMProc > 0)
             {
                 list.Add(new CycleControlledStateTransition()
                 {
                     Spell = AB,
-                    TargetState = GetState(Math.Max(0.0f, s.ArcaneBarrageCooldown - AB.CastTime), Math.Min(maxStack, s.ArcaneBlastStack + 1), s.ArcaneMissilesProcced, true),
-                    TransitionProbability = AMProc
+                    TargetState = GetState(
+                        Math.Max(0.0f, s.ArcaneBarrageCooldown - AB.CastTime), 
+                        Math.Min(maxStack, s.ArcaneBlastStack + 1), 
+                        s.ArcaneMissilesProcced || s.ArcaneMissilesDelayedProcced, 
+                        true,
+                        false),
+                    TransitionProbability = AMProc * (1 - DelayProc)
                 });
             }
             list.Add(new CycleControlledStateTransition()
             {
                 Spell = AB,
-                TargetState = GetState(Math.Max(0.0f, s.ArcaneBarrageCooldown - AB.CastTime), Math.Min(maxStack, s.ArcaneBlastStack + 1), s.ArcaneMissilesProcced, s.ArcaneMissilesProcced),
-                TransitionProbability = (1 - AMProc)
+                TargetState = GetState(
+                    Math.Max(0.0f, s.ArcaneBarrageCooldown - AB.CastTime), 
+                    Math.Min(maxStack, s.ArcaneBlastStack + 1), 
+                    s.ArcaneMissilesProcced || s.ArcaneMissilesDelayedProcced, 
+                    s.ArcaneMissilesProcced || s.ArcaneMissilesDelayedProcced,
+                    false),
+                TransitionProbability = (1 - AMProc) * (1 - DelayProc)
             });
             if (s.ArcaneMissilesRegistered)
             {
                 list.Add(new CycleControlledStateTransition()
                 {
                     Spell = AM,
-                    TargetState = GetState(Math.Max(0.0f, s.ArcaneBarrageCooldown - AM.CastTime), 0, false, false),
+                    TargetState = GetState(
+                        Math.Max(0.0f, s.ArcaneBarrageCooldown - AM.CastTime),
+                        0, 
+                        s.ArcaneMissilesDelayedProcced, 
+                        s.ArcaneMissilesDelayedProcced,
+                        false),
                     TransitionProbability = 1.0f
                 });
             }
@@ -4693,7 +4725,12 @@ w = remaining time on 2T10 effect";
                     {
                         Spell = ABar,
                         Pause = s.ArcaneBarrageCooldown,
-                        TargetState = GetState(ABar.Cooldown - ABar.CastTime, 0, true, true),
+                        TargetState = GetState(
+                            ABar.Cooldown - ABar.CastTime, 
+                            0, 
+                            true, 
+                            true,
+                            false),
                         TransitionProbability = AMProc
                     });
                 }
@@ -4701,7 +4738,12 @@ w = remaining time on 2T10 effect";
                 {
                     Spell = ABar,
                     Pause = s.ArcaneBarrageCooldown,
-                    TargetState = GetState(ABar.Cooldown - ABar.CastTime, 0, s.ArcaneMissilesProcced, s.ArcaneMissilesProcced),
+                    TargetState = GetState(
+                        ABar.Cooldown - ABar.CastTime, 
+                        0, 
+                        s.ArcaneMissilesProcced || s.ArcaneMissilesDelayedProcced, 
+                        s.ArcaneMissilesProcced || s.ArcaneMissilesDelayedProcced,
+                        false),
                     TransitionProbability = (1 - AMProc)
                 });
             }
@@ -4711,14 +4753,14 @@ w = remaining time on 2T10 effect";
 
         private Dictionary<string, State> stateDictionary = new Dictionary<string, State>();
 
-        private State GetState(float arcaneBarrageCooldown, int arcaneBlastStack, bool arcaneMissilesRegistered, bool arcaneMissilesProcced)
+        private State GetState(float arcaneBarrageCooldown, int arcaneBlastStack, bool arcaneMissilesRegistered, bool arcaneMissilesProcced, bool arcaneMissilesDelayedProcced)
         {
             string name;
-            name = string.Format("AB{0},ABar{1},AM{2}{3}", arcaneBlastStack, arcaneBarrageCooldown, arcaneMissilesProcced ? "+" : "-", arcaneMissilesRegistered ? "+" : "-");
+            name = string.Format("AB{0},ABar{1},AM{2}{3}{4}", arcaneBlastStack, arcaneBarrageCooldown, arcaneMissilesProcced ? "+" : "-", arcaneMissilesDelayedProcced ? "+" : "-", arcaneMissilesRegistered ? "+" : "-");
             State state;
             if (!stateDictionary.TryGetValue(name, out state))
             {
-                state = new State() { Name = name, ArcaneBarrageCooldown = arcaneBarrageCooldown, ArcaneBlastStack = arcaneBlastStack, ArcaneMissilesProcced = arcaneMissilesProcced, ArcaneMissilesRegistered = arcaneMissilesRegistered };
+                state = new State() { Name = name, ArcaneBarrageCooldown = arcaneBarrageCooldown, ArcaneBlastStack = arcaneBlastStack, ArcaneMissilesProcced = arcaneMissilesProcced, ArcaneMissilesDelayedProcced = arcaneMissilesDelayedProcced, ArcaneMissilesRegistered = arcaneMissilesRegistered };
                 stateDictionary[name] = state;
             }
             return state;
