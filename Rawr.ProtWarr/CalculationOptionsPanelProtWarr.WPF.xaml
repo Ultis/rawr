@@ -57,6 +57,7 @@
                     <ComboBox Grid.Row="1" Grid.Column="1" Margin="2" SelectedItem="{Binding Path=RankingMode, Converter={StaticResource RankingModeConverter}, Mode=TwoWay}" Grid.ColumnSpan="3">
                         <System:String>Mitigation Scale</System:String>
                         <System:String>Burst Time</System:String>
+                        <System:String>CT Coverage</System:String>
                     </ComboBox>
                     <!-- Notice -->
                     <TextBlock FontSize="10" Grid.Row="2" Grid.ColumnSpan="4" Margin="4,2" TextWrapping="Wrap"

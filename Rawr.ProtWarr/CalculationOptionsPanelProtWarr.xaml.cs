@@ -107,7 +107,10 @@ namespace Rawr.ProtWarr
             int rankingMode = (int)value;
             switch (rankingMode)
             {
-                case 2: return "Burst Time";
+                case 2: 
+                    return "Burst Time";
+                case 3:
+                    return "CT Coverage";
                 default: return "Mitigation Scale";
             }
         }
@@ -116,7 +119,10 @@ namespace Rawr.ProtWarr
             string rankingMode = (string)value;
             switch (rankingMode)
             {
-                case "Burst Time": return 2;
+                case "Burst Time": 
+                    return 2;
+                case "CT Coverage":
+                    return 3;
                 default: return 1;
             }
         }

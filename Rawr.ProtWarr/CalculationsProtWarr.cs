@@ -524,6 +524,12 @@ threat and limited threat scaled by the threat scale.",
                     calculatedStats.MitigationPoints    = 0.0f;
                     calculatedStats.ThreatPoints        = 0.0f;
                     break;
+                case 3:
+                    // CT Coverage mode
+                    calculatedStats.SurvivalPoints      = 0.0f;
+                    calculatedStats.MitigationPoints    = (player.DefendModel.DefendTable.Miss + player.DefendModel.DefendTable.Parry + player.DefendModel.DefendTable.Dodge + player.DefendModel.DefendTable.Block + player.DefendModel.DefendTable.CriticalBlock)*10000f;
+                    calculatedStats.ThreatPoints        = 0.0f;
+                    break;
                 default:
                     // Mitigation Scale Mode
                     double survivalCap = player.CalcOpts.HitsToSurvive * player.BossOpts.DefaultMeleeAttack.DamagePerHit / 1000.0d;
