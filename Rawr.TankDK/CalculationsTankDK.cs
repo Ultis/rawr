@@ -1550,7 +1550,7 @@ Points individually may be important.",
                     float moveVal = character.DeathKnightTalents.GlyphofBoneShield ? 0.15f : 0f;
                     SpecialEffect primary = new SpecialEffect(Trigger.Use,
                         new Stats() { DamageTakenReductionMultiplier = 0.20f, BonusDamageMultiplier = 0.02f, MovementSpeed = moveVal, },
-                        BoneLossRate * BSStacks, 60);
+                        BoneLossRate * BSStacks, 60) {BypassCache = true,};
                     statsTotal.AddSpecialEffect(primary);
                 }
                 #endregion
@@ -1570,44 +1570,28 @@ Points individually may be important.",
                     2 * 10,
                     0,
                     1,
-                    APStackCountMax);
-//                Dictionary<Trigger, float> triggerInterval;
-//                Dictionary<Trigger, float> triggerChance;
-//                triggerInterval[Trigger.DamageTaken] = TDK.bo.DynamicCompiler_Attacks.AttackSpeed;
-//                triggerChance[Trigger.DamageTaken] = 1f; // MitigatedDPS already factors in avoidance.
-                statsTotal.VengenceAttackPower = seVeng.GetAverageStats().AttackPower;
+                    APStackCountMax) { BypassCache = true, };
+                Dictionary<Trigger, float> triggerInterval = new Dictionary<Trigger,float>();
+                Dictionary<Trigger, float> triggerChance = new Dictionary<Trigger,float>();
+                triggerInterval.Add(Trigger.DamageTaken, TDK.bo.DynamicCompiler_Attacks.AttackSpeed);
+                triggerChance.Add(Trigger.DamageTaken, 1f); // MitigatedDPS already factors in avoidance.
+                statsTotal.VengenceAttackPower = seVeng.GetAverageStats(triggerInterval, triggerChance).AttackPower;
                 statsTotal.AttackPower += statsTotal.VengenceAttackPower * TDK.calcOpts.VengeanceWeight;
                 #endregion
                 statsTotal.AddSpecialEffect(_SE_DeathPact);
                 // For now we just factor them in once.
-                Rawr.DPSDK.StatsSpecialEffects sse = new Rawr.DPSDK.StatsSpecialEffects(rot.m_CT, rot, TDK.bo);
-                Stats statSE = new Stats();
-                Stats statOnUse = new Stats();
-                foreach (SpecialEffect e in statsTotal.SpecialEffects())
+                Rawr.DPSDK.StatsSpecialEffects se = new Rawr.DPSDK.StatsSpecialEffects(rot.m_CT, rot, TDK.bo);
+                StatsDK statSE = new StatsDK();
+
+                foreach (SpecialEffect effect in statsTotal.SpecialEffects())
                 {
-                    // We want the Special Effects that are OnUse to be separate 
-                    // so they can be factored into Burst subvalue.
-                    if (e.Trigger == Trigger.Use)
+                    if (HasRelevantStats(effect.Stats))
                     {
-                        // There are some multi-level special effects that need to be factored in.
-                        foreach (SpecialEffect ee in e.Stats.SpecialEffects())
-                        {
-                            e.Stats = sse.getSpecialEffects(ee);
-                        }
-                        // Only add in the OnUse triggers when we're trying to get our max stats.
-                        if (sType == StatType.Maximum)
-                            statSE.Accumulate(sse.getSpecialEffects(e));
-                    }
-                    else
-                    {
-                        // There are some multi-level special effects that need to be factored in.
-                        foreach (SpecialEffect ee in e.Stats.SpecialEffects())
-                        {
-                            e.Stats = sse.getSpecialEffects(ee);
-                        }
-                        statSE.Accumulate(sse.getSpecialEffects(e));
+                        statSE = se.getSpecialEffects(effect);
+                        statsTotal.Accumulate(statSE);
                     }
                 }
+
                 // Darkmoon card greatness procs
                 if (statSE.HighestStat > 0 || statSE.Paragon > 0)
                 {

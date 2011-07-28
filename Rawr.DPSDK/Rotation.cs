@@ -1460,10 +1460,13 @@ namespace Rawr.DK
             if (m_CT.m_CState.m_Talents.RunicCorruption > 0)
             {
                 RCRegenDur = Count(DKability.DeathCoil) * 3 * 1000;
-                RCHaste = (m_CT.m_CState.m_Talents.RunicCorruption * .5f);
-                float RCPpct = RCRegenDur / (Math.Min (GCDTime, RCRegenDur));
-                RCHaste *= RCPpct * m_CT.m_Opts.EffectiveRE;
-                m_BonusRunicCorruptionHaste = RCHaste;
+                if (RCRegenDur > 0)
+                {
+                    RCHaste = (m_CT.m_CState.m_Talents.RunicCorruption * .5f);
+                    float RCPpct = RCRegenDur / (GCDTime > 0 ? (Math.Min(GCDTime, RCRegenDur)) : RCRegenDur);
+                    RCHaste *= RCPpct * m_CT.m_Opts.EffectiveRE;
+                    m_BonusRunicCorruptionHaste = RCHaste;
+                }
             }
             #endregion
             // spend the death runes available:

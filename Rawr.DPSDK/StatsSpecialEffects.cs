@@ -80,25 +80,34 @@ namespace Rawr.DPSDK
             fSpellHitInterval = 1f / m_Rot.getSpellSpecialsPerSecond();
             float fSpellHitChance = 0;
             float fSpellCritChance = 0;
-            try
+            switch (m_Rot.curRotationType)
             {
-                // Unholy
-                fSpellHitChance = m_Rot.GetAbilityOfType(DKability.DeathCoil).HitChance;
-                fSpellCritChance = m_Rot.GetAbilityOfType(DKability.DeathCoil).CritChance;
-            }
-            catch
-            {
-                try
+                case Rotation.Type.Unholy:
                 {
-                    // Frost
-                    fSpellHitChance = m_Rot.GetAbilityOfType(DKability.HowlingBlast).HitChance;
-                    fSpellCritChance = m_Rot.GetAbilityOfType(DKability.HowlingBlast).CritChance;
+                    // Unholy
+                    fSpellHitChance = m_Rot.GetAbilityOfType(DKability.DeathCoil).HitChance;
+                    fSpellCritChance = m_Rot.GetAbilityOfType(DKability.DeathCoil).CritChance;
+                    break;
                 }
-                catch
+                case Rotation.Type.Frost:
                 {
-                    // Blood
+                    if (m_Rot.Contains(DKability.HowlingBlast))
+                    {
+                        fSpellHitChance = m_Rot.GetAbilityOfType(DKability.HowlingBlast).HitChance;
+                        fSpellCritChance = m_Rot.GetAbilityOfType(DKability.HowlingBlast).CritChance;
+                    }
+                    else
+                    {
+                        fSpellHitChance = m_Rot.GetAbilityOfType(DKability.IcyTouch).HitChance;
+                        fSpellCritChance = m_Rot.GetAbilityOfType(DKability.IcyTouch).CritChance;
+                    }
+                    break;
+                }
+                case Rotation.Type.Blood:
+                {
                     fSpellHitChance = m_Rot.GetAbilityOfType(DKability.IcyTouch).HitChance;
                     fSpellCritChance = m_Rot.GetAbilityOfType(DKability.IcyTouch).CritChance;
+                    break;
                 }
             }
             triggerIntervals.Add(Trigger.DamageSpellCast, fSpellHitInterval);
@@ -118,30 +127,62 @@ namespace Rawr.DPSDK
             #endregion
 
             #region Specific Strikes
-            triggerIntervals.Add(Trigger.BloodStrikeHit, m_Rot.CurRotationDuration / (m_Rot.CountTrigger(Trigger.BloodStrikeHit) * (combatTable.DW ? 2f : 1f)));
-            try { triggerChances.Add(Trigger.BloodStrikeHit, m_Rot.GetAbilityOfType(DKability.BloodStrike).HitChance); }
-            catch { }
-            triggerIntervals.Add(Trigger.HeartStrikeHit, m_Rot.CurRotationDuration / m_Rot.CountTrigger(Trigger.HeartStrikeHit));
-            try { triggerChances.Add(Trigger.HeartStrikeHit, m_Rot.GetAbilityOfType(DKability.HeartStrike).HitChance); }
-            catch { }
-            triggerIntervals.Add(Trigger.ObliterateHit, m_Rot.CurRotationDuration / (m_Rot.CountTrigger(Trigger.ObliterateHit) * (combatTable.DW ? 2f : 1f)));
-            try { triggerChances.Add(Trigger.ObliterateHit, m_Rot.GetAbilityOfType(DKability.Obliterate).HitChance);}
-            catch { }
-            triggerIntervals.Add(Trigger.ScourgeStrikeHit, m_Rot.CurRotationDuration / (m_Rot.CountTrigger(Trigger.ScourgeStrikeHit) * (combatTable.DW ? 2f : 1f)));
-            try { triggerChances.Add(Trigger.ScourgeStrikeHit, m_Rot.GetAbilityOfType(DKability.ScourgeStrike).HitChance);}
-            catch { }
-            triggerIntervals.Add(Trigger.DeathStrikeHit, m_Rot.CurRotationDuration / (m_Rot.CountTrigger(Trigger.DeathStrikeHit) * (combatTable.DW ? 2f : 1f)));
-            try { triggerChances.Add(Trigger.DeathStrikeHit, m_Rot.GetAbilityOfType(DKability.DeathStrike).HitChance);}
-            catch { }
-            triggerIntervals.Add(Trigger.PlagueStrikeHit, m_Rot.CurRotationDuration / (m_Rot.CountTrigger(Trigger.PlagueStrikeHit) * (combatTable.DW ? 2f : 1f)));
-            try { triggerChances.Add(Trigger.PlagueStrikeHit, m_Rot.GetAbilityOfType(DKability.PlagueStrike).HitChance);}
-            catch { }
-            triggerIntervals.Add(Trigger.IcyTouchHit, m_Rot.CurRotationDuration / (m_Rot.CountTrigger(Trigger.IcyTouchHit) * (combatTable.DW ? 2f : 1f)));
-            try { triggerChances.Add(Trigger.IcyTouchHit, m_Rot.GetAbilityOfType(DKability.IcyTouch).HitChance);}
-            catch { }
-            triggerIntervals.Add(Trigger.RuneStrikeHit, m_Rot.CurRotationDuration / (m_Rot.CountTrigger(Trigger.RuneStrikeHit) * (combatTable.DW ? 2f : 1f)));
-            try { triggerChances.Add(Trigger.RuneStrikeHit, m_Rot.GetAbilityOfType(DKability.RuneStrike).HitChance); }
-            catch { }
+//            triggerIntervals.Add(Trigger.BloodStrikeHit, 0);
+//            triggerChances.Add(Trigger.BloodStrikeHit, 0);
+            if (m_Rot.HasTrigger(Trigger.BloodStrikeHit))
+            {
+                triggerIntervals.Add(Trigger.BloodStrikeHit, m_Rot.CurRotationDuration / (m_Rot.CountTrigger(Trigger.BloodStrikeHit) * (combatTable.DW ? 2f : 1f)));
+                triggerChances.Add(Trigger.BloodStrikeHit, m_Rot.GetAbilityOfType(DKability.BloodStrike).HitChance);
+            }
+//            triggerIntervals.Add(Trigger.HeartStrikeHit, 0);
+//            triggerChances.Add(Trigger.HeartStrikeHit, 0);
+            if (m_Rot.HasTrigger(Trigger.HeartStrikeHit))
+            {
+                triggerIntervals.Add(Trigger.HeartStrikeHit, m_Rot.CurRotationDuration / m_Rot.CountTrigger(Trigger.HeartStrikeHit));
+                triggerChances.Add(Trigger.HeartStrikeHit, m_Rot.GetAbilityOfType(DKability.HeartStrike).HitChance); 
+            }
+//            triggerIntervals.Add(Trigger.ObliterateHit, 0);
+//            triggerChances.Add(Trigger.ObliterateHit, 0);
+            if (m_Rot.HasTrigger(Trigger.ObliterateHit))
+            {
+                triggerIntervals.Add(Trigger.ObliterateHit, m_Rot.CurRotationDuration / (m_Rot.CountTrigger(Trigger.ObliterateHit) * (combatTable.DW ? 2f : 1f)));
+                triggerChances.Add(Trigger.ObliterateHit, m_Rot.GetAbilityOfType(DKability.Obliterate).HitChance);
+            }
+//            triggerIntervals.Add(Trigger.ScourgeStrikeHit, 0);
+//            triggerChances.Add(Trigger.ScourgeStrikeHit, 0);
+            if (m_Rot.HasTrigger(Trigger.ScourgeStrikeHit))
+            {
+                triggerIntervals.Add(Trigger.ScourgeStrikeHit, m_Rot.CurRotationDuration / (m_Rot.CountTrigger(Trigger.ScourgeStrikeHit) * (combatTable.DW ? 2f : 1f)));
+                triggerChances.Add(Trigger.ScourgeStrikeHit, m_Rot.GetAbilityOfType(DKability.ScourgeStrike).HitChance);
+            }
+//            triggerIntervals.Add(Trigger.DeathStrikeHit, 0);
+//            triggerChances.Add(Trigger.DeathStrikeHit, 0);
+            if (m_Rot.HasTrigger(Trigger.DeathStrikeHit))
+            {
+                triggerIntervals.Add(Trigger.DeathStrikeHit, m_Rot.CurRotationDuration / (m_Rot.CountTrigger(Trigger.DeathStrikeHit) * (combatTable.DW ? 2f : 1f)));
+                triggerChances.Add(Trigger.DeathStrikeHit, m_Rot.GetAbilityOfType(DKability.DeathStrike).HitChance);
+            }
+//            triggerIntervals.Add(Trigger.PlagueStrikeHit, 0);
+//            triggerChances.Add(Trigger.PlagueStrikeHit, 0);
+            if (m_Rot.HasTrigger(Trigger.PlagueStrikeHit))
+            {
+                triggerIntervals.Add(Trigger.PlagueStrikeHit, m_Rot.CurRotationDuration / (m_Rot.CountTrigger(Trigger.PlagueStrikeHit) * (combatTable.DW ? 2f : 1f)));
+                triggerChances.Add(Trigger.PlagueStrikeHit, m_Rot.GetAbilityOfType(DKability.PlagueStrike).HitChance);
+            }
+//            triggerIntervals.Add(Trigger.IcyTouchHit, 0);
+//            triggerChances.Add(Trigger.IcyTouchHit, 0);
+            if (m_Rot.HasTrigger(Trigger.IcyTouchHit))
+            {
+                triggerIntervals.Add(Trigger.IcyTouchHit, m_Rot.CurRotationDuration / (m_Rot.CountTrigger(Trigger.IcyTouchHit) * (combatTable.DW ? 2f : 1f)));
+                triggerChances.Add(Trigger.IcyTouchHit, m_Rot.GetAbilityOfType(DKability.IcyTouch).HitChance);
+            }
+//            triggerIntervals.Add(Trigger.RuneStrikeHit, 0);
+//            triggerChances.Add(Trigger.RuneStrikeHit, 0);
+            if (m_Rot.HasTrigger(Trigger.RuneStrikeHit))
+            {
+                triggerIntervals.Add(Trigger.RuneStrikeHit, m_Rot.CurRotationDuration / (m_Rot.CountTrigger(Trigger.RuneStrikeHit) * (combatTable.DW ? 2f : 1f)));
+                triggerChances.Add(Trigger.RuneStrikeHit, m_Rot.GetAbilityOfType(DKability.RuneStrike).HitChance); 
+            }
             #endregion
 
             #region Misc Offensive
@@ -182,7 +223,6 @@ namespace Rawr.DPSDK
 
 
             #endregion
-
         }
 
 
