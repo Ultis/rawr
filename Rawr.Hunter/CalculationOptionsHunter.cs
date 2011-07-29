@@ -219,7 +219,6 @@ namespace Rawr.Hunter
             get { return _SelectedArmoryPet; }
             set { _SelectedArmoryPet = value; OnPropertyChanged("SelectedArmoryPet"); }
         }
-#if RAWR3 || RAWR4 || SILVERLIGHT
         [XmlIgnore]
         private PetTalents _PetTalents;
         public PetTalents PetTalents
@@ -227,15 +226,6 @@ namespace Rawr.Hunter
             get { return _PetTalents ?? (_PetTalents = new PetTalents()); }
             set { _PetTalents = value; OnPropertyChanged("PetTalents"); }
         }
-#else
-        [XmlIgnore]
-        private PetTalentTreeData _PetTalents;
-        [XmlIgnore]
-        public PetTalentTreeData PetTalents {
-            get { return _PetTalents ?? (_PetTalents = new PetTalentTreeData()); }
-            set { _PetTalents = value; OnPropertyChanged("PetTalents"); }
-        }
-#endif
         private string _petTalents;
         public string petTalents {
             get {
@@ -244,10 +234,15 @@ namespace Rawr.Hunter
             }
             set { _petTalents = value; }
         }
-        private PETFAMILY _petFamily = PETFAMILY.Cat;
         public PETFAMILY PetFamily {
-            get { return _petFamily; }
-            set { _petFamily = value; OnPropertyChanged("ArmoryPet.PETFAMILY"); }
+            get { return _Pet.FamilyID; }
+            set { _Pet.FamilyID = value; OnPropertyChanged("PetFamily"); }
+        }
+        private ArmoryPet _Pet = new ArmoryPet() { Family = "Cat" };
+        public ArmoryPet Pet
+        {
+            get { return _Pet; }
+            set { _Pet = value; OnPropertyChanged("Pet"); }
         }
         #region Skill Priorities
         public PetAttacks _PetPriority1 = PetAttacks.Growl;

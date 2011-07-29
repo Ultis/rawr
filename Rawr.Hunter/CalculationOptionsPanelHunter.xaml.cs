@@ -982,7 +982,7 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             // only Cat and SpiritBeast currently have a #5!
             //
 
-            switch (CalcOpts.PetFamily)
+            switch (CalcOpts.Pet.FamilyID)
             {
                 case PETFAMILY.Bat:         familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dive, PetAttacks.None, PetAttacks.SonicBlast }; break;
                 case PETFAMILY.Bear:        familyList = new PetAttacks[] { PetAttacks.Claw, PetAttacks.None, PetAttacks.Charge, PetAttacks.Swipe }; break;
@@ -1039,26 +1039,33 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                     }
                 }
 
-                PETFAMILYTREE family = getPetFamilyTree();
+                switch (CalcOpts.Pet.FamilyTree)
+                {
+                    case PETFAMILYTREE.Cunning:
+                        {
+                            //toPost.Add(PetAttacks.RoarOfRecovery);
+                            toPost.Add(PetAttacks.RoarOfSacrifice);
+                            toPost.Add(PetAttacks.WolverineBite);
+                            //toPost.Add(PetAttacks.Bullheaded);
+                            break;
+                        }
 
-                if (family == PETFAMILYTREE.Cunning) {
-                    //toPost.Add(PetAttacks.RoarOfRecovery);
-                    toPost.Add(PetAttacks.RoarOfSacrifice);
-                    toPost.Add(PetAttacks.WolverineBite);
-                    //toPost.Add(PetAttacks.Bullheaded);
-                }
+                    case PETFAMILYTREE.Ferocity:
+                        {
+                            toPost.Add(PetAttacks.LickYourWounds);
+                            //toPost.Add(PetAttacks.CallOfTheWild);
+                            //toPost.Add(PetAttacks.Rabid);
+                            break;
+                        }
 
-                if (family == PETFAMILYTREE.Ferocity) {
-                    toPost.Add(PetAttacks.LickYourWounds);
-                    //toPost.Add(PetAttacks.CallOfTheWild);
-                    //toPost.Add(PetAttacks.Rabid);
-                }
-
-                if (family == PETFAMILYTREE.Tenacity) {
-                    toPost.Add(PetAttacks.Thunderstomp);
-                    toPost.Add(PetAttacks.LastStand);
-                    toPost.Add(PetAttacks.Taunt);
-                    toPost.Add(PetAttacks.RoarOfSacrifice);
+                    case PETFAMILYTREE.Tenacity:
+                        {
+                            toPost.Add(PetAttacks.Thunderstomp);
+                            toPost.Add(PetAttacks.LastStand);
+                            toPost.Add(PetAttacks.Taunt);
+                            toPost.Add(PetAttacks.RoarOfSacrifice);
+                            break;
+                        }
                 }
             }
 
@@ -1088,25 +1095,23 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
         private void CB_PetFamily_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
         {
             if (_loadingCalculationOptions) updateTalentDisplay();
-
-            if (!_loadingCalculationOptions && CB_PetFamily.SelectedItem != null)
+            else
             {
-                PopulatePetAbilities();
-                updateTalentDisplay();
-                resetTalents();
-                _loadingCalculationOptions = false; // force it
-                Character.OnCalculationsInvalidated();
+                if (CB_PetFamily.SelectedItem != null)
+                {
+                    PopulatePetAbilities();
+                    updateTalentDisplay();
+                    resetTalents();
+                    _loadingCalculationOptions = false; // force it
+                    Character.OnCalculationsInvalidated();
+                }
             }
         }
-        private PETFAMILYTREE getPetFamilyTree()
-        {
-            if (CB_PetFamily.SelectedItem == null) return PETFAMILYTREE.None;
-            return ArmoryPet.FamilyToTree[(PETFAMILY)CB_PetFamily.SelectedItem];
-        }
+
         private void updateTalentDisplay() { if (CalcOpts != null) updateTalentDisplay(CalcOpts.PetTalents); } // this can get called before Character is set while loading xaml
         private void updateTalentDisplay(PetTalents newtalents)
         {
-            PETFAMILYTREE tree = getPetFamilyTree();
+            PETFAMILYTREE tree = CalcOpts.Pet.FamilyTree;
             //if (newtalents != CalcOpts.PetTalents) {
                 ThePetTalentPicker.Tree1.Talents = newtalents;
                 ThePetTalentPicker.Tree2.Talents = newtalents;

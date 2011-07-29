@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,27 +10,10 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Windows.Data;
-using System.Globalization;
 using System.Collections.Generic;
 
-namespace Rawr.Hunter
+namespace Rawr.UI
 {
-    public class PercentConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (targetType == typeof(float)) return System.Convert.ToSingle(value) * 100.0f;
-            if (targetType == typeof(double)) return System.Convert.ToDouble(value) * 100.0d;
-            return System.Convert.ToDouble(value) * 100.0d;
-        }
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (targetType == typeof(float)) return System.Convert.ToSingle(value) / 100f;
-            if (targetType == typeof(double)) return System.Convert.ToDouble(value) / 100d;
-            return System.Convert.ToDouble(value) / 100d;
-        }
-    }
-    
     // Code inspired by http://charlass.wordpress.com/2009/07/29/binding-enums-to-a-combobbox-in-silverlight/
     /// <summary>
     /// Caches the "enum objects" for the lifetime of the application.

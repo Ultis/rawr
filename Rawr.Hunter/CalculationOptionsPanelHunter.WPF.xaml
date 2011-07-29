@@ -18,6 +18,7 @@
     <UserControl.Resources>
         <local:CalculationOptionsHunter x:Key="CalculationOptionsHunterDataSource" d:IsDataSource="True"/>
         <local:PercentConverter x:Key="PercentConverter" />
+        <local:EnumValuesConverter x:Key="enumConverter"/>
         <Rawr:PETFAMILY x:Key="PetFamily"/>
     </UserControl.Resources>
 
@@ -180,44 +181,15 @@
                                     <System:String>No Armory Pets Loaded</System:String>
                                 </ComboBox>
                                 <dataInput:Label x:Name="LB_PetFamilies" Content="Pet Family:" Grid.Row="1" Margin="4,2" />
+<!--
                                 <ComboBox x:Name="CB_PetFamily" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="4,2" ItemsSource="{Binding Source={StaticResource PetFamily}}" 
                   SelectedValue="{Binding Source={StaticResource PetFamily}, Path=[0]}" SelectionChanged="CB_PetFamily_SelectedIndexChanged"/>
-
-<!--                                <ComboBox x:Name="CB_PetFamily" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="4,2" SelectedItem="{Binding Path=Rawr:ArmoryPet.FAMILY, Mode=TwoWay}" SelectionChanged="CB_PetFamily_SelectedIndexChanged">
-                                    <local:ArmoryPet.FAMILY>None</local:ArmoryPet.FAMILY>
-                                    <local:ArmoryPet.FAMILY>Bat</local:ArmoryPet.FAMILY>
-                                    <local:ArmoryPet.FAMILY>Bear</local:ArmoryPet.FAMILY>
-                                    <local:ArmoryPet.FAMILY>BirdOfPrey</local:ArmoryPet.FAMILY>
-                                    <local:ArmoryPet.FAMILY>Boar</local:ArmoryPet.FAMILY>
-                                    <local:ArmoryPet.FAMILY>CarrionBird</local:ArmoryPet.FAMILY>
-                                    <local:ArmoryPet.FAMILY>Cat</local:ArmoryPet.FAMILY>
-                                    <local:ArmoryPet.FAMILY>Chimaera</local:ArmoryPet.FAMILY>
-                                    <local:ArmoryPet.FAMILY>CoreHound</local:ArmoryPet.FAMILY>
-                                    <local:ArmoryPet.FAMILY>Crab</local:ArmoryPet.FAMILY>
-                                    <local:ArmoryPet.FAMILY>Crocolisk</local:ArmoryPet.FAMILY>
-                                    <local:ArmoryPet.FAMILY>Devilsaur</local:ArmoryPet.FAMILY>
-                                    <local:ArmoryPet.FAMILY>Dragonhawk</local:ArmoryPet.FAMILY>
-                                    <local:ArmoryPet.FAMILY>Gorilla</local:ArmoryPet.FAMILY>
-                                    <local:ArmoryPet.FAMILY>Hyena</local:ArmoryPet.FAMILY>
-                                    <local:ArmoryPet.FAMILY>Moth</local:ArmoryPet.FAMILY>
-                                    <local:ArmoryPet.FAMILY>NetherRay</local:ArmoryPet.FAMILY>
-                                    <local:ArmoryPet.FAMILY>Raptor</local:ArmoryPet.FAMILY>
-                                    <local:ArmoryPet.FAMILY>Ravager</local:ArmoryPet.FAMILY>
-                                    <local:ArmoryPet.FAMILY>Rhino</local:ArmoryPet.FAMILY>
-                                    <local:ArmoryPet.FAMILY>Scorpid</local:ArmoryPet.FAMILY>
-                                    <local:ArmoryPet.FAMILY>Serpent</local:ArmoryPet.FAMILY>
-                                    <local:ArmoryPet.FAMILY>Silithid</local:ArmoryPet.FAMILY>
-                                    <local:ArmoryPet.FAMILY>Spider</local:ArmoryPet.FAMILY>
-                                    <local:ArmoryPet.FAMILY>SpiritBeast</local:ArmoryPet.FAMILY>
-                                    <local:ArmoryPet.FAMILY>SporeBat</local:ArmoryPet.FAMILY>
-                                    <local:ArmoryPet.FAMILY>Tallstrider</local:ArmoryPet.FAMILY>
-                                    <local:ArmoryPet.FAMILY>Turtle</local:ArmoryPet.FAMILY>
-                                    <local:ArmoryPet.FAMILY>WarpStalker</local:ArmoryPet.FAMILY>
-                                    <local:ArmoryPet.FAMILY>Wasp</local:ArmoryPet.FAMILY>
-                                    <local:ArmoryPet.FAMILY>WindSerpent</local:ArmoryPet.FAMILY>
-                                    <local:ArmoryPet.FAMILY>Wolf</local:ArmoryPet.FAMILY>
-                                    <local:ArmoryPet.FAMILY>Worm</local:ArmoryPet.FAMILY>
-                                </ComboBox>-->
+-->
+                                <ComboBox x:Name="CB_PetFamily" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="4,2" 
+                                    ItemsSource="{Binding Path=PetFamily, Mode=OneTime, Converter={StaticResource enumConverter}}" 
+                                    SelectedItem="{Binding Path=PetFamily, Mode=TwoWay}"
+                                    SelectionChanged="CB_PetFamily_SelectedIndexChanged">
+                                </ComboBox>
                                 <local:PetTalentPicker x:Name="ThePetTalentPicker" Grid.Row="3" Grid.ColumnSpan="3"/>
                             </Grid>
                         </controls:TabItem>

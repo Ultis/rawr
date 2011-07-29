@@ -167,6 +167,7 @@
       <DependentUpon>RawrAddonSaveDialog.WPF.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\EnchantConverter.cs" />
+    <Compile Include="Converters\EnumConverter.cs" />
     <Compile Include="Converters\FactionConverter.cs" />
     <Compile Include="Converters\GemConverter.cs" />
     <Compile Include="Converters\IconPathConverter.cs" />
