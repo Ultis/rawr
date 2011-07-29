@@ -38,7 +38,7 @@ namespace Rawr.Moonkin
                         (effect.Stats.NatureDamage > 0 ? c.BasicStats.BonusNatureDamageMultiplier : 0) +
                         (effect.Stats.HolyDamage > 0 ? c.BasicStats.BonusHolyDamageMultiplier : 0) +
                         (effect.Stats.ArcaneDamage > 0 ? c.BasicStats.BonusArcaneDamageMultiplier : 0);
-                    float specialDamageModifier = (1 + c.BasicStats.BonusSpellPowerMultiplier) * (1 + c.BasicStats.BonusDamageMultiplier) * schoolModifier;
+                    float specialDamageModifier = schoolModifier;
                     float baseValue = e.Stats.ShadowDamage + e.Stats.FireDamage + e.Stats.FrostDamage + e.Stats.NatureDamage + e.Stats.HolyDamage + e.Stats.ArcaneDamage + e.Stats.HolySummonedDamage;
                     float triggerInterval = 0.0f, triggerChance = 1.0f;
                     switch (e.Trigger)

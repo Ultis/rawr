@@ -1001,15 +1001,13 @@ namespace Rawr.Moonkin
             #endregion
 
             // Talented bonus multipliers
-            Stats statsTalents = new Stats()
+            Stats statsTalents = new StatsMoonkin()
             {
                 BonusIntellectMultiplier = (1 + 0.02f * character.DruidTalents.HeartOfTheWild) * (Character.ValidateArmorSpecialization(character, ItemType.Leather) ? 1.05f : 1f) - 1f,
                 BonusManaMultiplier = 0.05f * character.DruidTalents.Furor,
-                BonusSpellPowerMultiplier = (1 + 0.01f * character.DruidTalents.BalanceOfPower) * (1 + 0.02f * character.DruidTalents.EarthAndMoon) *
+                BonusSpellPowerMultiplier = 1.1f * (1 + 0.01f * character.DruidTalents.BalanceOfPower) * (1 + 0.02f * character.DruidTalents.EarthAndMoon) *
                                             (1 + 0.01f * character.DruidTalents.MoonkinForm) *
                                             (1 + (character.DruidTalents.MoonkinForm > 0 ? 0.04f * character.DruidTalents.MasterShapeshifter : 0.0f)) - 1,
-                BonusArcaneDamageMultiplier = 0.1f,
-                BonusNatureDamageMultiplier = 0.1f
             };
 
             statsTotal.Accumulate(statsTalents);
