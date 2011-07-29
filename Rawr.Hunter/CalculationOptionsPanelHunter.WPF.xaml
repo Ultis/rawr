@@ -18,12 +18,7 @@
     <UserControl.Resources>
         <local:CalculationOptionsHunter x:Key="CalculationOptionsHunterDataSource" d:IsDataSource="True"/>
         <local:PercentConverter x:Key="PercentConverter" />
-        <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type System:Enum}" x:Key="PossibleValuesFamily">
-            <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="Rawr:PETFAMILY"/>
-            </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>
-
+        <Rawr:PETFAMILY x:Key="PetFamily"/>
     </UserControl.Resources>
 
 
@@ -185,8 +180,8 @@
                                     <System:String>No Armory Pets Loaded</System:String>
                                 </ComboBox>
                                 <dataInput:Label x:Name="LB_PetFamilies" Content="Pet Family:" Grid.Row="1" Margin="4,2" />
-                                <ComboBox x:Name="CB_PetFamily" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="4,2" ItemsSource="{Binding Source={StaticResource PossibleValuesFamily}}" 
-                  SelectedValue="{Binding Source={StaticResource PossibleValuesFamily}, Path=[0]}" SelectionChanged="CB_PetFamily_SelectedIndexChanged"/>
+                                <ComboBox x:Name="CB_PetFamily" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="4,2" ItemsSource="{Binding Source={StaticResource PetFamily}}" 
+                  SelectedValue="{Binding Source={StaticResource PetFamily}, Path=[0]}" SelectionChanged="CB_PetFamily_SelectedIndexChanged"/>
 
 <!--                                <ComboBox x:Name="CB_PetFamily" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="4,2" SelectedItem="{Binding Path=Rawr:ArmoryPet.FAMILY, Mode=TwoWay}" SelectionChanged="CB_PetFamily_SelectedIndexChanged">
                                     <local:ArmoryPet.FAMILY>None</local:ArmoryPet.FAMILY>

@@ -160,6 +160,38 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes()
         {
+#region Rawr 4.2.3 (July 29, 2011) [r62241]
+VNStuff.Add("Rawr 4.2.3 (July 29, 2011) [r62241]",
+@"Cataclysm Release
+
+Rawr.BossHandler:
+- Updated with Heroic Baleroc and Domo health nerfs and updated Heroic Rag 25 health pool 
+
+Rawr.Elemental:
+- Updated hotfix to Lightning Bolt, Chain Lightning and Lava Burst's Spell Power bonus from Shamanism 
+
+Rawr.Mage:
+- Moonwell Chalice hotfix. 
+- Arcane cycle solver support for delayed AM proc from nether vortex
+
+Rawr.Retribution:
+- Changed Goak to static SpecialEffect
+- PVP Set Bonus adapted
+- CrusaderStrike Cooldown decreases now with Spellhaste and not Physicalhaste 
+- More work on the Rotation 
+
+Rawr.ProtWarr:
+- Combat Table Coverage Ranking mode
+
+Rawr.TankDK:
+- Adjustment for Vengeance calcs by player role. 
+- Hanging on imports, so hopefully this resolves that issue. 
+
+Rawr.Moonkin:
+- Change usage of BonusNature/ArcangeDamageMultiplier to be specifically for the debuff on target, enabling more accurate representation of damage procs.
+- Change damage proc effects to only benefit from magic damage multiplier on target, and not on self-buffs. 
+");
+#endregion
 #region Rawr 4.2.2 (July 24, 2011) [r62174]
 VNStuff.Add("Rawr 4.2.2 (July 24, 2011) [r62174]",
 @"Cataclysm Release
