@@ -20,7 +20,13 @@ namespace Rawr.Hunter
         PetSpirit,
         /// <summary>Pet Attack Power</summary>
         PetAttackPower,
-     }
+        /// <summary>Bonus Critical Strike Chance on Serpent Sting</summary>
+        BonusSerpentStingCritChance,
+        /// <summary>Reduces the cast time of your Steady Shot and Cobra Shot by 0.2 sec.</summary>
+        FourPieceTier11,
+        /// <summary>You have a 10% chance from your autoshots to make your next shot or Kill Command cost no focus.</summary>
+        FourPieceTier12,
+    }
     /// <summary>List of Hunter stats that are Multiplicative</summary>
     public enum MultiplicativeStatHunter : int
     {
@@ -28,7 +34,11 @@ namespace Rawr.Hunter
         BonusRangedAttackPowerMultiplier,
         /// <summary>Bonus Pet Attack Power Multiplier</summary>
         BonusPetAttackPowerMultiplier,
-   }
+        /// <summary>Bonus Focus Regeneration Multiplier</summary>
+        BonusFocusRegenMultiplier,
+        /// <summary>Your Steady Shot and Cobra Shot have a 10% chance to trigger a Flaming Arrow, dealing 80% instant weapon damage as Fire.</summary>
+        BonusFireWeaponDamage,
+    }
     /// <summary>List of Hunter stats that are Inverse Multiplicative</summary>
     public enum InverseMultiplicativeStatHunter : int { }
     /// <summary>List of Hunter stats that do not Stack</summary>
@@ -576,6 +586,34 @@ namespace Rawr.Hunter
             get { return _rawAdditiveHunterData[(int)AdditiveStatHunter.PetAttackPower]; }
             set { _rawAdditiveHunterData[(int)AdditiveStatHunter.PetAttackPower] = value; }
         }
+        /// <summary>Bonus Critical Strike Chance on Serpent Sting</summary>
+        [DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Bonus Serpent Sting Crit Chance")]
+        [Category("Hunter")]
+        public float BonusSerpentStingCritChance
+        {
+            get { return _rawAdditiveHunterData[(int)AdditiveStatHunter.BonusSerpentStingCritChance]; }
+            set { _rawAdditiveHunterData[(int)AdditiveStatHunter.BonusSerpentStingCritChance] = value; }
+        }
+        /// <summary>Reduces the cast time of your Steady Shot and Cobra Shot by 0.2 sec.</summary>
+        [DefaultValueAttribute(0f)]
+        [DisplayName("Hunter 4-Piece Tier 11")]
+        [Category("Hunter")]
+        public float FourPieceTier11
+        {
+            get { return _rawAdditiveHunterData[(int)AdditiveStatHunter.FourPieceTier11]; }
+            set { _rawAdditiveHunterData[(int)AdditiveStatHunter.FourPieceTier11] = value; }
+        }
+        /// <summary>You have a 10% chance from your autoshots to make your next shot or Kill Command cost no focus.</summary>
+        [DefaultValueAttribute(0f)]
+        [DisplayName("Hunter 4-Piece Tier 12")]
+        [Category("Hunter")]
+        public float FourPieceTier12
+        {
+            get { return _rawAdditiveHunterData[(int)AdditiveStatHunter.FourPieceTier12]; }
+            set { _rawAdditiveHunterData[(int)AdditiveStatHunter.FourPieceTier12] = value; }
+        }
         #endregion
 
         #region ===== Multiplicative Stats ============
@@ -599,41 +637,26 @@ namespace Rawr.Hunter
             get { return _rawAdditiveHunterData[(int)MultiplicativeStatHunter.BonusPetAttackPowerMultiplier]; }
             set { _rawAdditiveHunterData[(int)MultiplicativeStatHunter.BonusPetAttackPowerMultiplier] = value; }
         }
-        #endregion
-
-        #region Set Bonuses
-        public bool Gladiator_2pc { get; set; }
-        public bool Gladiator_4pc { get; set; }
-
-        public bool Tier_11_2pc { get; set; }
-        public bool Tier_11_4pc { get; set; }
-
-        public bool Tier_12_2pc { get; set; }
-        public bool Tier_12_4pc { get; set; }
-        #endregion
-
-        public void SetSets(Character character)
+        /// <summary>Bonus Pet Attack Power Multiplier</summary>
+        [DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Bonus Focus Regen")]
+        [Category("Hunter")]
+        public float BonusFocusRegenMultiplier
         {
-            int TCount;
-            // Gladiator
-            character.SetBonusCount.TryGetValue("Gladiator's Pursuit", out TCount);
-            if (TCount >= 2) { Gladiator_2pc = true; }
-            if (TCount >= 4) { Gladiator_4pc = true; }
-
-            //T11
-            character.SetBonusCount.TryGetValue("Lightning-Charged Battlegear", out TCount);
-            if (TCount >= 2) { Tier_11_2pc = true; }
-            if (TCount >= 4) { Tier_11_4pc = true; }
-
-            //T12
-            character.SetBonusCount.TryGetValue("Flamewaker's Battlegear", out TCount);
-            if (TCount >= 2) { Tier_12_2pc = true; }
-            if (TCount >= 4) { Tier_12_4pc = true; }
+            get { return _rawAdditiveHunterData[(int)MultiplicativeStatHunter.BonusFocusRegenMultiplier]; }
+            set { _rawAdditiveHunterData[(int)MultiplicativeStatHunter.BonusFocusRegenMultiplier] = value; }
         }
-
-        internal float[] _rawAdditiveData = new float[AdditiveStatCount];
-        internal float[] _rawMultiplicativeData = new float[MultiplicativeStatCount];
-        internal float[] _rawInverseMultiplicativeData = new float[InverseMultiplicativeStatCount];
-        internal float[] _rawNoStackData = new float[NonStackingStatCount];
+        /// <summary>Your Steady Shot and Cobra Shot have a 10% chance to trigger a Flaming Arrow, dealing 80% instant weapon damage as Fire.</summary>
+        [DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Bonus Fire Weapon Damage")]
+        [Category("Hunter")]
+        public float BonusFireWeaponDamage
+        {
+            get { return _rawAdditiveHunterData[(int)MultiplicativeStatHunter.BonusFireWeaponDamage]; }
+            set { _rawAdditiveHunterData[(int)MultiplicativeStatHunter.BonusFireWeaponDamage] = value; }
+        }
+        #endregion
     }
 }

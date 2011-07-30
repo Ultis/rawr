@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,7 +6,6 @@ namespace Rawr.Hunter
 {
     public enum Specialization
     {
-        None,
         BeastMastery,
         Marksmanship,
         Survival

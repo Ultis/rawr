@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
@@ -14,8 +14,8 @@ namespace Rawr.Hunter
         BossOptions BossOpts;
         PetTalents PetTalents;
         HunterTalents Talents;
-        Stats HunterStats;
-        public Stats PetStats;
+        StatsHunter HunterStats;
+        public StatsHunter PetStats;
         public PetSkillPriorityRotation priorityRotation;
 
         public float ferociousInspirationUptime;
@@ -31,7 +31,7 @@ namespace Rawr.Hunter
         #endregion
 
         public PetCalculations(Character character, CharacterCalculationsHunter calculatedStats, CalculationOptionsHunter calcopts, BossOptions bossOpts,
-            Stats hunterStats)
+            StatsHunter hunterStats)
         {
             this.character = character;
             this.calculatedStats = calculatedStats;
@@ -41,11 +41,11 @@ namespace Rawr.Hunter
             this.Talents = character.HunterTalents;
             this.HunterStats = hunterStats;
 
-            PetStats = new Stats();
+            PetStats = new StatsHunter();
         }
 
-        private Stats _basePetStats = null;
-        private Stats BasePetStats {
+        private StatsHunter _basePetStats = null;
+        private StatsHunter BasePetStats {
             get {
                 float _health = 0f;
                 switch (CalcOpts.PetFamily)
@@ -106,7 +106,7 @@ namespace Rawr.Hunter
                         break;
                 }
 
-                return _basePetStats ?? (_basePetStats = new Stats() {
+                return _basePetStats ?? (_basePetStats = new StatsHunter() {
                     Health = _health * (character.Race == CharacterRace.Tauren ? 1.05f : 1f),
                     PetAttackPower = 932,
                     Armor = 11092,
@@ -150,57 +150,51 @@ namespace Rawr.Hunter
             priorityRotation.calculateTimings();
         }
 
-        public Stats GetSpecialEffectsStats(Character Char,
-            float[] attemptedAtkIntervals, 
-            float[] hitRates, float[] critRates, float bleedHitInterval, float dmgDoneInterval,
-            Stats statsTotal, Stats statsToProcess)
+        public StatsHunter GetSpecialEffectsStats(Character Char, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances, float[] attemptedAtkIntervals, float[] hitRates, float[] critRates, float bleedHitInterval, float dmgDoneInterval, StatsHunter statsTotal, StatsHunter statsToProcess)
         {
-            Stats statsProcs = new Stats();
+            StatsHunter statsProcs = new StatsHunter();
             float fightDuration = BossOpts.BerserkTimer;
             float atkspeed = attemptedAtkIntervals[1];
+            StatsHunter _stats, _stats2;
             
             foreach (SpecialEffect effect in (statsToProcess != null ? statsToProcess.SpecialEffects() : statsTotal.SpecialEffects()))
             {
                 switch (effect.Trigger) {
                     case Trigger.Use:
-                        Stats _stats = new Stats();
+                        _stats = new StatsHunter();
                         if (effect.Stats._rawSpecialEffectDataSize == 1 && statsToProcess == null) {
                             float uptime = effect.GetAverageUptime(0f, 1f, atkspeed, fightDuration);
                             _stats.AddSpecialEffect(effect.Stats._rawSpecialEffectData[0]);
-                            Stats _stats2 = GetSpecialEffectsStats(Char,
-                                attemptedAtkIntervals,
-                                hitRates, critRates, bleedHitInterval, dmgDoneInterval, statsTotal, _stats);
+                            _stats2 = GetSpecialEffectsStats(Char, triggerIntervals, triggerChances, attemptedAtkIntervals, hitRates, critRates, bleedHitInterval, dmgDoneInterval, statsTotal, _stats);
                             _stats = _stats2 * uptime;
                         } else {
-                            _stats = effect.GetAverageStats(0f, 1f, atkspeed, fightDuration);
+                            _stats.Accumulate(effect.GetAverageStats(triggerIntervals, triggerChances, atkspeed, fightDuration, 1f) as StatsHunter);
                         }
-                        statsProcs += _stats;
+                        statsProcs.Accumulate(_stats);
                         break;
                     case Trigger.MeleeHit:
                     case Trigger.PhysicalHit:
                     case Trigger.PhysicalAttack:
                         if (attemptedAtkIntervals[0] > 0f) {
-                            Stats add = effect.GetAverageStats(attemptedAtkIntervals[0], hitRates[0], atkspeed, fightDuration);
-                            statsProcs += add;
+                            statsProcs.Accumulate(effect.GetAverageStats(triggerIntervals, triggerChances, atkspeed, fightDuration, 1f) as StatsHunter);
                         }
                         break;
                     case Trigger.MeleeCrit:
                     case Trigger.PhysicalCrit:
                         if (attemptedAtkIntervals[0] > 0f) {
-                            Stats add = effect.GetAverageStats(attemptedAtkIntervals[0], critRates[0], atkspeed, fightDuration);
-                            statsProcs += add;
+                            statsProcs.Accumulate(effect.GetAverageStats(triggerIntervals, triggerChances, atkspeed, fightDuration, 1f) as StatsHunter);
                         }
                         break;
                     case Trigger.DoTTick:
-                        if (bleedHitInterval > 0f) { statsProcs += effect.GetAverageStats(bleedHitInterval, 1f, atkspeed, fightDuration); } // 1/sec DeepWounds, 1/3sec Rend
+                        if (bleedHitInterval > 0f) { statsProcs.Accumulate(effect.GetAverageStats(triggerIntervals, triggerChances, atkspeed, fightDuration, 1f) as StatsHunter); } // 1/sec DeepWounds, 1/3sec Rend
                         break;
                     case Trigger.DamageDone: // physical and dots
-                        if (dmgDoneInterval > 0f) { statsProcs += effect.GetAverageStats(dmgDoneInterval, 1f, atkspeed, fightDuration); }
+                        if (dmgDoneInterval > 0f) { statsProcs.Accumulate(effect.GetAverageStats(triggerIntervals, triggerChances, atkspeed, fightDuration, 1f) as StatsHunter); }
                         break;
                     case Trigger.PetClawBiteSmackCrit:
                         if (attemptedAtkIntervals[3] > 0f) {
-                            Stats add = effect.GetAverageStats(attemptedAtkIntervals[3], critRates[1], atkspeed, fightDuration); // this needs to be fixed to read steady shot frequencies
-                            statsProcs += add;
+//                            Stats add = effect.GetAverageStats(triggerIntervals[3], critRates[1], atkspeed, fightDuration, 1f); // this needs to be fixed to read steady shot frequencies
+                            statsProcs.Accumulate(effect.GetAverageStats(triggerIntervals, triggerChances, atkspeed, fightDuration, 1f) as StatsHunter); ;
                         }
                         break;
                 }
@@ -257,9 +251,9 @@ namespace Rawr.Hunter
         {
             // Initial Variables
             int levelDiff = BossOpts.Level - character.Level;
-            Stats petStatsBase = BasePetStats;
+            StatsHunter petStatsBase = BasePetStats;
             #region From Hunter
-            Stats petStatsFromHunter = new Stats() {
+            StatsHunter petStatsFromHunter = new StatsHunter() {
                 AttackPower = (HunterStats.RangedAttackPower * 0.424f),
                 SpellPower = HunterStats.RangedAttackPower * 0.211807381f,
                 Stamina = HunterStats.Stamina,
@@ -284,12 +278,6 @@ namespace Rawr.Hunter
 //                PetAttackPower = HunterStats.PetAttackPower,
             };
             #endregion
-/*            #region From Buffs
-            Stats petStatsBuffs = StatsPetBuffs;
-            petStatsBuffs.Stamina  += petStatsBuffs.PetStamina;
-            petStatsBuffs.Strength += petStatsBuffs.PetStrength;
-            petStatsBuffs.Spirit   += petStatsBuffs.PetSpirit;
-            #endregion */
             #region From Talents (Pet or Hunter)
             Stats petStatsTalents = new Stats() {
                 BonusStaminaMultiplier = PetTalents.GreatStamina * 0.04f,
@@ -354,13 +342,16 @@ namespace Rawr.Hunter
             // Totals
 //            Stats petStatsGearEnchantsBuffs = new Stats();
 //            petStatsGearEnchantsBuffs.Accumulate(petStatsBuffs);
-            Stats petStatsTotal = new Stats();
+            StatsHunter petStatsTotal = new StatsHunter();
             petStatsTotal.Accumulate(petStatsBase);
             petStatsTotal.Accumulate(petStatsFromHunter);
 //            petStatsTotal.Accumulate(petStatsBuffs);
             petStatsTotal.Accumulate(petStatsTalents);
             petStatsTotal.Accumulate(petStatsOptionsPanel);
-            Stats petStatsProcs = new Stats();
+            StatsHunter petStatsProcs = new StatsHunter();
+
+            Dictionary<Trigger, float> triggerIntervals = new Dictionary<Trigger, float>();
+            Dictionary<Trigger, float> triggerChances = new Dictionary<Trigger, float>();
 
             #region Stamina & Health
             float totalBSTAM = petStatsTotal.BonusStaminaMultiplier;
@@ -509,8 +500,8 @@ namespace Rawr.Hunter
                 PetClawBiteSmackInterval, // ClawBiteSmack
             };
 
-            petStatsProcs += GetSpecialEffectsStats(character, AttemptedAtkIntervals, hitRates, critRates,
-                                    bleedHitInterval, dmgDoneInterval, petStatsTotal, null);
+            petStatsProcs.Accumulate(GetSpecialEffectsStats(character, triggerIntervals, triggerChances, AttemptedAtkIntervals, hitRates, critRates,
+                                    bleedHitInterval, dmgDoneInterval, petStatsTotal, null) as StatsHunter);
 
             #region Stat Results of Special Effects
             // Base Stats

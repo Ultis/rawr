@@ -41,17 +41,17 @@ namespace Rawr.Hunter
         double armorReduction;
         double talentedArmorReduction;
 
-        HunterRatings ratings;
+        //HunterRatings ratings;
 
 
         public ShotRotationCalculator(Character character, CharacterCalculationsHunter calculatedStats, CalculationOptionsHunter options, double totalStaticHaste, double effectiveRAPAgainstMob, double abilitiesCritDmgModifier, double yellowCritDmgModifier, double weaponDamageAverage, double ammoDamage, double talentModifiers)
         {
-            ratings = new HunterRatings();
+            //ratings = new HunterRatings();
 
             this.character = character;
             this.calculatedStats = calculatedStats;
             this.options = options;
-            this.hawkRAPBonus = ratings.HAWK_BONUS_AP * (1.0 + 0.5 * character.HunterTalents.AspectMastery);
+            //this.hawkRAPBonus = ratings.HAWK_BONUS_AP * (1.0 + 0.5 * character.HunterTalents.AspectMastery);
             this.totalStaticHaste = totalStaticHaste;
             this.effectiveRAPAgainstMob = effectiveRAPAgainstMob;
             this.abilitiesCritDmgModifier = abilitiesCritDmgModifier;
@@ -60,17 +60,17 @@ namespace Rawr.Hunter
             this.ammoDamage = ammoDamage;
             this.talentModifiers = talentModifiers;
 
-			int targetArmor = options.TargetArmor;
-			this.armorReduction = 1f - StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
-				calculatedStats.BasicStats.ArmorPenetration, 0f, calculatedStats.BasicStats.ArmorPenetrationRating);
+			//int targetArmor = options.TargetArmor;
+			//this.armorReduction = 1f - StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
+			//	calculatedStats.BasicStats.ArmorPenetration, 0f, calculatedStats.BasicStats.ArmorPenetrationRating);
 			//double targetArmor = (options.TargetArmor - calculatedStats.BasicStats.ArmorPenetration) * (1.0 - calculatedStats.BasicStats.ArmorPenetrationRating / (ratings.ARP_RATING_PER_PERCENT * 100.0));
             //this.armorReduction = 1.0 - (targetArmor / (467.5 * options.TargetLevel + targetArmor - 22167.5));
 
             //reducedArmor *= (1f - character.HunterTalents.PiercingShots * 0.02f);
             
-            this.talentedArmorReduction = 1f - StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
-				calculatedStats.BasicStats.ArmorPenetration, character.HunterTalents.PiercingShots * 0.02f,
-				calculatedStats.BasicStats.ArmorPenetrationRating);
+            //this.talentedArmorReduction = 1f - StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
+			//	calculatedStats.BasicStats.ArmorPenetration, character.HunterTalents.PiercingShots * 0.02f,
+			//	calculatedStats.BasicStats.ArmorPenetrationRating);
 			//this.talentedArmorReduction = 1.0 - (targetArmor / (467.5 * options.TargetLevel + targetArmor - 22167.5));
         }
 
@@ -142,6 +142,28 @@ namespace Rawr.Hunter
             return info;
         }
 
+        public RotationInfo ExpCobraSerpRotation()
+        {
+            RotationInfo info = new RotationInfo();
+
+            ShotExplosive(info);
+            ShotSerpentSting(info);
+            ShotSteady(info);
+            ShotSteady(info);
+            ShotExplosive(info);
+            ShotSteady(info);
+            ShotSteady(info);
+            ShotSteady(info);
+
+            if (info.rotationTime < 12.0)
+            {
+                info.rotationTime = 12.0;
+            }
+
+
+            return info;
+        }
+
         public RotationInfo ChimASSteadyRotation()
         {
             RotationInfo info = new RotationInfo();
@@ -180,29 +202,29 @@ namespace Rawr.Hunter
             //chimeraDmg *= this.talentedArmorReduction; // Both dmg components seem to be nature damage
 
 
-            double serpentStingDmg = (effectiveRAPAgainstMob + hawkRAPBonus) * ratings.STEADY_AP_SCALE + ratings.SERPENT_BONUS_DMG;
-            double serpentTalentModifiers = 1.0 + character.HunterTalents.ImprovedStings * 0.10;
-            serpentStingDmg *= serpentTalentModifiers;
+            //double serpentStingDmg = (effectiveRAPAgainstMob + hawkRAPBonus) * ratings.STEADY_AP_SCALE + ratings.SERPENT_BONUS_DMG;
+            //double serpentTalentModifiers = 1.0 + character.HunterTalents.ImprovedStings * 0.10;
+            //serpentStingDmg *= serpentTalentModifiers;
             
-            chimeraDmg += serpentStingDmg * 0.4;
+            //chimeraDmg += serpentStingDmg * 0.4;
             chimeraDmg *= critHitModifier * talentModifiers;
 
-            info.rotationDmg += chimeraDmg + 2.0/3.0 * serpentStingDmg * talentModifiers; // Add Serpent Sting dmg for 10 sec
+            //info.rotationDmg += chimeraDmg + 2.0/3.0 * serpentStingDmg * talentModifiers; // Add Serpent Sting dmg for 10 sec
             info.rotationTime += 1.5 + options.Latency;
 
         }
 
         protected void ShotExplosive(RotationInfo info)
         {
-            double explosiveCrit = calculatedStats.BasicStats.PhysicalCrit + 0.03 * character.HunterTalents.TNT + 0.02 * character.HunterTalents.SurvivalInstincts;
-            double critHitModifier = (explosiveCrit * abilitiesCritDmgModifier + 1.0) * calculatedStats.BasicStats.PhysicalHit;
+            //double explosiveCrit = calculatedStats.BasicStats.PhysicalCrit + 0.03 * character.HunterTalents.TNT + 0.02 * character.HunterTalents.SurvivalInstincts;
+            //double critHitModifier = (explosiveCrit * abilitiesCritDmgModifier + 1.0) * calculatedStats.BasicStats.PhysicalHit;
 
-            double explosiveShotDmg = ratings.EXPLOSIVE_AP_SCALE * (effectiveRAPAgainstMob + hawkRAPBonus) + ratings.EXPLOSIVE_BONUS_DMG;
+            //double explosiveShotDmg = ratings.EXPLOSIVE_AP_SCALE * (effectiveRAPAgainstMob + hawkRAPBonus) + ratings.EXPLOSIVE_BONUS_DMG;
 
-            explosiveShotDmg *= critHitModifier * talentModifiers;
+            //explosiveShotDmg *= critHitModifier * talentModifiers;
 
 
-            info.rotationDmg += explosiveShotDmg * 3.0;
+            //info.rotationDmg += explosiveShotDmg * 3.0;
             info.rotationTime += 1.5 + options.Latency;
 
         }
@@ -211,64 +233,78 @@ namespace Rawr.Hunter
         {
             double steadyCritDmgModifier = abilitiesCritDmgModifier + 0.02 * character.HunterTalents.MarkedForDeath;
             double critHitModifier = (calculatedStats.BasicStats.PhysicalCrit * steadyCritDmgModifier + 1.0) * calculatedStats.BasicStats.PhysicalHit;
-            double steadyShotDmg = weaponDamageAverage + ammoDamage + (effectiveRAPAgainstMob + hawkRAPBonus) * ratings.STEADY_AP_SCALE + ratings.STEADY_BONUS_DMG;
+            //double steadyShotDmg = weaponDamageAverage + ammoDamage + (effectiveRAPAgainstMob + hawkRAPBonus) * ratings.STEADY_AP_SCALE + ratings.STEADY_BONUS_DMG;
 
-            steadyShotDmg *= critHitModifier * talentModifiers;
+            //steadyShotDmg *= critHitModifier * talentModifiers;
 
-            double steadyShotCastTime = calculatedStats.SteadySpeed;
+            //double steadyShotCastTime = calculatedStats.SteadySpeed;
 
-            info.rotationDmg += steadyShotDmg * talentedArmorReduction;
-            info.rotationTime += (steadyShotCastTime > 1.5 ? steadyShotCastTime : 1.5) + options.Latency;
+            //info.rotationDmg += steadyShotDmg * talentedArmorReduction;
+            //info.rotationTime += (steadyShotCastTime > 1.5 ? steadyShotCastTime : 1.5) + options.Latency;
+        }
+
+        protected void ShotCobra(RotationInfo info)
+        {
+            double cobraCritDmgModifier = abilitiesCritDmgModifier + 0.02 * character.HunterTalents.MarkedForDeath;
+            //double critHitModifier = (calculatedStats.BasicStats.PhysicalCrit * steadyCritDmgModifier + 1.0) * calculatedStats.BasicStats.PhysicalHit;
+            //double cobraShotDmg = weaponDamageAverage + ammoDamage + (effectiveRAPAgainstMob + hawkRAPBonus) * ratings.STEADY_AP_SCALE + ratings.STEADY_BONUS_DMG;
+
+            //cobraShotDmg *= critHitModifier * talentModifiers;
+
+            //double CobraShotCastTime = calculatedStats.SteadySpeed;
+
+            //info.rotationDmg += cobraShotDmg * talentedArmorReduction;
+            //info.rotationTime += (CobraShotCastTime > 1.5 ? CobraShotCastTime : 1.5) + options.Latency;
         }
 
         protected void ShotArcane(RotationInfo info, int steadyshots)
         {
-            double arcaneShotCrit = calculatedStats.BasicStats.PhysicalCrit + 0.02 * character.HunterTalents.SurvivalInstincts;
+            //double arcaneShotCrit = calculatedStats.BasicStats.PhysicalCrit + 0.02 * character.HunterTalents.SurvivalInstincts;
 
-            double critHitModifier = (arcaneShotCrit * abilitiesCritDmgModifier + 1.0) * calculatedStats.BasicStats.PhysicalHit;
-            double arcaneShotDmg = (effectiveRAPAgainstMob + hawkRAPBonus) * ratings.ARCANE_AP_SCALE + ratings.ARCANE_BONUS_DMG;
+            //double critHitModifier = (arcaneShotCrit * abilitiesCritDmgModifier + 1.0) * calculatedStats.BasicStats.PhysicalHit;
+            //double arcaneShotDmg = (effectiveRAPAgainstMob + hawkRAPBonus) * ratings.ARCANE_AP_SCALE + ratings.ARCANE_BONUS_DMG;
 
-            double asTalentModifiers = 1.0 + character.HunterTalents.ImprovedArcaneShot * 0.05;
+            //double asTalentModifiers = 1.0 + character.HunterTalents.ImprovedArcaneShot * 0.05;
 
             double impSteadyChance = 1.0 - Math.Pow(1.0 - character.HunterTalents.ImprovedSteadyShot * 0.05, steadyshots);
-            asTalentModifiers *= 1.0 + 0.15 * impSteadyChance;
+            //asTalentModifiers *= 1.0 + 0.15 * impSteadyChance;
 
-            arcaneShotDmg *= critHitModifier * talentModifiers * asTalentModifiers;
-            info.rotationDmg += arcaneShotDmg;
+            //arcaneShotDmg *= critHitModifier * talentModifiers * asTalentModifiers;
+            //info.rotationDmg += arcaneShotDmg;
             info.rotationTime += 1.5 + options.Latency;
         }
 
         protected void ShotSerpentSting(RotationInfo info)
         {
-            double serpentStingDmg = (effectiveRAPAgainstMob + hawkRAPBonus) * ratings.SERPENT_AP_SCALE + ratings.SERPENT_BONUS_DMG;
+            //double serpentStingDmg = (effectiveRAPAgainstMob + hawkRAPBonus) * ratings.SERPENT_AP_SCALE + ratings.SERPENT_BONUS_DMG;
 
-            double serpentTalentModifiers = 1.0 + character.HunterTalents.ImprovedStings * 0.10;
+            //double serpentTalentModifiers = 1.0 + character.HunterTalents.ImprovedStings * 0.10;
 
-            serpentStingDmg *= calculatedStats.BasicStats.PhysicalHit * talentModifiers * serpentTalentModifiers;
+            //serpentStingDmg *= calculatedStats.BasicStats.PhysicalHit * talentModifiers * serpentTalentModifiers;
 
-            info.rotationDmg += serpentStingDmg;
+            //info.rotationDmg += serpentStingDmg;
             info.rotationTime += 1.5 + options.Latency;
         }
 
         protected void ShotMulti(RotationInfo info)
         {
-            double critHitModifier = ((calculatedStats.BasicStats.PhysicalCrit + character.HunterTalents.ImprovedBarrage * 0.04) * abilitiesCritDmgModifier + 1.0) * calculatedStats.BasicStats.PhysicalHit;
+            //double critHitModifier = ((calculatedStats.BasicStats.PhysicalCrit + character.HunterTalents.ImprovedBarrage * 0.04) * abilitiesCritDmgModifier + 1.0) * calculatedStats.BasicStats.PhysicalHit;
 
-            double shotDmg = (weaponDamageAverage + ratings.MULTI_BONUS_DMG) * critHitModifier;
-            shotDmg *= talentModifiers * (1.0 + character.HunterTalents.Barrage * 0.04);
+            //double shotDmg = (weaponDamageAverage + ratings.MULTI_BONUS_DMG) * critHitModifier;
+            //shotDmg *= talentModifiers * (1.0 + character.HunterTalents.Barrage * 0.04);
 
-            info.rotationDmg += shotDmg * armorReduction;
+            //info.rotationDmg += shotDmg * armorReduction;
             info.rotationTime += 1.5 + options.Latency;
         }
 
         protected void ShotAimed(RotationInfo info)
         {
-            double critHitModifier = ((calculatedStats.BasicStats.PhysicalCrit + character.HunterTalents.ImprovedBarrage * 0.04) * abilitiesCritDmgModifier + 1.0) * calculatedStats.BasicStats.PhysicalHit;
+            //double critHitModifier = ((calculatedStats.BasicStats.PhysicalCrit + character.HunterTalents.ImprovedBarrage * 0.04) * abilitiesCritDmgModifier + 1.0) * calculatedStats.BasicStats.PhysicalHit;
 
-            double shotDmg = (weaponDamageAverage + ratings.AIMED_BONUS_DMG) * critHitModifier;
-            shotDmg *= talentModifiers * (1.0 + character.HunterTalents.Barrage * 0.04);
+            //double shotDmg = (weaponDamageAverage + ratings.AIMED_BONUS_DMG) * critHitModifier;
+            //shotDmg *= talentModifiers * (1.0 + character.HunterTalents.Barrage * 0.04);
 
-            info.rotationDmg += shotDmg * talentedArmorReduction;
+            //info.rotationDmg += shotDmg * talentedArmorReduction;
             info.rotationTime += 1.5 + options.Latency;
 
         }
@@ -280,18 +316,18 @@ namespace Rawr.Hunter
             List<RotationShot> shots = new List<RotationShot>();
             List<double> timings = new List<double>();
 
-            if (options.ShotPriority1 != Shots.None)
-            {
-                shots.Add(createRotationShot(options.ShotPriority1));
-            }
-            if (options.ShotPriority2 != Shots.None)
-            {
-                shots.Add(createRotationShot(options.ShotPriority2));
-            }
-            if (options.ShotPriority3 != Shots.None)
-            {
-                shots.Add(createRotationShot(options.ShotPriority3));
-            }
+            //if (options.ShotPriority1 != Shots.None)
+            //{
+            //    shots.Add(createRotationShot(options.ShotPriority1));
+            //}
+            //if (options.ShotPriority2 != Shots.None)
+            //{
+            //    shots.Add(createRotationShot(options.ShotPriority2));
+            //}
+            //if (options.ShotPriority3 != Shots.None)
+            //{
+            //    shots.Add(createRotationShot(options.ShotPriority3));
+            //}
             /*
             if (options.ShotPriority4 != Shots.None)
             {
@@ -383,9 +419,9 @@ namespace Rawr.Hunter
                         ShotExplosive(info);
                         break;
 
-                    case Shots.ChimeraShot_Serpent:
-                        ShotChimera(info, 0); // TODO: Improved Steady Shot
-                        break;
+                    //case Shots.ChimeraShot_Serpent:
+                    //    ShotChimera(info, 0); // TODO: Improved Steady Shot
+                    //    break;
 
                     case Shots.ArcaneShot:
                         ShotArcane(info, 0); // TODO: Improved Steady Shot
@@ -397,7 +433,7 @@ namespace Rawr.Hunter
                 }
             }
 
-            calculatedStats.CustomRotation = builder.ToString();
+            //calculatedStats.CustomRotation = builder.ToString();
             return info;
         }
 
@@ -408,7 +444,7 @@ namespace Rawr.Hunter
             switch (type)
             {
                 case Shots.SteadyShot:
-                    shot.casttime = (calculatedStats.SteadySpeed < 1.5 ? 1.5 : calculatedStats.SteadySpeed) + options.Latency;
+                    //shot.casttime = (calculatedStats.SteadySpeed < 1.5 ? 1.5 : calculatedStats.SteadySpeed) + options.Latency;
                     shot.cooldown = 0.0;
                     shot.type = Shots.SteadyShot;
                     break;
@@ -431,11 +467,11 @@ namespace Rawr.Hunter
                     shot.type = Shots.ExplosiveShot;
                     break;
 
-                case Shots.ChimeraShot_Serpent:
-                    shot.casttime = 1.5 + options.Latency;
-                    shot.cooldown = 10.0;
-                    shot.type = Shots.ChimeraShot_Serpent;
-                    break;
+                //case Shots.ChimeraShot_Serpent:
+                //    shot.casttime = 1.5 + options.Latency;
+                //    shot.cooldown = 10.0;
+                //    shot.type = Shots.ChimeraShot_Serpent;
+                //    break;
 
                 case Shots.ArcaneShot:
                     shot.casttime = 1.5 + options.Latency;

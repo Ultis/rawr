@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
@@ -7,6 +7,13 @@ namespace Rawr.Hunter
 {
     public class CharacterCalculationsHunter : CharacterCalculationsBase
     {
+        public StatsHunter AverageStats { get; set; }
+        public StatsHunter MaximumStats { get; set; }
+        public StatsHunter UnbuffedStats { get; set; }
+        public StatsHunter BuffedStats { get; set; }
+        public StatsHunter BuffsStats { get; set; } // The actual stats that come from Buffs
+
+        
         private float _overallPoints = 0f;
         private float[] _subPoints = new float[] { 0f, 0f, 0f, 0f };
         private Stats _basicStats;
@@ -19,7 +26,7 @@ namespace Rawr.Hunter
         public float _masteryBase = 8f;
         public Character character = null;
         public CalculationOptionsHunter CalcOpts = null;
-        public BossOptions BossOpts = null;
+        //public BossOptions BossOpts = null;
 
         #region Skills
         public Skills.WhiteAttacks Whites { get; set; }
@@ -31,9 +38,9 @@ namespace Rawr.Hunter
         public Skills.ArcaneShot Arcane { get; set; }
         public Skills.KillShot Kill { get; set; }
         //public Skills.Volley Volley { get; set; }
-        public Skills.BlackArrowDoT BlackArrowD { get; set; }
-        public Skills.BlackArrowBuff BlackArrowB { get; set; }
-        public Skills.PiercingShots Piercing { get; set; }
+        public Skills.BlackArrow BlackArrowD { get; set; }
+//        public Skills.BlackArrowBuff BlackArrowB { get; set; }
+//        public Skills.PiercingShots Piercing { get; set; }
         public Skills.SerpentSting Serpent { get; set; }
         public Skills.ChimeraShot_Serpent Chimera { get; set; }
         public Skills.ImmolationTrap Immolation { get; set; }
@@ -51,7 +58,7 @@ namespace Rawr.Hunter
         private double _piercingShotsDPSChimeraShot;
 
         public float BaseHealth { get; set; }
-        public float Agility { get; set; }
+        //public float Agility { get; set; }
 
         public PetCalculations pet { get; set; }
 
@@ -342,13 +349,6 @@ namespace Rawr.Hunter
             set { _subPoints[3] = value; }
         }
 
-        public Stats BasicStats { get { return _basicStats; } set { _basicStats = value; } }
-        public Stats AverageStats { get; set; }
-        public Stats MaximumStats { get; set; }
-        public Stats UnbuffedStats { get; set; }
-        public Stats BuffedStats { get; set; }
-        public Stats BuffsStats { get; set; } // The actual stats that come from Buffs
-
         public List<string> ActiveBuffs { get; set; }
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues() {
@@ -357,10 +357,10 @@ namespace Rawr.Hunter
             CalcOpts = character.CalculationOptions as CalculationOptionsHunter;
 
             // Basic Stats
-            dictValues.Add("Health and Stamina", string.Format("{0:##,##0} : {1:##,##0}*{2:00,000} : Base Health" +
-                                "\r\n{3:00,000} : Stam Bonus",
-                                BasicStats.Health, BasicStats.Stamina, BaseHealth, StatConversion.GetHealthFromStamina(BasicStats.Stamina)));
-            basefocus = 100f;
+            //dictValues.Add("Health and Stamina", string.Format("{0:##,##0} : {1:##,##0}*{2:00,000} : Base Health" +
+            //                    "\r\n{3:00,000} : Stam Bonus",
+            //                    UnbuffedStats.Health, UnbuffedStats.Stamina, BaseHealth, StatConversion.GetHealthFromStamina(UnbuffedStats.Stamina)));
+            /*basefocus = 100f;
             focus = basefocus + focusfromtalents;
             dictValues.Add("Focus", string.Format("{0:000}*Includes:" +
                             "\r\n{1:000} : Base" +
@@ -389,10 +389,10 @@ namespace Rawr.Hunter
             float HitPercent = StatConversion.GetHitFromRating(BasicStats.HitRating);
             float HitPercBonus = BasicStats.PhysicalHit - HitPercent;
             // Hit Soft Cap ratings check, how far from it
-            float capA1 = StatConversion.WHITE_MISS_CHANCE_CAP[BossOpts.Level - character.Level];
-            float convcapA1 = (float)Math.Ceiling(StatConversion.GetRatingFromHit(capA1));
-            float sec2lastNumA1 = (convcapA1 - StatConversion.GetRatingFromHit(HitPercent) - StatConversion.GetRatingFromHit(HitPercBonus)) * -1;
-            dictValues.Add("Hit",
+            //float capA1 = StatConversion.WHITE_MISS_CHANCE_CAP[BossOpts.Level - character.Level];
+            //float convcapA1 = (float)Math.Ceiling(StatConversion.GetRatingFromHit(capA1));
+            //float sec2lastNumA1 = (convcapA1 - StatConversion.GetRatingFromHit(HitPercent) - StatConversion.GetRatingFromHit(HitPercBonus)) * -1;
+            /*dictValues.Add("Hit",
                 string.Format("{0:00.00%} : {1}*" + "{2:0.00%} : From Other Bonuses" +
                                 Environment.NewLine + "{3:0.00%} : Total Hit % Bonus" +
                                 Environment.NewLine + Environment.NewLine + "Ranged Cap: " +
@@ -404,6 +404,7 @@ namespace Rawr.Hunter
                                 HitPercent + HitPercBonus,
                                 (sec2lastNumA1 > 0 ? sec2lastNumA1 : sec2lastNumA1 * -1)
                             ));
+             
             dictValues.Add("Crit", string.Format("{0:00.00%} : {1}*Includes:" +
                                 "\r\n{2:00.00%} : Base Crit" +
                                 "\r\n{3:00.00%} : Agility" +
@@ -423,7 +424,7 @@ namespace Rawr.Hunter
                                 critFromMasterMarksman, critFromMasterTactician, critFromBuffs,
                                 critFromDepression * -1f));
             dictValues.Add("Armor Penetration", string.Format("{0:00.00%}" + "*Enemy's Damage Reduction from armor: {1:00.00%}",
-                                BasicStats.ArmorPenetration /*+ StatConversion.GetArmorPenetrationFromRating(BasicStats.ArmorPenetrationRating)*/,
+                                BasicStats.ArmorPenetration /*+ StatConversion.GetArmorPenetrationFromRating(BasicStats.ArmorPenetrationRating),
                                 //BasicStats.ArmorPenetrationRating,
                                 damageReductionFromArmor));
             dictValues.Add("Haste", string.Format("{0:00.00%} : {1:0}*Includes:" +
@@ -479,7 +480,7 @@ namespace Rawr.Hunter
                             + "Furious Howl: Use {0} DPS {1:0.00}"
                             + "Bite: Use {2} DPS {3:0.00}",
                             pet.priorityRotation.getSkillFrequency(PetAttacks.FuriousHowl), 0f,
-                            pet.priorityRotation.getSkillFrequency(PetAttacks.Bite), pet.priorityRotation.dps - petWhiteDPS)*/);
+                            pet.priorityRotation.getSkillFrequency(PetAttacks.Bite), pet.priorityRotation.dps - petWhiteDPS));
 
             // Shot Stats
             dictValues.Add("Aimed Shot", aimedShot.GenTooltip());
@@ -555,9 +556,10 @@ namespace Rawr.Hunter
                             "Chimera Shot: " + PiercingShotsDPSChimeraShot.ToString("F2") + "\n");
             dictValues.Add("Special DMG Procs DPS", SpecProcDPS.ToString("F2"));
 
+             */
             // Combined DPS
-            string zod = (BonusAttackProcsDPS != 0 ? string.Format("*Includes:\r\nZod's Proc: {0:0.0}", BonusAttackProcsDPS) : "");
-            dictValues.Add("Hunter DPS", HunterDpsPoints.ToString("F2") + zod);
+            //string zod = (BonusAttackProcsDPS != 0 ? string.Format("*Includes:\r\nZod's Proc: {0:0.0}", BonusAttackProcsDPS) : "");
+            dictValues.Add("Hunter DPS", HunterDpsPoints.ToString("F2")/* + zod*/);
             dictValues.Add("Pet DPS", PetDpsPoints.ToString("F2"));
             dictValues.Add("Total DPS", OverallPoints.ToString("F2"));
 
@@ -568,17 +570,17 @@ namespace Rawr.Hunter
         {
             switch (calculation)
             {
-                case "Health": return BasicStats.Health;
-                case "Mana": return BasicStats.Mana;
-                case "Agility": return BasicStats.Agility;
-                case "Crit %": return BasicStats.PhysicalCrit * 100f;
-                case "Haste %": return BasicStats.PhysicalHaste * 100f;
-                case "Attack Power": return BasicStats.AttackPower;
+                case "Health": return UnbuffedStats.Health;
+                //case "Mana": return UnbuffedStats.Mana;
+                case "Agility": return UnbuffedStats.Agility;
+                case "Crit %": return UnbuffedStats.PhysicalCrit * 100f;
+                case "Haste %": return UnbuffedStats.PhysicalHaste * 100f;
+                case "Attack Power": return UnbuffedStats.AttackPower;
 //                case "Armor Penetration %": return BasicStats.ArmorPenetration * 100f;
 #if RAWR3 || RAWR4 || SILVERLIGHT
-                case "% Chance to Miss (Yellow)": return (StatConversion.WHITE_MISS_CHANCE_CAP[BossOpts.Level - character.Level] - BasicStats.PhysicalHit) * 100f;
+                //case "% Chance to Miss (Yellow)": return (StatConversion.WHITE_MISS_CHANCE_CAP[BossOpts.Level - character.Level] - BasicStats.PhysicalHit) * 100f;
 #else
-                case "% Chance to Miss (Yellow)": return (StatConversion.WHITE_MISS_CHANCE_CAP[CalcOpts.TargetLevel - character.Level] - BasicStats.PhysicalHit) * 100f;
+                //case "% Chance to Miss (Yellow)": return (StatConversion.WHITE_MISS_CHANCE_CAP[CalcOpts.TargetLevel - character.Level] - BasicStats.PhysicalHit) * 100f;
 #endif
             }
             return 0;

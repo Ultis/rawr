@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Rawr.Hunter.Skills;
@@ -15,6 +15,16 @@ namespace Rawr.Hunter {
             public float HPS { get { return ability.GetHPS(numActivates); } }
             public bool isDamaging { get { return ability.DamageOverride > 0f; } }
         }
+
+        public enum RotationType
+        {
+            Custom, BeastMastery, Marksmanship, Survival, Unknown,
+        }
+        public enum TalentTrees
+        {
+            BeastMastery, Marksmanship, Survival,
+        }
+
         // Constructors
         public Rotation()
         {
@@ -69,30 +79,7 @@ namespace Rawr.Hunter {
         public float TimesDisarmed = 0f;
         
         #region Abilities
-        // Anti-DeBuff
-        //public Skills.HeroicFury HF;
-        //public Skills.EveryManForHimself EM;
-        //public Skills.Charge CH;
-        //public Skills.Intercept IN;
-        //public Skills.Intervene IV;
-        // Rage Generators
-        //public Skills.SecondWind SndW;
-        //public Skills.BerserkerRage BZ;
-        //public Skills.Bloodrage BR;
-        // Maintenance
-        //public Skills.BattleShout BTS;
-        //public Skills.CommandingShout CS;
-        //public Skills.DemoralizingShout DS;
-        //public Skills.SunderArmor SN;
-        //public Skills.ThunderClap TH;
-        //public Skills.Hamstring HMS;
-        //public Skills.EnragedRegeneration ER;
-        // Periodics
-        //public Skills.ShatteringThrow ST;
-        //public Skills.SweepingStrikes SW;
-        //public Skills.DeathWish Death;
-        //public Skills.Recklessness RK;
-        // Shots
+       // Shots
         public Skills.ExplosiveShot Explosive;
         public Skills.MultiShot Multi;
         public Skills.SteadyShot Steady;
@@ -106,12 +93,12 @@ namespace Rawr.Hunter {
         // Buffs.
         public Skills.BestialWrath Bestial;
         public Skills.RapidFire Rapid;
-        public Skills.BlackArrowBuff BlackArrowB;
+//        public Skills.BlackArrowBuff BlackArrowB;
         public Skills.Readiness Ready;
 
         // DoTs.
-        public Skills.PiercingShots Piercing;
-        public Skills.BlackArrowDoT BlackArrowD;
+//        public Skills.PiercingShots Piercing;
+        public Skills.BlackArrow BlackArrowD;
 
         public Skills.SerpentSting Serpent;
         public Skills.ChimeraShot_Serpent Chimera;
@@ -215,17 +202,17 @@ namespace Rawr.Hunter {
             
             // Generic
             //calcs.CL = CL;
-            calcs.Piercing = Piercing;
+//            calcs.Piercing = Piercing;
             //calcs.HS = HS;
             calcs.Kill = Kill;
             //calcs.Volley = Volley;
 
             calcs.Bestial = Bestial;
             calcs.Rapid = Rapid;
-            calcs.BlackArrowB = BlackArrowB;
+//            calcs.BlackArrowB = BlackArrowB;
             calcs.Ready = Ready;
 
-            calcs.Piercing = Piercing;
+//            calcs.Piercing = Piercing;
             calcs.BlackArrowD = BlackArrowD;
             calcs.Serpent = Serpent;
             calcs.Chimera = Chimera;
@@ -239,6 +226,27 @@ namespace Rawr.Hunter {
 
         public virtual void MakeRotationandDoDPS(bool setCalcs, bool needsDisplayCalculations) {
             _needDisplayCalcs = needsDisplayCalculations;
+        }
+
+        public RotationType GetRotationType(HunterTalents t)
+        {
+            RotationType curRotationType = RotationType.Custom;
+            if (t.HighestTree == (int)Specialization.BeastMastery)
+            {
+                // Beast Mastery
+                curRotationType = Rotation.RotationType.BeastMastery;
+            }
+            else if (t.HighestTree == (int)Specialization.Marksmanship)
+            {
+                // Marksmanship
+                curRotationType = Rotation.RotationType.Marksmanship;
+            }
+            if (t.HighestTree == (int)Specialization.Survival)
+            {
+                // Survival
+                curRotationType = Rotation.RotationType.Survival;
+            }
+            return curRotationType;
         }
 
         protected virtual void initAbilities() {
@@ -300,7 +308,7 @@ namespace Rawr.Hunter {
             //AddAbility(new AbilWrapper(BT));
             //AddAbility(new AbilWrapper(new Skills.BloodSurge(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, SL, WW, BT)));
 
-            Piercing = new Skills.PiercingShots(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+//            Piercing = new Skills.PiercingShots(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
 
         }
 
@@ -876,7 +884,7 @@ namespace Rawr.Hunter {
         }
         #endregion
 
-        public void AddValidatedSpecialEffects(Stats statsTotal, WarriorTalents talents)
+        public void AddValidatedSpecialEffects(Stats statsTotal, HunterTalents talents)
         {
             /*Ability ST = GetWrapper<ShatteringThrow>().ability,
                     BTS = GetWrapper<BattleShout>().ability,

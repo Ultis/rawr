@@ -135,13 +135,6 @@ namespace Rawr
         RPp5,
         CinderglacierProc,
         #endregion
-        #region Added by Hunters       [Verified Jothay 2011-03-29]
-        BonusPetCritChance,
-        PetStamina,
-        PetStrength,
-        PetSpirit,
-        PetAttackPower,
-        #endregion
         #region Added by Mages
         BonusManaGem,
         MageIceArmor,
@@ -214,8 +207,6 @@ namespace Rawr
         BonusDamageMultiplierRakeTick, // T11
         #endregion
         #region Added by Hunters       [Verified Jothay 2011-03-29]
-        BonusRangedAttackPowerMultiplier,
-        BonusPetAttackPowerMultiplier,
         BonusPetDamageMultiplier,
         #endregion
         #region Added by Shamans       [Verified Jothay 2011-03-29]
@@ -1333,49 +1324,6 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.CinderglacierProc] = value; }
         }
         #endregion
-        #region Added by Hunters
-        [DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("% Extra Pet Crit Chance")]
-        [Category("Hunter")]
-        public float BonusPetCritChance
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusPetCritChance]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusPetCritChance] = value; }
-        }
-        [DefaultValueAttribute(0f)]
-        [DisplayName("Pet Stamina")]
-        [Category("Hunter")]
-        public float PetStamina
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.PetStamina]; }
-            set { _rawAdditiveData[(int)AdditiveStat.PetStamina] = value; }
-        }
-        [DefaultValueAttribute(0f)]
-        [DisplayName("Pet Strength")]
-        [Category("Hunter")]
-        public float PetStrength
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.PetStrength]; }
-            set { _rawAdditiveData[(int)AdditiveStat.PetStrength] = value; }
-        }
-        [DefaultValueAttribute(0f)]
-        [DisplayName("Pet Spirit")]
-        [Category("Hunter")]
-        public float PetSpirit
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.PetSpirit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.PetSpirit] = value; }
-        }
-        [DefaultValueAttribute(0f)]
-        [DisplayName("Pet Attack Power")]
-        [Category("Hunter")]
-        public float PetAttackPower
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.PetAttackPower]; }
-            set { _rawAdditiveData[(int)AdditiveStat.PetAttackPower] = value; }
-        }
-        #endregion
         #region Added by Mages
         [DefaultValueAttribute(0f)]
         [DisplayName("Mana Gem Effect")]
@@ -1828,25 +1776,7 @@ namespace Rawr
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusDamageMultiplierRakeTick] = value; }
         }
         #endregion
-        #region Added by Hunters
-        [DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Hunter")]
-        [CommonStat]
-        public float BonusRangedAttackPowerMultiplier
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusRangedAttackPowerMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusRangedAttackPowerMultiplier] = value; }
-        }
-        [DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Hunter")]
-        [CommonStat]
-        public float BonusPetAttackPowerMultiplier
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusPetAttackPowerMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusPetAttackPowerMultiplier] = value; }
-        }
+        #region Added by Hunters and Shamans
         [DefaultValueAttribute(0f)]
         [DisplayName("% Bonus Pet Damage")]
         [Percentage]

@@ -144,6 +144,8 @@ namespace Rawr
         HunterAutoShotHit,
         /// <summary>The Hunter's Steady Shot ability lands on the target (hit or crit)</summary>
         SteadyShotHit,
+        /// <summary>The Hunter's Cobra Shot ability lands on the target (hit or crit)</summary>
+        CobraShotHit,
         /// <summary>The Hunter Pet's normal Damage ability (Claw, Bite or Smack) crits on the target</summary>
         PetClawBiteSmackCrit,
         /// <summary>The Hunter's Serpent Sting and Wyvern Sting abilities deal damage</summary>

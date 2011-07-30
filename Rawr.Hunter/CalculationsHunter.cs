@@ -9,65 +9,48 @@ using System.Xml.Serialization;
 using Rawr.Hunter.Skills;
 
 namespace Rawr.Hunter {
-    public struct HunterCharacter
-    {
-        public Character Char;
-        public Rotation Rot;
-        public CombatFactors combatFactors;
-        public CalculationOptionsHunter calcOpts;
-    }
     [Rawr.Calculations.RawrModelInfo("Hunter", "Inv_Weapon_Bow_07", CharacterClass.Hunter)]
-    public class CalculationsHunter : CalculationsBase {
+    public class CalculationsHunter : CalculationsBase
+    {
         #region Variables and Properties
 
-        public override List<GemmingTemplate> DefaultGemmingTemplates {
-            get {
+        #region Hunter Gemming Templates
+        public override List<GemmingTemplate> DefaultGemmingTemplates
+        {
+            get
+            {
                 // == Relevant Gem IDs for Hunters ==
                 #region Red
-                int[] delicate = { 52082, 52212, 52212, 52258 }; // Agi
-//                int[] brit = { 39906, 39999, 40114, 36766 }; // AP
+                int[] delicate = { 52082, 52212, 52212, 52258 };    // Agi
                 #endregion
                 #region Purple
-                int[] shifting = { 52096, 52238, 52238, 52238 }; // Agi / Stam - Shifting
-                int[] glinting = { 52102, 52220, 52220, 52220 }; // Agi / Hit - Glinting
-//                int[] bala = { 41450, 40029, 40136, 40136 }; // AP   /Stam
-//                int[] infd = { 41454, 40030, 40137, 40137 }; // AP   /Mp5
-//                int[] tenu = { 41462, 40024, 40131, 40131 }; // Agi  /Mp5
+                int[] shifting = { 52096, 52238, 52238, 52238 };    // Agi / Stam - Shifting
+                int[] glinting = { 52102, 52220, 52220, 52220 };    // Agi / Hit - Glinting
                 #endregion
                 #region Blue
-                int[] rigid = { 52089, 52235, 52235, 52264 }; // Hit - Rigid
-//                int[] lust = { 41440, 40010, 40121, 42146 }; // Mp5
+                int[] rigid = { 52089, 52235, 52235, 52264 };       // Hit - Rigid
                 #endregion
                 #region Green
-                int[] forceful = { 52124, 52218, 52218, 52218 }; // Haste / Stam - Forceful
-                int[] jagged = { 52121, 52223, 52223, 52223 }; // Crit / Stam - Jagged
-                int[] lightning = { 52125, 52225, 52225, 52225 }; // Haste / Hit - Lightning
-                int[] piercing = { 52122, 52228, 52228, 52228 }; // Crit / Hit - Piercing
-                int[] puissant = { 52126, 52231, 52231, 52231 }; // Mastery / Stam - Puissant
-                int[] sensei = { 52128, 52237, 52237, 52237 }; // Mastery / Hit - Sensei
-//                int[] vivd = { 41481, 40088, 40166, 40166 }; // Hit / Stam
-//                int[] dazl = { 41463, 40094, 40175, 40175 }; // Int  /Mp5
-//                int[] lmbt = { 41469, 40100, 40177, 40177 }; // Hit  /Mp5
-//                int[] sndr = { 41477, 40096, 40176, 40176 }; // Crit /Mp5
-//                int[] enrg = { 41465, 40105, 40179, 40179 }; // Haste/Mp5
+                int[] forceful = { 52124, 52218, 52218, 52218 };    // Haste / Stam - Forceful
+                int[] jagged = { 52121, 52223, 52223, 52223 };      // Crit  / Stam - Jagged
+                int[] lightning = { 52125, 52225, 52225, 52225 };   // Haste / Hit - Lightning
+                int[] piercing = { 52122, 52228, 52228, 52228 };    // Crit / Hit - Piercing
+                int[] puissant = { 52126, 52231, 52231, 52231 };    // Mastery / Stam - Puissant
+                int[] sensei = { 52128, 52237, 52237, 52237 };      // Mastery / Hit - Sensei
                 #endregion
                 #region Yellow
-                int[] fractured = { 52094, 52219, 52219, 52269 }; // Mastery - Fractured
-                int[] quick = { 52093, 52232, 52232, 52268 }; // Haste - Quick
-                int[] smooth = { 52091, 52241, 52241, 52266 }; // Crit - Smooth
+                int[] fractured = { 52094, 52219, 52219, 52269 };   // Mastery - Fractured
+                int[] quick = { 52093, 52232, 52232, 52268 };       // Haste - Quick
+                int[] smooth = { 52091, 52241, 52241, 52266 };      // Crit - Smooth
                 #endregion
                 #region Orange
-                int[] adept = { 52115, 52204, 52204, 52204 }; // Agi / Mastery - Adept
-                int[] deadly = { 52109, 52209, 52209, 52209 }; // Agi / Crit - Deadly
-                int[] deft = { 52112, 52211, 52211, 52211 }; // Agi / Haste - Deft
-//                int[] prst = { 41496, 40053, 40157, 40157 }; // AP   /Hit
-//                int[] wckd = { 41429, 40052, 40156, 40156 }; // AP   /Crit
-//                int[] strk = { 41501, 40055, 40159, 40159 }; // AP   /Haste
+                int[] adept = { 52115, 52204, 52204, 52204 };       // Agi / Mastery - Adept
+                int[] deadly = { 52109, 52209, 52209, 52209 };      // Agi / Crit - Deadly
+                int[] deft = { 52112, 52211, 52211, 52211 };        // Agi / Haste - Deft
                 #endregion
                 #region Meta
-//                int relentless = 41398; // 21 Agi  3% Crit DMG
-                int agile      = 68778; // 54 Agi  3% Crit DMG
-                int chaotic    = 52291; // 54 Crit 3% Crit DMG
+                int agile = 68778; // 54 Agi  3% Crit DMG
+                int chaotic = 52291; // 54 Crit 3% Crit DMG
                 #endregion
                 #region Cogwheel
                 int[] cog_hit = { 59493, 59493, 59493, 59493 }; fixArray(cog_hit);
@@ -97,7 +80,7 @@ namespace Rawr.Hunter {
                             new GemmingTemplate() { Model = "Hunter", Group = "Cogwheels", Enabled = false, CogwheelId = cog_crt[0], Cogwheel2Id = cog_has[0], MetaId = agile, },
                         });
                 }
- 
+
                 return list;
             }
         }
@@ -124,31 +107,54 @@ namespace Rawr.Hunter {
                 MetaId = meta
             };
         }
-        private ICalculationOptionsPanel calculationOptionsPanel = null;
-        public override ICalculationOptionsPanel CalculationOptionsPanel
-        { get { return calculationOptionsPanel ?? (calculationOptionsPanel = new CalculationOptionsPanelHunter()); } }
+        #endregion
 
+        #region Display Strings
+        public override string GetCharacterStatsString(Character character)
+        {
+            if (character == null) { return ""; }
+            StringBuilder stats = new StringBuilder();
+            stats.AppendFormat("Character:\t\t{0}@{1}-{2}\r\nRace:\t\t{3}",
+                character.Name, character.Region, character.Realm, character.Race);
+
+            char[] splits = { ':', '*' };
+            Dictionary<string, string> dict = GetCharacterCalculations(character, null, false, false, true).GetAsynchronousCharacterDisplayCalculationValues();
+            foreach (string s in CharacterDisplayCalculationLabels)
+            {
+                string[] label = s.Split(splits);
+                if (dict.ContainsKey(label[1]))
+                {
+                    stats.AppendFormat("\r\n{0}:\t\t{1}", label[1], dict[label[1]].Split('*')[0]);
+                }
+            }
+
+            return stats.ToString();
+        }
         private string[] _characterDisplayCalculationLabels = null;
-        public override string[] CharacterDisplayCalculationLabels {
-            get {
-                if (_characterDisplayCalculationLabels == null) {
+        public override string[] CharacterDisplayCalculationLabels
+        {
+            get
+            {
+                if (_characterDisplayCalculationLabels == null)
+                {
                     _characterDisplayCalculationLabels = new string[] {
+                        #region Basic Stats
                         "Basic Stats:Health and Stamina",
                         "Basic Stats:Focus",
                         "Basic Stats:Armor",
                         "Basic Stats:Agility",
                         "Basic Stats:Ranged Attack Power",
-                        //"Basic Stats:Intellect",
                         @"Basic Stats:Hit*8.00% chance to miss base for Yellow Attacks",
 //Focused Aim 0 - 8%-0%=8%=263 Rating soft cap
 //Focused Aim 1 - 8%-1%=7%=230 Rating soft cap
 //Focused Aim 2 - 8%-2%=6%=197 Rating soft cap
 //Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         "Basic Stats:Crit",
-                        //"Basic Stats:Armor Penetration*Rating Cap 1400",
                         "Basic Stats:Haste",
                         "Basic Stats:Mastery",
+                        #endregion
 
+                        #region Pet Stats
                         "Pet Stats:Pet Health",
                         "Pet Stats:Pet Armor",
                         "Pet Stats:Pet Focus",
@@ -160,7 +166,9 @@ namespace Rawr.Hunter {
                         "Pet Stats:Pet White DPS",
                         "Pet Stats:Pet Kill Command DPS",
                         "Pet Stats:Pet Specials DPS",
+                        #endregion
 
+                        #region Shot Information
                         "Shot Stats:Aimed Shot",
                         "Shot Stats:Arcane Shot",
                         "Shot Stats:Multi Shot",
@@ -169,32 +177,21 @@ namespace Rawr.Hunter {
                         "Shot Stats:Kill Shot",
                         "Shot Stats:Explosive Shot",
                         "Shot Stats:Black Arrow",
-                        //"Shot Stats:Volley",
                         "Shot Stats:Chimera Shot",
+                        #endregion
 
-                        //"Shot Stats:Rapid Fire",
-                        //"Shot Stats:Readiness",
-                        //"Shot Stats:Bestial Wrath",
-
+                        #region Sting Information
                         "Sting Stats:Serpent Sting",
-                        //"Sting Stats:Scorpid Sting",
-                        //"Sting Stats:Viper Sting",
+                        #endregion
 
+                        #region Trap Information
                         "Trap Stats:Immolation Trap",
                         "Trap Stats:Explosive Trap",
                         "Trap Stats:Freezing Trap",
                         "Trap Stats:Frost Trap",
+                        #endregion
 
-                        //"Mana:Mana Usage Per Second",
-                        //"Mana:Mana Regen Per Second",
-                        //"Mana:Normal Change",
-                        ////"Mana:Change during Viper",
-                        ////"Mana:Time to OOM",
-                        //"Mana:Time to Full",
-                        //"Mana:Viper Damage Penalty",
-                        //"Mana:Viper Uptime",
-                        //"Mana:No Mana Damage Penalty",
-
+                        #region DPS Numbers
                         "Hunter DPS:Autoshot DPS",
                         "Hunter DPS:Priority Rotation DPS",
                         "Hunter DPS:Wild Quiver DPS",
@@ -202,70 +199,82 @@ namespace Rawr.Hunter {
                         "Hunter DPS:Aspect Loss",
                         "Hunter DPS:Piercing Shots DPS",
                         "Hunter DPS:Special DMG Procs DPS*Like Bandit's Insignia or Hand-Mounted Pyro Rockets",
+                        #endregion
 
+                        #region Combined Information
                         "Combined DPS:Hunter DPS",
                         "Combined DPS:Pet DPS",
                         "Combined DPS:Total DPS"
+                        #endregion
                     };
                 }
                 return _characterDisplayCalculationLabels;
             }
         }
+        #endregion
 
+        #region Optimizable Labels
         private string[] _optimizableCalculationLabels = null;
-        public override string[] OptimizableCalculationLabels {
-            get {
-                if (_optimizableCalculationLabels == null) {
+        public override string[] OptimizableCalculationLabels
+        {
+            get
+            {
+                if (_optimizableCalculationLabels == null)
+                {
                     _optimizableCalculationLabels = new string[] {
                         "Health",
                         "Attack Power",
                         "Agility",
-//                        "Mana",
                         "Crit %",
                         "Haste %",
-//                        "Armor Penetration %",
                         "% Chance to Miss (Yellow)",
                     };
                 }
                 return _optimizableCalculationLabels;
             }
         }
+        #endregion
 
+        #region Color Variables
         private Dictionary<string, Color> _subPointNameColors = null;
         private Dictionary<string, Color> _subPointNameColorsDPS = null;
-//        private Dictionary<string, Color> _subPointNameColorsMPS = null;
-//        private Dictionary<string, Color> _subPointNameColorsDPM = null;
-        public override Dictionary<string, Color> SubPointNameColors {
-            get {
-                if (_subPointNameColorsDPS == null) {
+        public override Dictionary<string, Color> SubPointNameColors
+        {
+            get
+            {
+                if (_subPointNameColorsDPS == null)
+                {
                     _subPointNameColorsDPS = new Dictionary<string, Color>();
                     _subPointNameColorsDPS.Add("Hunter DPS", Color.FromArgb(255, 255, 0, 0));
                     _subPointNameColorsDPS.Add("Pet DPS", Color.FromArgb(255, 255, 100, 0));
                     _subPointNameColorsDPS.Add("Hunter Survivability", Color.FromArgb(255, 64, 128, 32));
                     _subPointNameColorsDPS.Add("Pet Survivability", Color.FromArgb(255, 29, 131, 87));
                 }
-//                if (_subPointNameColorsMPS == null) {
-//                    _subPointNameColorsMPS = new Dictionary<string, Color>();
-//                    _subPointNameColorsMPS.Add("MPS", Color.FromArgb(255, 0, 0, 255));
-//                }
-//                if (_subPointNameColorsDPM == null) {
-//                    _subPointNameColorsDPM = new Dictionary<string, Color>();
-//                    _subPointNameColorsDPM.Add("Damage per Mana", Color.FromArgb(255, 0, 0, 255));
-//                }
-                if (_subPointNameColors == null) {
+                if (_subPointNameColors == null)
+                {
                     _subPointNameColors = _subPointNameColorsDPS;
                 }
                 return _subPointNameColors;
             }
         }
+        #endregion
 
+        public override CharacterClass TargetClass { get { return CharacterClass.Hunter; } }
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationHunter(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsHunter(); }
+        public ICalculationOptionsPanel _calculationOptionsPanel = null;
+        public override ICalculationOptionsPanel CalculationOptionsPanel { get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelHunter()); } }
 
         public override ICalculationOptionBase DeserializeDataObject(string xml) {
-            XmlSerializer s = new XmlSerializer(typeof(CalculationOptionsHunter));
-            StringReader sr = new StringReader(xml);
-            CalculationOptionsHunter calcOpts = s.Deserialize(sr) as CalculationOptionsHunter;
+            CalculationOptionsHunter calcOpts = null;
+            StringReader sr = null;
+            try
+            {
+                XmlSerializer s = new XmlSerializer(typeof(CalculationOptionsHunter));
+                sr = new StringReader(xml);
+                calcOpts = s.Deserialize(sr) as CalculationOptionsHunter;
+            }
+            finally { sr.Dispose(); }
 
             // convert buffs here!
             calcOpts.petActiveBuffs = new List<Buff>(calcOpts._petActiveBuffsXml.ConvertAll(buff => Buff.GetBuffByName(buff)));
@@ -273,6 +282,7 @@ namespace Rawr.Hunter {
 
             return calcOpts;
         }
+
 
         /// <summary>
         /// Evaluates which tree currently has more talent points associated with it.
@@ -283,42 +293,9 @@ namespace Rawr.Hunter {
         /// 1 - Marksmanship
         /// 2 - Survival
         /// In case of draw, defaults to Beast Mastery</returns>
-        public float HunterTreeSpecialization(HunterTalents talents)
-        {
-            int BM = 0;
-            int MM = 0;
-            int SV = 0;
-            BM = 
-                (talents.ImprovedKillCommand + talents.OneWithNature + talents.BestialDiscipline +
-                talents.Pathfinding + talents.SpiritBond + talents.Frenzy + talents.ImprovedMendPet +
-                talents.CobraStrikes + talents.Fervor + talents.FocusFire +
-                talents.Longevity + talents.KillingStreak +
-                talents.CrouchingTigerHiddenChimera + talents.BestialWrath + talents.FerociousInspiration +
-                talents.KindredSpirits + talents.TheBeastWithin + talents.Invigoration + talents.BeastMastery);
-            MM =
-                (talents.GoForTheThroat + talents.Efficiency + talents.RapidKilling +
-                talents.SicEm + talents.ImprovedSteadyShot + talents.CarefulAim +
-                talents.SilencingShot + talents.ConcussiveBarrage + talents.PiercingShots +
-                talents.Bombardment + talents.TrueshotAura + talents.Termination + talents.ResistanceIsFutile +
-                talents.RapidRecuperation + talents.MasterMarksman + talents.Readiness +
-                talents.Posthaste + talents.MarkedForDeath + talents.ChimeraShot);
-            SV = 
-                (talents.HunterVsWild + talents.Pathing + talents.ImprovedSerpentSting +
-                talents.SurvivalTactics + talents.TrapMastery + talents.Entrapment + talents.PointOfNoEscape +
-                talents.ThrillOfTheHunt + talents.Counterattack + talents.LockAndLoad +
-                talents.Resourcefulness + talents.MirroredBlades + talents.TNT +
-                talents.Toxicology + talents.WyvernSting + talents.NoxiousStings + talents.HuntingParty +
-                talents.SniperTraining + talents.SerpentSpread + talents.BlackArrow);
-            if (( BM > MM ) && ( BM > SV )) { return 0f; }
-            else if (( MM > BM ) && ( MM > SV )) { return 1f; }
-            else if ((SV > BM) && (SV > MM)) { return 2f; }
-            else { return 0; }
-        }
         #endregion
 
         #region Relevancy
-
-        public override CharacterClass TargetClass { get { return CharacterClass.Hunter; } }
 
         private List<ItemType> _relevantItemTypes = null;
         public override List<ItemType> RelevantItemTypes {
@@ -326,23 +303,11 @@ namespace Rawr.Hunter {
                 if (_relevantItemTypes == null) {
                     _relevantItemTypes = new List<ItemType>(new[] {
                         ItemType.None,
-//                        ItemType.AmmoPouch,
-//                        ItemType.Arrow,
-                        ItemType.Bow,
-//                        ItemType.Bullet,
-                        ItemType.Crossbow,
-                        ItemType.Dagger,
-                        ItemType.FistWeapon,
-                        ItemType.Gun,
-                        ItemType.Leather,
-                        ItemType.Mail,
-                        ItemType.OneHandAxe,                        
-                        ItemType.OneHandSword,
-                        ItemType.Polearm,
-                        ItemType.Quiver,
-                        ItemType.Staff,                    
-                        ItemType.TwoHandAxe,
-                        ItemType.TwoHandSword
+                        ItemType.Leather, ItemType.Mail,
+                        ItemType.Bow, ItemType.Crossbow, ItemType.Gun,
+                        ItemType.FistWeapon, ItemType.Dagger, ItemType.OneHandAxe, ItemType.OneHandSword,
+                        ItemType.Polearm, ItemType.Staff,
+                        ItemType.TwoHandAxe, ItemType.TwoHandSword
                     });
                 }
                 return _relevantItemTypes;
@@ -353,26 +318,110 @@ namespace Rawr.Hunter {
             return base.EnchantFitsInSlot(enchant, character, slot);
         }
 
-        private bool HidingBadStuff { get { return HidingBadStuff_Spl || HidingBadStuff_PvP; } }
+        public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique) {
+            return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
+        }
+
+        private static List<string> _relevantGlyphs = null;
+        public override List<string> GetRelevantGlyphs()
+        {
+            if (_relevantGlyphs == null)
+            {
+                _relevantGlyphs = new List<string>() {
+                    #region Prime
+                    "Glyph of Aimed Shot", //   @"When you critically hit with Aimed Shot, you instantly gain 5 Focus.")]
+                    "Glyph of Arcane Shot",  // @"Your Arcane Shot deals 12% more damage.")]
+                    "Glyph of Chimera Shot", // @"Reduces the cooldown of Chimera Shot by 1 sec.")]
+                    // "Glyph of Dazzled Prey", // @"Your Steady Shot generates an additional 2 Focus on targets afflicted by a daze effect.")]
+                    "Glyph of Explosive Shot", //   @"Increases the critical strike chance of Explosive Shot by 6%.")]
+                    "Glyph of Kill Command", // @"Reduces the Focus cost of your Kill Command by 3.")]
+                    "Glyph of Kill Shot", // @"If the damage from your Kill Shot fails to kill a target at or below 20% health, your Kill Shot's cooldown is instantly reset. This effect has a 6 sec cooldown.")]
+                    "Glyph of Rapid Fire", // @"Increases the haste from Rapid Fire by an additional 10%.")]
+                    "Glyph of Serpent Sting", // @"Increases the periodic critical strike chance of your Serpent Sting by 6%.")]
+                    "Glyph of Steady Shot", // @"Increases the damage dealt by Steady Shot by 10%.")]
+                    #endregion
+                    #region Major
+                    "Glyph of Bestial Wrath", // @"Decreases the cooldown of Bestial Wrath by 20 sec.")]
+                    // "Glyph of Concussive Shot", // @"Your Concussive Shot also limits the maximum run speed of your target.")]
+                    // "Glyph of Deterrence", // @"Decreases the cooldown of Deterrence by 10 sec.")]
+                    // "Glyph of Disengage", // @"Decreases the cooldown of Disengage by 5 sec.")]
+                    "Glyph of Freezing Trap", // @"When your Freezing Trap breaks, the victim's movement speed is reduced by 70% for 4 sec.")]
+                    "Glyph of Ice Trap", // @"Increases the radius of the effect from your Ice Trap by 2 yards.")]
+                    "Glyph of Immolation Trap", // @"Decreases the duration of the effect from your Immolation Trap by 6 sec., but damage while active is increased by 100%.")]
+                    "Glyph of Master's Call", // @"Increases the duration of your Master's Call by 4 sec.")]
+                    // "Glyph of Mending", // @"Increases the total amount of healing done by your Mend Pet ability by 60%.")]
+                    // "Glyph of Misdirection", // @"When you use Misdirection on your pet, the cooldown on your Misdirection is reset.")]
+                    // "Glyph of Raptor Strike", // @"Reduces damage taken by 20% for 5 sec after using Raptor Strike.")]
+                    "Glyph of Scatter Shot", // @"Increases the range of Scatter Shot by 3 yards.")]
+                    "Glyph of Silencing Shot", // @"When you successfully silence an enemy's spell cast with Silencing Shot, you instantly gain 10 focus.")]
+                    "Glyph of Snake Trap", // @"Snakes from your Snake Trap take 90% reduced damage from area of effect spells.")]
+                    "Glyph of Trap Launcher", // @"Reduces the focus cost of Trap Launcher by 10.")]
+                    "Glyph of Wyvern Sting", // @"Decreases the cooldown of your Wyvern Sting by 6 sec.")]
+                    #endregion
+                    #region Minor
+                    "Glyph of Aspect of the Pack", // @"Increases the range of your Aspect of the Pack ability by 15 yards.")]
+                    "Glyph of Feign Death", // @"Reduces the cooldown of your Feign Death spell by 5 sec.")]
+                    "Glyph of Lesser Proportion", // @"Slightly reduces the size of your Pet.")]
+                    "Glyph of Revive Pet", // @"Reduces the pushback suffered from damaging attacks while casting Revive Pet by 100%.")]
+                    "Glyph of Scare Beast" // @"Reduces the pushback suffered from damaging attacks while casting Scare Beast by 75%.")]
+                    #endregion
+                };
+            }
+            return _relevantGlyphs;
+        }
+
+        private bool HidingBadStuff { get { return HidingBadStuff_Def || HidingBadStuff_Spl || HidingBadStuff_PvP; } }
+        private static bool _HidingBadStuff_Def = true;
+        internal static bool HidingBadStuff_Def { get { return _HidingBadStuff_Def; } set { _HidingBadStuff_Def = value; } }
         private static bool _HidingBadStuff_Spl = true;
         internal static bool HidingBadStuff_Spl { get { return _HidingBadStuff_Spl; } set { _HidingBadStuff_Spl = value; } }
-        private static bool _HidingBadStuff_PvP = true;
+        private static bool _HidingBadStuff_PvP = false;
         internal static bool HidingBadStuff_PvP { get { return _HidingBadStuff_PvP; } set { _HidingBadStuff_PvP = value; } }
+
+        internal static List<Trigger> _RelevantTriggers = null;
+        internal static List<Trigger> RelevantTriggers {
+            get {
+                return _RelevantTriggers ?? (_RelevantTriggers = new List<Trigger>() {
+                    Trigger.Use,
+                    //
+                    Trigger.PhysicalAttack,
+                    Trigger.RangedHit,
+                    Trigger.PhysicalHit,
+                    Trigger.RangedCrit,
+                    Trigger.PhysicalCrit,
+                    //
+                    Trigger.DoTTick,
+                    Trigger.DamageDone,
+                    Trigger.DamageOrHealingDone,
+                    // Trigger.DamageTaken,
+                    // Pets only
+                    Trigger.MeleeHit,
+                    Trigger.MeleeCrit,
+                    // Hunter Specific
+                    Trigger.HunterAutoShotHit,
+                    Trigger.SteadyShotHit,
+                    Trigger.CobraShotHit,
+                    Trigger.PetClawBiteSmackCrit,
+                    Trigger.SerpentWyvernStingsDoDamage,
+                    Trigger.EnergyOrFocusDropsBelow20PercentOfMax,
+                });
+            }
+        }
 
         public override Stats GetRelevantStats(Stats stats)
         {
             Stats relevantStats = new Stats() {
-                // Basic Stats
+                #region Basic Stats
                 Stamina = stats.Stamina,
                 Health = stats.Health,
                 Agility = stats.Agility,
-//                Strength = stats.Strength,
                 Armor = stats.Armor,
                 BonusArmor = stats.BonusArmor,
-                // Ratings
+                #endregion
+
+                #region Ratings
                 AttackPower = stats.AttackPower,
                 RangedAttackPower = stats.RangedAttackPower,
-                PetAttackPower = stats.PetAttackPower,
                 PhysicalCrit = stats.PhysicalCrit,
                 CritRating = stats.CritRating,
                 RangedCritRating = stats.RangedCritRating,
@@ -384,12 +433,12 @@ namespace Rawr.Hunter {
                 RangedHasteRating = stats.RangedHasteRating,
                 MasteryRating = stats.MasteryRating,
 
-//                ArmorPenetration = stats.ArmorPenetration,
                 TargetArmorReduction = stats.TargetArmorReduction,
                 Miss = stats.Miss,
                 ScopeDamage = stats.ScopeDamage,
+                #endregion
 
-                // Special
+                #region Special
                 HighestStat = stats.HighestStat,
                 HighestSecondaryStat = stats.HighestSecondaryStat,
                 Paragon = stats.Paragon,
@@ -398,39 +447,33 @@ namespace Rawr.Hunter {
                 SnareRootDurReduc = stats.SnareRootDurReduc,
                 FearDurReduc = stats.FearDurReduc,
                 DarkmoonCardDeathProc = stats.DarkmoonCardDeathProc,
+                #endregion
 
-                // Survivability
+                #region Survivability
                 HealthRestore = stats.HealthRestore,
                 HealthRestoreFromMaxHealth = stats.HealthRestoreFromMaxHealth,
-                Dodge = stats.Dodge,
-                DodgeRating = stats.DodgeRating,
-                Parry = stats.Parry,
-                ParryRating = stats.ParryRating,
+                #endregion
 
                 // Set Bonuses
 
-                // Multipliers
+                #region Multipliers
                 BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
                 BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
                 BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
                 BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
-                BonusRangedAttackPowerMultiplier = stats.BonusRangedAttackPowerMultiplier,
-                BonusPetAttackPowerMultiplier = stats.BonusPetAttackPowerMultiplier,
 
-                BonusManaPotionEffectMultiplier = stats.BonusManaPotionEffectMultiplier,
                 DamageTakenReductionMultiplier = stats.DamageTakenReductionMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BaseArmorMultiplier = stats.BaseArmorMultiplier,
                 BonusArmorMultiplier = stats.BonusArmorMultiplier,
                 BonusCritDamageMultiplier = stats.BonusCritDamageMultiplier,
                 BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
-                BonusPetDamageMultiplier = stats.BonusPetDamageMultiplier,
-                BonusPetCritChance = stats.BonusPetCritChance,
                 BonusManaMultiplier = stats.BonusManaMultiplier,
                 BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
                 BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
+                #endregion
 
-                // Damage Procs
+                #region Damage Procs
                 ShadowDamage = stats.ShadowDamage,
                 ArcaneDamage = stats.ArcaneDamage,
                 HolyDamage = stats.HolyDamage,
@@ -443,26 +486,10 @@ namespace Rawr.Hunter {
                 BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier,
                 BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
                 BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
+                #endregion
             };
-            foreach (SpecialEffect effect in stats.SpecialEffects())
-            {
-                if ((effect.Trigger == Trigger.Use ||
-                     effect.Trigger == Trigger.PhysicalCrit ||
-                     effect.Trigger == Trigger.PhysicalHit ||
-                     effect.Trigger == Trigger.PhysicalAttack ||
-                     effect.Trigger == Trigger.DoTTick ||
-                     effect.Trigger == Trigger.DamageDone ||
-                     effect.Trigger == Trigger.DamageOrHealingDone ||
-                     effect.Trigger == Trigger.DamageTaken ||
-                     // Hunter Specific
-                     effect.Trigger == Trigger.RangedHit ||
-                     effect.Trigger == Trigger.RangedCrit ||
-                     effect.Trigger == Trigger.SteadyShotHit ||
-                     effect.Trigger == Trigger.PetClawBiteSmackCrit ||
-                     effect.Trigger == Trigger.HunterAutoShotHit ||
-                     effect.Trigger == Trigger.SerpentWyvernStingsDoDamage ||
-                     effect.Trigger == Trigger.EnergyOrFocusDropsBelow20PercentOfMax)
-                    && HasRelevantStats(effect.Stats))
+           foreach (SpecialEffect effect in stats.SpecialEffects()) {
+                if (RelevantTriggers.Contains(effect.Trigger) && (HasRelevantStats(effect.Stats) || HasSurvivabilityStats(effect.Stats)))
                 {
                     relevantStats.AddSpecialEffect(effect);
                 }
@@ -476,174 +503,163 @@ namespace Rawr.Hunter {
 
         private bool HasWantedStats(Stats stats)
         {
-            bool isRelevant = (
-                // Base Stats
-                stats.Agility +
-                stats.Strength +
-                stats.AttackPower + stats.RangedAttackPower + stats.PetAttackPower +
-                // Ratings
-                stats.CritRating    + stats.RangedCritRating +
-                stats.HasteRating   + stats.RangedHasteRating +
-                stats.HitRating     + stats.RangedHitRating +
-                stats.MasteryRating +
-                // Bonuses
-                stats.TargetArmorReduction +
-                stats.PhysicalCrit +
-                stats.RangedHaste +
-                stats.PhysicalHit +
-                stats.MovementSpeed + stats.StunDurReduc + stats.SnareRootDurReduc + stats.FearDurReduc +
-                // Target Debuffs
-                // Procs
-                stats.DarkmoonCardDeathProc +
-                stats.HighestStat +
-                stats.HighestSecondaryStat +
-                stats.Paragon +
-                stats.ManaorEquivRestore +
-                // Damage Procs
-                stats.ShadowDamage +
-                stats.ArcaneDamage +
-                stats.HolyDamage +
-                stats.NatureDamage +
-                stats.FrostDamage +
-                stats.FireDamage +
-                stats.BonusShadowDamageMultiplier +
-                stats.BonusArcaneDamageMultiplier +
-                stats.BonusHolyDamageMultiplier +
-                stats.BonusNatureDamageMultiplier +
-                stats.BonusFrostDamageMultiplier +
-                stats.BonusFireDamageMultiplier +
-                // Multipliers
-                stats.BonusAgilityMultiplier +
-                stats.BonusAttackPowerMultiplier +
-                stats.BonusRangedAttackPowerMultiplier +
-                stats.BonusPetAttackPowerMultiplier +
-                stats.BonusCritDamageMultiplier +
-                stats.BonusIntellectMultiplier +
-                stats.BonusPetDamageMultiplier +
-                stats.BonusDamageMultiplier +
-                stats.BonusSpiritMultiplier +
-                stats.DamageTakenReductionMultiplier +
-                stats.BaseArmorMultiplier +
-                stats.BonusArmorMultiplier +
-                stats.BonusBleedDamageMultiplier +
-                stats.BonusPhysicalDamageMultiplier +
-                stats.BonusManaMultiplier +
-                // Set Bonuses
-                // Special
-                stats.ScopeDamage +
-                stats.BonusManaPotionEffectMultiplier +
-                stats.BonusPetCritChance
-            ) != 0;
-
-            foreach (SpecialEffect e in stats.SpecialEffects())
+            #region Base Stats
+            if (stats.Agility != 0) { return true; }
+            if (stats.Strength != 0) { return true; }
+            if (stats.AttackPower != 0) { return true; }
+            if (stats.RangedAttackPower != 0) { return true; }
+            #endregion
+            #region Ratings
+            if (stats.CritRating != 0) { return true; }
+            if (stats.RangedCritRating != 0) { return true; }
+            if (stats.HasteRating != 0) { return true; }
+            if (stats.RangedHasteRating != 0) { return true; }
+            if (stats.HitRating != 0) { return true; }
+            if (stats.RangedHitRating != 0) { return true; }
+            if (stats.MasteryRating != 0) { return true; }
+            #endregion
+            #region Bonuses
+            if (stats.TargetArmorReduction != 0) { return true; }
+            if (stats.PhysicalCrit != 0) { return true; }
+            if (stats.RangedHaste != 0) { return true; }
+            if (stats.PhysicalHit != 0) { return true; }
+            if (stats.MovementSpeed != 0) { return true; }
+            if (stats.StunDurReduc != 0) { return true; }
+            if (stats.SnareRootDurReduc != 0) { return true; }
+            if (stats.FearDurReduc != 0) { return true; }
+            #endregion
+            // Target Debuffs
+            #region Procs
+            if (stats.DarkmoonCardDeathProc != 0) { return true; }
+            if (stats.HighestStat != 0) { return true; }
+            if (stats.HighestSecondaryStat != 0) { return true; }
+            if (stats.Paragon != 0) { return true; }
+            if (stats.ManaorEquivRestore != 0) { return true; }
+            #endregion
+            #region Damage Procs
+            if (stats.ShadowDamage != 0) { return true; }
+            if (stats.ArcaneDamage != 0) { return true; }
+            if (stats.HolyDamage != 0) { return true; }
+            if (stats.NatureDamage != 0) { return true; }
+            if (stats.FrostDamage != 0) { return true; }
+            if (stats.FireDamage != 0) { return true; }
+            if (stats.BonusShadowDamageMultiplier != 0) { return true; }
+            if (stats.BonusArcaneDamageMultiplier != 0) { return true; }
+            if (stats.BonusHolyDamageMultiplier != 0) { return true; }
+            if (stats.BonusNatureDamageMultiplier != 0) { return true; }
+            if (stats.BonusFrostDamageMultiplier != 0) { return true; }
+            if (stats.BonusFireDamageMultiplier != 0) { return true; }
+            #endregion
+            #region Multipliers
+            if (stats.BonusAgilityMultiplier != 0) { return true; }
+            if (stats.BonusAttackPowerMultiplier != 0) { return true; }
+            if (stats.BonusCritDamageMultiplier != 0) { return true; }
+            if (stats.BonusIntellectMultiplier != 0) { return true; }
+            if (stats.BonusDamageMultiplier != 0) { return true; }
+            if (stats.BonusSpiritMultiplier != 0) { return true; }
+            if (stats.DamageTakenReductionMultiplier != 0) { return true; }
+            if (stats.BaseArmorMultiplier != 0) { return true; }
+            if (stats.BonusArmorMultiplier != 0) { return true; }
+            if (stats.BonusBleedDamageMultiplier != 0) { return true; }
+            if (stats.BonusPhysicalDamageMultiplier != 0) { return true; }
+            if (stats.BonusManaMultiplier != 0) { return true; }
+            #endregion
+            // Set Bonuses
+            #region Special
+            if (stats.ScopeDamage != 0) { return true; }
+            // if (stats.BonusManaPotionEffectMultiplier != 0) { return true; }
+            #endregion
+            // Special Effects
+            foreach (SpecialEffect effect in stats.SpecialEffects())
             {
-                if (e.Trigger == Trigger.DamageDone
-                    || e.Trigger == Trigger.DamageOrHealingDone
-                    || e.Trigger == Trigger.DoTTick
-                    || e.Trigger == Trigger.PhysicalCrit
-                    || e.Trigger == Trigger.PhysicalHit
-                    || e.Trigger == Trigger.PhysicalAttack
-                    || e.Trigger == Trigger.Use
-                    || e.Trigger == Trigger.DamageTaken
-                    || e.Trigger == Trigger.EnergyOrFocusDropsBelow20PercentOfMax
-                    // Hunter Specific
-                    || e.Trigger == Trigger.RangedHit
-                    || e.Trigger == Trigger.RangedCrit
-                    || e.Trigger == Trigger.SteadyShotHit
-                    || e.Trigger == Trigger.PetClawBiteSmackCrit
-                    || e.Trigger == Trigger.HunterAutoShotHit
-                    || e.Trigger == Trigger.SerpentWyvernStingsDoDamage)
+                if (RelevantTriggers.Contains(effect.Trigger) && HasRelevantStats(effect.Stats))
                 {
-                    isRelevant |= HasRelevantStats(e.Stats);
+                    return true;
                 }
             }
-
-            return isRelevant;
+            return false;
         }
 
         private bool HasSurvivabilityStats(Stats stats)
         {
-            bool retVal = false;
-            if ((stats.Health
-                + stats.Stamina
-                + stats.BonusHealthMultiplier
-                + stats.BonusStaminaMultiplier
-                + stats.HealthRestore
-                + stats.HealthRestoreFromMaxHealth
-                ) > 0)
+            // Health Base
+            if (stats.Stamina != 0) { return true; }
+            if (stats.Health != 0) { return true; }
+            if (stats.BonusStaminaMultiplier != 0) { return true; }
+            if (stats.BonusHealthMultiplier != 0) { return true; }
+            // Health Regen
+            if (stats.HealthRestore != 0) { return true; }
+            if (stats.HealthRestoreFromMaxHealth != 0) { return true; }
+            // Armor
+            if (stats.Armor != 0) { return true; }
+            if (stats.BonusArmor != 0) { return true; }
+            if (stats.BaseArmorMultiplier != 0) { return true; }
+            if (stats.BonusArmorMultiplier != 0) { return true; }
+            // Multipliers
+            if (stats.DamageTakenReductionMultiplier != 0) { return true; }
+            // Target Debuffs
+            if (stats.BossPhysicalDamageDealtReductionMultiplier != 0) { return true; }
+            // Special Effects
+            foreach (SpecialEffect effect in stats.SpecialEffects())
             {
-                retVal = true;
+                if (RelevantTriggers.Contains(effect.Trigger) && HasSurvivabilityStats(effect.Stats))
+                {
+                    return true;
+                }
             }
-            return retVal;
+            return false;
         }
 
         private bool HasIgnoreStats(Stats stats)
         {
             if (!HidingBadStuff) { return false; }
-            return (
-                // Remove Spellcasting only Stuff
-                (HidingBadStuff_Spl ? stats.SpellPower + stats.SpellPenetration
-                                    : 0f)
-                // Remove PvP Items
-                + (HidingBadStuff_PvP ? stats.Resilience
-                                      : 0f)
-                ) > 0;
-        }
 
-        public override bool IsEnchantRelevant(Enchant enchant, Character character) 
-        {
-            return 
-                IsEnchantAllowedForClass(enchant, character.Class) &&
-                IsProfEnchantRelevant(enchant, character) && 
-                (HasWantedStats(enchant.Stats) || 
-                    (HasSurvivabilityStats(enchant.Stats) && !HasIgnoreStats(enchant.Stats)));
-        }
-
-        public override bool IsBuffRelevant(Buff buff, Character character)
-        {
-            string name = buff.Name;
-            // Force some buffs to active
-            if (name.Contains("Potion of Wild Magic")
-                || name.Contains("Insane Strength Potion")
-            ) {
-                return true;
-            }
-            // Force some buffs to go away
-            else if (!buff.AllowedClasses.Contains(CharacterClass.Hunter)
-                     // these four foods give stam, which is the only useful part of their buff.
-                     // removed because you shouldn't use these foods - other foods are always better.
-                     || name.Contains("Spirit Food")
-                     || name.Contains("Strength Food")
-                     || name.Contains("Expertise Food")
-                     || name.Contains("Spell Power Food")
-            ) {
-                return false;
-            }
-            else if (character != null && Rawr.Properties.GeneralSettings.Default.HideProfEnchants && !character.HasProfession(buff.Professions))
-            { return false; }
-            bool haswantedStats = HasWantedStats(buff.Stats);
-            bool hassurvStats = HasSurvivabilityStats(buff.Stats);
-            bool hasbadstats = HasIgnoreStats(buff.Stats);
-            bool retVal = haswantedStats || (hassurvStats && !hasbadstats);
-            return retVal;
-            //return base.IsBuffRelevant(buff);
-        }
-
-        public override bool CanUseAmmo { get { return true; } }
-
-        public override bool IsItemRelevant(Item item) {
-            if ( // Manual override for +X to all Stats gems
-                   item.Name == "Nightmare Tear"
-                || item.Name == "Enchanted Tear"
-                || item.Name == "Enchanted Pearl"
-                || item.Name == "Chromatic Sphere"
-                ) {
-                return true;
-            } else if (
-                (item.Slot == ItemSlot.Ranged && (item.Type != ItemType.Gun && item.Type != ItemType.Bow && item.Type != ItemType.Crossbow)))
+            // Remove Spellcasting Stuff
+            if (HidingBadStuff_Spl)
             {
-                return false;
-            } else {
+                if (stats.Mp5 != 0) { return true; }
+                if (stats.SpellPower != 0) { return true; }
+                if (stats.Mana != 0) { return true; }
+                if (stats.ManaRestore != 0) { return true; }
+                if (stats.Spirit != 0) { return true; }
+                if (stats.Intellect != 0) { return true; }
+                if (stats.BonusSpiritMultiplier != 0) { return true; }
+                if (stats.BonusIntellectMultiplier != 0) { return true; }
+                if (stats.SpellPenetration != 0) { return true; }
+                if (stats.BonusManaMultiplier != 0) { return true; }
+            }
+            // Remove Defensive Stuff
+            if (HidingBadStuff_Def)
+            {
+                if (stats.Dodge != 0) { return true; }
+                if (stats.Parry != 0) { return true; }
+                if (stats.DodgeRating != 0) { return true; }
+                if (stats.ParryRating != 0) { return true; }
+                if (stats.BlockRating != 0) { return true; }
+                if (stats.Block != 0) { return true; }
+                if (stats.SpellReflectChance != 0) { return true; }
+            }
+            // Remove PvP Items
+            if (HidingBadStuff_PvP)
+            {
+                if (stats.Resilience != 0) { return true; }
+            }
+            // Special Effects
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                // The effect doesn't have a relevant trigger
+                if (!RelevantTriggers.Contains(effect.Trigger)) { return true; }
+                // The Effect has Ignore Stats
+                if (HasIgnoreStats(effect.Stats)) { return true; }
+            }
+            return false;
+        }
+
+        public override bool IsItemRelevant(Item item)
+        {
+            if (item.Slot == ItemSlot.Ranged && (item.Type != ItemType.Gun && item.Type != ItemType.Bow && item.Type != ItemType.Crossbow)) { return false; }
+            else
+            {
                 Stats stats = item.Stats;
                 bool wantedStats = HasWantedStats(stats);
                 bool survstats = HasSurvivabilityStats(stats);
@@ -652,138 +668,62 @@ namespace Rawr.Hunter {
             }
         }
 
-        private static List<Buff> _relevantPetBuffs = new List<Buff>();
-        public static List<Buff> RelevantPetBuffs {
-            get {
-                if (_relevantPetBuffs.Count == 0) {
-                    _relevantPetBuffs = Buff.AllBuffs.FindAll(buff => CalculationsHunter.IsPetBuffRelevant(buff));
-                }
-                return _relevantPetBuffs;
-            }
-        }
-
-        private static bool IsPetBuffRelevant(Buff buff)
+        public override bool IsEnchantRelevant(Enchant enchant, Character character)
         {
-/*            if (buff.Group == "Elixirs and Flasks"
-                || buff.Group == "Food"
-                || buff.Group == "Set Bonuses"
-                || buff.Group == "Profession Buffs"
-                || buff.Group == "Temporary Buffs"
-                || buff.Group == "Potion")
-            { return false; }
-
-            // Greater Blessing of Kings
-            if (buff.Stats.BonusAgilityMultiplier != 0) return true;
-            if (buff.Stats.BonusStrengthMultiplier != 0) return true;
-            if (buff.Stats.BonusStaminaMultiplier != 0) return true;
-
-            // Commanding Shout & Blood Pact
-            if (buff.Stats.Health != 0) return true;
-
-            // Greater Blessing of Might & Battle Shout
-            if (buff.Stats.AttackPower != 0) return true;
-            if (buff.Stats.PetAttackPower != 0) return true;
-
-            // True Shot Aura (not you) & Abo. Might & Unl. Rage
-            if (buff.Stats.BonusAttackPowerMultiplier != 0) return true;
-            if (buff.Stats.BonusPetAttackPowerMultiplier != 0) return true;
-
-            // Leader of the Pack/Rampage
-            if (buff.Stats.PhysicalCrit != 0) return true;
-
-            // Strength of Earth Totem & Horn of Winter &  Gift of the Wild & Prayer of Fortitude & Scrolls
-            if (buff.Stats.Strength != 0) return true;
-            if (buff.Stats.Agility != 0) return true;
-            if (buff.Stats.Stamina != 0) return true;
-
-            // WF Totem & Imp. Icy Talons & Swift Ret & Moonkin Aura
-            if (buff.Stats.PhysicalHaste != 0) return true;
-
-            // Sunder Armor, Sting
-            if (buff.Stats.TargetArmorReduction != 0) return true;
-
-            // Ret Aura & Feroc. Insp.
-            if (buff.Stats.BonusDamageMultiplier != 0) return true;
-
-            // Pet Food
-            if (buff.Stats.PetStamina != 0) return true;
-            if (buff.Stats.PetStrength != 0) return true;
-
-            if (buff.Stats._rawSpecialEffectData != null && buff.Stats._rawSpecialEffectData.Length > 0) {
-                return IsPetBuffRelevant(new Buff() { Group = buff.Group, Stats = buff.Stats._rawSpecialEffectData[0].Stats });
-            }
-*/
-            return false;
+            if (enchant == null || character == null) { return false; }
+            return
+                IsEnchantAllowedForClass(enchant, character.Class) &&
+                IsProfEnchantRelevant(enchant, character) &&
+                (HasWantedStats(enchant.Stats) ||
+                    (HasSurvivabilityStats(enchant.Stats) && !HasIgnoreStats(enchant.Stats)));
         }
 
-        public Stats GetBuffsStats(Character character, CalculationOptionsHunter calcOpts) {
+        public override bool IsBuffRelevant(Buff buff, Character character)
+        {
+            string name = buff.Name;
+            // Force some buffs to active
+            if (name.Contains("Flask of the Winds")
+                || name.Contains("Potion of the Tol'vir")
+                || name.Contains("Agility Food")
+            ) {
+                return true;
+            }
+            // Force some buffs to go away
+            else if (!buff.AllowedClasses.Contains(CharacterClass.Warrior))
+            { return false; }
+            else if (character != null && Rawr.Properties.GeneralSettings.Default.HideProfEnchants && !character.HasProfession(buff.Professions))
+            { return false; }
+            //
+            bool haswantedStats = HasWantedStats(buff.Stats);
+            bool hassurvStats = HasSurvivabilityStats(buff.Stats);
+            bool hasbadstats = HasIgnoreStats(buff.Stats);
+            bool retVal = haswantedStats || (hassurvStats && !hasbadstats);
+            return retVal;
+        }
+
+        private static readonly SpecialEffect _SE_2T12_cs = new SpecialEffect(Trigger.CobraShotHit, new StatsHunter() { BonusFireWeaponDamage = 0.80f, }, 0f, 0f, 0.10f);
+        private static readonly SpecialEffect _SE_2T12_ss = new SpecialEffect(Trigger.SteadyShotHit, new StatsHunter() { BonusFireWeaponDamage = 0.80f, }, 0f, 0f, 0.10f);
+
+        private static readonly SpecialEffect _SE_4T12 = new SpecialEffect(Trigger.HunterAutoShotHit, new StatsHunter() { FourPieceTier12 = 1f, }, 2f, 15, 0.1f);
+
+        public StatsHunter GetBuffsStats(Character character, CalculationOptionsHunter calcOpts) {
             List<Buff> removedBuffs = new List<Buff>();
             List<Buff> addedBuffs = new List<Buff>();
 
             List<Buff> buffGroup = new List<Buff>();
             #region Maintenance Auto-Fixing
-            /*// Removes the Sunder Armor if you are maintaining it yourself
-            // Also removes Acid Spit and Expose Armor
-            // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.SunderArmor_])
-            {
-                buffGroup.Clear();
-                buffGroup.Add(Buff.GetBuffByName("Sunder Armor"));
-                buffGroup.Add(Buff.GetBuffByName("Acid Spit"));
-                buffGroup.Add(Buff.GetBuffByName("Expose Armor"));
-                MaintBuffHelper(buffGroup, character, removedBuffs);
-            }
-
-            // Removes the Thunder Clap & Improved Buffs if you are maintaining it yourself
-            // Also removes Judgements of the Just, Infected Wounds, Frost Fever, Improved Icy Touch
-            // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.ThunderClap_])
-            {
-                buffGroup.Clear();
-                buffGroup.Add(Buff.GetBuffByName("Thunder Clap"));
-                buffGroup.Add(Buff.GetBuffByName("Improved Thunder Clap"));
-                buffGroup.Add(Buff.GetBuffByName("Judgements of the Just"));
-                buffGroup.Add(Buff.GetBuffByName("Infected Wounds"));
-                buffGroup.Add(Buff.GetBuffByName("Frost Fever"));
-                buffGroup.Add(Buff.GetBuffByName("Improved Icy Touch"));
-                MaintBuffHelper(buffGroup, character, removedBuffs);
-            }
-
-            // Removes the Demoralizing Shout & Improved Buffs if you are maintaining it yourself
-            // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.DemoralizingShout_])
-            {
-                buffGroup.Clear();
-                buffGroup.Add(Buff.GetBuffByName("Demoralizing Shout"));
-                buffGroup.Add(Buff.GetBuffByName("Improved Demoralizing Shout"));
-                MaintBuffHelper(buffGroup, character, removedBuffs);
-            }
-
-            // Removes the Battle Shout & Commanding Presence Buffs if you are maintaining it yourself
-            // Also removes their equivalent of Blessing of Might (+Improved)
-            // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.BattleShout_])
-            {
-                buffGroup.Clear();
-                buffGroup.Add(Buff.GetBuffByName("Commanding Presence (Attack Power)"));
-                buffGroup.Add(Buff.GetBuffByName("Battle Shout"));
-                buffGroup.Add(Buff.GetBuffByName("Improved Blessing of Might"));
-                buffGroup.Add(Buff.GetBuffByName("Blessing of Might"));
-                MaintBuffHelper(buffGroup, character, removedBuffs);
-            }
-
-            // Removes the Commanding Shout & Commanding Presence Buffs if you are maintaining it yourself
-            // Also removes their equivalent of Blood Pact (+Improved Imp)
-            // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.CommandingShout_])
-            {
-                buffGroup.Clear();
-                buffGroup.Add(Buff.GetBuffByName("Commanding Presence (Health)"));
-                buffGroup.Add(Buff.GetBuffByName("Commanding Shout"));
-                buffGroup.Add(Buff.GetBuffByName("Improved Imp"));
-                buffGroup.Add(Buff.GetBuffByName("Blood Pact"));
-                MaintBuffHelper(buffGroup, character, removedBuffs);
-            }*/
+            /* Removes the Sunder Armor if you are maintaining it yourself
+             * Also removes Acid Spit and Expose Armor
+             * We are now calculating this internally for better accuracy and to provide value to relevant talents
+             * if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.SunderArmor_])
+             * {
+             *   buffGroup.Clear();
+             *   buffGroup.Add(Buff.GetBuffByName("Sunder Armor"));
+             *   buffGroup.Add(Buff.GetBuffByName("Acid Spit"));
+             *   buffGroup.Add(Buff.GetBuffByName("Expose Armor"));
+             *   MaintBuffHelper(buffGroup, character, removedBuffs);
+             * }
+             */
             #endregion
 
             #region Passive Ability Auto-Fixing
@@ -798,27 +738,83 @@ namespace Rawr.Hunter {
                 MaintBuffHelper(buffGroup, character, removedBuffs);
             }
 
-#if !RAWR4
-            // Removes the Hunter's Mark Buff and it's Children 'Glyphed', 'Improved' and 'Both' if you are
+            // Removes the Ferocious Inspiration Buff and it's equivalents Sanctified Retribution and Arcane Tactics if you are
             // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
             // value to relevant talents
-            if (character.HunterTalents.ImprovedHuntersMark + (character.HunterTalents.GlyphOfHuntersMark ? 1 : 0) > 0) {
+            if (character.HunterTalents.FerociousInspiration > 0) {
                 buffGroup.Clear();
-                buffGroup.Add(Buff.GetBuffByName("Hunter's Mark"));
-                buffGroup.Add(Buff.GetBuffByName("Glyphed Hunter's Mark"));
-                buffGroup.Add(Buff.GetBuffByName("Improved Hunter's Mark"));
-                buffGroup.Add(Buff.GetBuffByName("Improved and Glyphed Hunter's Mark"));
+                buffGroup.Add(Buff.GetBuffByName("Ferocious Inspiration"));
+                buffGroup.Add(Buff.GetBuffByName("Sanctified Retribution"));
+                buffGroup.Add(Buff.GetBuffByName("Arcane Tactics"));
                 MaintBuffHelper(buffGroup, character, removedBuffs);
             }
-#endif
-            /* [More Buffs to Come to this method]
-             * Ferocious Inspiration | Sanctified Retribution
-             * Hunting Party | Judgements of the Wise, Vampiric Touch, Improved Soul Leech, Enduring Winter
-             * Acid Spit | Expose Armor, Sunder Armor (requires BM & Worm Pet)
-             */
+
+
+            // Removes the Hunting Party Buff and it's equivalents Improved Icy Talons and Windfury Totem if you are
+            // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
+            // value to relevant talents
+            if (character.HunterTalents.HuntingParty > 0)
+            {
+                buffGroup.Clear();
+                buffGroup.Add(Buff.GetBuffByName("Hunting Party"));
+                buffGroup.Add(Buff.GetBuffByName("Improved Icy Talons"));
+                buffGroup.Add(Buff.GetBuffByName("Windfury Totem"));
+                MaintBuffHelper(buffGroup, character, removedBuffs);
+            }
+
+            // Removes the Hunter's Mark if you are
+            // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
+            // value to relevant talents
+            buffGroup.Clear();
+            buffGroup.Add(Buff.GetBuffByName("Hunter's Mark"));
+            MaintBuffHelper(buffGroup, character, removedBuffs);
             #endregion
 
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs, character.SetBonusCount);
+            StatsHunter statsBuffs = new StatsHunter();
+            statsBuffs.Accumulate(GetBuffsStats(character.ActiveBuffs));
+            AccumulateSetBonusStats(statsBuffs, character.SetBonusCount);
+
+            #region PvP Set Bonus
+            int PvPcount;
+            character.SetBonusCount.TryGetValue("Gladiator's Pursuit", out PvPcount);
+            if (PvPcount >= 2)
+            {
+                statsBuffs.Resilience += 400f;
+                statsBuffs.Agility += 70f;
+            }
+            if (PvPcount >= 4)
+            {
+                statsBuffs.BonusFocusRegenMultiplier = 0.05f;
+                statsBuffs.Agility += 90f;
+            }
+            #endregion
+
+            #region Tier 11 Set Bonus
+            int T11count;
+            character.SetBonusCount.TryGetValue("Lightning-Charged Battlegear", out T11count);
+            if (T11count >= 2)
+            {
+                statsBuffs.BonusSerpentStingCritChance = 0.05f;
+            }
+            if (T11count >= 4)
+            {
+                statsBuffs.FourPieceTier11 = 0.2f;
+            }
+            #endregion
+
+            #region Tier 12 Set Bonus
+            int T12count;
+            character.SetBonusCount.TryGetValue("Flamewaker's Battlegear", out T12count);
+            if (T12count >= 2)
+            {
+                statsBuffs.AddSpecialEffect(_SE_2T12_cs);
+                statsBuffs.AddSpecialEffect(_SE_2T12_ss);
+            }
+            if (T12count >= 4)
+            {
+                statsBuffs.AddSpecialEffect(_SE_4T12);
+            }
+            #endregion
 
             foreach (Buff b in removedBuffs) { character.ActiveBuffsAdd(b); }
             foreach (Buff b in addedBuffs) { character.ActiveBuffs.Remove(b); }
@@ -832,6 +828,7 @@ namespace Rawr.Hunter {
                 if (character.ActiveBuffs.Remove(b)) { removedBuffs.Add(b); }
             }
         }
+
         public override void SetDefaults(Character character) { }
         #endregion
 
@@ -842,15 +839,9 @@ namespace Rawr.Hunter {
                 if (_customChartNames == null) {
                     _customChartNames = new string[] {
                         "Pet Talents",
-#if RAWR3 || RAWR4 || SILVERLIGHT
-                        //"Pet Talent Specs + Armory Pets",
-#endif
-                        //"Pet Buffs",
                         "Spammed Shots DPS",
                         "Spammed Shots FPS",
                         "Rotation DPS",
-                        //"Rotation MPS",
-                        //"Shot Damage per Mana",
                         "Item Budget",
                     };
                 }
@@ -867,17 +858,6 @@ namespace Rawr.Hunter {
                 case "Pet Talents":
                     _subPointNameColors = _subPointNameColorsDPS;
                     return GetPetTalentChart(character, calculations);
-                #endregion
-                #region Pet Talents
-                /*case "Pet Talent Specs + Armory Pets":
-                    _subPointNameColors = _subPointNameColorsDPS;
-                    return GetPetTalentSpecsChart(character, calculations);*/
-                #endregion
-                #region Pet Buffs
-//                case "Pet Buffs":
-//                    _subPointNameColors = _subPointNameColorsDPS;
-//                    CalculationOptionsHunter calcOpts = character.CalculationOptions as CalculationOptionsHunter;
-//                    return GetPetBuffCalculations(character, calcOpts, calculations, "All").ToArray();
                 #endregion
                 #region Spammed Shots DPS
                 case "Spammed Shots DPS":
@@ -901,32 +881,6 @@ namespace Rawr.Hunter {
                         //comparisonFromShotSpammedDPS(calculations.volley),
                         comparisonFromShotSpammedDPS(calculations.chimeraShot),
                     };
-                #endregion
-                #region Spammed Shots MPS
-                //case "Spammed Shots MPS":
-                //    _subPointNameColors = _subPointNameColorsMPS;
-                //    return new ComparisonCalculationBase[] {
-                //        comparisonFromShotSpammedMPS(calculations.aimedShot),
-                //        comparisonFromShotSpammedMPS(calculations.arcaneShot),
-                //        comparisonFromShotSpammedMPS(calculations.multiShot),
-                //        comparisonFromShotSpammedMPS(calculations.serpentSting),
-                //        //comparisonFromShotSpammedMPS(calculations.scorpidSting),
-                //        //comparisonFromShotSpammedMPS(calculations.viperSting),
-                //        comparisonFromShotSpammedMPS(calculations.cobraShot),
-                //        comparisonFromShotSpammedMPS(calculations.steadyShot),
-                //        comparisonFromShotSpammedMPS(calculations.killShot),
-                //        comparisonFromShotSpammedMPS(calculations.explosiveShot),
-                //        comparisonFromShotSpammedMPS(calculations.blackArrow),
-                //        comparisonFromShotSpammedMPS(calculations.immolationTrap),
-                //        comparisonFromShotSpammedMPS(calculations.explosiveTrap),
-                //        comparisonFromShotSpammedMPS(calculations.freezingTrap),
-                //        comparisonFromShotSpammedMPS(calculations.frostTrap),
-                //        //comparisonFromShotSpammedMPS(calculations.volley),
-                //        comparisonFromShotSpammedMPS(calculations.chimeraShot),
-                //        comparisonFromShotSpammedMPS(calculations.rapidFire),
-                //        comparisonFromShotSpammedMPS(calculations.readiness),
-                //        comparisonFromShotSpammedMPS(calculations.bestialWrath),
-                //    };
                 #endregion
                 #region Rotation DPS
                 case "Rotation DPS":
@@ -957,56 +911,6 @@ namespace Rawr.Hunter {
                         comparisonFromDoubles("PetSkills", 0, calculations.petSpecialDPS),
                         comparisonFromDoubles("KillCommand", 0, calculations.petKillCommandDPS),
                     };
-                #endregion
-                #region Rotation MPS
-                //case "Rotation MPS":
-                //    _subPointNameColors = _subPointNameColorsMPS;
-                //    return new ComparisonCalculationBase[] {
-                //        comparisonFromShotRotationMPS(calculations.aimedShot),
-                //        comparisonFromShotRotationMPS(calculations.arcaneShot),
-                //        comparisonFromShotRotationMPS(calculations.multiShot),
-                //        comparisonFromShotRotationMPS(calculations.serpentSting),
-                //        //comparisonFromShotRotationMPS(calculations.scorpidSting),
-                //        //comparisonFromShotRotationMPS(calculations.viperSting),
-                //        comparisonFromShotRotationMPS(calculations.cobraShot),
-                //        comparisonFromShotRotationMPS(calculations.steadyShot),
-                //        comparisonFromShotRotationMPS(calculations.killShot),
-                //        comparisonFromShotRotationMPS(calculations.explosiveShot),
-                //        comparisonFromShotRotationMPS(calculations.blackArrow),
-                //        comparisonFromShotRotationMPS(calculations.immolationTrap),
-                //        comparisonFromShotRotationMPS(calculations.explosiveTrap),
-                //        comparisonFromShotRotationMPS(calculations.freezingTrap),
-                //        comparisonFromShotRotationMPS(calculations.frostTrap),
-                //        //comparisonFromShotRotationMPS(calculations.volley),
-                //        comparisonFromShotRotationMPS(calculations.chimeraShot),
-                //        comparisonFromShotRotationMPS(calculations.rapidFire),
-                //        comparisonFromShotRotationMPS(calculations.readiness),
-                //        comparisonFromShotRotationMPS(calculations.bestialWrath),
-                //        comparisonFromDouble("KillCommand", calculations.petKillCommandMPS),
-                //    };
-                #endregion
-                #region Shot Damage per Mana
-                //case "Shot Damage per Mana":
-                //    _subPointNameColors = _subPointNameColorsDPM;
-                //    return new ComparisonCalculationBase[] {
-                //        comparisonFromShotDPM(calculations.aimedShot),
-                //        comparisonFromShotDPM(calculations.arcaneShot),
-                //        comparisonFromShotDPM(calculations.multiShot),
-                //        comparisonFromShotDPM(calculations.serpentSting),
-                //        //comparisonFromShotDPM(calculations.scorpidSting),
-                //        //comparisonFromShotDPM(calculations.viperSting),
-                //        comparisonFromShotDPM(calculations.cobraShot),
-                //        comparisonFromShotDPM(calculations.steadyShot),
-                //        comparisonFromShotDPM(calculations.killShot),
-                //        comparisonFromShotDPM(calculations.explosiveShot),
-                //        comparisonFromShotDPM(calculations.blackArrow),
-                //        comparisonFromShotDPM(calculations.immolationTrap),
-                //        comparisonFromShotDPM(calculations.explosiveTrap),
-                //        comparisonFromShotDPM(calculations.freezingTrap),
-                //        comparisonFromShotDPM(calculations.frostTrap),
-                //        //comparisonFromShotDPM(calculations.volley),
-                //        comparisonFromShotDPM(calculations.chimeraShot),
-                //    };
                 #endregion
                 #region Item Budget
                 case "Item Budget":
@@ -1374,7 +1278,7 @@ namespace Rawr.Hunter {
         #endregion
 
         #region CalculationsBase Overrides
-        private void GenPrioRotation(CharacterCalculationsHunter calculatedStats, CalculationOptionsHunter calcOpts, HunterTalents talents) {
+        /*        private void GenPrioRotation(CharacterCalculationsHunter calculatedStats, CalculationOptionsHunter calcOpts, HunterTalents talents) {
             calculatedStats.priorityRotation = new ShotPriority(calcOpts);
             calculatedStats.priorityRotation.priorities[0] = getShotByIndex(calcOpts.PriorityIndex1, calculatedStats);
             calculatedStats.priorityRotation.priorities[1] = getShotByIndex(calcOpts.PriorityIndex2, calculatedStats);
@@ -1401,7 +1305,7 @@ namespace Rawr.Hunter {
 
             calculatedStats.arcaneShot.Cd = 6;
 
-            calculatedStats.multiShot.Cd = /*talents.GlyphOfMultiShot ? 9 :*/ 10;
+            calculatedStats.multiShot.Cd = /*talents.GlyphOfMultiShot ? 9 : 10;
 
             calculatedStats.blackArrow.Cd = 30 - (talents.Resourcefulness * 2);
             calculatedStats.blackArrow.Duration = 15;
@@ -1481,7 +1385,7 @@ namespace Rawr.Hunter {
             /* Projectiles/Ammo have been removed in Cata
             if (character.Projectile != null) {
                 rangedAmmoDPS = (float)(character.Projectile.Item.MaxDamage + character.Projectile.Item.MinDamage) / 2f;
-            }*/
+            }
             #endregion
             #region Static Haste Calcs
             // default quiver speed
@@ -1520,7 +1424,7 @@ namespace Rawr.Hunter {
              * 6) Hero adds 30% base regen (4.00->5.20).
              * 7) Glyph of Rapid Fire adds 10% base regen (4.00->6.00).
              * 8) Focused Fire adds 15% base regen (4.00->4.60).
-             */
+             
             // Now we have the haste, we can calculate steady shot cast time,
             // then rebuild other various stats.
             // (future enhancement: we only really need to rebuild steady shot)
@@ -1558,9 +1462,9 @@ namespace Rawr.Hunter {
         }
 
         public float ConstrainCrit(float lvlDifMOD, float chance) { return Math.Min(1f + lvlDifMOD, Math.Max(0f, chance)); }
+*/
 
-        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem,
-            bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
             // First things first, we need to ensure that we aren't using bad data
             CharacterCalculationsHunter calc = new CharacterCalculationsHunter();
@@ -1570,1315 +1474,66 @@ namespace Rawr.Hunter {
             //
             calc.character = character;
             calc.CalcOpts = calcOpts;
-            BossOptions bossOpts = character.BossOptions;
-            calc.BossOpts = bossOpts;
+            //BossOptions bossOpts = character.BossOptions;
+            //calc.BossOpts = bossOpts;
             Stats stats = GetCharacterStats(character, additionalItem);
             HunterTalents talents = character.HunterTalents;
-            CombatFactors combatFactors = new CombatFactors(character, stats, calcOpts, bossOpts);
-            WhiteAttacks whiteAttacks = new WhiteAttacks(character, stats, combatFactors, calcOpts, bossOpts);
+            //CombatFactors combatFactors = new CombatFactors(character, stats, calcOpts, bossOpts);
+            //WhiteAttacks whiteAttacks = new WhiteAttacks(character, stats, combatFactors, calcOpts, bossOpts);
 
-            Stats statsItems = GetItemStats(character, additionalItem);
-            Stats statsBuffs = GetBuffsStats(character, calcOpts);
-            Stats statsRace = BaseStats.GetBaseStats(character.Level, CharacterClass.Hunter, character.Race);
+            //StatsHunter statsItems = GetItemStats(character, additionalItem) as StatsHunter;
+            //StatsHunter statsBuffs = GetBuffsStats(character, calcOpts) as StatsHunter;
+            StatsHunter statsRace = BaseStats.GetBaseStats(character.Level, CharacterClass.Hunter, character.Race) as StatsHunter;
 
-            float hunterspec = HunterTreeSpecialization(talents);
+            Specialization hunterspec = GetSpecialization(talents);
 
-            //ExplosiveShot es = new ExplosiveShot(character, stats, combatFactors, whiteAttacks, calcOpts);
-            //ChimeraShot cs = new ChimeraShot(character, stats, combatFactors, whiteAttacks, calcOpts);
-
-            calc.BasicStats = stats;
-            calc.BaseHealth = statsRace.Health;
-
-            calc.pet = new PetCalculations(character, calc, calcOpts, bossOpts, stats);
-
-            if (character.Ranged == null || (character.Ranged.Item.Type != ItemType.Bow
-                                             && character.Ranged.Item.Type != ItemType.Gun
-                                             && character.Ranged.Item.Type != ItemType.Crossbow))
-            {
-                //skip all the calculations if there is no ranged weapon
-                return calc;
-            }
-            int levelDifI = bossOpts.Level - character.Level;
-            float levelDifF = (float)levelDifI;
-
-            float critMOD = StatConversion.NPC_LEVEL_CRIT_MOD[levelDifI];
-
-            GenPrioRotation(calc, calcOpts, talents);
-            GenAbilityCds(character, calc, calcOpts, bossOpts, talents);
-
-            float rangedWeaponSpeed = 0,rangedWeaponDamage = 0;
-            float autoShotSpeed = 0;
-            float autoShotsPerSecond = 0, specialShotsPerSecond = 0, totalShotsPerSecond = 0, shotsPerSecondWithoutHawk = 0;
-            RotationTest rotationTest;
-            GenRotation(character, stats, calc, calcOpts, bossOpts, talents,
-                out rangedWeaponSpeed, out rangedWeaponDamage, out autoShotSpeed,
-                out autoShotsPerSecond, out specialShotsPerSecond, out totalShotsPerSecond, out shotsPerSecondWithoutHawk,
-                out rotationTest);
-
-            // Mastery
-            #region Mastery
-            calc.masteryfrombase = 0f;
-            calc.masteryfromincrement = 0f;
-            calc.masteryoverall = 0f;
-            if (hunterspec == 0f) { calc.masteryfrombase = 0.13f; calc.masteryfromincrement = (0.017f * (calc._masteryBase + StatConversion.GetMasteryFromRating(stats.MasteryRating))); } // Beast Mastery
-            else if (hunterspec == 1f) { calc.masteryfrombase = 0.17f; calc.masteryfromincrement = (0.018f * (calc._masteryBase + StatConversion.GetMasteryFromRating(stats.MasteryRating))); } // Marksmanship
-            else if (hunterspec == 2f) { // Survival
-                calc.masteryfrombase = 0.08f; 
-                calc.masteryfromincrement = (0.01f * (calc._masteryBase + StatConversion.GetMasteryFromRating(stats.MasteryRating)));
-                calc.masteryoverall = calc.masteryfrombase + calc.masteryfromincrement;
-//                calc.Arcane.Mastery = calc.masteryoverall;
-//                calc.Cobra.Mastery = calc.masteryoverall;
-//                calc.BlackArrowD.Mastery = calc.masteryoverall;
-//                calc.Explosive.Mastery = calc.masteryoverall;
-//                calc.Serpent.Mastery = calc.masteryoverall;
-            } 
-            #endregion
-
-            // Hits
-            #region Hit vs Miss Chance
-            float ChanceToMiss = (float)Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[levelDifI] - stats.PhysicalHit);
-            #endregion
-
-            // Crits
-            #region Crit Chance
-            float mailspecialization = (Character.ValidateArmorSpecialization(character, ItemType.Mail) ? 0.05f : 0f);
-            float totalAGI = (float)Math.Ceiling(stats.Agility) * (1f + mailspecialization);
-            float baseAGI = (float)Math.Ceiling(statsRace.Agility * (1f + stats.BonusAgilityMultiplier) * (1f + mailspecialization));
-            calc.critFromAgi = ConstrainCrit(critMOD, StatConversion.GetCritFromAgility(stats.Agility/*statsRace.Agility * (1f + stats.BonusAgilityMultiplier)*//*totalAGI - baseAGI*/, character.Class)/* - 0.01536f*/);
-            calc.critFromRating = ConstrainCrit(critMOD, StatConversion.GetCritFromRating(stats.CritRating, character.Class));
-
-            calc.critRateOverall = stats.PhysicalCrit;
-            #endregion
-            #region Bonus Crit Chance
-            //Improved Barrage
-            float improvedBarrageCritModifier = 0.04f *
-#if !RAWR4
-                talents.ImprovedBarrage;
-#else
- 0f;
-#endif
-            // Survival instincts
-#if !RAWR4
-            float survivalInstinctsCritModifier = 0.02f * talents.SurvivalInstincts;
-#else
-            float survivalInstinctsCritModifier = 0;
-#endif
-            // Explosive Shot Glyph
-            float glyphOfExplosiveShotCritModifier = talents.GlyphOfExplosiveShot ? 0.04f : 0;
-            // Sniper Training
-            float sniperTrainingCritModifier = 0.05f * talents.SniperTraining;
-            #endregion
-            #region Shot Crit Chances
-            calc.steadyShot.CritChance = ConstrainCrit(critMOD, stats.PhysicalCrit + survivalInstinctsCritModifier);
-            calc.aimedShot.CritChance = ConstrainCrit(critMOD, stats.PhysicalCrit
-                                + (talents.GlyphOfTrueshotAura && talents.TrueshotAura > 0 ? 0.10f : 0f)
-                                + improvedBarrageCritModifier);
-            calc.explosiveShot.CritChance = ConstrainCrit(critMOD, stats.PhysicalCrit + glyphOfExplosiveShotCritModifier + survivalInstinctsCritModifier);
-            calc.serpentSting.CritChance = ConstrainCrit(critMOD, stats.PhysicalCrit);
-            calc.chimeraShot.CritChance = ConstrainCrit(critMOD, stats.PhysicalCrit);
-            calc.arcaneShot.CritChance = ConstrainCrit(critMOD, stats.PhysicalCrit + survivalInstinctsCritModifier);
-            calc.multiShot.CritChance = ConstrainCrit(critMOD, stats.PhysicalCrit + improvedBarrageCritModifier);
-            calc.killShot.CritChance = ConstrainCrit(critMOD, stats.PhysicalCrit + sniperTrainingCritModifier);
-            calc.cobraShot.CritChance = ConstrainCrit(critMOD, stats.PhysicalCrit);
-            calc.priorityRotation.calculateCrits();
-            #endregion
-
-            // Focus
-            #region Focus
-            calc.basefocus = 100f;
-            calc.focusfromtalents = 5f * talents.KindredSpirits; // up to 10 extra focus
-            calc.focus = calc.basefocus + calc.focusfromtalents;
-            #endregion
-
-            // pet - part 1
-            #region Pet MPS/Timing Calculations
-            // this first block needs to run before the mana adjustments code,
-            // since kill command effects mana usage.
-            float baseMana = statsRace.Mana;
-//            calc.baseMana = statsRace.Mana;
-            calc.pet.GenPetStats();
-            #endregion
-
-            // target debuffs
-            #region Target Debuffs
-            // The pet debuffs deal with stacking correctly themselves
-            float targetDebuffsArmor = 1f - (1f - calc.petArmorDebuffs)
-                                          * (1f - statsBuffs.TargetArmorReduction); // Buffs!G77
-
-            float targetDebuffsFire = statsBuffs.BonusFireDamageMultiplier; // Buffs!I77
-            float targetDebuffsArcane = statsBuffs.BonusArcaneDamageMultiplier; // Buffs!J77
-            float targetDebuffsNature = statsBuffs.BonusNatureDamageMultiplier; // Buffs!K77
-            float targetDebuffsShadow = statsBuffs.BonusShadowDamageMultiplier;
-
-            float targetDebuffsPetDamage = statsBuffs.BonusPhysicalDamageMultiplier;
-
-            calc.targetDebuffsArmor = 1f - targetDebuffsArmor;
-            calc.targetDebuffsNature = 1f + targetDebuffsNature;
-            calc.targetDebuffsPetDamage = 1f + targetDebuffsPetDamage;
-
-            //29-10-2009 Drizz: For PiercingShots
-            float targetDebuffBleed = statsBuffs.BonusBleedDamageMultiplier;
-            #endregion
-
-            #region Improved Steady Shot
-            float resourcefullnessManaAdjust = 1f - talents.Resourcefulness * 0.2f;
-
-//            float ISSAimedShotManaAdjust = 1f;
-//            float ISSArcaneShotManaAdjust = 1f;
-//            float ISSChimeraShotManaAdjust = 1f;
-
-            float ISSChimeraShotDamageAdjust = 1f;
-            float ISSArcaneShotDamageAdjust = 1f;
-            float ISSAimedShotDamageAdjust = 1f;
-
-            float ISSProcChance = 0.05f * talents.ImprovedSteadyShot;
-            if (ISSProcChance > 0f)
-            {
-                if (calcOpts.UseRotationTest)
-                {
-                    ISSChimeraShotDamageAdjust = 1f + rotationTest.ISSChimeraUptime * 0.15f;
-                    ISSArcaneShotDamageAdjust = 1f + rotationTest.ISSArcaneUptime * 0.15f;
-                    ISSAimedShotDamageAdjust = 1f + rotationTest.ISSAimedUptime * 0.15f;
-
-//                    ISSChimeraShotManaAdjust   = 1f - rotationTest.ISSChimeraUptime * 0.2f;
-//                    ISSArcaneShotManaAdjust    = 1f - rotationTest.ISSArcaneUptime * 0.2f;
-//                    ISSAimedShotManaAdjust     = 1f - rotationTest.ISSAimedUptime * 0.2f;
-                }
-                else
-                {
-                    float ISSRealProcChance = 0f; // N120
-                    if (calc.steadyShot.Freq > 0f)
-                    {
-                        float ISSSteadyFreq = calc.steadyShot.Freq;
-                        float ISSOtherFreq = calc.arcaneShot.Freq
-                                            + calc.chimeraShot.Freq
-                                            + calc.aimedShot.Freq;
-
-                        ISSRealProcChance = 1f - (float)Math.Pow(1f - ISSProcChance, ISSOtherFreq / ISSSteadyFreq);
-                    }
-                    float ISSProcFreqChimera = ISSRealProcChance > 0f ? calc.chimeraShot.Freq / ISSRealProcChance : 0f; // N121
-                    float ISSProcFreqArcane = ISSRealProcChance > 0f ? calc.arcaneShot.Freq / ISSRealProcChance : 0f; // N122
-                    float ISSProcFreqAimed = ISSRealProcChance > 0f ? calc.aimedShot.Freq / ISSRealProcChance : 0f; // N123
-
-                    float ISSProcFreqSumInverse = (ISSProcFreqChimera > 0f ? 1f / ISSProcFreqChimera : 0f)
-                                                 + (ISSProcFreqArcane > 0f ? 1f / ISSProcFreqArcane : 0f)
-                                                 + (ISSProcFreqAimed > 0f ? 1f / ISSProcFreqAimed : 0f);
-                    float ISSProcFreqCombined = ISSProcFreqSumInverse > 0f ? 1f / ISSProcFreqSumInverse : 0f; // N124
-
-                    ISSChimeraShotDamageAdjust = ISSProcFreqChimera > 0f ? 1f + ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqChimera * 0.15f : 1f;
-                    ISSArcaneShotDamageAdjust = ISSProcFreqArcane > 0f ? 1f + ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqArcane * 0.15f : 1f;
-                    ISSAimedShotDamageAdjust = ISSProcFreqAimed > 0f ? 1f + ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqAimed * 0.15f : 1f;
-
-//                    ISSChimeraShotManaAdjust   = ISSProcFreqChimera > 0f ? 1f - ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqChimera * 0.2f : 1f;
-//                    ISSArcaneShotManaAdjust    = ISSProcFreqArcane  > 0f ? 1f - ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqArcane * 0.2f : 1f;
-//                    ISSAimedShotManaAdjust     = ISSProcFreqAimed   > 0f ? 1f - ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqAimed * 0.2f : 1f;
-                }
-            }
-
-            float resourcefulnessManaAdjust = 1f - (talents.Resourcefulness * 0.2f);
-            #endregion
-
-            #region Aspect Usage
-            float glpyhOfAspectOfTheViperBonus = /*talents.GlyphOfAspectOfTheViper ? 1.1f :*/ 1f;
-
-            calc.manaRegenViper = calc.BasicStats.Mana * (float)Math.Round(rangedWeaponSpeed, 1) / 100f * shotsPerSecondWithoutHawk
-                                        * glpyhOfAspectOfTheViperBonus
-                                        + stats.Mana * 0.04f / 3f;
-
-            calc.manaUsageKillCommand = calc.petKillCommandMPS * (1f - stats.ManaCostReductionMultiplier);
-            calc.manaUsageRotation = calc.priorityRotation.MPS;
-
-            calc.manaUsageTotal = calc.manaUsageRotation
-                                           + calc.manaUsageKillCommand;
-
-            calc.manaChangeDuringViper = calc.manaRegenTotal - calc.manaUsageTotal + calc.manaRegenViper;
-            calc.manaChangeDuringNormal = calc.manaRegenTotal - calc.manaUsageTotal;
-
-            calc.manaTimeToFull = calc.manaChangeDuringViper > 0f ? stats.Mana / calc.manaChangeDuringViper : -1f;
-            calc.manaTimeToOOM = calc.manaChangeDuringNormal < 0f ? stats.Mana / (0f - calc.manaChangeDuringNormal) : -1f;
-
-            float PercTimeNoDPSforNoMana = 0f,
-                  viperTimeNeededToLastFight = 0f,
-                  aspectUptimeHawk = 0f,
-                  aspectUptimeViper = 0f;
-
-#if RAWR3 || RAWR4 || SILVERLIGHT
-            if (calc.manaTimeToOOM >= 0f && calc.manaTimeToOOM < bossOpts.BerserkTimer && calc.manaRegenViper > 0f)
-            {
-                viperTimeNeededToLastFight = (((0f - calc.manaChangeDuringNormal) * bossOpts.BerserkTimer) - calc.BasicStats.Mana) / calc.manaRegenViper;
-            }
-
-            if (calc.manaTimeToOOM >= 0 && calc.manaTimeToOOM < bossOpts.BerserkTimer)
-            {
-                /// TODO: AspectUsage.FoxToRun implementing
-                //if (calcOpts.AspectUsage == AspectUsage.ViperRegen)
-                //{
-                //    aspectUptimeViper = Math.Min(bossOpts.BerserkTimer - calc.manaTimeToOOM, calc.manaTimeToFull) / (calc.manaTimeToFull + calc.manaTimeToOOM);
-                //}
-                //else if (calcOpts.AspectUsage == AspectUsage.ViperToOOM && viperTimeNeededToLastFight > 0f)
-                //{
-                //    aspectUptimeViper = Math.Min(bossOpts.BerserkTimer - calc.manaTimeToOOM, viperTimeNeededToLastFight) / bossOpts.BerserkTimer;
-                //}
-                //else 
-                if (calcOpts.AspectUsage == AspectUsage.None)
-                {
-                    PercTimeNoDPSforNoMana = (bossOpts.BerserkTimer - calc.manaTimeToOOM) / bossOpts.BerserkTimer;
-                }
-            }
-
-            float aspectUptimeBeast = calcOpts.UseBeastDuringBestialWrath && calc.bestialWrath.Freq > 0
-                ? (calc.bestialWrath.Duration * (bossOpts.BerserkTimer / calc.bestialWrath.Cd)) / bossOpts.BerserkTimer : 0;
-#else
-            if (calculatedStats.manaTimeToOOM >= 0f && calculatedStats.manaTimeToOOM < calcOpts.Duration && calculatedStats.manaRegenViper > 0f) {
-                viperTimeNeededToLastFight = (((0f - calculatedStats.manaChangeDuringNormal) * calcOpts.Duration) - calculatedStats.BasicStats.Mana) / calculatedStats.manaRegenViper;
-            }
-
-            if (calculatedStats.manaTimeToOOM >= 0 && calculatedStats.manaTimeToOOM < calcOpts.Duration) {
-                if      (calcOpts.AspectUsage == AspectUsage.ViperRegen) {
-                    aspectUptimeViper = Math.Min(calcOpts.Duration - calculatedStats.manaTimeToOOM, calculatedStats.manaTimeToFull) / (calculatedStats.manaTimeToFull + calculatedStats.manaTimeToOOM);
-                }else if(calcOpts.AspectUsage == AspectUsage.ViperToOOM && viperTimeNeededToLastFight > 0f) {
-                    aspectUptimeViper = Math.Min(calcOpts.Duration - calculatedStats.manaTimeToOOM, viperTimeNeededToLastFight) / calcOpts.Duration;
-                }else if(calcOpts.AspectUsage == AspectUsage.None) {
-                    PercTimeNoDPSforNoMana = (calcOpts.Duration - calculatedStats.manaTimeToOOM) / calcOpts.Duration;
-                }
-            }
-
-            float aspectUptimeBeast = calcOpts.UseBeastDuringBestialWrath && calculatedStats.bestialWrath.Freq > 0
-                ? (calculatedStats.bestialWrath.Duration * (calcOpts.Duration / calculatedStats.bestialWrath.Cd)) / calcOpts.Duration : 0;
-#endif
-
-            switch (calcOpts.SelectedAspect) {
-//                case Aspect.Viper:
-//                    aspectUptimeViper = calcOpts.UseBeastDuringBestialWrath ? 1f - aspectUptimeBeast : 1f;
-//                    break;
-                    /// TODO Zhok: Refactor ... no beast.. more fox  
-                case Aspect.Fox:
-                    aspectUptimeBeast = (calcOpts.AspectUsage == AspectUsage.None) ? 1f : 1f - aspectUptimeViper;
-                    break;
-                case Aspect.Hawk:
-                    aspectUptimeHawk = 1f - aspectUptimeViper - aspectUptimeBeast;
-                    break;
-            }
-
-            // we now know aspect uptimes - calculate bonuses and penalties
-#if !RAWR4
-            float viperDamageEffect  = talents.AspectMastery > 0 ? 0.40f : 0.50f;
-#else
-            float viperDamageEffect = 0.50f;
-#endif
-            float viperDamagePenalty = aspectUptimeViper * viperDamageEffect;
-
-//            float beastStaticAPBonus = talents.GlyphOfTheBeast ? 0.12f : 0.10f;
-//            float beastAPBonus = aspectUptimeBeast * beastStaticAPBonus;
-
-            calc.aspectUptimeHawk = aspectUptimeHawk;
-            calc.aspectUptimeBeast = aspectUptimeBeast;
-            calc.aspectUptimeViper = aspectUptimeViper;
-            calc.aspectViperPenalty = viperDamagePenalty;
-//            calc.aspectBonusAPBeast = beastAPBonus;
-            calc.NoManaDPSDownTimePerc = PercTimeNoDPSforNoMana;
-            #endregion
-
-            // damage
-            #region Ranged Attack Power
-            calc.apFromBase = ((character.Level * 2f) - 20f);
-            calc.apFromAGI = (stats.Agility * 2f);
-            calc.apFromGear = stats.AttackPower - calc.apFromAGI - calc.apFromBase;
-
-            // use for pet calculations
-            calc.apSelfBuffed = calc.apFromGear;
-
-            // used for hunter calculations
-            calc.apTotal = calc.apSelfBuffed;
-
-            float RAP = calc.apTotal;
-            #endregion
-            #region Armor Penetration
-            float ArmorDamageReduction = GetArmorDamageReduction(character, stats, calcOpts, bossOpts);
-            calc.damageReductionFromArmor = (1f - ArmorDamageReduction);
-            #endregion
-            #region Damage Adjustments
-            // Partial Resists
-            float averageResist = (levelDifF) * 0.02f;
-            float resist10 = 5.0f * averageResist;
-            float resist20 = 2.5f * averageResist;
-            float partialResistDamageAdjust = 1f - (resist10 * 0.1f + resist20 * 0.2f);
-
-            // Focused Fire
-            float focusedFireDamageAdjust = 1f;
-
-            // Black Arrow Damage Multiplier
-            float blackArrowUptime = 0;
-            if (calc.priorityRotation.containsShot(Shots.BlackArrow))
-            {
-                SpecialEffect blackarrow = new SpecialEffect(Trigger.Use, new Stats(),
-                                            calc.blackArrow.Duration, calc.blackArrow.Freq);
-#if RAWR3 || RAWR4 || SILVERLIGHT
-                blackArrowUptime = blackarrow.GetAverageUptime(0f, 1f, calc.autoShotStaticSpeed, (float)bossOpts.BerserkTimer);
-#else
-                blackArrowUptime = blackarrow.GetAverageUptime(0f, 1f, calculatedStats.autoShotStaticSpeed, (float)calcOpts.Duration);
-#endif
-            }
-            float blackArrowAuraDamageAdjust = 1f + (0.06f * blackArrowUptime);
-            float blackArrowSelfDamageAdjust = 1f + (RAP / 225000f);
-
-            // Noxious Stings
-            float noxiousStingsSerpentUptime = 0;
-            if (calc.serpentSting.Freq > 0) { noxiousStingsSerpentUptime = calc.serpentSting.Duration / calc.serpentSting.Freq; }
-            if (calc.priorityRotation.chimeraRefreshesSerpent) { noxiousStingsSerpentUptime = 1; }
-            float noxiousStingsDamageAdjust = 1f + (0.01f * talents.NoxiousStings * noxiousStingsSerpentUptime);
-            float noxiousStingsSerpentDamageAdjust = 1f + (0.01f * talents.NoxiousStings);
-
-            // Ferocious Inspiration (calculated by pet model)
-            float ferociousInspirationDamageAdjust = calc.ferociousInspirationDamageAdjust;
-            float ferociousInspirationArcaneDamageAdjust = 1f + (0.03f * talents.FerociousInspiration);
-
-            // Improved Tracking
-            float improvedTrackingDamageAdjust = 1f + 0f; //Astryl: NOTE! This talent was removed. So, 0ing it. //0.01f * talents.ImprovedTracking;
-
-            // Ranged Weapon Specialization
-            float rangedWeaponSpecializationDamageAdjust = 1;
-
-            // Marked For Death (assume hunter's mark is on target)
-            float markedForDeathDamageAdjust = 1f + 0.01f * talents.MarkedForDeath;
-
-            // DamageTakenDebuffs
-            float targetPhysicalDebuffsDamageAdjust = (1f + statsBuffs.BonusPhysicalDamageMultiplier);
-
-            // Barrage
-            float barrageDamageAdjust = 1f;
-
-            // Sniper Training
-            float sniperTrainingDamageAdjust = 1f + 0.02f * talents.SniperTraining;
-
-            // Improve Stings
-            float improvedStingsDamageAdjust = 1f;
-
-            // Trap Mastery
-            float trapMasteryDamageAdjust = 1f + 0.1f * talents.TrapMastery;
-
-            // T.N.T.
-            float TNTDamageAdjust = 1f + 0.06f * talents.TNT;
-
-            // These intermediates group the two common sets of adjustments
-            float talentDamageAdjust = focusedFireDamageAdjust
-                //* beastWithinDamageAdjust
-                //* sancRetributionAuraDamageAdjust
-                                            * blackArrowAuraDamageAdjust
-                                            * noxiousStingsDamageAdjust
-                                            * ferociousInspirationDamageAdjust
-                                            * improvedTrackingDamageAdjust
-                                            * rangedWeaponSpecializationDamageAdjust
-                                            * markedForDeathDamageAdjust;
-
-            float talentDamageStingAdjust = focusedFireDamageAdjust
-                //* beastWithinDamageAdjust
-                //* sancRetributionAuraDamageAdjust
-                                            * blackArrowAuraDamageAdjust
-                                            * noxiousStingsDamageAdjust
-                                            * ferociousInspirationDamageAdjust;
-
-            // Full Bonus Damage Adjust
-            float BonusDamageAdjust = 1f + stats.BonusDamageMultiplier;
-            #endregion
-            #region Bonus Crit Damage
-            // MortalShots
-            float mortalShotsCritDamage = 0.06f *
-#if !RAWR4
-                talents.MortalShots;
-#else
-                0f;
-#endif
-            // CritDamageMetaGems
-            float metaGemCritDamage = 1f + (statsItems.BonusCritDamageMultiplier * 2);
-            // Marked For Death
-            float markedForDeathCritDamage = 0.02f * talents.MarkedForDeath;
-            float baseCritDamage = (1f + mortalShotsCritDamage) * metaGemCritDamage; // CriticalHitDamage
-            float specialCritDamage = (1f + mortalShotsCritDamage + markedForDeathCritDamage) * metaGemCritDamage; // SpecialCritDamage
-            #endregion
-
-            // pet - part 2
-            #region Pet DPS Calculations
-            calc.pet.calculateDPS();
-            #endregion
-
-            // shot damage calcs
-            #region AutoShot
-            // scope damage only applies to autoshot, so is not added to the normalized damage
-            /*float rangedAmmoDamage = rangedAmmoDPS * rangedWeaponSpeed;
-            float rangedAmmoDamageNormalized = rangedAmmoDPS * 2.8f;*/
-
-            float damageFromRAP = RAP / 14f * rangedWeaponSpeed;// this is supposed to be speed, not damage rangedWeaponDamage;
-            float damageFromRAPNormalized = RAP / 14f * 2.8f;
-
-            float autoShotDamage = rangedWeaponDamage
-                                 //+ rangedAmmoDamage
-                                 + stats.WeaponDamage
-                                 + damageFromRAP
-                                 + stats.ScopeDamage;
-            float autoShotDamageNormalized = rangedWeaponDamage
-                                           //+ rangedAmmoDamageNormalized
-                                           + stats.WeaponDamage
-                                           + damageFromRAPNormalized
-                                           + stats.ScopeDamage;
-
-            float autoShotDamageAdjust = talentDamageAdjust
-                                       * targetPhysicalDebuffsDamageAdjust
-                                       * ArmorDamageReduction
-                                       * BonusDamageAdjust;
-            float autoShotCritAdjust = 1f * metaGemCritDamage;
-
-            float autoShotDamageReal = CalcEffectiveDamage(autoShotDamage,
-                                                           ChanceToMiss,
-                                                           ConstrainCrit(critMOD, stats.PhysicalCrit),
-                                                           autoShotCritAdjust,
-                                                           autoShotDamageAdjust);
-
-            float hunterAutoDPS = autoShotsPerSecond
-                                * autoShotDamageReal;
- //                               * (1f - calculatedStats.aspectViperPenalty)
- //                               * tier7ViperDamageAdjust;
-
-            float QSBaseFrequencyIncrease = 0f;
-
-            calc.aspectBeastLostDPS = (0f - QSBaseFrequencyIncrease) * (1f - calc.aspectUptimeHawk) * hunterAutoDPS;
-
-            calc.AutoshotDPS = hunterAutoDPS;
-            #endregion
-            #region Wild Quiver
-            calc.WildQuiverDPS = 0;
-
-            if (hunterspec == 1f)
-            {
-                float wildQuiverProcChance = calc.masteryfrombase + calc.masteryfromincrement;
-                float wildQuiverProcFrequency = (autoShotSpeed / wildQuiverProcChance);
-                float wildQuiverDamageNormal = rangedWeaponDamage + statsItems.WeaponDamage + damageFromRAP;
-                float wildQuiverDamageAdjust = talentDamageAdjust * partialResistDamageAdjust * (1f + targetDebuffsNature) * BonusDamageAdjust;
-
-                float wildQuiverDamageReal = CalcEffectiveDamage(
-                                                wildQuiverDamageNormal,
-                                                ChanceToMiss,
-                                                ConstrainCrit(critMOD, stats.PhysicalCrit),
-                                                1f,
-                                                wildQuiverDamageAdjust
-                                              );
-
-                //29-10-2009 Drizz: Added the ViperUpTIme penalty
-                calc.WildQuiverDPS = (wildQuiverDamageReal / wildQuiverProcFrequency) * (1f - calc.aspectViperPenalty);
-            }
-
-
-            #endregion
-            #region August 2009 Steady Shot
-
-            // base = shot_base + gear_weapon_damage + normalized_ammo_dps + (RAP * 0.1)
-            //        + (rangedWeaponDamage / ranged_weapon_speed * 2.8)
-            float steadyShotDamageNormal = 252f
-                        + statsItems.WeaponDamage
-                        //+ rangedAmmoDamageNormalized
-                        + (RAP * 0.1f)
-                        + (rangedWeaponDamage / rangedWeaponSpeed * 2.8f);
-            // adjust = talent_adjust * gronnstalker_bonus * glyph_of_steadyshot
-            //          * sniper_training * physcial_debuffs
-            // to-maybe-do: Gronnstalker set bonus
-            float steadyShotDamageAdjust = talentDamageAdjust
-                                            * targetPhysicalDebuffsDamageAdjust
-                                            * sniperTrainingDamageAdjust
-                                            * (talents.GlyphOfSteadyShot ? 1.1f : 1f)
-                                            * BonusDamageAdjust;
-
-            // ****************************************************************************
-            // Drizz: 31-10-2009 Aligned the calculations with spreadsheet v92b
-            // Also moved the armorReduction adjust to be multiplied after DamageReal Calc
-            // Corrected from Spreadsheet changelog 91e "T9 2-set bonus only crits for spell-crit bonus damage (i.e. 50% instead of 100%), not affected by Mortal Shots"
-            // This is the reason for the 0.5 multiplier and that markedForDeath is kept outside
-            float steadyShotCritAdjust = metaGemCritDamage + 0.5f * mortalShotsCritDamage * (1f + metaGemCritDamage) + markedForDeathCritDamage;
-
-            float steadyShotDamageReal = CalcEffectiveDamage(
-                                            steadyShotDamageNormal,
-                                            ChanceToMiss,
-                                            calc.steadyShot.CritChance,
-                                            steadyShotCritAdjust,
-                                            steadyShotDamageAdjust
-                                          );
-
-            steadyShotDamageReal *= ArmorDamageReduction;
-
-            calc.steadyShot.Damage = steadyShotDamageReal;
-
-            float steadyShotAvgNonCritDamage = steadyShotDamageNormal * steadyShotDamageAdjust * ArmorDamageReduction;
-            float steadyShotAvgCritDamage = steadyShotAvgNonCritDamage * (1f + steadyShotCritAdjust);
-            //021109 Drizz: Have to add the Mangle/Trauma buff effect.
-            float steadyShotPiercingShots = (1f + targetDebuffBleed)
-                                          * (talents.PiercingShots * 0.1f)
-                                          * calc.steadyShot.CritChance * steadyShotAvgCritDamage;
-
-            //Drizz: Add the piercingShots effect
-            calc.steadyShot.Damage = steadyShotDamageReal + steadyShotPiercingShots;
-
-            #endregion
-            #region August 2009 Serpent Sting
-
-            // base_damage = 1210 + (0.2 * RAP)
-            float serpentStingDamageBase = (float)Math.Round(1210 + (RAP * 0.2f), 1);
-
-            // T9 2-piece bonus
-            // 29-10-2009 Drizz: The name in the buff have not switched from Battlegear (i.e. the name is of the Horde buff)
-            // if (character.ActiveBuffsContains("Windrunner's Pursuit 2 Piece Bonus"))
-            /*if (stats.BonusHunter_T9_2P_SerpCanCrit > 0)
-            {
-                // Drizz : aligned with v92b
-                serpentStingInterimBonus = 0.5f + 0.5f * mortalShotsCritDamage + 0.5f;
-                serpentStingCriticalHitDamage = serpentStingInterimBonus * (1f + (1f + 0.5f) * (metaGemCritDamage - 1f) / 2f + (1f + 0.5f) * (metaGemCritDamage - 1) / 2);
-                serpentStingT9CritAdjust = 1f + ConstrainCrit(critMOD, stats.PhysicalCrit) * serpentStingCriticalHitDamage;
-            }*/
-
-            // damage_adjust = (sting_talent_adjusts ~ noxious stings) * improved_stings * improved_tracking
-            //                  + partial_resists * tier-8_2-piece_bonus * target_nature_debuffs * 100%_noxious_stings
-            float serpentStingDamageAdjust = focusedFireDamageAdjust
-                //* beastWithinDamageAdjust
-                //* sancRetributionAuraDamageAdjust
-                                                * blackArrowAuraDamageAdjust
-                                                * ferociousInspirationDamageAdjust
-                                                * noxiousStingsSerpentDamageAdjust
-                                                * improvedStingsDamageAdjust
-                                                * improvedTrackingDamageAdjust
-                                                * partialResistDamageAdjust
-                                                * (1f + targetDebuffsNature)
-                                                * BonusDamageAdjust;
-
-            // T8 2-piece bonus
-            //serpentStingDamageAdjust += statsBuffs.BonusHunter_T8_2P_SerpDmg;
-
-            float serpentStingTicks = calc.serpentSting.Duration / 3f;
-            float serpentStingDamagePerTick = (float)Math.Round(serpentStingDamageBase * serpentStingDamageAdjust / 5f, 1);
-            float serpentStingDamageReal = serpentStingDamagePerTick * serpentStingTicks;
-
-            calc.serpentSting.Type = Shots.SerpentSting;
-            calc.serpentSting.Damage = serpentStingDamageReal;
-
-            #endregion
-            #region August 2009 Aimed Shot
-            // ****************************************************************************
-            // Drizz: 31-10-2009 Aligned the calculations with spreadsheet v92b
-            // Also moved the armorReduction adjust to be multiplied after DamageReal Calc
-
-            // base_damage = normalized_shot + 408 (but ammo is not normalized!)
-            float aimedShotDamageNormal = (rangedWeaponDamage + /*rangedAmmoDamage +*/ statsItems.WeaponDamage + damageFromRAPNormalized) + 408f;
-
-            // Corrected from Spreadsheet changelog 91e "T9 2-set bonus only crits for spell-crit bonus damage (i.e. 50% instead of 100%), not affected by Mortal Shots"
-            // This is the reason for the 0.5 multiplier and that markedForDeath is kept outside
-            float aimedShotCritAdjust = metaGemCritDamage + 0.5f * mortalShotsCritDamage * (1f + metaGemCritDamage) + markedForDeathCritDamage;
-
-            // damage_adjust = talent_adjust * barrage_adjust * target_debuff_adjust * sniper_training_adjust * improved_ss_adjust
-            float aimedShotDamageAdjust = talentDamageAdjust * barrageDamageAdjust * targetPhysicalDebuffsDamageAdjust
-                                            * sniperTrainingDamageAdjust * ISSAimedShotDamageAdjust * BonusDamageAdjust;
-
-            float aimedShotDamageReal = CalcEffectiveDamage(
-                                            aimedShotDamageNormal,
-                                            ChanceToMiss,
-                                            calc.aimedShot.CritChance,
-                                            aimedShotCritAdjust,
-                                            aimedShotDamageAdjust
-                                          );
-
-            calc.aimedShot.Damage = aimedShotDamageReal;
-
-            aimedShotDamageReal *= ArmorDamageReduction;
-
-            //Drizz: added for piercing shots
-            float aimedShotAvgNonCritDamage = aimedShotDamageNormal * aimedShotDamageAdjust * ArmorDamageReduction;
-            float aimedShotAvgCritDamage = aimedShotAvgNonCritDamage * (1f + aimedShotCritAdjust);
-            //021109 Drizz: Have to add the Mangle/Trauma buff effect. 
-            float aimedShotPiercingShots = (1f + targetDebuffBleed)
-                                         * (character.HunterTalents.PiercingShots * 0.1f)
-                                         * calc.aimedShot.CritChance * aimedShotAvgCritDamage;
-
-            //Drizz: Trying out...
-            calc.aimedShot.Damage = aimedShotDamageReal + aimedShotPiercingShots;
-
-            #endregion
-            #region August 2009 Explosive Shot
-
-            // base_damage = 425 + 14% of RAP
-            float explosiveShotDamageNormal = 425f + (RAP * 0.14f);
-
-            // crit_damage = 1 + mortal_shots + gem-crit
-            float explosiveShotCritAdjust = (1f + mortalShotsCritDamage) * metaGemCritDamage;
-
-            // damage_adjust = talent_adjust * tnt * fire_debuffs * sinper_training * partial_resist
-            float explosiveShotDamageAdjust = talentDamageAdjust * TNTDamageAdjust * sniperTrainingDamageAdjust
-                                             * partialResistDamageAdjust * (1f + targetDebuffsFire) * BonusDamageAdjust;
-
-            float explosiveShotDamageReal = CalcEffectiveDamage(
-                                                explosiveShotDamageNormal,
-                                                ChanceToMiss,
-                                                calc.explosiveShot.CritChance,
-                                                explosiveShotCritAdjust,
-                                                explosiveShotDamageAdjust
-                                              );
-
-            float explosiveShotDamagePerShot = explosiveShotDamageReal * 3f;
-
-            calc.explosiveShot.Damage = explosiveShotDamagePerShot;
-
-            #endregion
-            #region August 2009 Chimera Shot
-
-            // base_damage = normalized_autoshot * 125%
-            //float chimeraShotDamageNormal = autoShotDamageNormalized * 1.25f;
-            // Drizz: Making Changes
-            float chimeraShotDamageNormal = (/*rangedAmmoDamage +*/ (RAP / 14f * 2.8f) + rangedWeaponDamage) * 1.25f;
-
-            // Drizz: In the spreadsheet there is also added a row for + Weapon Damage Gear... not included here.
-
-            // Drizz: 
-            // Corrected from Spreadsheet changelog 91e "T9 2-set bonus only crits for spell-crit bonus damage (i.e. 50% instead of 100%), not affected by Mortal Shots"
-            // This is the reason for the 0.5 multiplier and that markedForDeath is kept outside
-            float chimeraShotCritAdjust = metaGemCritDamage + 0.5f * mortalShotsCritDamage * (1f + metaGemCritDamage) + markedForDeathCritDamage;
-
-            // damage_adjust = talent_adjust * nature_debuffs * ISS_cs_bonus * partial_resist
-            float chimeraShotDamageAdjust = talentDamageAdjust * ISSChimeraShotDamageAdjust
-                                           * partialResistDamageAdjust * (1f + targetDebuffsNature) * BonusDamageAdjust;
-
-            float chimeraShotDamageReal = CalcEffectiveDamage(
-                                                chimeraShotDamageNormal,
-                                                ChanceToMiss,
-                                                ConstrainCrit(critMOD, stats.PhysicalCrit),
-                                                chimeraShotCritAdjust,
-                                                chimeraShotDamageAdjust
-                                           );
-
-            //Drizz: added for piercing shots
-            float chimeraShotAvgNonCritDamage = chimeraShotDamageNormal * talentDamageAdjust * ISSChimeraShotDamageAdjust * (1f + targetDebuffsNature);
-            float chimeraShotAvgCritDamage = chimeraShotAvgNonCritDamage * (1f + chimeraShotCritAdjust);
-            // 021109 - Drizz: Had to add the Bleed Damage Multiplier
-            float chimeraShotPiercingShots = (1f + targetDebuffBleed)
-                                           * (character.HunterTalents.PiercingShots * 0.1f)
-                                           * ConstrainCrit(critMOD, stats.PhysicalCrit)
-                                           * chimeraShotAvgCritDamage;
-
-            calc.chimeraShot.Damage = chimeraShotDamageReal + chimeraShotPiercingShots;
-
-            // calculate damage from serpent sting
-            // Drizz: Adding
-            float chimeraShotSerpentMultiplier = improvedStingsDamageAdjust
-                                                  * improvedTrackingDamageAdjust
-                                                  * noxiousStingsDamageAdjust
-                                                  * partialResistDamageAdjust
-                                                  * (1f + targetDebuffsNature)
-                                                  * focusedFireDamageAdjust
-                //* beastWithinDamageAdjust
-                //* sancRetributionAuraDamageAdjust
-                                                  * blackArrowAuraDamageAdjust
-                                                  * ferociousInspirationArcaneDamageAdjust;
-
-            float chimeraShotSerpentStingDamage = (float)Math.Round(serpentStingDamageBase * chimeraShotSerpentMultiplier / 5f, 1) * serpentStingTicks;
-
-            float chimeraShotEffect;
-            if (calc.serpentSting.FailReason_AlreadyUsed)
-                chimeraShotEffect = chimeraShotSerpentStingDamage * 0.4f;
-            else
-                chimeraShotEffect = 0;
-
-            // Drizz: Updates
-            float chimeraShotSerpentCritAdjust = metaGemCritDamage + (0.5f * metaGemCritDamage + 0.5f) * mortalShotsCritDamage;
-            float chimeraShotSerpentDamageAdjust = (1f - ChanceToMiss) * (1f + ConstrainCrit(critMOD, stats.PhysicalCrit) * chimeraShotSerpentCritAdjust);
-
-            float chimeraShotSerpentTotalAdjust = chimeraShotSerpentDamageAdjust * talentDamageAdjust * (1f + targetDebuffsNature);
-
-            calc.chimeraShot.Damage += chimeraShotEffect * chimeraShotSerpentTotalAdjust;
-
-            #endregion
-            #region August 2009 Arcane Shot
-
-            // base_damage = 492 + weapon_damage_gear + (RAP * 15%)
-            float arcaneShotDamageNormal = 492f + statsItems.WeaponDamage + (RAP * 0.15f);
-
-            // Drizz:
-            // Corrected from Spreadsheet changelog 91e "T9 2-set bonus only crits for spell-crit bonus damage (i.e. 50% instead of 100%), not affected by Mortal Shots"
-            // This is the reason for the 0.5 multiplier and that markedForDeath is kept outside
-            float arcaneShotCritAdjust = metaGemCritDamage + 0.5f * mortalShotsCritDamage * (1f + metaGemCritDamage) + markedForDeathCritDamage;
-
-            float arcaneShotDamageAdjust = talentDamageAdjust * partialResistDamageAdjust
-#if !RAWR4
-                                            * (1f + 0.05f * talents.ImprovedArcaneShot)
-#endif
- * ferociousInspirationArcaneDamageAdjust * ISSArcaneShotDamageAdjust * BonusDamageAdjust; // missing arcane_debuffs!
-
-            float arcaneShotDamageReal = CalcEffectiveDamage(
-                                            arcaneShotDamageNormal,
-                                            ChanceToMiss,
-                                            calc.arcaneShot.CritChance,
-                                            arcaneShotCritAdjust,
-                                            arcaneShotDamageAdjust
-                                          );
-
-            calc.arcaneShot.Damage = arcaneShotDamageReal;
-
-            #endregion
-            #region August 2009 Multi Shot
-
-            float multiShotDamageNormal = rangedWeaponDamage + statsItems.WeaponDamage //+ rangedAmmoDamage
-                                        + calc.BasicStats.ScopeDamage + 408f + (RAP * 0.2f);
-            float multiShotDamageAdjust = talentDamageAdjust * barrageDamageAdjust * targetPhysicalDebuffsDamageAdjust
-                                            * ArmorDamageReduction * BonusDamageAdjust; // missing: pvp gloves bonus
-
-            float multiShotDamageReal = CalcEffectiveDamage(
-                                            multiShotDamageNormal,
-                                            ChanceToMiss,
-                                            calc.multiShot.CritChance,
-                                            1f,
-                                            multiShotDamageAdjust
-                                         );
-
-            calc.multiShot.Damage = multiShotDamageReal;
-            //calculatedStats.multiShot.Dump("Multi Shot");
-
-            #endregion
-            #region August 2009 Volley
-            float volleyDamageNormal = 353f + RAP * 0.0837f; // * AvgNumTargets
-            float volleyDamageAdjust = talentDamageAdjust
-                                     * partialResistDamageAdjust
-                                     * barrageDamageAdjust
-                                     * BonusDamageAdjust;
-            float numvolleyTicks = 6f;
-            float volleyDamageReal = volleyDamageNormal * volleyDamageAdjust * numvolleyTicks;
-
-            // TODO: Add possibility to crit
-            // TODO: Enforce channelled aspect of this ability,
-            //       right now it acts like they can just keep going
-
-            //calc.volley.Damage = volleyDamageReal;
-            #endregion
-            #region August 2009 Black Arrow
-            float blackArrowDamageNormal = 2765f + (RAP * 0.1f);
-
-            // this is a long list...
-            float blackArrowDamageAdjust = partialResistDamageAdjust * focusedFireDamageAdjust //* beastWithinDamageAdjust
-                //* sancRetributionAuraDamageAdjust
-                                          * noxiousStingsDamageAdjust
-                                          * ferociousInspirationDamageAdjust * improvedTrackingDamageAdjust
-                                          * rangedWeaponSpecializationDamageAdjust * markedForDeathDamageAdjust
-                                          * (sniperTrainingDamageAdjust + trapMasteryDamageAdjust + TNTDamageAdjust - 2f)
-                                          * blackArrowSelfDamageAdjust * (1f + targetDebuffsShadow) * BonusDamageAdjust;
-
-            float blackArrowDamage = blackArrowDamageNormal * blackArrowDamageAdjust;
-
-            calc.blackArrow.Damage = blackArrowDamage;
-            #endregion
-            #region August 2009 Kill Shot
-            // ****************************************************************************
-            // Drizz: 31-10-2009 Aligned the calculations with spreadsheet v92b
-            // Also moved the armorReduction adjust to be multiplied after DamageReal Calc
-
-            float killShotDamageNormal = (autoShotDamage * 2f) + statsItems.WeaponDamage + 650f + (RAP * 0.4f);
-
-            // Corrected from Spreadsheet changelog 91e "T9 2-set bonus only crits for spell-crit bonus damage (i.e. 50% instead of 100%), not affected by Mortal Shots"
-            // This is the reasone for the 0.5 multiplier and that markedForDeath is kept outside
-            float killShotCritAdjust = metaGemCritDamage + 0.5f * mortalShotsCritDamage * (1f + metaGemCritDamage) + markedForDeathCritDamage;
-
-            float killShotDamageAdjust = talentDamageAdjust * targetPhysicalDebuffsDamageAdjust * ArmorDamageReduction * BonusDamageAdjust;
-
-            float killShotDamageReal = CalcEffectiveDamage(
-                                            killShotDamageNormal,
-                                            ChanceToMiss,
-                                            calc.killShot.CritChance,
-                                            killShotCritAdjust,
-                                            killShotDamageAdjust
-                                        );
-
-            calc.killShot.Damage = killShotDamageReal;
-
-            #endregion
-            #region August 2009 Silencing Shot
-            // TODO Zhok: Refactor 2 Cobra Shot
-            float silencingShotDamageNormal = (rangedWeaponDamage + /*rangedAmmoDamage +*/ damageFromRAPNormalized) * 0.5f;
-            float silencingShotDamageAdjust = talentDamageAdjust * targetPhysicalDebuffsDamageAdjust * ArmorDamageReduction * BonusDamageAdjust;
-            float silencingShotCritAdjust = 1f * metaGemCritDamage;
-
-            float silencingShotDamageReal = CalcEffectiveDamage(
-                                                silencingShotDamageNormal,
-                                                ChanceToMiss,
-                                                ConstrainCrit(critMOD, stats.PhysicalCrit),
-                                                silencingShotCritAdjust,
-                                                silencingShotDamageAdjust
-                                             );
-
-            calc.cobraShot.Damage = silencingShotDamageReal;
-
-            #endregion
-            #region August 2009 Immolation Trap
-            float immolationTrapDamage = 1885f + (0.1f * RAP);
-            float immolationTrapDamageAdjust = (1f - targetDebuffsFire) * partialResistDamageAdjust * trapMasteryDamageAdjust
-                                              * TNTDamageAdjust * talentDamageStingAdjust * BonusDamageAdjust;
-            float immolationTrapProjectedDamage = immolationTrapDamage * immolationTrapDamageAdjust;
-            float immolationTrapDamagePerTick = immolationTrapProjectedDamage / (talents.GlyphOfImmolationTrap ? 2.5f : 5f);
-            float immolationTrapTicks = talents.GlyphOfImmolationTrap ? 3f : 5f;
-
-            calc.immolationTrap.Damage = immolationTrapDamagePerTick * immolationTrapTicks;
-            #endregion
-            #region Explosive Trap
-            float explosiveTrapDamage = (((0.1f * RAP) + 523f) + ((0.1f * RAP) + 671f)) / 2f + 900f;
-            float explosiveTrapDamageAdjust = (1f - targetDebuffsFire)
-                                            * partialResistDamageAdjust
-                                            * trapMasteryDamageAdjust
-                                            * TNTDamageAdjust
-                                            * talentDamageStingAdjust
-                                            * BonusDamageAdjust;
-            float explosiveTrapCritAdjust = 1f * metaGemCritDamage;
-            float explosiveTrapProjectedDamage = explosiveTrapDamage * explosiveTrapDamageAdjust;
-            float explosiveTrapDamagePerTick = explosiveTrapProjectedDamage / 20f;
-            float explosiveTrapTicks = 20f;
-
-            /*if (talents.GlyphOfExplosiveTrap)
-            {
-                calc.explosiveTrap.Damage = CalcEffectiveDamage(
-                                                            explosiveTrapDamagePerTick,
-                                                            0f,
-                                                            ConstrainCrit(critMOD, stats.PhysicalCrit),
-                                                            explosiveShotCritAdjust,
-                                                            explosiveShotDamageAdjust
-                                                        )
-                                                      * explosiveTrapTicks;
-            }
-            else
-            {*/
-                calc.explosiveTrap.Damage = explosiveTrapDamagePerTick * explosiveTrapTicks;
-            //}
-            #endregion
-            #region Freezing Trap
-            calc.freezingTrap.Damage = 0f;
-            #endregion
-            #region Frost Trap
-            calc.frostTrap.Damage = 0f;
-            #endregion
-            #region Rapid Fire
-            calc.rapidFire.Damage = 0;
-            #endregion
-            #region Piercing Shots
-            calc.PiercingShotsDPS = 0;
-            calc.PiercingShotsDPSSteadyShot = 0;
-            calc.PiercingShotsDPSAimedShot = 0;
-            calc.PiercingShotsDPSChimeraShot = 0;
-
-            if (talents.PiercingShots > 0)
-            {
-                float piercingShotsDamageDone = talents.PiercingShots * 0.1f;
-                float piercingShotsMangleOnTarget = targetDebuffBleed;
-                float piercingShotsTotalModifier = piercingShotsDamageDone * piercingShotsMangleOnTarget;
-                float piercingShotsSteadyShotFrequency = calc.steadyShot.Freq;
-                float piercingShotsSteadyShotDamageAdded = steadyShotPiercingShots;
-
-                float piercingShotsAimedShotFrequency = calc.aimedShot.Freq;
-                float piercingShotsAimedShotDamageAdded = aimedShotPiercingShots;
-                float piercingShotsChimeraShotFrequency = calc.chimeraShot.Freq;
-                float piercingShotsChimeraShotDamageAdded = chimeraShotPiercingShots;
-
-                if (piercingShotsSteadyShotFrequency > 0)
-                {
-                    calc.PiercingShotsDPS += piercingShotsSteadyShotDamageAdded / piercingShotsSteadyShotFrequency;
-                }
-                if (piercingShotsAimedShotFrequency > 0)
-                {
-                    calc.PiercingShotsDPS += piercingShotsAimedShotDamageAdded / piercingShotsAimedShotFrequency;
-                }
-                if (piercingShotsChimeraShotFrequency > 0)
-                {
-                    calc.PiercingShotsDPS += piercingShotsChimeraShotDamageAdded / piercingShotsChimeraShotFrequency;
-                }
-
-                calc.PiercingShotsDPSSteadyShot = piercingShotsSteadyShotDamageAdded;
-                calc.PiercingShotsDPSAimedShot = piercingShotsAimedShotDamageAdded;
-                calc.PiercingShotsDPSChimeraShot = piercingShotsChimeraShotDamageAdded;
-            }
-            #endregion
-
-            #region August 2009 Shot Rotation
-            calc.priorityRotation.viperDamagePenalty = calc.aspectViperPenalty;
-            calc.priorityRotation.NoManaPenalty = PercTimeNoDPSforNoMana;
-            calc.priorityRotation.calculateRotationDPS();
-            calc.CustomDPS = calc.priorityRotation.DPS;
-            #endregion
-            #region August 2009 Kill Shot Sub-20% Usage
-
-            float killShotCurrentFreq = calc.killShot.Freq;
-            float killShotPossibleFreq = calcOpts.UseRotationTest ? calc.killShot.Freq : calc.killShot.start_freq;
-            float steadyShotCurrentFreq = calc.steadyShot.Freq;
-
-            float steadyShotNewFreq = steadyShotCurrentFreq;
-            if (killShotCurrentFreq == 0f && steadyShotCurrentFreq > 0f && killShotPossibleFreq > 0f)
-            {
-                steadyShotNewFreq = 1f / (1f / steadyShotCurrentFreq - 1f / killShotPossibleFreq);
-            }
-
-            float oldKillShotDPS = calc.killShot.DPS;
-            float newKillShotDPS = killShotPossibleFreq > 0 ? calc.killShot.Damage / killShotPossibleFreq : 0f;
-            newKillShotDPS *= (1f - calc.aspectViperPenalty);
-
-            float oldSteadyShotDPS = calc.steadyShot.DPS;
-            float newSteadyShotDPS = steadyShotNewFreq > 0 ? calc.steadyShot.Damage / steadyShotNewFreq : 0f;
-            newSteadyShotDPS *= (1f - calc.aspectViperPenalty);
-
-            float killShotDPSGain = newKillShotDPS > 0f ? (newKillShotDPS + newSteadyShotDPS) - (oldKillShotDPS + oldSteadyShotDPS) : 0f;
-
-            float timeSpentSubTwenty = 0;
-#if RAWR3 || RAWR4 || SILVERLIGHT
-            if (bossOpts.BerserkTimer > 0 && bossOpts.Under20Perc > 0) timeSpentSubTwenty = (float)bossOpts.Under20Perc;
-#else
-            if (calcOpts.Duration > 0 && calcOpts.TimeSpentSub20 > 0) timeSpentSubTwenty = (float)calcOpts.TimeSpentSub20 / (float)calcOpts.Duration;
-#endif
-            if (calcOpts.BossHPPerc < 0.2f) timeSpentSubTwenty = 1f;
-
-            float killShotSubGain = timeSpentSubTwenty * killShotDPSGain;
-
-            calc.killShotSub20NewSteadyFreq = steadyShotNewFreq;
-            calc.killShotSub20NewDPS = newKillShotDPS;
-            calc.killShotSub20NewSteadyDPS = newSteadyShotDPS;
-            calc.killShotSub20Gain = killShotDPSGain;
-            calc.killShotSub20TimeSpent = timeSpentSubTwenty;
-            calc.killShotSub20FinalGain = killShotSubGain;
-
-            #endregion
-
-            #region Survivability
-            float Health2SurvHunter = (stats.Health) / 100f;
-            Health2SurvHunter += (stats.HealthRestore) / 1000f;
-            float Health2SurvPet = (calc.pet.PetStats.Health) / 100f;
-            Health2SurvPet += (calc.pet.PetStats.HealthRestore) / 1000f;
-            float DmgTakenMods2SurvHunter = (1f - stats.DamageTakenReductionMultiplier) * 100f;
-            float DmgTakenMods2SurvPet = (1f - calc.pet.PetStats.DamageTakenReductionMultiplier) * 100f;
-            float BossAttackSpeedMods2Surv = (1f - stats.BossAttackSpeedReductionMultiplier) * 100f;
-            float AvoidanceHunter = stats.Dodge + stats.Parry;
-            float AvoidancePet = calc.pet.PetStats.Dodge + calc.pet.PetStats.Parry;// should be pet stats
-            float Armor2SurvHunter = (stats.Armor) / 100f;
-            float Armor2SurvPet = (calc.pet.PetStats.Armor) / 100f;
-            //float spiritbondcoeff = (talents.SpiritBond * 0.01f * (calcOpts.Duration / 10f));
-#if RAWR3 || RAWR4 || SILVERLIGHT
-            float HealsPerSecHunter = ((talents.SpiritBond * 0.01f * stats.Health) * (bossOpts.BerserkTimer / 10f)) / bossOpts.BerserkTimer;
-            float HealsPerSecPet = ((talents.SpiritBond * 0.01f * calc.pet.PetStats.Health) * (bossOpts.BerserkTimer / 10f)) / bossOpts.BerserkTimer;
-#else
-            float HealsPerSecHunter = ((talents.SpiritBond * 0.01f * stats.Health) * (calcOpts.Duration / 10f)) / calcOpts.Duration;
-            float HealsPerSecPet = ((talents.SpiritBond * 0.01f * calculatedStats.pet.PetStats.Health) * (calcOpts.Duration / 10f)) / calcOpts.Duration;
-#endif
-            #endregion
-
-            #region Special Damage Procs, like Bandit's Insignia or Hand-mounted Pyro Rockets
-            Dictionary<Trigger, float> triggerIntervals = new Dictionary<Trigger, float>();
-            Dictionary<Trigger, float> triggerChances = new Dictionary<Trigger, float>();
-            CalculateTriggers(character, calc, stats, calcOpts, bossOpts, triggerIntervals, triggerChances);
-            DamageProcs.SpecialDamageProcs SDP;
-            calc.SpecProcDPS = 0f;
-            if (stats._rawSpecialEffectData != null)
-            {
-                SDP = new Rawr.DamageProcs.SpecialDamageProcs(character, stats,
-#if RAWR3 || RAWR4 || SILVERLIGHT
- bossOpts.Level - character.Level, new List<SpecialEffect>(stats._rawSpecialEffectData),
-                    triggerIntervals, triggerChances, bossOpts.BerserkTimer, combatFactors.DamageReduction);
-#else
-                    calcOpts.TargetLevel - character.Level, new List<SpecialEffect>(stats._rawSpecialEffectData),
-                    triggerIntervals, triggerChances, calcOpts.Duration, combatFactors.DamageReduction);
-#endif
-                calc.SpecProcDPS += SDP.Calculate(ItemDamageType.Physical);
-                calc.SpecProcDPS += SDP.Calculate(ItemDamageType.Shadow);
-                calc.SpecProcDPS += SDP.Calculate(ItemDamageType.Holy);
-                calc.SpecProcDPS += SDP.Calculate(ItemDamageType.Arcane);
-                calc.SpecProcDPS += SDP.Calculate(ItemDamageType.Nature);
-                calc.SpecProcDPS += SDP.Calculate(ItemDamageType.Fire);
-                calc.SpecProcDPS += SDP.Calculate(ItemDamageType.Frost);
-            }
-            #endregion
-
-            #region BossHandler
-            // TODO: Things that would break this stuff, other than Human's Every Man for Himself
-            float LatentGCD = 1.5f + calcOpts.FullLatency;
-            float EM4HSRec = character.Race == CharacterRace.Human ? LatentGCD : 0f;
-            float TotalBossHandlerMOD = Impedance.GetTotalImpedancePercs(bossOpts, PLAYER_ROLES.RangedDPS,
-                                            stats.MovementSpeed, stats.FearDurReduc, stats.StunDurReduc, stats.SnareRootDurReduc,
-                                            0f, EM4HSRec, EM4HSRec, EM4HSRec,
-                                            calcOpts.React);
-            #endregion
-
-            #region Finalized
-            calc.HunterDpsPoints = TotalBossHandlerMOD * (float)(calc.AutoshotDPS
-                                                    + calc.WildQuiverDPS
-                                                    + calc.CustomDPS
-                                                    + calc.killShotSub20FinalGain
-                                                    + calc.aspectBeastLostDPS
-                                                    + calc.BonusAttackProcsDPS
-                                                    + calc.SpecProcDPS);
-            calc.HunterSurvPoints = calcOpts.SurvScale *
-                                               (0 // TotalHPSOnHunter
-                                                + Health2SurvHunter
-                                                + DmgTakenMods2SurvHunter
-                                                + BossAttackSpeedMods2Surv
-                                                + AvoidanceHunter * 100f
-                                                + Armor2SurvHunter
-                                                + HealsPerSecHunter);
-            calc.PetSurvPoints = calcOpts.SurvScale *
-                                            (0 // TotalHPSOnPet
-                                             + Health2SurvPet
-                                             + DmgTakenMods2SurvPet
-                                             + BossAttackSpeedMods2Surv
-                                             + AvoidancePet * 100f
-                                             + Armor2SurvPet
-                                             + HealsPerSecPet);
-            calc.OverallPoints = calc.HunterDpsPoints
-                                          + calc.PetDpsPoints
-                                          + calc.HunterSurvPoints
-                                          + calc.PetSurvPoints;
-            #endregion
+            
 
             return calc;
         }
 
-        public override Stats GetCharacterStats(Character character, Item additionalItem) {
-            try {
+        public override Stats GetCharacterStats(Character character, Item additionalItem)
+        {
+            if (character == null) { return new Stats(); }
+            try
+            {
+                StatsHunter statsTotal = new StatsHunter();
+                if (null == character)
+                {
+#if DEBUG
+                    throw new Exception("Character is Null");
+#else
+                    return statsTotal;
+#endif
+                }
                 CalculationOptionsHunter calcOpts = character.CalculationOptions as CalculationOptionsHunter;
-                if (calcOpts == null) { calcOpts = new CalculationOptionsHunter(); character.CalculationOptions = calcOpts; }
-                BossOptions bossOpts = character.BossOptions;
+                if (null == calcOpts) { calcOpts = new CalculationOptionsHunter(); }
                 HunterTalents talents = character.HunterTalents;
-                PetTalents petTalents = calcOpts.PetTalents;
-                int levelDif = bossOpts.Level - character.Level;
+                if (null == talents) { return statsTotal; }
 
-                #region From Race
-                Stats statsRace = BaseStats.GetBaseStats(character.Level, CharacterClass.Hunter, character.Race);
-                statsRace.PhysicalCrit += (character.Ranged != null && 
-                    ((character.Race == CharacterRace.Dwarf && character.Ranged.Item.Type == ItemType.Gun) ||
-                    (character.Race == CharacterRace.Troll && character.Ranged.Item.Type == ItemType.Bow))) ?
-                    0.01f : 0.00f;
-                #endregion
-                #region From Gear/Buffs
-                Stats statsBuffs = GetBuffsStats(character, calcOpts);
-                Stats statsItems = GetItemStats(character, additionalItem);
-                #endregion
-                #region From Options
-                Stats statsOptionsPanel = new Stats() {
-                    PhysicalCrit = StatConversion.NPC_LEVEL_CRIT_MOD[levelDif],
-                    PhysicalHaste = 0.15f, // This is from what Bags used to give that got rolled into the class
-                };
-                CharacterCalculationsHunter calculatedStats = new CharacterCalculationsHunter();
-                GenPrioRotation(calculatedStats, calcOpts, talents);
-                GenAbilityCds(character, calculatedStats, calcOpts, bossOpts, talents);
-                if (calculatedStats.priorityRotation.containsShot(Shots.RapidFire)) {
-                    statsOptionsPanel.AddSpecialEffect(new SpecialEffect(Trigger.Use,
-                        new Stats() { RangedHaste = (talents.GlyphOfRapidFire ? 0.48f : 0.40f), },
-                        15f, (5 - talents.RapidKilling) * 60f));
-                }
-                #endregion
-                #region From Talents
-                Stats statsTalents = new Stats()
-                {
-                    // If specced survival, Into the Wilderness provides a passive 10% addative Agility bonus
-                    BonusAgilityMultiplier = (0.02f * talents.HuntingParty) + ((HunterTreeSpecialization(talents) == 2f) ? 0.10f : 0f) + (Character.ValidateArmorSpecialization(character, ItemType.Mail) ? 0.05f : 0f),
-                    BonusStaminaMultiplier = 0.05f * talents.HunterVsWild,
-                    BonusAttackPowerMultiplier = (0.10f * talents.TrueshotAura) + ((HunterTreeSpecialization(talents) == 0f) ? 0.25f : 0f),
-                    BonusDamageMultiplier = 0.10f * talents.TheBeastWithin,
-                    BonusPetDamageMultiplier = 0.20f * talents.TheBeastWithin,
-                };
-                // Beast Mastery Specialization provides a 25% increase to Attack Power
-                /*if (talents.MasterTactician > 0) {
-                    SpecialEffect mt = new SpecialEffect(Trigger.PhysicalHit,
-                        new Stats() { PhysicalCrit = talents.MasterTactician * 0.02f, }, 8f, 0f, 0.10f);
-                    statsTalents.AddSpecialEffect(mt);
-                }*/
-                /*if ((calcOpts.SelectedAspect == Aspect.Hawk || calcOpts.SelectedAspect == Aspect.Dragonhawk)
-                    && talents.ImprovedAspectOfTheHawk > 0)
-                {
-                    float quickShotsEffect = 0.03f * talents.ImprovedAspectOfTheHawk;
-                    if (talents.GlyphOfTheHawk) { quickShotsEffect += 0.06f; }
-                    SpecialEffect QuickShots = new SpecialEffect(Trigger.PhysicalHit,
-                        new Stats() { RangedHaste = quickShotsEffect, },
-                        12f, 0f, 0.10f);
-                    statsTalents.AddSpecialEffect(QuickShots);
-                }*/
-                /*if (calcOpts.SelectedAspect == Aspect.Hawk || (calcOpts.SelectedAspect == Aspect.Dragonhawk && talents.AspectMastery > 0)) {
-                    statsOptionsPanel.RangedAttackPower += 155f * (1f + talents.AspectMastery * 0.30f);
-                }*/
-                if (petTalents.CallOfTheWild > 0) {
-                    SpecialEffect callofthewild = new SpecialEffect(Trigger.Use,
-                        new Stats() { BonusRangedAttackPowerMultiplier = 0.10f, BonusPetAttackPowerMultiplier = 0.20f, },
-                        20f, (5f * 60f) * (1f - talents.Longevity * 0.10f));
-                    statsTalents.AddSpecialEffect(callofthewild);
-                }
-                if (calcOpts.PetFamily != PETFAMILY.None
-                    && calculatedStats.priorityRotation.containsShot(Shots.BestialWrath)
-                    && talents.BestialWrath > 0)
-                {
-                    float cooldown = (talents.GlyphOfBestialWrath ? 100f : 120f) * (1f - talents.Longevity * 0.10f);
-                    float val1 = talents.TheBeastWithin > 0 ?  0.10f : 0f;
-                    float val2 = talents.TheBeastWithin > 0 ? -0.50f : 0f;
-                    SpecialEffect WrathBeastWithin = new SpecialEffect(Trigger.Use,
-                        new Stats() { BonusPetDamageMultiplier = (0.50f /* / (1f + val1)*/), BonusDamageMultiplier = val1, ManaCostReductionMultiplier = val2 },
-                        10f, cooldown);
-                    statsTalents.AddSpecialEffect(WrathBeastWithin);
-                }
-                if (petTalents.CullingTheHerd > 0) {
-                    float val1 = petTalents.CullingTheHerd * 0.01f;
-                    SpecialEffect CullingTheHerd = new SpecialEffect(Trigger.PetClawBiteSmackCrit,
-                        new Stats() { BonusDamageMultiplier = val1, BonusPetDamageMultiplier = val1, },
-                        10f, 0f);
-                    statsTalents.AddSpecialEffect(CullingTheHerd);
-                }
-                #endregion
+                statsTotal.Accumulate(BaseStats.GetBaseStats(character.Level, CharacterClass.Hunter, character.Race));
+                AccumulateItemStats(statsTotal, character, additionalItem);
+                statsTotal.Accumulate(GetRelevantStats(statsTotal));
 
-                // Totals
-                Stats statsGearEnchantsBuffs = new Stats();
-                statsGearEnchantsBuffs.Accumulate(statsItems);
-                statsGearEnchantsBuffs.Accumulate(statsBuffs);
-                Stats statsTotal = new Stats();
-                statsTotal.Accumulate(statsRace);
-                statsTotal.Accumulate(statsItems);
-                statsTotal.Accumulate(statsBuffs);
-                statsTotal.Accumulate(statsTalents);
-                statsTotal.Accumulate(statsOptionsPanel);
-                Stats statsProcs = new Stats();
-
-                #region Stamina & Health
-                float totalBSTAM = statsTotal.BonusStaminaMultiplier;
-                float staBase    = (float)Math.Floor((1f + totalBSTAM) * statsRace.Stamina);
-                float staBonus   = (float)Math.Floor((1f + totalBSTAM) * statsGearEnchantsBuffs.Stamina);
-                statsTotal.Stamina = staBase + staBonus;
-
-                // Health
-                statsTotal.Health += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
-                statsTotal.Health *= 1f + statsTotal.BonusHealthMultiplier;
-                #endregion
-                #region  Agility
-                float totalBAGIM = statsTotal.BonusAgilityMultiplier;
-                float agiBase = (float)Math.Floor((1f + totalBAGIM) * statsRace.Agility);
-                float agiBonus = (float)Math.Floor((1f + totalBAGIM) * statsGearEnchantsBuffs.Agility);
-                statsTotal.Agility = Math.Max(0f, agiBase + agiBonus);
-                #endregion
-                #region Armor
-                statsTotal.Armor = /*(float)Math.Floor(*/statsTotal.Armor * (1f + statsTotal.BaseArmorMultiplier)/*)*/;
-//                statsTotal.BonusArmor += statsTotal.Agility * 2f;
-                statsTotal.BonusArmor = /*(float)Math.Floor(*/statsTotal.BonusArmor * (1f + statsTotal.BonusArmorMultiplier)/*)*/;
-                statsTotal.Armor += statsTotal.BonusArmor;
-                #endregion
-                #region Attack Power
-                statsTotal.BonusAttackPowerMultiplier *= (1f + statsTotal.BonusRangedAttackPowerMultiplier);
-                float totalBAPM    = statsTotal.BonusAttackPowerMultiplier;
-                float apBase       = (1f + totalBAPM) * ((character.Level * 2f) - 20f);
-                float apFromAGI    = (1f + totalBAPM) * (statsTotal.Agility * 2f);
-                // at 85, Hunters Mark supplies 1772 Ranged Attack Power
-                float apFromHM = (1f + totalBAPM) * 0f;
-                float apBonusOther = (1f + totalBAPM) * (statsGearEnchantsBuffs.AttackPower + statsGearEnchantsBuffs.RangedAttackPower
-                                                         + statsOptionsPanel.AttackPower + statsOptionsPanel.RangedAttackPower);
-                // Beast Mastery Specialization provides a 25% increase to Attack Power
-                statsTotal.AttackPower = (Math.Max(0f, apBase + apFromAGI + apFromHM + apBonusOther));
-                statsTotal.RangedAttackPower = statsTotal.AttackPower;
-                #endregion
-                #region Crit
-                statsTotal.CritRating += statsTotal.RangedCritRating;
-                statsTotal.PhysicalCrit += StatConversion.GetCritFromAgility(statsTotal.Agility /*- agiBase*/, character.Class)
-                                         + -0.01536f
-                                         + StatConversion.GetCritFromRating(Math.Max(0f, statsTotal.CritRating), character.Class);
-                #endregion
-                #region Haste
-                statsTotal.HasteRating += statsTotal.RangedHasteRating;
-                float ratingHasteBonus = StatConversion.GetPhysicalHasteFromRating(Math.Max(0f, statsTotal.HasteRating), character.Class);
-                statsTotal.PhysicalHaste = (1f + statsRace.PhysicalHaste) *
-                                           (1f + statsItems.PhysicalHaste) *
-                                           (1f + statsBuffs.PhysicalHaste) *
-                                           (1f + statsTalents.PhysicalHaste) *
-                                           (1f + statsOptionsPanel.PhysicalHaste) *
-                                           (1f + statsTotal.RangedHaste) *
-                                           (1f + ratingHasteBonus)
-                                           - 1f;
-                #endregion
-                #region Hit
-                statsTotal.PhysicalHit += StatConversion.GetHitFromRating(Math.Max(0f, statsTotal.HitRating + statsTotal.RangedHitRating));
-                statsTotal.SpellHit    += StatConversion.GetHitFromRating(Math.Max(0f, statsTotal.HitRating));
-                #endregion
-
-                #region Handle Special Effects
-                calculatedStats.pet = new PetCalculations(character, calculatedStats, calcOpts, bossOpts, statsTotal);
-                calculatedStats.pet.GenPetStats();
-
-                Dictionary<Trigger, float> triggerIntervals = new Dictionary<Trigger, float>();
-                Dictionary<Trigger, float> triggerChances = new Dictionary<Trigger, float>();
-
-                CalculateTriggers(character, calculatedStats, statsTotal, calcOpts, bossOpts, triggerIntervals, triggerChances);
-
-                if (calcOpts.PetFamily == PETFAMILY.Wolf
-                    && calculatedStats.pet.priorityRotation.getSkillFrequency(PetAttacks.FuriousHowl) > 0)
-                {
-                    statsTotal.AddSpecialEffect(FuriousHowl);
-                }
-                
-                statsProcs += GetSpecialEffectsStats(character, triggerIntervals, triggerChances, statsTotal, null);
-
-                #region Handle Results of Special Effects
-                // Base Stats
-                statsProcs.Stamina  = (float)Math.Floor(statsProcs.Stamina     * (1f + totalBSTAM) * (1f + statsProcs.BonusStaminaMultiplier));
-//                statsProcs.Strength = (float)Math.Floor(statsProcs.Strength    * (1f + totalBSTRM) * (1f + statsProcs.BonusStrengthMultiplier));
-//                statsProcs.Agility  = statsProcs.Agility     * (1f + totalBAGIM) * (1f + statsProcs.BonusAgilityMultiplier);
-//                statsProcs.Agility += statsProcs.HighestStat * (1f + totalBAGIM) * (1f + statsProcs.BonusAgilityMultiplier);
-//                statsProcs.Agility += statsProcs.Paragon     * (1f + totalBAGIM) * (1f + statsProcs.BonusAgilityMultiplier);
-                statsProcs.HighestStat = statsProcs.Paragon = 0f; // we've added them into agi so kill it
-                statsProcs.Health  += (float)Math.Floor(statsProcs.Stamina * 10f);
-
-                float HighestSecondaryStatValue = statsProcs.HighestSecondaryStat; // how much HighestSecondaryStat to add
-                statsProcs.HighestSecondaryStat = 0f; // remove HighestSecondaryStat stat, since it's not needed
-                if (statsTotal.CritRating > statsTotal.HasteRating && statsTotal.CritRating > statsTotal.MasteryRating) {
-                    statsTotal.CritRating += HighestSecondaryStatValue;
-                } else if (statsTotal.HasteRating > statsTotal.CritRating && statsTotal.HasteRating > statsTotal.MasteryRating) {
-                    statsTotal.HasteRating += HighestSecondaryStatValue;
-                } else /*if (statsTotal.MasteryRating > statsTotal.CritRating && statsTotal.MasteryRating > statsTotal.HasteRating)*/ {
-                    statsTotal.MasteryRating += HighestSecondaryStatValue;
-                }
-
-
-                // Armor
-                statsProcs.Armor = statsProcs.Armor * (1f + statsTotal.BaseArmorMultiplier + statsProcs.BaseArmorMultiplier);
-                //statsProcs.BonusArmor += statsProcs.Agility * 2f;
-                statsProcs.BonusArmor = statsProcs.BonusArmor * (1f + statsTotal.BonusArmorMultiplier + statsProcs.BonusArmorMultiplier);
-                statsProcs.Armor += statsProcs.BonusArmor;
-                statsProcs.BonusArmor = 0; //it's been added to Armor so kill it
-
-                // Attack Power
-                statsProcs.BonusAttackPowerMultiplier *= (1f + statsProcs.BonusRangedAttackPowerMultiplier);
-                statsProcs.BonusRangedAttackPowerMultiplier = 0; // it's been added to Attack Power so kill it
-                float totalBAPMProcs    = (1f + totalBAPM) * (1f + statsProcs.BonusAttackPowerMultiplier) - 1f;
-                float apFromAGIProcs    = (1f + totalBAPMProcs) * (statsProcs.Agility) * 2f;
-                //float apFromSTRProcs    = (1f + totalBAPMProcs) * (statsProcs.Strength);
-                float apBonusOtherProcs = (1f + totalBAPMProcs) * (statsProcs.AttackPower + statsProcs.RangedAttackPower);
-                statsProcs.AttackPower = Math.Max(0f, apFromAGIProcs + /*apFromSTRProcs +*/ apBonusOtherProcs);
-                statsProcs.RangedAttackPower = statsProcs.AttackPower;
-                statsTotal.AttackPower *= (1f + statsProcs.BonusAttackPowerMultiplier); // Make sure the originals get your AP% procs
-
-                // Crit
-                statsProcs.PhysicalCrit += StatConversion.GetCritFromAgility(statsProcs.Agility, character.Class);
-                statsProcs.PhysicalCrit += StatConversion.GetCritFromRating(statsProcs.CritRating + statsProcs.RangedCritRating, character.Class);
-
-                // Haste
-                statsProcs.PhysicalHaste = (1f + statsProcs.PhysicalHaste)
-                                         * (1f + statsProcs.RangedHaste)
-                                         * (1f + StatConversion.GetPhysicalHasteFromRating(statsProcs.HasteRating, character.Class))
-                                         - 1f;
-                #endregion
-                // Add it back into the fold
-                statsTotal.Accumulate(statsProcs);
-                #endregion
-
-                statsTotal.Mana = (float)Math.Floor((1f + statsTotal.BonusManaMultiplier) * statsTotal.Mana);
+                AccumulateBuffsStats(statsTotal, character.ActiveBuffs);
+                //AccumulateTalents(statsTotal, character);
                 return statsTotal;
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 new Base.ErrorBox()
                 {
-                    Title = "Error Generating Character Stats",
+                    Title = "Error in getting Character Stats",
                     Function = "GetCharacterStats()",
                     TheException = ex,
                 }.Show();
-                return new Stats();
             }
+            return new Stats() { };
         }
 
-        private static readonly SpecialEffect FuriousHowl = new SpecialEffect(Trigger.Use, new Stats() { AttackPower = 320f, PetAttackPower = 320f, }, 20f, 40f);
+        //private static readonly SpecialEffect FuriousHowl = new SpecialEffect(Trigger.Use, new StatsHunter() { AttackPower = 320f, PetAttackPower = 320f, }, 20f, 40f);
 
-        private static void CalculateTriggers(Character character, CharacterCalculationsHunter calculatedStats, Stats statsTotal,
-            CalculationOptionsHunter calcOpts, BossOptions bossOpts,
+        private static void CalculateTriggers(Character character, CharacterCalculationsHunter calculatedStats, StatsHunter statsTotal, CalculationOptionsHunter calcOpts, BossOptions bossOpts, 
             Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances)
         {
             int levelDif = bossOpts.Level - character.Level;
@@ -2888,10 +1543,10 @@ namespace Rawr.Hunter {
             float autoShotSpeed = 0;
             float autoShotsPerSecond = 0, specialShotsPerSecond = 0, totalShotsPerSecond = 0, shotsPerSecondWithoutHawk = 0;
             RotationTest rotationTest;
-            GenRotation(character, statsTotal, calculatedStats, calcOpts, bossOpts, talents,
-                out rangedWeaponSpeed, out rangedWeaponDamage, out autoShotSpeed,
-                out autoShotsPerSecond, out specialShotsPerSecond, out totalShotsPerSecond, out shotsPerSecondWithoutHawk,
-                out rotationTest);
+            //GenRotation(character, statsTotal, calculatedStats, calcOpts, bossOpts, talents,
+            //    out rangedWeaponSpeed, out rangedWeaponDamage, out autoShotSpeed,
+            //    out autoShotsPerSecond, out specialShotsPerSecond, out totalShotsPerSecond, out shotsPerSecondWithoutHawk,
+            //    out rotationTest);
 
             // Generic
             triggerIntervals[Trigger.Use]                                   = 0f;
@@ -2911,6 +1566,7 @@ namespace Rawr.Hunter {
             // Hunter Specific
             triggerIntervals[Trigger.HunterAutoShotHit]                     = 1f / autoShotsPerSecond;
             triggerIntervals[Trigger.SteadyShotHit]                         = calculatedStats.steadyShot.Cd;
+            triggerIntervals[Trigger.CobraShotHit]                          = calculatedStats.cobraShot.Cd;
             triggerIntervals[Trigger.PetClawBiteSmackCrit]                  = Math.Max(0f, calculatedStats.pet.PetClawBiteSmackInterval);
             triggerIntervals[Trigger.SerpentWyvernStingsDoDamage]           = (calculatedStats.serpentSting.Freq > 0 || calculatedStats.serpentSting.is_refreshed ? 3f : 0f);
             triggerIntervals[Trigger.EnergyOrFocusDropsBelow20PercentOfMax] = 4f; // Approximating as 80% chance every 4 seconds. TODO: Put in some actual method of calculating this
@@ -2936,23 +1592,22 @@ namespace Rawr.Hunter {
             // Hunter Specific
             triggerChances[Trigger.HunterAutoShotHit]                     = (1f - ChanceToMiss);
             triggerChances[Trigger.SteadyShotHit]                         = (1f - ChanceToMiss);
+            triggerChances[Trigger.CobraShotHit]                          = (1f - ChanceToMiss);
             triggerChances[Trigger.PetClawBiteSmackCrit]                  = Math.Min(1f + critMOD, Math.Max(0f, calculatedStats.pet.WhAtkTable.Crit));
             triggerChances[Trigger.SerpentWyvernStingsDoDamage]           = 1f;
             triggerChances[Trigger.EnergyOrFocusDropsBelow20PercentOfMax] = 0.80f; // Approximating as 80% chance every 4 seconds. TODO: Put in some actual method of calculating this
         }
 
-        private Stats GetSpecialEffectsStats(Character Char,
-            Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances,
-            Stats statsTotal, Stats statsToProcess)
+        private StatsHunter GetSpecialEffectsStats(Character Char, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances, StatsHunter statsTotal, StatsHunter statsToProcess)
         {
             CalculationOptionsHunter calcOpts = Char.CalculationOptions as CalculationOptionsHunter;
-            BossOptions bossOpts = Char.BossOptions;
+            //BossOptions bossOpts = Char.BossOptions;
             ItemInstance RangeWeap = Char.MainHand;
             float speed = (RangeWeap != null ? RangeWeap.Speed : 2.4f);
             HunterTalents talents = Char.HunterTalents;
-            Stats statsProcs = new Stats();
-            float fightDuration_M = bossOpts.BerserkTimer;
-            Stats _stats;
+            StatsHunter statsProcs = new StatsHunter();
+            float fightDuration_M = 450f;   //bossOpts.BerserkTimer;
+            StatsHunter _stats, _stats2;
             //
             foreach (SpecialEffect effect in (statsToProcess != null ? statsToProcess.SpecialEffects() : statsTotal.SpecialEffects())) {
                 float fightDuration = fightDuration_M;
@@ -2969,13 +1624,11 @@ namespace Rawr.Hunter {
                     float weight = 1f;
                     switch (effect.Trigger) {
                         case Trigger.Use:
-                            _stats = new Stats();
+                            _stats = new StatsHunter();
                             if (effect.Stats._rawSpecialEffectDataSize == 1 && statsToProcess == null) {
                                 float uptime = effect.GetAverageUptime(0f, 1f, speed, fightDuration);
                                 _stats.AddSpecialEffect(effect.Stats._rawSpecialEffectData[0]);
-                                Stats _stats2 = GetSpecialEffectsStats(Char,
-                                    triggerIntervals, triggerChances,
-                                    statsTotal, _stats);
+                                _stats2 = GetSpecialEffectsStats(Char, triggerIntervals, triggerChances, statsTotal, _stats);
                                 _stats = _stats2 * uptime;
                             } else {
                                 /*if (effect.Stats.ArmorPenetrationRating > 0 && arpToHardCap < effect.Stats.ArmorPenetrationRating) {
@@ -2983,7 +1636,8 @@ namespace Rawr.Hunter {
                                     weight = uptime;
                                     _stats.ArmorPenetrationRating = arpToHardCap;
                                 } else {*/
-                                    _stats = effect.GetAverageStats(0f, 1f, speed, fightDuration);
+                                //    _stats = effect.GetAverageStats(0f, 1f, speed, fightDuration);
+                                _stats = effect.GetAverageStats(triggerIntervals, triggerChances, speed, fightDuration, 1f) as StatsHunter;
                                 //}
                             }
                             statsProcs.Accumulate(_stats, weight);
@@ -2992,7 +1646,7 @@ namespace Rawr.Hunter {
                         case Trigger.RangedHit:
                         case Trigger.PhysicalHit:
                         case Trigger.PhysicalAttack:
-                            _stats = new Stats();
+                            _stats = new StatsHunter();
                             weight = 1.0f;
                             {
                                 /*if (effect.Stats.ArmorPenetrationRating > 0 && arpToHardCap < effect.Stats.ArmorPenetrationRating) {
@@ -3000,7 +1654,7 @@ namespace Rawr.Hunter {
                                     weight = uptime;
                                     _stats.ArmorPenetrationRating = arpToHardCap;
                                 } else {*/
-                                    _stats = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
+                                _stats = effect.GetAverageStats(triggerIntervals, triggerChances, speed, fightDuration, weight) as StatsHunter;
                                 //}
                             }
                             statsProcs.Accumulate(_stats, weight);
@@ -3015,27 +1669,28 @@ namespace Rawr.Hunter {
                         case Trigger.DamageOrHealingDone: // physical and dots
                         case Trigger.HunterAutoShotHit:
                         case Trigger.SteadyShotHit:
+                        case Trigger.CobraShotHit:
                         case Trigger.PetClawBiteSmackCrit:
-                            _stats = new Stats();
+                            _stats = new StatsHunter();
                             weight = 1.0f;
                             /*if (effect.Stats.ArmorPenetrationRating > 0 && arpToHardCap < effect.Stats.ArmorPenetrationRating) {
                                 float uptime = effect.GetAverageUptime(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
                                 weight = uptime;
                                 _stats.ArmorPenetrationRating = arpToHardCap;
                             } else {*/
-                                _stats = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
+                                _stats = effect.GetAverageStats(triggerIntervals, triggerChances, speed, fightDuration, weight) as StatsHunter;
                             //}
                             statsProcs.Accumulate(_stats, weight);
                             break;
                         case Trigger.SerpentWyvernStingsDoDamage:
-                            _stats = new Stats();
+                            _stats = new StatsHunter();
                             weight = 1.0f;
                             /*if (effect.Stats.ArmorPenetrationRating > 0 && arpToHardCap < effect.Stats.ArmorPenetrationRating) {
                                 float uptime = effect.GetAverageUptime(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
                                 weight = uptime;
                                 _stats.ArmorPenetrationRating = arpToHardCap;
                             } else {*/
-                                _stats = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
+                                _stats = effect.GetAverageStats(triggerIntervals, triggerChances, speed, fightDuration, weight) as StatsHunter;
                             //}
                             statsProcs.Accumulate(_stats, weight);
                             break;
@@ -3050,6 +1705,28 @@ namespace Rawr.Hunter {
         #endregion //overrides
 
         #region Private Functions
+        private Specialization GetSpecialization(HunterTalents t)
+        {
+            Specialization curSpecialization = Specialization.BeastMastery;
+            if (t.HighestTree == (int)Specialization.BeastMastery)
+            {
+                // Beast Mastery
+                curSpecialization = Specialization.BeastMastery;
+            }
+            else if (t.HighestTree == (int)Specialization.Marksmanship)
+            {
+                // Marksmanship
+                curSpecialization = Specialization.Marksmanship;
+            }
+            if (t.HighestTree == (int)Specialization.Survival)
+            {
+                // Survival
+                curSpecialization = Specialization.Survival;
+            }
+            return curSpecialization;
+
+        }
+        
         private ShotData getShotByIndex(int index, CharacterCalculationsHunter calculatedStats)
         {
             if (index ==  1) return calculatedStats.aimedShot;
@@ -3107,7 +1784,7 @@ namespace Rawr.Hunter {
 
             return dmg;
         }
-        public float GetArmorDamageReduction(Character Char, Stats StatS, CalculationOptionsHunter CalcOpts, BossOptions BossOpts) {
+/*        public float GetArmorDamageReduction(Character Char, Stats StatS, CalculationOptionsHunter CalcOpts, BossOptions BossOpts) {
             float armorReduction;
             float arpenBuffs = 0.0f;
 
@@ -3119,6 +1796,7 @@ namespace Rawr.Hunter {
 
             return armorReduction;
         }
+*/
         #endregion
     }
 }
