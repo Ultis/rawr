@@ -271,9 +271,8 @@ namespace Rawr.Moonkin
             float starfallEclipseDamage = starfallBaseDamage * eclipseBonus;
             RotationData.TreantDamage = talents.ForceOfNature == 0 ? 0 : DoTreeCalcs(calcs, spellPower, treantLifespan);
             // T12 2-piece: 2-sec cast, 5192-6035 damage, affected by hit, 15-sec duration
-            // For now, hard-code the 8% multiplier from Earth and Moon
             // Hard-code 3.5 casts/proc based on EJ testing
-            float T122PieceHitDamage = (5192 + 6035) / 2f * spellHit * 1.08f;
+            float T122PieceHitDamage = (5192 + 6035) / 2f * spellHit * (1 + calcs.BasicStats.BonusFireDamageMultiplier);
             // I'm going to assume a 150% crit modifier on the 2T12 proc until I'm told otherwise
             float T122PieceCritDamage = T122PieceHitDamage * 1.5f;
             // Use 2.5% crit rate based on EJ testing
