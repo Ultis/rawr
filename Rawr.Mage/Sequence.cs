@@ -3607,14 +3607,14 @@ namespace Rawr.Mage.SequenceReconstruction
                                 unexplained += duration - EvocationDuration;
                                 if (timing != null) timing.AppendLine("WARNING: Evocation duration too long!");
                             }
-                            if (timing != null) timing.AppendLine(TimeFormat(time) + ": Evocation (" + Math.Round(mana).ToString() + " mana)");
-                            mana += Math.Min(EvocationDuration, duration) * EvocationRegen;
+                            if (timing != null) timing.AppendLine(TimeFormat(time) + ": Evocation (" + Math.Round(manabefore).ToString() + " mana)");
+                            //mana += Math.Min(EvocationDuration, duration) * EvocationRegen;
                             evocationCooldown = SequenceItem.Calculations.EvocationCooldown;
                         }
                     }
                     else
                     {
-                        mana += Math.Min(EvocationDuration, duration) * EvocationRegen;
+                        //mana += Math.Min(EvocationDuration, duration) * EvocationRegen;
                     }
                 }
                 if (type == VariableType.EvocationIV)
@@ -3638,14 +3638,14 @@ namespace Rawr.Mage.SequenceReconstruction
                                 unexplained += duration - SequenceItem.Calculations.EvocationDurationIV;
                                 if (timing != null) timing.AppendLine("WARNING: Evocation duration too long!");
                             }
-                            if (timing != null) timing.AppendLine(TimeFormat(time) + ": Evocation (Icy Veins) (" + Math.Round(mana).ToString() + " mana)");
-                            mana += Math.Min(SequenceItem.Calculations.EvocationDurationIV, duration) * SequenceItem.Calculations.EvocationRegenIV;
+                            if (timing != null) timing.AppendLine(TimeFormat(time) + ": Evocation (Icy Veins) (" + Math.Round(manabefore).ToString() + " mana)");
+                            //mana += Math.Min(SequenceItem.Calculations.EvocationDurationIV, duration) * SequenceItem.Calculations.EvocationRegenIV;
                             evocationCooldown = SequenceItem.Calculations.EvocationCooldown;
                         }
                     }
                     else
                     {
-                        mana += Math.Min(SequenceItem.Calculations.EvocationDurationIV, duration) * SequenceItem.Calculations.EvocationRegenIV;
+                        //mana += Math.Min(SequenceItem.Calculations.EvocationDurationIV, duration) * SequenceItem.Calculations.EvocationRegenIV;
                     }
                 }
                 if (type == VariableType.EvocationHero)
@@ -3669,14 +3669,14 @@ namespace Rawr.Mage.SequenceReconstruction
                                 unexplained += duration - SequenceItem.Calculations.EvocationDurationHero;
                                 if (timing != null) timing.AppendLine("WARNING: Evocation duration too long!");
                             }
-                            if (timing != null) timing.AppendLine(TimeFormat(time) + ": Evocation (Heroism) (" + Math.Round(mana).ToString() + " mana)");
-                            mana += Math.Min(SequenceItem.Calculations.EvocationDurationHero, duration) * SequenceItem.Calculations.EvocationRegenHero;
+                            if (timing != null) timing.AppendLine(TimeFormat(time) + ": Evocation (Heroism) (" + Math.Round(manabefore).ToString() + " mana)");
+                            //mana += Math.Min(SequenceItem.Calculations.EvocationDurationHero, duration) * SequenceItem.Calculations.EvocationRegenHero;
                             evocationCooldown = SequenceItem.Calculations.EvocationCooldown;
                         }
                     }
                     else
                     {
-                        mana += Math.Min(SequenceItem.Calculations.EvocationDurationHero, duration) * SequenceItem.Calculations.EvocationRegenHero;
+                        //mana += Math.Min(SequenceItem.Calculations.EvocationDurationHero, duration) * SequenceItem.Calculations.EvocationRegenHero;
                     }
                 }
                 if (type == VariableType.EvocationIVHero)
@@ -3700,14 +3700,14 @@ namespace Rawr.Mage.SequenceReconstruction
                                 unexplained += duration - SequenceItem.Calculations.EvocationDurationIVHero;
                                 if (timing != null) timing.AppendLine("WARNING: Evocation duration too long!");
                             }
-                            if (timing != null) timing.AppendLine(TimeFormat(time) + ": Evocation (Icy Veins+Heroism) (" + Math.Round(mana).ToString() + " mana)");
-                            mana += Math.Min(SequenceItem.Calculations.EvocationDurationIVHero, duration) * SequenceItem.Calculations.EvocationRegenIVHero;
+                            if (timing != null) timing.AppendLine(TimeFormat(time) + ": Evocation (Icy Veins+Heroism) (" + Math.Round(manabefore).ToString() + " mana)");
+                            //mana += Math.Min(SequenceItem.Calculations.EvocationDurationIVHero, duration) * SequenceItem.Calculations.EvocationRegenIVHero;
                             evocationCooldown = SequenceItem.Calculations.EvocationCooldown;
                         }
                     }
                     else
                     {
-                        mana += Math.Min(SequenceItem.Calculations.EvocationDurationIVHero, duration) * SequenceItem.Calculations.EvocationRegenIVHero;
+                        //mana += Math.Min(SequenceItem.Calculations.EvocationDurationIVHero, duration) * SequenceItem.Calculations.EvocationRegenIVHero;
                     }
                 }
                 if (mana < 0) mana = 0;

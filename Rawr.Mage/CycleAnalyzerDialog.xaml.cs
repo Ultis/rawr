@@ -159,42 +159,42 @@ namespace Rawr.Mage
                 case "Arcane":
                 default:
                     armor = "Mage Armor";
-                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false, true);
+                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false, true, false);
                     solver.Initialize(null);
                     castingState = new CastingState(solver, 0, false, 0);
                     generator = new ArcaneCycleGeneratorBeta(castingState, true, false, false);
                     break;
                 case "Arcane AOE":
                     armor = "Mage Armor";
-                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false, true);
+                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false, true, false);
                     solver.Initialize(null);
                     castingState = new CastingState(solver, 0, false, 0);
                     generator = new ArcaneAOECycleGenerator(castingState, true, false, false);
                     break;
                 case "Frost":
                     armor = "Molten Armor";
-                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false, true);
+                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false, true, false);
                     solver.Initialize(null);
                     castingState = new CastingState(solver, 0, false, 0);
                     generator = new FrostCycleGeneratorBeta(castingState, false, 0.0f, false, 0.0f);
                     break;
                 case "Frost+Deep Freeze":
                     armor = "Molten Armor";
-                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false, true);
+                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false, true, false);
                     solver.Initialize(null);
                     castingState = new CastingState(solver, 0, false, 0);
                     generator = new FrostCycleGeneratorBeta(castingState, true, 30.0f, false, 0.0f);
                     break;
                 case "Frost+Freeze":
                     armor = "Molten Armor";
-                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false, true);
+                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false, true, false);
                     solver.Initialize(null);
                     castingState = new CastingState(solver, 0, false, 0);
                     generator = new FrostCycleGeneratorBeta(castingState, false, 0.0f, true, 25.0f);
                     break;
                 case "Frost+Freeze+Deep Freeze":
                     armor = "Molten Armor";
-                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false, true);
+                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false, true, false);
                     solver.Initialize(null);
                     castingState = new CastingState(solver, 0, false, 0);
                     generator = new FrostCycleGeneratorBeta(castingState, true, 30.0f, true, 25.0f);

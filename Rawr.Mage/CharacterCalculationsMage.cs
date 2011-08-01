@@ -962,7 +962,7 @@ namespace Rawr.Mage
                 ret["Spell Cycles"] = "...";
                 ret["By Spell"] = "...";
                 ret["Status"] = "Score: ..., Dps: ..., Survivability: ...";
-                DisplayCalculations.DisplaySolver = new Solver(DisplayCalculations.Character, DisplayCalculations.CalculationOptions, DisplayCalculations.CalculationOptions.DisplaySegmentCooldowns, DisplayCalculations.CalculationOptions.DisplaySegmentMana, DisplayCalculations.CalculationOptions.DisplayIntegralMana, DisplayCalculations.CalculationOptions.DisplayAdvancedConstraintsLevel, DisplayCalculations.MageArmor, false, DisplayCalculations.CalculationOptions.SmartOptimization, true, true, true);
+                DisplayCalculations.DisplaySolver = new Solver(DisplayCalculations.Character, DisplayCalculations.CalculationOptions, DisplayCalculations.CalculationOptions.DisplaySegmentCooldowns, DisplayCalculations.CalculationOptions.DisplaySegmentMana, DisplayCalculations.CalculationOptions.DisplayIntegralMana, DisplayCalculations.CalculationOptions.DisplayAdvancedConstraintsLevel, DisplayCalculations.MageArmor, false, DisplayCalculations.CalculationOptions.SmartOptimization, true, true, true, DisplayCalculations.CalculationOptions.CombinatorialSolver);
                 CalculationsMage.EnableSolver(DisplayCalculations.DisplaySolver);
                 DisplayCalculations.CalculationOptions.SequenceReconstruction = null;
                 return ret;
@@ -982,7 +982,7 @@ namespace Rawr.Mage
         {
             get
             {
-                return DisplayCalculations.CalculationOptions.DisplaySegmentCooldowns != DisplayCalculations.CalculationOptions.ComparisonSegmentCooldowns || DisplayCalculations.CalculationOptions.DisplaySegmentMana != DisplayCalculations.CalculationOptions.ComparisonSegmentMana || DisplayCalculations.CalculationOptions.DisplayIntegralMana != DisplayCalculations.CalculationOptions.ComparisonIntegralMana || DisplayCalculations.CalculationOptions.DisplayAdvancedConstraintsLevel != DisplayCalculations.CalculationOptions.ComparisonAdvancedConstraintsLevel;
+                return DisplayCalculations.CalculationOptions.DisplaySegmentCooldowns != DisplayCalculations.CalculationOptions.ComparisonSegmentCooldowns || DisplayCalculations.CalculationOptions.DisplaySegmentMana != DisplayCalculations.CalculationOptions.ComparisonSegmentMana || DisplayCalculations.CalculationOptions.DisplayIntegralMana != DisplayCalculations.CalculationOptions.ComparisonIntegralMana || DisplayCalculations.CalculationOptions.DisplayAdvancedConstraintsLevel != DisplayCalculations.CalculationOptions.ComparisonAdvancedConstraintsLevel || DisplayCalculations.CalculationOptions.CombinatorialSolver;
             }
         }
 

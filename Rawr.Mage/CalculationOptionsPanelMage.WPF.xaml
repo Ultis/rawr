@@ -513,6 +513,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.6*" />
@@ -539,9 +540,10 @@
                     <TextBlock Grid.Column="0" Grid.Row="17" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Advanced Constraints: *" TextWrapping="Wrap" ToolTipService.ToolTip="Enables advanced constraints that are too expensive for comparisons, but are needed for sequence reconstruction." />
                     <TextBlock Grid.Column="0" Grid.Row="18" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Segment Duration: *" TextWrapping="Wrap" ToolTipService.ToolTip="Duration of segments when variable segment duration is not used." />
                     <TextBlock Grid.Column="0" Grid.Row="19" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Variable Segment Duration: *" TextWrapping="Wrap" ToolTipService.ToolTip="Determine segment durations based on cooldown durations." />
-                    <TextBlock Grid.Column="0" Grid.Row="20" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Additional Segment Splits: *" TextWrapping="Wrap" ToolTipService.ToolTip="A comma-separated list of segment splits in seconds, useful in combination with debug segmentation." />
-                    <TextBlock Grid.Column="0" Grid.Row="21" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Lower Bound Hint: *" TextWrapping="Wrap" ToolTipService.ToolTip="A lower bound supplied to guide depth-first and hybrid search, if you use this make sure it is an actual lower bound." />
-                    <TextBlock Grid.Column="0" Grid.Row="22" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Max Redecompose: *" TextWrapping="Wrap" ToolTipService.ToolTip="Maximum number of solver iterations before redecomposing the basis. Lowering this value might improve stability of the advanced solver if you're having problems." />
+                    <TextBlock Grid.Column="0" Grid.Row="20" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Combinatorial Solver: *" TextWrapping="Wrap" ToolTipService.ToolTip="Combinatorial examination of cooldown stacking options." />
+                    <TextBlock Grid.Column="0" Grid.Row="21" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Additional Segment Splits: *" TextWrapping="Wrap" ToolTipService.ToolTip="A comma-separated list of segment splits in seconds, useful in combination with debug segmentation." />
+                    <TextBlock Grid.Column="0" Grid.Row="22" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Lower Bound Hint: *" TextWrapping="Wrap" ToolTipService.ToolTip="A lower bound supplied to guide depth-first and hybrid search, if you use this make sure it is an actual lower bound." />
+                    <TextBlock Grid.Column="0" Grid.Row="23" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Max Redecompose: *" TextWrapping="Wrap" ToolTipService.ToolTip="Maximum number of solver iterations before redecomposing the basis. Lowering this value might improve stability of the advanced solver if you're having problems." />
                     <CheckBox Grid.Column="2" Grid.Row="1" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=IncrementalOptimizations, UpdateSourceTrigger=Default}" />
                     <CheckBox Grid.Column="2" Grid.Row="2" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=ForceIncrementalOptimizations, UpdateSourceTrigger=Default}" />
                     <CheckBox Grid.Column="2" Grid.Row="3" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=ReconstructSequence, UpdateSourceTrigger=Default}" d:LayoutOverrides="Height, VerticalMargin" />
@@ -558,9 +560,9 @@
                         <local:MIPMethod>HybridGuided</local:MIPMethod>
                         <local:MIPMethod>HybridUnguided</local:MIPMethod>
                     </ComboBox>
-                    <TextBox Grid.Column="1" Grid.Row="20" Height="20" Margin="0,2,0,2" Text="{Binding Mode=TwoWay, Path=AdditionalSegmentSplits, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.ColumnSpan="2" />
-                    <TextBox Grid.Column="1" Grid.Row="21" Height="20" Margin="0,2,0,2" Text="{Binding Mode=TwoWay, Path=LowerBoundHint, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.ColumnSpan="2" />
-                    <TextBox Grid.Column="1" Grid.Row="22" Height="20" Margin="0,2,0,2" Text="{Binding Mode=TwoWay, Path=MaxRedecompose, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.ColumnSpan="2" />
+                    <TextBox Grid.Column="1" Grid.Row="21" Height="20" Margin="0,2,0,2" Text="{Binding Mode=TwoWay, Path=AdditionalSegmentSplits, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.ColumnSpan="2" />
+                    <TextBox Grid.Column="1" Grid.Row="22" Height="20" Margin="0,2,0,2" Text="{Binding Mode=TwoWay, Path=LowerBoundHint, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.ColumnSpan="2" />
+                    <TextBox Grid.Column="1" Grid.Row="23" Height="20" Margin="0,2,0,2" Text="{Binding Mode=TwoWay, Path=MaxRedecompose, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.ColumnSpan="2" />
                     <CheckBox Grid.Column="2" Grid.Row="0" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=SmartOptimization, UpdateSourceTrigger=Default}" />
                     <TextBox Grid.Column="1" Grid.Row="10" Height="20" Margin="0,2,0,2" Text="{Binding Mode=TwoWay, Path=GlobalRestarts, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.ColumnSpan="2" />
                     <TextBox Grid.Column="1" Grid.Row="11" Height="20" Margin="0,2,0,2" Text="{Binding Mode=TwoWay, Path=MaxHeapLimit, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.ColumnSpan="2" />
@@ -570,6 +572,7 @@
                     <CheckBox Grid.Column="1" Grid.Row="15" Margin="0,2,8,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=ComparisonSegmentCooldowns, UpdateSourceTrigger=Default}" HorizontalAlignment="Right" />
                     <CheckBox Grid.Column="2" Grid.Row="15" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=DisplaySegmentCooldowns, UpdateSourceTrigger=Default}" />
                     <CheckBox Grid.Column="2" Grid.Row="19" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=VariableSegmentDuration, UpdateSourceTrigger=Default}" />
+                    <CheckBox Grid.Column="2" Grid.Row="20" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=CombinatorialSolver, UpdateSourceTrigger=Default}" />
                     <ComboBox Grid.Column="1" Grid.Row="18" Margin="0,2,0,2" Height="Auto" Grid.ColumnSpan="2" SelectedItem="{Binding Mode=TwoWay, Path=FixedSegmentDuration}">
                         <System:Int32>10</System:Int32>
                         <System:Int32>15</System:Int32>

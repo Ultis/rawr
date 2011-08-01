@@ -18,7 +18,8 @@
     <UserControl.Resources>
         <local:CalculationOptionsHunter x:Key="CalculationOptionsHunterDataSource" d:IsDataSource="True"/>
         <local:PercentConverter x:Key="PercentConverter" />
-        <local:EnumValuesConverter x:Name="enumConverter"/>
+        <local:EnumValuesConverter x:Key="enumConverter"/>
+        <Rawr:PETFAMILY x:Key="PetFamily"/>
     </UserControl.Resources>
 
 
@@ -180,9 +181,13 @@
                                     <System:String>No Armory Pets Loaded</System:String>
                                 </ComboBox>
                                 <dataInput:Label x:Name="LB_PetFamilies" Content="Pet Family:" Grid.Row="1" Margin="4,2" />
+<!--
+                                <ComboBox x:Name="CB_PetFamily" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="4,2" ItemsSource="{Binding Source={StaticResource PetFamily}}" 
+                  SelectedValue="{Binding Source={StaticResource PetFamily}, Path=[0]}" SelectionChanged="CB_PetFamily_SelectedIndexChanged"/>
+-->
                                 <ComboBox x:Name="CB_PetFamily" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="4,2" 
-                                    ItemsSource="{Binding PetFamily, Mode=OneTime, Converter={StaticResource enumConverter}}" 
-                                    SelectedItem="{Binding PetFamily, Mode=TwoWay}"
+                                    ItemsSource="{Binding Path=PetFamily, Mode=OneTime, Converter={StaticResource enumConverter}}" 
+                                    SelectedItem="{Binding Path=PetFamily, Mode=TwoWay}"
                                     SelectionChanged="CB_PetFamily_SelectedIndexChanged">
                                 </ComboBox>
                                 <local:PetTalentPicker x:Name="ThePetTalentPicker" Grid.Row="3" Grid.ColumnSpan="3"/>

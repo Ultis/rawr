@@ -852,6 +852,13 @@ namespace Rawr.Mage
             set { _SmartOptimization = value; OnPropertyChanged("SmartOptimization"); }
         }
 
+        private bool _CombinatorialSolver;
+        public bool CombinatorialSolver
+        {
+            get { return _CombinatorialSolver; }
+            set { _CombinatorialSolver = value; OnPropertyChanged("CombinatorialSolver"); }
+        }
+
         private float _DpsTime;
         public float DpsTime
         {

@@ -280,12 +280,12 @@ namespace Rawr.Mage.Graphs
                     VariableType type = sequence[i].VariableType;
                     float duration = (float)sequence[i].Duration;
                     Cycle cycle = sequence[i].Cycle;
+                    CastingState state = sequence[i].CastingState;
                     if (cycle != null)
                     {
-                        float dps = (float)cycle.GetDamagePerSecond(calculations.ManaAdeptBonus);
+                        float dps = (float)cycle.GetDamagePerSecond(state.ManaAdeptBonus);
                         if (dps > maxDps) maxDps = dps;
                     }
-                    CastingState state = sequence[i].CastingState;
                     float mps = (float)sequence[i].Mps;
                     if (sequence[i].IsManaPotionOrGem)
                     {

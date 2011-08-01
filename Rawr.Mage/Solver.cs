@@ -45,6 +45,15 @@ namespace Rawr.Mage
         public double MaximumStackingDuration;
     }
 
+    public struct CombinatorialConstraint
+    {
+        public int Row;
+        public int MinSegment;
+        public int MaxSegment;
+        public double MinTime;
+        public double MaxTime;
+    }
+
     public class EffectCooldown
     {
         public int Mask { get; set; }
@@ -114,6 +123,7 @@ namespace Rawr.Mage
         private bool needsSolutionVariables;
         private bool cancellationPending;
         private bool needsQuadratic;
+        public bool CombinatorialSolver { get; private set; }
 
         public ArraySet ArraySet { get; set; }
 
@@ -995,6 +1005,9 @@ namespace Rawr.Mage
         private StackingConstraint[] rowStackingConstraint;
         private int rowStackingConstraintCount;
 
+        private CombinatorialConstraint[] rowCombinatorialConstraint;
+        private int rowCombinatorialConstraintCount;
+
         #region LP rows
         private int rowManaRegen;
         private int rowFightDuration;
@@ -1132,12 +1145,12 @@ namespace Rawr.Mage
         }
         #endregion
 
-        public Solver(Character character, CalculationOptionsMage calculationOptions, bool segmentCooldowns, bool segmentMana, bool integralMana, int advancedConstraintsLevel, string armor, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables, bool solveCycles)
+        public Solver(Character character, CalculationOptionsMage calculationOptions, bool segmentCooldowns, bool segmentMana, bool integralMana, int advancedConstraintsLevel, string armor, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables, bool solveCycles, bool combinatorialSolver)
         {
-            Construct(character, calculationOptions, segmentCooldowns, segmentMana, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables, solveCycles);
+            Construct(character, calculationOptions, segmentCooldowns, segmentMana, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables, solveCycles, combinatorialSolver);
         }
 
-        private void Construct(Character character, CalculationOptionsMage calculationOptions, bool segmentCooldowns, bool segmentMana, bool integralMana, int advancedConstraintsLevel, string armor, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables, bool solveCycles)
+        private void Construct(Character character, CalculationOptionsMage calculationOptions, bool segmentCooldowns, bool segmentMana, bool integralMana, int advancedConstraintsLevel, string armor, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables, bool solveCycles, bool combinatorialSolver)
         {
             this.Character = character;
             this.MageTalents = character.MageTalents;
@@ -1156,28 +1169,33 @@ namespace Rawr.Mage
             this.needsSolutionVariables = needsSolutionVariables;
             this.needsQuadratic = false;
             this.needsManaSegmentConstraints = segmentMana && !segmentCooldowns && advancedConstraintsLevel >= 1 && useIncrementalOptimizations;
+            this.CombinatorialSolver = combinatorialSolver;
+            if (combinatorialSolver)
+            {
+                requiresMIP = false;
+            }
             cancellationPending = false;
         }
 
         [ThreadStatic]
         private static Solver threadSolver;
 
-        public static CharacterCalculationsMage GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, CalculationsMage calculations, string armor, bool segmentCooldowns, bool segmentMana, bool integralMana, int advancedConstraintsLevel, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables, bool solveCycles)
+        public static CharacterCalculationsMage GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, CalculationsMage calculations, string armor, bool segmentCooldowns, bool segmentMana, bool integralMana, int advancedConstraintsLevel, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables, bool solveCycles, bool combinatorialSolver)
         {
             if (needsDisplayCalculations)
             {
                 // if we need display calculations then solver data has to remain clean because calls from display calculations
                 // that generate spell/cycle tooltips use that data (for example otherwise mage armor solver gets overwritten with molten armor solver data and we get bad data)
-                var displaySolver = new Solver(character, calculationOptions, segmentCooldowns, segmentMana, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables, solveCycles);
+                var displaySolver = new Solver(character, calculationOptions, segmentCooldowns, segmentMana, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables, solveCycles, combinatorialSolver);
                 return displaySolver.GetCharacterCalculations(additionalItem);
             }
             if (threadSolver == null)
             {
-                threadSolver = new Solver(character, calculationOptions, segmentCooldowns, segmentMana, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables, solveCycles);
+                threadSolver = new Solver(character, calculationOptions, segmentCooldowns, segmentMana, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables, solveCycles, combinatorialSolver);
             }
             else
             {
-                threadSolver.Construct(character, calculationOptions, segmentCooldowns, segmentMana, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables, solveCycles);
+                threadSolver.Construct(character, calculationOptions, segmentCooldowns, segmentMana, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables, solveCycles, combinatorialSolver);
             }
             return threadSolver.GetCharacterCalculations(additionalItem);
         }
@@ -1193,6 +1211,446 @@ namespace Rawr.Mage
 
             CalculateCycles();
 
+            SetCalculationReuseReferences();
+            AddWardStates();
+
+            CharacterCalculationsMage ret;
+
+            if (CombinatorialSolver)
+            {
+                ret = SolveCombinatorialProblem();
+            }
+            else
+            {
+                SolveBasicProblem();
+                ret = GetCalculationsResult();
+            }
+
+            ArrayPool.ReleaseArraySet(ArraySet);
+            ArraySet = null;
+
+            return ret;
+        }
+
+        private class CombList : List<CombItem>
+        {
+            public CombList(List<EffectCooldown> effects, List<CastingState> states, Solver solver)
+            {
+                this.effects = effects;
+                this.states = new Dictionary<int, CastingState>();
+                foreach (var s in states)
+                {
+                    this.states[s.Effects] = s;
+                }
+                this.solver = solver;
+                foreach (EffectCooldown cooldown in effects)
+                {
+                    if (cooldown.Cooldown > 0 && cooldown.Duration > 0)
+                    {
+                        cooldown.MaximumDuration = (float)MaximizeEffectDuration(solver.CalculationOptions.FightDuration, cooldown.Duration, cooldown.Cooldown);
+                    }
+                }
+            }
+
+            internal List<EffectCooldown> effects;
+            internal Dictionary<int, CastingState> states;
+            internal Solver solver;
+
+            public bool IsActive(int cooldown)
+            {
+                return IsActive(cooldown, Count);
+            }
+
+            public bool IsActive(int cooldown, int index)
+            {
+                /*bool active = false;
+                for (int i = 0; i < index; i++)
+                {
+                    if (this[i].Cooldown == cooldown)
+                    {
+                        active = this[i].Activation;
+                    }
+                }
+                return active;*/
+                if (index == 0) return false;
+                return (this[index - 1].Effects & effects[cooldown].Mask) != 0;
+            }
+
+            public void UpdateCastingStates()
+            {
+                for (int i = 0; i < Count; i++)
+                {
+                    this[i].UpdateCastingState(this);
+                }
+            }
+
+            public void UpdateMinTime(int index)
+            {
+                int cooldown = this[index].Cooldown;
+                bool act = this[index].Activation;
+                double min = 0;
+                for (int i = 0; i < index; i++)
+                {
+                    if (this[i].Cooldown == cooldown)
+                    {
+                        if (this[i].Activation && act)
+                        {
+                            min = Math.Max(min, this[i].MinTime + effects[cooldown].Cooldown);
+                        }
+                        else if (this[i].Activation && !act)
+                        {                          
+                            min = Math.Max(min, this[i].MinTime + this[i].Duration);
+                        }
+                        else
+                        {
+                            min = Math.Max(min, this[i].MinTime);
+                        }
+                    }
+                    else
+                    {
+                        min = Math.Max(min, this[i].MinTime);
+                    }
+                }
+                this[index].MinTime = min;
+            }
+
+            public bool UpdateEffects(int index)
+            {
+                int effect = 0;                
+                /*for (int i = 0; i <= index; i++)
+                {
+                    if (this[i].Activation)
+                    {
+                        effect = effect | effects[this[i].Cooldown].Mask;
+                    }
+                    else
+                    {
+                        effect = effect & ~effects[this[i].Cooldown].Mask;
+                    }
+                }*/
+                if (index > 0)
+                {
+                    effect = this[index - 1].Effects;
+                }
+                var cur = this[index];
+                if (cur.Activation)
+                {
+                    // during evocation we can't activate anything
+                    if ((effect & (int)StandardEffect.Evocation) != 0)
+                    {
+                        cur.Effects = -1;
+                        return false;
+                    }
+                    effect = effect | effects[cur.Cooldown].Mask;
+                }
+                else
+                {
+                    effect = effect & ~effects[cur.Cooldown].Mask;
+                }
+                
+
+                bool valid = true;
+                foreach (int exclusionMask in solver.effectExclusionList)
+                {
+                    if (solver.BitCount2(effect & exclusionMask))
+                    {
+                        valid = false;
+                        break;
+                    }
+                }
+
+                cur.CastingState = null;
+                if (valid)
+                {
+                    /*CastingState s;
+                    if (!states.TryGetValue(effect, out s))
+                    {
+                        s = CastingState.New(solver, effect, false, 0);
+                        states[effect] = s;
+                    }*/
+                    cur.Effects = effect;
+                    return true;
+                }
+                else
+                {
+                    cur.Effects = -1;
+                    return false;
+                }
+            }
+
+            public bool IsFeasible(int[] activationCount)
+            {
+                // make sure we use up all abilities
+                for (int index = 0; index < effects.Count; index++)
+                {
+                    EffectCooldown cooldown = effects[index];
+                    if (cooldown.Cooldown > 0 && cooldown.Duration > 0)
+                    {
+                        double max;
+                        if (float.IsPositiveInfinity(cooldown.Cooldown))
+                        {
+                            max = 1;
+                        }
+                        else
+                        {
+                            max = Math.Ceiling(solver.CalculationOptions.FightDuration / cooldown.Cooldown);
+                        }
+                        if (activationCount[index] < max)
+                        {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+
+            public bool IsPartialFeasible(int[] lastActivation, int[] activationCount)
+            {
+                // make sure that from last activation till last event there's no more than double cooldown duration
+                // if it is we could have filled one more activation in without affecting anything
+                // each activation must have a deactivation before an entry with higher min time
+                for (int index = 0; index < effects.Count; index++)
+                {
+                    EffectCooldown cooldown = effects[index];
+                    if (cooldown.Cooldown > 0 && cooldown.Duration > 0)
+                    {
+                        if (lastActivation[index] == -1)
+                        {
+                            if (this[Count - 1].MinTime >= cooldown.Cooldown)
+                            {
+                                return false;
+                            }
+                        }
+                        else
+                        {            
+                            // make sure we can reach feasible
+                            double act = this[lastActivation[index]].MinTime;
+                            double delta = this[Count - 1].MinTime - act;
+                            if (!float.IsPositiveInfinity(cooldown.Cooldown))
+                            {
+                                double max = Math.Ceiling(solver.CalculationOptions.FightDuration / cooldown.Cooldown);
+                                double nextact = Math.Max(this[Count - 1].MinTime, act + cooldown.Cooldown);
+                                double remaining = Math.Ceiling((solver.CalculationOptions.FightDuration - nextact) / cooldown.Cooldown);
+                                if (activationCount[index] + remaining < max)
+                                {
+                                    return false;
+                                }
+                            }
+
+                            // only need to check for matching deactivation if we just passed the duration, if we were past it already there's no need to check again
+                            if (delta >= cooldown.Duration)
+                            {
+                                if (Count < 2 || this[Count - 2].MinTime - act < cooldown.Duration)
+                                {
+                                    // find deactivation
+                                    bool found = false;
+                                    for (int j = lastActivation[index] + 1; j < Count; j++)
+                                    {
+                                        if (this[j].Cooldown == index && !this[j].Activation)
+                                        {
+                                            found = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!found)
+                                    {
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                return true;
+            }
+
+            public override string ToString()
+            {
+                return string.Join(",", this);
+            }
+        }
+
+        private class CombItem
+        {
+            public int Cooldown;
+            public bool Activation;
+            public double MinTime;
+            public bool Generated;
+            public CastingState CastingState;
+            public double Duration;
+            public int LastActivation;
+            public int Effects;
+
+            public void UpdateDuration(CombList list)
+            {
+                int cooldown = Cooldown;
+                EffectCooldown effect = list.effects[cooldown];
+                if (effect.StandardEffect == StandardEffect.Evocation)
+                {
+                    UpdateCastingState(list);
+                    Duration = 6.0 / CastingState.CastingSpeed;
+                }
+                else
+                {
+                    Duration = effect.Duration;
+                }
+            }
+
+            public void UpdateCastingState(CombList list)
+            {
+                if (CastingState == null)
+                {
+                    CastingState s;
+                    if (!list.states.TryGetValue(Effects, out s))
+                    {
+                        s = CastingState.New(list.solver, Effects, false, 0);
+                        list.states[Effects] = s;
+                    }
+                    CastingState = s;
+                }
+            }
+
+            public override string ToString()
+            {
+                return Cooldown.ToString();
+            }
+        }
+
+        private CombList combList;
+
+        private CharacterCalculationsMage SolveCombinatorialProblem()
+        {
+            // we're examining combinatorial solutions to cooldown stacking
+            // for each feasible ordering of cooldown activations/deactivations we solve a separate linear/quadratic problem
+            // the best solution is the ultimate result
+
+            double[] bestSolution = null;
+            CharacterCalculationsMage bestResult = null;
+
+            int[] lastActivation = new int[CooldownList.Count];
+            int[] activationCount = new int[CooldownList.Count];
+            for (int i = 0; i < lastActivation.Length; i++)
+            {
+                lastActivation[i] = -1;
+            }
+
+            // generate all combinatorial options
+            combList = new CombList(CooldownList, stateList, this);
+            int index = 0;
+            int count = 0;
+            CombItem cur;
+            do
+            {
+                count++;
+                if (count % 100000 == 0)
+                {
+                    CalculationsMage.Log(this, count + ": " + combList.ToString());
+                }
+                if (index == combList.Count)
+                {
+                    // adding new entry
+                    cur = new CombItem() { Cooldown = 0, Activation = !combList.IsActive(0) };
+                    combList.Add(cur);
+                }
+                else
+                {
+                    // increment option
+                    cur = combList[index];
+                    cur.Cooldown++;
+                    if (cur.Cooldown >= CooldownList.Count)
+                    {
+                        // we exhausted all options, move to earlier time event
+                        index--;
+                        cur = combList[index];
+                        // if this option did not generate a solution yet then create it now
+                        // since all future events are beyond fight horizon
+                        if (!cur.Generated)
+                        {
+                            combList.RemoveRange(index + 1, combList.Count - index - 1);
+                            if (combList.IsFeasible(activationCount))
+                            {
+                                for (int i = 0; i < index; i++)
+                                {
+                                    combList[i].Generated = true;
+                                }
+                                combList.UpdateCastingStates();
+                                SolveBasicProblem();
+                                if (bestSolution == null || solution[solution.Length - 1] > bestSolution[bestSolution.Length - 1])
+                                {
+                                    bestSolution = solution;
+                                    bestResult = GetCalculationsResult();
+                                    CalculationsMage.Log(this, count + ": " + bestSolution[bestSolution.Length - 1]);
+                                }
+                            }
+                        }
+                        if (cur.Activation)
+                        {
+                            lastActivation[cur.Cooldown] = cur.LastActivation;
+                            activationCount[cur.Cooldown]--;
+                        }
+                        continue;
+                    }
+                    cur.Activation = !combList.IsActive(cur.Cooldown, index);
+                    combList.RemoveRange(index + 1, combList.Count - index - 1);
+                }
+                //combList.UpdateMinTime(index);
+                int cooldown = cur.Cooldown;
+                double mt;
+                if (index > 0)
+                {
+                    mt = combList[index - 1].MinTime;
+                }
+                else
+                {
+                    mt = 0;
+                }
+                if (lastActivation[cooldown] >= 0)
+                {
+                    var last = combList[lastActivation[cooldown]];
+                    double t = last.MinTime;
+                    if (cur.Activation)
+                    {
+                        t += CooldownList[cooldown].Cooldown;
+                    }
+                    else
+                    {
+                        t += last.Duration;
+                    }
+                    if (t > mt)
+                    {
+                        mt = t;
+                    }
+                }
+                cur.MinTime = mt;
+                if (combList.UpdateEffects(index))
+                {
+                    cur.UpdateDuration(combList);
+                    cur.Generated = false;
+                    if (cur.MinTime >= CalculationOptions.FightDuration || !combList.IsPartialFeasible(lastActivation, activationCount))
+                    {
+                        // we went beyond the fight horizon, move to next option
+                        // we skipped some deactivations, cancel and move on
+                        // or it won't be optimal
+                    }
+                    else
+                    {
+                        // move to future events
+                        if (cur.Activation)
+                        {
+                            cur.LastActivation = lastActivation[cooldown];
+                            lastActivation[cooldown] = index;
+                            activationCount[cooldown]++;
+                        }
+                        index++;
+                    }
+                }
+            } while (index >= 0 && !cancellationPending);
+            solution = bestSolution;
+            return bestResult;
+        }
+
+        private void SolveBasicProblem()
+        {
             ConstructProblem();
 
             //TestScaling();
@@ -1207,14 +1665,7 @@ namespace Rawr.Mage
                 RestrictSolution();
             }
 
-            solution = lp.Solve();            
-
-            var ret = GetCalculationsResult();
-
-            ArrayPool.ReleaseArraySet(ArraySet);
-            ArraySet = null;
-
-            return ret;
+            solution = lp.Solve();
         }
 
         private void CalculateCycles()
@@ -2282,7 +2733,7 @@ namespace Rawr.Mage
             if (evocationAvailable)
             {
                 EffectCooldown cooldown = NewStandardEffectCooldown(cachedEffectEvocation);
-                cooldown.Cooldown = EvocationDuration;
+                cooldown.Cooldown = EvocationCooldown;
                 CooldownList.Add(cooldown);
             }
             if (powerInfusionAvailable)
@@ -3010,7 +3461,11 @@ namespace Rawr.Mage
                 dpsTime -= movementShare;
             }
 
-            if (segmentMana)
+            if (CombinatorialSolver)
+            {
+                manaSegments = combList.Count + 1;
+            }
+            else if (segmentMana)
             {
                 if (segmentCooldowns)
                 {
@@ -3033,9 +3488,6 @@ namespace Rawr.Mage
                 lp = new SolverLP();
             }
             lp.Initialize(ArraySet, rowCount, 9 + (12 + (CalculationOptions.EnableHastedEvocation ? 6 : 0) + spellList.Count * stateList.Count * (1 + (CalculationOptions.UseMageWard ? 1 : 0))) * manaSegments * SegmentList.Count, this, SegmentList.Count);
-
-            SetCalculationReuseReferences();
-            AddWardStates();
 
             if (needsSolutionVariables)
             {
@@ -3158,6 +3610,49 @@ namespace Rawr.Mage
                     for (; lastSegment < SegmentList.Count; )
                     {
                         segmentColumn[++lastSegment] = column + 1;
+                    }
+                }
+            }
+            else if (CombinatorialSolver)
+            {
+                List<Cycle> placed = new List<Cycle>();
+                for (int manaSegment = manaSegments - 1; manaSegment >= 0; manaSegment--)
+                {
+                    CastingState state = (manaSegment == 0) ? BaseState : combList[manaSegment - 1].CastingState;
+                    if (!state.Evocation)
+                    {
+                        placed.Clear();
+                        for (int spell = 0; spell < spellList.Count; spell++)
+                        {
+                            Cycle c = state.GetCycle(spellList[spell]);
+                            if (c.CycleId == CycleId.ArcaneManaNeutral)
+                            {
+                                c.FixManaNeutral();
+                            }
+                            bool skip = false;
+                            foreach (Cycle s2 in placed)
+                            {
+                                // TODO verify it this is ok, it assumes that spells placed under same casting state are independent except for aoe spells
+                                // assuming there are no constraints that depend on properties of particular spell cycle instead of properties of casting state
+                                if (!c.AreaEffect && s2.DamagePerSecond >= c.DamagePerSecond - 0.00001 && s2.ManaPerSecond <= c.ManaPerSecond + 0.00001)
+                                {
+                                    skip = true;
+                                    break;
+                                }
+                            }
+                            if ((c.ManaPerSecond < -0.001 && c.CycleId != CycleId.ArcaneManaNeutral) && (CalculationOptions.DisableManaRegenCycles && Specialization == Mage.Specialization.Arcane))
+                            {
+                                skip = true;
+                            }
+                            if (!skip)
+                            {
+                                placed.Add(c);
+                                //for (int manaSegment = 0; manaSegment < manaSegments; manaSegment++)
+                                column = lp.AddColumnUnsafe();
+                                if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { State = state, Cycle = c, Segment = 0, ManaSegment = manaSegment, Type = VariableType.Spell, Dps = c.DamagePerSecond, Mps = c.ManaPerSecond, Tps = c.ThreatPerSecond });
+                                SetSpellColumn(minimizeTime, 0, manaSegment, state, column, c, 1);
+                            }
+                        }
                     }
                 }
             }
@@ -3285,6 +3780,18 @@ namespace Rawr.Mage
                 MaxConjureManaGem = 0;
             }
         }
+
+        private void SetCombinatorialConstraint(int manaSegment, int column)
+        {
+            for (int i = 0; i < rowCombinatorialConstraintCount; i++)
+            {
+                if (manaSegment >= rowCombinatorialConstraint[i].MinSegment && manaSegment <= rowCombinatorialConstraint[i].MaxSegment)
+                {
+                    lp.SetElementUnsafe(rowCombinatorialConstraint[i].Row, column, 1.0);
+                }
+            }
+        }
+
 
         private void SetManaSegmentConstraint(int manaSegment, int column)
         {
@@ -3521,6 +4028,10 @@ namespace Rawr.Mage
             {
                 SetManaSegmentConstraint(manaSegment, column);
             }
+            if (CombinatorialSolver)
+            {
+                SetCombinatorialConstraint(manaSegment, column);
+            }
         }
 
         /*private void ConstructSummonWaterElemental()
@@ -3615,6 +4126,10 @@ namespace Rawr.Mage
             {
                 SetManaSegmentConstraint(manaSegment, column);
             }
+            if (CombinatorialSolver)
+            {
+                SetCombinatorialConstraint(manaSegment, column);
+            }
         }
 
         private void ConstructManaGem(Stats baseStats, float threatFactor)
@@ -3635,6 +4150,10 @@ namespace Rawr.Mage
                 double dps = 0.0f;
                 double upperBound;
                 if (manaGemSegments > 1)
+                {
+                    upperBound = 1.0;
+                }
+                else if (CombinatorialSolver && manaGemEffectAvailable)
                 {
                     upperBound = 1.0;
                 }
@@ -3667,7 +4186,10 @@ namespace Rawr.Mage
                     {
                         for (int manaSegment = 0; manaSegment < manaSegments; manaSegment++)
                         {
-                            SetManaGemColumn(mps, tps, dps, upperBound, segment, manaSegment);
+                            if (!CombinatorialSolver || !manaGemEffectAvailable || (manaSegment > 0 && CooldownList[combList[manaSegment - 1].Cooldown].StandardEffect == StandardEffect.ManaGemEffect && combList[manaSegment - 1].Activation))
+                            {
+                                SetManaGemColumn(mps, tps, dps, upperBound, segment, manaSegment);
+                            }
                         }
                     }
                 }
@@ -3837,136 +4359,150 @@ namespace Rawr.Mage
                 {
                     MaxEvocation = Math.Max(1, 1 + (float)Math.Floor((CalculationOptions.FightDuration - 90f) / EvocationCooldown));
                 }
-                int mask = 0;
-                CastingState evoState = null;
-                CastingState evoStateIV = null;
-                CastingState evoStateHero = null;
-                CastingState evoStateIVHero = null;
-                if (waterElementalAvailable)
+                if (CombinatorialSolver)
                 {
-                    evoState = CastingState.New(this, (int)StandardEffect.Evocation | mask, false, 0);
-                    if (CalculationOptions.EnableHastedEvocation)
+                    for (int manaSegment = 0; manaSegment < manaSegments; manaSegment++)
                     {
-                        evoStateIV = CastingState.New(this, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins | mask, false, 0);
-                        evoStateHero = CastingState.New(this, (int)StandardEffect.Evocation | (int)StandardEffect.Heroism | mask, false, 0);
-                        evoStateIVHero = CastingState.New(this, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins | (int)StandardEffect.Heroism | mask, false, 0);
-                    }
-                }
-                else
-                {
-                    evoState = CastingState.NewRaw(this, (int)StandardEffect.Evocation | mask);
-                    if (CalculationOptions.EnableHastedEvocation)
-                    {
-                        evoStateIV = CastingState.NewRaw(this, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins | mask);
-                        evoStateHero = CastingState.NewRaw(this, (int)StandardEffect.Evocation | (int)StandardEffect.Heroism | mask);
-                        evoStateIVHero = CastingState.NewRaw(this, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins | (int)StandardEffect.Heroism | mask);
-                    }
-                }
-                if (UseIncrementalOptimizations && segmentMana && Specialization == Specialization.Arcane)
-                {
-                    for (int index = 0; index < CalculationOptions.IncrementalSetStateIndexes.Length; index++)
-                    {
-                        int segment = CalculationOptions.IncrementalSetSegments[index];
-                        int manaSegment = CalculationOptions.IncrementalSetManaSegment[index];
-                        int state = CalculationOptions.IncrementalSetStateIndexes[index];
-                        switch (CalculationOptions.IncrementalSetVariableType[index])
+                        CastingState state = (manaSegment == 0) ? BaseState : combList[manaSegment - 1].CastingState;
+                        if (state.Evocation)
                         {
-                            case VariableType.Evocation:
-                                if (CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoState))
-                                {
-                                    SetEvocationColumn(threatFactor, evocationSegments, evocationMana, evoState, segment, manaSegment, VariableType.Evocation, false);
-                                }
-                                break;
-                            case VariableType.EvocationHero:
-                                if (state == (evoStateHero.Effects & (int)StandardEffect.NonItemBasedMask) && CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoStateHero))
-                                {
-                                    // last tick of heroism
-                                    SetEvocationColumn(threatFactor, evocationSegments, evocationMana, evoStateHero, segment, manaSegment, VariableType.EvocationHero, true);
-                                }
-                                if (state == (evoState.Effects & (int)StandardEffect.NonItemBasedMask) && CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoState))
-                                {
-                                    // remainder
-                                    SetEvocationColumn(threatFactor, evocationSegments, evocationMana, evoState, segment, manaSegment, VariableType.EvocationHero, false);
-                                }
-                                break;
-                            case VariableType.EvocationIV:
-                                if (state == (evoStateIV.Effects & (int)StandardEffect.NonItemBasedMask) && CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoStateIV))
-                                {
-                                    // last tick of icy veins
-                                    SetEvocationColumn(threatFactor, evocationSegments, evocationMana, evoStateIV, segment, manaSegment, VariableType.EvocationIV, true);
-                                }
-                                else if (state == (evoState.Effects & (int)StandardEffect.NonItemBasedMask) && CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoState))
-                                {
-                                    // remainder
-                                    SetEvocationColumn(threatFactor, evocationSegments, evocationMana, evoState, segment, manaSegment, VariableType.EvocationIV, false);
-                                }
-                                break;
-                            case VariableType.EvocationIVHero:
-                                if (state == (evoStateIVHero.Effects & (int)StandardEffect.NonItemBasedMask) && CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoStateIVHero))
-                                {
-                                    // last tick of icy veins+heroism
-                                    SetEvocationColumn(threatFactor, evocationSegments, evocationMana, evoStateIVHero, segment, manaSegment, VariableType.EvocationIVHero, true);
-                                }
-                                if (state == (evoState.Effects & (int)StandardEffect.NonItemBasedMask) && CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoState))
-                                {
-                                    // remainder
-                                    SetEvocationColumn(threatFactor, evocationSegments, evocationMana, evoState, segment, manaSegment, VariableType.EvocationIVHero, false);
-                                }
-                                break;
+                            SetEvocationColumn(threatFactor, evocationSegments, baseStats.Mana + state.StateEffectMaxMana, state, 0, manaSegment, VariableType.Evocation);
                         }
                     }
                 }
                 else
                 {
-                    int minManaSegment = segmentMana ? 1 : 0;
-                    for (int segment = 0; segment < evocationSegments; segment++)
+                    int mask = 0;
+                    CastingState evoState = null;
+                    CastingState evoStateIV = null;
+                    CastingState evoStateHero = null;
+                    CastingState evoStateIVHero = null;
+                    if (waterElementalAvailable)
                     {
-                        for (int manaSegment = minManaSegment; manaSegment < manaSegments; manaSegment++)
+                        evoState = CastingState.New(this, (int)StandardEffect.Evocation | mask, false, 0);
+                        if (CalculationOptions.EnableHastedEvocation)
                         {
-                            // base evocation
-                            if (CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoState))
+                            evoStateIV = CastingState.New(this, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins | mask, false, 0);
+                            evoStateHero = CastingState.New(this, (int)StandardEffect.Evocation | (int)StandardEffect.Heroism | mask, false, 0);
+                            evoStateIVHero = CastingState.New(this, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins | (int)StandardEffect.Heroism | mask, false, 0);
+                        }
+                    }
+                    else
+                    {
+                        evoState = CastingState.NewRaw(this, (int)StandardEffect.Evocation | mask);
+                        if (CalculationOptions.EnableHastedEvocation)
+                        {
+                            evoStateIV = CastingState.NewRaw(this, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins | mask);
+                            evoStateHero = CastingState.NewRaw(this, (int)StandardEffect.Evocation | (int)StandardEffect.Heroism | mask);
+                            evoStateIVHero = CastingState.NewRaw(this, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins | (int)StandardEffect.Heroism | mask);
+                        }
+                    }
+                    if (UseIncrementalOptimizations && segmentMana && Specialization == Specialization.Arcane)
+                    {
+                        for (int index = 0; index < CalculationOptions.IncrementalSetStateIndexes.Length; index++)
+                        {
+                            int segment = CalculationOptions.IncrementalSetSegments[index];
+                            int manaSegment = CalculationOptions.IncrementalSetManaSegment[index];
+                            int state = CalculationOptions.IncrementalSetStateIndexes[index];
+                            switch (CalculationOptions.IncrementalSetVariableType[index])
                             {
-                                SetEvocationColumn(threatFactor, evocationSegments, evocationMana, evoState, segment, manaSegment, VariableType.Evocation, false);
-                            }
-                            if (CalculationOptions.EnableHastedEvocation)
-                            {
-                                if (icyVeinsAvailable)
-                                {
-                                    if (CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoStateIV))
-                                    {
-                                        // last tick of icy veins
-                                        SetEvocationColumn(threatFactor, evocationSegments, evocationMana, evoStateIV, segment, manaSegment, VariableType.EvocationIV, true);
-                                    }
+                                case VariableType.Evocation:
                                     if (CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoState))
                                     {
-                                        // remainder
-                                        SetEvocationColumn(threatFactor, evocationSegments, evocationMana, evoState, segment, manaSegment, VariableType.EvocationIV, false);
+                                        SetEvocationColumn(threatFactor, evocationSegments, evocationMana, evoState, segment, manaSegment, VariableType.Evocation, false);
                                     }
-                                }
-                                if (heroismAvailable)
-                                {
-                                    if (CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoStateHero))
+                                    break;
+                                case VariableType.EvocationHero:
+                                    if (state == (evoStateHero.Effects & (int)StandardEffect.NonItemBasedMask) && CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoStateHero))
                                     {
                                         // last tick of heroism
                                         SetEvocationColumn(threatFactor, evocationSegments, evocationMana, evoStateHero, segment, manaSegment, VariableType.EvocationHero, true);
                                     }
-                                    if (CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoState))
+                                    if (state == (evoState.Effects & (int)StandardEffect.NonItemBasedMask) && CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoState))
                                     {
                                         // remainder
                                         SetEvocationColumn(threatFactor, evocationSegments, evocationMana, evoState, segment, manaSegment, VariableType.EvocationHero, false);
                                     }
-                                }
-                                if (icyVeinsAvailable && heroismAvailable)
-                                {
-                                    if (CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoStateIVHero))
+                                    break;
+                                case VariableType.EvocationIV:
+                                    if (state == (evoStateIV.Effects & (int)StandardEffect.NonItemBasedMask) && CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoStateIV))
+                                    {
+                                        // last tick of icy veins
+                                        SetEvocationColumn(threatFactor, evocationSegments, evocationMana, evoStateIV, segment, manaSegment, VariableType.EvocationIV, true);
+                                    }
+                                    else if (state == (evoState.Effects & (int)StandardEffect.NonItemBasedMask) && CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoState))
+                                    {
+                                        // remainder
+                                        SetEvocationColumn(threatFactor, evocationSegments, evocationMana, evoState, segment, manaSegment, VariableType.EvocationIV, false);
+                                    }
+                                    break;
+                                case VariableType.EvocationIVHero:
+                                    if (state == (evoStateIVHero.Effects & (int)StandardEffect.NonItemBasedMask) && CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoStateIVHero))
                                     {
                                         // last tick of icy veins+heroism
                                         SetEvocationColumn(threatFactor, evocationSegments, evocationMana, evoStateIVHero, segment, manaSegment, VariableType.EvocationIVHero, true);
                                     }
-                                    if (CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoState))
+                                    if (state == (evoState.Effects & (int)StandardEffect.NonItemBasedMask) && CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoState))
                                     {
                                         // remainder
                                         SetEvocationColumn(threatFactor, evocationSegments, evocationMana, evoState, segment, manaSegment, VariableType.EvocationIVHero, false);
+                                    }
+                                    break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        int minManaSegment = segmentMana ? 1 : 0;
+                        for (int segment = 0; segment < evocationSegments; segment++)
+                        {
+                            for (int manaSegment = minManaSegment; manaSegment < manaSegments; manaSegment++)
+                            {
+                                // base evocation
+                                if (CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoState))
+                                {
+                                    SetEvocationColumn(threatFactor, evocationSegments, evocationMana, evoState, segment, manaSegment, VariableType.Evocation, false);
+                                }
+                                if (CalculationOptions.EnableHastedEvocation)
+                                {
+                                    if (icyVeinsAvailable)
+                                    {
+                                        if (CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoStateIV))
+                                        {
+                                            // last tick of icy veins
+                                            SetEvocationColumn(threatFactor, evocationSegments, evocationMana, evoStateIV, segment, manaSegment, VariableType.EvocationIV, true);
+                                        }
+                                        if (CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoState))
+                                        {
+                                            // remainder
+                                            SetEvocationColumn(threatFactor, evocationSegments, evocationMana, evoState, segment, manaSegment, VariableType.EvocationIV, false);
+                                        }
+                                    }
+                                    if (heroismAvailable)
+                                    {
+                                        if (CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoStateHero))
+                                        {
+                                            // last tick of heroism
+                                            SetEvocationColumn(threatFactor, evocationSegments, evocationMana, evoStateHero, segment, manaSegment, VariableType.EvocationHero, true);
+                                        }
+                                        if (CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoState))
+                                        {
+                                            // remainder
+                                            SetEvocationColumn(threatFactor, evocationSegments, evocationMana, evoState, segment, manaSegment, VariableType.EvocationHero, false);
+                                        }
+                                    }
+                                    if (icyVeinsAvailable && heroismAvailable)
+                                    {
+                                        if (CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoStateIVHero))
+                                        {
+                                            // last tick of icy veins+heroism
+                                            SetEvocationColumn(threatFactor, evocationSegments, evocationMana, evoStateIVHero, segment, manaSegment, VariableType.EvocationIVHero, true);
+                                        }
+                                        if (CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoState))
+                                        {
+                                            // remainder
+                                            SetEvocationColumn(threatFactor, evocationSegments, evocationMana, evoState, segment, manaSegment, VariableType.EvocationIVHero, false);
+                                        }
                                     }
                                 }
                             }
@@ -4103,6 +4639,70 @@ namespace Rawr.Mage
             {
                 SetManaSegmentConstraint(manaSegment, column);
             }
+            if (CombinatorialSolver)
+            {
+                SetCombinatorialConstraint(manaSegment, column);
+            }
+        }
+
+        private void SetEvocationColumn(float threatFactor, int evocationSegments, float evocationMana, CastingState evoState, int segment, int manaSegment, VariableType evocationType)
+        {
+            double dps = 0.0f;
+            if (waterElementalAvailable)
+            {
+                dps = evoState.GetSpell(SpellId.Waterbolt).DamagePerSecond;
+            }
+            double tps;
+            double mps;
+            float evocationDuration;
+            int column = lp.AddColumnUnsafe();
+            double evoFactor;
+
+            var duration = 6f / evoState.CastingSpeed;
+            var regen = evoState.ManaRegen5SR + 0.6f * evocationMana / duration;
+
+            mps = -regen;
+            evocationDuration = duration;
+            tps = 0.6f * evocationMana / evocationDuration * 0.5f * threatFactor;
+            evoFactor = 1.0;
+
+            lp.SetElementUnsafe(rowEvocation, column, 1.0);
+
+            if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = evocationType, Segment = segment, ManaSegment = manaSegment, State = evoState, Dps = dps, Mps = mps, Tps = tps });
+            lp.SetColumnUpperBound(column, (evocationSegments > 1 || manaSegments > 1) ? evocationDuration : evocationDuration * MaxEvocation);
+            lp.SetElementUnsafe(rowAfterFightRegenMana, column, mps);
+            lp.SetElementUnsafe(rowManaRegen, column, mps);
+            lp.SetElementUnsafe(rowFightDuration, column, 1.0);
+            lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
+            lp.SetElementUnsafe(rowThreat, column, tps); // should split among all targets if more than one, assume one only
+            lp.SetCostUnsafe(column, minimizeTime ? -1 : dps);
+            if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
+            if (restrictManaUse)
+            {
+                SetManaConstraint(mps, segment, manaSegment, column);
+                if (segmentCooldowns)
+                {
+                    foreach (SegmentConstraint constraint in rowSegmentEvocation)
+                    {
+                        if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, evoFactor);
+                    }
+                }
+            }
+            if (restrictThreat)
+            {
+                for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                {
+                    lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                }
+            }
+            if (needsManaSegmentConstraints)
+            {
+                SetManaSegmentConstraint(manaSegment, column);
+            }
+            if (CombinatorialSolver)
+            {
+                SetCombinatorialConstraint(manaSegment, column);
+            }
         }
 
         private void ConstructWand()
@@ -4157,12 +4757,15 @@ namespace Rawr.Mage
                             {
                                 for (int manaSegment = 0; manaSegment < manaSegments; manaSegment++)
                                 {
-                                    float mult = segmentCooldowns ? CalculationOptions.GetDamageMultiplier(SegmentList[segment]) : 1.0f;
-                                    double dps = wand.DamagePerSecond * mult;
-                                    double tps = wand.ThreatPerSecond;
-                                    if (mult > 0)
+                                    if (!CombinatorialSolver || manaSegment == 0 || combList[manaSegment - 1].CastingState.Effects == 0)
                                     {
-                                        SetWandColumn(wand, mps, segment, manaSegment, dps, tps);
+                                        float mult = segmentCooldowns ? CalculationOptions.GetDamageMultiplier(SegmentList[segment]) : 1.0f;
+                                        double dps = wand.DamagePerSecond * mult;
+                                        double tps = wand.ThreatPerSecond;
+                                        if (mult > 0)
+                                        {
+                                            SetWandColumn(wand, mps, segment, manaSegment, dps, tps);
+                                        }
                                     }
                                 }
                             }
@@ -4204,6 +4807,10 @@ namespace Rawr.Mage
             {
                 SetManaSegmentConstraint(manaSegment, column);
             }
+            if (CombinatorialSolver)
+            {
+                SetCombinatorialConstraint(manaSegment, column);
+            }
         }
 
         private void ConstructIdleRegen()
@@ -4237,7 +4844,10 @@ namespace Rawr.Mage
                         {
                             for (int manaSegment = 0; manaSegment < manaSegments; manaSegment++)
                             {
-                                SetIdleRegenColumn(idleRegenSegments, dps, tps, mps, segment, manaSegment);
+                                if (!CombinatorialSolver || manaSegment == 0 || combList[manaSegment - 1].CastingState.Effects == 0)
+                                {
+                                    SetIdleRegenColumn(idleRegenSegments, dps, tps, mps, segment, manaSegment);
+                                }
                             }
                         }
                     }
@@ -4268,6 +4878,10 @@ namespace Rawr.Mage
             if (needsManaSegmentConstraints)
             {
                 SetManaSegmentConstraint(manaSegment, column);
+            }
+            if (CombinatorialSolver)
+            {
+                SetCombinatorialConstraint(manaSegment, column);
             }
         }
 
@@ -4535,11 +5149,14 @@ namespace Rawr.Mage
             if (conjureManaGem) lp.SetRHSUnsafe(rowConjureManaGem, MaxConjureManaGem * ConjureManaGem.CastTime);
             //if (wardsAvailable) lp.SetRHSUnsafe(rowWard, calculationResult.MaxWards * calculationResult.Ward.CastTime);
 
-            foreach (EffectCooldown cooldown in CooldownList)
+            if (!CombinatorialSolver)
             {
-                if (cooldown.AutomaticConstraints)
+                foreach (EffectCooldown cooldown in CooldownList)
                 {
-                    lp.SetRHSUnsafe(cooldown.Row, (CalculationOptions.AverageCooldowns && !float.IsPositiveInfinity(cooldown.Cooldown)) ? CalculationOptions.FightDuration * cooldown.Duration / cooldown.Cooldown : cooldown.MaximumDuration);
+                    if (cooldown.AutomaticConstraints)
+                    {
+                        lp.SetRHSUnsafe(cooldown.Row, (CalculationOptions.AverageCooldowns && !float.IsPositiveInfinity(cooldown.Cooldown)) ? CalculationOptions.FightDuration * cooldown.Duration / cooldown.Cooldown : cooldown.MaximumDuration);
+                    }
                 }
             }
 
@@ -4778,6 +5395,14 @@ namespace Rawr.Mage
                     lp.SetLHSUnsafe(rowManaSegment[ms].Row, EvocationCooldown);
                 }
             }
+            if (CombinatorialSolver)
+            {
+                for (int i = 0; i < rowCombinatorialConstraintCount; i++)
+                {
+                    lp.SetRHSUnsafe(rowCombinatorialConstraint[i].Row, rowCombinatorialConstraint[i].MaxTime);
+                    lp.SetLHSUnsafe(rowCombinatorialConstraint[i].Row, rowCombinatorialConstraint[i].MinTime);
+                }
+            }
         }
 
         private int ConstructRows(bool minimizeTime, bool drinkingEnabled, bool needsTimeExtension, bool afterFightRegen)
@@ -4851,8 +5476,8 @@ namespace Rawr.Mage
 
             if (!CalculationOptions.UnlimitedMana) rowManaRegen = rowCount++;
             rowFightDuration = rowCount++;
-            if (evocationAvailable && (needsTimeExtension || restrictManaUse || integralMana || CalculationOptions.EnableHastedEvocation)) rowEvocation = rowCount++;
-            if (CalculationOptions.EnableHastedEvocation)
+            if (evocationAvailable && (needsTimeExtension || restrictManaUse || integralMana || CalculationOptions.EnableHastedEvocation) && !CombinatorialSolver) rowEvocation = rowCount++;
+            if (CalculationOptions.EnableHastedEvocation && !CombinatorialSolver)
             {
                 if (evocationAvailable && icyVeinsAvailable)
                 {
@@ -4870,8 +5495,8 @@ namespace Rawr.Mage
                     //rowEvocationIVHeroActivation = rowCount++;
                 }
             }
-            if (manaPotionAvailable || effectPotionAvailable) rowPotion = rowCount++;
-            if (manaPotionAvailable && integralMana) rowManaPotion = rowCount++;
+            if ((manaPotionAvailable || effectPotionAvailable) && !CombinatorialSolver) rowPotion = rowCount++;
+            if (manaPotionAvailable && integralMana && !CombinatorialSolver) rowManaPotion = rowCount++;
             if (CalculationOptions.ManaGemEnabled)
             {
                 if (segmentCooldowns || conjureManaGem || needsTimeExtension || segmentMana)
@@ -4887,60 +5512,28 @@ namespace Rawr.Mage
                     rowConjureManaGem = rowCount++;
                 }
             }
-            /*if (wardsAvailable)
+            if (moltenFuryAvailable && !CombinatorialSolver) rowMoltenFury = rowCount++;
+            if (!CombinatorialSolver)
             {
-                rowWard = rowCount++;
-            }*/
-            //if (heroismAvailable) rowHeroism = rowCount++;
-            //if (arcanePowerAvailable) rowArcanePower = rowCount++;
-            //if (powerInfusionAvailable) rowPowerInfusion = rowCount++;
-            //if (heroismAvailable && arcanePowerAvailable) rowHeroismArcanePower = rowCount++;
-            //if (heroismAvailable && manaGemEffectAvailable) rowHeroismManaGemEffect = rowCount++;
-            if (moltenFuryAvailable) rowMoltenFury = rowCount++;
-            //if (moltenFuryAvailable && potionOfWildMagicAvailable) rowMoltenFuryDestructionPotion = rowCount++;
-            //if (moltenFuryAvailable && manaGemEffectAvailable) rowMoltenFuryManaGemEffect = rowCount++;
-            //if (heroismAvailable && effectPotionAvailable) rowHeroismDestructionPotion = rowCount++;
-            //if (icyVeinsAvailable && effectPotionAvailable) rowIcyVeinsDestructionPotion = rowCount++;
-            //if (flameCapAvailable) rowFlameCap = rowCount++;
-            //if (moltenFuryAvailable && flameCapAvailable) rowMoltenFuryFlameCap = rowCount++;
-            //if (flameCapAvailable && destructionPotionAvailable) rowFlameCapDestructionPotion = rowCount++;
-            foreach (EffectCooldown cooldown in CooldownList)
-            {
-                if (cooldown.AutomaticConstraints)
+                foreach (EffectCooldown cooldown in CooldownList)
                 {
-                    cooldown.Row = rowCount++;
-                    cooldown.MaximumDuration = (float)MaximizeEffectDuration(CalculationOptions.FightDuration, cooldown.Duration, cooldown.Cooldown);
+                    if (cooldown.AutomaticConstraints)
+                    {
+                        cooldown.Row = rowCount++;
+                        cooldown.MaximumDuration = (float)MaximizeEffectDuration(CalculationOptions.FightDuration, cooldown.Duration, cooldown.Cooldown);
+                    }
                 }
+                if (manaGemEffectAvailable) rowManaGemEffectActivation = rowCount++;
             }
-            if (manaGemEffectAvailable) rowManaGemEffectActivation = rowCount++;
             if (CalculationOptions.AoeDuration > 0)
             {
                 rowAoe = rowCount++;
-                //rowFlamestrike = rowCount++;
-                //rowConeOfCold = rowCount++;
-                //if (MageTalents.BlastWave == 1) rowBlastWave = rowCount++;
-                //if (MageTalents.DragonsBreath == 1) rowDragonsBreath = rowCount++;
             }
-            //if (combustionAvailable) rowCombustion = rowCount++;
-            //if (combustionAvailable && moltenFuryAvailable) rowMoltenFuryCombustion = rowCount++;
-            //if (combustionAvailable && heroismAvailable) rowHeroismCombustion = rowCount++;
-            //if (berserkingAvailable && moltenFuryAvailable) rowMoltenFuryBerserking = rowCount++;
-            //if (berserkingAvailable && heroismAvailable) rowHeroismBerserking = rowCount++;
-            //if (drumsOfBattleAvailable && icyVeinsAvailable) rowIcyVeinsDrumsOfBattle = rowCount++;
-            //if (drumsOfBattleAvailable && arcanePowerAvailable) rowArcanePowerDrumsOfBattle = rowCount++;
             if (CalculationOptions.TpsLimit > 0f) rowThreat = rowCount++;
-            //if (berserkingAvailable) rowBerserking = rowCount++;
             if (needsTimeExtension) rowTimeExtension = rowCount++;
             if (afterFightRegen) rowAfterFightRegenMana = rowCount++;
-            //if (afterFightRegen) rowAfterFightRegenHealth = rowCount++;
             if (minimizeTime) rowTargetDamage = rowCount++;
-            /*if (waterElementalAvailable && !MageTalents.GlyphOfEternalWater)
-            {
-                rowWaterElemental = rowCount++;
-                rowSummonWaterElemental = rowCount++;
-                rowSummonWaterElementalCount = rowCount++;
-            }*/
-            if (mirrorImageAvailable)
+            if (mirrorImageAvailable && !CombinatorialSolver)
             {
                 rowSummonMirrorImage = rowCount++;
                 if (requiresMIP)
@@ -4954,104 +5547,174 @@ namespace Rawr.Mage
             }
 
             rowStackingConstraintCount = 0;
-            if (rowStackingConstraint == null)
+            if (!CombinatorialSolver)
             {
-                rowStackingConstraint = new StackingConstraint[8];
-            }
-            for (int i = 0; i < CooldownList.Count; i++)
-            {
-                EffectCooldown cooli = CooldownList[i];
-                if (cooli.AutomaticStackingConstraints)
+                if (rowStackingConstraint == null)
                 {
-                    for (int j = i + 1; j < CooldownList.Count; j++)
+                    rowStackingConstraint = new StackingConstraint[8];
+                }
+                for (int i = 0; i < CooldownList.Count; i++)
+                {
+                    EffectCooldown cooli = CooldownList[i];
+                    if (cooli.AutomaticStackingConstraints)
                     {
-                        EffectCooldown coolj = CooldownList[j];
-                        if (coolj.AutomaticStackingConstraints)
+                        for (int j = i + 1; j < CooldownList.Count; j++)
                         {
-                            bool valid = true;
-                            foreach (int exclusionMask in effectExclusionList)
+                            EffectCooldown coolj = CooldownList[j];
+                            if (coolj.AutomaticStackingConstraints)
                             {
-                                if (BitCount2((cooli.Mask | coolj.Mask) & exclusionMask))
+                                bool valid = true;
+                                foreach (int exclusionMask in effectExclusionList)
                                 {
-                                    valid = false;
-                                    break;
-                                }
-                            }
-                            if (valid)
-                            {
-                                // if we're using incremental optimizations and both are non-item based then we can
-                                // remove the constraint if they won't be used together
-                                if (UseIncrementalOptimizations && cooli.StandardEffect != StandardEffect.None && coolj.StandardEffect != StandardEffect.None)
-                                {
-                                    int mask = (cooli.Mask | coolj.Mask);
-                                    int[] sortedStates = CalculationOptions.IncrementalSetSortedStates;
-                                    bool usedTogether = false;
-                                    for (int incrementalSortedIndex = 0; incrementalSortedIndex < sortedStates.Length; incrementalSortedIndex++)
-                                    {
-                                        // incremental index is filtered by non-item based cooldowns
-                                        int incrementalSetIndex = sortedStates[incrementalSortedIndex];
-                                        if ((incrementalSetIndex & mask) == mask)
-                                        {
-                                            usedTogether = true;
-                                            break;
-                                        }
-                                    }
-                                    if (!usedTogether)
+                                    if (BitCount2((cooli.Mask | coolj.Mask) & exclusionMask))
                                     {
                                         valid = false;
+                                        break;
                                     }
                                 }
-                            }
-                            if (valid)
-                            {
-                                double maxDuration = MaximizeStackingDuration(CalculationOptions.FightDuration, cooli.Duration, cooli.Cooldown, coolj.Duration, coolj.Cooldown);
-                                if (maxDuration < cooli.MaximumDuration && maxDuration < coolj.MaximumDuration)
+                                if (valid)
                                 {
-                                    int scCount = rowStackingConstraintCount;
-                                    if (scCount >= rowStackingConstraint.Length)
+                                    // if we're using incremental optimizations and both are non-item based then we can
+                                    // remove the constraint if they won't be used together
+                                    if (UseIncrementalOptimizations && cooli.StandardEffect != StandardEffect.None && coolj.StandardEffect != StandardEffect.None)
                                     {
-                                        StackingConstraint[] newArr = new StackingConstraint[rowStackingConstraint.Length * 2];
-                                        Array.Copy(rowStackingConstraint, 0, newArr, 0, scCount);
-                                        rowStackingConstraint = newArr;
+                                        int mask = (cooli.Mask | coolj.Mask);
+                                        int[] sortedStates = CalculationOptions.IncrementalSetSortedStates;
+                                        bool usedTogether = false;
+                                        for (int incrementalSortedIndex = 0; incrementalSortedIndex < sortedStates.Length; incrementalSortedIndex++)
+                                        {
+                                            // incremental index is filtered by non-item based cooldowns
+                                            int incrementalSetIndex = sortedStates[incrementalSortedIndex];
+                                            if ((incrementalSetIndex & mask) == mask)
+                                            {
+                                                usedTogether = true;
+                                                break;
+                                            }
+                                        }
+                                        if (!usedTogether)
+                                        {
+                                            valid = false;
+                                        }
                                     }
-                                    // Heroism is before IcyVeins in cooldown list in cooldown list (initialized in InitializeEffectCooldowns)
-                                    if (cooli.StandardEffect == StandardEffect.Heroism && coolj.StandardEffect == StandardEffect.IcyVeins)
+                                }
+                                if (valid)
+                                {
+                                    double maxDuration = MaximizeStackingDuration(CalculationOptions.FightDuration, cooli.Duration, cooli.Cooldown, coolj.Duration, coolj.Cooldown);
+                                    if (maxDuration < cooli.MaximumDuration && maxDuration < coolj.MaximumDuration)
                                     {
-                                        rowHeroismIcyVeins = rowCount;
+                                        int scCount = rowStackingConstraintCount;
+                                        if (scCount >= rowStackingConstraint.Length)
+                                        {
+                                            StackingConstraint[] newArr = new StackingConstraint[rowStackingConstraint.Length * 2];
+                                            Array.Copy(rowStackingConstraint, 0, newArr, 0, scCount);
+                                            rowStackingConstraint = newArr;
+                                        }
+                                        // Heroism is before IcyVeins in cooldown list in cooldown list (initialized in InitializeEffectCooldowns)
+                                        if (cooli.StandardEffect == StandardEffect.Heroism && coolj.StandardEffect == StandardEffect.IcyVeins)
+                                        {
+                                            rowHeroismIcyVeins = rowCount;
+                                        }
+                                        StackingConstraint[] arr = rowStackingConstraint;
+                                        arr[scCount].Row = rowCount++;
+                                        arr[scCount].MaximumStackingDuration = maxDuration;
+                                        arr[scCount].Effect1 = cooli;
+                                        arr[scCount].Effect2 = coolj;
+                                        rowStackingConstraintCount = scCount + 1;
                                     }
-                                    StackingConstraint[] arr = rowStackingConstraint;
-                                    arr[scCount].Row = rowCount++;
-                                    arr[scCount].MaximumStackingDuration = maxDuration;
-                                    arr[scCount].Effect1 = cooli;
-                                    arr[scCount].Effect2 = coolj;
-                                    rowStackingConstraintCount = scCount + 1;
                                 }
                             }
                         }
                     }
                 }
+
+                if (coldsnapAvailable)
+                {
+                    if (icyVeinsAvailable) rowIcyVeins = rowCount++;
+                    if (icyVeinsAvailable && heroismAvailable) rowHeroismIcyVeins = rowCount++;
+                    if (moltenFuryAvailable && icyVeinsAvailable) rowMoltenFuryIcyVeins = rowCount++;
+                }
+                else if (icyVeinsAvailable)
+                {
+                    rowIcyVeins = EffectCooldown[(int)StandardEffect.IcyVeins].Row;
+                }
+                if (heroismAvailable) rowHeroism = EffectCooldown[(int)StandardEffect.Heroism].Row;
+                if (arcanePowerAvailable) rowArcanePower = EffectCooldown[(int)StandardEffect.ArcanePower].Row;
+                if (combustionAvailable) rowCombustion = EffectCooldown[(int)StandardEffect.Combustion].Row;
+                if (powerInfusionAvailable) rowPowerInfusion = EffectCooldown[(int)StandardEffect.PowerInfusion].Row;
+                if (flameOrbAvailable) rowFlameOrb = EffectCooldown[(int)StandardEffect.FlameOrb].Row;
+                if (flameCapAvailable) rowFlameCap = EffectCooldown[(int)StandardEffect.FlameCap].Row;
+                if (berserkingAvailable) rowBerserking = EffectCooldown[(int)StandardEffect.Berserking].Row;
+                if (bloodFuryAvailable) rowBloodFury = EffectCooldown[(int)StandardEffect.BloodFury].Row;
+                if (mirrorImageAvailable) rowMirrorImage = EffectCooldown[(int)StandardEffect.MirrorImage].Row;
             }
 
-            if (coldsnapAvailable)
+            rowCombinatorialConstraintCount = 0;
+            if (CombinatorialSolver)
             {
-                if (icyVeinsAvailable) rowIcyVeins = rowCount++;
-                if (icyVeinsAvailable && heroismAvailable) rowHeroismIcyVeins = rowCount++;
-                if (moltenFuryAvailable && icyVeinsAvailable) rowMoltenFuryIcyVeins = rowCount++;
-            }
-            else if (icyVeinsAvailable)
-            {
-                rowIcyVeins = EffectCooldown[(int)StandardEffect.IcyVeins].Row;
-            }
-            if (heroismAvailable) rowHeroism = EffectCooldown[(int)StandardEffect.Heroism].Row;
-            if (arcanePowerAvailable) rowArcanePower = EffectCooldown[(int)StandardEffect.ArcanePower].Row;
-            if (combustionAvailable) rowCombustion = EffectCooldown[(int)StandardEffect.Combustion].Row;
-            if (powerInfusionAvailable) rowPowerInfusion = EffectCooldown[(int)StandardEffect.PowerInfusion].Row;
-            if (flameOrbAvailable) rowFlameOrb = EffectCooldown[(int)StandardEffect.FlameOrb].Row;
-            if (flameCapAvailable) rowFlameCap = EffectCooldown[(int)StandardEffect.FlameCap].Row;
-            if (berserkingAvailable) rowBerserking = EffectCooldown[(int)StandardEffect.Berserking].Row;
-            if (bloodFuryAvailable) rowBloodFury = EffectCooldown[(int)StandardEffect.BloodFury].Row;
-            if (mirrorImageAvailable) rowMirrorImage = EffectCooldown[(int)StandardEffect.MirrorImage].Row;
+                if (rowCombinatorialConstraint == null)
+                {
+                    rowCombinatorialConstraint = new CombinatorialConstraint[16];
+                }
 
+                for (int i = 0; i < combList.Count; i++)
+                {
+                    if (combList[i].Activation)
+                    {
+                        // constraint on duration
+                        int maxSeg = combList.Count;
+                        for (int j = i + 1; j < combList.Count; j++)
+                        {
+                            if (combList[j].Cooldown == combList[i].Cooldown && !combList[j].Activation)
+                            {
+                                maxSeg = j;
+                                break;
+                            }
+                        }
+                        int ccCount = rowCombinatorialConstraintCount;
+                        if (ccCount >= rowCombinatorialConstraint.Length)
+                        {
+                            CombinatorialConstraint[] newArr = new CombinatorialConstraint[rowCombinatorialConstraint.Length * 2];
+                            Array.Copy(rowCombinatorialConstraint, 0, newArr, 0, ccCount);
+                            rowCombinatorialConstraint = newArr;
+                        }
+                        CombinatorialConstraint[] arr = rowCombinatorialConstraint;
+                        arr[ccCount].Row = rowCount++;
+                        arr[ccCount].MinSegment = i + 1;
+                        arr[ccCount].MaxSegment = maxSeg;
+                        arr[ccCount].MinTime = 0;
+                        arr[ccCount].MaxTime = combList[i].Duration;
+                        rowCombinatorialConstraintCount = ccCount + 1;
+
+                        // constraint on cooldown
+                        maxSeg = -1;
+                        for (int j = i + 1; j < combList.Count; j++)
+                        {
+                            if (combList[j].Cooldown == combList[i].Cooldown && combList[j].Activation)
+                            {
+                                maxSeg = j;
+                                break;
+                            }
+                        }
+                        if (maxSeg >= 0)
+                        {
+                            ccCount = rowCombinatorialConstraintCount;
+                            if (ccCount >= rowCombinatorialConstraint.Length)
+                            {
+                                CombinatorialConstraint[] newArr = new CombinatorialConstraint[rowCombinatorialConstraint.Length * 2];
+                                Array.Copy(rowCombinatorialConstraint, 0, newArr, 0, ccCount);
+                                rowCombinatorialConstraint = newArr;
+                            }
+                            arr = rowCombinatorialConstraint;
+                            arr[ccCount].Row = rowCount++;
+                            arr[ccCount].MinSegment = i + 1;
+                            arr[ccCount].MaxSegment = maxSeg;
+                            arr[ccCount].MinTime = CooldownList[combList[i].Cooldown].Cooldown;
+                            arr[ccCount].MaxTime = CalculationOptions.FightDuration;
+                            rowCombinatorialConstraintCount = ccCount + 1;
+                        }
+                    }
+                }
+            }
 
             //rowManaPotionManaGem = rowCount++;
             if (segmentCooldowns)
@@ -5401,12 +6064,15 @@ namespace Rawr.Mage
             if (state.FlameCap) lp.SetElementUnsafe(rowFlameCap, column, 1.0);
             //if (state.MoltenFury && state.FlameCap) lp.SetElementUnsafe(rowMoltenFuryFlameCap, column, 1.0);
             //if (state.PotionOfWildMagic && state.FlameCap) lp.SetElementUnsafe(rowFlameCapDestructionPotion, column, 1.0);
-            for (int i = 0; i < ItemBasedEffectCooldownsCount; i++)
+            if (!CombinatorialSolver)
             {
-                EffectCooldown cooldown = ItemBasedEffectCooldowns[i];
-                if (state.EffectsActive(cooldown.Mask))
+                for (int i = 0; i < ItemBasedEffectCooldownsCount; i++)
                 {
-                    lp.SetElementUnsafe(cooldown.Row, column, 1.0);
+                    EffectCooldown cooldown = ItemBasedEffectCooldowns[i];
+                    if (state.EffectsActive(cooldown.Mask))
+                    {
+                        lp.SetElementUnsafe(cooldown.Row, column, 1.0);
+                    }
                 }
             }
             if (state.ManaGemEffect) lp.SetElementUnsafe(rowManaGemEffectActivation, column, 1 / ManaGemEffectDuration);
@@ -5462,6 +6128,10 @@ namespace Rawr.Mage
             if (needsManaSegmentConstraints)
             {
                 SetManaSegmentConstraint(manaSegment, column);
+            }
+            if (CombinatorialSolver)
+            {
+                SetCombinatorialConstraint(manaSegment, column);
             }
             lp.SetColumnUpperBound(column, bound);
         }
