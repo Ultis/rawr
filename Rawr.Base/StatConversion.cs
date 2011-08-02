@@ -651,7 +651,7 @@ namespace Rawr
         public static float GetSpellMiss(int LevelDelta, bool bPvP)
         {
             if (-LevelDelta <= 2)
-                return (float)Math.Min(0.0f, - (LevelDelta + 4) * 0.01f);
+                return (float)Math.Min(0.0f, (-LevelDelta + 4) * 0.01f);
 
             if (-LevelDelta > 2)
                 if (bPvP)
