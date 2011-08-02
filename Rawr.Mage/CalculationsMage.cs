@@ -384,6 +384,19 @@ namespace Rawr.Mage
             }
         }
 
+        public static void ClearLog(Solver solver, string line)
+        {
+            if (solver == advancedSolver)
+            {
+                advancedSolverLog.Length = 0;
+                advancedSolverLog.AppendLine(line);
+                if (AdvancedSolverLogUpdated != null)
+                {
+                    AdvancedSolverLogUpdated(null, EventArgs.Empty);
+                }
+            }
+        }
+
         public static void Log(Solver solver, string line)
         {
             if (solver == advancedSolver)

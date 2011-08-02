@@ -309,7 +309,7 @@ namespace Rawr.Mage.Graphs
                     }
                     else
                     {
-                        if (sequence[i].IsEvocation)
+                        /*if (sequence[i].IsEvocation)
                         {
                             switch (sequence[i].VariableType)
                             {
@@ -326,7 +326,7 @@ namespace Rawr.Mage.Graphs
                                     mps = -(float)calculationOptions.Calculations.EvocationRegenIVHero;
                                     break;
                             }
-                        }
+                        }*/
                         float partTime = duration;
                         if (mana - mps * duration < 0) partTime = mana / mps;
                         else if (mana - mps * duration > maxMana) partTime = (mana - maxMana) / mps;

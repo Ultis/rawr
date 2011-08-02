@@ -859,6 +859,27 @@ namespace Rawr.Mage
             set { _CombinatorialSolver = value; OnPropertyChanged("CombinatorialSolver"); }
         }
 
+        private bool _GeneticSolver;
+        public bool GeneticSolver
+        {
+            get { return _GeneticSolver; }
+            set { _GeneticSolver = value; OnPropertyChanged("GeneticSolver"); }
+        }
+
+        private int _GeneticThoroughness;
+        public int GeneticThoroughness
+        {
+            get { return _GeneticThoroughness; }
+            set { _GeneticThoroughness = value; OnPropertyChanged("GeneticThoroughness"); }
+        }
+
+        private string _CombinatorialFixedOrdering;
+        public string CombinatorialFixedOrdering
+        {
+            get { return _CombinatorialFixedOrdering; }
+            set { _CombinatorialFixedOrdering = value; OnPropertyChanged("CombinatorialFixedOrdering"); }
+        }
+
         private float _DpsTime;
         public float DpsTime
         {
@@ -1876,6 +1897,7 @@ namespace Rawr.Mage
             ArcaneLight = true;
             MaxRedecompose = 50;
             ProcCombustion = true;
+            GeneticThoroughness = 200;
         }
 
         public CalculationOptionsMage(Character character)

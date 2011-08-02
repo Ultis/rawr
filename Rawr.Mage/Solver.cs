@@ -1218,7 +1218,18 @@ namespace Rawr.Mage
 
             if (CombinatorialSolver)
             {
-                ret = SolveCombinatorialProblem();
+                if (!string.IsNullOrEmpty(CalculationOptions.CombinatorialFixedOrdering))
+                {
+                    ret = SolveCombinatorialFixedProblem();
+                }
+                if (CalculationOptions.GeneticSolver)
+                {
+                    ret = SolveGeneticCombinatorialProblem();
+                }
+                else
+                {
+                    ret = SolveCombinatorialProblem();
+                }
             }
             else
             {
@@ -1234,6 +1245,8 @@ namespace Rawr.Mage
 
         private class CombList : List<CombItem>
         {
+            public int[] Generator;
+
             public CombList(List<EffectCooldown> effects, List<CastingState> states, Solver solver)
             {
                 this.effects = effects;
@@ -1517,6 +1530,401 @@ namespace Rawr.Mage
         }
 
         private CombList combList;
+
+        private class CooldownOptimizer : Optimizer.OptimizerBase<int, CombList, CharacterCalculationsMage>
+        {
+            private Solver solver;
+            private int[] maxSlots;
+
+            public CooldownOptimizer(Solver solver)
+            {
+                this.solver = solver;
+                ThreadPoolValuation = false;
+                slotCount = 0;
+                _thoroughness = solver.CalculationOptions.GeneticThoroughness;
+                validators = new List<Optimizer.OptimizerRangeValidatorBase<int>>();
+
+                maxSlots = new int[solver.CooldownList.Count];
+                for (int i = 0; i < maxSlots.Length; i++)
+                {
+                    int max = (int)Math.Ceiling(solver.CalculationOptions.FightDuration / solver.CooldownList[i].Cooldown);
+                    if (float.IsPositiveInfinity(solver.CooldownList[i].Cooldown))
+                    {
+                        max = 1;
+                    }
+                    maxSlots[i] = 2 * max;
+                    slotCount += maxSlots[i];
+                }
+                slotCount++; // ending marker
+            }
+
+            protected override CombList BuildRandomIndividual(CombList recycledIndividual)
+            {
+                int[] countSlots = new int[maxSlots.Length];
+                int[] gen = new int[slotCount];
+                int end = Rnd.Next((int)(0.8 * slotCount), slotCount);
+                for (int i = 0; i < gen.Length; i++)
+                {
+                    if (i == end)
+                    {
+                        gen[i] = -1;
+                    }
+                    else
+                    {
+                        int slot;
+                        do
+                        {
+                            slot = Rnd.Next(countSlots.Length);
+                        } while (countSlots[slot] >= maxSlots[slot]);
+                        gen[i] = slot;
+                        countSlots[slot]++;
+                    }
+                }
+
+                return GenerateIndividual(gen, true, recycledIndividual);
+            }
+
+            protected override int GetRandomItem(int slot, int[] items)
+            {
+                return Rnd.Next(solver.CooldownList.Count);
+            }
+
+            protected override CombList BuildMutantIndividual(CombList parent, CombList recycledIndividual)
+            {
+                List<int> gen = new List<int>(GetItems(parent));
+
+                if (gen.Count > 0)
+                {
+                    int max = Rnd.Next(5);
+                    for (int i = 0; i < max; i++)
+                    {
+                        int index = Rnd.Next(gen.Count);
+                        int v = gen[index];
+                        gen.RemoveAt(index);
+                        index += (Rnd.Next(5) - 2);
+                        if (index < 0) index = 0;
+                        if (index > gen.Count) index = gen.Count;
+                        gen.Insert(index, v);
+                    }
+                }
+
+                return GenerateIndividual(gen.ToArray(), true, recycledIndividual);
+            }
+
+            protected override CombList BuildChildIndividual(CombList father, CombList mother, CombList recycledIndividual)
+            {
+                int[] f = GetItems(father);
+                int[] m = GetItems(mother);
+
+                if (Rnd.Next(2) == 1)
+                {
+                    var tmp = f;
+                    f = m;
+                    m = tmp;
+                }
+
+                // select a section from first parent, eliminate those from second
+                // what remains is things in front, a scattering remaining in between, and those at the end
+                // pick randomly a spot in the scattering, this gives the final placement in offspring
+
+                int i1 = Rnd.Next(f.Length);
+                int i2 = Rnd.Next(f.Length);
+
+                if (i2 < i1)
+                {
+                    var tmp = i1;
+                    i1 = i2;
+                    i2 = tmp;
+                }
+
+                bool[] used = new bool[slotCount];
+                int[] count = new int[solver.CooldownList.Count];
+
+                for (int i = 0; i < i1; i++)
+                {
+                    if (f[i] >= 0)
+                    {
+                        count[f[i]]++;
+                    }
+                }
+
+                // start the markings
+                for (int i = i1; i <= i2; i++)
+                {
+                    int c = f[i];
+                    if (c >= 0)
+                    {
+                        int d = count[c];
+                        // find the right match
+                        for (int j = 0; j < m.Length; j++)
+                        {
+                            if (m[j] == c)
+                            {
+                                if (d == 0)
+                                {
+                                    used[j] = true;
+                                    break;
+                                }
+                                else
+                                {
+                                    d--;
+                                }
+                            }
+                        }
+                        count[c]++;
+                    }
+                    else
+                    {
+                        for (int j = 0; j < m.Length; j++)
+                        {
+                            if (m[j] == c)
+                            {
+                                used[j] = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                int j1 = Array.IndexOf(used, true);
+                int j2 = Array.LastIndexOf(used, true);
+
+                int s = Rnd.Next(j1, j2);
+
+                // splice
+
+                int[] gen = new int[slotCount];
+                int index = 0;
+                for (int j = 0; j < s; j++)
+                {
+                    if (!used[j])
+                    {
+                        gen[index++] = m[j];
+                    }
+                }
+                for (int i = i1; i <= i2; i++)
+                {
+                    gen[index++] = f[i];
+                }
+                for (int j = s; j < slotCount; j++)
+                {
+                    if (!used[j])
+                    {
+                        gen[index++] = m[j];
+                    }
+                }
+
+                return GenerateIndividual(gen, true, recycledIndividual);
+            }
+            
+            protected override void ReportProgress(int progressPercentage, float bestValue)
+            {
+                CalculationsMage.ClearLog(solver, progressPercentage + ": " + bestValue);
+            }
+
+            protected override void LookForDirectItemUpgrades()
+            {
+                // no direct upgrades
+            }            
+
+            protected override CharacterCalculationsMage GetValuation(CombList individual)
+            {
+                individual.UpdateCastingStates();
+                solver.combList = individual;
+                solver.SolveBasicProblem();
+                return solver.GetCalculationsResult();
+            }
+
+            protected override float GetOptimizationValue(CombList individual, CharacterCalculationsMage valuation)
+            {
+                return valuation.OverallPoints;
+            }
+
+            protected override int GetItem(CombList individual, int slot)
+            {
+                if (slot < individual.Count)
+                {
+                    return individual[slot].Cooldown;
+                }
+                else
+                {
+                    return GetRandomItem(slot, null);
+                }
+            }
+
+            protected override int[] GetItems(CombList individual)
+            {
+                if (individual.Generator != null)
+                {
+                    return individual.Generator;
+                }
+                int[] arr = new int[individual.Count];
+                for (int i = 0; i < individual.Count; i++)
+                {
+                    arr[i] = individual[i].Cooldown;
+                }
+                return arr;
+            }
+
+            public CombList GenerateIndividual(string code)
+            {
+                var codes = code.Split(',');
+                int[] items = codes.ConvertAll(c => int.Parse(c)).ToArray();
+                return GenerateIndividual(items, true, null);
+            }
+
+            protected override CombList GenerateIndividual(int[] items, bool canUseArray, CombList recycledIndividual)
+            {
+                int[] lastActivation = new int[solver.CooldownList.Count];
+                int[] activationCount = new int[solver.CooldownList.Count];
+                bool[] used = new bool[items.Length];
+                for (int i = 0; i < lastActivation.Length; i++)
+                {
+                    lastActivation[i] = -1;
+                }
+
+                CombList list = new CombList(solver.CooldownList, solver.stateList, solver);
+                for (int index = 0; index < items.Length; index++)
+                {
+                    if (items[index] == -1) break;
+                    if (used[index]) continue;
+                    var cur = new CombItem() { Cooldown = items[index], Activation = !list.IsActive(items[index]) };
+                TRY_AGAIN:
+                    list.Add(cur);
+
+                    int cooldown = cur.Cooldown;
+                    double mt;
+                    if (list.Count >= 2)
+                    {
+                        mt = list[list.Count - 2].MinTime;
+                    }
+                    else
+                    {
+                        mt = 0;
+                    }
+                    if (lastActivation[cooldown] >= 0)
+                    {
+                        var last = list[lastActivation[cooldown]];
+                        double t = last.MinTime;
+                        if (cur.Activation)
+                        {
+                            t += solver.CooldownList[cooldown].Cooldown;
+                        }
+                        else
+                        {
+                            t += last.Duration;
+                        }
+                        if (t > mt)
+                        {
+                            mt = t;
+                        }
+                    }
+                    for (int i = 0; i < solver.CooldownList.Count; i++)
+                    {
+                        EffectCooldown coold = solver.CooldownList[i];
+                        if (coold.Cooldown > 0 && coold.Duration > 0)
+                        {
+                            if (lastActivation[i] >= 0)
+                            {
+                                double act = list[lastActivation[i]].MinTime;
+                                double delta = mt - act;
+
+                                if (delta > coold.Duration)
+                                {
+                                    // find deactivation
+                                    bool found = false;
+                                    for (int j = lastActivation[i] + 1; j < list.Count; j++)
+                                    {
+                                        if (list[j].Cooldown == i && !list[j].Activation)
+                                        {
+                                            found = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!found)
+                                    {
+                                        // insert missing closer
+                                        cur = new CombItem() { Cooldown = i, Activation = false };
+                                        list.RemoveAt(list.Count - 1);
+                                        index--;
+                                        // find the slot and mark it used (it was positioned too late)
+                                        for (int j = index; j < items.Length; j++)
+                                        {
+                                            if (items[j] == i)
+                                            {
+                                                used[j] = true;
+                                                break;
+                                            }
+                                        }
+                                        goto TRY_AGAIN;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    cur.MinTime = mt;
+                    if (list.UpdateEffects(list.Count - 1))
+                    {
+                        cur.UpdateDuration(list);
+                        if (cur.MinTime >= solver.CalculationOptions.FightDuration)
+                        {
+                            list.RemoveAt(list.Count - 1);
+                            break;
+                        }
+                        else
+                        {
+                            if (cur.Activation)
+                            {
+                                cur.LastActivation = lastActivation[cooldown];
+                                lastActivation[cooldown] = list.Count - 1;
+                                activationCount[cooldown]++;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // it creates an invalid combo, we have to skip this
+                        list.RemoveAt(list.Count - 1);
+                    }
+                }
+
+                if (canUseArray)
+                {
+                    list.Generator = items;
+                }
+                else
+                {
+                    list.Generator = (int[])items.Clone();
+                }
+
+                return list;
+            }
+
+            public CharacterCalculationsMage Optimize()
+            {
+                float bestValue;
+                bool inj;
+                CharacterCalculationsMage ret;
+                base.Optimize(null, 0, out bestValue, out ret, out inj);
+                return ret;
+            }
+        }
+
+        private CharacterCalculationsMage SolveGeneticCombinatorialProblem()
+        {
+            CooldownOptimizer optimizer = new CooldownOptimizer(this);
+            return optimizer.Optimize();
+        }
+
+        private CharacterCalculationsMage SolveCombinatorialFixedProblem()
+        {
+            CooldownOptimizer optimizer = new CooldownOptimizer(this);
+            combList = optimizer.GenerateIndividual(CalculationOptions.CombinatorialFixedOrdering);
+            combList.UpdateCastingStates();
+            SolveBasicProblem();
+            return GetCalculationsResult();
+        }
 
         private CharacterCalculationsMage SolveCombinatorialProblem()
         {
