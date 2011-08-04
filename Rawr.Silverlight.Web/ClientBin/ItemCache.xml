@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-16"?>
-<ArrayOfItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<ArrayOfItem xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Item>
     <ItemLevel>1</ItemLevel>
     <DisplayId>33310</DisplayId>
@@ -7024,6 +7024,7 @@
           <Chance>0.5</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
         <SpecialEffect>
           <Trigger>SpellCrit</Trigger>
@@ -7035,6 +7036,7 @@
           <Chance>0.5</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>2</SpecialEffectCount>
@@ -7198,6 +7200,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -7235,6 +7238,7 @@
           <Chance>0.05</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -18475,6 +18479,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -20338,6 +20343,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -20385,6 +20391,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -20432,6 +20439,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -20479,6 +20487,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -23100,6 +23109,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -23267,6 +23277,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -23432,6 +23443,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -23705,6 +23717,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -24451,6 +24464,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -24700,6 +24714,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -25019,6 +25034,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -25156,6 +25172,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -25231,6 +25248,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -25334,6 +25352,7 @@
           <Chance>0.3</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -25888,6 +25907,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -26144,6 +26164,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -26576,6 +26597,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -26775,6 +26797,7 @@
           <Chance>1</Chance>
           <MaxStack>10</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -26941,6 +26964,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>true</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -27014,6 +27038,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -27197,6 +27222,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -27362,6 +27388,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -27802,6 +27829,7 @@
           <Chance>0.5</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -27877,6 +27905,7 @@
           <Chance>0.5</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -28246,6 +28275,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -28414,6 +28444,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -28768,6 +28799,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -28875,6 +28907,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
         <SpecialEffect>
           <Trigger>Use</Trigger>
@@ -28886,6 +28919,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
         <SpecialEffect>
           <Trigger>Use</Trigger>
@@ -28897,6 +28931,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>3</SpecialEffectCount>
@@ -28972,6 +29007,7 @@
           <Chance>1</Chance>
           <MaxStack>20</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
         <SpecialEffect>
           <Trigger>HoTTick</Trigger>
@@ -28983,6 +29019,7 @@
           <Chance>1</Chance>
           <MaxStack>20</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>2</SpecialEffectCount>
@@ -29492,6 +29529,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -29667,6 +29705,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -29799,6 +29838,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -29876,6 +29916,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -30675,6 +30716,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -30846,6 +30888,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -31207,6 +31250,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -31411,6 +31455,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -31486,6 +31531,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -31622,6 +31668,7 @@
           <Chance>0.3</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -32147,6 +32194,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -32822,6 +32870,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -32865,6 +32914,7 @@
           <Chance>1</Chance>
           <MaxStack>10</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -33068,6 +33118,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>true</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -33209,6 +33260,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -33443,6 +33495,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -33865,6 +33918,7 @@
           <Chance>0.5</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -34006,6 +34060,7 @@
           <Chance>0.5</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -34204,6 +34259,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -34765,6 +34821,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -34907,6 +34964,7 @@
           <Chance>1</Chance>
           <MaxStack>20</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
         <SpecialEffect>
           <Trigger>HoTTick</Trigger>
@@ -34918,6 +34976,7 @@
           <Chance>1</Chance>
           <MaxStack>20</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>2</SpecialEffectCount>
@@ -34961,6 +35020,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
         <SpecialEffect>
           <Trigger>Use</Trigger>
@@ -34972,6 +35032,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
         <SpecialEffect>
           <Trigger>Use</Trigger>
@@ -34983,6 +35044,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>3</SpecialEffectCount>
@@ -40695,6 +40757,7 @@
           <Chance>1</Chance>
           <MaxStack>10</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -40760,6 +40823,7 @@
           <Chance>1</Chance>
           <MaxStack>10</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -40810,6 +40874,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -40860,6 +40925,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -40925,6 +40991,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -42366,6 +42433,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -42995,6 +43063,7 @@
           <Chance>0.2</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -43197,6 +43266,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -43838,6 +43908,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
         <SpecialEffect>
           <Trigger>HealingSpellCast</Trigger>
@@ -43853,6 +43924,7 @@
                 <Chance>1</Chance>
                 <MaxStack>5</MaxStack>
                 <LimitedToExecutePhase>false</LimitedToExecutePhase>
+                <BypassCache>false</BypassCache>
               </SpecialEffect>
             </SpecialEffects>
             <SpecialEffectCount>1</SpecialEffectCount>
@@ -43862,6 +43934,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>2</SpecialEffectCount>
@@ -44064,6 +44137,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -44614,6 +44688,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -44988,6 +45063,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -45582,6 +45658,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -45791,6 +45868,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -46055,6 +46133,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
         <SpecialEffect>
           <Trigger>DamageSpellHit</Trigger>
@@ -46070,6 +46149,7 @@
                 <Chance>1</Chance>
                 <MaxStack>5</MaxStack>
                 <LimitedToExecutePhase>false</LimitedToExecutePhase>
+                <BypassCache>false</BypassCache>
               </SpecialEffect>
             </SpecialEffects>
             <SpecialEffectCount>1</SpecialEffectCount>
@@ -46079,6 +46159,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>2</SpecialEffectCount>
@@ -46121,6 +46202,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -46255,6 +46337,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -46291,13 +46374,14 @@
         <SpecialEffect>
           <Trigger>MeleeHit</Trigger>
           <Stats>
-            <WeaponDamage>680</WeaponDamage>
+            <AttackPower>1926</AttackPower>
           </Stats>
           <Duration>10</Duration>
           <Cooldown>50</Cooldown>
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -46839,6 +46923,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -58301,6 +58386,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -58341,6 +58427,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -58381,6 +58468,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -58421,6 +58509,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -58461,6 +58550,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -58501,6 +58591,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -58567,6 +58658,7 @@
           <Chance>0.15</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -58607,6 +58699,7 @@
           <Chance>0.15</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -59835,6 +59928,7 @@
           <Chance>0.3</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
         <SpecialEffect>
           <Trigger>DamageDone</Trigger>
@@ -59846,6 +59940,7 @@
           <Chance>0.3</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>2</SpecialEffectCount>
@@ -59886,6 +59981,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -59926,6 +60022,7 @@
           <Chance>0.05</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -59966,6 +60063,7 @@
           <Chance>0.5</Chance>
           <MaxStack>5</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -59999,13 +60097,14 @@
         <SpecialEffect>
           <Trigger>PhysicalHit</Trigger>
           <Stats>
-            <NatureDamage>5000</NatureDamage>
+            <NatureDamage>7000</NatureDamage>
           </Stats>
           <Duration>0</Duration>
           <Cooldown>0</Cooldown>
           <Chance>0.05</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -62394,6 +62493,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -62449,6 +62549,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -62504,6 +62605,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -62563,6 +62665,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -62618,6 +62721,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -62673,6 +62777,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -62728,6 +62833,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -62783,6 +62889,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -62842,6 +62949,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -62897,6 +63005,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -63811,6 +63920,7 @@
           <Chance>0.02</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -66437,6 +66547,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -66863,6 +66974,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -66903,6 +67015,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -66943,6 +67056,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -68378,6 +68492,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -68418,6 +68533,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -68458,6 +68574,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -68880,6 +68997,7 @@
           <Chance>0.15</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -68920,6 +69038,7 @@
           <Chance>0.25</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -68960,6 +69079,7 @@
           <Chance>0.15</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -72917,6 +73037,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -73023,6 +73144,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
         <SpecialEffect>
           <Trigger>HealingSpellCast</Trigger>
@@ -73038,6 +73160,7 @@
                 <Chance>1</Chance>
                 <MaxStack>5</MaxStack>
                 <LimitedToExecutePhase>false</LimitedToExecutePhase>
+                <BypassCache>false</BypassCache>
               </SpecialEffect>
             </SpecialEffects>
             <SpecialEffectCount>1</SpecialEffectCount>
@@ -73047,6 +73170,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>2</SpecialEffectCount>
@@ -73685,6 +73809,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -73855,6 +73980,7 @@
           <Chance>0.2</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -74484,6 +74610,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -75335,6 +75462,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -75469,6 +75597,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -75512,6 +75641,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
         <SpecialEffect>
           <Trigger>DamageSpellHit</Trigger>
@@ -75527,6 +75657,7 @@
                 <Chance>1</Chance>
                 <MaxStack>5</MaxStack>
                 <LimitedToExecutePhase>false</LimitedToExecutePhase>
+                <BypassCache>false</BypassCache>
               </SpecialEffect>
             </SpecialEffects>
             <SpecialEffectCount>1</SpecialEffectCount>
@@ -75536,6 +75667,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>2</SpecialEffectCount>
@@ -75799,6 +75931,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -76008,6 +76141,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -76538,6 +76672,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -83580,6 +83715,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -85601,6 +85737,7 @@
           <Chance>0.3</Chance>
           <MaxStack>3</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -87644,6 +87781,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -88605,6 +88743,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -90800,6 +90939,7 @@
           <Chance>0.3</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -97520,6 +97660,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -97560,6 +97701,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -97600,6 +97742,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -97640,6 +97783,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -97680,6 +97824,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -99739,6 +99884,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -99805,6 +99951,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -110093,6 +110240,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
         <SpecialEffect>
           <Trigger>PhysicalAttack</Trigger>
@@ -110104,6 +110252,7 @@
           <Chance>0.2</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>2</SpecialEffectCount>
@@ -110230,6 +110379,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -110270,6 +110420,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -110519,6 +110670,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
         <SpecialEffect>
           <Trigger>MeleeHit</Trigger>
@@ -110530,6 +110682,7 @@
           <Chance>0.15</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>2</SpecialEffectCount>
@@ -111189,6 +111342,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -111229,6 +111383,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -112335,6 +112490,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -112378,6 +112534,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -112655,6 +112812,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -113200,6 +113358,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -113480,6 +113639,9 @@
     <AllowedRandomSuffix>268</AllowedRandomSuffix>
     <AllowedRandomSuffix>269</AllowedRandomSuffix>
     <AllowedRandomSuffix>270</AllowedRandomSuffix>
+    <AllowedRandomSuffix>185</AllowedRandomSuffix>
+    <AllowedRandomSuffix>183</AllowedRandomSuffix>
+    <AllowedRandomSuffix>184</AllowedRandomSuffix>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Firelands</Area>
@@ -114655,6 +114817,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -115130,6 +115293,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -116409,6 +116573,7 @@
           <Chance>1</Chance>
           <MaxStack>10</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -116774,6 +116939,7 @@
           <Chance>1</Chance>
           <MaxStack>10</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -117215,6 +117381,7 @@
                 <Chance>1</Chance>
                 <MaxStack>10</MaxStack>
                 <LimitedToExecutePhase>false</LimitedToExecutePhase>
+                <BypassCache>false</BypassCache>
               </SpecialEffect>
             </SpecialEffects>
             <SpecialEffectCount>1</SpecialEffectCount>
@@ -117224,6 +117391,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -117267,6 +117435,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -117642,6 +117811,7 @@
                 <Chance>1</Chance>
                 <MaxStack>10</MaxStack>
                 <LimitedToExecutePhase>false</LimitedToExecutePhase>
+                <BypassCache>false</BypassCache>
               </SpecialEffect>
             </SpecialEffects>
             <SpecialEffectCount>1</SpecialEffectCount>
@@ -117651,6 +117821,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -117694,6 +117865,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -117737,6 +117909,7 @@
           <Chance>0.15</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -117780,6 +117953,7 @@
           <Chance>1</Chance>
           <MaxStack>5</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -118127,6 +118301,7 @@
           <Chance>1</Chance>
           <MaxStack>5</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -118297,6 +118472,7 @@
           <Chance>0.15</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -119105,6 +119281,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -119146,6 +119323,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -119187,6 +119365,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -119228,6 +119407,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -129159,6 +129339,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -129206,6 +129387,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -129246,6 +129428,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -129286,6 +129469,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -129333,6 +129517,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -129380,6 +129565,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -129427,6 +129613,7 @@
           <Chance>0.15</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -129500,6 +129687,7 @@
           <Chance>0.15</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -131292,9 +131480,6 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
     <Name>[Downloading from Wowhead]</Name>
     <Id>0</Id>
@@ -131434,6 +131619,7 @@
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -131733,6 +131919,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -131773,6 +131960,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -131813,6 +132001,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -133284,6 +133473,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -133324,6 +133514,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -133364,6 +133555,7 @@
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -133786,6 +133978,7 @@
           <Chance>0.15</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -133852,6 +134045,7 @@
           <Chance>0.15</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
+          <BypassCache>false</BypassCache>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
