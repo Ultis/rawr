@@ -85,7 +85,7 @@ namespace Rawr.Retribution
         protected float _Cooldown = 1f;
         public float Cooldown { get { return _Cooldown; }
                                 set { _Cooldown = value; } }
-        public float CooldownWithLatency { get { return _Cooldown + Latency; } }
+        public virtual float CooldownWithLatency { get { return _Cooldown + Latency; } }
 
         public bool HasGCD;
         protected float _GCD;

@@ -143,6 +143,17 @@ namespace Rawr.Retribution
             }
             //Hand of Light
             AddTrigger(new HandofLight(Character, Stats, AverageDamage));
+
+            _CycleTime = GCD * 2f + (1.5f / (1 + Stats.SpellHaste) + Latency);
+        }
+
+        private float _CycleTime;
+        public override float CooldownWithLatency
+        {
+            get
+            {
+                return _CycleTime;
+            }
         }
     }
 
