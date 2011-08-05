@@ -741,8 +741,8 @@ namespace Rawr.Tree
             actions[(int)TreeAction.TankWildGrowth].Ticks *= wgTargets;
             actions[(int)TreeAction.RaidWildGrowth].Ticks *= wgTargets;
             
-            actions[(int)TreeAction.TankSwiftmend].Direct *= (1 + swiftmendExtraTargets * opts.TankRaidHealingWeight);
-            actions[(int)TreeAction.RaidSwiftmend].Direct *= (1 + swiftmendExtraTargets);
+            actions[(int)TreeAction.TankSwiftmend].Direct *= (1 + swiftmendExtraTargets * stats.DirectHealMultiplier * opts.TankRaidHealingWeight);
+            actions[(int)TreeAction.RaidSwiftmend].Direct *= (1 + swiftmendExtraTargets * stats.DirectHealMultiplier);
 
             actions[(int)TreeAction.TankSwiftmend].Casts *= (1 + swiftmendExtraTargets);
             actions[(int)TreeAction.RaidSwiftmend].Casts *= (1 + swiftmendExtraTargets);
