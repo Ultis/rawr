@@ -7,179 +7,18 @@ namespace Rawr.Hunter
 {
     public class CharacterCalculationsHunter : CharacterCalculationsBase
     {
-        public StatsHunter AverageStats { get; set; }
-        public StatsHunter MaximumStats { get; set; }
         public StatsHunter UnbuffedStats { get; set; }
-        public StatsHunter BuffedStats { get; set; }
-        public StatsHunter BuffsStats { get; set; } // The actual stats that come from Buffs
+        public StatsHunter BuffStats { get; set; }
+        public StatsHunter MaximumStats { get; set; }
 
-        
-        private float _overallPoints = 0f;
-        private float[] _subPoints = new float[] { 0f, 0f, 0f, 0f };
-        private Stats _basicStats;
-        private float _baseAttackSpeed;
-        private float _autoshotDPS;
-        private float _BonusAttackProcsDPS;
-        private float _wildQuiverDPS;
-        public float SpecProcDPS;
-        private float _customDPS;
-        public float _masteryBase = 8f;
         public Character character = null;
         public CalculationOptionsHunter CalcOpts = null;
-        //public BossOptions BossOpts = null;
 
-        #region Skills
-        public Skills.WhiteAttacks Whites { get; set; }
-        public Skills.ExplosiveShot Explosive { get; set; }
-        public Skills.SteadyShot Steady { get; set; }
-        public Skills.CobraShot Cobra { get; set; }
-        public Skills.AimedShot Aimed { get; set; }
-        public Skills.MultiShot Multi { get; set; }
-        public Skills.ArcaneShot Arcane { get; set; }
-        public Skills.KillShot Kill { get; set; }
-        //public Skills.Volley Volley { get; set; }
-        public Skills.BlackArrow BlackArrowD { get; set; }
-//        public Skills.BlackArrowBuff BlackArrowB { get; set; }
-//        public Skills.PiercingShots Piercing { get; set; }
-        public Skills.SerpentSting Serpent { get; set; }
-        public Skills.ChimeraShot_Serpent Chimera { get; set; }
-        public Skills.ImmolationTrap Immolation { get; set; }
-        public Skills.ExplosiveTrap ExplosiveT { get; set; }
-        public Skills.FreezingTrap Freezing { get; set; }
-        public Skills.FrostTrap Frost { get; set; }
-        public Skills.Readiness Ready { get; set; }
-        public Skills.BestialWrath Bestial { get; set; }
-        public Skills.RapidFire Rapid { get; set; }
-        #endregion
+        public HunterBase Hunter { get; set; }
+        public PetBase Pet { get; set; }
 
-        private double _piercingShotsDPS;
-        private double _piercingShotsDPSSteadyShot;
-        private double _piercingShotsDPSAimedShot;
-        private double _piercingShotsDPSChimeraShot;
+        public PetCalculations PetCalc { get; set; }
 
-        public float BaseHealth { get; set; }
-        //public float Agility { get; set; }
-
-        public PetCalculations pet { get; set; }
-
-        #region Pet Stats
-        public float petBaseHealth { get; set; }
-        public float petHealthfromStamina { get; set; }
-        public float petBonusHealth { get; set; }
-        public float petKillCommandDPS { get; set; }
-        public float petKillCommandMPS { get; set; }
-        public float petWhiteDPS { get; set; }
-        public float petSpecialDPS { get; set; }
-        public float petArmorDebuffs { get; set; }
-        public float petTargetArmorReduction { get; set; }
-        public float petTargetDodge { get; set; }
-        public float ferociousInspirationDamageAdjust { get; set; }
-        #endregion
-
-        #region Pet Hit
-        public float petHitTotal { get; set; }
-        public float petHitSpellTotal { get; set; }
-        #endregion
-
-        #region Pet Crit
-        public float petCritFromBase { get; set; }
-        public float petCritFromAgility { get; set; }
-        public float petCritFromSpidersBite { get; set; }
-        public float petCritFromFerocity { get; set; }
-        public float petCritFromGear { get; set; }
-        public float petCritFromBuffs { get; set; }
-        public float petCritFromTargetDebuffs { get; set; }
-        public float petCritFromDepression { get; set; }
-        public float petCritFromCobraStrikes { get; set; }
-        public float petCritTotalMelee { get; set; }
-        public float petCritTotalSpecials { get; set; }
-        #endregion
-
-        #region Pet AP
-        public float petAPFromStrength { get; set; }
-        public float petAPFromHunterVsWild { get; set; }
-        public float petAPFromTier9 { get; set; }
-        public float petAPFromBuffs { get; set; }
-        public float petAPFromHunterRAP { get; set; }
-        public float petAPFromRabidProc { get; set; }
-        public float petAPFromSerenityDust { get; set; }
-        public float petAPFromOutsideBuffs { get; set; }
-        public float petAPFromAnimalHandler { get; set; }
-        public float petAPFromAspectOfTheBeast { get; set; }
-        #endregion
-
-        #region Debuffs
-        public float targetDebuffsCrit { get; set; }
-        public float targetDebuffsArmor { get; set; }
-        public float targetDebuffsNature { get; set; }
-        public float targetDebuffsPetDamage { get; set; }
-        #endregion
-
-        #region Haste Stats
-        public float hasteFromTalentsStatic { get; set; }
-        public float hasteFromRapidFire { get; set; }
-        public float hasteFromProcs { get; set; }
-        public float hasteFromBase { get; set; }
-        public float hasteFromRating { get; set; }
-        public float hasteFromRangedBuffs { get; set; }
-        public float hasteFromRacial { get; set; }
-        public float hasteStaticTotal { get; set; }
-        public float hasteDynamicTotal { get; set; }
-        public float hasteEffectsTotal { get; set; }
-        #endregion   		
-        
-        #region RAP Stats
-        public float apTotal { get; set; }
-        public float apSelfBuffed { get; set; }
-        public float apFromBase { get; set; }
-        public float apFromAGI { get; set; }
-        public float apFromGear { get; set; }
-        #endregion
-        
-        #region Hit Stats
-        public float hitOverall {get; set;}
-        public float hitFromBase { get; set; }
-        public float hitFromRating { get; set; }
-        public float hitFromTalents {get; set;}
-        public float hitFromBuffs {get; set;}
-        public float hitFromTargetDebuffs { get; set; }
-        public float hitFromLevelAdjustment { get; set; }       
-        #endregion        
-        
-        #region Crit Stats
-        public float critRateOverall {get; set;}
-        public float critBase { get; set; }
-        public float critFromRacial { get; set; }
-        public float critFromAgi { get; set; }
-        public float critFromRating { get; set; }
-        public float critFromProcRating { get; set; }
-        public float critFromLethalShots { get; set; }
-        public float critFromKillerInstincts { get; set; }
-        public float critFromMasterMarksman { get; set; }
-        public float critFromMasterTactician { get; set; }
-        public float critFromBuffs { get; set; }
-        public float critFromDepression { get; set; }
-        #endregion
-
-        #region Mastery
-        public float masteryoverall { get; set; }
-        public float masteryfrombase { get; set; }
-        public float masteryfromincrement { get; set; }
-        #endregion
-
-        #region Shots Per Second
-        public float shotsPerSecondCritting { get; set; }
-        #endregion
-
-        public float damageReductionFromArmor { get; set; }
-        public float baseMana { get; set; }
-
-        // stuff for rotation test
-        //public float autoShotSpeed { get; set; }
-        public float autoShotStaticSpeed { get; set; }
-
-        // new shots data
-        // TODO: complete with new shots and check parameter
         public ShotData aimedShot = new ShotData(Shots.AimedShot, false, true, true);
         public ShotData arcaneShot = new ShotData(Shots.ArcaneShot, false, true, true);
         public ShotData multiShot = new ShotData(Shots.MultiShot, false, true, true);
@@ -203,63 +42,252 @@ namespace Rawr.Hunter
 
         public ShotPriority priorityRotation = null;
 
+        private float _overallPoints = 0f;
+        private float[] _subPoints = new float[] { 0f, 0f, 0f, 0f };
+        public override float[] SubPoints
+        {
+            get { return _subPoints; }
+            set { _subPoints = value; }
+        }
+        public float HunterDpsPoints { get; set; }
+        public float HunterSurvPoints { get; set; }
+        public float PetDpsPoints { get; set; }
+        public float PetSurvPoints { get; set; }
+        public override float OverallPoints
+        {
+            get { return _overallPoints; }
+            set { _overallPoints = value; }
+        }
+
+        #region Skills
+        public Skills.WhiteAttacks Whites { get; set; }
+        public Skills.ExplosiveShot Explosive { get; set; }
+        public Skills.SteadyShot Steady { get; set; }
+        public Skills.CobraShot Cobra { get; set; }
+        public Skills.AimedShot Aimed { get; set; }
+        public Skills.MultiShot Multi { get; set; }
+        public Skills.ArcaneShot Arcane { get; set; }
+        public Skills.KillShot Kill { get; set; }
+        //public Skills.Volley Volley { get; set; }
+        public Skills.BlackArrow BlackArrowD { get; set; }
+        //        public Skills.BlackArrowBuff BlackArrowB { get; set; }
+        //        public Skills.PiercingShots Piercing { get; set; }
+        public Skills.SerpentSting Serpent { get; set; }
+        public Skills.ChimeraShot_Serpent Chimera { get; set; }
+        public Skills.ImmolationTrap Immolation { get; set; }
+        public Skills.ExplosiveTrap ExplosiveT { get; set; }
+        public Skills.FreezingTrap Freezing { get; set; }
+        public Skills.FrostTrap Frost { get; set; }
+        public Skills.Readiness Ready { get; set; }
+        public Skills.BestialWrath Bestial { get; set; }
+        public Skills.RapidFire Rapid { get; set; }
+        #endregion
+
+//        private Stats _basicStats;
+//        private float _baseAttackSpeed;
+//        private float _autoshotDPS;
+//        private float _BonusAttackProcsDPS;
+//        private float _wildQuiverDPS;
+//        public float SpecProcDPS;
+//        private float _customDPS;
+//        public float _masteryBase = 8f;
+        //public BossOptions BossOpts = null;
+
+
+//        private double _piercingShotsDPS;
+//        private double _piercingShotsDPSSteadyShot;
+//        private double _piercingShotsDPSAimedShot;
+//        private double _piercingShotsDPSChimeraShot;
+
+//        public float BaseHealth { get; set; }
+        //public float Agility { get; set; }
+
+
+        #region Pet Stats
+/*        public float petBaseHealth { get; set; }
+        public float petHealthfromStamina { get; set; }
+        public float petBonusHealth { get; set; }
+        public float petKillCommandDPS { get; set; }
+        public float petKillCommandMPS { get; set; }
+        public float petWhiteDPS { get; set; }
+        public float petSpecialDPS { get; set; }
+        public float petArmorDebuffs { get; set; }
+        public float petTargetArmorReduction { get; set; }
+        public float petTargetDodge { get; set; }
+        public float ferociousInspirationDamageAdjust { get; set; }
+ */
+        #endregion
+
+        #region Pet Hit
+//        public float petHitTotal { get; set; }
+//        public float petHitSpellTotal { get; set; }
+        #endregion
+
+        #region Pet Crit
+/*        public float petCritFromBase { get; set; }
+        public float petCritFromAgility { get; set; }
+        public float petCritFromSpidersBite { get; set; }
+        public float petCritFromFerocity { get; set; }
+        public float petCritFromGear { get; set; }
+        public float petCritFromBuffs { get; set; }
+        public float petCritFromTargetDebuffs { get; set; }
+        public float petCritFromDepression { get; set; }
+        public float petCritFromCobraStrikes { get; set; }
+        public float petCritTotalMelee { get; set; }
+        public float petCritTotalSpecials { get; set; }
+ */
+        #endregion
+
+        #region Pet AP
+/*        public float petAPFromStrength { get; set; }
+        public float petAPFromHunterVsWild { get; set; }
+        public float petAPFromTier9 { get; set; }
+        public float petAPFromBuffs { get; set; }
+        public float petAPFromHunterRAP { get; set; }
+        public float petAPFromRabidProc { get; set; }
+        public float petAPFromSerenityDust { get; set; }
+        public float petAPFromOutsideBuffs { get; set; }
+        public float petAPFromAnimalHandler { get; set; }
+        public float petAPFromAspectOfTheBeast { get; set; }
+ */
+        #endregion
+
+        #region Debuffs
+/*        public float targetDebuffsCrit { get; set; }
+        public float targetDebuffsArmor { get; set; }
+        public float targetDebuffsNature { get; set; }
+        public float targetDebuffsPetDamage { get; set; }
+ */
+        #endregion
+
+        #region Haste Stats
+/*        public float hasteFromTalentsStatic { get; set; }
+        public float hasteFromRapidFire { get; set; }
+        public float hasteFromProcs { get; set; }
+        public float hasteFromBase { get; set; }
+        public float hasteFromRating { get; set; }
+        public float hasteFromRangedBuffs { get; set; }
+        public float hasteFromRacial { get; set; }
+        public float hasteStaticTotal { get; set; }
+        public float hasteDynamicTotal { get; set; }
+        public float hasteEffectsTotal { get; set; }
+ */
+        #endregion   		
+        
+        #region RAP Stats
+/*        public float apTotal { get; set; }
+        public float apSelfBuffed { get; set; }
+        public float apFromBase { get; set; }
+        public float apFromAGI { get; set; }
+        public float apFromGear { get; set; }
+ */
+        #endregion
+        
+        #region Hit Stats
+/*        public float hitOverall {get; set;}
+        public float hitFromBase { get; set; }
+        public float hitFromRating { get; set; }
+        public float hitFromTalents {get; set;}
+        public float hitFromBuffs {get; set;}
+        public float hitFromTargetDebuffs { get; set; }
+        public float hitFromLevelAdjustment { get; set; }
+ */
+        #endregion        
+        
+        #region Crit Stats
+/*        public float critRateOverall {get; set;}
+        public float critBase { get; set; }
+        public float critFromRacial { get; set; }
+        public float critFromAgi { get; set; }
+        public float critFromRating { get; set; }
+        public float critFromProcRating { get; set; }
+        public float critFromLethalShots { get; set; }
+        public float critFromKillerInstincts { get; set; }
+        public float critFromMasterMarksman { get; set; }
+        public float critFromMasterTactician { get; set; }
+        public float critFromBuffs { get; set; }
+        public float critFromDepression { get; set; }
+ */
+        #endregion
+
+        #region Mastery
+//        public float masteryoverall { get; set; }
+//        public float masteryfrombase { get; set; }
+//        public float masteryfromincrement { get; set; }
+        #endregion
+
+        #region Shots Per Second
+//        public float shotsPerSecondCritting { get; set; }
+        #endregion
+
+//        public float damageReductionFromArmor { get; set; }
+//        public float baseMana { get; set; }
+
+        // stuff for rotation test
+        //public float autoShotSpeed { get; set; }
+//        public float autoShotStaticSpeed { get; set; }
+
+        // new shots data
+        // TODO: complete with new shots and check parameter
+
         //***************************************
         // 091109 Drizz: Added
-        public bool collectSequence = false;
-        public string sequence = "";
+//        public bool collectSequence = false;
+//        public string sequence = "";
         //***************************************
+
         #region Focus
-        public float focus { get; set; }
-        public float basefocus { get; set; }
-        public float focusfromtalents { get; set; }
+//        public float focus { get; set; }
+//        public float basefocus { get; set; }
+//        public float focusfromtalents { get; set; }
         #endregion
 
         #region Mana Regen
-        public float manaRegenGearBuffs {get; set;}
-        public float manaRegenConstantViper { get; set; }
-        public float manaRegenRoarOfRecovery { get; set; }
-        public float manaRegenRapidRecuperation { get; set; }
-        public float manaRegenChimeraViperProc { get; set; }
-        public float manaRegenInvigoration { get; set; }
-        public float manaRegenHuntingParty { get; set; }
-        public float manaRegenTargetDebuffs { get; set; }
-        public float manaRegenFromPots { get; set; }
-        public float manaRegenTotal { get; set; }
+//        public float manaRegenGearBuffs {get; set;}
+//        public float manaRegenConstantViper { get; set; }
+//        public float manaRegenRoarOfRecovery { get; set; }
+//        public float manaRegenRapidRecuperation { get; set; }
+//        public float manaRegenChimeraViperProc { get; set; }
+//        public float manaRegenInvigoration { get; set; }
+//        public float manaRegenHuntingParty { get; set; }
+//        public float manaRegenTargetDebuffs { get; set; }
+//        public float manaRegenFromPots { get; set; }
+//        public float manaRegenTotal { get; set; }
 
-        public float manaRegenViper { get; set; }
+//        public float manaRegenViper { get; set; }
         #endregion
 
         #region Mana Usage
-        public float manaUsageRotation { get; set; }
-        public float manaUsageKillCommand { get; set; }
-        public float manaUsageTotal { get; set; }
+//        public float manaUsageRotation { get; set; }
+//        public float manaUsageKillCommand { get; set; }
+//        public float manaUsageTotal { get; set; }
 
-        public float manaChangeDuringViper { get; set; }
-        public float manaChangeDuringNormal { get; set; }
-        public float manaTimeToFull { get; set; }
-        public float manaTimeToOOM { get; set; }
+//        public float manaChangeDuringViper { get; set; }
+//        public float manaChangeDuringNormal { get; set; }
+//        public float manaTimeToFull { get; set; }
+//        public float manaTimeToOOM { get; set; }
         #endregion
 
         #region Kill shot used sub-20%
-        public float killShotSub20NewSteadyFreq { get; set; }
-        public float killShotSub20NewDPS { get; set; }
-        public float killShotSub20NewSteadyDPS { get; set; }
-        public float killShotSub20Gain { get; set; }
-        public float killShotSub20TimeSpent { get; set; }
-        public float killShotSub20FinalGain { get; set; }
+//        public float killShotSub20NewSteadyFreq { get; set; }
+//        public float killShotSub20NewDPS { get; set; }
+//        public float killShotSub20NewSteadyDPS { get; set; }
+//        public float killShotSub20Gain { get; set; }
+//        public float killShotSub20TimeSpent { get; set; }
+//        public float killShotSub20FinalGain { get; set; }
         #endregion
 
         #region Aspect uptime/penalties/bonuses
-        public float aspectUptimeHawk { get; set; }
-        public float aspectUptimeViper { get; set; }
-        public float aspectUptimeBeast { get; set; }
-        public float aspectBeastLostDPS { get; set; }
-        public float aspectViperPenalty { get; set; }
-        public float aspectBonusAPBeast { get; set; }
-        public float NoManaDPSDownTimePerc { get; set; }
+ //       public float aspectUptimeHawk { get; set; }
+ //       public float aspectUptimeViper { get; set; }
+ //       public float aspectUptimeBeast { get; set; }
+ //       public float aspectBeastLostDPS { get; set; }
+ //       public float aspectViperPenalty { get; set; }
+ //       public float aspectBonusAPBeast { get; set; }
+ //       public float NoManaDPSDownTimePerc { get; set; }
         #endregion
 
-        public float BaseAttackSpeed
+/*        public float BaseAttackSpeed
         {
             get { return _baseAttackSpeed; }
             set { _baseAttackSpeed = value; }
@@ -348,6 +376,7 @@ namespace Rawr.Hunter
             get { return _subPoints[3]; }
             set { _subPoints[3] = value; }
         }
+ */
 
         public List<string> ActiveBuffs { get; set; }
 
