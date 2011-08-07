@@ -1222,7 +1222,7 @@ namespace Rawr.Mage
                 {
                     ret = SolveCombinatorialFixedProblem();
                 }
-                if (CalculationOptions.GeneticSolver)
+                else if (CalculationOptions.GeneticSolver)
                 {
                     ret = SolveGeneticCombinatorialProblem();
                 }
@@ -1648,6 +1648,62 @@ namespace Rawr.Mage
                     }
                 }
 
+                // potentially make an index adjustment so we can do time based transplants
+                //if (Rnd.NextDouble() < 0.2)
+                {
+                    int[] count2 = new int[solver.CooldownList.Count];
+                    for (int i = 0; i <= i2; i++)
+                    {
+                        if (f[i] >= 0)
+                        {
+                            count2[f[i]]++;
+                        }
+                    }
+
+                    // pick a random cooldown
+                    int c = Rnd.Next(solver.CooldownList.Count);
+
+                    if (!float.IsPositiveInfinity(solver.CooldownList[c].Cooldown))
+                    {
+                        // choose a shift
+
+                        int min = -(count[c] / 2);
+                        int max = (maxSlots[c] - count2[c]) / 2;
+                        int shift = Rnd.Next(min, max + 1);
+                        double tshift = shift * solver.CooldownList[c].Cooldown;
+
+                        // shift
+                        for (int i = 0; i < solver.CooldownList.Count; i++)
+                        {
+                            if (i == c)
+                            {
+                                count[c] += 2 * shift;
+                            }
+                            else
+                            {
+                                if (!float.IsPositiveInfinity(solver.CooldownList[i].Cooldown))
+                                {
+                                    double d = tshift / solver.CooldownList[i].Cooldown;
+                                    int dd;
+                                    if (Rnd.Next(2) == 0)
+                                    {
+                                        dd = (int)Math.Floor(d);
+                                    }
+                                    else
+                                    {
+                                        dd = (int)Math.Ceiling(d);
+                                    }
+                                    min = -(count[i] / 2);
+                                    max = (maxSlots[i] - count2[i]) / 2;
+                                    if (dd < min) dd = min;
+                                    if (dd > max) dd = max;
+                                    count[i] += 2 * dd;
+                                }
+                            }
+                        }
+                    }
+                }
+
                 // start the markings
                 for (int i = i1; i <= i2; i++)
                 {
@@ -1775,25 +1831,25 @@ namespace Rawr.Mage
 
             protected override CombList GenerateIndividual(int[] items, bool canUseArray, CombList recycledIndividual)
             {
-                int[] lastActivation = new int[solver.CooldownList.Count];
+                /*int[] lastActivation = new int[solver.CooldownList.Count];
                 int[] activationCount = new int[solver.CooldownList.Count];
                 bool[] used = new bool[items.Length];
                 for (int i = 0; i < lastActivation.Length; i++)
                 {
                     lastActivation[i] = -1;
-                }
+                }*/
 
                 CombList list = new CombList(solver.CooldownList, solver.stateList, solver);
                 for (int index = 0; index < items.Length; index++)
                 {
                     if (items[index] == -1) break;
-                    if (used[index]) continue;
+                    //if (used[index]) continue;
                     var cur = new CombItem() { Cooldown = items[index], Activation = !list.IsActive(items[index]) };
-                TRY_AGAIN:
+                //TRY_AGAIN:
                     list.Add(cur);
 
                     int cooldown = cur.Cooldown;
-                    double mt;
+                    /*double mt;
                     if (list.Count >= 2)
                     {
                         mt = list[list.Count - 2].MinTime;
@@ -1848,7 +1904,7 @@ namespace Rawr.Mage
                                         list.RemoveAt(list.Count - 1);
                                         index--;
                                         // find the slot and mark it used (it was positioned too late)
-                                        for (int j = index; j < items.Length; j++)
+                                        for (int j = index + 1; j < items.Length; j++)
                                         {
                                             if (items[j] == i)
                                             {
@@ -1863,11 +1919,11 @@ namespace Rawr.Mage
                         }
                     }
 
-                    cur.MinTime = mt;
+                    cur.MinTime = mt;*/
                     if (list.UpdateEffects(list.Count - 1))
                     {
                         cur.UpdateDuration(list);
-                        if (cur.MinTime >= solver.CalculationOptions.FightDuration)
+                        /*if (cur.MinTime >= solver.CalculationOptions.FightDuration)
                         {
                             list.RemoveAt(list.Count - 1);
                             break;
@@ -1880,7 +1936,7 @@ namespace Rawr.Mage
                                 lastActivation[cooldown] = list.Count - 1;
                                 activationCount[cooldown]++;
                             }
-                        }
+                        }*/
                     }
                     else
                     {
