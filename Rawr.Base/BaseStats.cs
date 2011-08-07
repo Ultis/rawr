@@ -137,7 +137,7 @@ namespace Rawr
                             Strength = 60, Agility = 178, Stamina = 119, Intellect = 77, Spirit = 88,
                             Health = 39037,
                             Dodge = 0.03758f, Parry = 0.05f,
-                            PhysicalCrit = 0.03192f, AttackPower = 0f, RangedAttackPower = 0f/*546*/,
+                            PhysicalCrit = 0.03192f, AttackPower = 170f, RangedAttackPower = 170f/*546*/,
                         };
                         S.Accumulate(race);
                         S.Accumulate(hun);
