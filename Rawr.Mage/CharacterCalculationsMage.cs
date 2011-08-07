@@ -299,7 +299,7 @@ namespace Rawr.Mage
             if (CalculationOptions.HeroismControl == 3)
             {
                 heroismGroup.MinTime = Math.Min(CalculationOptions.FightDuration - CalculationOptions.MoltenFuryPercentage * CalculationOptions.FightDuration, CalculationOptions.FightDuration - 40.0);
-            }
+            }            
             sequence.GroupCombustion();
             sequence.GroupArcanePower();
             sequence.GroupVolcanicPotion();
@@ -962,7 +962,7 @@ namespace Rawr.Mage
                 ret["Spell Cycles"] = "...";
                 ret["By Spell"] = "...";
                 ret["Status"] = "Score: ..., Dps: ..., Survivability: ...";
-                DisplayCalculations.DisplaySolver = new Solver(DisplayCalculations.Character, DisplayCalculations.CalculationOptions, DisplayCalculations.CalculationOptions.DisplaySegmentCooldowns, DisplayCalculations.CalculationOptions.DisplaySegmentMana, DisplayCalculations.CalculationOptions.DisplayIntegralMana, DisplayCalculations.CalculationOptions.DisplayAdvancedConstraintsLevel, DisplayCalculations.MageArmor, false, DisplayCalculations.CalculationOptions.SmartOptimization, true, true, true, DisplayCalculations.CalculationOptions.CombinatorialSolver || DisplayCalculations.CalculationOptions.GeneticSolver);
+                DisplayCalculations.DisplaySolver = new Solver(DisplayCalculations.Character, DisplayCalculations.CalculationOptions, DisplayCalculations.CalculationOptions.DisplaySegmentCooldowns, DisplayCalculations.CalculationOptions.DisplaySegmentMana, DisplayCalculations.CalculationOptions.DisplayIntegralMana, DisplayCalculations.CalculationOptions.DisplayAdvancedConstraintsLevel, DisplayCalculations.MageArmor, false, DisplayCalculations.CalculationOptions.SmartOptimization, true, true, true, DisplayCalculations.CalculationOptions.CombinatorialSolver || DisplayCalculations.CalculationOptions.GeneticSolver, false);
                 CalculationsMage.EnableSolver(DisplayCalculations.DisplaySolver);
                 DisplayCalculations.CalculationOptions.SequenceReconstruction = null;
                 return ret;

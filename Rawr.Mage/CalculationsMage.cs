@@ -469,16 +469,16 @@ namespace Rawr.Mage
             }
             if (useIncrementalOptimizations && !character.DisableBuffAutoActivation)
             {
-                return GetCharacterCalculations(character, additionalItem, calcOpts, calcOpts.IncrementalSetArmor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet, solveCycles, false);
+                return GetCharacterCalculations(character, additionalItem, calcOpts, calcOpts.IncrementalSetArmor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet, solveCycles);
             }
             else if (calcOpts.AutomaticArmor && !calcOpts.ArmorSwapping && !character.DisableBuffAutoActivation)
             {
-                CharacterCalculationsMage mage = GetCharacterCalculations(character, additionalItem, calcOpts, "Mage Armor", useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet, solveCycles, false);
-                CharacterCalculationsMage molten = GetCharacterCalculations(character, additionalItem, calcOpts, "Molten Armor", useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet, solveCycles, false);
+                CharacterCalculationsMage mage = GetCharacterCalculations(character, additionalItem, calcOpts, "Mage Armor", useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet, solveCycles);
+                CharacterCalculationsMage molten = GetCharacterCalculations(character, additionalItem, calcOpts, "Molten Armor", useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet, solveCycles);
                 CharacterCalculationsMage calc = (mage.OverallPoints > molten.OverallPoints) ? mage : molten;
                 if (calcOpts.MeleeDps + calcOpts.MeleeDot + calcOpts.PhysicalDps + calcOpts.PhysicalDot > 0)
                 {
-                    CharacterCalculationsMage ice = GetCharacterCalculations(character, additionalItem, calcOpts, "Ice Armor", useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet, solveCycles, false);
+                    CharacterCalculationsMage ice = GetCharacterCalculations(character, additionalItem, calcOpts, "Ice Armor", useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet, solveCycles);
                     if (ice.OverallPoints > calc.OverallPoints) calc = ice;
                 }
                 if (computeIncrementalSet) StoreIncrementalSet(character, calc.DisplayCalculations);
@@ -487,7 +487,7 @@ namespace Rawr.Mage
             }
             else
             {
-                CharacterCalculationsMage calc = GetCharacterCalculations(character, additionalItem, calcOpts, null, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet, solveCycles, false);
+                CharacterCalculationsMage calc = GetCharacterCalculations(character, additionalItem, calcOpts, null, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet, solveCycles);
                 if (computeIncrementalSet) StoreIncrementalSet(character, calc.DisplayCalculations);
                 if (referenceCalculation) StoreCycleSolutions(character, calc.DisplayCalculations);
                 return calc;
@@ -589,9 +589,9 @@ namespace Rawr.Mage
             calculationOptions.IncrementalSetSortedStates = filteredCooldowns.ToArray();
         }
 
-        public CharacterCalculationsMage GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, string armor, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables, bool solveCycles, bool combinatorialSolver)
+        public CharacterCalculationsMage GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, string armor, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables, bool solveCycles)
         {
-            return Solver.GetCharacterCalculations(character, additionalItem, calculationOptions, this, armor, calculationOptions.ComparisonSegmentCooldowns, calculationOptions.ComparisonSegmentMana, calculationOptions.ComparisonIntegralMana, calculationOptions.ComparisonAdvancedConstraintsLevel, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables, solveCycles, combinatorialSolver);
+            return Solver.GetCharacterCalculations(character, additionalItem, calculationOptions, this, armor, calculationOptions.ComparisonSegmentCooldowns, calculationOptions.ComparisonSegmentMana, calculationOptions.ComparisonIntegralMana, calculationOptions.ComparisonAdvancedConstraintsLevel, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables, solveCycles, calculationOptions.SimpleStacking, calculationOptions.SimpleStacking);
         }
 
         //public static readonly Buff CriticalMassBuff = Buff.GetBuffByName("Critical Mass");

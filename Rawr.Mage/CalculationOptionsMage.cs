@@ -786,6 +786,13 @@ namespace Rawr.Mage
             set { _ArcaneLight = value; OnPropertyChanged("ArcaneLight"); }
         }
 
+        private bool _SimpleStacking;
+        public bool SimpleStacking
+        {
+            get { return _SimpleStacking; }
+            set { _SimpleStacking = value; OnPropertyChanged("SimpleStacking"); }
+        }
+
         private bool _ProcCombustion;
         public bool ProcCombustion
         {

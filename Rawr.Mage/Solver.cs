@@ -124,6 +124,7 @@ namespace Rawr.Mage
         private bool cancellationPending;
         private bool needsQuadratic;
         public bool CombinatorialSolver { get; private set; }
+        public bool SimpleStacking { get; private set; }
 
         public ArraySet ArraySet { get; set; }
 
@@ -1145,12 +1146,12 @@ namespace Rawr.Mage
         }
         #endregion
 
-        public Solver(Character character, CalculationOptionsMage calculationOptions, bool segmentCooldowns, bool segmentMana, bool integralMana, int advancedConstraintsLevel, string armor, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables, bool solveCycles, bool combinatorialSolver)
+        public Solver(Character character, CalculationOptionsMage calculationOptions, bool segmentCooldowns, bool segmentMana, bool integralMana, int advancedConstraintsLevel, string armor, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables, bool solveCycles, bool combinatorialSolver, bool simpleStacking)
         {
-            Construct(character, calculationOptions, segmentCooldowns, segmentMana, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables, solveCycles, combinatorialSolver);
+            Construct(character, calculationOptions, segmentCooldowns, segmentMana, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables, solveCycles, combinatorialSolver, simpleStacking);
         }
 
-        private void Construct(Character character, CalculationOptionsMage calculationOptions, bool segmentCooldowns, bool segmentMana, bool integralMana, int advancedConstraintsLevel, string armor, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables, bool solveCycles, bool combinatorialSolver)
+        private void Construct(Character character, CalculationOptionsMage calculationOptions, bool segmentCooldowns, bool segmentMana, bool integralMana, int advancedConstraintsLevel, string armor, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables, bool solveCycles, bool combinatorialSolver, bool simpleStacking)
         {
             this.Character = character;
             this.MageTalents = character.MageTalents;
@@ -1170,9 +1171,12 @@ namespace Rawr.Mage
             this.needsQuadratic = false;
             this.needsManaSegmentConstraints = segmentMana && !segmentCooldowns && advancedConstraintsLevel >= 1 && useIncrementalOptimizations;
             this.CombinatorialSolver = combinatorialSolver;
+            this.SimpleStacking = simpleStacking;
             if (combinatorialSolver)
             {
-                requiresMIP = false;
+                this.requiresMIP = false;
+                this.UseIncrementalOptimizations = false;
+                this.needsManaSegmentConstraints = false;
             }
             cancellationPending = false;
         }
@@ -1180,22 +1184,22 @@ namespace Rawr.Mage
         [ThreadStatic]
         private static Solver threadSolver;
 
-        public static CharacterCalculationsMage GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, CalculationsMage calculations, string armor, bool segmentCooldowns, bool segmentMana, bool integralMana, int advancedConstraintsLevel, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables, bool solveCycles, bool combinatorialSolver)
+        public static CharacterCalculationsMage GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, CalculationsMage calculations, string armor, bool segmentCooldowns, bool segmentMana, bool integralMana, int advancedConstraintsLevel, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables, bool solveCycles, bool combinatorialSolver, bool simpleStacking)
         {
             if (needsDisplayCalculations)
             {
                 // if we need display calculations then solver data has to remain clean because calls from display calculations
                 // that generate spell/cycle tooltips use that data (for example otherwise mage armor solver gets overwritten with molten armor solver data and we get bad data)
-                var displaySolver = new Solver(character, calculationOptions, segmentCooldowns, segmentMana, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables, solveCycles, combinatorialSolver);
+                var displaySolver = new Solver(character, calculationOptions, segmentCooldowns, segmentMana, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables, solveCycles, combinatorialSolver, simpleStacking);
                 return displaySolver.GetCharacterCalculations(additionalItem);
             }
             if (threadSolver == null)
             {
-                threadSolver = new Solver(character, calculationOptions, segmentCooldowns, segmentMana, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables, solveCycles, combinatorialSolver);
+                threadSolver = new Solver(character, calculationOptions, segmentCooldowns, segmentMana, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables, solveCycles, combinatorialSolver, simpleStacking);
             }
             else
             {
-                threadSolver.Construct(character, calculationOptions, segmentCooldowns, segmentMana, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables, solveCycles, combinatorialSolver);
+                threadSolver.Construct(character, calculationOptions, segmentCooldowns, segmentMana, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables, solveCycles, combinatorialSolver, simpleStacking);
             }
             return threadSolver.GetCharacterCalculations(additionalItem);
         }
@@ -1218,7 +1222,11 @@ namespace Rawr.Mage
 
             if (CombinatorialSolver)
             {
-                if (!string.IsNullOrEmpty(CalculationOptions.CombinatorialFixedOrdering))
+                if (SimpleStacking)
+                {
+                    ret = SolveSimpleStackingProblem();
+                }
+                else if (!string.IsNullOrEmpty(CalculationOptions.CombinatorialFixedOrdering))
                 {
                     ret = SolveCombinatorialFixedProblem();
                 }
@@ -1294,6 +1302,16 @@ namespace Rawr.Mage
                 for (int i = 0; i < Count; i++)
                 {
                     this[i].UpdateCastingState(this);
+                }
+            }
+
+            public void UpdateEffectsAndCastingStates()
+            {
+                for (int i = 0; i < Count; i++)
+                {
+                    UpdateEffects(i);                    
+                    this[i].UpdateCastingState(this);
+                    this[i].UpdateDuration(this);
                 }
             }
 
@@ -1493,6 +1511,8 @@ namespace Rawr.Mage
             public double Duration;
             public int LastActivation;
             public int Effects;
+            public bool ZeroDuration;
+            public int StateIndex;
 
             public void UpdateDuration(CombList list)
             {
@@ -1529,7 +1549,37 @@ namespace Rawr.Mage
             }
         }
 
+        public class CombState
+        {
+            public CastingState CastingState;
+            public int OverflowConstraint;
+            public int UnderflowConstraint;
+            public int Segment;
+            public int ManaSegment;
+        }
+
         private CombList combList;
+        private List<CombState> combStateList;
+
+        private void ConstructCombStateList()
+        {
+            combStateList = new List<CombState>();
+            combStateList.Add(new CombState() { CastingState = BaseState, Segment = 0, ManaSegment = 0 });
+            int start = 0;
+            int ms = 0;
+            for (int i = 0; i < combList.Count; i++)
+            {
+                if (!combList[i].ZeroDuration)
+                {
+                    combStateList.Add(new CombState() { CastingState = combList[i].CastingState, Segment = 0, ManaSegment = ++ms });
+                    for (int j = start; j <= i; j++)
+                    {
+                        combList[j].StateIndex = ms;
+                    }
+                    start = i + 1;
+                }
+            }
+        }
 
         private class CooldownOptimizer : Optimizer.OptimizerBase<int, CombList, CharacterCalculationsMage>
         {
@@ -1787,6 +1837,7 @@ namespace Rawr.Mage
             {
                 individual.UpdateCastingStates();
                 solver.combList = individual;
+                solver.ConstructCombStateList();
                 solver.SolveBasicProblem();
                 return solver.GetCalculationsResult();
             }
@@ -1978,8 +2029,155 @@ namespace Rawr.Mage
             CooldownOptimizer optimizer = new CooldownOptimizer(this);
             combList = optimizer.GenerateIndividual(CalculationOptions.CombinatorialFixedOrdering);
             combList.UpdateCastingStates();
+            ConstructCombStateList();
             SolveBasicProblem();
             return GetCalculationsResult();
+        }
+
+        private class ComparisonComparer<T> : IComparer<T>
+        {
+            private readonly Comparison<T> _comparison;
+
+            public ComparisonComparer(Comparison<T> comparison)
+            {
+                _comparison = comparison;
+            }
+
+            public int Compare(T x, T y)
+            {
+                return _comparison(x, y);
+            }
+        }
+
+        private CharacterCalculationsMage SolveSimpleStackingProblem()
+        {
+            double[] bestSolution = null;
+            CharacterCalculationsMage bestResult = null;
+
+            var sorter = new ComparisonComparer<CombItem>((a, b) => 
+                {
+                    int c = a.MinTime.CompareTo(b.MinTime);
+                    if (c == 0)
+                    {
+                        return a.Activation.CompareTo(b.Activation);
+                    }
+                    return c;
+                });
+            // stack on 2 min burns, search through all item based cooldown permutations
+            int[] P = new int[ItemBasedEffectCooldownsCount];
+            int[] Q = new int[P.Length];
+            int evo = CooldownList.FindIndex(c => c.StandardEffect == StandardEffect.Evocation);
+            for (int i = 0; i < P.Length; i++)
+            {
+                P[i] = i;
+                Q[i] = CooldownList.IndexOf(ItemBasedEffectCooldowns[i]);
+            }
+            int k;
+            do
+            {
+                // create a basic stacking sequence based on current item based order
+                combList = new CombList(CooldownList, stateList, this);
+                // one time cooldowns on last burn
+                // others on burn unless you can fit multiple inside a 2 min period
+                double t = 0;
+                while (t < CalculationOptions.FightDuration)
+                {
+                    int count = combList.Count;
+                    if (CalculationOptions.FightDuration - t < EvocationCooldown)
+                    {
+                        // pop one time cooldowns
+                        for (int i = 0; i < CooldownList.Count; i++)
+                        {
+                            if (float.IsPositiveInfinity(CooldownList[i].Cooldown))
+                            {
+                                combList.Add(new CombItem() { Cooldown = i, Activation = true, MinTime = t });
+                                combList.Add(new CombItem() { Cooldown = i, Activation = false, MinTime = t + CooldownList[i].Duration });
+                            }
+                        }
+                    }
+                    // pop all nonitem based cooldowns
+                    for (int i = 0; i < CooldownList.Count; i++)
+                    {
+                        if (CooldownList[i].StandardEffect != StandardEffect.Evocation && !CooldownList[i].ItemBased && !float.IsPositiveInfinity(CooldownList[i].Cooldown))
+                        {
+                            combList.Add(new CombItem() { Cooldown = i, Activation = true, MinTime = t });
+                            combList.Add(new CombItem() { Cooldown = i, Activation = false, MinTime = t + CooldownList[i].Duration });
+                        }
+                    }
+                    double tt = 0;
+                    // start popping item cooldowns and close off the others as they go away
+                    for (int i = 0; i < P.Length; i++)
+                    {
+                        combList.Add(new CombItem() { Cooldown = Q[P[i]], Activation = true, MinTime = t + tt});
+                        combList.Add(new CombItem() { Cooldown = Q[P[i]], Activation = false, MinTime = t + tt + CooldownList[Q[P[i]]].Duration });
+                        tt += CooldownList[Q[P[i]]].Duration;
+                    }
+                    // throw out anything above fight length
+                    combList.RemoveAll(ci => ci.MinTime > CalculationOptions.FightDuration);
+                    // sort by time
+                    combList.Sort(count, combList.Count - count, sorter);
+                    // everything that has same time stamp should be considered simultaneous and zero duration in between
+                    for (int i = count; i < combList.Count - 1; i++)
+                    {
+                        if (combList[i].MinTime == combList[i + 1].MinTime)
+                        {
+                            combList[i].ZeroDuration = true;
+                        }
+                    }
+                    // pop evocation
+                    combList.Add(new CombItem() { Cooldown = evo, Activation = true });
+                    combList.Add(new CombItem() { Cooldown = evo, Activation = false });
+                    // move to next burn
+                    t += EvocationCooldown;
+                }
+
+                combList.UpdateEffectsAndCastingStates();
+                ConstructCombStateList();
+
+                // simplify mana constraints
+                for (int i = 0; i < combStateList.Count; i++)
+                {
+                    combStateList[i].OverflowConstraint = ((combStateList[i].CastingState.Evocation && (i == combStateList.Count - 1 || !combStateList[i + 1].CastingState.Evocation)) || (i > 0 && combStateList[i].CastingState.ManaGemEffect && !combStateList[i - 1].CastingState.ManaGemEffect)) ? 0 : -1;
+                    combStateList[i].UnderflowConstraint = (!combStateList[i].CastingState.Evocation && i < combStateList.Count - 1 && combStateList[i + 1].CastingState.Evocation) ? 0 : -1;
+                }
+
+                SolveBasicProblem();
+                if (bestSolution == null || solution[solution.Length - 1] > bestSolution[bestSolution.Length - 1])
+                {
+                    bestSolution = solution;
+                    bestResult = GetCalculationsResult();
+                }
+
+                // move to next permutation
+                for (k = P.Length - 2; k >= 0; k--)
+                {
+                    if (P[k] < P[k + 1])
+                    {
+                        for (int l = P.Length - 1; l > k; l--)
+                        {
+                            if (P[k] < P[l])
+                            {
+                                int tmp = P[k];
+                                P[k] = P[l];
+                                P[l] = tmp;
+
+                                int j = P.Length - 1;
+                                k++;
+                                for (; k < j; k++, j--)
+                                {
+                                    tmp = P[k];
+                                    P[k] = P[j];
+                                    P[j] = tmp;
+                                }
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+            } while (k >= 0);
+            solution = bestSolution;
+            return bestResult;
         }
 
         private CharacterCalculationsMage SolveCombinatorialProblem()
@@ -2038,6 +2236,7 @@ namespace Rawr.Mage
                                     combList[i].Generated = true;
                                 }
                                 combList.UpdateCastingStates();
+                                ConstructCombStateList();
                                 SolveBasicProblem();
                                 if (bestSolution == null || solution[solution.Length - 1] > bestSolution[bestSolution.Length - 1])
                                 {
@@ -3927,7 +4126,7 @@ namespace Rawr.Mage
 
             if (CombinatorialSolver)
             {
-                manaSegments = combList.Count + 1;
+                manaSegments = combStateList.Count;
             }
             else if (segmentMana)
             {
@@ -3982,13 +4181,24 @@ namespace Rawr.Mage
                 lp.SetRowScaleUnsafe(rowCount, 0.05);
                 if (restrictManaUse)
                 {
-                    for (int ss = 0; ss < manaSegments * SegmentList.Count - 1; ss++)
+                    if (CombinatorialSolver)
                     {
-                        lp.SetRowScaleUnsafe(rowSegmentManaUnderflow + ss, ManaRegenLPScaling);
+                        for (int i = 0; i < combStateList.Count; i++)
+                        {
+                            lp.SetRowScaleUnsafe(combStateList[i].UnderflowConstraint, ManaRegenLPScaling);
+                            lp.SetRowScaleUnsafe(combStateList[i].OverflowConstraint, ManaRegenLPScaling);
+                        }
                     }
-                    for (int ss = 0; ss < manaSegments * SegmentList.Count; ss++)
+                    else
                     {
-                        lp.SetRowScaleUnsafe(rowSegmentManaOverflow + ss, ManaRegenLPScaling);
+                        for (int ss = 0; ss < manaSegments * SegmentList.Count - 1; ss++)
+                        {
+                            lp.SetRowScaleUnsafe(rowSegmentManaUnderflow + ss, ManaRegenLPScaling);
+                        }
+                        for (int ss = 0; ss < manaSegments * SegmentList.Count; ss++)
+                        {
+                            lp.SetRowScaleUnsafe(rowSegmentManaOverflow + ss, ManaRegenLPScaling);
+                        }
                     }
                 }
                 if (restrictThreat)
@@ -4082,7 +4292,7 @@ namespace Rawr.Mage
                 List<Cycle> placed = new List<Cycle>();
                 for (int manaSegment = manaSegments - 1; manaSegment >= 0; manaSegment--)
                 {
-                    CastingState state = (manaSegment == 0) ? BaseState : combList[manaSegment - 1].CastingState;
+                    CastingState state = combStateList[manaSegment].CastingState;
                     if (!state.Evocation)
                     {
                         placed.Clear();
@@ -4270,23 +4480,40 @@ namespace Rawr.Mage
 
         private void SetManaConstraint(double mps, int segment, int manaSegment, int column)
         {
-            for (int ss = segment * manaSegments + manaSegment; ss < SegmentList.Count * manaSegments - 1; ss++)
+            if (CombinatorialSolver)
             {
-                lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, mps);
+                for (int i = 0; i < combStateList.Count; i++)
+                {
+                    if (manaSegment <= i)
+                    {
+                        lp.SetElementUnsafe(combStateList[i].UnderflowConstraint, column, mps);
+                    }
+                    if (manaSegment < i || (manaSegment == i && mps < 0))
+                    {
+                        lp.SetElementUnsafe(combStateList[i].OverflowConstraint, column, -mps);
+                    }
+                }
             }
-            if (mps < 0)
+            else
             {
-                lp.SetElementUnsafe(rowSegmentManaOverflow + segment * manaSegments + manaSegment, column, -mps);
-            }
-            for (int ss = segment * manaSegments + manaSegment + 1; ss < SegmentList.Count * manaSegments; ss++)
-            {
-                lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -mps);
+                for (int ss = segment * manaSegments + manaSegment; ss < SegmentList.Count * manaSegments - 1; ss++)
+                {
+                    lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, mps);
+                }
+                if (mps < 0)
+                {
+                    lp.SetElementUnsafe(rowSegmentManaOverflow + segment * manaSegments + manaSegment, column, -mps);
+                }
+                for (int ss = segment * manaSegments + manaSegment + 1; ss < SegmentList.Count * manaSegments; ss++)
+                {
+                    lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -mps);
+                }
             }
         }
 
         private void ConstructManaOverflow()
         {
-            if (restrictManaUse)
+            if (restrictManaUse && !SimpleStacking)
             {
                 // TODO reevaluate how much we need this, if we don't have this then mana regen effects can get negative value
                 /*if (useIncrementalOptimizations)
@@ -4321,14 +4548,15 @@ namespace Rawr.Mage
             lp.SetColumnScaleUnsafe(column, 100);
             lp.SetElementUnsafe(rowAfterFightRegenMana, column, 1.0);
             lp.SetElementUnsafe(rowManaRegen, column, 1.0);
-            for (int ss = segment * manaSegments + manaSegment; ss < SegmentList.Count * manaSegments - 1; ss++)
+            /*for (int ss = segment * manaSegments + manaSegment; ss < SegmentList.Count * manaSegments - 1; ss++)
             {
                 lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, 1.0);
             }
             for (int ss = segment * manaSegments + manaSegment; ss < SegmentList.Count * manaSegments; ss++)
             {
                 lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -1.0);
-            }
+            }*/
+            SetManaConstraint(1.0, segment, manaSegment, column);
         }
 
         private void ConstructAfterFightRegen(bool afterFightRegen)
@@ -4650,7 +4878,7 @@ namespace Rawr.Mage
                     {
                         for (int manaSegment = 0; manaSegment < manaSegments; manaSegment++)
                         {
-                            if (!CombinatorialSolver || !manaGemEffectAvailable || (manaSegment > 0 && CooldownList[combList[manaSegment - 1].Cooldown].StandardEffect == StandardEffect.ManaGemEffect && combList[manaSegment - 1].Activation))
+                            if (!CombinatorialSolver || !manaGemEffectAvailable || (manaSegment > 0 && combStateList[manaSegment].CastingState.ManaGemEffect && !combStateList[manaSegment - 1].CastingState.ManaGemEffect))
                             {
                                 SetManaGemColumn(mps, tps, dps, upperBound, segment, manaSegment);
                             }
@@ -4827,7 +5055,7 @@ namespace Rawr.Mage
                 {
                     for (int manaSegment = 0; manaSegment < manaSegments; manaSegment++)
                     {
-                        CastingState state = (manaSegment == 0) ? BaseState : combList[manaSegment - 1].CastingState;
+                        CastingState state = combStateList[manaSegment].CastingState;
                         if (state.Evocation)
                         {
                             SetEvocationColumn(threatFactor, evocationSegments, baseStats.Mana + state.StateEffectMaxMana, state, 0, manaSegment, VariableType.Evocation);
@@ -5221,7 +5449,7 @@ namespace Rawr.Mage
                             {
                                 for (int manaSegment = 0; manaSegment < manaSegments; manaSegment++)
                                 {
-                                    if (!CombinatorialSolver || manaSegment == 0 || combList[manaSegment - 1].CastingState.Effects == 0)
+                                    if (!CombinatorialSolver || combStateList[manaSegment].CastingState.Effects == 0)
                                     {
                                         float mult = segmentCooldowns ? CalculationOptions.GetDamageMultiplier(SegmentList[segment]) : 1.0f;
                                         double dps = wand.DamagePerSecond * mult;
@@ -5308,7 +5536,7 @@ namespace Rawr.Mage
                         {
                             for (int manaSegment = 0; manaSegment < manaSegments; manaSegment++)
                             {
-                                if (!CombinatorialSolver || manaSegment == 0 || combList[manaSegment - 1].CastingState.Effects == 0)
+                                if (!CombinatorialSolver || combStateList[manaSegment].CastingState.Effects == 0)
                                 {
                                     SetIdleRegenColumn(idleRegenSegments, dps, tps, mps, segment, manaSegment);
                                 }
@@ -5835,13 +6063,24 @@ namespace Rawr.Mage
             }
             if (restrictManaUse)
             {
-                for (int ss = 0; ss < SegmentList.Count * manaSegments - 1; ss++)
+                if (CombinatorialSolver)
                 {
-                    lp.SetRHSUnsafe(rowSegmentManaUnderflow + ss, StartingMana);
+                    for (int i = 0; i < combStateList.Count; i++)
+                    {
+                        lp.SetRHSUnsafe(combStateList[i].UnderflowConstraint, StartingMana);
+                        lp.SetRHSUnsafe(combStateList[i].OverflowConstraint, BaseStats.Mana - StartingMana);
+                    }
                 }
-                for (int ss = 0; ss < SegmentList.Count * manaSegments; ss++)
+                else
                 {
-                    lp.SetRHSUnsafe(rowSegmentManaOverflow + ss, BaseStats.Mana - StartingMana);
+                    for (int ss = 0; ss < SegmentList.Count * manaSegments - 1; ss++)
+                    {
+                        lp.SetRHSUnsafe(rowSegmentManaUnderflow + ss, StartingMana);
+                    }
+                    for (int ss = 0; ss < SegmentList.Count * manaSegments; ss++)
+                    {
+                        lp.SetRHSUnsafe(rowSegmentManaOverflow + ss, BaseStats.Mana - StartingMana);
+                    }
                 }
             }
             if (restrictThreat)
@@ -6125,12 +6364,12 @@ namespace Rawr.Mage
                     if (combList[i].Activation)
                     {
                         // constraint on duration
-                        int maxSeg = combList.Count;
+                        int maxSeg = combStateList.Count - 1;
                         for (int j = i + 1; j < combList.Count; j++)
                         {
                             if (combList[j].Cooldown == combList[i].Cooldown && !combList[j].Activation)
                             {
-                                maxSeg = j;
+                                maxSeg = combList[j].StateIndex - 1;
                                 break;
                             }
                         }
@@ -6142,12 +6381,32 @@ namespace Rawr.Mage
                             rowCombinatorialConstraint = newArr;
                         }
                         CombinatorialConstraint[] arr = rowCombinatorialConstraint;
-                        arr[ccCount].Row = rowCount++;
-                        arr[ccCount].MinSegment = i + 1;
-                        arr[ccCount].MaxSegment = maxSeg;
-                        arr[ccCount].MinTime = 0;
-                        arr[ccCount].MaxTime = combList[i].Duration;
-                        rowCombinatorialConstraintCount = ccCount + 1;
+                        int minSeg = combList[i].StateIndex;
+                        int ccRow;
+                        for (ccRow = 0; ccRow < ccCount; ccRow++)
+                        {
+                            if (arr[ccRow].MinSegment == minSeg && arr[ccRow].MaxSegment == maxSeg)
+                            {
+                                break;
+                            }
+                        }
+                        if (ccRow == ccCount)
+                        {
+                            if (!(CooldownList[combList[i].Cooldown].StandardEffect == StandardEffect.Evocation && minSeg == maxSeg))
+                            {
+                                arr[ccCount].Row = rowCount++;
+                                arr[ccCount].MinSegment = minSeg;
+                                arr[ccCount].MaxSegment = maxSeg;
+                                arr[ccCount].MinTime = 0;
+                                arr[ccCount].MaxTime = combList[i].Duration;
+                                rowCombinatorialConstraintCount = ccCount + 1;
+                            }
+                        }
+                        else
+                        {
+                            arr[ccRow].MinTime = Math.Max(arr[ccRow].MinTime, 0);
+                            arr[ccRow].MaxTime = Math.Min(arr[ccRow].MaxTime, combList[i].Duration);
+                        }
 
                         // constraint on cooldown
                         maxSeg = -1;
@@ -6155,7 +6414,7 @@ namespace Rawr.Mage
                         {
                             if (combList[j].Cooldown == combList[i].Cooldown && combList[j].Activation)
                             {
-                                maxSeg = j;
+                                maxSeg = combList[j].StateIndex - 1;
                                 break;
                             }
                         }
@@ -6169,12 +6428,27 @@ namespace Rawr.Mage
                                 rowCombinatorialConstraint = newArr;
                             }
                             arr = rowCombinatorialConstraint;
-                            arr[ccCount].Row = rowCount++;
-                            arr[ccCount].MinSegment = i + 1;
-                            arr[ccCount].MaxSegment = maxSeg;
-                            arr[ccCount].MinTime = CooldownList[combList[i].Cooldown].Cooldown;
-                            arr[ccCount].MaxTime = CalculationOptions.FightDuration;
-                            rowCombinatorialConstraintCount = ccCount + 1;
+                            minSeg = combList[i].StateIndex;
+                            for (ccRow = 0; ccRow < ccCount; ccRow++)
+                            {
+                                if (arr[ccRow].MinSegment == minSeg && arr[ccRow].MaxSegment == maxSeg)
+                                {
+                                    break;
+                                }
+                            }
+                            if (ccRow == ccCount)
+                            {
+                                arr[ccCount].Row = rowCount++;
+                                arr[ccCount].MinSegment = minSeg;
+                                arr[ccCount].MaxSegment = maxSeg;
+                                arr[ccCount].MinTime = CooldownList[combList[i].Cooldown].Cooldown;
+                                arr[ccCount].MaxTime = CalculationOptions.FightDuration;
+                                rowCombinatorialConstraintCount = ccCount + 1;
+                            }
+                            else
+                            {
+                                arr[ccRow].MinTime = Math.Max(arr[ccRow].MinTime, CooldownList[combList[i].Cooldown].Cooldown);
+                            }
                         }
                     }
                 }
@@ -6189,11 +6463,33 @@ namespace Rawr.Mage
             {
                 if (restrictManaUse)
                 {
-                    int segments = segmentCooldowns ? SegmentList.Count : 1;
-                    rowSegmentManaOverflow = rowCount;
-                    rowCount += segments * manaSegments;
-                    rowSegmentManaUnderflow = rowCount;
-                    rowCount += segments * manaSegments - 1;
+                    if (CombinatorialSolver)
+                    {
+                        rowSegmentManaOverflow = rowCount;
+                        for (int i = 0; i < combStateList.Count; i++)
+                        {
+                            if (combStateList[i].OverflowConstraint >= 0)
+                            {
+                                combStateList[i].OverflowConstraint = rowCount++;
+                            }
+                        }
+                        rowSegmentManaUnderflow = rowCount;
+                        for (int i = 0; i < combStateList.Count; i++)
+                        {
+                            if (combStateList[i].UnderflowConstraint >= 0)
+                            {
+                                combStateList[i].UnderflowConstraint = rowCount++;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        int segments = segmentCooldowns ? SegmentList.Count : 1;
+                        rowSegmentManaOverflow = rowCount;
+                        rowCount += segments * manaSegments;
+                        rowSegmentManaUnderflow = rowCount;
+                        rowCount += segments * manaSegments - 1;
+                    }
                 }
             }
             if (needsManaSegmentConstraints)
@@ -6969,7 +7265,7 @@ namespace Rawr.Mage
                 return vx.Mps.CompareTo(vy.Mps);
             });
 
-            lp.SolvePrimalQuadratic(rowManaRegen, sort, 1 / (BaseStats.Mana * ManaRegenLPScaling), UseIncrementalOptimizations, CalculationOptions.TargetDamage > 0 ? lp.Columns + rowFightDuration : -1, CalculationOptions.TargetDamage);
+            lp.SolvePrimalQuadratic(rowManaRegen, sort, 1 / (BaseStats.Mana * ManaRegenLPScaling), UseIncrementalOptimizations || SimpleStacking, CalculationOptions.TargetDamage > 0 ? lp.Columns + rowFightDuration : -1, CalculationOptions.TargetDamage);
         }
         #endregion
 
