@@ -93,6 +93,8 @@ namespace Rawr.Hunter
         public float _masteryBase = 8f;
         public BossOptions BossOpts = null;
 
+        public float critRateOverall { get; set; }
+        public float critFromAgi { get; set; }
 
         private double _piercingShotsDPS;
         private double _piercingShotsDPSSteadyShot;
@@ -188,10 +190,8 @@ namespace Rawr.Hunter
         #endregion        
         
         #region Crit Stats
-        public float critRateOverall {get; set;}
         public float critBase { get; set; }
         public float critFromRacial { get; set; }
-        public float critFromAgi { get; set; }
         public float critFromRating { get; set; }
         public float critFromProcRating { get; set; }
         public float critFromLethalShots { get; set; }
@@ -377,88 +377,54 @@ namespace Rawr.Hunter
             //string format = "";
             CalcOpts = character.CalculationOptions as CalculationOptionsHunter;
 
-            // Basic Stats
-            //dictValues.Add("Health and Stamina", string.Format("{0:##,##0} : {1:##,##0}*{2:00,000} : Base Health" +
-            //                    "\r\n{3:00,000} : Stam Bonus",
-            //                    UnbuffedStats.Health, UnbuffedStats.Stamina, BaseHealth, StatConversion.GetHealthFromStamina(UnbuffedStats.Stamina)));
-            /*basefocus = 100f;
-            focus = basefocus + focusfromtalents;
-            dictValues.Add("Focus", string.Format("{0:000}*Includes:" +
-                            "\r\n{1:000} : Base" +
-                            "\r\n{2:000} : Talents",
-                            focus, basefocus, focusfromtalents));
-            dictValues.Add("Mana", BasicStats.Mana.ToString("F0"));
-            dictValues.Add("Armor", BasicStats.Armor.ToString("F0"));
-            dictValues.Add("Agility", BasicStats.Agility.ToString("F0"));
-            apTotal = apFromBase + apFromAGI + apFromGear;
-            dictValues.Add("Ranged Attack Power",string.Format("{0:00,000}*Includes:" +
-                            "\r\n{1:00,000} : Base" +
-                            "\r\n{2:00,000} : Agility" +
-                            "\r\n{3:00,000} : Gear / Spec" +
-                            "\r\nProcs were averaged out and added",
-                            apTotal, apFromBase, apFromAGI, apFromGear));
-            masteryoverall = masteryfrombase + masteryfromincrement;
-            dictValues.Add("Mastery", string.Format("{0:00.00%} : {1}*Includes:" +
-                            "\r\n{2:00.00} : Mastery Base" +
-                            "\r\n{3:00.00} : Mastery from Rating" +
-                            "\r\n{4:00.00%} : Spec base %" +
-                            "\r\n{5:00.00%} : Incremental %",
-                            masteryoverall, BasicStats.MasteryRating, _masteryBase, StatConversion.GetMasteryFromRating(BasicStats.MasteryRating),
-                            masteryfrombase, masteryfromincrement));
-            dictValues.Add("Intellect", BasicStats.Intellect.ToString("F0"));
-            // old
-            float HitPercent = StatConversion.GetHitFromRating(BasicStats.HitRating);
-            float HitPercBonus = BasicStats.PhysicalHit - HitPercent;
-            // Hit Soft Cap ratings check, how far from it
-            //float capA1 = StatConversion.WHITE_MISS_CHANCE_CAP[BossOpts.Level - character.Level];
-            //float convcapA1 = (float)Math.Ceiling(StatConversion.GetRatingFromHit(capA1));
-            //float sec2lastNumA1 = (convcapA1 - StatConversion.GetRatingFromHit(HitPercent) - StatConversion.GetRatingFromHit(HitPercBonus)) * -1;
-            /*dictValues.Add("Hit",
-                string.Format("{0:00.00%} : {1}*" + "{2:0.00%} : From Other Bonuses" +
-                                Environment.NewLine + "{3:0.00%} : Total Hit % Bonus" +
-                                Environment.NewLine + Environment.NewLine + "Ranged Cap: " +
-                                (sec2lastNumA1 > 0 ? "You can free {4:0} Rating"
-                                                   : "You need {4:0} more Rating"),
-                                StatConversion.GetHitFromRating(BasicStats.HitRating),
-                                BasicStats.HitRating,
-                                HitPercBonus,
-                                HitPercent + HitPercBonus,
-                                (sec2lastNumA1 > 0 ? sec2lastNumA1 : sec2lastNumA1 * -1)
-                            ));
+            //Basic Stats
+            dictValues.Add("Health and Stamina", string.Format("{0:##,##0}*{1:##,##0} : Stamina",
+                                Hunter.Health, Hunter.Stamina));
+            dictValues.Add("Focus", string.Format("{0:000}", Hunter.Focus.ToString("F0")));
+            dictValues.Add("Armor", Hunter.Armor.ToString("F0"));
+            dictValues.Add("Agility", Hunter.Agility.ToString("F0"));
+            dictValues.Add("Ranged Attack Power", string.Format("{0:00,000}", //+
+//                            "\r\n{1:00,000} : Base" +
+//                            "\r\n{2:00,000} : Agility" +
+//                            "\r\n{3:00,000} : Gear / Spec" +
+//                            "\r\nProcs were averaged out and added",
+                            Hunter.RangedAttackPower));//, apFromBase, apFromAGI, apFromGear));
+            dictValues.Add("Hit", string.Format("{0:00.00%} : {1}*" + 
+                                "Ranged Cap: " + Hunter.HitNeededLabel,
+                                Hunter.HitRatingPercent,
+                                Hunter.HitRating,
+                                Hunter.HitRatingNeeded));
              
             dictValues.Add("Crit", string.Format("{0:00.00%} : {1}*Includes:" +
-                                "\r\n{2:00.00%} : Base Crit" +
-                                "\r\n{3:00.00%} : Agility" +
-                                "\r\n{4:00.00%} : Rating" +
-                                "\r\n{5:00.00%} : Racial" +
-                                "\r\n{6:00.00%} : Proc Effects" +
-                                "\r\n{7:00.00%} : Lethal Shots" +
-                                "\r\n{8:00.00%} : Killer Instincts" +
-                                "\r\n{9:00.00%} : Master Marksman" +
-                                "\r\n{10:00.00%} : Master Tactician" +
-                                "\r\n{11:00.00%} : Buffs & Debuffs" +
-                                "\r\n{12:00.00%} : Level Adjustment" +
-                                "\r\n\r\nNote that individual Shots will handle their own crit caps",
-                                critRateOverall, BasicStats.CritRating,
-                                critBase, critFromAgi, critFromRating, critFromRacial,
-                                critFromProcRating, critFromLethalShots, critFromKillerInstincts,
-                                critFromMasterMarksman, critFromMasterTactician, critFromBuffs,
-                                critFromDepression * -1f));
-            dictValues.Add("Armor Penetration", string.Format("{0:00.00%}" + "*Enemy's Damage Reduction from armor: {1:00.00%}",
-                                BasicStats.ArmorPenetration /*+ StatConversion.GetArmorPenetrationFromRating(BasicStats.ArmorPenetrationRating),
-                                //BasicStats.ArmorPenetrationRating,
-                                damageReductionFromArmor));
-            dictValues.Add("Haste", string.Format("{0:00.00%} : {1:0}*Includes:" +
-                                "\r\n{2:00.00%} : Base" +
+                                "\r\n{2:00.00%} : Agility" +
                                 "\r\n{3:00.00%} : Rating" +
-                                "\r\n{4:00.00%} : Serpent's Swiftness" +
-                                "\r\n{5:00.00%} : Buffs" +
-                                "\r\n{6:00.00%} : Rapid Fire" +
-                                "\r\n{7:00.00%} : Proc Effects",
-                                BasicStats.PhysicalHaste, BasicStats.HasteRating,
-                                hasteFromBase, hasteFromRating, hasteFromTalentsStatic, hasteFromRangedBuffs,
-                                hasteFromRapidFire, hasteFromProcs));
-            dictValues.Add("Attack Speed", BaseAttackSpeed.ToString("F2"));
+                                "\r\n{4:00.00%} : Buffs" + 
+                                "\r\n{5:00.00%} : Target Modifier" +
+                                "\r\n\r\nNote that individual Shots will handle their own crit caps",
+                                Hunter.ChancetoCrit,
+                                Hunter.CritRating,
+                                Hunter.CritfromAgility,
+                                Hunter.CritfromRating,
+                                Hunter.PhysicalCrit,
+                                Hunter.CritModifiedfromTarget));
+            dictValues.Add("Haste", string.Format("{0:00.00%} : {1:0}",
+//                                "*Includes:" +
+//                                "\r\n{2:00.00%} : Base" +
+//                                "\r\n{3:00.00%} : Rating" +
+                                Hunter.Haste,
+                                Hunter.HasteRating));
+            dictValues.Add("Mastery", string.Format("{0:00.00%} : {1}* Includes:" +
+                                "\r\n{2:00.0000} : Mastery From Rating" +
+                                "\r\n{3:00.0000%} : Spec base %" +
+                                "\r\n{4:00.0000%} : Incremental %" +
+                                Hunter.MasteryLabel,
+                                Hunter.MasteryRatePercent,
+                                Hunter.MasteryRating,
+                                Hunter.MasteryRateConversion,
+                                Hunter.BaseMastery,
+                                Hunter.IncrementalmasterywithConversion,
+                                Hunter.MasteryRatePercent));
+            /* dictValues.Add("Attack Speed", BaseAttackSpeed.ToString("F2"));
             
             // Pet Stats
             dictValues.Add("Pet Health", string.Format("{0:000,000}*" +

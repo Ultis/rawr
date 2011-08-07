@@ -159,7 +159,7 @@ namespace Rawr.Hunter {
         #region Functions
         public virtual void Initialize(CharacterCalculationsHunter calcs) {
             this.calcs = calcs;
-            StatS = calcs.AverageStats;
+            StatS = /*calcs.AverageStats*/ calcs.MaximumStats;
 
             initAbilities();
             //doIterations();

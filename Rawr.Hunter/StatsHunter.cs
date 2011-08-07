@@ -26,6 +26,8 @@ namespace Rawr.Hunter
         FourPieceTier11,
         /// <summary>You have a 10% chance from your autoshots to make your next shot or Kill Command cost no focus.</summary>
         FourPieceTier12,
+        /// <summary>Unmitigated Agility used for Crit calculation</summary>
+        BaseAgilityforCrit
     }
     /// <summary>List of Hunter stats that are Multiplicative</summary>
     public enum MultiplicativeStatHunter : int
@@ -38,6 +40,8 @@ namespace Rawr.Hunter
         BonusFocusRegenMultiplier,
         /// <summary>Your Steady Shot and Cobra Shot have a 10% chance to trigger a Flaming Arrow, dealing 80% instant weapon damage as Fire.</summary>
         BonusFireWeaponDamage,
+        /// <summary>Bonus Haste Multiplier</summary>
+        BonusHasteMultiplier,
     }
     /// <summary>List of Hunter stats that are Inverse Multiplicative</summary>
     public enum InverseMultiplicativeStatHunter : int { }
@@ -614,6 +618,14 @@ namespace Rawr.Hunter
             get { return _rawAdditiveHunterData[(int)AdditiveStatHunter.FourPieceTier12]; }
             set { _rawAdditiveHunterData[(int)AdditiveStatHunter.FourPieceTier12] = value; }
         }
+        [DefaultValueAttribute(0f)]
+        [DisplayName("Hunter 4-Piece Tier 12")]
+        [Category("Hunter")]
+        public float BaseAgilityforCrit
+        {
+            get { return _rawAdditiveHunterData[(int)AdditiveStatHunter.BaseAgilityforCrit]; }
+            set { _rawAdditiveHunterData[(int)AdditiveStatHunter.BaseAgilityforCrit] = value; }
+        }
         #endregion
 
         #region ===== Multiplicative Stats ============
@@ -656,6 +668,16 @@ namespace Rawr.Hunter
         {
             get { return _rawAdditiveHunterData[(int)MultiplicativeStatHunter.BonusFireWeaponDamage]; }
             set { _rawAdditiveHunterData[(int)MultiplicativeStatHunter.BonusFireWeaponDamage] = value; }
+        }
+        /// <summary>Bonus Ranged Attack Power Multiplier</summary>
+        [DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Bonus Haste")]
+        [Category("Hunter")]
+        public float BonusHasteMultiplier
+        {
+            get { return _rawAdditiveHunterData[(int)MultiplicativeStatHunter.BonusHasteMultiplier]; }
+            set { _rawAdditiveHunterData[(int)MultiplicativeStatHunter.BonusHasteMultiplier] = value; }
         }
         #endregion
     }

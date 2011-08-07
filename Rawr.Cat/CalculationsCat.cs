@@ -734,10 +734,10 @@ namespace Rawr.Cat
             statsProcs.Stamina = (float)Math.Floor(statsProcs.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
             statsProcs.Strength = (float)Math.Floor(statsProcs.Strength * (1f + statsTotal.BonusStrengthMultiplier));
             statsProcs.Agility = (float)Math.Floor(statsProcs.Agility * (1f + statsTotal.BonusAgilityMultiplier));
-            statsProcs.AttackPower += statsProcs.Strength * 2f + statsProcs.Agility * 2f;
+            statsProcs.AttackPower += statsProcs.Strength * 1f + statsProcs.Agility * 2f;
             statsProcs.AttackPower = (float)Math.Floor(statsProcs.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
             statsProcs.Health += (float)Math.Floor(statsProcs.Stamina * 10f);
-            statsProcs.Armor += 2f * statsProcs.Agility;
+            //statsProcs.Armor += 2f * statsProcs.Agility;
             statsProcs.Armor = (float)Math.Floor(statsProcs.Armor * (1f + statsTotal.BonusArmorMultiplier));
             if (statsProcs.HighestSecondaryStat > 0)
             {

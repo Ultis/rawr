@@ -38,7 +38,7 @@ namespace Rawr.Hunter
             this.BossOpts = bossOpts;
             this.calculatedStats = calculatedStats;
             // 091109 Drizz: Added
-            this.calculatedStats.sequence = "Time  :Shot          :CastTime:Done   :CD Until" + Environment.NewLine;
+            //this.calculatedStats.sequence = "Time  :Shot          :CastTime:Done   :CD Until" + Environment.NewLine;
         }
 
         // 091109 Drizz: Added to be able to pull infor from "outside"
@@ -138,7 +138,7 @@ namespace Rawr.Hunter
 
             // set Steady Shot cast time so it's only static haste
             if (shotData.ContainsKey(Shots.SteadyShot)) {
-                shotData[Shots.SteadyShot].castTime = 2f / (1f + calculatedStats.hasteStaticTotal);
+                //shotData[Shots.SteadyShot].castTime = 2f / (1f + calculatedStats.hasteStaticTotal);
             }
 
             // set Steady Shot cast time so it's only static haste
@@ -147,7 +147,7 @@ namespace Rawr.Hunter
             //}
 
             // Set Auto Shot Speed to statically hasted value
-            AutoShotSpeed = calculatedStats.autoShotStaticSpeed;
+            AutoShotSpeed = 0f;//calculatedStats.autoShotStaticSpeed;
 
             #endregion
             #region Variable setup
@@ -487,7 +487,7 @@ namespace Rawr.Hunter
 
                     // Note down shot current time and shot used
                     // 091109 Drizz: If we now can get the debug info within Rawr, no need to go by debug option.
-                    if (calculatedStats.collectSequence) 
+                    /*if (calculatedStats.collectSequence) 
                     {
                         float timeUsed = 0;
                         float castEnd = currentTime;
@@ -527,6 +527,7 @@ namespace Rawr.Hunter
                         Debug.Flush();
                         #endif
                     }
+                     */
 
                     // Set L&L Timer after Black Arrow/Immolation Trap was used
                     if (thisShot == Shots.BlackArrow

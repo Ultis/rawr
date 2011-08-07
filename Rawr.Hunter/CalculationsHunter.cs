@@ -371,7 +371,7 @@ namespace Rawr.Hunter {
         }
 
         private bool HidingBadStuff { get { return HidingBadStuff_Def || HidingBadStuff_Spl || HidingBadStuff_PvP; } }
-        private static bool _HidingBadStuff_Def = true;
+        private static bool _HidingBadStuff_Def = false;
         internal static bool HidingBadStuff_Def { get { return _HidingBadStuff_Def; } set { _HidingBadStuff_Def = value; } }
         private static bool _HidingBadStuff_Spl = true;
         internal static bool HidingBadStuff_Spl { get { return _HidingBadStuff_Spl; } set { _HidingBadStuff_Spl = value; } }
@@ -514,6 +514,7 @@ namespace Rawr.Hunter {
             if (stats.RangedCritRating != 0) { return true; }
             if (stats.HasteRating != 0) { return true; }
             if (stats.RangedHasteRating != 0) { return true; }
+            if (stats.PhysicalHaste != 0) { return true; }
             if (stats.HitRating != 0) { return true; }
             if (stats.RangedHitRating != 0) { return true; }
             if (stats.MasteryRating != 0) { return true; }
@@ -903,13 +904,13 @@ namespace Rawr.Hunter {
                         comparisonFromShotRotationDPS(calculations.frostTrap),
                         //comparisonFromShotRotationDPS(calculations.volley),
                         comparisonFromShotRotationDPS(calculations.chimeraShot),
-                        comparisonFromDoubles("Autoshot", calculations.AutoshotDPS, 0),
-                        comparisonFromDoubles("WildQuiver", calculations.WildQuiverDPS, 0),
-                        comparisonFromDoubles("KillShotSub20", calculations.killShotSub20FinalGain, 0),
-                        comparisonFromDoubles("AspectBeastLoss", calculations.aspectBeastLostDPS, 0),
-                        comparisonFromDoubles("PetAutoAttack", 0, calculations.petWhiteDPS),
-                        comparisonFromDoubles("PetSkills", 0, calculations.petSpecialDPS),
-                        comparisonFromDoubles("KillCommand", 0, calculations.petKillCommandDPS),
+                        //comparisonFromDoubles("Autoshot", calculations.AutoshotDPS, 0),
+                        //comparisonFromDoubles("WildQuiver", calculations.WildQuiverDPS, 0),
+                        //comparisonFromDoubles("KillShotSub20", calculations.killShotSub20FinalGain, 0),
+                        //comparisonFromDoubles("AspectBeastLoss", calculations.aspectBeastLostDPS, 0),
+                        //comparisonFromDoubles("PetAutoAttack", 0, calculations.petWhiteDPS),
+                        //comparisonFromDoubles("PetSkills", 0, calculations.petSpecialDPS),
+                        //comparisonFromDoubles("KillCommand", 0, calculations.petKillCommandDPS),
                     };
                 #endregion
                 #region Item Budget
@@ -1476,7 +1477,9 @@ namespace Rawr.Hunter {
             calc.CalcOpts = calcOpts;
             //BossOptions bossOpts = character.BossOptions;
             //calc.BossOpts = bossOpts;
-            Stats stats = GetCharacterStats(character, additionalItem);
+            StatsHunter Stats = new StatsHunter();
+            Stats.Accumulate(GetCharacterStats(character, additionalItem));
+            calc.MaximumStats = Stats;
             HunterTalents talents = character.HunterTalents;
             //CombatFactors combatFactors = new CombatFactors(character, stats, calcOpts, bossOpts);
             //WhiteAttacks whiteAttacks = new WhiteAttacks(character, stats, combatFactors, calcOpts, bossOpts);
@@ -1487,7 +1490,7 @@ namespace Rawr.Hunter {
 
             Specialization hunterspec = GetSpecialization(talents);
 
-            
+            calc.Hunter = new HunterBase(character, calc.MaximumStats, talents, hunterspec, 88/*bossOpts.Level*/);
 
             return calc;
         }
@@ -1511,12 +1514,141 @@ namespace Rawr.Hunter {
                 HunterTalents talents = character.HunterTalents;
                 if (null == talents) { return statsTotal; }
 
-                statsTotal.Accumulate(BaseStats.GetBaseStats(character.Level, CharacterClass.Hunter, character.Race));
-                AccumulateItemStats(statsTotal, character, additionalItem);
-                statsTotal.Accumulate(GetRelevantStats(statsTotal));
+                Specialization tree = GetSpecialization(talents);
+                StatsHunter statsProcs = new StatsHunter();
+                CharacterCalculationsHunter calculatedStats = new CharacterCalculationsHunter();
+                if (null == calculatedStats)
+                {
+#if DEBUG
+                    throw new Exception("Character Calculations is Null");
+#else
+                    return statsTotal;
+#endif
+                }
+                BossOptions bossOpts = new BossOptions();
+                if (null == bossOpts)
+                {
+#if DEBUG
+                    throw new Exception("Boss Options is Null");
+#else
+                    return statsTotal;
+#endif
+                }
 
+                statsTotal.BonusAttackPowerMultiplier = (tree == Specialization.BeastMastery) ? 0.25f : 0f;
+                statsTotal.BonusAgilityMultiplier = talents.HuntingParty * 0.02f;
+                statsTotal.BonusStaminaMultiplier = talents.HunterVsWild * 0.05f;
+                statsTotal.BonusHasteMultiplier = talents.Pathing * 0.01f;
+
+                statsTotal.Accumulate(BaseStats.GetBaseStats(character.Level, CharacterClass.Hunter, character.Race));
+                statsTotal.Accumulate(GetItemStats(character, additionalItem));
                 AccumulateBuffsStats(statsTotal, character.ActiveBuffs);
-                //AccumulateTalents(statsTotal, character);
+
+                calculatedStats.critFromAgi = (float)Math.Floor(statsTotal.Agility * (1f + statsTotal.BonusAgilityMultiplier)
+                    //* (1f + ((tree == Specialization.Survival) ? 0.10f : 0f))
+                                                                          * (1f + (Character.ValidateArmorSpecialization(character, ItemType.Mail) ? 0.05f : 0f)));
+                statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
+                statsTotal.Strength = (float)Math.Floor(statsTotal.Strength * (1f + statsTotal.BonusStrengthMultiplier));
+                statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1f + statsTotal.BonusAgilityMultiplier)
+                                                                          * (1f + ((tree == Specialization.Survival) ? 0.10f : 0f))
+                                                                          * (1f + (Character.ValidateArmorSpecialization(character, ItemType.Mail) ? 0.05f : 0f))
+                                                                          );
+                statsTotal.AttackPower += (statsTotal.Agility * 2f - 20f); //-20 to account for the first 20 agi only giving 1 ap each
+                statsTotal.AttackPower = statsTotal.RangedAttackPower = (float)Math.Floor(statsTotal.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
+                statsTotal.Health += (float)Math.Floor((statsTotal.Stamina - 20f) * 14f + 20f);
+                statsTotal.Health = (float)Math.Floor(statsTotal.Health * (1f + statsTotal.BonusHealthMultiplier));
+                statsTotal.Armor = (float)Math.Floor(statsTotal.Armor * (1f + statsTotal.BonusArmorMultiplier)) + statsTotal.BonusArmor;
+
+                statsTotal.NatureResistance += statsTotal.NatureResistanceBuff;
+                statsTotal.FireResistance += statsTotal.FireResistanceBuff;
+                statsTotal.FrostResistance += statsTotal.FrostResistanceBuff;
+                statsTotal.ShadowResistance += statsTotal.ShadowResistanceBuff;
+                statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff;
+
+                int targetLevel = 88;//bossOpts.Level;
+                float hasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.Hunter);
+                statsTotal.RangedHaste = (1f + hasteBonus) * (1f + statsTotal.BonusHasteMultiplier) * (1f + statsTotal.PhysicalHaste) - 1f;
+                float hitBonus = StatConversion.GetPhysicalHitFromRating(statsTotal.HitRating) + statsTotal.PhysicalHit;
+                float chanceMiss = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[targetLevel - character.Level] - hitBonus);
+                float chanceAvoided = chanceMiss;
+
+                float rawChanceCrit = StatConversion.GetPhysicalCritFromRating(statsTotal.CritRating)
+                                    + StatConversion.GetCritFromAgility(calculatedStats.critFromAgi, CharacterClass.Hunter)
+                                    + statsTotal.PhysicalCrit
+                                    + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - character.Level];
+                calculatedStats.critRateOverall = rawChanceCrit * (1f - chanceAvoided);
+                float chanceHit = 1f - chanceAvoided;
+
+                Dictionary<Trigger, float> triggerIntervals = new Dictionary<Trigger, float>();
+                Dictionary<Trigger, float> triggerChances = new Dictionary<Trigger, float>();
+
+                CalculateTriggers(character, calculatedStats, statsTotal, calcOpts, bossOpts, triggerIntervals, triggerChances);
+
+                /*if (calcOpts.PetFamily == PETFAMILY.Wolf
+                    && calculatedStats.pet.priorityRotation.getSkillFrequency(PetAttacks.FuriousHowl) > 0)
+                {
+                    statsTotal.AddSpecialEffect(FuriousHowl);
+                }
+                */
+                statsProcs.Accumulate(GetSpecialEffectsStats(character, triggerIntervals, triggerChances, statsTotal, null));
+
+                #region Handle Results of Special Effects
+                // Base Stats
+                statsProcs.Stamina = (float)Math.Floor(statsProcs.Stamina * (1f + statsTotal.BonusStaminaMultiplier) * (1f + statsProcs.BonusStaminaMultiplier));
+                statsProcs.Strength = (float)Math.Floor(statsProcs.Strength * (1f + statsTotal.BonusStrengthMultiplier) * (1f + statsProcs.BonusStrengthMultiplier));
+                statsProcs.Agility = statsProcs.Agility * (1f + statsTotal.BonusAgilityMultiplier) * (1f + statsProcs.BonusAgilityMultiplier);
+                statsProcs.Agility += statsProcs.HighestStat * (1f + statsTotal.BonusAgilityMultiplier) * (1f + statsProcs.BonusAgilityMultiplier);
+                statsProcs.Agility += statsProcs.Paragon     * (1f + statsTotal.BonusAgilityMultiplier) * (1f + statsProcs.BonusAgilityMultiplier);
+                statsProcs.HighestStat = statsProcs.Paragon = 0f; // we've added them into agi so kill it
+                statsProcs.Health += (float)Math.Floor(statsProcs.Stamina * 10f);
+
+                float HighestSecondaryStatValue = statsProcs.HighestSecondaryStat; // how much HighestSecondaryStat to add
+                statsProcs.HighestSecondaryStat = 0f; // remove HighestSecondaryStat stat, since it's not needed
+                if (statsTotal.CritRating > statsTotal.HasteRating && statsTotal.CritRating > statsTotal.MasteryRating)
+                {
+                    statsTotal.CritRating += HighestSecondaryStatValue;
+                }
+                else if (statsTotal.HasteRating > statsTotal.CritRating && statsTotal.HasteRating > statsTotal.MasteryRating)
+                {
+                    statsTotal.HasteRating += HighestSecondaryStatValue;
+                }
+                else /*if (statsTotal.MasteryRating > statsTotal.CritRating && statsTotal.MasteryRating > statsTotal.HasteRating)*/
+                {
+                    statsTotal.MasteryRating += HighestSecondaryStatValue;
+                }
+
+
+                // Armor
+                statsProcs.Armor = statsProcs.Armor * (1f + statsTotal.BaseArmorMultiplier + statsProcs.BaseArmorMultiplier);
+                //statsProcs.BonusArmor += statsProcs.Agility * 2f;
+                statsProcs.BonusArmor = statsProcs.BonusArmor * (1f + statsTotal.BonusArmorMultiplier + statsProcs.BonusArmorMultiplier);
+                statsProcs.Armor += statsProcs.BonusArmor;
+                statsProcs.BonusArmor = 0; //it's been added to Armor so kill it
+
+                // Attack Power
+                statsProcs.BonusAttackPowerMultiplier *= (1f + statsProcs.BonusRangedAttackPowerMultiplier);
+                statsProcs.BonusRangedAttackPowerMultiplier = 0; // it's been added to Attack Power so kill it
+                float totalBAPMProcs = (1f + statsTotal.BonusAttackPowerMultiplier) * (1f + statsProcs.BonusAttackPowerMultiplier) - 1f;
+                float apFromAGIProcs = (1f + totalBAPMProcs) * (statsProcs.Agility) * 2f;
+                //float apFromSTRProcs    = (1f + totalBAPMProcs) * (statsProcs.Strength);
+                float apBonusOtherProcs = (1f + totalBAPMProcs) * (statsProcs.AttackPower + statsProcs.RangedAttackPower);
+                statsProcs.AttackPower = Math.Max(0f, apFromAGIProcs + /*apFromSTRProcs +*/ apBonusOtherProcs);
+                statsProcs.RangedAttackPower = statsProcs.AttackPower;
+                statsTotal.AttackPower *= (1f + statsProcs.BonusAttackPowerMultiplier); // Make sure the originals get your AP% procs
+
+                // Crit
+                statsProcs.PhysicalCrit += StatConversion.GetCritFromAgility(statsProcs.Agility, character.Class);
+                statsProcs.PhysicalCrit += StatConversion.GetCritFromRating(statsProcs.CritRating + statsProcs.RangedCritRating, character.Class);
+
+                // Haste
+                statsProcs.PhysicalHaste = (1f + statsProcs.PhysicalHaste)
+                                         * (1f + statsProcs.RangedHaste)
+                                         * (1f + StatConversion.GetPhysicalHasteFromRating(statsProcs.HasteRating, character.Class))
+                                         - 1f;
+                #endregion
+                // Add it back into the fold
+                statsTotal.Accumulate(statsProcs);
+
                 return statsTotal;
             }
             catch (Exception ex)
@@ -1547,55 +1679,66 @@ namespace Rawr.Hunter {
             //    out rangedWeaponSpeed, out rangedWeaponDamage, out autoShotSpeed,
             //    out autoShotsPerSecond, out specialShotsPerSecond, out totalShotsPerSecond, out shotsPerSecondWithoutHawk,
             //    out rotationTest);
+            try
+            {
+                // Generic
+                triggerIntervals[Trigger.Use] = 0f;
+                //
+                triggerIntervals[Trigger.PhysicalAttack] =
+                triggerIntervals[Trigger.RangedHit] =
+                triggerIntervals[Trigger.PhysicalHit] =
+                triggerIntervals[Trigger.RangedCrit] =
+                triggerIntervals[Trigger.PhysicalCrit] = 1f / totalShotsPerSecond;
+                //
+                triggerIntervals[Trigger.DoTTick] = talents.PiercingShots > 0 ? 1f : 0f;
+                triggerIntervals[Trigger.DamageDone] = Math.Max(0f, 1f / (totalShotsPerSecond + ((talents.PiercingShots > 0 ? 1f : 0f) > 0 ? 1f / (talents.PiercingShots > 0 ? 1f : 0f) : 0f)));
+                triggerIntervals[Trigger.DamageOrHealingDone] = Math.Max(0f, 1f / (totalShotsPerSecond + ((talents.PiercingShots > 0 ? 1f : 0f) > 0 ? 1f / (talents.PiercingShots > 0 ? 1f : 0f) : 0f))); // Need to add Self-Heals
+                // Pets only
+                //triggerIntervals[Trigger.MeleeHit]                              = 
+                //triggerIntervals[Trigger.MeleeCrit]                             = Math.Max(0f, calculatedStats.PetCalc.PetCompInterval);
+                // Hunter Specific
+                triggerIntervals[Trigger.HunterAutoShotHit] = 1f / autoShotsPerSecond;
+                triggerIntervals[Trigger.SteadyShotHit] = calculatedStats.steadyShot.Cd;
+                triggerIntervals[Trigger.CobraShotHit] = calculatedStats.cobraShot.Cd;
+                //triggerIntervals[Trigger.PetClawBiteSmackCrit]                  = Math.Max(0f, calculatedStats.PetCalc.PetClawBiteSmackInterval);
+                //triggerIntervals[Trigger.SerpentWyvernStingsDoDamage]           = (calculatedStats.serpentSting.Freq > 0 || calculatedStats.serpentSting.is_refreshed ? 3f : 0f);
+                triggerIntervals[Trigger.EnergyOrFocusDropsBelow20PercentOfMax] = 4f; // Approximating as 80% chance every 4 seconds. TODO: Put in some actual method of calculating this
 
-            // Generic
-            triggerIntervals[Trigger.Use]                                   = 0f;
-            //
-            triggerIntervals[Trigger.PhysicalAttack]                        = 
-            triggerIntervals[Trigger.RangedHit]                             = 
-            triggerIntervals[Trigger.PhysicalHit]                           = 
-            triggerIntervals[Trigger.RangedCrit]                            = 
-            triggerIntervals[Trigger.PhysicalCrit]                          = 1f / totalShotsPerSecond;
-            //
-            triggerIntervals[Trigger.DoTTick]                               = talents.PiercingShots > 0 ? 1f : 0f;
-            triggerIntervals[Trigger.DamageDone]                            = Math.Max(0f, 1f / (totalShotsPerSecond + ((talents.PiercingShots > 0 ? 1f : 0f) > 0 ? 1f / (talents.PiercingShots > 0 ? 1f : 0f) : 0f)));
-            triggerIntervals[Trigger.DamageOrHealingDone]                   = Math.Max(0f, 1f / (totalShotsPerSecond + ((talents.PiercingShots > 0 ? 1f : 0f) > 0 ? 1f / (talents.PiercingShots > 0 ? 1f : 0f) : 0f))); // Need to add Self-Heals
-            // Pets only
-            triggerIntervals[Trigger.MeleeHit]                              = 
-            triggerIntervals[Trigger.MeleeCrit]                             = Math.Max(0f, calculatedStats.pet.PetCompInterval);
-            // Hunter Specific
-            triggerIntervals[Trigger.HunterAutoShotHit]                     = 1f / autoShotsPerSecond;
-            triggerIntervals[Trigger.SteadyShotHit]                         = calculatedStats.steadyShot.Cd;
-            triggerIntervals[Trigger.CobraShotHit]                          = calculatedStats.cobraShot.Cd;
-            triggerIntervals[Trigger.PetClawBiteSmackCrit]                  = Math.Max(0f, calculatedStats.pet.PetClawBiteSmackInterval);
-            triggerIntervals[Trigger.SerpentWyvernStingsDoDamage]           = (calculatedStats.serpentSting.Freq > 0 || calculatedStats.serpentSting.is_refreshed ? 3f : 0f);
-            triggerIntervals[Trigger.EnergyOrFocusDropsBelow20PercentOfMax] = 4f; // Approximating as 80% chance every 4 seconds. TODO: Put in some actual method of calculating this
+                float ChanceToMiss = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[levelDif] - statsTotal.PhysicalHit);
+                float ChanceToSpellMiss = Math.Max(0f, StatConversion.GetSpellMiss(levelDif, false) - statsTotal.SpellHit);
 
-            float ChanceToMiss = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[levelDif] - statsTotal.PhysicalHit);
-            float ChanceToSpellMiss = Math.Max(0f, StatConversion.GetSpellMiss(levelDif, false) - statsTotal.SpellHit);
-
-            // Generic
-            triggerChances[Trigger.Use]                                   = 1f;
-            //
-            triggerChances[Trigger.PhysicalAttack]                        = 1f;
-            triggerChances[Trigger.RangedHit]                             = 
-            triggerChances[Trigger.PhysicalHit]                           = (1f - ChanceToMiss);
-            triggerChances[Trigger.RangedCrit]                            = 
-            triggerChances[Trigger.PhysicalCrit]                          = Math.Min(1f + critMOD, Math.Max(0f, statsTotal.PhysicalCrit));
-            //
-            triggerChances[Trigger.DoTTick]                               = 1f;
-            triggerChances[Trigger.DamageDone]                            = 1f;
-            triggerChances[Trigger.DamageOrHealingDone]                   = 1f;
-            // Pets only
-            triggerChances[Trigger.MeleeHit]                              = calculatedStats.pet.WhAtkTable.AnyLand;
-            triggerChances[Trigger.MeleeCrit]                             = Math.Min(1f + critMOD, Math.Max(0f, calculatedStats.pet.WhAtkTable.Crit));
-            // Hunter Specific
-            triggerChances[Trigger.HunterAutoShotHit]                     = (1f - ChanceToMiss);
-            triggerChances[Trigger.SteadyShotHit]                         = (1f - ChanceToMiss);
-            triggerChances[Trigger.CobraShotHit]                          = (1f - ChanceToMiss);
-            triggerChances[Trigger.PetClawBiteSmackCrit]                  = Math.Min(1f + critMOD, Math.Max(0f, calculatedStats.pet.WhAtkTable.Crit));
-            triggerChances[Trigger.SerpentWyvernStingsDoDamage]           = 1f;
-            triggerChances[Trigger.EnergyOrFocusDropsBelow20PercentOfMax] = 0.80f; // Approximating as 80% chance every 4 seconds. TODO: Put in some actual method of calculating this
+                // Generic
+                triggerChances[Trigger.Use] = 1f;
+                //
+                triggerChances[Trigger.PhysicalAttack] = 1f;
+                triggerChances[Trigger.RangedHit] =
+                triggerChances[Trigger.PhysicalHit] = (1f - ChanceToMiss);
+                triggerChances[Trigger.RangedCrit] =
+                triggerChances[Trigger.PhysicalCrit] = Math.Min(1f + critMOD, Math.Max(0f, statsTotal.PhysicalCrit));
+                //
+                triggerChances[Trigger.DoTTick] = 1f;
+                triggerChances[Trigger.DamageDone] = 1f;
+                triggerChances[Trigger.DamageOrHealingDone] = 1f;
+                // Pets only
+                //triggerChances[Trigger.MeleeHit]                              = calculatedStats.PetCalc.WhAtkTable.AnyLand;
+                //triggerChances[Trigger.MeleeCrit]                             = Math.Min(1f + critMOD, Math.Max(0f, calculatedStats.PetCalc.WhAtkTable.Crit));
+                // Hunter Specific
+                triggerChances[Trigger.HunterAutoShotHit] = (1f - ChanceToMiss);
+                triggerChances[Trigger.SteadyShotHit] = (1f - ChanceToMiss);
+                triggerChances[Trigger.CobraShotHit] = (1f - ChanceToMiss);
+                //triggerChances[Trigger.PetClawBiteSmackCrit]                  = Math.Min(1f + critMOD, Math.Max(0f, calculatedStats.PetCalc.WhAtkTable.Crit));
+                //triggerChances[Trigger.SerpentWyvernStingsDoDamage]           = 1f;
+                triggerChances[Trigger.EnergyOrFocusDropsBelow20PercentOfMax] = 0.80f; // Approximating as 80% chance every 4 seconds. TODO: Put in some actual method of calculating this
+            }
+            catch (Exception ex)
+            {
+                new Base.ErrorBox()
+                {
+                    Title = "Error in getting Special Effect Triggers",
+                    Function = "CalculateTriggers()",
+                    TheException = ex,
+                }.Show();
+            }
         }
 
         private StatsHunter GetSpecialEffectsStats(Character Char, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances, StatsHunter statsTotal, StatsHunter statsToProcess)
@@ -1608,47 +1751,77 @@ namespace Rawr.Hunter {
             StatsHunter statsProcs = new StatsHunter();
             float fightDuration_M = 450f;   //bossOpts.BerserkTimer;
             StatsHunter _stats, _stats2;
-            //
-            foreach (SpecialEffect effect in (statsToProcess != null ? statsToProcess.SpecialEffects() : statsTotal.SpecialEffects())) {
-                float fightDuration = fightDuration_M;
-                /*float oldArp = float.Parse(effect.Stats.ArmorPenetrationRating.ToString());
-                float arpToHardCap = StatConversion.RATING_PER_ARMORPENETRATION;
-                if (effect.Stats.ArmorPenetrationRating > 0) {
-                    float arpenBuffs = 0.0f;
-                    float currentArp = arpenBuffs + StatConversion.GetArmorPenetrationFromRating(statsTotal.ArmorPenetrationRating
-                        + (statsToProcess != null ? statsToProcess.ArmorPenetrationRating : 0f));
-                    arpToHardCap *= (1f - currentArp);
-                }*/
-                if (triggerIntervals.ContainsKey(effect.Trigger) && (triggerIntervals[effect.Trigger] > 0f || effect.Trigger == Trigger.Use))
+            try
+            {
+                foreach (SpecialEffect effect in (statsToProcess != null ? statsToProcess.SpecialEffects() : statsTotal.SpecialEffects()))
                 {
-                    float weight = 1f;
-                    switch (effect.Trigger) {
-                        case Trigger.Use:
-                            _stats = new StatsHunter();
-                            if (effect.Stats._rawSpecialEffectDataSize == 1 && statsToProcess == null) {
-                                float uptime = effect.GetAverageUptime(0f, 1f, speed, fightDuration);
-                                _stats.AddSpecialEffect(effect.Stats._rawSpecialEffectData[0]);
-                                _stats2 = GetSpecialEffectsStats(Char, triggerIntervals, triggerChances, statsTotal, _stats);
-                                _stats = _stats2 * uptime;
-                            } else {
-                                /*if (effect.Stats.ArmorPenetrationRating > 0 && arpToHardCap < effect.Stats.ArmorPenetrationRating) {
+                    float fightDuration = fightDuration_M;
+                    /*float oldArp = float.Parse(effect.Stats.ArmorPenetrationRating.ToString());
+                    float arpToHardCap = StatConversion.RATING_PER_ARMORPENETRATION;
+                    if (effect.Stats.ArmorPenetrationRating > 0) {
+                        float arpenBuffs = 0.0f;
+                        float currentArp = arpenBuffs + StatConversion.GetArmorPenetrationFromRating(statsTotal.ArmorPenetrationRating
+                            + (statsToProcess != null ? statsToProcess.ArmorPenetrationRating : 0f));
+                        arpToHardCap *= (1f - currentArp);
+                    }*/
+                    if (triggerIntervals.ContainsKey(effect.Trigger) && (triggerIntervals[effect.Trigger] > 0f || effect.Trigger == Trigger.Use))
+                    {
+                        float weight = 1f;
+                        switch (effect.Trigger)
+                        {
+                            case Trigger.Use:
+                                _stats = new StatsHunter();
+                                if (effect.Stats._rawSpecialEffectDataSize == 1 && statsToProcess == null)
+                                {
                                     float uptime = effect.GetAverageUptime(0f, 1f, speed, fightDuration);
-                                    weight = uptime;
-                                    _stats.ArmorPenetrationRating = arpToHardCap;
-                                } else {*/
-                                //    _stats = effect.GetAverageStats(0f, 1f, speed, fightDuration);
-                                _stats = effect.GetAverageStats(triggerIntervals, triggerChances, speed, fightDuration, 1f) as StatsHunter;
-                                //}
-                            }
-                            statsProcs.Accumulate(_stats, weight);
-                            _stats = null;
-                            break;
-                        case Trigger.RangedHit:
-                        case Trigger.PhysicalHit:
-                        case Trigger.PhysicalAttack:
-                            _stats = new StatsHunter();
-                            weight = 1.0f;
-                            {
+                                    _stats.AddSpecialEffect(effect.Stats._rawSpecialEffectData[0]);
+                                    _stats2 = GetSpecialEffectsStats(Char, triggerIntervals, triggerChances, statsTotal, _stats);
+                                    _stats = _stats2 * uptime;
+                                }
+                                else
+                                {
+                                    /*if (effect.Stats.ArmorPenetrationRating > 0 && arpToHardCap < effect.Stats.ArmorPenetrationRating) {
+                                        float uptime = effect.GetAverageUptime(0f, 1f, speed, fightDuration);
+                                        weight = uptime;
+                                        _stats.ArmorPenetrationRating = arpToHardCap;
+                                    } else {*/
+                                    //    _stats = effect.GetAverageStats(0f, 1f, speed, fightDuration);
+                                    _stats = effect.GetAverageStats(triggerIntervals, triggerChances, speed, fightDuration, 1f) as StatsHunter;
+                                    //}
+                                }
+                                statsProcs.Accumulate(_stats, weight);
+                                _stats = null;
+                                break;
+                            case Trigger.RangedHit:
+                            case Trigger.PhysicalHit:
+                            case Trigger.PhysicalAttack:
+                                _stats = new StatsHunter();
+                                weight = 1.0f;
+                                {
+                                    /*if (effect.Stats.ArmorPenetrationRating > 0 && arpToHardCap < effect.Stats.ArmorPenetrationRating) {
+                                        float uptime = effect.GetAverageUptime(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
+                                        weight = uptime;
+                                        _stats.ArmorPenetrationRating = arpToHardCap;
+                                    } else {*/
+                                    _stats = effect.GetAverageStats(triggerIntervals, triggerChances, speed, fightDuration, weight) as StatsHunter;
+                                    //}
+                                }
+                                statsProcs.Accumulate(_stats, weight);
+                                _stats = null;
+                                break;
+                            case Trigger.MeleeHit: // Pets Only
+                            case Trigger.MeleeCrit: // Pets Only
+                            case Trigger.RangedCrit:
+                            case Trigger.PhysicalCrit:
+                            case Trigger.DoTTick:
+                            case Trigger.DamageDone: // physical and dots
+                            case Trigger.DamageOrHealingDone: // physical and dots
+                            case Trigger.HunterAutoShotHit:
+                            case Trigger.SteadyShotHit:
+                            case Trigger.CobraShotHit:
+                            case Trigger.PetClawBiteSmackCrit:
+                                _stats = new StatsHunter();
+                                weight = 1.0f;
                                 /*if (effect.Stats.ArmorPenetrationRating > 0 && arpToHardCap < effect.Stats.ArmorPenetrationRating) {
                                     float uptime = effect.GetAverageUptime(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
                                     weight = uptime;
@@ -1656,49 +1829,34 @@ namespace Rawr.Hunter {
                                 } else {*/
                                 _stats = effect.GetAverageStats(triggerIntervals, triggerChances, speed, fightDuration, weight) as StatsHunter;
                                 //}
-                            }
-                            statsProcs.Accumulate(_stats, weight);
-                            _stats = null;
-                            break;
-                        case Trigger.MeleeHit: // Pets Only
-                        case Trigger.MeleeCrit: // Pets Only
-                        case Trigger.RangedCrit:
-                        case Trigger.PhysicalCrit:
-                        case Trigger.DoTTick:
-                        case Trigger.DamageDone: // physical and dots
-                        case Trigger.DamageOrHealingDone: // physical and dots
-                        case Trigger.HunterAutoShotHit:
-                        case Trigger.SteadyShotHit:
-                        case Trigger.CobraShotHit:
-                        case Trigger.PetClawBiteSmackCrit:
-                            _stats = new StatsHunter();
-                            weight = 1.0f;
-                            /*if (effect.Stats.ArmorPenetrationRating > 0 && arpToHardCap < effect.Stats.ArmorPenetrationRating) {
-                                float uptime = effect.GetAverageUptime(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
-                                weight = uptime;
-                                _stats.ArmorPenetrationRating = arpToHardCap;
-                            } else {*/
+                                statsProcs.Accumulate(_stats, weight);
+                                break;
+                            case Trigger.SerpentWyvernStingsDoDamage:
+                                _stats = new StatsHunter();
+                                weight = 1.0f;
+                                /*if (effect.Stats.ArmorPenetrationRating > 0 && arpToHardCap < effect.Stats.ArmorPenetrationRating) {
+                                    float uptime = effect.GetAverageUptime(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
+                                    weight = uptime;
+                                    _stats.ArmorPenetrationRating = arpToHardCap;
+                                } else {*/
                                 _stats = effect.GetAverageStats(triggerIntervals, triggerChances, speed, fightDuration, weight) as StatsHunter;
-                            //}
-                            statsProcs.Accumulate(_stats, weight);
-                            break;
-                        case Trigger.SerpentWyvernStingsDoDamage:
-                            _stats = new StatsHunter();
-                            weight = 1.0f;
-                            /*if (effect.Stats.ArmorPenetrationRating > 0 && arpToHardCap < effect.Stats.ArmorPenetrationRating) {
-                                float uptime = effect.GetAverageUptime(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
-                                weight = uptime;
-                                _stats.ArmorPenetrationRating = arpToHardCap;
-                            } else {*/
-                                _stats = effect.GetAverageStats(triggerIntervals, triggerChances, speed, fightDuration, weight) as StatsHunter;
-                            //}
-                            statsProcs.Accumulate(_stats, weight);
-                            break;
+                                //}
+                                statsProcs.Accumulate(_stats, weight);
+                                break;
+                        }
                     }
+                    //effect.Stats.ArmorPenetrationRating = oldArp;
                 }
-                //effect.Stats.ArmorPenetrationRating = oldArp;
             }
-
+            catch (Exception ex)
+            {
+                new Base.ErrorBox()
+                {
+                    Title = "Error in getting Special Effect information",
+                    Function = "GetSpecialEffectsStats()",
+                    TheException = ex,
+                }.Show();
+            }
             return statsProcs;
         }
 
