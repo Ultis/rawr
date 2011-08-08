@@ -23,6 +23,7 @@ namespace Rawr.UI
             ServerNames = new Dictionary<string, List<string>>();
             #region United States Servers
             ServerNames["US"] = new List<string>() {
+                #region United States
                 "Aegwynn",
                 "Aerie Peak",
                 "Agamaggan",
@@ -32,7 +33,6 @@ namespace Rawr.UI
                 "Alleria",
                 "Altar of Storms",
                 "Alterac Mountains",
-                "Aman'Thul",
                 "Andorhal",
                 "Anetheron",
                 "Antonidas",
@@ -51,7 +51,6 @@ namespace Rawr.UI
                 "Azuremyst",
                 "Baelgun",
                 "Balnazzar",
-                "Barthilas",
                 "Black Dragonflight",
                 "Blackhand",
                 "Blackrock",
@@ -69,7 +68,6 @@ namespace Rawr.UI
                 "Bronzebeard",
                 "Burning Blade",
                 "Burning Legion",
-                "Caelestrasz",
                 "Cairne",
                 "Cenarion Circle",
                 "Cenarius",
@@ -83,7 +81,6 @@ namespace Rawr.UI
                 "Dark Iron",
                 "Darkspear",
                 "Darrowmere",
-                "Dath'Remar",
                 "Dawnbringer",
                 "Deathwing",
                 "Demon Soul",
@@ -95,11 +92,9 @@ namespace Rawr.UI
                 "Draenor",
                 "Dragonblight",
                 "Dragonmaw",
-                "Draka",
-                "Drakkari",
                 "Drak'tharon",
                 "Drak'thul",
-                "Dreadmaul",
+                "Draka",
                 "Drenden",
                 "Dunemaul",
                 "Durotan",
@@ -120,7 +115,6 @@ namespace Rawr.UI
                 "Firetree",
                 "Fizzcrank",
                 "Frostmane",
-                "Frostmourne",
                 "Frostwolf",
                 "Galakrond",
                 "Garithos",
@@ -134,7 +128,6 @@ namespace Rawr.UI
                 "Greymane",
                 "Grizzly Hills",
                 "Gul'dan",
-                "Gundrak",
                 "Gurubashi",
                 "Hakkar",
                 "Haomarush",
@@ -144,14 +137,12 @@ namespace Rawr.UI
                 "Icecrown",
                 "Illidan",
                 "Jaedenar",
-                "Jubei'Thos",
                 "Kael'thas",
                 "Kalecgos",
                 "Kargath",
                 "Kel'Thuzad",
                 "Khadgar",
                 "Khaz Modan",
-                "Khaz'goroth",
                 "Kil'Jaeden",
                 "Kilrogg",
                 "Kirin Tor",
@@ -181,7 +172,6 @@ namespace Rawr.UI
                 "Moonrunner",
                 "Mug'thol",
                 "Muradin",
-                "Nagrand",
                 "Nathrezim",
                 "Nazgrel",
                 "Nazjatar",
@@ -193,15 +183,12 @@ namespace Rawr.UI
                 "Perenolde",
                 "Proudmoore",
                 "Quel'Dorei",
-                "Quel'Thalas",
-                "Ragnaros",
                 "Ravencrest",
                 "Ravenholdt",
                 "Rexxar",
                 "Rivendare",
                 "Runetotem",
                 "Sargeras",
-                "Saurfang",
                 "Scarlet Crusade",
                 "Scilla",
                 "Sen'Jin",
@@ -231,7 +218,6 @@ namespace Rawr.UI
                 "Tanaris",
                 "Terenas",
                 "Terokkar",
-                "Thaurissan",
                 "The Forgotten Coast",
                 "The Scryers",
                 "The Underbog",
@@ -264,6 +250,26 @@ namespace Rawr.UI
                 "Zangarmarsh",
                 "Zul'jin",
                 "Zuluhed",
+                #endregion
+                #region Oceanic
+                "Aman'Thul",
+                "Barthilas",
+                "Caelestrasz",
+                "Dath'Remar",
+                "Dreadmaul",
+                "Frostmourne",
+                "Gundrak",
+                "Jubei'Thos",
+                "Khaz'goroth",
+                "Nagrand",
+                "Saurfang",
+                "Thaurissan",
+                #endregion
+                #region Latin America
+                "Drakkari",
+                "Quel'Thalas",
+                "Ragnaros",
+                #endregion
             };
             ServerNames["US"].Sort();
             #endregion
@@ -545,10 +551,10 @@ namespace Rawr.UI
                 #endregion
                 // Following are possible removals
                 // Unable to locate server names at http://eu.battle.net/wow/en/status
-                "Molten Core",
-                "Shadowmoon",
-                "Stonemaul",
-                "Warsong",
+                //"Molten Core",
+                //"Shadowmoon",
+                //"Stonemaul",
+                //"Warsong",
             };
             ServerNames["EU"].Sort();
             #endregion
@@ -625,7 +631,7 @@ namespace Rawr.UI
                 // http://tw.battle.net/wow/zh/status
                 "世界之樹",
                 "亞雷戈斯",
-                "全球爭霸戰2",
+                //"全球爭霸戰2", Global Battle realm
                 "冬握湖",
                 "冰霜之刺",
                 "冰風崗哨",
