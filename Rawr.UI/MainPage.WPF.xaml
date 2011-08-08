@@ -85,6 +85,15 @@
                     <menu:MenuItem Header="Equip Item Set" Click="EquipItemSet_Click"/>
                     <menu:MenuItem Header="Compare Item Set to Equipped" Click="CompareItemSet_Click"/>
                     <menu:Separator />
+                    <menu:MenuItem Header="Reset Item Cost" Click="ResetItemCost_Click"/>
+                    <menu:MenuItem Header="Load Item Cost">
+                        <menu:MenuItem Header="Justice" Click="LoadItemCostJustice_Click"/>
+                        <menu:MenuItem Header="Valor" Click="LoadItemCostValor_Click"/>
+                        <menu:MenuItem Header="Honor" Click="LoadItemCostHonor_Click"/>
+                        <menu:MenuItem Header="Conquest" Click="LoadItemCostConquest_Click"/>
+                        <menu:MenuItem Header="Crystallized Firestone" Click="LoadItemCostCrystallizedFirestone_Click"/>
+                    </menu:MenuItem>
+                    <menu:Separator />
                     <menu:MenuItem Header="Compare Character to Another" Click="CompareCharacters_Click"/>
                 </splitButton:MenuButton.ButtonMenuItemsSource>
             </splitButton:MenuButton>
@@ -164,6 +173,15 @@
                 <MenuItem Header="Remove Item Set" Click="RemoveItemSet_Click"/>
                 <MenuItem Header="Equip Item Set" Click="EquipItemSet_Click"/>
                 <MenuItem Header="Compare Item Set to Equipped" Click="CompareItemSet_Click"/>
+                <Separator />
+                <MenuItem Header="Reset Item Cost" Click="ResetItemCost_Click"/>
+                <MenuItem Header="Load Item Cost">
+                    <MenuItem Header="Justice" Click="LoadItemCostJustice_Click"/>
+                    <MenuItem Header="Valor" Click="LoadItemCostValor_Click"/>
+                    <MenuItem Header="Honor" Click="LoadItemCostHonor_Click"/>
+                    <MenuItem Header="Conquest" Click="LoadItemCostConquest_Click"/>
+                    <MenuItem Header="Crystallized Firestone" Click="LoadItemCostCrystallizedFirestone_Click"/>
+                </MenuItem>
                 <Separator />
                 <MenuItem Header="Compare Character to Another" Click="CompareCharacters_Click"/>
             </MenuItem>

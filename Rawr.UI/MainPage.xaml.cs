@@ -1237,6 +1237,32 @@ If that is still not working for you, right-click anywhere within the web versio
             }
         }
         #endregion
+        #region Item Cost
+        private void ResetItemCost_Click(object sender, RoutedEventArgs args)
+        {
+            ItemCache.ResetItemCost();
+        }
+        private void LoadItemCostJustice_Click(object sender, RoutedEventArgs args)
+        {
+            ItemCache.LoadTokenItemCost("Justice Points");
+        }
+        private void LoadItemCostValor_Click(object sender, RoutedEventArgs args)
+        {
+            ItemCache.LoadTokenItemCost("Valor Points");
+        }
+        private void LoadItemCostHonor_Click(object sender, RoutedEventArgs args)
+        {
+            ItemCache.LoadPointItemCost("Honor");
+        }
+        private void LoadItemCostConquest_Click(object sender, RoutedEventArgs args)
+        {
+            ItemCache.LoadPointItemCost("Conquest");
+        }
+        private void LoadItemCostCrystallizedFirestone_Click(object sender, RoutedEventArgs args)
+        {
+            ItemCache.LoadAvailablePrerequisiteItemCost("Crystallized Firestone", Character);
+        }
+        #endregion
         private void CompareCharacters_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();

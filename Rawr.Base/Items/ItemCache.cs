@@ -48,6 +48,8 @@ namespace Rawr
         public static void LoadItemCost(TextReader reader) { _instance.LoadItemCost(reader); }
         public static void ResetItemCost() { _instance.ResetItemCost(); }
         public static void LoadTokenItemCost(string token) { _instance.LoadTokenItemCost(token); }
+        public static void LoadPointItemCost(string token) { _instance.LoadPointItemCost(token); }
+        public static void LoadAvailablePrerequisiteItemCost(string token, Character character) { _instance.LoadAvailablePrerequisiteItemCost(token, character); }
     }
 
     public class ItemCacheInstance
@@ -388,13 +390,84 @@ namespace Rawr
         {
             foreach (Item item in AllItems)
             {
-                item.Cost = 0.0f; 
-                if (item.LocationInfo[0].Source == ItemSource.Vendor)
+                item.Cost = 0.0f;
+                foreach (var li in item.LocationInfo)
                 {
-                    VendorItem vendor = item.LocationInfo[0] as VendorItem;
-                    int count;
-                    vendor.TokenMap.TryGetValue(token, out count);
-                    item.Cost = count;
+                    if (li.Source == ItemSource.Vendor)
+                    {
+                        VendorItem vendor = li as VendorItem;
+                        int count;
+                        if (vendor.TokenMap.TryGetValue(token, out count))
+                        {
+                            item.Cost = count;
+                        }
+                    }
+                }
+            }
+            // don't need to invalidate relevant caches, but still trigger event to refresh graphs etc.
+            if (ItemsChanged != null) ItemsChanged(null, null);
+        }
+
+        public void LoadPointItemCost(string token)
+        {
+            foreach (Item item in AllItems)
+            {
+                item.Cost = 0.0f;
+                foreach (var li in item.LocationInfo)
+                {
+                    if (li.Source == ItemSource.PVP)
+                    {
+                        PvpItem pvp = li as PvpItem;
+                        if (pvp.PointType == token)
+                        {
+                            item.Cost = pvp.Points;
+                        }
+                    }
+                }
+            }
+            // don't need to invalidate relevant caches, but still trigger event to refresh graphs etc.
+            if (ItemsChanged != null) ItemsChanged(null, null);
+        }
+
+        public void LoadAvailablePrerequisiteItemCost(string token, Character character)
+        {
+            foreach (Item item in AllItems)
+            {
+                item.Cost = 0.0f;
+                foreach (var li in item.LocationInfo)
+                {
+                    if (li.Source == ItemSource.Vendor)
+                    {
+                        VendorItem vendor = li as VendorItem;
+                        int count;
+                        if (vendor.TokenMap.TryGetValue(token, out count))
+                        {
+                            // determine if the other prerequisites are available
+                            bool valid = true;
+                            foreach (var t in vendor.TokenMap)
+                            {
+                                if (t.Key != token)
+                                {
+                                    // we have the name of the lower level item
+                                    // find this item
+                                    var pitem = AllItems.Find(i => i.Name == t.Key && i.ItemLevel < item.ItemLevel);
+                                    if (pitem != null)
+                                    {
+                                        // is it available
+                                        if (character.GetItemAvailability(new ItemInstance(pitem, 0, null, null, null, null, null, null)) == ItemAvailability.NotAvailable)
+                                        {
+                                            valid = false;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            if (valid)
+                            {
+                                item.Cost = count;
+                            }
+                        }
+                    }
                 }
             }
             // don't need to invalidate relevant caches, but still trigger event to refresh graphs etc.
