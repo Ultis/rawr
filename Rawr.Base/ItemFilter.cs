@@ -155,7 +155,7 @@ namespace Rawr
         public override void UpdateEnabled(bool? setValue)
         {
             if (Parent == null) ItemFilter.OtherEnabled = setValue.GetValueOrDefault(false);
-            else Parent.OtherRegexEnabled = setValue.GetValueOrDefault(false);
+            else Parent.UpdateOtherRegexEnabled(setValue.GetValueOrDefault(false), false);
             OnEnabledChanged(false);
         }
     }
@@ -277,11 +277,16 @@ namespace Rawr
             }
             set
             {
-                otherRegexEnabled = value;
-                if (regexList != null && regexList.other != null)
-                {
-                    regexList.other.OnEnabledChanged(true);
-                }
+                UpdateOtherRegexEnabled(value, true);
+            }
+        }
+
+        internal void UpdateOtherRegexEnabled(bool value, bool originator)
+        {
+            otherRegexEnabled = value;
+            if (regexList != null && regexList.other != null)
+            {
+                regexList.other.OnEnabledChanged(originator);
             }
         }
 

@@ -390,10 +390,10 @@ namespace Rawr.UI
         {
             //Character.InvalidateItemInstances(); // this is already called by OnCalculationsInvalidated
             Character.OnCalculationsInvalidated();
-            if (!Character.IsLoading)
+            /*if (!Character.IsLoading) // this is already called by OnCalculationsInvalidated
             {
                 ComparisonGraph.UpdateGraph();
-            }
+            }*/
         }
         #endregion
 
