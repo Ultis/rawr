@@ -1141,7 +1141,7 @@ namespace Rawr.DPSDK
                 // Improved Death Strike
                 if (character.DeathKnightTalents.ImprovedDeathStrike > 0)
                 {
-                    FullCharacterStats.BonusDamageDeathStrike += (.30f * character.DeathKnightTalents.ImprovedDeathStrike);
+                    FullCharacterStats.BonusDamageDeathStrike += (.40f * character.DeathKnightTalents.ImprovedDeathStrike);
                     // Also improves DS Healing.  Implemented in TankDK heals section.
                 }
 
