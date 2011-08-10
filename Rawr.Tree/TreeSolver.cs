@@ -497,7 +497,7 @@ namespace Rawr.Tree
         double getCritMultiplier(TreeStats stats, double extraCritChance, double livingSeed)
         {
             double crit = Math.Min(1, stats.SpellCrit + extraCritChance);
-            return crit * (2.0 + stats.BonusCritHealMultiplier) * (1 + livingSeed) + (1 - crit);
+            return crit * 2.0 * (1.0 + stats.BonusCritHealMultiplier) * (1 + livingSeed) + (1 - crit);
         }
 
         // cast Rejuvenation rjn times to get Nature's Bounty, then cast Nourish until it drops off
