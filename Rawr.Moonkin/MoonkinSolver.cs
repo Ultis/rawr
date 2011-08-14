@@ -422,7 +422,7 @@ namespace Rawr.Moonkin
                         rot.RotationData.WrathAvgHit * rot.RotationData.WrathCount + 
                         rot.RotationData.StarfallDamage * rot.RotationData.StarfallCasts;
                     float dragonwrathBaseDamage = baselineRotationDamage / rot.RotationData.Duration * dragonwrathProcInterval;
-                    float dragonwrathAverageDamage = (dragonwrathBaseDamage * (1 - currentCrit) + (dragonwrathBaseDamage * 1.5f) * currentCrit) * baseHit;
+                    float dragonwrathAverageDamage = (dragonwrathBaseDamage * (1 - currentCrit) + (dragonwrathBaseDamage * rot.Solver.Starfire.CriticalDamageModifier) * currentCrit) * baseHit;
                     float procsPerSecond = dragonwrathProc.GetAverageProcsPerSecond(dragonwrathProcInterval, 1f, 3.0f, calcs.FightLength * 60f);
                     currentTrinketDPS += procsPerSecond * dragonwrathAverageDamage;
                 }
