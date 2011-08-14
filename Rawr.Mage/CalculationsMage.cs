@@ -1102,7 +1102,7 @@ namespace Rawr.Mage
             // Dragonwrath
             if (statsTotal.DragonwrathProc > 0)
             {
-                statsTotal.BonusDamageMultiplier = (1 + statsTotal.BonusDamageMultiplier) * 1.01f - 1f;
+                statsTotal.BonusDamageMultiplier = (1 + statsTotal.BonusDamageMultiplier) * 1.1f - 1f;
             }
 
             int playerLevel = calculationOptions.PlayerLevel;

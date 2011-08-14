@@ -1117,6 +1117,10 @@ namespace Rawr.Mage
         public void CancelAsync()
         {
             cancellationPending = true;
+            if (stackingOptimizer != null)
+            {
+                stackingOptimizer.CancelAsync();
+            }
         }
 
         public List<EffectCooldown> GetEffectList(int effects)
@@ -2018,10 +2022,14 @@ namespace Rawr.Mage
             }
         }
 
+        private CooldownOptimizer stackingOptimizer;
+
         private CharacterCalculationsMage SolveGeneticCombinatorialProblem()
         {
-            CooldownOptimizer optimizer = new CooldownOptimizer(this);
-            return optimizer.Optimize();
+            stackingOptimizer = new CooldownOptimizer(this);
+            var ret = stackingOptimizer.Optimize();
+            stackingOptimizer = null;
+            return ret;
         }
 
         private CharacterCalculationsMage SolveCombinatorialFixedProblem()
