@@ -526,7 +526,9 @@ namespace Rawr.Optimizer
                     {
                         population = null;
                         values = null;
-                        return null;
+                        bestValuation = this.bestValuation;
+                        bestValue = this.bestValue;
+                        return bestIndividual;
                     }
                     ReportProgress((int)Math.Round((float)noImprove / ((float)cycleLimit / 100f)), this.bestValue);
 
