@@ -14,7 +14,7 @@ namespace Rawr.Moonkin
         public static float EUPHORIA_PERCENT = 0.08f;
 
         // Variables to calculate Dragonwrath procs per second
-        private static float DRAGONWRATH_PROC_RATE = 0.04f;
+        private static float DRAGONWRATH_PROC_RATE = 0.11f;
         private static SpecialEffect dragonwrathProc = new SpecialEffect(Trigger.DamageDone, new Stats { }, 0f, 0f, DRAGONWRATH_PROC_RATE);
         // A list of all the damage spells
         private Spell[] _spellData = null;
@@ -419,7 +419,8 @@ namespace Rawr.Moonkin
                         rot.RotationData.MoonfireAvgHit * rot.RotationData.MoonfireCasts +
                         rot.RotationData.StarfireAvgHit * rot.RotationData.StarfireCount +
                         rot.RotationData.StarSurgeAvgHit * rot.RotationData.StarSurgeCount +
-                        rot.RotationData.WrathAvgHit * rot.RotationData.WrathCount;
+                        rot.RotationData.WrathAvgHit * rot.RotationData.WrathCount + 
+                        rot.RotationData.StarfallDamage * rot.RotationData.StarfallCasts;
                     float dragonwrathBaseDamage = baselineRotationDamage / rot.RotationData.Duration * dragonwrathProcInterval;
                     float dragonwrathAverageDamage = (dragonwrathBaseDamage * (1 - currentCrit) + (dragonwrathBaseDamage * 1.5f) * currentCrit) * baseHit;
                     float procsPerSecond = dragonwrathProc.GetAverageProcsPerSecond(dragonwrathProcInterval, 1f, 3.0f, calcs.FightLength * 60f);
