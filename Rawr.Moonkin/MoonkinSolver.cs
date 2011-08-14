@@ -12,6 +12,10 @@ namespace Rawr.Moonkin
         public static float BaseMana;
         public static float OOC_PROC_CHANCE = 0.02f;
         public static float EUPHORIA_PERCENT = 0.08f;
+
+        // Variables to calculate Dragonwrath procs per second
+        private static float DRAGONWRATH_PROC_RATE = 0.04f;
+        private static SpecialEffect dragonwrathProc = new SpecialEffect(Trigger.DamageDone, new Stats { }, 0f, 0f, DRAGONWRATH_PROC_RATE);
         // A list of all the damage spells
         private Spell[] _spellData = null;
         private Spell[] SpellData
@@ -405,19 +409,19 @@ namespace Rawr.Moonkin
                     }
                 }
                 // Dragonwrath, Tarecgosa's Rest
-                // X% chance on any spell damage to proc Arcane damage equal to the damage done.
-                // This includes DoT ticks and has no ICD.
+                // X% chance on any spell damage to instantly duplicate any spell that does damage.
+                // If the spell is a DoT tick, it will do Arcane damage equal to the damage of the DoT.
+                // The effect has no ICD, it can miss and crit as per the wielding character's hit/crit rates.
                 if (calcs.BasicStats.DragonwrathProc > 0)
                 {
-                    float dragonwrathProcRate = 0.04f;
                     float dragonwrathProcInterval = rot.RotationData.Duration / (rot.RotationData.CastCount - rot.RotationData.InsectSwarmCasts + rot.RotationData.DotTicks);
                     float baselineRotationDamage = rot.RotationData.InsectSwarmAvgHit * rot.RotationData.InsectSwarmCasts +
                         rot.RotationData.MoonfireAvgHit * rot.RotationData.MoonfireCasts +
                         rot.RotationData.StarfireAvgHit * rot.RotationData.StarfireCount +
                         rot.RotationData.StarSurgeAvgHit * rot.RotationData.StarSurgeCount +
                         rot.RotationData.WrathAvgHit * rot.RotationData.WrathCount;
-                    float dragonwrathAverageDamage = baselineRotationDamage / rot.RotationData.Duration * dragonwrathProcInterval * baseHit;
-                    SpecialEffect dragonwrathProc = new SpecialEffect(Trigger.DamageDone, new Stats { ArcaneDamage = dragonwrathAverageDamage }, 0f, 0f, dragonwrathProcRate);
+                    float dragonwrathBaseDamage = baselineRotationDamage / rot.RotationData.Duration * dragonwrathProcInterval;
+                    float dragonwrathAverageDamage = (dragonwrathBaseDamage * (1 - currentCrit) + (dragonwrathBaseDamage * 1.5f) * currentCrit) * baseHit;
                     float procsPerSecond = dragonwrathProc.GetAverageProcsPerSecond(dragonwrathProcInterval, 1f, 3.0f, calcs.FightLength * 60f);
                     currentTrinketDPS += procsPerSecond * dragonwrathAverageDamage;
                 }
