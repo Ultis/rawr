@@ -2184,7 +2184,7 @@
         <ItemFilterRegex>
           <Name>Valor Points</Name>
           <Enabled>true</Enabled>
-          <Pattern>Valor Points|Faldren Tillsdale|Jamus'Vaz</Pattern>
+          <Pattern>Valor Points</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -2207,7 +2207,7 @@
         <ItemFilterRegex>
           <Name>Justice Points</Name>
           <Enabled>true</Enabled>
-          <Pattern>Justice Points|Magatha Silverton|Gunra</Pattern>
+          <Pattern>Justice Points</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>

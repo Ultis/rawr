@@ -463,7 +463,7 @@ namespace Rawr {
                 if (id == 68995)
                     crt = 82;
                 else if (id == 69167)
-                    crt = 93;
+                    crt = 92;
                 else
                     crt = int.Parse(match.Groups["amount"].Value);
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeCrit,
@@ -2260,7 +2260,7 @@ namespace Rawr {
                 if (id == 68972)
                     HSS = 508;
                 else if (id == 69113)
-                    HSS = 573;
+                    HSS = 575;
                 else
                     HSS = int.Parse(match.Groups["amount"].Value);
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use,

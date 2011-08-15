@@ -51068,6 +51068,7 @@
     <SetName>Magma Plated Battlegear</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
+    <RequiredClasses>DeathKnight</RequiredClasses>
     <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketColor2>Blue</SocketColor2>
@@ -51112,6 +51113,7 @@
     <SetName>Magma Plated Battlegear</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
+    <RequiredClasses>DeathKnight</RequiredClasses>
     <Bind>BoP</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketBonus>
@@ -51155,6 +51157,7 @@
     <SetName>Magma Plated Battlegear</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
+    <RequiredClasses>DeathKnight</RequiredClasses>
     <Bind>BoP</Bind>
     <SocketColor1>Meta</SocketColor1>
     <SocketColor2>Yellow</SocketColor2>
@@ -51257,6 +51260,7 @@
     <SetName>Magma Plated Battlegear</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
+    <RequiredClasses>DeathKnight</RequiredClasses>
     <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketBonus>
@@ -51562,6 +51566,7 @@
     <SetName>Magma Plated Battlearmor</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
+    <RequiredClasses>DeathKnight</RequiredClasses>
     <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketColor2>Blue</SocketColor2>
@@ -51606,6 +51611,7 @@
     <SetName>Magma Plated Battlearmor</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
+    <RequiredClasses>DeathKnight</RequiredClasses>
     <Bind>BoP</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketBonus>
@@ -51649,6 +51655,7 @@
     <SetName>Magma Plated Battlearmor</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
+    <RequiredClasses>DeathKnight</RequiredClasses>
     <Bind>BoP</Bind>
     <SocketColor1>Meta</SocketColor1>
     <SocketColor2>Yellow</SocketColor2>
@@ -51751,6 +51758,7 @@
     <SetName>Magma Plated Battlearmor</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
+    <RequiredClasses>DeathKnight</RequiredClasses>
     <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketBonus>
@@ -60101,7 +60109,7 @@
           </Stats>
           <Duration>0</Duration>
           <Cooldown>0</Cooldown>
-          <Chance>0.05</Chance>
+          <Chance>-1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
           <BypassCache>false</BypassCache>
@@ -77411,6 +77419,7 @@
     <SetName>Magma Plated Battlegear</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
+    <RequiredClasses>DeathKnight</RequiredClasses>
     <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketColor2>Blue</SocketColor2>
@@ -77469,6 +77478,7 @@
     <SetName>Magma Plated Battlegear</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
+    <RequiredClasses>DeathKnight</RequiredClasses>
     <Bind>BoP</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketBonus>
@@ -77526,6 +77536,7 @@
     <SetName>Magma Plated Battlegear</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
+    <RequiredClasses>DeathKnight</RequiredClasses>
     <Bind>BoP</Bind>
     <SocketColor1>Meta</SocketColor1>
     <SocketColor2>Yellow</SocketColor2>
@@ -77642,6 +77653,7 @@
     <SetName>Magma Plated Battlegear</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
+    <RequiredClasses>DeathKnight</RequiredClasses>
     <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketBonus>
@@ -77698,6 +77710,7 @@
     <SetName>Magma Plated Battlearmor</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
+    <RequiredClasses>DeathKnight</RequiredClasses>
     <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketColor2>Blue</SocketColor2>
@@ -77756,6 +77769,7 @@
     <SetName>Magma Plated Battlearmor</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
+    <RequiredClasses>DeathKnight</RequiredClasses>
     <Bind>BoP</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketBonus>
@@ -77813,6 +77827,7 @@
     <SetName>Magma Plated Battlearmor</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
+    <RequiredClasses>DeathKnight</RequiredClasses>
     <Bind>BoP</Bind>
     <SocketColor1>Meta</SocketColor1>
     <SocketColor2>Yellow</SocketColor2>
@@ -77929,6 +77944,7 @@
     <SetName>Magma Plated Battlearmor</SetName>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
+    <RequiredClasses>DeathKnight</RequiredClasses>
     <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketBonus>
@@ -98564,9 +98580,9 @@
     <Quality>Epic</Quality>
     <Type>TwoHandSword</Type>
     <Faction>Neutral</Faction>
-    <MinDamage>2003</MinDamage>
-    <MaxDamage>3006</MaxDamage>
-    <Speed>3.8</Speed>
+    <MinDamage>1615</MinDamage>
+    <MaxDamage>2999</MaxDamage>
+    <Speed>3.5</Speed>
     <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
@@ -99444,8 +99460,8 @@
     <Stats>
       <Agility>145</Agility>
       <Stamina>217</Stamina>
-      <MasteryRating>85</MasteryRating>
-      <CritRating>103</CritRating>
+      <CritRating>99</CritRating>
+      <HasteRating>92</HasteRating>
     </Stats>
     <Quality>Epic</Quality>
     <Type>Crossbow</Type>
@@ -99877,7 +99893,7 @@
         <SpecialEffect>
           <Trigger>Use</Trigger>
           <Stats>
-            <HighestSecondaryStat>2865</HighestSecondaryStat>
+            <HighestSecondaryStat>2875</HighestSecondaryStat>
           </Stats>
           <Duration>15</Duration>
           <Cooldown>120</Cooldown>
@@ -112200,8 +112216,8 @@
     <Stats>
       <Agility>128</Agility>
       <Stamina>192</Stamina>
-      <MasteryRating>75</MasteryRating>
-      <CritRating>91</CritRating>
+      <CritRating>88</CritRating>
+      <HasteRating>81</HasteRating>
     </Stats>
     <Quality>Epic</Quality>
     <Type>Crossbow</Type>
@@ -117988,7 +118004,7 @@
     <Stats>
       <Strength>223</Strength>
       <Stamina>480</Stamina>
-      <HitRating>142</HitRating>
+      <MasteryRating>142</MasteryRating>
       <Armor>2764</Armor>
       <DodgeRating>320</DodgeRating>
     </Stats>
@@ -118294,7 +118310,7 @@
         <SpecialEffect>
           <Trigger>MeleeCrit</Trigger>
           <Stats>
-            <CritRating>93</CritRating>
+            <CritRating>92</CritRating>
           </Stats>
           <Duration>20</Duration>
           <Cooldown>0</Cooldown>
@@ -118397,7 +118413,7 @@
     <Stats>
       <Strength>255</Strength>
       <Stamina>542</Stamina>
-      <HitRating>163</HitRating>
+      <MasteryRating>163</MasteryRating>
       <Armor>2871</Armor>
       <DodgeRating>361</DodgeRating>
     </Stats>
@@ -118748,7 +118764,6 @@
     <SetName>Bloodthirsty Embersilk</SetName>
     <Type>None</Type>
     <Faction>Neutral</Faction>
-    <Unique>true</Unique>
     <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
@@ -118778,7 +118793,6 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
-    <Unique>true</Unique>
     <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
@@ -118808,7 +118822,6 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
-    <Unique>true</Unique>
     <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
@@ -131480,6 +131493,7 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
     <Name>[Downloading from Wowhead]</Name>
     <Id>0</Id>
@@ -131847,7 +131861,7 @@
     <IconPath>inv_bracer_leather_pvprogue_c_01</IconPath>
     <Stats>
       <Agility>212</Agility>
-      <Stamina>319</Stamina>
+      <Stamina>303</Stamina>
       <HitRating>142</HitRating>
       <Resilience>142</Resilience>
       <Armor>771</Armor>
@@ -131878,7 +131892,7 @@
     <IconPath>inv_bracer_leather_pvprogue_c_01</IconPath>
     <Stats>
       <Agility>212</Agility>
-      <Stamina>319</Stamina>
+      <Stamina>303</Stamina>
       <HasteRating>142</HasteRating>
       <Resilience>142</Resilience>
       <Armor>771</Armor>
@@ -132255,7 +132269,7 @@
     <IconPath>inv_boots_leather_pvprogue_c_01</IconPath>
     <Stats>
       <Agility>263</Agility>
-      <Stamina>425</Stamina>
+      <Stamina>404</Stamina>
       <HasteRating>169</HasteRating>
       <Resilience>189</Resilience>
       <Armor>1212</Armor>
@@ -132289,7 +132303,7 @@
     <IconPath>inv_boots_leather_pvprogue_c_01</IconPath>
     <Stats>
       <Agility>263</Agility>
-      <Stamina>425</Stamina>
+      <Stamina>404</Stamina>
       <CritRating>169</CritRating>
       <Resilience>189</Resilience>
       <Armor>1212</Armor>
@@ -132688,7 +132702,7 @@
     <DisplaySlot>6</DisplaySlot>
     <IconPath>inv_belt_plate_pvppaladin_c_01</IconPath>
     <Stats>
-      <Stamina>425</Stamina>
+      <Stamina>404</Stamina>
       <Intellect>263</Intellect>
       <CritRating>169</CritRating>
       <Resilience>189</Resilience>
@@ -133763,7 +133777,7 @@
     <DisplaySlot>8</DisplaySlot>
     <IconPath>inv_boots_leather_pvpdruid_c_01</IconPath>
     <Stats>
-      <Stamina>425</Stamina>
+      <Stamina>404</Stamina>
       <Intellect>263</Intellect>
       <HasteRating>169</HasteRating>
       <Resilience>189</Resilience>
@@ -136915,7 +136929,7 @@
     <IconPath>inv_belt_leather_pvprogue_c_01</IconPath>
     <Stats>
       <Agility>263</Agility>
-      <Stamina>425</Stamina>
+      <Stamina>404</Stamina>
       <HitRating>169</HitRating>
       <Resilience>189</Resilience>
       <Armor>992</Armor>
@@ -136949,7 +136963,7 @@
     <IconPath>inv_belt_leather_pvprogue_c_01</IconPath>
     <Stats>
       <Agility>263</Agility>
-      <Stamina>425</Stamina>
+      <Stamina>404</Stamina>
       <CritRating>169</CritRating>
       <Resilience>189</Resilience>
       <Armor>992</Armor>

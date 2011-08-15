@@ -253,7 +253,7 @@ namespace Rawr.Bosses
             Comment = "Main Tank is tanking Beth'tilac, Off Tank is tanking adds during Cinderweb phase.";
             #endregion
             #region Basics
-            Health = new float[] { 20871756f, 62615268f, 29220458f, 89500000f };
+            Health = new float[] { 20871756f, 62615268f, 32839376f, 98518128f };
             MobType = (int)MOB_TYPES.BEAST;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 7 * 60, 7 * 60, 7 * 60, 7 * 60 };
