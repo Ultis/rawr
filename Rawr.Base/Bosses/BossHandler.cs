@@ -420,13 +420,13 @@ namespace Rawr {
         };
         public enum TierLevels : int { T11_10 = 0, T11_25, T11_10H, T11_25H, T12_10, T12_25, T12_10H, T12_25H }
         public static readonly float[] StandardMeleePerHit = new float[] {
-            112000f, // T11_10 // 4.2 lowered the base damage on all T11 Normal mode damage by 20%
-            140000f, // T11_25 // 4.2 lowered the base damage on all T11 Normal mode damage by 20%
-//            140000f, // T11_10,  //     Tested and verified, Used a Magmaw Kill from April, 2011
-//            175000f, // T11_25,  //     Tested and verified, Used a Magmaw Kill from April, 2011
-            200000f, // T11_10H, // Not tested and verified, assumed based on other values
-            225000f, // T11_25H, //     Tested and verified, Used a Magmaw Kill from April, 2011
-            230000f, // T12_10,  // Not Tested and verified, initial numbers
+             95192.308f, // T11_10 // 4.2 lowered the base damage on all T11 Normal mode damage by 20%
+            118990.385f, // T11_25 // 4.2 lowered the base damage on all T11 Normal mode damage by 20%
+//            114230.769f, // T11_10,  //     Tested and verified, Used a Magmaw Kill from April, 2011
+//            142788.462f, // T11_25,  //     Tested and verified, Used a Magmaw Kill from April, 2011
+            163186.923f, // T11_10H, // Not tested and verified, assumed based on other values
+            183585.385f, // T11_25H, //     Tested and verified, Used a Magmaw Kill from April, 2011
+            115178.603f, // T12_10,  // Not Tested and verified, initial numbers
             255000f, // T12_25,  // Not Tested and verified, initial numbers
             300000f, // T12_10H, // Not Tested and verified, initial numbers
             325000f, // T12_25H, // Not Tested and verified, initial numbers
