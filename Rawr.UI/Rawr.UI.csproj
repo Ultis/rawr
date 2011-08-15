@@ -316,6 +316,7 @@
     <Compile Include="StatTooltip.xaml.cs">
       <DependentUpon>StatTooltip.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UIUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="BossHandler\BossPicker.xaml">
@@ -592,6 +593,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\Print.png" />
     <Resource Include="Images\Rawr.Splash.png" />
     <Resource Include="Images\across-left-green.png" />
     <Resource Include="Images\across-left-grey.png" />

@@ -33,37 +33,52 @@
 
         <TextBlock x:Name="CurrentScoreLabel" HorizontalAlignment="Center" Margin="4,4,2,2" VerticalAlignment="Center" FontSize="12" Text="Current: 99999" FontWeight="Bold"/>
         <TextBlock x:Name="OptimizedScoreLabel" HorizontalAlignment="Center" Margin="2,4,4,2" VerticalAlignment="Center" Grid.Column="1" FontSize="12" Text="Optimized: 99999" d:LayoutOverrides="Width" FontWeight="Bold"/>
-        <basics:TabControl Margin="4,2,4,2" Grid.Row="1" Grid.ColumnSpan="2" Width="680">
-            <basics:TabItem Header="Items">
+        <basics:TabControl Margin="4,2,4,2" Grid.Row="1" Grid.ColumnSpan="2" Width="680" x:Name="Tabs">
+            <basics:TabItem Header="Items" x:Name="ItemsTab">
                 <ScrollViewer d:LayoutOverrides="Margin" VerticalScrollBarVisibility="Auto" BorderThickness="0,0,0,0">
-                    <Grid x:Name="ItemGrid">
+                    <Grid x:Name="ItemGrid">                        
+                        <Grid.RowDefinitions>                            
+                            <RowDefinition Height="0" />                            
+                            <RowDefinition Height="0" />                            
+                        </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="CharName1" FontSize="16" FontWeight="Bold" VerticalAlignment="Top" Grid.ColumnSpan="2" />
+                        <TextBlock x:Name="ItemCurrentScoreLabel" Margin="4,4,2,2" FontSize="12" FontWeight="Bold" HorizontalAlignment="Center" Text="{Binding ElementName=CurrentScoreLabel, Path=Text}" Grid.Row="1" />
+                        <TextBlock x:Name="ItemOptimizedScoreLabel" Grid.Column="1" Margin="2,4,4,2" FontSize="12" FontWeight="Bold" HorizontalAlignment="Center" Text="{Binding ElementName=OptimizedScoreLabel, Path=Text}" Grid.Row="1" />
                     </Grid>
                 </ScrollViewer>
             </basics:TabItem>
-            <basics:TabItem Header="Calculations">
-                <Grid>
+            <basics:TabItem Header="Calculations" x:Name="CalculationsTab">
+                <Grid x:Name="CalcGrid">
+                    <Grid.RowDefinitions>                       
+                        <RowDefinition Height="0" />                       
+                        <RowDefinition Height="*" />                       
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <local:CalculationDisplay x:Name="CurrentCalculations" Margin="0,0,2,0"/>
-                    
-                    <local:CalculationDisplay x:Name="OptimizedCalculations" Grid.Column="1" Margin="2,0,0,0"/>
+                    <TextBlock x:Name="CharName2" FontSize="16" FontWeight="Bold" VerticalAlignment="Top" Grid.ColumnSpan="2" />
+                    <local:CalculationDisplay x:Name="CurrentCalculations" Margin="0,0,2,0" Grid.Row="1"/>
+                    <local:CalculationDisplay x:Name="OptimizedCalculations" Grid.Column="1" Margin="2,0,0,0" Grid.Row="1"/>
                 </Grid>
             </basics:TabItem>
-            <basics:TabItem Header="Talents">
-                <Grid>
+            <basics:TabItem Header="Talents" x:Name="TalentsTab">
+                <Grid x:Name="TalentGrid">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <local:TalentPicker x:Name="CurrentTalents" Margin="0,0,2,0"/>
-
-                    <local:TalentPicker x:Name="OptimizedTalents" Grid.Column="1" Margin="2,0,0,0"/>
+                    <TextBlock x:Name="CharName3" FontSize="16" FontWeight="Bold" VerticalAlignment="Top" Grid.ColumnSpan="2" />
+                    <local:TalentPicker x:Name="CurrentTalents" Margin="0,0,2,0" Grid.Row="1"/>
+                    <local:TalentPicker x:Name="OptimizedTalents" Grid.Column="1" Margin="2,0,0,0" Grid.Row="1"/>
                 </Grid>
             </basics:TabItem>
             <basics:TabItem Header="Buffs">
@@ -78,6 +93,14 @@
                 </Grid>
             </basics:TabItem>
         </basics:TabControl>
+        <Button x:Name="PrintButton" Grid.ColumnSpan="2" Grid.Row="2" Height="36" Margin="2,2,4,4" Padding="8,3" Click="Print_Click" HorizontalAlignment="Left" ToolTipService.ToolTip="Print" VerticalAlignment="Center">
+            <!--IFSL
+            <Image Source="/Rawr.UI;component/Images/print.png" />
+            ENDIFSL-->
+            <!--IFWPF-->
+            <Image Source="/Rawr.UI.WPF;component/Images/print.png" />
+            <!--ENDIFWPF-->
+        </Button>
         <Button x:Name="OKButton" Content="Load Optimized" Click="OKButton_Click" Height="23" HorizontalAlignment="Center" Grid.Row="2" Margin="2,2,4,4" VerticalAlignment="Center" Grid.Column="1" Padding="8,3" />
         <Button x:Name="BT_StoreIt" Content="Store Item Set (only stores item set)" Click="BT_StoreIt_Click" Height="23" HorizontalAlignment="Center" Grid.ColumnSpan="2" Grid.Row="2" Margin="2,2,4,4" VerticalAlignment="Center" Grid.Column="0" Padding="8,3" />
         <Button x:Name="CancelButton" Content="Keep Existing" Click="CancelButton_Click"  Margin="4,2,2,4" Grid.Row="2" HorizontalAlignment="Center" Grid.Column="0" d:LayoutOverrides="VerticalMargin" Padding="8,3" />

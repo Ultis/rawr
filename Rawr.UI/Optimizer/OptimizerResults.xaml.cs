@@ -36,7 +36,7 @@ namespace Rawr.UI
             CurrentCharacter = oldCharacter;
             BestCharacter = newCharacter;
 
-            int rows = 0;
+            int rows = ItemGrid.RowDefinitions.Count;
             for (int i = 0; i < Character.OptimizableSlotCount; i++)
             {
                 CharacterSlot slot = (CharacterSlot)i;
@@ -100,6 +100,8 @@ namespace Rawr.UI
             OptimizedCalculations.SetCalculations(optimizedCalc.GetCharacterDisplayCalculationValues());
             OptimizedTalents.Character = newCharacter; //OptimizedTalents.IsEnabled = false;
             OptimizedBuffs.Character = newCharacter; //OptimizedBuffs.IsEnabled = false;
+
+            CharName1.Text = CharName2.Text = CharName1.Text = oldCharacter.Name;
         }
         public CharacterCalculationsBase currentCalc;
         public CharacterCalculationsBase optimizedCalc;
@@ -118,6 +120,56 @@ namespace Rawr.UI
         {
             WeWantToStoreIt = true;
             this.DialogResult = true;
+        }
+
+        private void Print_Click(object sender, RoutedEventArgs e)
+        {
+            PrintButton.IsEnabled = false;
+#if !SILVERLIGHT
+            Mouse.OverrideCursor = Cursors.Wait;
+#endif
+            try
+            {
+                TabItem item = (TabItem)Tabs.SelectedItem;
+                Panel panelToPrint;
+                int hiddenRowCount = 1;
+
+                switch (item.Name)
+                {
+                    case "ItemsTab":
+                        panelToPrint = ItemGrid;
+                        hiddenRowCount = 2;
+                        break;
+                    case "CalculationsTab":
+                        panelToPrint = CalcGrid;
+                        break;
+                    case "TalentsTab":
+                        panelToPrint = TalentGrid;
+                        break;
+                    default:
+                        return;
+                }
+
+                // add the header
+                for (int index = 0; index < hiddenRowCount; index++)
+                {
+                    ((Grid)panelToPrint).RowDefinitions[index].Height = GridLength.Auto;
+                }
+
+                panelToPrint.Print();
+                // remove the header
+                for (int index = 0; index < hiddenRowCount; index++)
+                {
+                    ((Grid)panelToPrint).RowDefinitions[index].Height = new GridLength(0);
+                }
+            }
+            finally
+            {
+                PrintButton.IsEnabled = true;
+#if !SILVERLIGHT
+                Mouse.OverrideCursor = null;
+#endif
+            }
         }
     }
 }

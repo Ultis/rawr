@@ -126,6 +126,8 @@
     <Compile Include="Abilites\SteadyShot.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="HunterBase.cs" />
+    <Compile Include="PetBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Pet\PetCalculations.cs" />
     <Compile Include="Pet\PetSkill.cs" />

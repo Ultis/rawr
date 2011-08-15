@@ -62,6 +62,7 @@
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\binaries\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
+    <Reference Include="ReachFramework" />
     <Reference Include="SplitButtonWpf">
       <HintPath>..\binaries\SplitButtonWpf.dll</HintPath>
     </Reference>
@@ -75,6 +76,7 @@
     <Reference Include="System.Net">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Printing" />
     <Reference Include="System.Runtime.Serialization">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
@@ -339,6 +341,7 @@
     <Compile Include="StatTooltip.xaml.cs">
       <DependentUpon>StatTooltip.WPF.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UIUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rawr.DPSWarr\Rawr.DPSWarr.WPF.csproj">
@@ -763,6 +766,9 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Print.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

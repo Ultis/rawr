@@ -86,13 +86,11 @@
                     <menu:MenuItem Header="Compare Item Set to Equipped" Click="CompareItemSet_Click"/>
                     <menu:Separator />
                     <menu:MenuItem Header="Reset Item Cost" Click="ResetItemCost_Click"/>
-                    <menu:MenuItem Header="Load Item Cost">
-                        <menu:MenuItem Header="Justice" Click="LoadItemCostJustice_Click"/>
-                        <menu:MenuItem Header="Valor" Click="LoadItemCostValor_Click"/>
-                        <menu:MenuItem Header="Honor" Click="LoadItemCostHonor_Click"/>
-                        <menu:MenuItem Header="Conquest" Click="LoadItemCostConquest_Click"/>
-                        <menu:MenuItem Header="Crystallized Firestone" Click="LoadItemCostCrystallizedFirestone_Click"/>
-                    </menu:MenuItem>
+                    <menu:MenuItem Header="Load Justice Cost" Click="LoadItemCostJustice_Click"/>
+                    <menu:MenuItem Header="Load Valor Cost" Click="LoadItemCostValor_Click"/>
+                    <menu:MenuItem Header="Load Honor Cost" Click="LoadItemCostHonor_Click"/>
+                    <menu:MenuItem Header="Load Conquest Cost" Click="LoadItemCostConquest_Click"/>
+                    <menu:MenuItem Header="Load Crystallized Firestone Cost" Click="LoadItemCostCrystallizedFirestone_Click"/>
                     <menu:Separator />
                     <menu:MenuItem Header="Compare Character to Another" Click="CompareCharacters_Click"/>
                 </splitButton:MenuButton.ButtonMenuItemsSource>
