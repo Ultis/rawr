@@ -160,6 +160,59 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes()
         {
+#region Rawr 4.2.4 (August 15, 2011) [r62567]
+VNStuff.Add("Rawr 4.2.4 (August 15, 2011) [r62567]",
+@"Cataclysm Release
+Rawr.Base:
+- Menu options for loading item costs.
+- Improved filter manipulation performance.
+- Updated missing Chinese (about 200 servers) and Tiawanese (about 20 servers) server names.
+- Printing support for optimizer results.
+
+Rawr.Items:
+- Unheeded Warning's proc was hotfixed to proc 1926 Attack Power
+- Incorrect Nature damaging proc from DMC:Hurricane
+- Updated several items that were hotfixed recently
+- Finalized Heroic trinket values that were hotfixed shortly after the release of 4.2 (values were guesstimates at the time)
+- Corrected several 371 PvP leather off-pieces that have lower than anticipated Stamina
+
+Rawr.BossHandler:
+- Tier 11 was over exaggering on the surviability values (Basing all damage values around the two hardest hitting bosses of the content) Fixed so that it takes the weakest boss damage and then multiplies the damage on a per boss basis
+- Updated Heroic 25 Beth'tilac's health value
+- Fixed some Boss Damage numbers for Firelands Bosses
+
+Rawr.Bear:
+- Fixed so that the expected Survival amount needed from the Boss Handler properly updates the Survivability number in the Options Menu
+
+Rawr.Mage:
+- Combinatorial solver available in advanced options, only works in async mode currently. It's a good alternative for solving optimal cooldown stacking (not any faster than full advanced solver, but is guaranteed to generate perfect reconstructions), only works for arcane at the moment.
+- Genetic solver, if you like the idea of combinatorial solver, but would like to see results today, then this is for you.
+- Advanced Simple Stacking mode, based on combinatorial solver, but using a handcrafted stacking rule that is in general suboptimal. Only works for arcane at the moment and highly experimental. It can be slower than normal solver depending on how many item based use effects you're using.
+- updated legendary proc rate (still doesn't model mechanics changes)
+
+Rawr.Retribution:
+- Propper CS CD
+
+Rawr.Tree:
+- Correct T12 4P to double-dip MSS and ToL according to EJ thread
+- Fixed the Revitalizing meta to give 206% instead of 203% crit heals (according to in-game tests and TreeCalcs): this seems to make it BiS
+
+Rawr.DPSDK:
+- Update DS values based on hotfix.
+
+Rawr.Cat:
+- Fixed some missed 4.2 changes in the trigger section
+
+Rawr.Moonkin:
+- Remove hard-coded 8% magic damage debuff and calculate based on whether the buff is present.
+- Dragonwrath: Added ability of proc to crit. Also made the special effect static to reduce potential performance issues.
+- Dragonwrath has an 11% proc rate and also procs from Starfall.
+- Dragonwrath proc: Inherits the moonkin's critical damage multiplier.
+
+Rawr.Hunter:
+- Most base calculations are back in place
+");
+#endregion
 #region Rawr 4.2.3 (July 29, 2011) [r62241]
 VNStuff.Add("Rawr 4.2.3 (July 29, 2011) [r62241]",
 @"Cataclysm Release
