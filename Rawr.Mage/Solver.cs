@@ -5519,7 +5519,7 @@ namespace Rawr.Mage
             double dps = 0.0f;
             double tps = 0.0f;
             double mps = -(BaseState.ManaRegen * (1 - CalculationOptions.Fragmentation) + BaseState.ManaRegen5SR * CalculationOptions.Fragmentation);
-            if (UseIncrementalOptimizations)
+            if (UseIncrementalOptimizations && Specialization == Specialization.Arcane) // fire and frost can get in trouble satisfying constraints if they don't have any regen options
             {
                 for (int index = 0; index < CalculationOptions.IncrementalSetStateIndexes.Length; index++)
                 {
