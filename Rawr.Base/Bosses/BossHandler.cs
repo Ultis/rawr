@@ -426,10 +426,10 @@ namespace Rawr {
 //            142788.462f, // T11_25,  //     Tested and verified, Used a Magmaw Kill from April, 2011
             163186.923f, // T11_10H, // Not tested and verified, assumed based on other values
             183585.385f, // T11_25H, //     Tested and verified, Used a Magmaw Kill from April, 2011
-            115178.603f, // T12_10,  // Not Tested and verified, initial numbers
-            255000f, // T12_25,  // Not Tested and verified, initial numbers
-            300000f, // T12_10H, // Not Tested and verified, initial numbers
-            325000f, // T12_25H, // Not Tested and verified, initial numbers
+            175000, // T12_10,  // Not Tested and verified, initial numbers
+            195000f, // T12_25,  // Not Tested and verified, initial numbers
+            245000f, // T12_10H, // Not Tested and verified, initial numbers
+            273000f, // T12_25H, // Not Tested and verified, initial numbers
         };
         #endregion
         #region ==== Info ====
