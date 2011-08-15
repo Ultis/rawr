@@ -317,10 +317,11 @@ namespace Rawr.Moonkin
             float preSolarCasts = (barHalfSize - eclipseSFAverageEnergy / 2 - sf.BaseEnergy * (1 - (float)Math.Pow(1 - 0.12f * talents.Euphoria, 2))) * (1 - (starsurgeEnergyRate) / starfireEnergyRate) / sf.AverageEnergy;
             float solarCasts = (barHalfSize + eclipseWAverageEnergy / 2) / eclipseWAverageEnergy * (1 - (starsurgeEnergyRate) / wrathEclipseEnergyRate);
 
-            float preLunarTime = preLunarCasts * w.CastTime;
-            float lunarTime = lunarCasts * sf.CastTime;
-            float preSolarTime = preSolarCasts * sf.CastTime;
-            float solarTime = solarCasts * w.CastTime;
+            // First-cut approximation of Dragonwrath procs adding Eclipse energy.
+            float preLunarTime = preLunarCasts * w.CastTime / (calcs.BasicStats.DragonwrathProc > 0 ? 1 + MoonkinSolver.DRAGONWRATH_PROC_RATE : 1f);
+            float lunarTime = lunarCasts * sf.CastTime / (calcs.BasicStats.DragonwrathProc > 0 ? 1 + MoonkinSolver.DRAGONWRATH_PROC_RATE : 1f);
+            float preSolarTime = preSolarCasts * sf.CastTime / (calcs.BasicStats.DragonwrathProc > 0 ? 1 + MoonkinSolver.DRAGONWRATH_PROC_RATE : 1f);
+            float solarTime = solarCasts * w.CastTime / (calcs.BasicStats.DragonwrathProc > 0 ? 1 + MoonkinSolver.DRAGONWRATH_PROC_RATE : 1f);
 
             float mainNukeDuration = preLunarTime + preSolarTime + lunarTime + solarTime;
 

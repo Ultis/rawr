@@ -14,7 +14,7 @@ namespace Rawr.Moonkin
         public static float EUPHORIA_PERCENT = 0.08f;
 
         // Variables to calculate Dragonwrath procs per second
-        private static float DRAGONWRATH_PROC_RATE = 0.11f;
+        public static float DRAGONWRATH_PROC_RATE = 0.11f;
         private static SpecialEffect dragonwrathProc = new SpecialEffect(Trigger.DamageDone, new Stats { }, 0f, 0f, DRAGONWRATH_PROC_RATE);
         // A list of all the damage spells
         private Spell[] _spellData = null;
