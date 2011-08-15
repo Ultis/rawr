@@ -273,7 +273,7 @@ namespace Rawr.Bosses
                 {
                     Name = "Default Melee",
                     AttackType = ATTACK_TYPES.AT_MELEE,
-                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)Content[i]] * 1.2f,
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)Content[i]],
                     AttackSpeed = 2.4f,
                 };
                 Melee.AffectsRole[PLAYER_ROLES.MainTank] = true;
@@ -852,8 +852,7 @@ namespace Rawr.Bosses
                     Name = "Default Melee",
                     AttackSpeed = 2f,
                     AttackType = ATTACK_TYPES.AT_MELEE,
-                    DamagePerHit = new float[] { 60000, 75000, 
-                        60000*1.5f, 75000*1.5f, }[i], // Heroic values are unkonwn at this point.
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)Content[i]] * 1.3f, // Heroic values are unkonwn at this point.
                     Missable = true,
                     Dodgable = true,
                     Parryable = true,
@@ -1286,8 +1285,7 @@ namespace Rawr.Bosses
                     Name = "Melee Shannox",
                     AttackSpeed = 2.5f,
                     AttackType = ATTACK_TYPES.AT_MELEE,
-                    DamagePerHit = new float[] { 62000, 128000, 
-                        62000*1.5f, 128000*1.5f, }[i], // Heroic values are unkonwn at this point.
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)Content[i]] * 1.37f, // Heroic values are unkonwn at this point.
                     Missable=true,
                     Dodgable=true,
                     Parryable=true,
@@ -1587,7 +1585,7 @@ namespace Rawr.Bosses
             for (int i = 0; i < 4; i++)
             {
                 Phase Normal = new Phase() { Name = "Normal Phase" };
-                Phase EmpoweredBlade = new Phase() { Name = "EmpoweredBlade" };
+                Phase EmpoweredBlade = new Phase() { Name = "Empowered Blade" };
 
                 Attack Melee = GenAStandardMelee(this[i].Content);
                 Melee.IsDualWielding = true;

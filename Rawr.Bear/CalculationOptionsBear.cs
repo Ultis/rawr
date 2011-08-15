@@ -30,7 +30,7 @@ namespace Rawr.Bear
 			get { return _threatScale; }
 			set { if (_threatScale != value) { _threatScale = value; OnPropertyChanged("ThreatScale"); } }
 		}
-		private double _survivalSoftCap = 600000f;
+		private double _survivalSoftCap = 437500f;
         public double SurvivalSoftCap
 		{
             get { return _survivalSoftCap; }
