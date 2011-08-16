@@ -12,10 +12,8 @@ namespace Rawr.Moonkin
         public static float BaseMana;
         public static float OOC_PROC_CHANCE = 0.02f;
         public static float EUPHORIA_PERCENT = 0.08f;
-
-        // Variables to calculate Dragonwrath procs per second
         public static float DRAGONWRATH_PROC_RATE = 0.11f;
-        private static SpecialEffect dragonwrathProc = new SpecialEffect(Trigger.DamageDone, new Stats { }, 0f, 0f, DRAGONWRATH_PROC_RATE);
+
         // A list of all the damage spells
         private Spell[] _spellData = null;
         private Spell[] SpellData
@@ -408,24 +406,6 @@ namespace Rawr.Moonkin
                         }
                     }
                 }
-                // Dragonwrath, Tarecgosa's Rest
-                // X% chance on any spell damage to instantly duplicate any spell that does damage.
-                // If the spell is a DoT tick, it will do Arcane damage equal to the damage of the DoT.
-                // The effect has no ICD, it can miss and crit as per the wielding character's hit/crit rates.
-                if (calcs.BasicStats.DragonwrathProc > 0)
-                {
-                    float dragonwrathProcInterval = rot.RotationData.Duration / (rot.RotationData.CastCount - rot.RotationData.InsectSwarmCasts + rot.RotationData.DotTicks);
-                    float baselineRotationDamage = rot.RotationData.InsectSwarmAvgHit * rot.RotationData.InsectSwarmCasts +
-                        rot.RotationData.MoonfireAvgHit * rot.RotationData.MoonfireCasts +
-                        rot.RotationData.StarfireAvgHit * rot.RotationData.StarfireCount +
-                        rot.RotationData.StarSurgeAvgHit * rot.RotationData.StarSurgeCount +
-                        rot.RotationData.WrathAvgHit * rot.RotationData.WrathCount + 
-                        rot.RotationData.StarfallDamage * rot.RotationData.StarfallCasts;
-                    float dragonwrathBaseDamage = baselineRotationDamage / rot.RotationData.Duration * dragonwrathProcInterval;
-                    float dragonwrathAverageDamage = (dragonwrathBaseDamage * (1 - currentCrit) + (dragonwrathBaseDamage * rot.Solver.Starfire.CriticalDamageModifier) * currentCrit) * baseHit;
-                    float procsPerSecond = dragonwrathProc.GetAverageProcsPerSecond(dragonwrathProcInterval, 1f, 3.0f, calcs.FightLength * 60f);
-                    currentTrinketDPS += procsPerSecond * dragonwrathAverageDamage;
-                }
                 // Calculate stat-boosting trinkets, taking into effect interactions with other stat-boosting procs
                 int sign = 1;
                 Dictionary<int, float> cachedDamages = new Dictionary<int, float>();
@@ -785,6 +765,19 @@ namespace Rawr.Moonkin
             // 4.2: Starfire and Wrath damage increased by 23%.
             Starfire.BaseDamage *= 1.23f;
             Wrath.BaseDamage *= 1.23f;
+
+            // Dragonwrath, Tarecgosa's Rest: X% chance on damaging spell cast to proc a duplicate version of the spell.
+            // If it duplicates a DoT tick, it fires Wrath of Tarecgosa for an equivalent amount of damage.
+            // Wrath, Starfire, and Starsurge will duplicate the Eclipse energy gained.
+            if (calcs.BasicStats.DragonwrathProc > 0)
+            {
+                Starfire.AllDamageModifier += MoonkinSolver.DRAGONWRATH_PROC_RATE;
+                Wrath.AllDamageModifier += MoonkinSolver.DRAGONWRATH_PROC_RATE;
+                Starsurge.AllDamageModifier += MoonkinSolver.DRAGONWRATH_PROC_RATE;
+                Moonfire.AllDamageModifier += MoonkinSolver.DRAGONWRATH_PROC_RATE;
+                Moonfire.DotEffect.AllDamageModifier += MoonkinSolver.DRAGONWRATH_PROC_RATE;
+                InsectSwarm.AllDamageModifier += MoonkinSolver.DRAGONWRATH_PROC_RATE;
+            }
 
             // PTR changes go here
             if (calcs.PtrMode)

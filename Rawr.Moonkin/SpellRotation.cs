@@ -268,6 +268,8 @@ namespace Rawr.Moonkin
 
             float starfallBaseDamage = (talents.Starfall > 0 && RotationData.StarfallCastMode == StarfallMode.Unused) ? 0 : DoStarfallCalcs(calcs, spellPower, spellHit, spellCrit);
             starfallBaseDamage *= 1 + (talents.GlyphOfFocus ? 0.1f : 0f);
+            // Dragonwrath
+            starfallBaseDamage *= 1 + (calcs.BasicStats.DragonwrathProc > 0 ? MoonkinSolver.DRAGONWRATH_PROC_RATE : 0f);
             float starfallEclipseDamage = starfallBaseDamage * eclipseBonus;
             RotationData.TreantDamage = talents.ForceOfNature == 0 ? 0 : DoTreeCalcs(calcs, spellPower, treantLifespan);
             // T12 2-piece: 2-sec cast, 5192-6035 damage, affected by hit, 15-sec duration
@@ -278,6 +280,8 @@ namespace Rawr.Moonkin
             // Use 2.5% crit rate based on EJ testing
             float T122PieceBaseDamage = (0.975f * T122PieceHitDamage + 0.025f * T122PieceCritDamage) * 3.5f;
             float mushroomBaseDamage = RotationData.WildMushroomCastMode == MushroomMode.Unused ? 0 : DoMushroomCalcs(calcs, spellPower, spellHit, spellCrit);
+            // Dragonwrath
+            mushroomBaseDamage *= 1 + (calcs.BasicStats.DragonwrathProc > 0 ? MoonkinSolver.DRAGONWRATH_PROC_RATE : 0f);
             float mushroomEclipseDamage = mushroomBaseDamage * eclipseBonus;
 
             float barHalfSize = 100f;
@@ -298,17 +302,23 @@ namespace Rawr.Moonkin
             // This is a % cast time reduction
             float starfallReduction = RotationData.StarsurgeCastMode == StarsurgeMode.OnCooldown ? 1 / (1 + 5 * starSurgeFrequency) : 0f;
 
+            // Dragonwrath
+            ss.AverageEnergy *= (1 + MoonkinSolver.DRAGONWRATH_PROC_RATE);
             float starsurgeEnergyRate = ss.AverageEnergy / starsurgeCooldownWithSSProcs;
             float starsurgeEnergyRateOnlySSProcs = ss.AverageEnergy * shootingStarsProcFrequency;
 
-            float eclipseWAverageEnergy = w.AverageEnergy;
+            float eclipseWAverageEnergy = w.AverageEnergy * (1 + MoonkinSolver.DRAGONWRATH_PROC_RATE);
             // T12 4-piece set bonus
             w.AverageEnergy += calcs.BasicStats.BonusWrathEnergy;
+            // Dragonwrath
+            w.AverageEnergy *= (1 + MoonkinSolver.DRAGONWRATH_PROC_RATE);
             float wrathEnergyRate = w.AverageEnergy / w.CastTime;
             float wrathEclipseEnergyRate = eclipseWAverageEnergy / w.CastTime;
-            float eclipseSFAverageEnergy = sf.AverageEnergy;
+            float eclipseSFAverageEnergy = sf.AverageEnergy * (1 + MoonkinSolver.DRAGONWRATH_PROC_RATE);
             // T12 4-piece set bonus
             sf.AverageEnergy += calcs.BasicStats.BonusStarfireEnergy;
+            // Dragonwrath
+            sf.AverageEnergy *= (1 + MoonkinSolver.DRAGONWRATH_PROC_RATE);
             float starfireEnergyRate = sf.AverageEnergy / sf.CastTime;
             float starfireEclipseEnergyRate = eclipseSFAverageEnergy / sf.CastTime;
 
@@ -317,11 +327,10 @@ namespace Rawr.Moonkin
             float preSolarCasts = (barHalfSize - eclipseSFAverageEnergy / 2 - sf.BaseEnergy * (1 - (float)Math.Pow(1 - 0.12f * talents.Euphoria, 2))) * (1 - (starsurgeEnergyRate) / starfireEnergyRate) / sf.AverageEnergy;
             float solarCasts = (barHalfSize + eclipseWAverageEnergy / 2) / eclipseWAverageEnergy * (1 - (starsurgeEnergyRate) / wrathEclipseEnergyRate);
 
-            // First-cut approximation of Dragonwrath procs adding Eclipse energy.
-            float preLunarTime = preLunarCasts * w.CastTime / (calcs.BasicStats.DragonwrathProc > 0 ? 1 + MoonkinSolver.DRAGONWRATH_PROC_RATE : 1f);
-            float lunarTime = lunarCasts * sf.CastTime / (calcs.BasicStats.DragonwrathProc > 0 ? 1 + MoonkinSolver.DRAGONWRATH_PROC_RATE : 1f);
-            float preSolarTime = preSolarCasts * sf.CastTime / (calcs.BasicStats.DragonwrathProc > 0 ? 1 + MoonkinSolver.DRAGONWRATH_PROC_RATE : 1f);
-            float solarTime = solarCasts * w.CastTime / (calcs.BasicStats.DragonwrathProc > 0 ? 1 + MoonkinSolver.DRAGONWRATH_PROC_RATE : 1f);
+            float preLunarTime = preLunarCasts * w.CastTime;
+            float lunarTime = lunarCasts * sf.CastTime;
+            float preSolarTime = preSolarCasts * sf.CastTime;
+            float solarTime = solarCasts * w.CastTime;
 
             float mainNukeDuration = preLunarTime + preSolarTime + lunarTime + solarTime;
 
