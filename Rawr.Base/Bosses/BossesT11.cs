@@ -2538,6 +2538,8 @@ namespace Rawr.Bosses
             Max_Players = new int[] { 10, 25, 0, 0 };
             Min_Tanks = new int[] { 2, 2, 0, 0 };
             Min_Healers = new int[] { 3, 5, 0, 0 };
+            Under35Perc = new double[] { 0.166666667, 0.166666667, 0, 0 };
+            Under20Perc = new double[] { 0.151515152, 0.151515152, 0, 0 };
 
             // Assume it takes 60 seconds to get through P2.
             // Technically she isn't invulneratble, it's just while in P2, she heals herself fairly quickly

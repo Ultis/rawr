@@ -339,13 +339,6 @@ namespace Rawr {
         [DefaultValue(false)]
         public bool DisarmingTargs { get { return DISARMINGTARGS; } set { DISARMINGTARGS = value; OnPropertyChanged("DisarmingTargs"); } }
 
-        private double UNDER35PERC = 0.10d;
-        [DefaultValue(0.10d)]
-        public double Under35Perc { get { return UNDER35PERC; } set { UNDER35PERC = value; OnPropertyChanged("Under35Perc"); } }
-        private double UNDER20PERC = 0.15d;
-        [DefaultValue(0.15d)]
-        public double Under20Perc { get { return UNDER20PERC; } set { UNDER20PERC = value; OnPropertyChanged("Under20Perc"); } }
-
         private BossList.FilterType FILTERTYPE = BossList.FilterType.Content;
         [DefaultValue(BossList.FilterType.Content)]
         public BossList.FilterType FilterType { get { return FILTERTYPE; } set { FILTERTYPE = value; OnPropertyChanged("FilterType"); } }
@@ -490,6 +483,13 @@ namespace Rawr {
         [DefaultValue(0.00d)]
         public double InBackPerc_Ranged { get { return _inBackPerc_Ranged; } set { _inBackPerc_Ranged = CPd(value); OnPropertyChanged("InBackPerc_Ranged"); } }
         private double _inBackPerc_Ranged = 0.00d;
+        private double UNDER35PERC = 0.10d;
+        [DefaultValue(0.10d)]
+        public double Under35Perc { get { return UNDER35PERC; } set { UNDER35PERC = value; OnPropertyChanged("Under35Perc"); } }
+        private double UNDER20PERC = 0.15d;
+        [DefaultValue(0.15d)]
+        public double Under20Perc { get { return UNDER20PERC; } set { UNDER20PERC = value; OnPropertyChanged("Under20Perc"); } }
+
         #endregion
         #region ==== Offensive ====
         public List<TargetGroup> Targets = new List<TargetGroup>();
@@ -2015,6 +2015,46 @@ namespace Rawr {
                 this[i].Min_Healers = value[i];
             }
         }
+        public double[] Under35Perc
+        {
+            get
+            {
+                return new double[] {
+                    this[0].Under35Perc,
+                    this[1].Under35Perc,
+                    this[2].Under35Perc,
+                    this[3].Under35Perc,
+                };
+            }
+            set
+            {
+                int i = 0;
+                this[i].Under35Perc = value[i]; i++;
+                this[i].Under35Perc = value[i]; i++;
+                this[i].Under35Perc = value[i]; i++;
+                this[i].Under35Perc = value[i];
+            }
+        }
+        public double[] Under20Perc
+        {
+            get
+            {
+                return new double[] {
+                    this[0].Under20Perc,
+                    this[1].Under20Perc,
+                    this[2].Under20Perc,
+                    this[3].Under20Perc,
+                };
+            }
+            set
+            {
+                int i = 0;
+                this[i].Under20Perc = value[i]; i++;
+                this[i].Under20Perc = value[i]; i++;
+                this[i].Under20Perc = value[i]; i++;
+                this[i].Under20Perc = value[i];
+            }
+        }
         // Offensive
         // Defensive
         public double[] Resist_Physical
@@ -2185,7 +2225,7 @@ namespace Rawr {
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = BossHandler.StandardMeleePerHit[(int)content],
                 MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
+                AttackSpeed = 2.5f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
                 IsTheDefaultMelee = true,
             };

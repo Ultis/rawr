@@ -1953,12 +1953,15 @@ namespace Rawr.Bosses
             Health = new float[] { 66995760f * 0.9f, 200987280f * 0.9f, 87300000f * 1.38f, 290500000f * 1.40f };
             MobType = (int)MOB_TYPES.ELEMENTAL;
             BerserkTimer = new int[] { 18 * 60, 18 * 60, 18 * 60, 18 * 60 };
-            SpeedKillTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
+            SpeedKillTimer = new int[] { 5 * 60, 8 * 60, 12 * 60, 12 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
             Max_Players = new int[] { 10, 25, 10, 25 };
             Min_Tanks = new int[] { 2, 2, 2, 2 };
             Min_Healers = new int[] { 3, 5, 3, 5 };
+            TimeBossIsInvuln = new float[] { 60, 60, 90, 90 }; // Assume 30 seconds during each phase transition
+            Under35Perc = new double[] { 0.175824176, 0.175824176, 0.225352112, 0.225352112 };
+            Under20Perc = new double[] { 0.10989011, 0.10989011, 0.211267606, 0.211267606 };
             #endregion
             #region Offensive
             //MaxNumTargets = new double[] { 1, 1, 0, 0 };
@@ -1973,7 +1976,9 @@ namespace Rawr.Bosses
                 Phase BegoneFrommyRealm = new Phase() { Name = "Begone From my Realm!" };
                 Phase TheTruePoweroftheFireLord = new Phase() { Name = "The True Power of the Fire Lord!" }; // Heroic Only
 
-                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+                Attack melee = GenAStandardMelee(this[i].Content);
+                melee.DamagePerHit *= 1.22f;
+                this[i].Attacks.Add(melee);
 
                 #region By Fire be Purged!
                 #region Sulfuras Smash
