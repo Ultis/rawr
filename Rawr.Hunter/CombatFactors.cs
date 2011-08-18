@@ -186,13 +186,8 @@ namespace Rawr.Hunter {
                         + HitPerc;          // Bonus from Hit Rating
             }
         }
-#if RAWR3 || RAWR4 || SILVERLIGHT
         private float WhMissCap { get { return StatConversion.WHITE_MISS_CHANCE_CAP[BossOpts.Level - Char.Level]; } }
         private float YwMissCap { get { return StatConversion.YELLOW_MISS_CHANCE_CAP[BossOpts.Level - Char.Level]; } }
-#else
-        private float WhMissCap { get { return StatConversion.WHITE_MISS_CHANCE_CAP[CalcOpts.TargetLevel - Char.Level]; } }
-        private float YwMissCap { get { return StatConversion.YELLOW_MISS_CHANCE_CAP[CalcOpts.TargetLevel - Char.Level]; } }
-#endif
         private float WhMissChance { get { return Math.Max(0f, WhMissCap - MissPrevBonuses); } }
         private float YwMissChance { get { return Math.Max(0f, YwMissCap - MissPrevBonuses); } }
         #endregion
@@ -259,13 +254,8 @@ namespace Rawr.Hunter {
         }
         #endregion
         #region Attackers Stats against you
-#if RAWR3 || RAWR4 || SILVERLIGHT
         private float LevelModifier { get { return (BossOpts.Level - Char.Level) * 0.002f; } }
         private float NPC_CritChance { get { return Math.Max(0f, 0.05f + LevelModifier - StatConversion.GetDRAvoidanceChance(Char, StatS, HitResult.Crit, BossOpts.Level)); } }
-#else
-        private float LevelModifier { get { return (CalcOpts.TargetLevel - Char.Level) * 0.002f; } }
-        private float NPC_CritChance { get { return Math.Max(0f, 0.05f + LevelModifier - StatConversion.GetDRAvoidanceChance(Char, StatS, HitResult.Crit, CalcOpts.TargetLevel) ); } }
-#endif
         #endregion
     }
 }

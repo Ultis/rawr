@@ -374,6 +374,17 @@ namespace Rawr.Hunter
 
         public void Accumulate(StatsHunter data, float weight)
         {
+            // Check the root data:
+
+            if (data == null)
+            {
+#if DEBUG
+                throw new NullReferenceException("Caller passed in null data."); // I know this is redundant.
+                return;
+#else
+                return;
+#endif
+            }
             #region Base
             if (data.sparseIndices != null)
             {

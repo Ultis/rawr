@@ -18,13 +18,9 @@ namespace Rawr.Hunter.Skills
             CalcOpts = calcOpts;
             BossOpts = bossOpts;
             RWAtkTable = new AttackTable(Char, StatS, combatFactors, calcOpts, false, false);
-#if RAWR3 || RAWR4 || SILVERLIGHT
             FightDuration = BossOpts.BerserkTimer;
-#else
-            FightDuration = CalcOpts.Duration;
-#endif
-            //
-            Targets = 1f;
+
+            Targets = BossOpts.Targets.Count; // Should update to better handle Target objects
             HSOverridesOverDur = 0f;
             CLOverridesOverDur = 0f;
             Steady_Freq = 0f;
@@ -48,20 +44,9 @@ namespace Rawr.Hunter.Skills
         private float Targets { get { return TARGETS; } set { TARGETS = value; } }
         private float AvgTargets {
             get {
-#if RAWR3 || RAWR4 || SIVLERLIGHT
                 if (BossOpts.MultiTargs)
-#else
-                if (CalcOpts.MultipleTargets)
-#endif
                 {
-                    //float extraTargetsHit = Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f;
-                    return 1f +
-                        //(Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f) *
-#if RAWR3 || RAWR4 || SIVLERLIGHT
-                        (BossOpts.MultiTargsTime / BossOpts.BerserkTimer)  + StatS.BonusTargets;
-#else
-                        CalcOpts.MultipleTargetsPerc / 100f + StatS.BonusTargets;
-#endif
+                    return 1f + (BossOpts.MultiTargsTime / BossOpts.BerserkTimer)  + StatS.BonusTargets;
                 }
                 else { return 1f; }
             }
@@ -98,19 +83,12 @@ namespace Rawr.Hunter.Skills
                     // Work the Attack Table
                     float dmgDrop = (1f
                         - RWAtkTable.Miss   // no damage when being missed
-//                        - RWAtkTable.Dodge  // no damage when being dodged
-//                        - RWAtkTable.Parry  // no damage when being parried
-//                        - RWAtkTable.Glance // glancing handled below
-//                        - RWAtkTable.Block  // blocked handled below
                         - RWAtkTable.Crit); // crits   handled below
 
-//                    float dmgGlance = dmg * RWAtkTable.Glance * combatFactors.ReducWhGlancedDmg;//Partial Damage when glancing
-//                    float dmgBlock = dmg * RWAtkTable.Block * combatFactors.ReducWhBlockedDmg;//Partial damage when blocked
-                    float dmgCrit = dmg * RWAtkTable.Crit * (1f + combatFactors.BonusWhiteCritDmg);//Bonus Damage when critting
+                    float dmgCrit = dmg * RWAtkTable.Crit * (1f + combatFactors.BonusWhiteCritDmg); //Bonus Damage when critting
 
                     dmg *= dmgDrop;
-
-                    dmg += /*dmgGlance + dmgBlock + */dmgCrit;
+                    dmg += dmgCrit;
 
                     _RwDamageOnUse = dmg;
                 }
@@ -161,11 +139,7 @@ namespace Rawr.Hunter.Skills
             switch (i)
             {
                 case AttackTableSelector.Missed:  { retVal = acts * table.Miss;   break; }
-                //case AttackTableSelector.Dodged:  { retVal = acts * table.Dodge;  break; }
-                //case AttackTableSelector.Parried: { retVal = acts * table.Parry;  break; }
-                //case AttackTableSelector.Blocked: { retVal = acts * table.Block;  break; }
                 case AttackTableSelector.Crit:    { retVal = acts * table.Crit;   break; }
-                //case AttackTableSelector.Glance:  { retVal = acts * table.Glance; break; }
                 case AttackTableSelector.Hit:     { retVal = acts * table.Hit;    break; }
                 default: { break; }
             }
