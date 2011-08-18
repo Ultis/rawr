@@ -88,7 +88,7 @@ namespace Rawr.DK
         {
             get
             {
-                return Math.Min(1, base.CritChance + CState.m_Talents.ImprovedDeathStrike * 0.1f);
+                return Math.Min(1, base.CritChance + CState.m_Talents.ImprovedDeathStrike * 0.3f);
             }
         }
     }
