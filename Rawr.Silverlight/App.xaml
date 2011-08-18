@@ -19,6 +19,7 @@
             <UI:GemNameConverter x:Key="GemNameConverter"/>
             <UI:EnchantNameConverter x:Key="EnchantNameConverter"/>
             <UI:EnchantVisbilityConverter x:Key="EnchantVisbilityConverter"/>
+            <UI:EnumValuesConverter x:Key="EnumValuesConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </UI:App>
