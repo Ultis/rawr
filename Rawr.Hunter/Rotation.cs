@@ -128,7 +128,7 @@ namespace Rawr.Hunter {
         protected CalculationOptionsHunter CalcOpts { get; set; }
         protected BossOptions BossOpts { get; set; }
         
-        protected float LatentGCD { get { return 1.5f + CalcOpts.Latency + CalcOpts.AllowedReact; } }
+        protected float LatentGCD { get { return 1f + CalcOpts.Latency + CalcOpts.AllowedReact; } }
         
         /// <summary>
         /// How many GCDs are in the rotation, based on fight duration and latency
@@ -159,7 +159,7 @@ namespace Rawr.Hunter {
         #region Functions
         public virtual void Initialize(CharacterCalculationsHunter calcs) {
             this.calcs = calcs;
-            StatS = /*calcs.AverageStats*/ calcs.MaximumStats;
+            StatS = /*calcs.AverageStats*/ calcs.Hunter.Stats;
 
             initAbilities();
             //doIterations();

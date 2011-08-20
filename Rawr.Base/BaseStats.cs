@@ -134,10 +134,18 @@ namespace Rawr
                     #region Hunter
                     case CharacterClass.Hunter:
                         Stats hun = new Stats() {
-                            Strength = 60, Agility = 178, Stamina = 119, Intellect = 77, Spirit = 88,
+                            // Stats updated 8/19/2011 4.2 w/ Troll Hunter: Tsevon @ US-Dragonmaw w/ no spec.
+                            Strength = 60,
+                            Agility = 178,
+                            Stamina = 119,
+                            Intellect = 77,
+                            Spirit = 88,
                             Health = 39037,
-                            Dodge = 0.03758f, Parry = 0.05f,
-                            PhysicalCrit = 0.03192f, AttackPower = 170f, RangedAttackPower = 170f/*546*/,
+                            Dodge = 0.03758f, Parry = 0.05f, 
+                            // This assumes ALL AP from full AP += AGI * 2
+                            // So naked Hunter has 31 AP un accounted for.
+                            // Naked troll, no gear, no spec, LW & Skinning.
+                            PhysicalCrit = 0, AttackPower = 31f, RangedAttackPower = 31f,
                         };
                         S.Accumulate(race);
                         S.Accumulate(hun);

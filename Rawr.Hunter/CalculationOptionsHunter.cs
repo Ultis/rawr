@@ -12,51 +12,6 @@ namespace Rawr.Hunter
     public class CalculationOptionsHunter : ICalculationOptionBase, INotifyPropertyChanged
     {
         #region Hunter Tab
-        // ==== Boss Settings ====
-#if !RAWR3 && !RAWR4 && !SILVERLIGHT
-        private int _TargetLevel = 88;
-        public int TargetLevel
-        {
-            get { return _TargetLevel; }
-            set { _TargetLevel = value; OnPropertyChanged("TargetLevel"); }
-        }
-        private float _TargetArmor = StatConversion.NPC_ARMOR[3];
-        public float TargetArmor
-        {
-            get { return _TargetArmor; }
-            set { _TargetArmor = value; OnPropertyChanged("TargetArmor"); }
-        }
-        private int _Duration = 300;
-        public int Duration
-        {
-            get { return _Duration; }
-            set { _Duration = value; OnPropertyChanged("Duration"); }
-        }
-        public int _TimeSpentSub20 = 72;
-        public int TimeSpentSub20
-        {
-            get { return _TimeSpentSub20; }
-            set { _TimeSpentSub20 = value; OnPropertyChanged("TimeSpentSub20"); }
-        }
-        public int _TimeSpent35To20 = 54;
-        public int TimeSpent35To20
-        {
-            get { return _TimeSpent35To20; }
-            set { _TimeSpent35To20 = value; OnPropertyChanged("TimeSpent35To20"); }
-        }
-        private bool _MultipleTargets = false;
-        public bool MultipleTargets
-        {
-            get { return _MultipleTargets; }
-            set { _MultipleTargets = value; OnPropertyChanged("MultipleTargets"); }
-        }
-        private float _MultipleTargetsPerc = 0;
-        public float MultipleTargetsPerc
-        {
-            get { return _MultipleTargetsPerc; }
-            set { _MultipleTargetsPerc = value; OnPropertyChanged("MultipleTargetsPerc"); }
-        }
-#endif
         // ==== Fight Settings ====
         #region Latency
         private float _Lag = 150;
@@ -208,10 +163,11 @@ namespace Rawr.Hunter
         #endregion
 
         #region Pet Tab
+        [XmlIgnore]
         private int _petLevel = 85; // Not Editable
         public int PetLevel {
             get { return _petLevel; }
-            set { _petLevel = value; OnPropertyChanged("PetLevel"); }
+//            set { _petLevel = value; OnPropertyChanged("PetLevel"); }
         }
         [XmlIgnore]
         public int _SelectedArmoryPet = 0;

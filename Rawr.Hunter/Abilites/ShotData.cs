@@ -7,7 +7,7 @@ namespace Rawr.Hunter
 {
     public class ShotData
     {
-        public const float GCD = 1.5f;
+        public const float GCD = 1f;
 
         public Shots Type = Shots.None;
         public float Damage = 0f;

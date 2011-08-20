@@ -27,7 +27,7 @@ namespace Rawr.Hunter
         /// <summary>You have a 10% chance from your autoshots to make your next shot or Kill Command cost no focus.</summary>
         FourPieceTier12,
         /// <summary>Unmitigated Agility used for Crit calculation</summary>
-        BaseAgilityforCrit
+        BaseAgilityforCrit,
     }
     /// <summary>List of Hunter stats that are Multiplicative</summary>
     public enum MultiplicativeStatHunter : int
@@ -378,12 +378,7 @@ namespace Rawr.Hunter
 
             if (data == null)
             {
-#if DEBUG
-                throw new NullReferenceException("Caller passed in null data."); // I know this is redundant.
                 return;
-#else
-                return;
-#endif
             }
             #region Base
             if (data.sparseIndices != null)
@@ -630,7 +625,7 @@ namespace Rawr.Hunter
             set { _rawAdditiveHunterData[(int)AdditiveStatHunter.FourPieceTier12] = value; }
         }
         [DefaultValueAttribute(0f)]
-        [DisplayName("Hunter 4-Piece Tier 12")]
+        [DisplayName("BaseAgilityForCrit")]
         [Category("Hunter")]
         public float BaseAgilityforCrit
         {
@@ -660,7 +655,7 @@ namespace Rawr.Hunter
             get { return _rawAdditiveHunterData[(int)MultiplicativeStatHunter.BonusPetAttackPowerMultiplier]; }
             set { _rawAdditiveHunterData[(int)MultiplicativeStatHunter.BonusPetAttackPowerMultiplier] = value; }
         }
-        /// <summary>Bonus Pet Attack Power Multiplier</summary>
+        /// <summary>Bonus Focus Regen Multiplier</summary>
         [DefaultValueAttribute(0f)]
         [Percentage]
         [DisplayName("% Bonus Focus Regen")]
@@ -680,7 +675,7 @@ namespace Rawr.Hunter
             get { return _rawAdditiveHunterData[(int)MultiplicativeStatHunter.BonusFireWeaponDamage]; }
             set { _rawAdditiveHunterData[(int)MultiplicativeStatHunter.BonusFireWeaponDamage] = value; }
         }
-        /// <summary>Bonus Ranged Attack Power Multiplier</summary>
+        /// <summary>Bonus Haste Multiplier</summary>
         [DefaultValueAttribute(0f)]
         [Percentage]
         [DisplayName("% Bonus Haste")]

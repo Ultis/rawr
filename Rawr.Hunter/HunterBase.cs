@@ -17,7 +17,7 @@ namespace Rawr.Hunter
         }
 
         private Character character { get; set; }
-        private StatsHunter Stats { get; set; }
+        public StatsHunter Stats { get; set; }
         private HunterTalents Talents { get; set; }
         private Specialization Tree { get; set; }
         private int TargetLevel { get; set; }
@@ -34,8 +34,6 @@ namespace Rawr.Hunter
         public float Agility { get { return Stats.Agility; } }
         /// <summary>Shows the Ranged Attack Power the Hunter has.</summary>
         public float RangedAttackPower { get { return Stats.RangedAttackPower; } }
-        /// <summary>Returns a 5% Agility Bonus if the player is wearing all mail gear.</summary>
-        public float MailSpecialization { get { return Character.ValidateArmorSpecialization(character, ItemType.Mail) ? 0.05f : 0f; } }
 
         /// <summary>Show base Physical Hit chance</summary>
         public float PhysicalHit { get { return Stats.PhysicalHit; } }
@@ -66,7 +64,8 @@ namespace Rawr.Hunter
         /// <summary>Show amount of Crit from Critical Strike Rating</summary>
         public float CritfromRating { get { return StatConversion.GetPhysicalCritFromRating(this.CritRating); } }
         /// <summary>Show amount of Crit from Agility</summary>
-        public float CritfromAgility { get { return StatConversion.GetCritFromAgility(Stats.BaseAgilityforCrit, CharacterClass.Hunter); } }
+//        public float CritfromAgility { get { return StatConversion.GetCritFromAgility(Stats.BaseAgilityforCrit, CharacterClass.Hunter); } }
+        public float CritfromAgility { get { return StatConversion.GetCritFromAgility(Stats.Agility, CharacterClass.Hunter); } }
         /// <summary>Shows the amount of Physical Crit</summary>
         public float PhysicalCrit { get { return Stats.PhysicalCrit; } }
         /// <summary>Show Crit modification from attacking a higher target mob.</summary>
@@ -83,7 +82,7 @@ namespace Rawr.Hunter
         /// <summary>Show Haste Percentage</summary>
         public float Haste { get { return Stats.RangedHaste; } }
 
-        /// <summary>Show Focus Regen</summar>
+        /// <summary>Focus Regen Per Second</summar>
         // TODO: Apply Rapid Fire + Glyph, Hero, and Focused Fire
         /* http://elitistjerks.com/f74/t65904-hunter_dps_analyzer/p25/#post1887407
              * 1) Base focus regen is 4.00.
@@ -92,12 +91,14 @@ namespace Rawr.Hunter
              * 4) Each 1% gear haste adds 2% base focus regen.
              * 5) Rapid Fire adds 40% base regen (4.00->5.60).
              * 6) Hero adds 30% base regen (4.00->5.20).
+         * this line (7) doesn't match the math of the other Base regen modifiers on the other lines.
              * 7) Glyph of Rapid Fire adds 10% base regen (4.00->6.00).
              * 8) Focused Fire adds 15% base regen (4.00->4.60).
          */
         public float FocusRegen { get { return 4f * (1f + (Talents.Pathing * 0.01f)) * (1 + (this.BaseHaste * 2f)); } }
 
-        /// <summary>Returns the Base amount of Mastery per Tree, before Mastery Rating is added</summary>
+        /// <summary>Returns the Base amount of Mastery value in % per Tree, before Mastery Rating is added</summary>
+        [Percentage]
         public float BaseMastery
         {
             get
@@ -116,6 +117,7 @@ namespace Rawr.Hunter
             }
         }
         /// <summary>Returns the Incremental Mastery Multiplier, multiplied by the Mastery Rating Conversion.</summary>
+        [Percentage]
         public float IncrementalMastery
         {
             get
@@ -138,8 +140,10 @@ namespace Rawr.Hunter
         /// <summary>Returns Mastery Rate conversion.</summary>
         public float MasteryRateConversion { get { return StatConversion.GetMasteryFromRating(this.MasteryRating); } }
         /// <summary>Returns total amount of Incremental Mastery with the Conversion</summary>
+        [Percentage]
         public float IncrementalmasterywithConversion { get { return this.IncrementalMastery * (8f + MasteryRateConversion); } }
         /// <summary>Returns total Mastery Rating Percentage</summary>
+        [Percentage]
         public float MasteryRatePercent { get { return this.BaseMastery + this.IncrementalmasterywithConversion; } }
         /// <summary>Show Mastery Label</summary>
         public string MasteryLabel

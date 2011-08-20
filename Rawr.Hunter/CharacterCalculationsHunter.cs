@@ -7,14 +7,21 @@ namespace Rawr.Hunter
 {
     public class CharacterCalculationsHunter : CharacterCalculationsBase
     {
-        public StatsHunter UnbuffedStats { get; set; }
-        public StatsHunter BuffStats { get; set; }
-        public StatsHunter MaximumStats { get; set; }
+//        public StatsHunter UnbuffedStats { get; set; }
+//        public StatsHunter BuffStats { get; set; }
+//        public StatsHunter MaximumStats { get; set; }
 
         public Character character = null;
         public CalculationOptionsHunter CalcOpts = null;
 
+        /// <summary>
+        /// The hunter with max or averaged SE stats.
+        /// </summary>
         public HunterBase Hunter { get; set; }
+        /// <summary>
+        /// The Hunter with armory (no SE stats).
+        /// </summary>
+        public HunterBase HunterUnBuffed { get; set; }
         public PetBase Pet { get; set; }
 
         public PetCalculations PetCalc { get; set; }
@@ -83,7 +90,7 @@ namespace Rawr.Hunter
         public Skills.RapidFire Rapid { get; set; }
         #endregion
 
-        private Stats _basicStats;
+//        private Stats _basicStats;
         private float _baseAttackSpeed;
         private float _autoshotDPS;
         private float _BonusAttackProcsDPS;
@@ -382,18 +389,18 @@ namespace Rawr.Hunter
                                 Hunter.Health, Hunter.Stamina));
             dictValues.Add("Focus", string.Format("{0:000}", Hunter.Focus.ToString("F0")));
             dictValues.Add("Armor", Hunter.Armor.ToString("F0"));
-            dictValues.Add("Agility", Hunter.Agility.ToString("F0"));
-            dictValues.Add("Ranged Attack Power", string.Format("{0:00,000}", //+
+            dictValues.Add("Agility", string.Format("{0}*{1} : After Special Effects", HunterUnBuffed.Agility, Hunter.Agility));
+            dictValues.Add("Ranged Attack Power", string.Format("{0:00,000}*{1:00,000} : After Special Effects", //+
 //                            "\r\n{1:00,000} : Base" +
 //                            "\r\n{2:00,000} : Agility" +
 //                            "\r\n{3:00,000} : Gear / Spec" +
 //                            "\r\nProcs were averaged out and added",
-                            Hunter.RangedAttackPower));//, apFromBase, apFromAGI, apFromGear));
+                            HunterUnBuffed.RangedAttackPower, Hunter.RangedAttackPower));//, apFromBase, apFromAGI, apFromGear));
             dictValues.Add("Hit", string.Format("{0:00.00%} : {1}*" + 
                                 "Ranged Cap: " + Hunter.HitNeededLabel,
-                                Hunter.HitRatingPercent,
-                                Hunter.HitRating,
-                                Hunter.HitRatingNeeded));
+                                HunterUnBuffed.HitRatingPercent,
+                                HunterUnBuffed.HitRating,
+                                HunterUnBuffed.HitRatingNeeded));
              
             dictValues.Add("Crit", string.Format("{0:00.00%} : {1}*Includes:" +
                                 "\r\n{2:00.00%} : Agility" +
@@ -401,29 +408,29 @@ namespace Rawr.Hunter
                                 "\r\n{4:00.00%} : Buffs" + 
                                 "\r\n{5:00.00%} : Target Modifier" +
                                 "\r\n\r\nNote that individual Shots will handle their own crit caps",
-                                Hunter.ChancetoCrit,
-                                Hunter.CritRating,
-                                Hunter.CritfromAgility,
-                                Hunter.CritfromRating,
-                                Hunter.PhysicalCrit,
-                                Hunter.CritModifiedfromTarget));
+                                HunterUnBuffed.ChancetoCrit,
+                                HunterUnBuffed.CritRating,
+                                HunterUnBuffed.CritfromAgility,
+                                HunterUnBuffed.CritfromRating,
+                                HunterUnBuffed.PhysicalCrit,
+                                HunterUnBuffed.CritModifiedfromTarget));
             dictValues.Add("Haste", string.Format("{0:00.00%} : {1:0}",
 //                                "*Includes:" +
 //                                "\r\n{2:00.00%} : Base" +
 //                                "\r\n{3:00.00%} : Rating" +
-                                Hunter.Haste,
-                                Hunter.HasteRating));
+                                HunterUnBuffed.Haste,
+                                HunterUnBuffed.HasteRating));
             dictValues.Add("Mastery", string.Format("{0:00.00%} : {1}* Includes:" +
                                 "\r\n{2:00.0000} : Mastery From Rating" +
                                 "\r\n{3:00.0000%} : Spec base %" +
                                 "\r\n{4:00.0000%} : Incremental %" +
-                                Hunter.MasteryLabel,
-                                Hunter.MasteryRatePercent,
-                                Hunter.MasteryRating,
-                                Hunter.MasteryRateConversion,
-                                Hunter.BaseMastery,
-                                Hunter.IncrementalmasterywithConversion,
-                                Hunter.MasteryRatePercent));
+                                HunterUnBuffed.MasteryLabel,
+                                HunterUnBuffed.MasteryRatePercent,
+                                HunterUnBuffed.MasteryRating,
+                                HunterUnBuffed.MasteryRateConversion,
+                                HunterUnBuffed.BaseMastery,
+                                HunterUnBuffed.IncrementalmasterywithConversion,
+                                HunterUnBuffed.MasteryRatePercent));
             /* dictValues.Add("Attack Speed", BaseAttackSpeed.ToString("F2"));
             
             // Pet Stats
@@ -557,18 +564,12 @@ namespace Rawr.Hunter
         {
             switch (calculation)
             {
-                case "Health": return UnbuffedStats.Health;
-                //case "Mana": return UnbuffedStats.Mana;
-                case "Agility": return UnbuffedStats.Agility;
-                case "Crit %": return UnbuffedStats.PhysicalCrit * 100f;
-                case "Haste %": return UnbuffedStats.PhysicalHaste * 100f;
-                case "Attack Power": return UnbuffedStats.AttackPower;
-//                case "Armor Penetration %": return BasicStats.ArmorPenetration * 100f;
-#if RAWR3 || RAWR4 || SILVERLIGHT
+                case "Health": return HunterUnBuffed.Health;
+                case "Agility": return HunterUnBuffed.Agility;
+                case "Crit %": return HunterUnBuffed.PhysicalCrit * 100f;
+                case "Haste %": return HunterUnBuffed.PhysicalHaste * 100f;
+                case "Attack Power": return HunterUnBuffed.RangedAttackPower;
                 //case "% Chance to Miss (Yellow)": return (StatConversion.WHITE_MISS_CHANCE_CAP[BossOpts.Level - character.Level] - BasicStats.PhysicalHit) * 100f;
-#else
-                //case "% Chance to Miss (Yellow)": return (StatConversion.WHITE_MISS_CHANCE_CAP[CalcOpts.TargetLevel - character.Level] - BasicStats.PhysicalHit) * 100f;
-#endif
             }
             return 0;
         }

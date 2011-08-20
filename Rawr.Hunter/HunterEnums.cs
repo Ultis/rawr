@@ -59,6 +59,7 @@ namespace Rawr.Hunter
         Scryer
     }
 
+    // TODO: Setup map to go with Petfamily & PetAttack
     public enum PetAttacks
     {
         AcidSpit,
