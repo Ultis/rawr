@@ -1099,12 +1099,6 @@ namespace Rawr.Mage
             statsTotal.NatureResistance += allResist + statsTotal.NatureResistanceBuff;
             statsTotal.ShadowResistance += allResist + statsTotal.ShadowResistanceBuff;
 
-            // Dragonwrath
-            if (statsTotal.DragonwrathProc > 0)
-            {
-                statsTotal.BonusDamageMultiplier = (1 + statsTotal.BonusDamageMultiplier) * 1.1f - 1f;
-            }
-
             int playerLevel = calculationOptions.PlayerLevel;
             float maxHitRate = 1.0f;
             float bossHitRate = Math.Min(maxHitRate, ((playerLevel <= calculationOptions.TargetLevel + 2) ? (0.96f - (playerLevel - calculationOptions.TargetLevel) * 0.01f) : (0.94f - (playerLevel - calculationOptions.TargetLevel - 2) * 0.11f)));

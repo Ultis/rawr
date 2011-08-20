@@ -4616,12 +4616,14 @@ w = remaining time on 2T10 effect";
         private bool ABarAllowed;
         private bool ABarOnCooldownOnly;
         private bool ABarCooldownCollapsed;
+        private bool flameOrb;
 
-        public ArcaneCycleGeneratorBeta(CastingState castingState, bool ABarAllowed, bool ABarOnCooldownOnly, bool ABarCooldownCollapsed)
+        public ArcaneCycleGeneratorBeta(CastingState castingState, bool ABarAllowed, bool ABarOnCooldownOnly, bool ABarCooldownCollapsed, bool flameOrb)
         {
             this.ABarAllowed = ABarAllowed;
             this.ABarOnCooldownOnly = ABarOnCooldownOnly;
             this.ABarCooldownCollapsed = ABarCooldownCollapsed;
+            this.flameOrb = flameOrb;
 
             var calc = castingState.Solver;
             maxStack = 4;
@@ -4664,7 +4666,64 @@ w = remaining time on 2T10 effect";
             {
                 AM = this.AM;
             }
+            float orbProc = flameOrb ? 1f - (float)Math.Pow(1 - AMProc, AB.CastTime) : 0;
             if (DelayProc > 0)
+            {
+                if (s.ArcaneMissilesProcced || s.ArcaneMissilesDelayedProcced || !flameOrb)
+                {
+                    list.Add(new CycleControlledStateTransition()
+                    {
+                        Spell = AB,
+                        TargetState = GetState(
+                            Math.Max(0.0f, s.ArcaneBarrageCooldown - AB.CastTime),
+                            Math.Min(maxStack, s.ArcaneBlastStack + 1),
+                            s.ArcaneMissilesProcced || s.ArcaneMissilesDelayedProcced,
+                            true,
+                            true),
+                        TransitionProbability = DelayProc
+                    });
+                }
+                else
+                {
+                    list.Add(new CycleControlledStateTransition()
+                    {
+                        Spell = AB,
+                        TargetState = GetState(
+                            Math.Max(0.0f, s.ArcaneBarrageCooldown - AB.CastTime),
+                            Math.Min(maxStack, s.ArcaneBlastStack + 1),
+                            true,
+                            true,
+                            true),
+                        TransitionProbability = DelayProc * orbProc
+                    });
+                    list.Add(new CycleControlledStateTransition()
+                    {
+                        Spell = AB,
+                        TargetState = GetState(
+                            Math.Max(0.0f, s.ArcaneBarrageCooldown - AB.CastTime),
+                            Math.Min(maxStack, s.ArcaneBlastStack + 1),
+                            false,
+                            true,
+                            true),
+                        TransitionProbability = DelayProc * (1 - orbProc)
+                    });
+                }
+            }
+            if (orbProc > 0)
+            {
+                list.Add(new CycleControlledStateTransition()
+                {
+                    Spell = AB,
+                    TargetState = GetState(
+                        Math.Max(0.0f, s.ArcaneBarrageCooldown - AB.CastTime),
+                        Math.Min(maxStack, s.ArcaneBlastStack + 1),
+                        true,
+                        true,
+                        false),
+                    TransitionProbability = orbProc * (1 - DelayProc)
+                });
+            }
+            if (AMProc > 0)
             {
                 list.Add(new CycleControlledStateTransition()
                 {
@@ -4674,37 +4733,38 @@ w = remaining time on 2T10 effect";
                         Math.Min(maxStack, s.ArcaneBlastStack + 1),
                         s.ArcaneMissilesProcced || s.ArcaneMissilesDelayedProcced,
                         true,
-                        true),
-                    TransitionProbability = DelayProc
-                });
-            }
-            if (AMProc > 0)
-            {
-                list.Add(new CycleControlledStateTransition()
-                {
-                    Spell = AB,
-                    TargetState = GetState(
-                        Math.Max(0.0f, s.ArcaneBarrageCooldown - AB.CastTime), 
-                        Math.Min(maxStack, s.ArcaneBlastStack + 1), 
-                        s.ArcaneMissilesProcced || s.ArcaneMissilesDelayedProcced, 
-                        true,
                         false),
-                    TransitionProbability = AMProc * (1 - DelayProc)
+                    TransitionProbability = AMProc * (1 - DelayProc) * (1 - orbProc)
                 });
             }
             list.Add(new CycleControlledStateTransition()
             {
                 Spell = AB,
                 TargetState = GetState(
-                    Math.Max(0.0f, s.ArcaneBarrageCooldown - AB.CastTime), 
-                    Math.Min(maxStack, s.ArcaneBlastStack + 1), 
-                    s.ArcaneMissilesProcced || s.ArcaneMissilesDelayedProcced, 
+                    Math.Max(0.0f, s.ArcaneBarrageCooldown - AB.CastTime),
+                    Math.Min(maxStack, s.ArcaneBlastStack + 1),
+                    s.ArcaneMissilesProcced || s.ArcaneMissilesDelayedProcced,
                     s.ArcaneMissilesProcced || s.ArcaneMissilesDelayedProcced,
                     false),
-                TransitionProbability = (1 - AMProc) * (1 - DelayProc)
+                TransitionProbability = (1 - AMProc) * (1 - DelayProc) * (1 - orbProc)
             });
             if (s.ArcaneMissilesRegistered)
             {
+                orbProc = flameOrb ? 1f - (float)Math.Pow(1 - AMProc, AM.CastTime) : 0;
+                if (orbProc > 0)
+                {
+                    list.Add(new CycleControlledStateTransition()
+                    {
+                        Spell = AM,
+                        TargetState = GetState(
+                            Math.Max(0.0f, s.ArcaneBarrageCooldown - AM.CastTime),
+                            0,
+                            true,
+                            true,
+                            false),
+                        TransitionProbability = orbProc
+                    });
+                }
                 list.Add(new CycleControlledStateTransition()
                 {
                     Spell = AM,
@@ -4714,12 +4774,13 @@ w = remaining time on 2T10 effect";
                         s.ArcaneMissilesDelayedProcced, 
                         s.ArcaneMissilesDelayedProcced,
                         false),
-                    TransitionProbability = 1.0f
+                    TransitionProbability = 1.0f - orbProc
                 });
             }
             if (ABarAllowed && (!ABarOnCooldownOnly || s.ArcaneBarrageCooldown == 0.0))
             {
-                if (AMProc > 0)
+                orbProc = flameOrb ? 1f - (float)Math.Pow(1 - AMProc, ABar.CastTime) : 0;
+                if (AMProc > 0 || orbProc > 0)
                 {
                     list.Add(new CycleControlledStateTransition()
                     {
@@ -4731,7 +4792,7 @@ w = remaining time on 2T10 effect";
                             true, 
                             true,
                             false),
-                        TransitionProbability = AMProc
+                        TransitionProbability = 1 - (1 - AMProc) * (1 - orbProc)
                     });
                 }
                 list.Add(new CycleControlledStateTransition()
@@ -4744,7 +4805,7 @@ w = remaining time on 2T10 effect";
                         s.ArcaneMissilesProcced || s.ArcaneMissilesDelayedProcced, 
                         s.ArcaneMissilesProcced || s.ArcaneMissilesDelayedProcced,
                         false),
-                    TransitionProbability = (1 - AMProc)
+                    TransitionProbability = (1 - AMProc) * (1 - orbProc)
                 });
             }
 

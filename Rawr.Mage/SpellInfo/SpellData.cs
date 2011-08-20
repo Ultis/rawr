@@ -308,6 +308,10 @@ namespace Rawr.Mage
             {
                 BaseSpellModifier *= 1.05f;
             }
+            if (solver.BaseStats.DragonwrathProc > 0)
+            {
+                BaseSpellModifier *= 1.1f;
+            }
             Dirty = false;
         }
     }
@@ -329,6 +333,10 @@ namespace Rawr.Mage
             InitializeCastTime(false, false, 2, 0);
             InitializeScaledDamage(solver, true, 40, MagicSchool.Fire, 0.3f, 0.662000000476837f, 0.202000007033348f, 4 * 0.103000000119209f, 0.145999997854233f, 4 * 0.0610000006854534f, 1, 1, 8f);
             DotTickInterval = 2;
+            if (solver.BaseStats.DragonwrathProc > 0)
+            {
+                BaseSpellModifier *= 1.1f;
+            }
             Dirty = false;
         }
     }
@@ -385,6 +393,10 @@ namespace Rawr.Mage
             Name = "Frost Nova";
             InitializeCastTime(false, true, 0, 25);
             InitializeScaledDamage(solver, true, 0, MagicSchool.Frost, 0.07f, 0.42399999499321f, 0.150000005960464f, 0, 0.193000003695488f, 0, 1, 1, 0);
+            if (solver.BaseStats.DragonwrathProc > 0)
+            {
+                BaseSpellModifier *= 1.1f;
+            }
             Dirty = false;
         }
     }
@@ -441,6 +453,10 @@ namespace Rawr.Mage
             {
                 BaseSpellModifier *= 1.05f;
             }
+            if (solver.BaseStats.DragonwrathProc > 0)
+            {
+                BaseSpellModifier *= 1.1f;
+            }
             Dirty = false;
         }
     }
@@ -460,31 +476,13 @@ namespace Rawr.Mage
             {
                 BaseSpellModifier *= 1.2f;
             }
-            // deep freeze can only be cast in frozen state
-            //float fof = (calculations.MageTalents.FingersOfFrost == 2 ? 0.15f : 0.07f * calculations.MageTalents.FingersOfFrost);
-            //fingersOfFrostCritRate = (1.0f - (1.0f - fof) * (1.0f - fof)) * (calculations.MageTalents.Shatter == 3 ? 0.5f : 0.17f * calculations.MageTalents.Shatter);
+            if (solver.BaseStats.DragonwrathProc > 0)
+            {
+                // TODO proc not benefitting from shatter?
+                BaseSpellModifier *= 1.1f;
+            }
             Dirty = false;
         }
-
-        /*public Spell GetSpell(CastingState castingState, bool averageFingersOfFrost)
-        {
-            Spell spell = Spell.New(this, castingState.Calculations);
-            spell.Calculate(castingState);
-            if (averageFingersOfFrost && castingState.CalculationOptions.TargetLevel > castingState.CalculationOptions.PlayerLevel + 2)
-            {
-                spell.CritRate += fingersOfFrostCritRate;
-            }
-            spell.CalculateDerivedStats(castingState);
-            return spell;
-        }*/
-
-        /*public override Spell GetSpell(CastingState castingState)
-        {
-            Spell spell = Spell.New(this, castingState.Solver);
-            spell.Calculate(castingState);
-            spell.CalculateDerivedStats(castingState);
-            return spell;
-        }*/
     }
 
     // spell id: 2136, scaling id: 17
@@ -496,6 +494,10 @@ namespace Rawr.Mage
             InitializeCastTime(false, true, 0, 8);
             InitializeScaledDamage(solver, false, 30 + 5 * solver.MageTalents.ImprovedFireBlast, MagicSchool.Fire, 0.21f, 1.11300003528595f, 0.170000001788139f, 0, 0.428999990224838f, 0, 1, 1, 0);
             BaseCritRate += 0.04f * solver.MageTalents.ImprovedFireBlast;
+            if (solver.BaseStats.DragonwrathProc > 0)
+            {
+                BaseSpellModifier *= 1.1f;
+            }
             Dirty = false;
         }
     }
@@ -535,6 +537,10 @@ namespace Rawr.Mage
             if (solver.Mage4PVP)
             {
                 BaseSpellModifier *= 1.05f;
+            }
+            if (solver.BaseStats.DragonwrathProc > 0)
+            {
+                BaseSpellModifier *= 1.1f;
             }
             Dirty = false;
         }
@@ -578,6 +584,10 @@ namespace Rawr.Mage
             {
                 BaseSpellModifier *= 1.05f;
             }
+            if (solver.BaseStats.DragonwrathProc > 0)
+            {
+                BaseSpellModifier *= 1.1f;
+            }
             Dirty = false;
         }
     }
@@ -616,6 +626,10 @@ namespace Rawr.Mage
             {
                 BaseCritRate += 0.05f;
             }
+            if (solver.BaseStats.DragonwrathProc > 0)
+            {
+                BaseSpellModifier *= 1.1f;
+            }
             Dirty = false;
         }
     }
@@ -652,6 +666,10 @@ namespace Rawr.Mage
             if (solver.Mage2T11)
             {
                 BaseCritRate += 0.05f;
+            }
+            if (solver.BaseStats.DragonwrathProc > 0)
+            {
+                BaseSpellModifier *= 1.1f;
             }
             Dirty = false;
         }
@@ -700,6 +718,10 @@ namespace Rawr.Mage
             if (solver.MageTalents.GlyphOfLivingBomb)
             {
                 BaseSpellModifier *= 1.03f;
+            }
+            if (solver.BaseStats.DragonwrathProc > 0)
+            {
+                BaseSpellModifier *= 1.1f;
             }
             Dirty = false;
         }
@@ -783,6 +805,10 @@ namespace Rawr.Mage
             BasePeriodicDamage *= 10;
             DotDamageCoefficient *= 10;
             IgniteContributionCoefficient *= 10;
+            if (solver.BaseStats.DragonwrathProc > 0)
+            {
+                BaseSpellModifier *= 1.1f;
+            }
             Dirty = false;
         }
     }
@@ -810,6 +836,10 @@ namespace Rawr.Mage
             if (solver.MageTalents.GlyphOfConeOfCold)
             {
                 BaseSpellModifier *= 1.25f;
+            }
+            if (solver.BaseStats.DragonwrathProc > 0)
+            {
+                BaseSpellModifier *= 1.1f;
             }
             Dirty = false;
         }
@@ -844,6 +874,10 @@ namespace Rawr.Mage
             {
                 BaseCritRate += 0.05f;
             }
+            if (solver.BaseStats.DragonwrathProc > 0)
+            {
+                BaseSpellModifier *= 1.1f;
+            }
             Dirty = false;
         }
     }
@@ -874,6 +908,13 @@ namespace Rawr.Mage
             if (solver.MageTalents.GlyphOfArcaneBarrage)
             {
                 BaseDirectDamageModifier *= 1.04f;
+            }
+            if (solver.BaseStats.DragonwrathProc > 0)
+            {
+                BaseSpellModifier *= 1.1f;
+                Ticks *= 1.1f;
+                CastProcs *= 1.1f;
+                CastProcs2 *= 1.1f;
             }
             Dirty = false;
         }
@@ -926,6 +967,28 @@ namespace Rawr.Mage
             spell.Calculate(castingState);
             spell.BaseCastTime -= castDebuff * 0.1f * castTimeMultiplier;
             spell.AdditiveSpellModifier += arcaneBlastDamageMultiplier * debuff;
+            spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
+            spell.CostModifier += arcaneBlastManaMultiplier * debuff;
+            spell.CalculateDerivedStats(castingState, false, false, false, true, false, false);
+            return spell;
+        }
+
+        public Spell GetSpell(CastingState castingState, int debuff, int dwdebuff, int castDebuff, bool dragonwrathProc)
+        {
+            Spell spell = Spell.New(this, castingState.Solver);
+            spell.Calculate(castingState);
+            // we're not averaging dragonwrath so take the average out            
+            spell.SpellModifier /= 1.1f;
+            if (dragonwrathProc)
+            {
+                spell.SpellModifier *= 2f;
+                spell.AdditiveSpellModifier += arcaneBlastDamageMultiplier * (debuff + dwdebuff) / 2f;
+            }
+            else
+            {
+                spell.AdditiveSpellModifier += arcaneBlastDamageMultiplier * debuff;
+            }
+            spell.BaseCastTime -= castDebuff * 0.1f * castTimeMultiplier;
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
             spell.CostModifier += arcaneBlastManaMultiplier * debuff;
             spell.CalculateDerivedStats(castingState, false, false, false, true, false, false);
@@ -1053,6 +1116,10 @@ namespace Rawr.Mage
             {
                 BaseSpellModifier *= 1.05f;
             }
+            if (solver.BaseStats.DragonwrathProc > 0)
+            {
+                BaseSpellModifier *= 1.1f;
+            }
             Dirty = false;
         }
     }
@@ -1175,6 +1242,13 @@ namespace Rawr.Mage
             // this is assuming two spells before AM are not AM, not completely accurate, but close enough
             float potencyChance = 11f / 125f * (10f - 3f * solver.ClearcastingChance) * solver.ClearcastingChance;
             BaseCritRate = BaseCritRate - solver.ArcanePotencyCrit + arcanePotency * potencyChance;
+            if (solver.BaseStats.DragonwrathProc > 0)
+            {
+                BaseSpellModifier *= 1.1f;
+                Ticks *= 1.1f;
+                CastProcs *= 1.1f;
+                CastProcs2 *= 1.1f;
+            }
             Dirty = false;
         }
     }
@@ -1205,6 +1279,10 @@ namespace Rawr.Mage
             // should we count torment the weak?
             arcaneBlastDamageMultiplier = solver.MageTalents.GlyphOfArcaneBlast ? 0.13f : 0.1f;
             GlobalCooldown -= 0.25f * solver.MageTalents.ImprovedArcaneExplosion;
+            if (solver.BaseStats.DragonwrathProc > 0)
+            {
+                BaseSpellModifier *= 1.1f;
+            }
             Dirty = false;
         }
     }
@@ -1217,6 +1295,10 @@ namespace Rawr.Mage
             Name = "Blast Wave";
             InitializeCastTime(false, true, 0, 15);
             InitializeScaledDamage(solver, true, 0, MagicSchool.Fire, 0.07f, 0.989000022411346f, 0.164000004529953f, 0, 0.14300000667572f, 0, 1, 1, 0);
+            if (solver.BaseStats.DragonwrathProc > 0)
+            {
+                BaseSpellModifier *= 1.1f;
+            }
             Dirty = false;
         }
     }
@@ -1229,6 +1311,10 @@ namespace Rawr.Mage
             Name = "Dragon's Breath";
             InitializeCastTime(false, true, 0, 20);
             InitializeScaledDamage(solver, true, 0, MagicSchool.Fire, 0.07f, 1.37800002098083f, 0.150000005960464f, 0, 0.193000003695488f, 0, 1, 1, 0);
+            if (solver.BaseStats.DragonwrathProc > 0)
+            {
+                BaseSpellModifier *= 1.1f;
+            }
             Dirty = false;
         }
     }
@@ -1241,6 +1327,10 @@ namespace Rawr.Mage
             Name = "Blizzard";
             InitializeCastTime(true, false, 8, 0);
             InitializeScaledDamage(solver, true, 30, MagicSchool.Frost, 0.74f, 8 * 0.5423000097274782f, 0, 0, 8 * 0.16149999797344207f, 0, 8, 1, 0);
+            if (solver.BaseStats.DragonwrathProc > 0)
+            {
+                BaseSpellModifier *= 1.1f;
+            }
             Dirty = false;
         }
     }
