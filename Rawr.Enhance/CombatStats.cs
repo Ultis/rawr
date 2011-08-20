@@ -328,7 +328,7 @@ namespace Rawr.Enhance
             else if (_calcOpts.PriorityInUse(EnhanceAbility.RefreshTotems)) // if no Searing or Magma totem use refresh of Flametongue totem.
                 fireTotemUptime = firstPass ? 1.0f : 300f / AbilityCooldown(EnhanceAbility.RefreshTotems); 
             
-            float mwPPM = 2 * _talents.MaelstromWeapon;  //Check
+            float mwPPM = (10f / 3f) * _talents.MaelstromWeapon;
             float flurryHasteBonus = .10f * _talents.Flurry;
             float uWHasteBonus = .4f + .1f * _talents.ElementalWeapons;
             float edCritBonus = .03f * _talents.ElementalDevastation;
