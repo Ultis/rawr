@@ -225,7 +225,11 @@ namespace Rawr.DPSDK
             #endregion
         }
 
-
+        /// <summary>
+        /// With Triggers already setup, just pass into the Accumulate function and return the values
+        /// </summary>
+        /// <param name="effect"></param>
+        /// <returns></returns>
         public StatsDK getSpecialEffects(SpecialEffect effect)
         {
             StatsDK statsAverage = new StatsDK();

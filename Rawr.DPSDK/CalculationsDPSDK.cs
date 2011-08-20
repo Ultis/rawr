@@ -841,52 +841,7 @@ namespace Rawr.DPSDK
 
         public static Rotation.Type GetSpec(DeathKnightTalents t)
         {
-            Rotation.Type curRotationType = Rotation.Type.Custom;
-            const int indexBlood = 0; // start index of Blood Talents.
-            const int indexFrost = 19; // start index of Frost Talents.
-            const int indexUnholy = indexFrost + 19; // start index of Unholy Talents.
-            //const int sizeUnholy = 20;
-            int[] TalentCounter = new int[4];
-            int index = indexBlood;
-            foreach (int i in t.Data)
-            {
-                if (i > 0)
-                {
-                    // Blood
-                    if (index < indexFrost)
-                        TalentCounter[(int)Rotation.Type.Blood] += i;
-                    // Frost
-                    else if ((indexFrost <= index) && (index < indexUnholy))
-                    {
-                        TalentCounter[(int)Rotation.Type.Frost] += i;
-                    }
-                    // Unholy
-                    else if (index >= indexUnholy)
-                    {
-                        TalentCounter[(int)Rotation.Type.Unholy] += i;
-                    }
-                }
-                index++;
-            }
-            if ((TalentCounter[(int)Rotation.Type.Blood] >= 31)
-                || (TalentCounter[(int)Rotation.Type.Blood] > TalentCounter[(int)Rotation.Type.Frost]) && (TalentCounter[(int)Rotation.Type.Blood] > TalentCounter[(int)Rotation.Type.Unholy]))
-            {
-                // Blood
-                curRotationType = Rotation.Type.Blood;
-            }
-            else if ((TalentCounter[(int)Rotation.Type.Frost] >= 31)
-                || (TalentCounter[(int)Rotation.Type.Frost] > TalentCounter[(int)Rotation.Type.Blood]) && (TalentCounter[(int)Rotation.Type.Frost] > TalentCounter[(int)Rotation.Type.Unholy]))
-            {
-                // Frost
-                curRotationType = Rotation.Type.Frost;
-            }
-            else if ((TalentCounter[(int)Rotation.Type.Unholy] >=31)
-                || (TalentCounter[(int)Rotation.Type.Unholy] > TalentCounter[(int)Rotation.Type.Frost]) && (TalentCounter[(int)Rotation.Type.Unholy] > TalentCounter[(int)Rotation.Type.Blood]))
-            {
-                // Unholy
-                curRotationType = Rotation.Type.Unholy;
-            }
-            return curRotationType;
+            return (Rotation.Type)t.HighestTree + 1;
         }
 
         /// <summary>
