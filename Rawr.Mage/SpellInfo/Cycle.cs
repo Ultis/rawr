@@ -916,6 +916,7 @@ namespace Rawr.Mage
         public CycleState TargetState { get; set; }
         public Cycle Cycle { get; set; }
         public Spell Spell { get; set; }
+        public Spell DWSpell { get; set; } // legendary proc
         public float Pause { get; set; }
         public virtual float TransitionProbability { get; set; }
 
@@ -942,6 +943,7 @@ namespace Rawr.Mage
         public List<CycleState> StateList;
         public double[] StateWeight;
         Dictionary<Spell, double> SpellWeight = new Dictionary<Spell, double>();
+        Dictionary<Spell, double> DWSpellWeight = new Dictionary<Spell, double>();
         Dictionary<Cycle, double> CycleWeight = new Dictionary<Cycle, double>();
         public string SpellDistribution;
 
@@ -1033,6 +1035,7 @@ namespace Rawr.Mage
 
                 SpellWeight = new Dictionary<Spell, double>();
                 CycleWeight = new Dictionary<Cycle, double>();
+                DWSpellWeight = new Dictionary<Spell, double>();
 
                 foreach (CycleState state in StateList)
                 {
@@ -1049,6 +1052,12 @@ namespace Rawr.Mage
                                     double weight;
                                     SpellWeight.TryGetValue(transition.Spell, out weight);
                                     SpellWeight[transition.Spell] = weight + stateWeight * transitionProbability;
+                                }
+                                if (transition.DWSpell != null)
+                                {
+                                    double weight;
+                                    DWSpellWeight.TryGetValue(transition.DWSpell, out weight);
+                                    DWSpellWeight[transition.DWSpell] = weight + stateWeight * transitionProbability;
                                 }
                                 if (transition.Cycle != null)
                                 {
@@ -1070,6 +1079,10 @@ namespace Rawr.Mage
                 {
                     AddSpell(needsDisplayCalculations, kvp.Key, (float)kvp.Value);
                     if (kvp.Value > 0) sb.AppendFormat("{0}:\t{1:F}%\r\n", kvp.Key.Label ?? kvp.Key.SpellId.ToString(), 100.0 * kvp.Value);
+                }
+                foreach (KeyValuePair<Spell, double> kvp in DWSpellWeight)
+                {
+                    AddSpell(needsDisplayCalculations, kvp.Key, (float)kvp.Value);
                 }
                 foreach (KeyValuePair<Cycle, double> kvp in CycleWeight)
                 {

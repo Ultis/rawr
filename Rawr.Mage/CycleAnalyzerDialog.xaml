@@ -15,6 +15,7 @@
         <ComboBox Grid.Row="0" x:Name="CycleGeneratorComboBox" SelectionChanged="CycleGeneratorComboBox_SelectionChanged">
             <ComboBoxItem Content="Arcane" />
             <ComboBoxItem Content="Arcane Hyper Regen" />
+            <ComboBoxItem Content="Arcane Dragonwrath" />
             <ComboBoxItem Content="Arcane AOE" />
             <ComboBoxItem Content="Frost" />
             <ComboBoxItem Content="Frost+Deep Freeze" />

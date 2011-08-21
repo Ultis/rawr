@@ -978,7 +978,10 @@ namespace Rawr.Mage
             Spell spell = Spell.New(this, castingState.Solver);
             spell.Calculate(castingState);
             // we're not averaging dragonwrath so take the average out            
-            spell.SpellModifier /= 1.1f;
+            if (castingState.BaseStats.DragonwrathProc > 0)
+            {
+                spell.SpellModifier /= 1.1f;
+            }
             if (dragonwrathProc)
             {
                 spell.SpellModifier *= 2f;
@@ -992,6 +995,42 @@ namespace Rawr.Mage
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
             spell.CostModifier += arcaneBlastManaMultiplier * debuff;
             spell.CalculateDerivedStats(castingState, false, false, false, true, false, false);
+            return spell;
+        }
+
+        public Spell GetSpellNoDW(CastingState castingState, int debuff, int castDebuff)
+        {
+            Spell spell = Spell.New(this, castingState.Solver);
+            spell.Calculate(castingState);
+            // we're not averaging dragonwrath so take the average out            
+            if (castingState.BaseStats.DragonwrathProc > 0)
+            {
+                spell.SpellModifier /= 1.1f;
+            }
+            spell.AdditiveSpellModifier += arcaneBlastDamageMultiplier * debuff;
+            spell.BaseCastTime -= castDebuff * 0.1f * castTimeMultiplier;
+            spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
+            spell.CostModifier += arcaneBlastManaMultiplier * debuff;
+            spell.CalculateDerivedStats(castingState, false, false, false, true, false, false);
+            return spell;
+        }
+
+        public Spell GetSpellDW(CastingState castingState, int debuff, int castDebuff)
+        {
+            Spell spell = Spell.New(this, castingState.Solver);
+            spell.Calculate(castingState);
+            // we're not averaging dragonwrath so take the average out
+            if (castingState.BaseStats.DragonwrathProc > 0)
+            {
+                spell.SpellModifier /= 1.1f;
+            }
+            spell.AdditiveSpellModifier += arcaneBlastDamageMultiplier * debuff;
+            spell.BaseCastTime -= castDebuff * 0.1f * castTimeMultiplier;
+            spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
+            spell.CostModifier += arcaneBlastManaMultiplier * debuff;
+            spell.CalculateDerivedStats(castingState, false, false, false, true, false, false);
+            spell.CastTime = 0;
+            spell.AverageCost = 0;
             return spell;
         }
 
