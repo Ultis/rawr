@@ -726,6 +726,18 @@ the Threat Scale defined on the Options tab.",
             };
 
             #region Set Bonuses
+            int PvPCount;
+            character.SetBonusCount.TryGetValue("Gladiator's Sanctuary", out PvPCount);
+            if (PvPCount >= 2)
+            {
+                statsTotal.Agility += 70f;
+                statsTotal.Resilience += 400f;
+            }
+            if (PvPCount >= 4)
+            {
+                // the 15% movement speed is only outdoors which most dungeons are not
+                statsTotal.Agility += 90f;
+            }
             int T11Count;
             character.SetBonusCount.TryGetValue("Stormrider's Battlegarb", out T11Count);
             if (T11Count >= 2) {
@@ -1297,6 +1309,7 @@ the Threat Scale defined on the Options tab.",
         public override bool IsBuffRelevant(Buff buff, Character character) {
             if (buff != null
                 && !string.IsNullOrEmpty(buff.SetName)
+                && buff.SetName == "Gladiator's Sanctuary"
                 && buff.SetName == "Stormrider's Battlegarb"
                 && buff.SetName == "Obsidian Arborweave Battlegarb")
             { return true; }
