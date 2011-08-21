@@ -669,7 +669,7 @@ namespace Rawr
             }
             {
                 enchantTemp = new Stats() { };
-                enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { DodgeRating = 600, MovementSpeed = 0.15f }, 10, 0f, -1.4f)); // 2 PPM
+                enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { DodgeRating = 600, MovementSpeed = 0.15f }, 10, 0f, -1f)); // 2 PPM
                 defaultEnchants.Add(new Enchant(4098, "Windwalk", ItemSlot.OneHand, enchantTemp, "ability_paladin_sacredcleansing"));
             }
             {
