@@ -118,5 +118,91 @@ namespace Rawr.Base.Algorithms
            
             ArrayPool<LU.ArraySet>.ReleaseArraySet(arraySet);
         }
+
+        /// <summary>
+        /// Computes the average time from any state to the set of ending states.
+        /// </summary>
+        /// <param name="endingState">Predicate that returns true if a state is an ending state.</param>
+        /// <returns>An array with average time to end for all the states.</returns>
+#if SILVERLIGHT
+        public double[] GetAverageTimeToEnd(Predicate<State<TAbility>> endingState)
+#else
+        public unsafe double[] GetAverageTimeToEnd(Predicate<State<TAbility>> endingState)
+#endif
+        {
+            int size = StateSpace.Count;
+
+            LU.ArraySet arraySet = ArrayPool<LU.ArraySet>.RequestArraySet();
+            LU M = new LU(size, arraySet);
+
+            double[] ret = new double[size];
+
+#if SILVERLIGHT
+            M.BeginSafe();
+
+            Array.Clear(arraySet.LU_U, 0, size * size);
+
+            //U[i * rows + j]
+
+            foreach (State<TAbility> state in StateSpace)
+            {
+                if (endingState(state))
+                {
+                    arraySet.LU_U[state.Index * size + state.Index] = 1.0;
+                }
+                else
+                {
+                    foreach (StateTransition<TAbility> transition in state.Transitions)
+                    {
+                        arraySet.LU_U[transition.TargetState.Index * size + state.Index] += transition.TransitionProbability;
+                        ret[state.Index] -= transition.TransitionProbability * transition.TransitionDuration;
+                    }
+                    arraySet.LU_U[state.Index * size + state.Index] -= 1.0;
+                }
+            }
+
+            M.Decompose();
+            M.FSolve(ret);
+
+            M.EndUnsafe();            
+#else
+            fixed (double* U = arraySet.LU_U, x = ret)
+            fixed (double* sL = arraySet.LUsparseL, column = arraySet.LUcolumn, column2 = arraySet.LUcolumn2)
+            fixed (int* P = arraySet.LU_P, Q = arraySet.LU_Q, LJ = arraySet.LU_LJ, sLI = arraySet.LUsparseLI, sLstart = arraySet.LUsparseLstart)
+            {
+                M.BeginUnsafe(U, sL, P, Q, LJ, sLI, sLstart, column, column2);
+
+                Array.Clear(arraySet.LU_U, 0, size * size);
+
+                //U[i * rows + j]
+
+                foreach (State<TAbility> state in StateSpace)
+                {
+                    if (endingState(state))
+                    {
+                        U[state.Index * size + state.Index] = 1.0;
+                    }
+                    else
+                    {
+                        foreach (StateTransition<TAbility> transition in state.Transitions)
+                        {
+                            U[transition.TargetState.Index * size + state.Index] += transition.TransitionProbability;
+                            x[state.Index] -= transition.TransitionProbability * transition.TransitionDuration;
+                        }
+                        U[state.Index * size + state.Index] -= 1.0;
+                    }
+                }
+
+                M.Decompose();
+                M.FSolve(x);
+
+                M.EndUnsafe();
+            }
+#endif
+
+            ArrayPool<LU.ArraySet>.ReleaseArraySet(arraySet);
+
+            return ret;
+        }
     }
 }
