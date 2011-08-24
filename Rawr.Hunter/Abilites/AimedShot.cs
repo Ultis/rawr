@@ -19,16 +19,14 @@ namespace Rawr.Hunter.Skills
         /// Sic 'Em! - When you critically hit with your Arcane Shot, Aimed Shot or Explosive Shot the focus cost of your Pet's next basic attack is reduced by 50/100% for 12 sec.
         /// </TalentsAffecting>
         /// <GlyphsAffecting>Glyph of Aimed Shot - When you critically hit with Aimed Shot, you instantly gain 5 Focus.</GlyphsAffecting>
-        public AimedShot(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
+        public AimedShot(Character c, StatsHunter s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Aimed Shot";
-            //AbilIterater = (int)CalculationOptionsHunter.Maintenances.MortalStrike_;
             ReqTalent = true;
             ReqRangedWeap = true;
             ReqSkillsRange = true;
-            //Targets += StatS.BonusTargets;
             CastTime = 2.9f;
             FocusCost = 50f;
             DamageBase = (combatFactors.AvgRwWeaponDmgUnhasted + (StatS.RangedAttackPower * 0.724f) + 776) * 1.60f + 100;

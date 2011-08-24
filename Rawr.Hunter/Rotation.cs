@@ -10,7 +10,7 @@ namespace Rawr.Hunter {
             public AbilWrapper(Skills.Ability abil) { ability = abil; }
             public Skills.Ability ability { get; set; }
             public float numActivates { get; set; }
-            public float Mana { get { return ability.GetFocusUseOverDur(numActivates); } }
+            public float Focus { get { return ability.GetFocusUseOverDur(numActivates); } }
             public float DPS { get { return ability.GetDPS(numActivates); } }
             public float HPS { get { return ability.GetHPS(numActivates); } }
             public bool isDamaging { get { return ability.DamageOverride > 0f; } }
@@ -85,10 +85,10 @@ namespace Rawr.Hunter {
         public Skills.SteadyShot Steady;
         public Skills.CobraShot Cobra;
         public Skills.AimedShot Aimed;
-        public Skills.ArcaneShot Arcane;
-        
-        //public Skills.Volley Volley;
-        //public Skills.ChimeraShot ChimeraS;
+        public Skills.ArcaneShot Arcane;        
+        public Skills.ChimeraShot ChimeraShot;
+        // Generic
+        public Skills.KillShot Kill;
 
         // Buffs.
         public Skills.BestialWrath Bestial;
@@ -97,7 +97,7 @@ namespace Rawr.Hunter {
         public Skills.Readiness Ready;
 
         // DoTs.
-//        public Skills.PiercingShots Piercing;
+        public Skills.PiercingShots Piercing;
         public Skills.BlackArrow BlackArrowD;
 
         public Skills.SerpentSting Serpent;
@@ -112,19 +112,15 @@ namespace Rawr.Hunter {
         public float _Steady_DPS = 0f, _Steady_HPS = 0f, _Steady_GCDs = 0f;
         public float _Multi_DPS = 0f, _Multi_HPS = 0f, _Multi_GCDs = 0f;
         
-        // Generic
-        //public Skills.Cleave CL;
-        //public Skills.HeroicStrike HS;
-        public Skills.KillShot Kill;
         #endregion
 
         #endregion
         #region Get/Set
         protected Character Char { get; set; }
-        protected WarriorTalents Talents { get; set; }
-        protected Stats StatS { get; set; }
-        protected CombatFactors CombatFactors { get; set; }
-        public Skills.WhiteAttacks WhiteAtks { get; protected set; }
+        protected HunterTalents Talents { get; set; }
+        protected StatsHunter StatS { get; set; }
+        public CombatFactors CombatFactors { get; set; }
+        public WhiteAttacks WhiteAtks { get; protected set; }
         protected CalculationOptionsHunter CalcOpts { get; set; }
         protected BossOptions BossOpts { get; set; }
         
@@ -159,68 +155,55 @@ namespace Rawr.Hunter {
         #region Functions
         public virtual void Initialize(CharacterCalculationsHunter calcs) {
             this.calcs = calcs;
-            StatS = /*calcs.AverageStats*/ calcs.Hunter.Stats;
+            StatS = calcs.Hunter.Stats;
+            Char = calcs.character;
+            BossOpts = calcs.BossOpts;
+            CalcOpts = calcs.CalcOpts;
 
+            // Get our Ability list with valid options.
             initAbilities();
-            //doIterations();
 
+            // Generate the rotation
+            doIterations();
+
+            #region Populate the display values.
             // Whites
             calcs.Whites = WhiteAtks;
-            // Anti-Debuff
-            calcs.Explosive = Explosive;
-            /*calcs.HF = HF;
-            calcs.EM = EM;
-            calcs.CH = CH;
-            calcs.IN = IN;
-            calcs.IV = IV;
-            // Rage Generators
-            calcs.SndW = SndW;
-            calcs.BZ = BZ;
-            calcs.BR = BR;
-            // Maintenance
-            calcs.BTS = BTS;
-            calcs.CS = CS;
-            calcs.DS = DS;
-            calcs.SN = SN;
-            calcs.TH = TH;
-            calcs.HMS = HMS;
-            calcs.ER = ER;
-            // Periodics
-            calcs.ST = ST;
-            calcs.SW = SW;
-            calcs.Death = Death;
-            calcs.RK = RK;*/
+
+            // Filler/ Focus regen.
+            calcs.Steady = Steady;
+            calcs.Cobra = Cobra; // SV or BM (Replaces Steady Shot)
             
             // Shared Instants
             calcs.Multi = Multi;
-            calcs.Steady = Steady;
-            calcs.Cobra = Cobra;
-            calcs.Aimed = Aimed;
-            calcs.Multi = Multi;
             calcs.Arcane = Arcane;
-            // Arms
-            
+
+            // Spec specific.
+            calcs.Explosive = Explosive; // SV
+            calcs.BlackArrowD = BlackArrowD; // SV
+            calcs.Aimed = Aimed; // MM
+            calcs.Chimera = Chimera; // MM
+            // calcs.Intimidate = Intimidate; // BM
+            calcs.Bestial = Bestial; // BM
+
             // Generic
-            //calcs.CL = CL;
-//            calcs.Piercing = Piercing;
-            //calcs.HS = HS;
+            calcs.Piercing = Piercing;
             calcs.Kill = Kill;
-            //calcs.Volley = Volley;
 
-            calcs.Bestial = Bestial;
+            // Buffs
             calcs.Rapid = Rapid;
-//            calcs.BlackArrowB = BlackArrowB;
             calcs.Ready = Ready;
-
-//            calcs.Piercing = Piercing;
-            calcs.BlackArrowD = BlackArrowD;
+            
+            // DOT
             calcs.Serpent = Serpent;
-            calcs.Chimera = Chimera;
 
+            // Traps
             calcs.Immolation = Immolation;
             calcs.ExplosiveT = ExplosiveT;
             calcs.Freezing = Freezing;
             calcs.Frost = Frost;
+            #endregion
+
         }
         public virtual void Initialize() { initAbilities(); /*doIterations();*/ }
 
@@ -231,85 +214,84 @@ namespace Rawr.Hunter {
         public RotationType GetRotationType(HunterTalents t)
         {
             RotationType curRotationType = RotationType.Custom;
-            if (t.HighestTree == (int)Specialization.BeastMastery)
+            if (t != null)
             {
-                // Beast Mastery
-                curRotationType = Rotation.RotationType.BeastMastery;
-            }
-            else if (t.HighestTree == (int)Specialization.Marksmanship)
-            {
-                // Marksmanship
-                curRotationType = Rotation.RotationType.Marksmanship;
-            }
-            if (t.HighestTree == (int)Specialization.Survival)
-            {
-                // Survival
-                curRotationType = Rotation.RotationType.Survival;
+                if (t.HighestTree == (int)Specialization.BeastMastery)
+                {
+                    // Beast Mastery
+                    curRotationType = Rotation.RotationType.BeastMastery;
+                }
+                else if (t.HighestTree == (int)Specialization.Marksmanship)
+                {
+                    // Marksmanship
+                    curRotationType = Rotation.RotationType.Marksmanship;
+                }
+                if (t.HighestTree == (int)Specialization.Survival)
+                {
+                    // Survival
+                    curRotationType = Rotation.RotationType.Survival;
+                }
             }
             return curRotationType;
         }
 
+        /// <summary>
+        /// Initilize the abilties for use in generating the rotation.
+        /// </summary>
         protected virtual void initAbilities() {
             AbilityList.Clear();
-            WhiteAtks.InvalidateCache();
+            if (WhiteAtks != null)
+                WhiteAtks.InvalidateCache();
+
             // Whites
-            //WhiteAtks = new Skills.WhiteAtks(Char, StatS, CombatFactors);
-            // Anti-Debuff
-            //AddAbility(new AbilWrapper(new Skills.HeroicFury(        Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            //AddAbility(new AbilWrapper(new Skills.EveryManForHimself(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            //AddAbility(new AbilWrapper(new Skills.Charge(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            //AddAbility(new AbilWrapper(new Skills.Intercept(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            //AddAbility(new AbilWrapper(new Skills.Intervene(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            // Rage Generators
-            //AddAbility(new AbilWrapper(new Skills.SecondWind(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            //AddAbility(new AbilWrapper(new Skills.BerserkerRage(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            //AddAbility(new AbilWrapper(new Skills.Bloodrage(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            // Maintenance
-            //AddAbility(new AbilWrapper(new Skills.BattleShout(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            //AddAbility(new AbilWrapper(new Skills.CommandingShout(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            //AddAbility(new AbilWrapper(new Skills.DemoralizingShout(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            //AddAbility(new AbilWrapper(new Skills.SunderArmor(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            //AddAbility(new AbilWrapper(new Skills.ThunderClap(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            //AddAbility(new AbilWrapper(new Skills.Hamstring(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            //AddAbility(new AbilWrapper(new Skills.EnragedRegeneration(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            // Periodics
-            //AddAbility(new AbilWrapper(new Skills.ShatteringThrow(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            //AddAbility(new AbilWrapper(new Skills.SweepingStrikes(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            //AddAbility(new AbilWrapper(new Skills.DeathWish(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            //AddAbility(new AbilWrapper(new Skills.Recklessness(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
+            WhiteAtks = new Skills.WhiteAttacks(Char, StatS, CombatFactors, CalcOpts, BossOpts);
 
-            // Slam used by Bloodsurge, WW used by Bladestorm, so they're shared
-            SteadyShot Steady = new Skills.SteadyShot(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            // Filler/ Focus regen.
+            Steady = new Skills.SteadyShot(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
             AddAbility(new AbilWrapper(Steady));
-
-            CobraShot Cobra = new Skills.CobraShot(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            Cobra = new Skills.CobraShot(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
             AddAbility(new AbilWrapper(Cobra));
 
-            Skills.Ability Multi = new Skills.MultiShot(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            // Shared Instants
+            Multi = new Skills.MultiShot(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
             AddAbility(new AbilWrapper(Multi));
-            
-            //AddAbility(new AbilWrapper(new Skills.Cleave(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            //AddAbility(new AbilWrapper(new Skills.HeroicStrike(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            Skills.Ability Kill = new Skills.KillShot(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            Arcane = new Skills.ArcaneShot(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            AddAbility(new AbilWrapper(Arcane));
+
+            // Spec specific.
+            Explosive = new Skills.ExplosiveShot(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            AddAbility(new AbilWrapper(Explosive));
+            this.BlackArrowD = new Skills.BlackArrow(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            AddAbility(new AbilWrapper(BlackArrowD));
+            Aimed = new Skills.AimedShot(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            AddAbility(new AbilWrapper(Aimed));
+            ChimeraShot = new Skills.ChimeraShot(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            AddAbility(new AbilWrapper(ChimeraShot));
+            //Skills.Ability Intimidate = new Skills.Intimidate(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            Bestial = new Skills.BestialWrath(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            AddAbility(new AbilWrapper(Bestial));
+
+            // Generic
+            Piercing = new Skills.PiercingShots(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            AddAbility(new AbilWrapper(Piercing));
+            Kill = new Skills.KillShot(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
             AddAbility(new AbilWrapper(Kill));
 
-            // Arms abilities
-            //AddAbility(new AbilWrapper(new Skills.Bladestorm(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, WW)));
-            //AddAbility(new AbilWrapper(new Skills.MortalStrike(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            //AddAbility(new AbilWrapper(new Skills.Rend(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            //Skills.Ability SS = new Skills.Swordspec(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
-            //AddAbility(new AbilWrapper(SS));
-            //AddAbility(new AbilWrapper(new Skills.OverPower(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, SS)));
-            //AddAbility(new AbilWrapper(new Skills.TasteForBlood(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            //AddAbility(new AbilWrapper(new Skills.Suddendeath(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, EX)));
-            
-            // Fury abilities
-            //Ability BT = new Skills.BloodThirst(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
-            //AddAbility(new AbilWrapper(BT));
-            //AddAbility(new AbilWrapper(new Skills.BloodSurge(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, SL, WW, BT)));
+            // Buffs
+            Rapid = new Skills.RapidFire(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            AddAbility(new AbilWrapper(Rapid));
+            Ready = new Skills.Readiness(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            AddAbility(new AbilWrapper(Ready));
 
-//            Piercing = new Skills.PiercingShots(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            // DOT
+            Serpent = new Skills.SerpentSting(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            AddAbility(new AbilWrapper(Serpent));
 
+            // Traps
+            //AddAbility(new AbilWrapper(new Skills.ImmolationTrap(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            //AddAbility(new AbilWrapper(new Skills.ExplosiveTrap(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            //AddAbility(new AbilWrapper(new Skills.FreezingTrap(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            //AddAbility(new AbilWrapper(new Skills.FrostTrap(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
         }
 
         private void AddAbility(AbilWrapper abilWrapper)
@@ -317,28 +299,58 @@ namespace Rawr.Hunter {
             AbilityList.Add(abilWrapper.ability.GetType(), abilWrapper);
         }
 
-        public virtual void doIterations() { }
+        public virtual void doIterations() 
+        {
+            return;
+            // For starters lets build up what the rotation would look like for a given Spec:
+            #region  BM
+            if (GetRotationType(Talents) == RotationType.BeastMastery)
+            { }
+            #endregion
+            #region MM
+            else if (GetRotationType(Talents) == RotationType.Marksmanship)
+            {
+                // Taken from:
+                // http://www.warcrafthuntersunion.com/2010/11/cataclysm-mm-hunter-shot-rotation-guide/
 
-        protected virtual void calcDeepWounds() {
-            // Ranged Weapon
-            float rwActivates =
-                /*Yellow  */CriticalYellowsOverDurMH + 
-                /*White   */WhiteAtks.RwActivates * WhiteAtks.RWAtkTable.Crit;
+                // Setup:  
+                // TODO: Assume Hunter's Mark
+                // TODO: Assume AOTHawk
 
-            // Push to the Ability
-            //DW.SetAllAbilityActivates(rwActivates); 
+                // Opening: first 10 % health.  Terrible hack at this point.
+                float fOpeningDur = this.BossOpts.BerserkTimer * .1f;
+                // TODO: Check movement rate
+                // Open with RapidFire/Readiness/RapidFire
+                //      Aimed Shot procs (instant cast from Master Marksman procs)
+                //      Aimed Shot hardcast (manually casting the 2.9-second cast version)
+                //      Steady Shot
+                // May replace some of this if movement is high, for SerpentSting & Chimera to refresh.
+                // For now, static fight.
+                
+
+                // Body: Above 35% health.
+                //    Chimera Shot
+                //    Kill Shot (if available)
+                //    Aimed Shot procs
+                //    Arcane Shot
+                //    Steady Shot (in pairs)
+            }
+            #endregion
+
+            // SV
         }
 
         public void InvalidateCache()
         {
-            for (int i = 0; i < 5; i++) for (int k = 0; k < 3; k++)
+            for (int i = 0; i < EnumHelper.GetCount(typeof(ShotResult)); i++) for (int k = 0; k < EnumHelper.GetCount(typeof(AttackType)); k++)
                 _atkOverDurs[i,k] = -1f;
         }
 
         #region Attacks over Duration
         public enum ShotResult : int { Attempt=0, Land, Crit };
-        public enum AttackType : int { Yellow=0, White, Both };
-        private float[,] _atkOverDurs = new float[5,3];
+        [Flags]
+        public enum AttackType : int { Yellow, White}; // this should be [Flags] were Yellow & White are the flags so that Both would be Yellow + White
+        private float[,] _atkOverDurs = new float[EnumHelper.GetCount(typeof(ShotResult)), EnumHelper.GetCount(typeof(AttackType))];
         public float GetAttackOverDuration(ShotResult shotResult, AttackType attackType)
         {
             if (_atkOverDurs[(int)shotResult, (int)attackType] == -1f)
@@ -353,7 +365,8 @@ namespace Rawr.Hunter {
             float mod;
             CombatTable table;
 
-            if (at != AttackType.White) {
+            if ((at & AttackType.Yellow) == AttackType.Yellow) 
+            {
                 foreach (AbilWrapper abil in GetDamagingAbilities())
                 {
                     if (!abil.ability.Validated) { continue; }
@@ -362,7 +375,8 @@ namespace Rawr.Hunter {
                     count += abil.numActivates * abil.ability.AvgTargets * abil.ability.SwingsPerActivate * mod;
                 }
             }
-            if (at != AttackType.Yellow) {
+            if ((at & AttackType.White) == AttackType.White) 
+            {
                 table = WhiteAtks.RWAtkTable;
                 mod = GetTableFromSwingResult(sr, table);
                 count += WhiteAtks.RwActivates * mod;
@@ -377,45 +391,18 @@ namespace Rawr.Hunter {
             {
                 case ShotResult.Attempt: return 1f;
                 case ShotResult.Crit: return table.Crit;
-                //case ShotResult.Dodge: return table.Dodge;
                 case ShotResult.Land: return table.AnyLand;
-                //case ShotResult.Parry: return table.Parry;
                 default: return 0f;
             }
         }
 
-        public float AttemptedAtksOverDur { get { return GetAttackOverDuration(ShotResult.Attempt, AttackType.Both); } }
+        public float AttemptedAtksOverDur { get { return GetAttackOverDuration(ShotResult.Attempt, AttackType.Yellow | AttackType.White); } }
         public float AttemptedYellowsOverDur { get { return GetAttackOverDuration(ShotResult.Attempt, AttackType.Yellow); } }
-        public float LandedAtksOverDur { get { return GetAttackOverDuration(ShotResult.Land, AttackType.Both); } }
-        public float CriticalAtksOverDur { get { return GetAttackOverDuration(ShotResult.Crit, AttackType.Both); } }
+        public float LandedAtksOverDur { get { return GetAttackOverDuration(ShotResult.Land, AttackType.Yellow | AttackType.White); } }
+        public float CriticalAtksOverDur { get { return GetAttackOverDuration(ShotResult.Crit, AttackType.Yellow | AttackType.White); } }
 
-        public float AttemptedAtksOverDurMH { get { return GetAttackOverDuration(ShotResult.Attempt, AttackType.Both); } }
-        public float LandedAtksOverDurMH { get { return GetAttackOverDuration(ShotResult.Land, AttackType.Both); } }
-
-        public float AttemptedAtksOverDurOH { get { return GetAttackOverDuration(ShotResult.Attempt, AttackType.Both); } }
-        public float LandedAtksOverDurOH { get { return GetAttackOverDuration(ShotResult.Land, AttackType.Both); } }
-
-        public float CriticalYellowsOverDur { get { return GetAttackOverDuration(ShotResult.Crit, AttackType.Both); } }
-        public float LandedYellowsOverDur { get { return GetAttackOverDuration(ShotResult.Land, AttackType.Both); } }
-
-        public float CriticalYellowsOverDurMH { get { return GetAttackOverDuration(ShotResult.Crit, AttackType.Yellow); } }
-        public float CriticalYellowsOverDurOH { get { return GetAttackOverDuration(ShotResult.Crit, AttackType.Yellow); } }
-        
-        //public float DodgedYellowsOverDur { get { return GetAttackOverDuration(ShotResult.Dodge, AttackType.Yellow); } }
-        //public float ParriedYellowsOverDur { get { return GetAttackOverDuration(ShotResult.Parry, AttackType.Yellow); } }
-
-        public virtual float CritHsSlamOverDur {
-            get {
-                return 0f;
-                /*AbilWrapper HS = GetWrapper<HeroicStrike>();
-                AbilWrapper SL = GetWrapper<Slam>();
-                AbilWrapper BS = GetWrapper<BloodSurge>();
-                return HS.numActivates * HS.ability.RWAtkTable.Crit * HS.ability.AvgTargets +
-                       SL.numActivates * SL.ability.RWAtkTable.Crit * SL.ability.AvgTargets +
-                       BS.numActivates * BS.ability.RWAtkTable.Crit * BS.ability.AvgTargets;*/
-            }
-        }
-
+        public float CriticalYellowsOverDur { get { return GetAttackOverDuration(ShotResult.Crit, AttackType.Yellow | AttackType.White); } }
+        public float LandedYellowsOverDur { get { return GetAttackOverDuration(ShotResult.Land, AttackType.Yellow | AttackType.White); } }
         #endregion
 
         public float MaintainCDs { get {
@@ -424,73 +411,29 @@ namespace Rawr.Hunter {
             return cds;
         } }
         #endregion
-        #region Rage Calcs
-        protected virtual float RageGenOverDur_IncDmg {
+        #region Focus Calcs
+        protected virtual float FocusGenOverDur_Other {
             get {
-                // Invalidate bad things
-                /*if (!CalcOpts.AoETargets || CalcOpts.AoETargetsFreq < 1 || CalcOpts.AoETargetsDMG < 1) { return 0f; }
-                float RageMod = 2.5f / 453.3f;
-                float damagePerSec = 0f;
-                float freq = CalcOpts.AoETargetsFreq;
-                float dmg = CalcOpts.AoETargetsDMG * (1f + StatS.DamageTakenMultiplier) + StatS.BossAttackPower / 14f;
-                float acts = FightDuration / freq;
-                // Add Berserker Rage's
-                float zerkerMOD = 1f;
-                if (CalcOpts.Maintenance[(int)Rawr.Hunter.CalculationOptionsHunter.Maintenances.BerserkerRage_]) {
-                    SpecialEffect effect = new SpecialEffect(Trigger.Use,
-                        new Stats() { BonusAgilityMultiplier = 1f }, // this is just so we can use a Perc Mod without having to make a new stat
-                        10f, 30f);
-                    float upTime = effect.GetAverageUptime(0, 1f, CombatFactors._c_rwItemSpeed, (CalcOpts.SE_UseDur ? FightDuration : 0f));
-                    zerkerMOD *= (1f + upTime);
-                }
-                float dmgCap = 100f / (RageMod * zerkerMOD); // Can't get any more rage than 100 at any given time
-                damagePerSec = (acts * Math.Min(dmgCap, dmg)) / FightDuration;
-                
-                return (damagePerSec * RageMod * zerkerMOD) * FightDuration;*/
-                return 0;
-            }
-        }
-#if RAWR3 || RAWR4 || SILVERLIGHT
-#if !RAWR4
-        protected virtual float RageGenOverDur_Anger { get { return (Talents.AngerManagement / 3.0f) * BossOpts.BerserkTimer; } }
-#else
-        protected virtual float RageGenOverDur_Anger { get { return 0f; } }
-#endif
-#else
-        protected virtual float RageGenOverDur_Anger { get { return (Talents.AngerManagement / 3.0f) * CalcOpts.Duration; } }
-#endif
-
-        protected virtual float RageGenOverDur_Other {
-            get {
-                    float mana = RageGenOverDur_Anger               // Anger Management Talent
-                               //+ RageGenOverDur_IncDmg              // Damage from the bosses
-                               + (100f * StatS.ManaorEquivRestore)  // 0.02f becomes 2f
-                               + StatS.BonusRageGen;                // Bloodrage, Berserker Rage, Might Rage Pot
+                float focus = (100f * StatS.ManaorEquivRestore);  // 0.02f becomes 2f
 
                     foreach (AbilWrapper aw in GetAbilityList())
                     {
-                        if (aw.Mana < 0) 
-                            mana += (-1f) * aw.Mana;
+                        if (aw.Focus < 0) 
+                            focus += (-1f) * aw.Focus;
                     }
-
-                    // 4pcT7
-                    //if (StatS.BonusWarrior_T7_4P_RageProc != 0f) {
-                    //    rage += (StatS.BonusWarrior_T7_4P_RageProc * 0.1f) * (Talents.DeepWounds > 0f ? 1f : 0f) * CalcOpts.Duration;
-                    //    rage += (StatS.BonusWarrior_T7_4P_RageProc * 0.1f) * (CalcOpts.Maintenance[(int)CalculationOptionsHunter.Maintenances.Rend_] ? 1f / 3f : 0f) * CalcOpts.Duration;
-                    //}
                     
-                return mana;
+                return focus;
             }
         }
-        protected float RageNeededOverDur {
+        protected float FocusNeededOverDur {
             get {
-                float mana = 0f;
+                float focus = 0f;
                 foreach (AbilWrapper aw in GetAbilityList())
                 {
-                    if (aw.Mana > 0f) 
-                        mana += aw.Mana;
+                    if (aw.Focus > 0f) 
+                        focus += aw.Focus;
                 }
-                return mana;
+                return focus;
             }
         }
         #endregion
@@ -500,17 +443,17 @@ namespace Rawr.Hunter {
         /// Adds every maintenance ability to the rotation
         /// </summary>
         /// <param name="totalPercTimeLost">Time lost due to Boss Handler options</param>
-        /// <returns>Change in rage from these abilities</returns>
+        /// <returns>Change in focus from these abilities</returns>
         protected float DoMaintenanceActivates(float totalPercTimeLost)
         {
-            float netRage = 0f;
+            float netFocus = 0f;
 
             foreach (AbilWrapper aw in GetMaintenanceAbilities())
             {
-                netRage += AddMaintenanceAbility(totalPercTimeLost, aw);
+                netFocus += AddMaintenanceAbility(totalPercTimeLost, aw);
             }
-            if (netRage != 0f && _needDisplayCalcs) GCDUsage += Environment.NewLine;
-            return netRage;
+            if (netFocus != 0f && _needDisplayCalcs) GCDUsage += Environment.NewLine;
+            return netFocus;
         }
 
         /// <summary>
@@ -551,7 +494,7 @@ namespace Rawr.Hunter {
             float percTimeInMovement = CalculateMovement(MS);
             float percTimeInFear = CalculateFear();
             float percTimeInStun = CalculateStun();
-            float percTimeInRoot = CalculateRoot();
+            float percTimeInRoot = CalculateRoot(); // Root will not have much effect on hunters since they are physical ranged.
             return Math.Min(1f, percTimeInStun + percTimeInMovement + percTimeInFear + percTimeInRoot);
         }
 

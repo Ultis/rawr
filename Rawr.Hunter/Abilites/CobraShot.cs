@@ -20,7 +20,9 @@ namespace Rawr.Hunter.Skills
         /// Sniper Training - Increases the critical strike chance of your Kill Shot ability by 5/10/15%, and after remaining stationary for 6 sec, your Steady Shot and Cobra Shot deal 2/4/6% more damage for 15 sec.
         /// Termination - Your Steady Shot and Cobra Shot abilities grant an additional 3/6 Focus when dealt on targets at or below 25% health.
         /// </TalentsAffecting>
-        public CobraShot(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
+        /// <Note>Cobra Shot is a replacement to [Steady Shot] for beastmaster and survival hunters due to its ability 
+        /// (and beastmaster and survival hunters otherwise lack of ability) to increase the duration of [Serpent Sting] without recasting it. </Note>
+        public CobraShot(Character c, StatsHunter s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //

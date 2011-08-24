@@ -9,7 +9,7 @@ namespace Rawr.Hunter.Skills
     public class WhiteAttacks
     {
         // Constructors
-        public WhiteAttacks(Character character, Stats stats, CombatFactors cf, CalculationOptionsHunter calcOpts, BossOptions bossOpts)
+        public WhiteAttacks(Character character, StatsHunter stats, CombatFactors cf, CalculationOptionsHunter calcOpts, BossOptions bossOpts)
         {
             Char = character;
             StatS = stats;
@@ -31,7 +31,7 @@ namespace Rawr.Hunter.Skills
         }
         #region Variables
         private readonly Character Char;
-        private Stats StatS;
+        private StatsHunter StatS;
         private readonly HunterTalents Talents;
         private readonly CombatFactors combatFactors;
         private CalculationOptionsHunter CalcOpts;
@@ -166,7 +166,7 @@ namespace Rawr.Hunter.Skills
             string tooltip = "*" + "White Damage (Ranged Weapon)" +
                 Environment.NewLine + "Cast Time: Instant"
                                     + ", CD: " + (RwEffectiveSpeed != -1 ? RwEffectiveSpeed.ToString("0.00") : "None")
-                                    + //", Mana Generated: " + (MHSwingMana != -1 ? MHSwingMana.ToString("0.00") : "None") +
+                                    + //", Focus Generated: " + (MHSwingMana != -1 ? MHSwingMana.ToString("0.00") : "None") +
             Environment.NewLine + Environment.NewLine + acts.ToString("000.00") + " Activates over Attack Table:" +
             (showmisss ? Environment.NewLine + "- " + misses.ToString("000.00") + " : " + missesPerc.ToString("00.00%") + " : Missed " : "") +
             //(showdodge ? Environment.NewLine + "- " + dodges.ToString("000.00") + " : " + dodgesPerc.ToString("00.00%") + " : Dodged " : "") +
@@ -279,7 +279,7 @@ namespace Rawr.Hunter.Skills
         private bool USEREACT; // if this ability is used as a proc effect
         private Character CHARACTER;
         private HunterTalents TALENTS;
-        private Stats STATS;
+        private StatsHunter STATS;
         private CombatFactors COMBATFACTORS;
         private AttackTable RWATTACKTABLE;
         private WhiteAttacks WHITEATTACKS;
@@ -307,21 +307,12 @@ namespace Rawr.Hunter.Skills
                 //float extraTargetsHit = Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f;
                 if (_AvgTargets == -1f)
                 {
-#if RAWR3 || RAWR4 || SILVERLIGHT
                     _AvgTargets = 1f +
                        (BossOpts.MultiTargs ?
                            StatS.BonusTargets +
                            (BossOpts.MultiTargsTime / BossOpts.BerserkTimer) // *
                            //(Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f)
                            : 0f);
-#else
-                    _AvgTargets = 1f +
-                       (CalcOpts.MultipleTargets ?
-                           StatS.BonusTargets +
-                           CalcOpts.MultipleTargetsPerc / 100f // *
-                        //(Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f)
-                           : 0f);
-#endif
                 }
                 return _AvgTargets;
             }
@@ -382,7 +373,7 @@ namespace Rawr.Hunter.Skills
                 {
                     Talents = null;
                     StatS = null;
-                    //combatFactors = null;
+                    combatFactors = null;
                     RWAtkTable = null;
                     Whiteattacks = null;
                     CalcOpts = null;
@@ -390,8 +381,8 @@ namespace Rawr.Hunter.Skills
             }
         }
         protected HunterTalents Talents { get { return TALENTS; } set { TALENTS = value; } }
-        protected Stats StatS { get { return STATS; } set { STATS = value; } }
-        protected CombatFactors combatFactors { get { return COMBATFACTORS; } set { COMBATFACTORS = value; } }
+        protected StatsHunter StatS { get { return STATS; } set { STATS = value; } }
+        public CombatFactors combatFactors { get { return COMBATFACTORS; } set { COMBATFACTORS = value; } }
         public virtual AttackTable RWAtkTable { get { return RWATTACKTABLE; } protected set { RWATTACKTABLE = value; } }
         public WhiteAttacks Whiteattacks { get { return WHITEATTACKS; } set { WHITEATTACKS = value; } }
         protected CalculationOptionsHunter CalcOpts { get { return CALCOPTS; } set { CALCOPTS = value; } }
@@ -720,13 +711,13 @@ namespace Rawr.Hunter.Skills
         public SpecialEffect Effect { get { return EFFECT; } set { EFFECT = value; } }
         public SpecialEffect Effect2 { get { return EFFECT2; } set { EFFECT2 = value; } }
         // Functions
-        public virtual Stats AverageStats
+        public virtual StatsHunter AverageStats
         {
             get
             {
-                if (!Validated) { return new Stats(); }
-                Stats bonus = (Effect == null) ? new Stats() { AttackPower = 0f, } : Effect.GetAverageStats(0f, RWAtkTable.Hit + RWAtkTable.Crit, Whiteattacks.RwEffectiveSpeed, FightDuration);
-                bonus.Accumulate((Effect2 == null) ? new Stats() { AttackPower = 0f, } : Effect2.GetAverageStats(0f, RWAtkTable.Hit + RWAtkTable.Crit, Whiteattacks.RwEffectiveSpeed, FightDuration));
+                if (!Validated) { return new StatsHunter(); }
+                StatsHunter bonus = (Effect == null) ? new StatsHunter() { AttackPower = 0f, } : Effect.GetAverageStats(0f, RWAtkTable.Hit + RWAtkTable.Crit, Whiteattacks.RwEffectiveSpeed, FightDuration) as StatsHunter;
+                bonus.Accumulate((Effect2 == null) ? new StatsHunter() { AttackPower = 0f, } : Effect2.GetAverageStats(0f, RWAtkTable.Hit + RWAtkTable.Crit, Whiteattacks.RwEffectiveSpeed, FightDuration) as StatsHunter); 
                 return bonus;
             }
         }

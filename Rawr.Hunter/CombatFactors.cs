@@ -2,11 +2,20 @@ using System;
 
 namespace Rawr.Hunter {
     public class CombatFactors {
-        public CombatFactors(Character character, Stats stats, CalculationOptionsHunter calcOpts, BossOptions bossOpts)
+        public CombatFactors(Character character, StatsHunter stats, CalculationOptionsHunter calcOpts, BossOptions bossOpts)
         {
             Char = character;
-            RW = Char == null || Char.Ranged == null ? new Knuckles() : Char.Ranged.Item;
-            Talents = Char == null || Char.HunterTalents == null ? new HunterTalents() : Char.HunterTalents;
+            if (Char != null)
+            {
+                if (Char.Ranged != null)
+                    RW = Char.Ranged.Item;
+                else
+                    RW = new Knuckles();
+                if (Char.HunterTalents != null)
+                    Talents = Char.HunterTalents;
+                else
+                    Talents = new HunterTalents();
+            }
             CalcOpts = (calcOpts == null ? new CalculationOptionsHunter() : calcOpts);
             BossOpts = (bossOpts == null ? new BossOptions() : bossOpts);
             StatS = stats;
@@ -34,8 +43,8 @@ namespace Rawr.Hunter {
             _c_glance = GlanceChance;
         }
         #region Global Variables
-        private Stats _Stats;
-        public Stats StatS { get { return _Stats; } set { _Stats = value; } }
+        private StatsHunter _Stats;
+        public StatsHunter StatS { get { return _Stats; } set { _Stats = value; } }
         private HunterTalents Talents;
         public CalculationOptionsHunter CalcOpts { get; private set; }
         public BossOptions BossOpts { get; private set; }
@@ -135,8 +144,7 @@ namespace Rawr.Hunter {
         public float TotalHaste {
             get {
                 if (_TotalHaste == -1f)
-                    _TotalHaste = 1f + StatS.PhysicalHaste; // All haste is calc'd into PhysicalHaste in GetCharacterStats
-                //totalHaste      *= 1f + Talents.Flurry * 0.05f * FlurryUptime;
+                    _TotalHaste = 1f + StatS.RangedHaste; // All haste is calc'd into PhysicalHaste in GetCharacterStats
                 return _TotalHaste;
             }
         }

@@ -5,6 +5,7 @@ using System.Diagnostics;
 
 namespace Rawr.Hunter
 {
+    /*
     public class ShotData
     {
         public const float GCD = 1f;
@@ -98,8 +99,7 @@ namespace Rawr.Hunter
                 case Shots.ImmolationTrap: { time_used = Priority.CalcOpts.gcdsToLayImmoTrap * GCD; break; }
                 case Shots.ExplosiveTrap:  { time_used = Priority.CalcOpts.gcdsToLayImmoTrap * GCD; break; }
                 case Shots.FreezingTrap:   { time_used = Priority.CalcOpts.gcdsToLayImmoTrap * GCD; break; }
-                case Shots.FrostTrap:      { time_used = Priority.CalcOpts.gcdsToLayImmoTrap * GCD; break; }
-                //case Shots.Volley:         { time_used = Priority.CalcOpts.gcdsToVolley      * GCD; break; }
+                case Shots.IceTrap:      { time_used = Priority.CalcOpts.gcdsToLayImmoTrap * GCD; break; }
                 case Shots.SteadyShot:     { time_used = Cd < GCD ? GCD : Cd;                       break; }
                 default:                   { time_used = TriggersGCD ? GCD : 0f;                    break; }
             }
@@ -236,7 +236,6 @@ namespace Rawr.Hunter
 
             float final_focusps = final_freq > 0 ? FocusCost / final_freq : 0;
 
-            //if (Priority.chimeraRefreshesViper && Type == Shots.ViperSting) final_mps = 0;
             if (Priority.chimeraRefreshesSerpent && Type == Shots.SerpentSting) final_focusps = 0;
             // TODO Zhok: Huntersmark refresh no need as Marksman
             // TODO Zhok: Cobra no need for SerpentString Refresh
@@ -314,4 +313,5 @@ namespace Rawr.Hunter
             return ret;
         }
     }
+     */
 }

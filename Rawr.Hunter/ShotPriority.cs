@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
 
-namespace Rawr.Hunter {
-    public class ShotPriority {
+namespace Rawr.Hunter 
+{
+#if FALSE
+    public class ShotPriority 
+    {
         #region Variables
         public ShotData[] priorities = new ShotData[10];
 
@@ -57,7 +60,7 @@ namespace Rawr.Hunter {
                 if (priorities[i] != null && (priorities[i].Type == Shots.ImmolationTrap && used_black_immo)){ priorities[i].FailReason_SharedCooldownUsed = true; priorities[i] = null;}
                 if (priorities[i] != null && (priorities[i].Type == Shots.ExplosiveTrap && used_black_immo)) { priorities[i].FailReason_SharedCooldownUsed = true; priorities[i] = null; }
                 if (priorities[i] != null && (priorities[i].Type == Shots.FreezingTrap && used_black_immo)) { priorities[i].FailReason_SharedCooldownUsed = true; priorities[i] = null; }
-                if (priorities[i] != null && (priorities[i].Type == Shots.FrostTrap && used_black_immo)) { priorities[i].FailReason_SharedCooldownUsed = true; priorities[i] = null; }
+                if (priorities[i] != null && (priorities[i].Type == Shots.IceTrap && used_black_immo)) { priorities[i].FailReason_SharedCooldownUsed = true; priorities[i] = null; }
                 //if (priorities[i] != null && (priorities[i].Type == Shots.Volley && used_black_immo)) { priorities[i].FailReason_SharedCooldownUsed = true; priorities[i] = null; }
 
                 // Requires Multiple Targets ... TODO Zhok: Rly use multi here?
@@ -69,7 +72,7 @@ namespace Rawr.Hunter {
 
                 // shots which require talents
                 if (priorities[i] != null && priorities[i].Type == Shots.BlackArrow && Talents.BlackArrow == 0){ priorities[i].FailReason_LackTalent = true; priorities[i] = null; }
-                if (priorities[i] != null && priorities[i].Type == Shots.ChimearaShot && Talents.ChimeraShot == 0) { priorities[i].FailReason_LackTalent = true; priorities[i] = null; }
+                if (priorities[i] != null && priorities[i].Type == Shots.ChimeraShot && Talents.ChimeraShot == 0) { priorities[i].FailReason_LackTalent = true; priorities[i] = null; }
 #if !RAWR4
                 if (priorities[i] != null && priorities[i].Type == Shots.AimedShot && Talents.AimedShot == 0) { priorities[i].FailReason_LackTalent = true; priorities[i] = null; }
                 if (priorities[i] != null && priorities[i].Type == Shots.ExplosiveShot && Talents.ExplosiveShot == 0){priorities[i].FailReason_LackTalent = true; priorities[i] = null;}
@@ -90,7 +93,7 @@ namespace Rawr.Hunter {
                     if (priorities[i].Type == Shots.ImmolationTrap) used_black_immo = true;
                     if (priorities[i].Type == Shots.ExplosiveTrap) used_black_immo = true;
                     if (priorities[i].Type == Shots.FreezingTrap) used_black_immo = true;
-                    if (priorities[i].Type == Shots.FrostTrap) used_black_immo = true;
+                    if (priorities[i].Type == Shots.IceTrap) used_black_immo = true;
                     //if (priorities[i].Type == Shots.Volley) used_black_immo = true;
                 }
             }
@@ -98,7 +101,7 @@ namespace Rawr.Hunter {
             // store some derived facts about the rotation for later use
             chimeraRefreshesSerpent = false;
             chimeraRefreshesViper = false;
-            if (containsShot(Shots.ChimearaShot))
+            if (containsShot(Shots.ChimeraShot))
             {
                 if (containsShot(Shots.SerpentSting)) chimeraRefreshesSerpent = true;
             }
@@ -144,7 +147,7 @@ namespace Rawr.Hunter {
             // We have already calculated all shot cooldowns and validated the rotation by this point.
 
             // THIS FUNCTION IS CALLED THREE TIMES - TRY TO REMEMBER THIS!
-            // 1) When we have mana and basic timings
+            // 1) When we have focus and basic timings
             // 2) When we have LAL proc info
             // 3) When we have steady shot speed
 
@@ -224,7 +227,7 @@ namespace Rawr.Hunter {
             if (proc_shot == null) proc_shot = getShotInRotation(Shots.ImmolationTrap);
             if (proc_shot == null) proc_shot = getShotInRotation(Shots.ExplosiveTrap);
             if (proc_shot == null) proc_shot = getShotInRotation(Shots.FreezingTrap);
-            if (proc_shot == null) proc_shot = getShotInRotation(Shots.FrostTrap);
+            if (proc_shot == null) proc_shot = getShotInRotation(Shots.IceTrap);
             //if (proc_shot == null) proc_shot = getShotInRotation(Shots.Volley);
 
             if (proc_shot != null)
@@ -298,7 +301,7 @@ namespace Rawr.Hunter {
 
                     // the hidden shot calculations!
                     // G  (RotationCooldown)
-                    // H  (Mana)
+                    // H  (Focus)
                     // I  (Damage)
                     // J  (TimeUsed)
                     // K  (Ratio) =IF(OR(AND(ChimeraRefreshesViper,E30="Viper Sting"),AND(ChimeraRefreshesSerpent,E30="Serpent Sting")),"Refreshed",AB30)
@@ -350,4 +353,6 @@ namespace Rawr.Hunter {
             }
         }
     }
+#endif
+
 }

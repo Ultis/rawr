@@ -9,7 +9,7 @@ namespace Rawr.Hunter
         protected Character Char;
         protected CalculationOptionsHunter calcOpts;
         protected CombatFactors combatFactors;
-        protected Stats StatS;
+        protected StatsHunter StatS;
         protected Skills.Ability Abil;
         protected PetAttacks PetAbil;
         protected bool useSpellHit = false;
@@ -45,7 +45,7 @@ namespace Rawr.Hunter
             _anyNotLand = 0f;
         }
 
-        protected void Initialize(Character character, Stats stats, CombatFactors cf, CalculationOptionsHunter co,
+        protected void Initialize(Character character, StatsHunter stats, CombatFactors cf, CalculationOptionsHunter co,
             Skills.Ability ability, bool useSpellHit, bool alwaysHit)
         {
             Char = character;
@@ -53,8 +53,15 @@ namespace Rawr.Hunter
             calcOpts = co;
             combatFactors = cf;
             Abil = ability;
+            if (Abil == null)
+            {
+                isWhite = true;
+            }
+            else
+            {
+                Abil.combatFactors = combatFactors;
+            }
             PetAbil = PetAttacks.None;
-            isWhite = (Abil == null);
             this.useSpellHit = useSpellHit;
             /*// Defaults
             Miss 
@@ -149,11 +156,11 @@ namespace Rawr.Hunter
             base.Calculate();
         }
 
-        public AttackTable(Character character, Stats stats, CombatFactors cf, CalculationOptionsHunter co, bool useSpellHit, bool alwaysHit) {
+        public AttackTable(Character character, StatsHunter stats, CombatFactors cf, CalculationOptionsHunter co, bool useSpellHit, bool alwaysHit) {
             Initialize(character, stats, cf, co, null, useSpellHit, alwaysHit);
         }
 
-        public AttackTable(Character character, Stats stats, CombatFactors cf, CalculationOptionsHunter co, Skills.Ability ability, bool useSpellHit, bool alwaysHit) {
+        public AttackTable(Character character, StatsHunter stats, CombatFactors cf, CalculationOptionsHunter co, Skills.Ability ability, bool useSpellHit, bool alwaysHit) {
             Initialize(character, stats, cf, co, ability, useSpellHit, alwaysHit);
         }
     }
@@ -199,7 +206,7 @@ namespace Rawr.Hunter
             base.Calculate();
         }
 
-        protected void Initialize(Character character, Stats stats, CalculationOptionsHunter co,
+        protected void Initialize(Character character, StatsHunter stats, CalculationOptionsHunter co,
             float[] avoidChances, PetAttacks ability, bool useSpellHit, bool alwaysHit)
         {
             Char = character;
@@ -223,12 +230,12 @@ namespace Rawr.Hunter
             else Calculate(avoidChances);
         }
 
-        public PetAttackTable(Character character, Stats stats, CalculationOptionsHunter co,
+        public PetAttackTable(Character character, StatsHunter stats, CalculationOptionsHunter co,
             float[] avoidChances, bool useSpellHit, bool alwaysHit) {
             Initialize(character, stats, co, avoidChances, PetAttacks.None, useSpellHit, alwaysHit);
         }
 
-        public PetAttackTable(Character character, Stats stats, CalculationOptionsHunter co,
+        public PetAttackTable(Character character, StatsHunter stats, CalculationOptionsHunter co,
             float[] avoidChances, PetAttacks ability, bool useSpellHit, bool alwaysHit) {
             Initialize(character, stats, co, avoidChances, ability, useSpellHit, alwaysHit);
         }

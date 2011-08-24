@@ -25,38 +25,39 @@ namespace Rawr.Hunter
         ThreeToTwo
     }
 
+    // Updated 4.2 from Wowhead talents, Shots & Abilities.
     public enum Shots
     {
         None,
-        AimedShot,
-        ArcaneShot,
-        BestialWrath,
-        BlackArrow,
-        ChimearaShot,
-        CobraShot,
-        ExplosiveShot,
-        ExplosiveTrap,
-        FreezingTrap,
-        FrostTrap,
-        ImmolationTrap,
-        KillCommand,
-        KillShot,
-        MultiShot,
-        RapidFire,
-        Readiness,
-        SerpentSting,
-        SilencingShot,
-        SnakeTrap,
-        SteadyShot,
-        WidowVenum,
-        WyvernString
-    }
-
-    public enum Faction
-    {
-        None,
-        Aldor,
-        Scryer
+        AimedShot, // MM
+        ArcaneShot, //
+        BestialWrath, //
+        BlackArrow, //
+        ChimeraShot, //
+        CobraShot, //
+        ConcussiveShot, //
+        ExplosiveShot, // SV
+        ExplosiveTrap, //
+        Fervor, //
+        FocusFire, // 
+        FreezingTrap, //
+        DistractingShot, //
+        IceTrap, //
+        ImmolationTrap, //
+        Intimidation, //
+        KillCommand, // 
+        KillShot, //
+        MultiShot, //
+        RapidFire, //
+        Readiness, //
+        ScatterShot, //
+        SerpentSting, //
+        SilencingShot, //
+        SnakeTrap, //
+        SteadyShot, //
+        TranquilizingShot, //
+        WidowVenom, //
+        WyvernSting, //
     }
 
     // TODO: Setup map to go with Petfamily & PetAttack
@@ -137,12 +138,5 @@ namespace Rawr.Hunter
     {
         None,
         FoxToRun
-    }
-
-    public enum PetHappiness
-    {
-        Happy,
-        Content,
-        Unhappy
     }
 }

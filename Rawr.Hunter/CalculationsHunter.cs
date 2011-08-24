@@ -545,7 +545,7 @@ namespace Rawr.Hunter {
             if (stats.BonusArmorMultiplier != 0) { return true; }
             if (stats.BonusBleedDamageMultiplier != 0) { return true; }
             if (stats.BonusPhysicalDamageMultiplier != 0) { return true; }
-//            if (stats.BonusManaMultiplier != 0) { return true; } // No mana any more.
+//            if (stats.BonusManaMultiplier != 0) { return true; } // No focus any more.
             #endregion
             // Set Bonuses
             #region Special
@@ -846,12 +846,11 @@ namespace Rawr.Hunter {
                 case "Spammed Shots DPS":
                     _subPointNameColors = _subPointNameColorsDPS;
                     return new ComparisonCalculationBase[] {
+                        /*
                         comparisonFromShotSpammedDPS(calculations.aimedShot),
                         comparisonFromShotSpammedDPS(calculations.arcaneShot),
                         comparisonFromShotSpammedDPS(calculations.multiShot),
                         comparisonFromShotSpammedDPS(calculations.serpentSting),
-                        //comparisonFromShotSpammedDPS(calculations.scorpidSting),
-                        //comparisonFromShotSpammedDPS(calculations.viperSting),
                         comparisonFromShotSpammedDPS(calculations.cobraShot),
                         comparisonFromShotSpammedDPS(calculations.steadyShot),
                         comparisonFromShotSpammedDPS(calculations.killShot),
@@ -861,14 +860,15 @@ namespace Rawr.Hunter {
                         comparisonFromShotSpammedDPS(calculations.explosiveTrap),
                         comparisonFromShotSpammedDPS(calculations.freezingTrap),
                         comparisonFromShotSpammedDPS(calculations.frostTrap),
-                        //comparisonFromShotSpammedDPS(calculations.volley),
                         comparisonFromShotSpammedDPS(calculations.chimeraShot),
+                         */
                     };
                 #endregion
                 #region Rotation DPS
                 case "Rotation DPS":
                     _subPointNameColors = _subPointNameColorsDPS;
                     return new ComparisonCalculationBase[] {
+                        /*
                         comparisonFromShotRotationDPS(calculations.aimedShot),
                         comparisonFromShotRotationDPS(calculations.arcaneShot),
                         comparisonFromShotRotationDPS(calculations.multiShot),
@@ -893,6 +893,7 @@ namespace Rawr.Hunter {
                         //comparisonFromDoubles("PetAutoAttack", 0, calculations.petWhiteDPS),
                         //comparisonFromDoubles("PetSkills", 0, calculations.petSpecialDPS),
                         //comparisonFromDoubles("KillCommand", 0, calculations.petKillCommandDPS),
+                         */
                     };
                 #endregion
                 #region Item Budget
@@ -1140,6 +1141,7 @@ namespace Rawr.Hunter {
             }
             return talentCalculations.ToArray();
         }*/
+#if FALSE
         private ComparisonCalculationHunter comparisonFromShotSpammedDPS(ShotData shot)
         {
             ComparisonCalculationHunter comp =  new ComparisonCalculationHunter();
@@ -1191,6 +1193,8 @@ namespace Rawr.Hunter {
             comp.OverallPoints = dpm;
             return comp;
         }
+#endif
+
         private ComparisonCalculationHunter comparisonFromStat(Character character, CharacterCalculationsHunter calcBase, Stats stats, string label)
         {
             ComparisonCalculationHunter comp = new ComparisonCalculationHunter();
@@ -1419,16 +1423,23 @@ namespace Rawr.Hunter {
             calc.BossOpts = bossOpts;
 
             HunterTalents talents = character.HunterTalents;
-            //CombatFactors combatFactors = new CombatFactors(character, stats, calcOpts, bossOpts);
-            //WhiteAttacks whiteAttacks = new WhiteAttacks(character, stats, combatFactors, calcOpts, bossOpts);
-
             Specialization hunterspec = GetSpecialization(talents);
 
             calc.Hunter = new HunterBase(character, this.GetCharacterStats(character, additionalItem, true), talents, hunterspec, bossOpts.Level);
+            CombatFactors combatFactors = new CombatFactors(character, calc.Hunter.Stats, calcOpts, bossOpts);
+//            WhiteAttacks whiteAttacks = new WhiteAttacks(character, calc.Hunter.Stats, combatFactors, calcOpts, bossOpts);
+
+            Rotation Rot = new Rotation();
+            Rot.CombatFactors = combatFactors;
+            Rot.Initialize(calc); // Sets up the shots in the rotation and provides connection with the Calc object.
+
+
+
             if (needsDisplayCalculations)
             {
                 calc.HunterUnBuffed = new HunterBase(character, GetCharacterStats(character, additionalItem, false), talents, hunterspec, bossOpts.Level);
             }
+
             return calc;
         }
 
@@ -1705,7 +1716,7 @@ namespace Rawr.Hunter {
             float specialShotsPerSecond = GCDpSec; // I know it doesn't start w/ a special every GCD, but something to start with more than 0.
             float totalShotsPerSecond = GCDpSec + autoShotsPerSecond; 
             float shotsPerSecondWithoutHawk = 0;
-            RotationTest rotationTest;
+//            RotationTest rotationTest;
             //GenRotation(character, statsTotal, calculatedStats, calcOpts, bossOpts, talents,
             //    out rangedWeaponSpeed, out rangedWeaponDamage, out autoShotSpeed,
             //    out autoShotsPerSecond, out specialShotsPerSecond, out totalShotsPerSecond, out shotsPerSecondWithoutHawk,
@@ -1756,15 +1767,13 @@ namespace Rawr.Hunter {
 
             #region Hunter Specific
             triggerIntervals[Trigger.HunterAutoShotHit] = 1f / autoShotsPerSecond;
-            triggerIntervals[Trigger.SteadyShotHit] = calculatedStats.steadyShot.Cd;
-            triggerIntervals[Trigger.CobraShotHit] = calculatedStats.cobraShot.Cd;
-            //triggerIntervals[Trigger.SerpentWyvernStingsDoDamage]           = (calculatedStats.serpentSting.Freq > 0 || calculatedStats.serpentSting.is_refreshed ? 3f : 0f);
+            triggerIntervals[Trigger.SteadyShotHit] = 0; // calculatedStats.steadyShot.Cd;
+            triggerIntervals[Trigger.CobraShotHit] = 0; // calculatedStats.cobraShot.Cd;
             triggerIntervals[Trigger.EnergyOrFocusDropsBelow20PercentOfMax] = 4f; // Approximating as 80% chance every 4 seconds. TODO: Put in some actual method of calculating this
 
             triggerChances[Trigger.HunterAutoShotHit] = (1f - ChanceToMiss);
             triggerChances[Trigger.SteadyShotHit] = (1f - ChanceToMiss);
             triggerChances[Trigger.CobraShotHit] = (1f - ChanceToMiss);
-            //triggerChances[Trigger.SerpentWyvernStingsDoDamage]           = 1f;
             triggerChances[Trigger.EnergyOrFocusDropsBelow20PercentOfMax] = 0.80f; // Approximating as 80% chance every 4 seconds. TODO: Put in some actual method of calculating this
             #endregion
         }
@@ -1919,6 +1928,7 @@ namespace Rawr.Hunter {
             return curSpecialization;
         }
         
+        /*
         private ShotData getShotByIndex(int index, CharacterCalculationsHunter calculatedStats)
         {
             // This Index should really match the ENUM values for Shot.
@@ -1944,6 +1954,7 @@ namespace Rawr.Hunter {
             if (index == 20) return calculatedStats.bestialWrath;
             return null;
         }
+         */
         public static float CalcEffectiveDamage(float damageNormal, float missChance, float critChance, float critAdjust, float damageAdjust) {
             /* OLD CODE
              * 

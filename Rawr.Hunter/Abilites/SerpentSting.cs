@@ -17,7 +17,7 @@ namespace Rawr.Hunter.Skills
         /// Toxicology - Increases the periodic critical damage of your Serpent Sting and Black Arrow by 50/100%.
         /// </TalentsAffecting>
         /// <GlyphsAffecting>Glyph of Serpent Sting - Increases the periodic critical strike chance of your Serpent Sting by 6%.</GlyphsAffecting>
-        public SerpentSting(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
+        public SerpentSting(Character c, StatsHunter s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             Name = "Serpent Sting";

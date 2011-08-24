@@ -22,16 +22,15 @@ namespace Rawr.Hunter.Skills
         /// </TalentsAffecting>
         /// <GlyphsAffecting>Glyph of Steady Shot [+10% DMG]
         /// Glyph of Dazzled Prey - Your Steady Shot generates an additional 2 Focus on targets afflicted by a daze effect.</GlyphsAffecting>
-        public SteadyShot(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
+        public SteadyShot(Character c, StatsHunter s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Steady Shot";
-            //AbilIterater = (int)CalculationOptionsHunter.Maintenances.MortalStrike_;
             ReqRangedWeap = true;
             ReqSkillsRange = true;
+            UsesGCD = true;
             CastTime = 1.5f;
-            //Targets += StatS.BonusTargets;
             DamageBase = combatFactors.AvgRwWeaponDmgUnhasted + (StatS.RangedAttackPower * 0.021f) + 280f;
             DamageBonus = 1f + (Talents.GlyphOfSteadyShot ? 0.10f : 0f);
             //

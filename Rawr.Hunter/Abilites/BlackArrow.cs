@@ -21,7 +21,7 @@ namespace Rawr.Hunter.Skills
         /// Trap Mastery - Immolation Trap, Explosive Trap and Black Arrow - Increases the periodic damage done by 10/20/30%.
         /// </TalentsAffecting>
         /// <GlyphsAffecting></GlyphsAffecting>
-        public BlackArrow(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
+        public BlackArrow(Character c, StatsHunter s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
 

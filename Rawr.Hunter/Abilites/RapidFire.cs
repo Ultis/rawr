@@ -15,7 +15,7 @@ namespace Rawr.Hunter.Skills
         /// Rapid Recuperation - You gain 6/12 focus every 3 sec while under the effect of Rapid Fire, and you gain 50 focus instantly when you gain Rapid Killing.
         /// </TalentsAffecting>
         /// <GlyphsAffecting>Glyph of Rapid Fire [+10% Haste Bonus]</GlyphsAffecting>
-        public RapidFire(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
+        public RapidFire(Character c, StatsHunter s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
@@ -24,18 +24,23 @@ namespace Rawr.Hunter.Skills
             Cd = (5f - Talents.Posthaste) * 60f; // In Seconds
             Duration = 15f;
             UseHitTable = false;
-            Effect = new SpecialEffect(Trigger.Use,
-                new Stats() { RangedHaste = 0.40f + (Talents.GlyphOfRapidFire ? 0.10f : 0f), },
-                Duration, Cd);
-            //
-            // TODO Zhok: Use this for Glyph and Talent.. but no Mana.. more focus ;)
-            /*if (Talents.RapidRecuperation > 0) {
-                Effect2 = new SpecialEffect(Trigger.Use,
-                        new Stats() { ManaRestore = StatS.Mana * (0.02f * Talents.RapidRecuperation) * Duration / 3f, },
-                        Duration, Cd);
-            } else { Effect2 = null; }*/
-            //
+            Effect = _RAPIDFIRE[Talents.GlyphOfRapidFire ? 1 : 0][Talents.Posthaste];
             Initialize();
         }
+
+        private static readonly SpecialEffect[][] _RAPIDFIRE = new SpecialEffect[][] {
+            new SpecialEffect[]{
+                // Not Glyphed
+                new SpecialEffect(Trigger.Use, new StatsHunter() { RangedHaste = (0.40f + 0f), }, 15f, (5 - 0) * 60),
+                new SpecialEffect(Trigger.Use, new StatsHunter() { RangedHaste = (0.40f + 0f), }, 15f, (5 - 1) * 60),
+                new SpecialEffect(Trigger.Use, new StatsHunter() { RangedHaste = (0.40f + 0f), }, 15f, (5 - 2) * 60),
+            },
+            new SpecialEffect[]{
+                // Glyphed
+                new SpecialEffect(Trigger.Use, new StatsHunter() { RangedHaste = (0.40f + 0.10f), }, 15f, (5 - 0) * 60),
+                new SpecialEffect(Trigger.Use, new StatsHunter() { RangedHaste = (0.40f + 0.10f), }, 15f, (5 - 1) * 60),
+                new SpecialEffect(Trigger.Use, new StatsHunter() { RangedHaste = (0.40f + 0.10f), }, 15f, (5 - 2) * 60),
+            }
+        };
     }
 }

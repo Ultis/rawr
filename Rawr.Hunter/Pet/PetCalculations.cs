@@ -123,7 +123,7 @@ namespace Rawr.Hunter
             float focusRegenBasePer4 = 20f;
             float focusRegenBestialDiscipline = focusRegenBasePer4 * 0.5f * Talents.BestialDiscipline;
 
-            float critHitsPer4 = /*calculatedStats.shotsPerSecondCritting * */calculatedStats.priorityRotation.critsCompositeSum * 4f;
+            float critHitsPer4 = 0f; /*calculatedStats.shotsPerSecondCritting * */ //calculatedStats.priorityRotation.critsCompositeSum * 4f;
             float goForTheThroatPerCrit = 25 * Talents.GoForTheThroat;
             float focusRegenGoForTheThroat = critHitsPer4 * goForTheThroatPerCrit;
 
@@ -442,6 +442,7 @@ namespace Rawr.Hunter
             float cobraStrikesProc = Talents.CobraStrikes * 0.2f;
             if (cobraStrikesProc > 0)
             {
+                #if FALSE
                 float cobraStrikesCritFreqSteady = calculatedStats.steadyShot.Freq * (1f / calculatedStats.steadyShot.CritChance);
                 float cobraStrikesCritFreqArcane = calculatedStats.arcaneShot.Freq * (1f / calculatedStats.arcaneShot.CritChance);
                 float cobraStrikesCritFreqKill = calculatedStats.killShot.Freq * (1f / calculatedStats.killShot.CritChance);
@@ -462,6 +463,8 @@ namespace Rawr.Hunter
                 float cobraStrikesUptime = 1f - (float)Math.Pow(1f - calculatedStats.steadyShot.CritChance * cobraStrikesProc, cobraStrikesFreqInv * cobraStrikesTwoSpecials);
 
                 //calculatedStats.petCritFromCobraStrikes = (cobraStrikesUptime + (1f - cobraStrikesUptime) * calculatedStats.petCritTotalMelee) - calculatedStats.petCritTotalMelee;
+                #endif
+
             }
 
             //calculatedStats.petCritTotalSpecials = petStatsTotal.PhysicalCrit + calculatedStats.petCritFromCobraStrikes; // PetCritChance
@@ -553,14 +556,10 @@ namespace Rawr.Hunter
             if (CalcOpts.useKillCommand) {
                 float killCommandManaCost = 40f /* * calculatedStats.baseMana*/;
 
-                float killCommandReadinessFactor = calculatedStats.priorityRotation.containsShot(Shots.Readiness) ? 1.0f / 180f : 0f;
-                float killCommandCooldownBase = 1.0f
-#if !RAWR4
-                    / (60f - Talents.CatlikeReflexes * 10f)
-#endif
-                    ;
+//                float killCommandReadinessFactor = calculatedStats.priorityRotation.containsShot(Shots.Readiness) ? 1.0f / 180f : 0f;
+                float killCommandCooldownBase = 1.0f;
 
-                killCommandCooldown = 1.0f / (killCommandCooldownBase + killCommandReadinessFactor);
+//                killCommandCooldown = 1.0f / (killCommandCooldownBase + killCommandReadinessFactor);
 
                 //calculatedStats.petKillCommandMPS = killCommandCooldown > 0 ? killCommandManaCost / killCommandCooldown : 0;
             }
@@ -661,15 +660,9 @@ namespace Rawr.Hunter
             //calculatedStats.manaRegenRoarOfRecovery = 0;
             float roarOfRecoveryFreq = priorityRotation.getSkillFrequency(PetAttacks.RoarOfRecovery);
             if (roarOfRecoveryFreq > 0) {
-#if RAWR3 || RAWR4 || SILVERLIGHT
                 float roarOfRecoveryUseCount = (float)Math.Ceiling(BossOpts.BerserkTimer / roarOfRecoveryFreq);
                 float roarOfRecoveryManaRestored = HunterStats.Mana * 0.30f * roarOfRecoveryUseCount; // E129
                 //calculatedStats.manaRegenRoarOfRecovery = roarOfRecoveryUseCount > 0 ? roarOfRecoveryManaRestored / BossOpts.BerserkTimer : 0;
-#else
-                float roarOfRecoveryUseCount = (float)Math.Ceiling(CalcOpts.Duration / roarOfRecoveryFreq);
-                float roarOfRecoveryManaRestored = HunterStats.Mana * 0.30f * roarOfRecoveryUseCount; // E129
-                calculatedStats.manaRegenRoarOfRecovery = roarOfRecoveryUseCount > 0 ? roarOfRecoveryManaRestored / CalcOpts.Duration : 0;
-#endif
             }
 
             //Invigoration

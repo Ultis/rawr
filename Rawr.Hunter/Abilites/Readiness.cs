@@ -12,7 +12,7 @@ namespace Rawr.Hunter.Skills
         /// </summary>
         /// <TalentsAffecting></TalentsAffecting>
         /// <GlyphsAffecting></GlyphsAffecting>
-        public Readiness(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
+        public Readiness(Character c, StatsHunter s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //

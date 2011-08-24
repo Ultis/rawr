@@ -15,7 +15,7 @@ namespace Rawr.Hunter.Skills
         /// The Beast Within - While your pet is under the effects of Bestial Wrath, you also go into a rage causing 10% additional damage and reducing the focus cost of all shots and abilities by 50% for 10 sec.
         /// </TalentsAffecting>
         /// <GlyphsAffecting>Glyph of Bestial Wrath - Decreases the cooldown of Bestial Wrath by 20 sec.</GlyphsAffecting>
-        public BestialWrath(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
+        public BestialWrath(Character c, StatsHunter s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
@@ -24,6 +24,7 @@ namespace Rawr.Hunter.Skills
             Duration = 10f;
             UseHitTable = false;
             ReqTalent = true;
+            // TODO: Move these to static SEs.
             Effect = new SpecialEffect(Trigger.Use,
                 new Stats() { BonusPetDamageMultiplier = 0.20f }, Duration, Cd);
             if (Talents.TheBeastWithin > 0f)
@@ -31,15 +32,9 @@ namespace Rawr.Hunter.Skills
                 Effect = new SpecialEffect(Trigger.Use,
                     new Stats() { BonusDamageMultiplier = 0.10f }, Duration, Cd);
             }
-            //
-            // TODO Zhok: Use this for Glyph and Talent.. but no Mana.. more focus ;)
-            /*if (Talents.RapidRecuperation > 0) {
-                Effect2 = new SpecialEffect(Trigger.Use,
-                        new Stats() { ManaRestore = StatS.Mana * (0.02f * Talents.RapidRecuperation) * Duration / 3f, },
-                        Duration, Cd);
-            } else { Effect2 = null; }*/
-            //
             Initialize();
         }
+
+        
     }
 }

@@ -5,6 +5,7 @@ using System.Diagnostics;
 
 namespace Rawr.Hunter
 {
+#if FALSE
     class RotationTest
     {
         // passed in by the caller
@@ -41,7 +42,7 @@ namespace Rawr.Hunter
             //this.calculatedStats.sequence = "Time  :Shot          :CastTime:Done   :CD Until" + Environment.NewLine;
         }
 
-        // 091109 Drizz: Added to be able to pull infor from "outside"
+        // 091109 Drizz: Added to be able to pull info from "outside"
         public RotationShotInfo[] getRotationTable()
         {
             return shotTable;
@@ -49,11 +50,7 @@ namespace Rawr.Hunter
 
         public void RunTest()
         {
-#if RAWR3 || RAWR4 || SILVERLIGHT
             float FightDuration = BossOpts.BerserkTimer;
-#else
-            float FightDuration = CalcOpts.Duration;
-#endif
             float Latency = CalcOpts.Latency;
             float CDCutoff = CalcOpts.CDCutoff;
             float Longevity = character.HunterTalents.Longevity;
@@ -71,11 +68,7 @@ namespace Rawr.Hunter
             int LALfix = 0;
             float AutoShotSpeed = 2; // Speed at which we shoot auto-shots
             //float IAotHEffect = 1 + calculatedStats.quickShotsEffect; // haste increase during IAoTH
-            float IAotHChance =
-#if !RAWR4
-                character.HunterTalents.ImprovedAspectOfTheHawk > 0 ? 10 :
-#endif
-                -1;
+            float IAotHChance = -1;
             float WaitForESCS = CalcOpts.waitForCooldown;
             bool InterleaveLAL = CalcOpts.interleaveLAL;
             bool ArcAimedPrio = CalcOpts.prioritiseArcAimedOverSteady;
@@ -85,11 +78,7 @@ namespace Rawr.Hunter
             int ISSProcsArcane = 0;
             int ISSProcsChimera = 0;
             float BossHPPercentage = CalcOpts.BossHPPerc * 100;
-#if RAWR3 || RAWR4 || SILVERLIGHT
             float Sub20Time = (BossHPPercentage > 20) ? FightDuration - (float)BossOpts.Under20Perc * FightDuration : 0; // time *until* we hit sub-20
-#else
-            float Sub20Time = (BossHPPercentage > 20) ? FightDuration - CalcOpts.TimeSpentSub20 : 0; // time *until* we hit sub-20
-#endif
             bool UseKillShot = calculatedStats.priorityRotation.containsShot(Shots.KillShot);
             bool BMSpec = character.HunterTalents.BestialWrath + character.HunterTalents.TheBeastWithin > 0;
 
@@ -118,7 +107,7 @@ namespace Rawr.Hunter
             bool SerpentUsed;  // Have we used Serpent Sting yet?
 
             #region Initialize shotData & shotTable
-            shotData = new Dictionary<Shots, RotationShotInfo>(); // the shot info (mana, cooldown, etc)
+            shotData = new Dictionary<Shots, RotationShotInfo>(); // the shot info (focus, cooldown, etc)
             shotTable = new RotationShotInfo[10]; // the rotation info
             
             for (int i=0; i<calculatedStats.priorityRotation.priorities.Length; i++) {
@@ -141,11 +130,6 @@ namespace Rawr.Hunter
                 //shotData[Shots.SteadyShot].castTime = 2f / (1f + calculatedStats.hasteStaticTotal);
             }
 
-            // set Steady Shot cast time so it's only static haste
-            //if (shotData.ContainsKey(Shots.Volley)) {
-            //    shotData[Shots.Volley].castTime = 6f;
-            //}
-
             // Set Auto Shot Speed to statically hasted value
             AutoShotSpeed = 0f;//calculatedStats.autoShotStaticSpeed;
 
@@ -153,7 +137,7 @@ namespace Rawr.Hunter
             #region Variable setup
 
             // these are used by both the frequency rotation and here in the rotation test
-            bool chimeraRefreshesSerpent = containsShot(Shots.ChimearaShot) && containsShot(Shots.SerpentSting);
+            bool chimeraRefreshesSerpent = containsShot(Shots.ChimeraShot) && containsShot(Shots.SerpentSting);
 
             currentShot = 1;
             currentTime = 0;
@@ -534,14 +518,14 @@ namespace Rawr.Hunter
                         || thisShot == Shots.ImmolationTrap
                         || thisShot == Shots.ExplosiveTrap
                         || thisShot == Shots.FreezingTrap
-                        || thisShot == Shots.FrostTrap)
+                        || thisShot == Shots.IceTrap)
                     {
                         switch (thisShot) {
                             case Shots.BlackArrow: { LALTimer = currentTime + BA; break; }
                             case Shots.ImmolationTrap: { LALTimer = currentTime + it; break; }
                             case Shots.ExplosiveTrap: { LALTimer = currentTime + et; break; }
                             case Shots.FreezingTrap: { LALTimer = currentTime + ft; break; }
-                            default: { LALTimer = currentTime + frt; break; } // Shots.FrostTrap
+                            default: { LALTimer = currentTime + frt; break; } // Shots.IceTrap
                         }
                         LALType = thisShot;
                         LastLALCheck = currentTime - 3;
@@ -580,7 +564,7 @@ namespace Rawr.Hunter
                             ISSProcsArcane++;
                             ISSDuration = -1;
                             //Cells(row, col + 5).value = Cells(row, col + 5).value + "(ISS proc)"
-                        } else if (thisShot == Shots.ChimearaShot) {
+                        } else if (thisShot == Shots.ChimeraShot) {
                             ISSProcsChimera++;
                             ISSDuration = -1;
                             //Cells(row, col + 5).value = Cells(row, col + 5).value + "(ISS proc)"
@@ -733,7 +717,7 @@ namespace Rawr.Hunter
             this.IAotHUptime      = this.TestTimeElapsed > 0 ? 1.0f * this.IAotHTime / this.TestTimeElapsed : 0;
             this.ISSAimedUptime   = this.ISSProcsAimed   > 0 ? 1.0f * this.ISSProcsAimed / shotData[Shots.AimedShot].countUsed : 0;
             this.ISSArcaneUptime  = this.ISSProcsArcane  > 0 ? 1.0f * this.ISSProcsArcane / shotData[Shots.ArcaneShot].countUsed : 0;
-            this.ISSChimeraUptime = this.ISSProcsChimera > 0 ? 1.0f * this.ISSProcsChimera / shotData[Shots.ChimearaShot].countUsed : 0;
+            this.ISSChimeraUptime = this.ISSProcsChimera > 0 ? 1.0f * this.ISSProcsChimera / shotData[Shots.ChimeraShot].countUsed : 0;
 
             #endregion
             /*
@@ -744,7 +728,8 @@ namespace Rawr.Hunter
             */
         }
 
-        private bool randomProc(float chance) {
+        private bool randomProc(float chance) 
+        {
             if (chance < 0) return false;
             // 021109 Drizz: If I understand the rand.Next function correctly it is always below the 2nd parameter so (0,100) is what we want.
             //return rand.Next(0,99) < chance;
@@ -823,5 +808,6 @@ namespace Rawr.Hunter
         // these flags all show up in 1 column on the SS
         public bool flagBA;
     }
-*/ 
+*/
+#endif
 }

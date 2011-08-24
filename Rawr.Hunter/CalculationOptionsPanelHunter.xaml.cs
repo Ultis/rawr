@@ -157,17 +157,17 @@ PNStuff.Add(
 - Fixed Pet Spell Miss variable (didn't realize the Spell miss function in StatConversion was inverse)
 - Removed some dead code
 - Fixed a scope damage issue
-- Fixed an issue with Mana Regen stats (at least I think I did)
+- Fixed an issue with Focus Regen stats (at least I think I did)
 - Improved Attack Intervals for Pet Special Effects
 - Fix for Serpent Sting proc related damage
 ");
 PNStuff.Add(
 "v2.3.1 (Dec 10, 2009 03:47)",
-@"- Corrected a couple of Get Stat points for Mana Recovery options
+@"- Corrected a couple of Get Stat points for Focus Recovery options
 - Fixed a problem with Hunter's Hit translating to Pet's Dodged attacks
-NOTICE: A new issue has been identified, if you do not select the option to use Aspect of the Viper but you are running out of Mana before end of fight, there's presently no penalty. I'll need to fix this but it's not a simple correction so please be patient and until then at least use Viper at 'Just Enough'
+NOTICE: A new issue has been identified, if you do not select the option to use Aspect of the Viper but you are running out of Focus before end of fight, there's presently no penalty. I'll need to fix this but it's not a simple correction so please be patient and until then at least use Viper at 'Just Enough'
 - Fixed some back end naming for Aspect of the Viper Usage
-- Your DPS is now appropriately penalized when you are running OoM and not using an Aspect of the Viper Uptime, giving heavy favor to Mana Regen methods (pots, Mp5, etc). When using Viper, those stats reduce in value but don't go away unless your time to OoM is more than the fight duration
+- Your DPS is now appropriately penalized when you are running OoM and not using an Aspect of the Viper Uptime, giving heavy favor to Focus Regen methods (pots, Mp5, etc). When using Viper, those stats reduce in value but don't go away unless your time to OoM is more than the fight duration
 - Added a method by which users could get off the specialized chart setups after having viewed them. Since it doesn't auto-revert after seeing one of those and going back to a normal chart, you can now select one of the Custom DPS charts to revert the view then go to a normal chart.
 - Added a new Custom Chart 'Pet Talents' looks and feels just like the regular talent chart but works on Pet Talents, even shows the information about the talent at it's current rank on mouse-over
 ");
@@ -215,7 +215,7 @@ PNStuff.Add(
 - Corrected a bug in Arms where Slam would try to use more rage than you had available, which led to negative DPS while the rotation tried to correct itself
 - All models using Prof enchant hiding have been changed to use the global sets on the Stats Pane and Options > General Settings > Hide enchants based on professions. Models that were handling this manually have been edited to the new method, models that didn't have it are now on it as the back end changed
 - Profession bonus Buffs (Toughness and the like) are now updated when you update your professions in all models. Models that were handling this manually have been edited to the new method, models that didn't have it are now on it as the back end changed
-- Added a new Stats for global Mana Cost Reducs by Percentage (for the Beast Within talent)
+- Added a new Stats for global Focus Cost Reducs by Percentage (for the Beast Within talent)
 - Changed BonusDamageMultiplier usage in Hunter to not be restrictive (which was just dumb). It can now handle sources beyond just Buffs and be used in more places
 - Changed handling of The Beast Within and Bestial Wrath. Now these are handled using SpecialEffects and better modifiers, though I do need to add more of it into Pet damage calculation. Also fixed teh Duration from 18 to 10 sec
 - Changed the Armor Damage Reduction Formula for Pets to use the global one (just without ArP Rating)
@@ -237,10 +237,10 @@ Completely reworked the Pet Talents storage and interface (these steps will lead
 - Added Multiple Targets % to control Volley usage and reworked Volley's activation to enforce it's channeling
 - Moved Traps to a separate section on the Stats Pane from Shots
 - Removed Racials from the Stats Pane (back end is there)
-- Adjusted the display of some of the Mana Regen stats
+- Adjusted the display of some of the Focus Regen stats
 - Added the RAP boost coeff to Volley
 - Added a failure reason to Volley for not having Multiple Targets active and at >0%
-- Fixed a potential bug with certain gear setups that would break Mana Regen (causing it to go to Infinity)
+- Fixed a potential bug with certain gear setups that would break Focus Regen (causing it to go to Infinity)
 - Made the Randomize Procs on Rotation Test option gray out if not using Shot Rotation Test
 - Added the PetBuffSelector directly to the Options Pane instead of using a back end function to add it on load (previous builder didn't know how to add it)
 - Moved Pet stuff to a subfolder
@@ -391,21 +391,21 @@ Rawr.HunterSE:
 - made items/enchants with use-effects appear correctly
 - implemented the 5 proc haste trinkets/enchants on the spreadsheet
 - implemented the 2 proc crit trinkets on the spreadsheet
-- implemented improved steady shot (mana reduction & damage adjustment)
+- implemented improved steady shot (focus reduction & damage adjustment)
 - fixed default pet rotation for pets without two of dive/dash/charge/swoop
 - calculate pet specials crit frequency soon enough for Ferocious Inspiraion calcs
 - show more pet crit detail in stats pane
 - use heroism for pets too
 - don't let the pet dodge effect be beneficial
-- calculate mana regen from roar of recovery
-- calculate mana regen from invigoration
+- calculate focus regen from roar of recovery
+- calculate focus regen from invigoration
 - adjust pet ap for animal handler
 - calculate the t7 pet bonus correctly
 - calculate the beastial wrath effect for pets
 - show full (correct) haste calculations in stats pane
-- correctly adjust mana for glyph of arcane shot
-- calculate mana and damage effects from improved steady shot
-- calculate mana regen when viper is up 100%
+- correctly adjust focus for glyph of arcane shot
+- calculate focus and damage effects from improved steady shot
+- calculate focus regen when viper is up 100%
 - added cobra strikes calculation
 - made the utility calculation functions static
 - implemented t7 2-piece bonus
@@ -446,7 +446,7 @@ Rawr.HunterSE:
 * poison spit multiplies damage correctly by number of dots
 * scorpid poison damage uses the correct freq
 - now compatible with spreadsheet 91b
-- beastial wrath correctly reduce the mana cost of kill command
+- beastial wrath correctly reduce the focus cost of kill command
 - Bestial Wrath can only be used if you have the talent
 - PriorityRotation uses the options object directly - moved some constants in there
 - implemented Scorpid Sting
@@ -491,7 +491,7 @@ Rawr.HunterSE:
 - emulate Serpent/Chimera spreadsheet rounding bug
 - updated to match spreadsheet 91c(r2)
 - another bug that got fixed in 91c(r2)
-- show mana usage/regen details in stats output
+- show focus usage/regen details in stats output
 - show a lot more detail for pet ap/hit/hit in stats output
 - compatibility with spreadsheet 91e
 - fix for rotation test - don't wait for non-gcd abilities
@@ -522,7 +522,7 @@ Rawr.HunterSE:
 - fixed wild quiver calculation
 - split out wild quiver from autoshot dps
 - cleaned up displayed stats list (and added placeholders)
-- Mana regen overhaul
+- Focus regen overhaul
 - General refactoring continues
 - show AP from procs on tooltip
 - show crit talent breakdown in tooltip
@@ -540,14 +540,14 @@ Rawr.HunterSE:
 - calculate & display bonus damage from kill shot at sub-20% HP
 - added all of the armor set bonuses (tiers 4-9, seasons 1-6)
 - don't crash when character is not wearing trinkets or back enchant
-- updated Thrill of the Hunt mana adjustment for 3.2
-- removed Thrill of the Hunt mana adjustment from black arrow
+- updated Thrill of the Hunt focus adjustment for 3.2
+- removed Thrill of the Hunt focus adjustment from black arrow
 - round MPS in the same way the spreadsheet does
 - break out mps calculation from dps, so we can determine aspect uptime for dps
-- added several new options (main aspect, viper usage, mana pots, phase timings and more)
-- calculate and display aspect uptimes (based on mana rotation and needed viper)
+- added several new options (main aspect, viper usage, focus pots, phase timings and more)
+- calculate and display aspect uptimes (based on focus rotation and needed viper)
 - corrected aspect of the hawk AP calculation
-- tweaked base mana calculation to match spreadsheet
+- tweaked base focus calculation to match spreadsheet
 - rearranged the option panels
 - correctly save and load fight duration option
 - removed some debugging
@@ -621,7 +621,7 @@ Rawr.HunterSE:
 - WotLK boss armor is 10643, not 13100
 - Show 2dp for haste calculations.
 - Rapid fire base haste is 40%, not 50%
-- Corrected base mana and hp calculations
+- Corrected base focus and hp calculations
 - Updated autoshot dps calculations
 - Break autoshot dps down into base autoshot and wild quiver
 - Removed a couple of unused/redundant regions

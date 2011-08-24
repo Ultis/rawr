@@ -13,7 +13,7 @@ namespace Rawr.Hunter.Skills
         /// </summary>
         /// <TalentsAffecting>Piercing Shots (Requires Talent)</TalentsAffecting>
         /// <GlyphsAffecting></GlyphsAffecting>
-        public PiercingShots(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
+        public PiercingShots(Character c, StatsHunter s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //

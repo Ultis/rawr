@@ -23,7 +23,7 @@ namespace Rawr.Hunter.Skills
         /// Thrill of the Hunt - You have a 5/10/15% chance when you use Arcane Shot, Explosive Shot or Black Arrow to instantly regain 40% of the base focus cost of the shot.</TalentsAffecting>
         /// </TalentsAffecting>
         /// <GlyphsAffecting>Glyph of Arcane Shot [12% More DMG]</GlyphsAffecting>
-        public ArcaneShot(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
+        public ArcaneShot(Character c, StatsHunter s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
 

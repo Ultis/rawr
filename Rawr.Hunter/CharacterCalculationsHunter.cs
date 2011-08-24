@@ -26,12 +26,12 @@ namespace Rawr.Hunter
 
         public PetCalculations PetCalc { get; set; }
 
-        public ShotData aimedShot = new ShotData(Shots.AimedShot, false, true, true);
+/*      This is from the original Shot Code
+ * 
+ *      public ShotData aimedShot = new ShotData(Shots.AimedShot, false, true, true);
         public ShotData arcaneShot = new ShotData(Shots.ArcaneShot, false, true, true);
         public ShotData multiShot = new ShotData(Shots.MultiShot, false, true, true);
         public ShotData serpentSting = new ShotData(Shots.SerpentSting, false, true, true);
-        //public ShotData scorpidSting = new ShotData(Shots.ScorpidSting, false, false, true);
-        //public ShotData viperSting = new ShotData(Shots.ViperSting, false, false, true);
         public ShotData cobraShot = new ShotData(Shots.CobraShot, false, true, true);
         public ShotData steadyShot = new ShotData(Shots.SteadyShot, false, true, true);
         public ShotData killShot = new ShotData(Shots.KillShot, false, true, true);
@@ -40,14 +40,14 @@ namespace Rawr.Hunter
         public ShotData immolationTrap = new ShotData(Shots.ImmolationTrap, false, false, true);
         public ShotData explosiveTrap = new ShotData(Shots.ExplosiveTrap, false, false, true);
         public ShotData freezingTrap = new ShotData(Shots.FreezingTrap, true, false, true);
-        public ShotData frostTrap = new ShotData(Shots.FrostTrap, true, false, true);
-        //public ShotData volley = new ShotData(Shots.Volley, false, true, true);
-        public ShotData chimeraShot = new ShotData(Shots.ChimearaShot, false, true, true);
+        public ShotData frostTrap = new ShotData(Shots.IceTrap, true, false, true);
+        public ShotData chimeraShot = new ShotData(Shots.ChimeraShot, false, true, true);
         public ShotData rapidFire = new ShotData(Shots.RapidFire, true, false, false);
         public ShotData readiness = new ShotData(Shots.Readiness, true, false, true);
         public ShotData bestialWrath = new ShotData(Shots.BestialWrath, true, false, false);
 
-        public ShotPriority priorityRotation = null;
+//        public ShotPriority priorityRotation = null;
+        */
 
         private float _overallPoints = 0f;
         private float[] _subPoints = new float[] { 0f, 0f, 0f, 0f };
@@ -75,10 +75,9 @@ namespace Rawr.Hunter
         public Skills.MultiShot Multi { get; set; }
         public Skills.ArcaneShot Arcane { get; set; }
         public Skills.KillShot Kill { get; set; }
-        //public Skills.Volley Volley { get; set; }
         public Skills.BlackArrow BlackArrowD { get; set; }
         //        public Skills.BlackArrowBuff BlackArrowB { get; set; }
-        //        public Skills.PiercingShots Piercing { get; set; }
+        public Skills.PiercingShots Piercing { get; set; }
         public Skills.SerpentSting Serpent { get; set; }
         public Skills.ChimeraShot_Serpent Chimera { get; set; }
         public Skills.ImmolationTrap Immolation { get; set; }
@@ -226,45 +225,10 @@ namespace Rawr.Hunter
         public float autoShotSpeed { get; set; }
         public float autoShotStaticSpeed { get; set; }
 
-        // new shots data
-        // TODO: complete with new shots and check parameter
-
-        //***************************************
-        // 091109 Drizz: Added
-//        public bool collectSequence = false;
-//        public string sequence = "";
-        //***************************************
-
         #region Focus
         public float focus { get; set; }
         public float basefocus { get; set; }
         public float focusfromtalents { get; set; }
-        #endregion
-
-        #region Mana Regen
-        public float manaRegenGearBuffs {get; set;}
-        public float manaRegenConstantViper { get; set; }
-        public float manaRegenRoarOfRecovery { get; set; }
-        public float manaRegenRapidRecuperation { get; set; }
-        public float manaRegenChimeraViperProc { get; set; }
-        public float manaRegenInvigoration { get; set; }
-        public float manaRegenHuntingParty { get; set; }
-        public float manaRegenTargetDebuffs { get; set; }
-        public float manaRegenFromPots { get; set; }
-        public float manaRegenTotal { get; set; }
-
-        public float manaRegenViper { get; set; }
-        #endregion
-
-        #region Mana Usage
-        public float manaUsageRotation { get; set; }
-        public float manaUsageKillCommand { get; set; }
-        public float manaUsageTotal { get; set; }
-
-        public float manaChangeDuringViper { get; set; }
-        public float manaChangeDuringNormal { get; set; }
-        public float manaTimeToFull { get; set; }
-        public float manaTimeToOOM { get; set; }
         #endregion
 
         #region Kill shot used sub-20%
@@ -294,8 +258,9 @@ namespace Rawr.Hunter
 
         public float AutoshotDPS
         {
-            get { return _autoshotDPS; }
-            set { _autoshotDPS = value; }
+            get { return Whites.RwDPS; }
+//            get { return _autoshotDPS; }
+//            set { _autoshotDPS = value; }
         }
 
         public float BonusAttackProcsDPS
@@ -431,10 +396,10 @@ namespace Rawr.Hunter
                                 HunterUnBuffed.BaseMastery,
                                 HunterUnBuffed.IncrementalmasterywithConversion,
                                 HunterUnBuffed.MasteryRatePercent));
-            /* dictValues.Add("Attack Speed", BaseAttackSpeed.ToString("F2"));
+            dictValues.Add("Attack Speed", BaseAttackSpeed.ToString("F2"));
             
             // Pet Stats
-            dictValues.Add("Pet Health", string.Format("{0:000,000}*" +
+/*            dictValues.Add("Pet Health", string.Format("{0:000,000}*" +
                                         "{1:000,000} : Base" + 
                                         "\r\n{2:000,000} : Hunter" +
                                         "\r\n{3:000,000} : Bonus",
@@ -475,87 +440,56 @@ namespace Rawr.Hunter
                             + "Bite: Use {2} DPS {3:0.00}",
                             pet.priorityRotation.getSkillFrequency(PetAttacks.FuriousHowl), 0f,
                             pet.priorityRotation.getSkillFrequency(PetAttacks.Bite), pet.priorityRotation.dps - petWhiteDPS));
-
+*/
             // Shot Stats
-            dictValues.Add("Aimed Shot", aimedShot.GenTooltip());
-            dictValues.Add("Arcane Shot", arcaneShot.GenTooltip());
-            dictValues.Add("Multi Shot", multiShot.GenTooltip());
-            dictValues.Add("Cobra Shot", cobraShot.GenTooltip());
-            dictValues.Add("Steady Shot", steadyShot.GenTooltip());
-            dictValues.Add("Kill Shot", killShot.GenTooltip());
-            dictValues.Add("Explosive Shot", explosiveShot.GenTooltip());
-            dictValues.Add("Black Arrow", blackArrow.GenTooltip());
-            //dictValues.Add("Volley", volley.GenTooltip());
-            dictValues.Add("Chimera Shot", chimeraShot.GenTooltip());
+//            dictValues.Add("Aimed Shot", aimedShot.GenTooltip());
+//            dictValues.Add("Arcane Shot", arcaneShot.GenTooltip());
+//            dictValues.Add("Multi Shot", multiShot.GenTooltip());
+//            dictValues.Add("Cobra Shot", cobraShot.GenTooltip());
+//            dictValues.Add("Steady Shot", steadyShot.GenTooltip());
+//            dictValues.Add("Kill Shot", killShot.GenTooltip());
+//            dictValues.Add("Explosive Shot", explosiveShot.GenTooltip());
+//            dictValues.Add("Black Arrow", blackArrow.GenTooltip());
+//            dictValues.Add("Chimera Shot", chimeraShot.GenTooltip());
             
             //dictValues.Add("Rapid Fire", rapidFire.GenTooltip());
             //dictValues.Add("Readiness", readiness.GenTooltip());
             //dictValues.Add("Bestial Wrath", bestialWrath.GenTooltip());
 
             // Sting Stats
-            dictValues.Add("Serpent Sting", serpentSting.GenTooltip());
+//            dictValues.Add("Serpent Sting", serpentSting.GenTooltip());
 
             // Trap Stats
-            dictValues.Add("Immolation Trap", immolationTrap.GenTooltip());
-            dictValues.Add("Explosive Trap", explosiveTrap.GenTooltip());
-            dictValues.Add("Freezing Trap", freezingTrap.GenTooltip());
-            dictValues.Add("Frost Trap", frostTrap.GenTooltip());
-
-            // Mana
-            dictValues.Add("Mana Usage Per Second", manaUsageTotal.ToString("F2") + "*includes:\n" +
-                           manaUsageRotation.ToString("F2") + " from shot rotation\n" +
-                           manaUsageKillCommand.ToString("F2") + " from Kill Command");
-            dictValues.Add("Mana Regen Per Second", manaRegenTotal.ToString("F2") + "*includes:\n" +
-                (manaRegenGearBuffs + manaRegenConstantViper + manaRegenViper + manaRegenRoarOfRecovery
-                 + manaRegenRapidRecuperation + manaRegenChimeraViperProc + manaRegenInvigoration
-                 + manaRegenHuntingParty + manaRegenTargetDebuffs + manaRegenFromPots > 0f ? 
-                    (manaRegenGearBuffs != 0 ? manaRegenGearBuffs.ToString("F2") + " from Gear and Buffs\n" : "") +
-                    (manaRegenConstantViper != 0 ? manaRegenConstantViper.ToString("F2") + " from Constant Aspect of the Viper\n" : "") +
-                    (manaRegenViper != 0 ? manaRegenViper.ToString("F2") + " from Aspect of the Viper\n" : "") +
-                    (manaRegenRoarOfRecovery != 0 ? manaRegenRoarOfRecovery.ToString("F2") + " from Roar of Recovery\n" : "") +
-                    (manaRegenRapidRecuperation != 0 ? manaRegenRapidRecuperation.ToString("F2") + " from Rapid Recuperation\n" : "") +
-                    (manaRegenChimeraViperProc != 0 ? manaRegenChimeraViperProc.ToString("F2") + " from Chimera Viper String Proc\n" : "") +
-                    (manaRegenInvigoration != 0 ? manaRegenInvigoration.ToString("F2") + " from Invigoration\n" : "") +
-                    (manaRegenHuntingParty != 0 ? manaRegenHuntingParty.ToString("F2") + " from Hunting Party\n" : "") +
-                    (manaRegenTargetDebuffs != 0 ? manaRegenTargetDebuffs.ToString("F2") + " from Target Debuffs\n" : "") +
-                    (manaRegenFromPots != 0 ? manaRegenFromPots.ToString("F2") + " from Pots" : "")
-                : "Nothing to add")
-            );
-            dictValues.Add("Normal Change", manaChangeDuringNormal.ToString("F2"));
-            dictValues.Add("Change during Viper", manaChangeDuringViper.ToString("F2"));
-            dictValues.Add("Time to OOM", manaTimeToOOM.ToString("F2"));
-            dictValues.Add("Time to Full", manaTimeToFull.ToString("F2"));
-            dictValues.Add("Viper Damage Penalty", aspectViperPenalty.ToString("P2"));
-            dictValues.Add("Viper Uptime", aspectUptimeViper.ToString("P2"));
-            dictValues.Add("No Mana Damage Penalty", NoManaDPSDownTimePerc.ToString("P2"));
+            //dictValues.Add("Immolation Trap", immolationTrap.GenTooltip());
+            //dictValues.Add("Explosive Trap", explosiveTrap.GenTooltip());
+            //dictValues.Add("Freezing Trap", freezingTrap.GenTooltip());
+            //dictValues.Add("Frost Trap", frostTrap.GenTooltip());
 
             // Hunter DPS
             dictValues.Add("Autoshot DPS", AutoshotDPS.ToString("F2"));
             dictValues.Add("Priority Rotation DPS", CustomDPS.ToString("F2"));
             dictValues.Add("Wild Quiver DPS", WildQuiverDPS.ToString("F2"));
-            dictValues.Add("Kill Shot low HP gain", killShotSub20FinalGain.ToString("F2")+"*"+
-                            "Kill Shot freq: "+killShot.Freq.ToString("F2")+" -> "+killShot.start_freq.ToString("F2")+"\n"+
-                            "Steady Shot freq: "+steadyShot.Freq.ToString("F2")+" -> "+killShotSub20NewSteadyFreq.ToString("F2")+"\n"+
-                            "Kill Shot DPS: "+killShot.DPS.ToString("F2")+" -> "+killShotSub20NewDPS.ToString("F2")+"\n"+
-                            "Steady Shot DPS: "+steadyShot.DPS.ToString("F2")+" -> "+killShotSub20NewSteadyDPS.ToString("F2")+"\n"+
-                            "DPS Gain when switched: " + killShotSub20Gain.ToString("F2")+"\n"+
-                            "Time spent sub-20%: " + killShotSub20TimeSpent.ToString("P2"));
+//            dictValues.Add("Kill Shot low HP gain", killShotSub20FinalGain.ToString("F2")+"*"+
+//                            "Kill Shot freq: "+killShot.Freq.ToString("F2")+" -> "+killShot.start_freq.ToString("F2")+"\n"+
+//                            "Steady Shot freq: "+steadyShot.Freq.ToString("F2")+" -> "+killShotSub20NewSteadyFreq.ToString("F2")+"\n"+
+//                            "Kill Shot DPS: "+killShot.DPS.ToString("F2")+" -> "+killShotSub20NewDPS.ToString("F2")+"\n"+
+//                            "Steady Shot DPS: "+steadyShot.DPS.ToString("F2")+" -> "+killShotSub20NewSteadyDPS.ToString("F2")+"\n"+
+//                            "DPS Gain when switched: " + killShotSub20Gain.ToString("F2")+"\n"+
+//                            "Time spent sub-20%: " + killShotSub20TimeSpent.ToString("P2"));
             dictValues.Add("Aspect Loss", aspectBeastLostDPS.ToString("F2") + "*" +
                             "Hawk Uptime: " + aspectUptimeHawk.ToString("P2") + "\n" + 
-                            "Viper Uptime: " + aspectUptimeViper.ToString("P2") + "\n" + 
-                            "Beast Uptime: " + aspectUptimeBeast.ToString("P2"));
+                            "Fox Uptime: " + aspectUptimeBeast.ToString("P2"));
             dictValues.Add("Piercing Shots DPS", PiercingShotsDPS.ToString("F2") + "*" +
                             "Steady Shot: " + PiercingShotsDPSSteadyShot.ToString("F2") + "\n" +
                             "Aimed Shot: " + PiercingShotsDPSAimedShot.ToString("F2") + "\n" +
                             "Chimera Shot: " + PiercingShotsDPSChimeraShot.ToString("F2") + "\n");
             dictValues.Add("Special DMG Procs DPS", SpecProcDPS.ToString("F2"));
 
-             */
             // Combined DPS
             //string zod = (BonusAttackProcsDPS != 0 ? string.Format("*Includes:\r\nZod's Proc: {0:0.0}", BonusAttackProcsDPS) : "");
-            dictValues.Add("Hunter DPS", HunterDpsPoints.ToString("F2")/* + zod*/);
-            dictValues.Add("Pet DPS", PetDpsPoints.ToString("F2"));
-            dictValues.Add("Total DPS", OverallPoints.ToString("F2"));
+            //dictValues.Add("Hunter DPS", HunterDpsPoints.ToString("F2")/* + zod*/);
+            //dictValues.Add("Pet DPS", PetDpsPoints.ToString("F2"));
+            //dictValues.Add("Total DPS", OverallPoints.ToString("F2"));
 
             return dictValues;
         }

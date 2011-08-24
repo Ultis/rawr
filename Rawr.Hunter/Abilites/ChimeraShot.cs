@@ -20,7 +20,7 @@ namespace Rawr.Hunter.Skills
         /// Piercing Shots - Your critical Aimed, Steady and Chimera Shots cause the target to bleed for 10/20/30% of the damage dealt over 8 sec.
         /// </TalentsAffecting>
         /// <GlyphsAffecting>Glyph of Chimera Shot [-1 sec Cd]</GlyphsAffecting>
-        public ChimeraShot(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
+        public ChimeraShot(Character c, StatsHunter s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //

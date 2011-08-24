@@ -17,7 +17,7 @@ namespace Rawr.Hunter.Skills
         /// Concussive Barrage - Your successful Chimera Shot and Multi-Shot attacks have a 50/100% chance to daze the target for 4 sec.
         /// Serpent Spread - Targets hit by your Multi-Shot are also afflicted by your Serpent Sting equal to 6/9 sec of its total duration.
         /// </TalentsAffecting>
-        public MultiShot(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
+        public MultiShot(Character c, StatsHunter s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
@@ -48,7 +48,7 @@ namespace Rawr.Hunter.Skills
         /// </summary>
         /// <TalentsAffecting>Black Arrow (Requires Talent)</TalentsAffecting>
         /// <GlyphsAffecting></GlyphsAffecting>
-        public BlackArrowBuff(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
+        public BlackArrowBuff(Character c, StatsHunter s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
