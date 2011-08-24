@@ -494,7 +494,90 @@ namespace Rawr.RestoSham
 
             Stats stats = GetCharacterStats(character, additionalItem, statModifier);
             calc.BasicStats = stats;
-            
+            // All calculations will be changing vastly.  Regions being created to lay out model change
+            #region Create Blank Variables
+            //Fight Seconds
+            //Use Berserk Timer
+            //or Use Speed Kill Timer
+            //Or use 1/2 and 1/2 Method.
+            //Responsability
+            //Main Tank healer (75% of tank damage, 25% Raid Damage)
+            //Off-tank Healer (60% Tank damage, 40% raid damage)
+            //Raid Healer Light (75% Raid Damage, 25% Tank Damage)
+            //Raid Healer Heavy (100% raid Damage)
+            //Raid Size (Reduce healing needed by 10/25 responsability size
+            #endregion
+            #region Haste
+            //Cast Speed
+            //GCD (Riptide/Unleash)
+            //Healing Rains Tick Speed
+            //ELW Tick Speed
+            //HSurge Speed
+            //HW Speed
+            //HWTW Speed
+            //GHW Speed
+            //GHWTW Speed
+            //CH Speed
+            //Totem Drop Speed
+            #endregion
+            #region Criticals
+            //Crit per Spells
+            //Normal Spell Crit
+            //Riptide Heal Crit
+            //LB Crit
+            //Spell Mana Cost
+            //Riptide Cost w/ Resurgance Reduction
+            //Unleash Cost w/ Resurgance Reduction
+            //HSurge Cost w/ Resurgance Reduction
+            //HW Cost w/ Resurgance Reduction
+            //GHW Cost w/ Resurgance Reduction
+            //CH Cost w/ Resurgance Reduction
+            //HR Cost w/ Focused Insight Reduction
+            //Totem Cost
+            //LB Cost
+            #endregion
+            #region Sequencer
+            //Single Target Over 10k
+            //Single Target Under 10k
+            //Two to Three Targets Over 10k
+            //Two to Three Targets Under 10k
+            //Four Plus Targets Over 10k
+            //Four Plus Targets Under 10k
+            //Movement Time conversion to LB with Lag factor
+            //Add spells to Spell Totals
+            //For each damage, remove orb and factor in WS recharge
+            #endregion
+            #region Int/Spirit
+            //Spellpower
+            //Spellpower from Intel and other items
+            //Healing conversion from Spellpower
+            //Mastery
+            //Mastery conversion for per-target
+            //Create mastery based on 140k health values for raid
+            //Create mastery based on 180k health values for tanks
+            //Healing and Damage
+            //Riptide Healing
+            //Unleash Elements Healing
+            //HSurge Healing
+            //HW Healing
+            //GHW Healing
+            //Chain Heal Healing
+            //Healing Rains Healing
+            //HST Healing
+            //Hit from Spirit
+            //LB Damage
+            //Mana Regen
+            //LB Mana Restored
+            //Mana restored from Potions, Mana Restore, and Replenishment
+            //Mana Regen, including Mana Tide
+            #endregion
+            #region Final tally
+            //Spells
+            //Apply Spell Hits to Amounts
+            //Apply Amounts against fight seconds
+            //Apply new settings to subpoints
+            #endregion
+            //Begin old calculations
             #region FightSeconds, and CastingActivity
             _FightSeconds = bossOpts.BerserkTimer;
             _CastingActivity = 1f;
