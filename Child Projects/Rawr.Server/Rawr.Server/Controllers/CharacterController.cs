@@ -462,16 +462,20 @@ namespace Rawr.Server.Controllers
             #region Pets
             try
             {
-                var pets = (object[])dict["pets"];
-                character.ArmoryPets = new List<ArmoryPet>();
-                foreach (Dictionary<string, object> pet in pets)
+                object opets;
+                if (dict.TryGetValue("pets", out opets))
                 {
-                    ArmoryPet p = new ArmoryPet();
-                    p.Name = (string)pet["name"];
-                    p.CreatureID = (int)pet["creature"];
-                    p.SlotID = (int)pet["slot"];
-                    if (pet.ContainsKey("selected")) p.Selected = true;
-                    character.ArmoryPets.Add(p);
+                    var pets = (object[])opets;
+                    character.ArmoryPets = new List<ArmoryPet>();
+                    foreach (Dictionary<string, object> pet in pets)
+                    {
+                        ArmoryPet p = new ArmoryPet();
+                        p.Name = (string)pet["name"];
+                        p.CreatureID = (int)pet["creature"];
+                        p.SlotID = (int)pet["slot"];
+                        if (pet.ContainsKey("selected")) p.Selected = true;
+                        character.ArmoryPets.Add(p);
+                    }
                 }
             }
             catch { }
@@ -532,106 +536,7 @@ namespace Rawr.Server.Controllers
             string charXml = reader.ReadToEnd();
             #region Character Weight Loss Program
             charXml = Regex.Replace(charXml, @"
-  <Boss>
-    <Targets />
-    <BuffStates />
-    <Moves />
-    <Stuns />
-    <Fears />
-    <Roots />
-    <Silences />
-    <Disarms />
-    <Attacks>
-      <Attack>
-        <Name>Generated Default Melee Attack</Name>
-        <IsTheDefaultMelee>true</IsTheDefaultMelee>
-        <DamagePerHit>\d+</DamagePerHit>
-        <PhaseTimes>
-          <item>
-            <key>
-              <int>1</int>
-            </key>
-            <value>
-              <ArrayOfFloat>
-                <float>0</float>
-                <float>1200</float>
-              </ArrayOfFloat>
-            </value>
-          </item>
-        </PhaseTimes>
-        <Missable>true</Missable>
-        <Dodgable>true</Dodgable>
-        <Parryable>true</Parryable>
-        <Blockable>true</Blockable>
-        <AffectsRole>
-          <item>
-            <key>
-              <PLAYER_ROLES>MainTank</PLAYER_ROLES>
-            </key>
-            <value>
-              <boolean>true</boolean>
-            </value>
-          </item>
-          <item>
-            <key>
-              <PLAYER_ROLES>OffTank</PLAYER_ROLES>
-            </key>
-            <value>
-              <boolean>true</boolean>
-            </value>
-          </item>
-          <item>
-            <key>
-              <PLAYER_ROLES>TertiaryTank</PLAYER_ROLES>
-            </key>
-            <value>
-              <boolean>true</boolean>
-            </value>
-          </item>
-          <item>
-            <key>
-              <PLAYER_ROLES>MeleeDPS</PLAYER_ROLES>
-            </key>
-            <value>
-              <boolean>false</boolean>
-            </value>
-          </item>
-          <item>
-            <key>
-              <PLAYER_ROLES>RangedDPS</PLAYER_ROLES>
-            </key>
-            <value>
-              <boolean>false</boolean>
-            </value>
-          </item>
-          <item>
-            <key>
-              <PLAYER_ROLES>MainTankHealer</PLAYER_ROLES>
-            </key>
-            <value>
-              <boolean>false</boolean>
-            </value>
-          </item>
-          <item>
-            <key>
-              <PLAYER_ROLES>OffAndTertTankHealer</PLAYER_ROLES>
-            </key>
-            <value>
-              <boolean>false</boolean>
-            </value>
-          </item>
-          <item>
-            <key>
-              <PLAYER_ROLES>RaidHealer</PLAYER_ROLES>
-            </key>
-            <value>
-              <boolean>false</boolean>
-            </value>
-          </item>
-        </AffectsRole>
-      </Attack>
-    </Attacks>
-  </Boss>
+  <Boss>.*</Boss>
   <ItemFilterEnabledOverride>
     <ItemFilterEnabledOverride>
       <Name>Other</Name>
@@ -640,7 +545,7 @@ namespace Rawr.Server.Controllers
   </ItemFilterEnabledOverride>
   <CustomGemmingTemplates />
   <GemmingTemplateOverrides />
-  <CustomItemInstances />", "");
+  <CustomItemInstances />", "", RegexOptions.Singleline);
             charXml = charXml.Replace(@"
   <ItemFiltersSettings_UseChecks>true</ItemFiltersSettings_UseChecks>
   <ItemFiltersSettings_0>true</ItemFiltersSettings_0>
