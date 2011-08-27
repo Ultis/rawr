@@ -168,7 +168,7 @@ namespace Rawr.RestoSham
 
         #endregion
 
-        #region Default Buff Setup -- Updated to 4.0.3a and beyond.
+        #region Default Buff Setup
 
         /// <summary>
         /// Sets the defaults for a RestoShaman character
@@ -193,7 +193,7 @@ namespace Rawr.RestoSham
 
         #endregion
 
-        #region Gemming Templates (Updated for 4.0.3a and Beyond.  Rare ID's used as placeholders for epics.)
+        #region Gemming Templates (Rare ID's used as placeholders for epics.)
 
         /// <summary>
         /// List of default gemming templates recommended by the model
@@ -441,7 +441,7 @@ namespace Rawr.RestoSham
         #endregion
 
         #region Calculations Area (Spells, Armor, Ratings, and Burst/Sustained Points)
-
+        #region Unchanging Calculation Options
         /// <summary>
         /// GetCharacterCalculations is the primary method of each model, where a majority of the calculations
         /// and formulae will be used. GetCharacterCalculations should call GetCharacterStats(), and based on
@@ -481,7 +481,7 @@ namespace Rawr.RestoSham
 
             return _ReferenceShaman.GetCharacterCalculations(character);*/
         }
-
+        #endregion
         internal CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, Stats statModifier)
         {
             // First things first, we need to ensure that we aren't using bad data
@@ -496,29 +496,64 @@ namespace Rawr.RestoSham
             calc.BasicStats = stats;
             // All calculations will be changing vastly.  Regions being created to lay out model change
             #region Create Blank Variables
-            //Fight Seconds
-            //Use Berserk Timer
+            //Fight Seconds -  optional drop down for choosing speed
+            _FightSeconds = bossOpts.BerserkTimer;  // Use Berserk Timer
+            _CastingActivity = 1f;  // Amount of time casting.  Currently not able to be changed for testing.
             //or Use Speed Kill Timer
             //Or use 1/2 and 1/2 Method.
-            //Responsability
+            float GcdLatency = calcOpts.Latency / 1000;  // Latency from Options panel applied to GCD
+            float Latency = Math.Max(Math.Min(GcdLatency, 0.275f) - 0.14f, 0) + Math.Max(GcdLatency - 0.275f, 0);  //Standard latency
+            float TWChance = character.ShamanTalents.TidalWaves * 0.1f; // Calcuation for Tidal Waves
+            #endregion
+            #region Create incoming damage from boss handler
+            // Here is where the damage from the boss handler will be aggregated in a format to be used by the model.
+            // Will need to have a temporary panel setup on stats panel to verify numbers are correct.
+            #endregion
+            #region Responsability  
+            // In this model, over-healing is no longer going to be measured.
             //Main Tank healer (75% of tank damage, 25% Raid Damage)
             //Off-tank Healer (60% Tank damage, 40% raid damage)
             //Raid Healer Light (75% Raid Damage, 25% Tank Damage)
             //Raid Healer Heavy (100% raid Damage)
             //Raid Size (Reduce healing needed by 10/25 responsability size
             #endregion
-            #region Haste
-            //Cast Speed
-            //GCD (Riptide/Unleash)
+            #region Haste and Cast Speed - TODO - Create proper calculation for Haste effects on HOT's
+            float TDrop = 1f;//Totem Drop Speed
+            float HasteScale = 1f / (1f + calc.SpellHaste);
+            float ICast = (float)Math.Max(1.5f * HasteScale + Latency, 1f + GcdLatency); //GCD (Riptide/Unleash)            
+            float HRCast = (float)Math.Max(2.0f * HasteScale + Latency, 1f + GcdLatency); //Healing Rains Cast Speed
             //Healing Rains Tick Speed
             //ELW Tick Speed
-            //HSurge Speed
-            //HW Speed
-            //HWTW Speed
-            //GHW Speed
-            //GHWTW Speed
-            //CH Speed
-            //Totem Drop Speed
+            //Riptide Tick Speed
+            #region Healing Wave Cast Speed + TW Speed
+            float HWCastBase = 2.5f;
+            calc.RealHWCast = HWCastBase * HasteScale;
+            float HWCast = (float)Math.Max(HWCastBase * HasteScale + Latency, 1f + GcdLatency);
+            float HWCastTWLatency = (Latency * 0.25f + GcdLatency * 0.75f) * TWChance + (Latency * 0.5f + GcdLatency * 0.5f) * (1 - TWChance);
+            float HWCastTW = (float)Math.Max(HWCastBase * HasteScale * 0.7f + HWCastTWLatency, 1f + GcdLatency);
+            float HWCast_RT = (float)Math.Max(HWCastBase / (1f + calc.SpellHaste), 1f) + GcdLatency;
+            float HWCastTW_RT = (float)Math.Max(HWCastBase / (1f + calc.SpellHaste) * 0.7f + HWCastTWLatency, 1f + GcdLatency);
+            #endregion
+            #region Greater Healing Wave Cast Speed + TW Speed
+            float GHWCastBase = 2.5f;
+            calc.RealGHWCast = GHWCastBase * HasteScale;
+            float GHWCast = (float)Math.Max(GHWCastBase * HasteScale + Latency, 1f + GcdLatency);
+            float GHWCastTWLatency = (Latency * 0.25f + GcdLatency * 0.75f) * TWChance + (Latency * 0.5f + GcdLatency * 0.5f) * (1 - TWChance);
+            float GHWCastTW = (float)Math.Max(GHWCastBase * HasteScale * 0.7f + GHWCastTWLatency, 1f + GcdLatency);
+            float GHWCast_RT = (float)Math.Max(GHWCastBase / (1f + calc.SpellHaste), 1f) + GcdLatency;
+            float GHWCastTW_RT = (float)Math.Max(GHWCastBase / (1f + calc.SpellHaste) * 0.7f + GHWCastTWLatency, 1f + GcdLatency);
+            #endregion
+            #region Healing Surge Cast Speed
+            calc.RealHSrgCast = 1.5f * HasteScale;
+            float HSrgCast = (float)Math.Max(1.5f * HasteScale, 1f) + GcdLatency;
+            float HSrgCast_RT = (float)Math.Max(1.5f / (1f + calc.SpellHaste), 1f) + GcdLatency;
+            #endregion
+            #region Chain Heal Cast Speed
+            float CHCastBase = 2.5f;
+            calc.RealCHCast = CHCastBase * HasteScale;
+            float CHCast = (float)Math.Max(CHCastBase * HasteScale + Latency, 1f + GcdLatency);
+            float CHCast_RT = (float)Math.Max(CHCastBase / (1f + calc.SpellHaste), 1f) + GcdLatency;
+            #endregion
             #endregion
             #region Criticals
             //Crit per Spells
@@ -577,18 +612,14 @@ namespace Rawr.RestoSham
             //Apply Amounts against fight seconds
             //Apply new settings to subpoints
             #endregion
-            //Begin old calculations
+            #region Old calculations, regioned to be commented out more easily.
             #region FightSeconds, and CastingActivity
-            _FightSeconds = bossOpts.BerserkTimer;
-            _CastingActivity = 1f;
             #endregion
             #region Spell Power and Haste Based Calcs
             calc.SpellHaste = stats.SpellHaste;
             float LBSpellPower = stats.SpellPower - (1 * ((1 + character.ShamanTalents.ElementalWeapons * .2f) * 150f));
             #endregion
             #region Overhealing/Latency/Interval/CH jumps values
-            float GcdLatency = calcOpts.Latency / 1000;
-            float Latency = Math.Max(Math.Min(GcdLatency, 0.275f) - 0.14f, 0) + Math.Max(GcdLatency - 0.275f, 0);
 #if true
             float ESOverheal = 0;
             float ELWOverheal = 0;
@@ -650,7 +681,6 @@ namespace Rawr.RestoSham
             //  AA scale
             float AAScale = CriticalScale * character.ShamanTalents.AncestralAwakening * .1f * PurificationScale;
             //  TW chance
-            float TWChance = character.ShamanTalents.TidalWaves * 0.1f;
             #endregion
             #region Water Shield and Mana Calculations
             float Orb;
@@ -707,36 +737,13 @@ namespace Rawr.RestoSham
             float ELWTicksPerSec = 0;
             #endregion
             #region Base Speeds ( Hasted / RTCast / HSrgCast / HWCast / CHCast )
-            float HasteScale = 1f / (1f + calc.SpellHaste);
-            float RTCast = (float)Math.Max(1.5f * HasteScale + Latency, 1f + GcdLatency);
             float RTCD = 6;
             float RTCDCast = RTCD + GcdLatency;
             float RTDuration = 15 + (character.ShamanTalents.GlyphofRiptide ? 6 : 0);
-            float HRCast = (float)Math.Max(2.0f * HasteScale + Latency, 1f + GcdLatency);
+            
             //float HRCD = 10;
             //float HRDuration = 10;
             float ELWDuration = 12;
-            float HWCastBase = 2.5f;
-            float GHWCastBase = 2.5f;
-            calc.RealHWCast = HWCastBase * HasteScale;
-            float HWCast = (float)Math.Max(HWCastBase * HasteScale + Latency, 1f + GcdLatency);
-            float HWCastTWLatency = (Latency * 0.25f + GcdLatency * 0.75f) * TWChance + (Latency * 0.5f + GcdLatency * 0.5f) * (1 - TWChance);
-            float HWCastTW = (float)Math.Max(HWCastBase * HasteScale * 0.7f + HWCastTWLatency, 1f + GcdLatency);
-            float HWCast_RT = (float)Math.Max(HWCastBase / (1f + calc.SpellHaste), 1f) + GcdLatency;
-            float HWCastTW_RT = (float)Math.Max(HWCastBase / (1f + calc.SpellHaste) * 0.7f + HWCastTWLatency, 1f + GcdLatency);
-            calc.RealGHWCast = GHWCastBase * HasteScale;
-            float GHWCast = (float)Math.Max(GHWCastBase * HasteScale + Latency, 1f + GcdLatency);
-            float GHWCastTWLatency = (Latency * 0.25f + GcdLatency * 0.75f) * TWChance + (Latency * 0.5f + GcdLatency * 0.5f) * (1 - TWChance);
-            float GHWCastTW = (float)Math.Max(GHWCastBase * HasteScale * 0.7f + GHWCastTWLatency, 1f + GcdLatency);
-            float GHWCast_RT = (float)Math.Max(GHWCastBase / (1f + calc.SpellHaste), 1f) + GcdLatency;
-            float GHWCastTW_RT = (float)Math.Max(GHWCastBase / (1f + calc.SpellHaste) * 0.7f + GHWCastTWLatency, 1f + GcdLatency);
-            calc.RealHSrgCast = 1.5f * HasteScale;
-            float HSrgCast = (float)Math.Max(1.5f * HasteScale, 1f) + GcdLatency;
-            float HSrgCast_RT = (float)Math.Max(1.5f / (1f + calc.SpellHaste), 1f) + GcdLatency;
-            float CHCastBase = 2.5f;
-            calc.RealCHCast = CHCastBase * HasteScale;
-            float CHCast = (float)Math.Max(CHCastBase * HasteScale + Latency, 1f + GcdLatency);
-            float CHCast_RT = (float)Math.Max(CHCastBase / (1f + calc.SpellHaste), 1f) + GcdLatency;
 
             // This totally heals the boss backwards! Yeah! :D
             // Don't worry about this messing with procs or anything, it's just to show on the stats page. :)
@@ -853,7 +860,7 @@ namespace Rawr.RestoSham
             #region RT + HSrg Rotation (RTHSrgMPS / RTHSrgHPS / RTHSrgTime)  (Adjusted based on Casting Activity)
             if (character.ShamanTalents.Riptide != 0)
             {
-                float RTHSrgTime = RTCast;
+                float RTHSrgTime = ICast;
                 float RTHSrgRemainingTime = RTCDCast - RTHSrgTime;
                 int RTHSrgHSrgCasts = 0;
                 if (RTHSrgRemainingTime > GcdLatency)
@@ -892,7 +899,7 @@ namespace Rawr.RestoSham
             #region RT + HW Rotation (RTHWMPS / RTHWHPS / RTHWTime) (Adjusted based on Casting Activity)
             if (character.ShamanTalents.Riptide != 0)
             {
-                float RTHWTime = RTCast;
+                float RTHWTime = ICast;
                 float RTHWRemainingTime = RTCDCast - RTHWTime;
                 int RTHWHWCasts = 0;
                 if (RTHWRemainingTime > GcdLatency)
@@ -940,7 +947,7 @@ namespace Rawr.RestoSham
             #region RT + GHW Rotation (RTGHWMPS / RTGHWHPS / RTGHWTime) (Adjusted based on Casting Activity)
             if (character.ShamanTalents.Riptide != 0)
             {
-                float RTGHWTime = RTCast;
+                float RTGHWTime = ICast;
                 float RTGHWRemainingTime = RTCDCast - RTGHWTime;
                 int RTGHWGHWCasts = 0;
                 if (RTGHWRemainingTime > GcdLatency)
@@ -987,7 +994,7 @@ namespace Rawr.RestoSham
             #region RT + CH Rotation (RTCHMPS / RTCHHPS / RTCHTime / TankCH) (Adjusted based on Casting Activity)
             if (character.ShamanTalents.Riptide != 0)
             {
-                float RTCHTime = RTCast;
+                float RTCHTime = ICast;
                 float RTCHRemainingTime = RTCDCast - RTCHTime;
                 int RTCHCHCasts = 0;
                 if (RTCHRemainingTime > GcdLatency)
@@ -1005,7 +1012,7 @@ namespace Rawr.RestoSham
                 float RTCHRTHeal = RTHeal * Critical;
                 float RTCHCHHeal = (CHJumpHeal + CHHeal * CHRTConsumption * .25f) * RTCHCHCasts * ChCritical;
                 float RTCHAA = RTHeal * CriticalChance * AAScale;
-                float RTTargets = TankHeal ? Math.Max(RTDuration / RTCHTime - CHRTConsumption, 0) : (RTCast + (RTDuration - RTCast) * (1 - CHRTConsumption)) / RTCHTime;
+                float RTTargets = TankHeal ? Math.Max(RTDuration / RTCHTime - CHRTConsumption, 0) : (ICast + (RTDuration - ICast) * (1 - CHRTConsumption)) / RTCHTime;
                 float RTCHELWTargets = ELWChance * (CHJumps * RTCHCHCasts + RTTargets) * ELWDuration / RTCHTime;
                 calc.RTCHHPS = (((RTCHRTHeal * (1 - RTOverheal) + RTCHCHHeal * (1 - CHOverheal) + RTCHAA * (1 - AAOverheal)) / RTCHTime + RTTargets * RTHotHPS * (1 - RTOverheal) + RTCHELWTargets * ELWHPS * (1 - ELWOverheal)) * _CastingActivity) * (1 + stats.BonusHealingDoneMultiplier);
                 calc.RTCHMPS = ((RTCost + (CHCost * RTCHCHCasts)) / RTCHTime) * _CastingActivity;
@@ -1094,42 +1101,6 @@ namespace Rawr.RestoSham
             _HealHitPerSec = (RTPerSec + RTTicksPerSec + HSrgPerSec + HWPerSec + CHHitsPerSec + AAsPerSec + ELWTicksPerSec + GHWPerSec) * _CastingActivity;
             _CritPerSec = (RTCPerSec + HSrgCPerSec + HWCPerSec + CHCPerSec + GHWCPerSec) * _CastingActivity;
             #endregion
-            /*#region Proc Handling for Mana Restore only
-            Stats statsProcs2 = new Stats();
-            foreach (SpecialEffect effect in stats.SpecialEffects())
-            {
-                switch (effect.Trigger)
-                {
-                    case (Trigger.HealingSpellCast):
-                        if (_HealPerSec != 0)
-                            effect.AccumulateAverageStats(statsProcs2, (1f / _HealPerSec), 1f, 0f, _FightSeconds);
-                        break;
-                    case (Trigger.HealingSpellHit):
-                        if (_HealHitPerSec != 0)
-                            effect.AccumulateAverageStats(statsProcs2, (1f / _HealHitPerSec), 1f, 0f, _FightSeconds);
-                        break;
-                    case (Trigger.HealingSpellCrit):
-                        if (_CritPerSec != 0)
-                            effect.AccumulateAverageStats(statsProcs2, (1f / _CritPerSec), 1f, 0f, _FightSeconds);
-                        break;
-                    case (Trigger.SpellCast):
-                        if (_HealPerSec != 0)
-                            effect.AccumulateAverageStats(statsProcs2, (1f / _HealPerSec), 1f, 0f, _FightSeconds);
-                        break;
-                    case (Trigger.SpellHit):
-                        if (_HealHitPerSec != 0)
-                            effect.AccumulateAverageStats(statsProcs2, (1f / _HealHitPerSec), 1f, 0f, _FightSeconds);
-                        break;
-                    case (Trigger.SpellCrit):
-                        if (_CritPerSec != 0)
-                            effect.AccumulateAverageStats(statsProcs2, (1f / _CritPerSec), 1f, 0f, _FightSeconds);
-                        break;
-                    case Trigger.Use:
-                        effect.AccumulateAverageStats(statsProcs2, 0f, 1f, 0f, _FightSeconds);
-                        break;
-                }
-            }
-            #endregion*/
             #region Calculate Sequence HPS/MPS
             float HSTHPS = (25 + HSTBonusHealing) * HSTHealingScale / 2f * (1 - HSTOverheal);
             calc.HSTHeals = HSTHPS * HSTTargets;
@@ -1222,7 +1193,7 @@ namespace Rawr.RestoSham
             #region Final Stats
             calc.LBNumber = calcOpts.LBUse;
             float ESUsage = UseES ? (float)Math.Round((_FightSeconds / ESTimer), 0) : 0;
-            float ESDowntime = (_FightSeconds - ((RTCast * ESUsage) + (calcOpts.LBUse * calc.LBCast)) - 3) / _FightSeconds;  // Rip tide cast time is used to simulate ES cast time, as they are exactly the same.  The 3 Simulates the time of two full totem drops.
+            float ESDowntime = (_FightSeconds - ((ICast * ESUsage) + (calcOpts.LBUse * calc.LBCast)) - 3) / _FightSeconds;  // Rip tide cast time is used to simulate ES cast time, as they are exactly the same.  The 3 Simulates the time of two full totem drops.
             calc.MAPS = ((stats.Mana) / (_FightSeconds))
                 //+ (stats.ManaRestore / _FightSeconds)
                 + (stats.ManaRestoreFromMaxManaPerSecond * stats.Mana)
@@ -1250,6 +1221,7 @@ namespace Rawr.RestoSham
             calc.SubPoints[2] = calc.Survival;
 
             return calc;
+            #endregion
             #endregion
         }
 
