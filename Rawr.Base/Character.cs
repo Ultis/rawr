@@ -705,7 +705,8 @@ namespace Rawr
             if (itemSetList == null || itemSetList.Count <= 0) { return 0; }
             int count = 0;
             foreach (ItemSet IS in itemSetList) {
-                if (IS.Name.Contains("Optimized GearSet")) { count++; }
+                // potential fix for http://rawr.codeplex.com/workitem/21371
+                if (IS != null && IS.Name != null & IS.Name.Contains("Optimized GearSet")) { count++; }
             }
             return count;
         }
