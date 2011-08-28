@@ -2825,7 +2825,19 @@ namespace Rawr.Mage
 
             if (cycles[0].ManaPerSecond > 0)
             {
-                return cycles[0];
+                //return cycles[0];
+                Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
+                cycle.Name = "ArcaneManaNeutral";
+                if (needsDisplayCalculations)
+                {
+                    cycle.Note = string.Format("Mix {0:F}% {1}", 100, cycles[0].Name);
+                }
+                cycle.Mix1 = cycles[0].CycleId;
+                cycle.Mix2 = CycleId.None;
+                cycle.AddCycle(needsDisplayCalculations, cycles[0], 1);
+                cycle.DpmConversion = 0;
+                cycle.Calculate();
+                return cycle;
             }
 
             int i = 0;
@@ -2867,7 +2879,19 @@ namespace Rawr.Mage
                 else
                 {
                     // we've run out of cycles
-                    return cycles[i];
+                    //return cycles[i];
+                    Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
+                    cycle.Name = "ArcaneManaNeutral";
+                    if (needsDisplayCalculations)
+                    {
+                        cycle.Note = string.Format("Mix {0:F}% {1}", 100, cycles[i].Name);
+                    }
+                    cycle.Mix1 = cycles[i].CycleId;
+                    cycle.Mix2 = CycleId.None;
+                    cycle.AddCycle(needsDisplayCalculations, cycles[i], 1);
+                    cycle.DpmConversion = 0;
+                    cycle.Calculate();
+                    return cycle;
                 }
             }
             return null;

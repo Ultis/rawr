@@ -381,8 +381,11 @@ namespace Rawr.Mage
             // costPerSecond + x - manaRegenPerSecond = 0
             CalculateEffects();
             double x = manaRegenPerSecond - costPerSecond;
-            costPerSecond += x;
-            damagePerSecond += x * DpmConversion;
+            if (DpmConversion != 0)
+            {
+                costPerSecond += x;
+                damagePerSecond += x * DpmConversion;
+            }
         }
 
         public double GetDamagePerSecond(double manaAdeptBonus)

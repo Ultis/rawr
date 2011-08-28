@@ -539,11 +539,11 @@ namespace Rawr.Mage
                     }
                     if (spellId == CycleId.ArcaneManaNeutral)
                     {
-                        if (!manaNeutralMixList.Contains(calculations.SolutionVariable[i].Cycle.Mix1))
+                        if (calculations.SolutionVariable[i].Cycle.Mix1 != CycleId.None && !manaNeutralMixList.Contains(calculations.SolutionVariable[i].Cycle.Mix1))
                         {
                             manaNeutralMixList.Add(calculations.SolutionVariable[i].Cycle.Mix1);
                         }
-                        if (!manaNeutralMixList.Contains(calculations.SolutionVariable[i].Cycle.Mix2))
+                        if (calculations.SolutionVariable[i].Cycle.Mix2 != CycleId.None && !manaNeutralMixList.Contains(calculations.SolutionVariable[i].Cycle.Mix2))
                         {
                             manaNeutralMixList.Add(calculations.SolutionVariable[i].Cycle.Mix2);
                         }
