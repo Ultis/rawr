@@ -131,7 +131,8 @@
                 <!--ENDIFWPF-->
 				<CheckBox Margin="4,4,4,4" IsChecked="{Binding OverrideRegem}" Content="Override Regem"/>
 				<CheckBox Margin="4,4,4,4" IsChecked="{Binding OverrideReenchant}" Content="Override Reenchant"/>
-				<Grid Margin="4,4,4,4">
+                <CheckBox Margin="4,4,4,4" IsChecked="{Binding OverrideReforge}" Content="Override Reforge"/>
+                <Grid Margin="4,4,4,4">
 					<Grid.RowDefinitions>
 						<RowDefinition Height="Auto"/>
 					</Grid.RowDefinitions>
