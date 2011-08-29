@@ -117,14 +117,14 @@ namespace Rawr.DK
         {
             get
             {
-                float ChanceToHit = 1 - (glancechance + CritChance);
+                // Determine Miss Chance
+                float fMissChance = wMH.chanceMissed;
+                float ChanceToHit = 1 - Math.Max(0, fMissChance);
+                ChanceToHit -= glancechance;
                 // Determine Dodge chance
                 float fDodgeChanceForTarget = wMH.chanceDodged;
                 // Determine Parry Chance  (Only for Tank... Since only they should be in front of the target.)
                 float fParryChanceForTarget = wMH.chanceParried;
-                // Determine Miss Chance
-                float fMissChance = wMH.chanceMissed;
-                ChanceToHit -= Math.Max(0, fMissChance);
                 ChanceToHit -= Math.Max(0, fDodgeChanceForTarget);
                 if (CState != null && !CState.m_bAttackingFromBehind)
                     ChanceToHit -= Math.Max(0, fParryChanceForTarget);
@@ -132,7 +132,7 @@ namespace Rawr.DK
                 if (ChanceToHit < 0 || ChanceToHit > 1)
                     throw new Exception("Chance to hit out of range.");
 #endif
-                return ChanceToHit;
+                return Math.Max(0, Math.Min(1,ChanceToHit));
             }
         }
 

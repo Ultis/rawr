@@ -595,6 +595,7 @@ Points individually may be important.",
                 StunDurReduc = stats.StunDurReduc,
                 MovementSpeed = stats.MovementSpeed,
                 TargetArmorReduction = stats.TargetArmorReduction,
+                BossAttackSpeedReductionMultiplier = stats.BossAttackSpeedReductionMultiplier,
             };
 
             // Also bringing in the trigger events from DPSDK - 
@@ -616,6 +617,11 @@ Points individually may be important.",
             StatsDK s = new StatsDK();
             s.Accumulate(GetRelevantStats(stats));
             return s;
+        }
+
+        public override bool IsBuffRelevant(Buff buff, Character character)
+        {
+            return base.IsBuffRelevant(buff, character);
         }
 
         public List<Trigger> SuperRelevantTriggers {
@@ -676,6 +682,7 @@ Points individually may be important.",
 
         private bool HasSuperRelevantStats(Stats stats) {
             if (stats.Strength != 0) return true;
+            if (stats.BonusStrengthMultiplier != 0) return true;
             if (stats.DodgeRating != 0) return true;
             if (stats.ParryRating != 0) return true;
             if (stats.Dodge != 0) return true;
@@ -686,7 +693,7 @@ Points individually may be important.",
         }
         private bool HasWantedStats(Stats stats) {
             // Core
-            if (stats.Agility != 0) return true;
+//            if (stats.Agility != 0) return true;
             if (stats.Stamina != 0) return true;
             if (stats.Armor != 0) return true;
             if (stats.BonusArmor != 0) return true;
@@ -719,9 +726,8 @@ Points individually may be important.",
             if (stats.BaseArmorMultiplier != 0) return true;
             if (stats.BonusArmorMultiplier != 0) return true;
             if (stats.BonusHealthMultiplier != 0) return true;
-            if (stats.BonusStrengthMultiplier != 0) return true;
             if (stats.BonusStaminaMultiplier != 0) return true;
-            if (stats.BonusAgilityMultiplier != 0) return true;
+//            if (stats.BonusAgilityMultiplier != 0) return true;
             if (stats.BonusCritDamageMultiplier != 0) return true;
             if (stats.BonusSpellCritDamageMultiplier != 0) return true;
             if (stats.BonusAttackPowerMultiplier != 0) return true;
@@ -777,6 +783,7 @@ Points individually may be important.",
             if (stats.StunDurReduc != 0) return true;
             if (stats.MovementSpeed != 0) return true;
             if (stats.TargetArmorReduction != 0) return true;
+            if (stats.BossAttackSpeedReductionMultiplier != 0) return true;
             // Other
             if (stats.RPp5 != 0) return true;
             //
@@ -785,11 +792,11 @@ Points individually may be important.",
         private bool HasIgnoreStats(Stats stats)
         {
             if (stats.Intellect != 0) return true;
-            if (stats.BonusIntellectMultiplier != 0) return true;
+//            if (stats.BonusIntellectMultiplier != 0) return true;
             if (stats.Spirit != 0) return true;
-            if (stats.BonusSpiritMultiplier != 0) return true;
+//            if (stats.BonusSpiritMultiplier != 0) return true;
             if (stats.Mana != 0) return true;
-            if (stats.BonusManaMultiplier != 0) return true;
+//            if (stats.BonusManaMultiplier != 0) return true;
             if (stats.Mp5 != 0) return true;
             if (stats.ManaRestore != 0) return true;
             if (stats.SpellPenetration != 0) return true;
@@ -933,7 +940,11 @@ Points individually may be important.",
             if (rot.Contains(DKability.IcyTouch)
                 || rot.Contains(DKability.FrostFever))
             {
-                fBossAttackSpeedReduction = 0.14f;
+                fBossAttackSpeedReduction = 0.2f;
+            }
+            else if (stats.BossAttackSpeedReductionMultiplier > 0) // FF provided by someone else.
+            {
+                fBossAttackSpeedReduction = stats.BossAttackSpeedReductionMultiplier;
             }
             // Figure out what the new Physical DPS should be based on that.
             fSegmentDPS = TDK.bo.GetDPSByType(ATTACK_TYPES.AT_MELEE, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -1246,7 +1257,7 @@ Points individually may be important.",
             // Level differences.
             int iLevelDiff = Math.Max(TDK.bo.Level - TDK.Char.Level, 0);
 
-            float fChanceToGetHit = 1f - (stats.Miss + stats.Dodge + stats.EffectiveParry);
+            float fChanceToGetHit = 1f - Math.Min(1f, stats.Miss + stats.Dodge + stats.EffectiveParry);
             float ArmorDamageReduction = (float)StatConversion.GetArmorDamageReduction(TDK.bo.Level, stats.Armor, 0f, 0f);
 
             #region **** Setup Fight parameters ****
@@ -1469,6 +1480,9 @@ Points individually may be important.",
             statsTotal.BaseAgility = BStats.Agility;
 
             AccumulateItemStats(statsTotal, character, additionalItem);
+            // Stack only the info we care about.
+            statsTotal = GetRelevantStatsLocal(statsTotal);
+
             AccumulateBuffsStats(statsTotal, character.ActiveBuffs);
             AccumulateSetBonusStats(statsTotal, character.SetBonusCount);
 
@@ -1513,8 +1527,6 @@ Points individually may be important.",
             Rawr.DPSDK.CalculationsDPSDK.AccumulateTalents(statsTotal, character);
             Rawr.DPSDK.CalculationsDPSDK.AccumulatePresenceStats(statsTotal, Presence.Blood, character.DeathKnightTalents);
 
-            // Stack only the info we care about.
-            statsTotal = GetRelevantStatsLocal(statsTotal);
 
             statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff; statsTotal.ArcaneResistanceBuff = 0f;
             statsTotal.FireResistance   += statsTotal.FireResistanceBuff;   statsTotal.FireResistanceBuff   = 0f;
@@ -1531,11 +1543,11 @@ Points individually may be important.",
             ProcessRatings(statsTotal);
             ProcessAvoidance(statsTotal, TDK.bo.Level, TDK.Char, PreRatingsBase);
             statsTotal.EffectiveParry = 0;
-            //if (character.MainHand != null || character.OffHand != null)
+            if (character.MainHand != null)
             {
                 statsTotal.EffectiveParry = statsTotal.Parry;
             }
-            float fChanceToGetHit = 1f - (statsTotal.Miss + statsTotal.Dodge + statsTotal.EffectiveParry);
+            float fChanceToGetHit = 1f - Math.Min(1f, statsTotal.Miss + statsTotal.Dodge + statsTotal.EffectiveParry);
 
             // Now comes the special handling for secondary stats passes that are dependant upon Boss & Rotation values.
             if (sType != StatType.Unbuffed
