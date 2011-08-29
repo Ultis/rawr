@@ -322,9 +322,9 @@ namespace Rawr.Moonkin
             float starfireEnergyRate = sf.AverageEnergy / sf.CastTime;
             float starfireEclipseEnergyRate = eclipseSFAverageEnergy / sf.CastTime;
 
-            float preLunarCasts = (barHalfSize - eclipseWAverageEnergy / 2 - w.BaseEnergy * talents.Euphoria * 0.12f * 2) * (1 - (starsurgeEnergyRate) / wrathEnergyRate) / w.AverageEnergy;
+            float preLunarCasts = (barHalfSize - eclipseWAverageEnergy / 2 - w.AverageEnergy * talents.Euphoria * 0.12f * 2) * (1 - (starsurgeEnergyRate) / wrathEnergyRate) / w.AverageEnergy;
             float lunarCasts = (barHalfSize + eclipseSFAverageEnergy / 2) / eclipseSFAverageEnergy * (1 - (starsurgeEnergyRate) / starfireEclipseEnergyRate);
-            float preSolarCasts = (barHalfSize - eclipseSFAverageEnergy / 2 - sf.BaseEnergy * (1 - (float)Math.Pow(1 - 0.12f * talents.Euphoria, 2))) * (1 - (starsurgeEnergyRate) / starfireEnergyRate) / sf.AverageEnergy;
+            float preSolarCasts = (barHalfSize - eclipseSFAverageEnergy / 2 - sf.AverageEnergy * (1 - (float)Math.Pow(1 - 0.12f * talents.Euphoria, 2))) * (1 - (starsurgeEnergyRate) / starfireEnergyRate) / sf.AverageEnergy;
             float solarCasts = (barHalfSize + eclipseWAverageEnergy / 2) / eclipseWAverageEnergy * (1 - (starsurgeEnergyRate) / wrathEclipseEnergyRate);
 
             float preLunarTime = preLunarCasts * w.CastTime;
