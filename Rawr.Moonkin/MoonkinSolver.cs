@@ -13,6 +13,7 @@ namespace Rawr.Moonkin
         public static float OOC_PROC_CHANCE = 0.02f;
         public static float EUPHORIA_PERCENT = 0.08f;
         public static float DRAGONWRATH_PROC_RATE = 0.11f;
+        public static float ECLIPSE_BASE = 0.25f;
 
         // A list of all the damage spells
         private Spell[] _spellData = null;
@@ -166,31 +167,6 @@ namespace Rawr.Moonkin
         // Results data from the calculations, which will be sent to the UI.
         Dictionary<string, RotationData> cachedResults = new Dictionary<string, RotationData>();
 
-        public float GetSpellHit(CharacterCalculationsMoonkin calcs)
-        {
-            float baseHit = 1.0f;
-            switch (calcs.TargetLevel - calcs.PlayerLevel)
-            {
-                case 0:
-                    baseHit -= 0.04f;
-                    break;
-                case 1:
-                    baseHit -= 0.05f;
-                    break;
-                case 2:
-                    baseHit -= 0.06f;
-                    break;
-                case 3:
-                    baseHit -= 0.17f;
-                    break;
-                default:
-                    baseHit -= 0.17f;
-                    break;
-            }
-            baseHit = (float)Math.Min(1.0f, baseHit + calcs.SpellHit);
-            return baseHit;
-        }
-
         public void Solve(Character character, ref CharacterCalculationsMoonkin calcs)
         {
             BaseMana = BaseStats.GetBaseStats(character).Mana;
@@ -202,10 +178,11 @@ namespace Rawr.Moonkin
 
             float trinketDPS = 0.0f;
             float baseSpellPower = calcs.SpellPower;
-            float baseHit = GetSpellHit(calcs);
+            float baseHit = 1 - Math.Min(0, calcs.SpellHitCap - calcs.SpellHit);
             float baseCrit = calcs.SpellCrit;
             float baseHaste = calcs.SpellHaste;
             float baseMastery = calcs.Mastery;
+            float sub35PercentTime = (float)(character.BossOptions.Under20Perc + character.BossOptions.Under35Perc);
 
             BuildProcList(calcs);
 
@@ -250,7 +227,7 @@ namespace Rawr.Moonkin
 
                 // Reset variables modified in the pre-loop to base values
                 float currentSpellPower = baseSpellPower;
-                float currentCrit = baseCrit + StatConversion.NPC_LEVEL_SPELL_CRIT_MOD[calcs.TargetLevel - character.Level];
+                float currentCrit = baseCrit + StatConversion.NPC_LEVEL_SPELL_CRIT_MOD[character.BossOptions.Level - character.Level];
                 float currentHaste = baseHaste;
                 float currentMastery = baseMastery;
                 float currentTrinketDPS = trinketDPS;
@@ -264,7 +241,7 @@ namespace Rawr.Moonkin
 
                 // Pre-calculate rotational variables with base stats
                 rot.RotationData.NaturesGraceUptime = 0f;
-                float baselineDPS = rot.DamageDone(talents, calcs, calcOpts.TreantLifespan, baseSpellPower, baseHit, baseCrit, baseHaste, baseMastery) / (calcs.FightLength * 60.0f);
+                float baselineDPS = rot.DamageDone(character, calcs, calcOpts.TreantLifespan, baseSpellPower, baseHit, baseCrit, baseHaste, baseMastery, calcOpts.Latency) / (character.BossOptions.BerserkTimer * 60.0f);
                 rot.BaselineDuration = rot.RotationData.Duration;
                 // Calculate Nature's Grace uptime in a separate loop
 				if (talents.NaturesGrace > 0)
@@ -273,7 +250,7 @@ namespace Rawr.Moonkin
                     do
                     {
                         rot.RotationData.NaturesGraceUptime = 30 / rot.RotationData.Duration;
-                        float currentDPS = rot.DamageDone(talents, calcs, calcOpts.TreantLifespan, baseSpellPower, baseHit, currentCrit, currentHaste, currentMastery) / (calcs.FightLength * 60.0f);
+                        float currentDPS = rot.DamageDone(character, calcs, calcOpts.TreantLifespan, baseSpellPower, baseHit, currentCrit, currentHaste, currentMastery, calcOpts.Latency) / (character.BossOptions.BerserkTimer * 60.0f);
                         delta = currentDPS - baselineDPS;
                         baselineDPS = currentDPS;
                         rot.NaturesGraceShortening = rot.BaselineDuration - rot.RotationData.Duration;
@@ -303,7 +280,7 @@ namespace Rawr.Moonkin
                             case Trigger.SpellHit:
                             case Trigger.DamageSpellHit:
                                 triggerInterval = rot.RotationData.Duration / rot.RotationData.CastCount;
-                                triggerChance = GetSpellHit(calcs);
+                                triggerChance = baseHit;
                                 break;
                             case Trigger.SpellCrit:
                             case Trigger.DamageSpellCrit:
@@ -332,25 +309,25 @@ namespace Rawr.Moonkin
                         }
                         if (triggerChance > 0)
                         {
-                            float durationMultiplier = proc.Effect.LimitedToExecutePhase ? calcs.Sub35Percent : 1f;
-                            currentSpellPower += (proc.Effect.MaxStack > 1 ? proc.Effect.GetAverageStackSize(triggerInterval, triggerChance, 3.0f, calcs.FightLength * 60.0f * durationMultiplier) : 1) *
-                            proc.Effect.GetAverageUptime(triggerInterval, triggerChance, 3.0f, calcs.FightLength * 60.0f) * procSpellPower * durationMultiplier;
-                            currentCrit += (proc.Effect.MaxStack > 1 ? proc.Effect.GetAverageStackSize(triggerInterval, triggerChance, 3.0f, calcs.FightLength * 60.0f * durationMultiplier) : 1) *
-                                proc.Effect.GetAverageUptime(triggerInterval, triggerChance, 3.0f, calcs.FightLength * 60.0f) * procSpellCrit * durationMultiplier;
-                            currentMastery += (proc.Effect.MaxStack > 1 ? proc.Effect.GetAverageStackSize(triggerInterval, triggerChance, 3.0f, calcs.FightLength * 60.0f * durationMultiplier) : 1) *
-                                proc.Effect.GetAverageUptime(triggerInterval, triggerChance, 3.0f, calcs.FightLength * 60.0f) * procMastery * durationMultiplier;
+                            float durationMultiplier = proc.Effect.LimitedToExecutePhase ? sub35PercentTime : 1f;
+                            currentSpellPower += (proc.Effect.MaxStack > 1 ? proc.Effect.GetAverageStackSize(triggerInterval, triggerChance, 3.0f, character.BossOptions.BerserkTimer * 60.0f * durationMultiplier) : 1) *
+                            proc.Effect.GetAverageUptime(triggerInterval, triggerChance, 3.0f, character.BossOptions.BerserkTimer * 60.0f) * procSpellPower * durationMultiplier;
+                            currentCrit += (proc.Effect.MaxStack > 1 ? proc.Effect.GetAverageStackSize(triggerInterval, triggerChance, 3.0f, character.BossOptions.BerserkTimer * 60.0f * durationMultiplier) : 1) *
+                                proc.Effect.GetAverageUptime(triggerInterval, triggerChance, 3.0f, character.BossOptions.BerserkTimer * 60.0f) * procSpellCrit * durationMultiplier;
+                            currentMastery += (proc.Effect.MaxStack > 1 ? proc.Effect.GetAverageStackSize(triggerInterval, triggerChance, 3.0f, character.BossOptions.BerserkTimer * 60.0f * durationMultiplier) : 1) *
+                                proc.Effect.GetAverageUptime(triggerInterval, triggerChance, 3.0f, character.BossOptions.BerserkTimer * 60.0f) * procMastery * durationMultiplier;
                         }
                     }
                     // 2T10 (both if statements, which is why it isn't else-if)
                     if (proc.Effect.Stats.BonusArcaneDamageMultiplier > 0)
                     {
                         handled = true;
-                        calcs.BasicStats.BonusArcaneDamageMultiplier += proc.Effect.GetAverageUptime(rot.RotationData.Duration / rot.RotationData.CastCount, 1f, 3.0f, calcs.FightLength * 60.0f) * proc.Effect.Stats.BonusArcaneDamageMultiplier;
+                        calcs.BasicStats.BonusArcaneDamageMultiplier += proc.Effect.GetAverageUptime(rot.RotationData.Duration / rot.RotationData.CastCount, 1f, 3.0f, character.BossOptions.BerserkTimer * 60.0f) * proc.Effect.Stats.BonusArcaneDamageMultiplier;
                     }
                     if (proc.Effect.Stats.BonusNatureDamageMultiplier > 0)
                     {
                         handled = true;
-                        calcs.BasicStats.BonusNatureDamageMultiplier += proc.Effect.GetAverageUptime(rot.RotationData.Duration / rot.RotationData.CastCount, 1f, 3.0f, calcs.FightLength * 60.0f) * proc.Effect.Stats.BonusNatureDamageMultiplier;
+                        calcs.BasicStats.BonusNatureDamageMultiplier += proc.Effect.GetAverageUptime(rot.RotationData.Duration / rot.RotationData.CastCount, 1f, 3.0f, character.BossOptions.BerserkTimer * 60.0f) * proc.Effect.Stats.BonusNatureDamageMultiplier;
                     }
                     // This area reserved for Dragonwrath, Tarecgosa's Rest
                     // Variable Pulse Lightning Capacitor
@@ -358,7 +335,7 @@ namespace Rawr.Moonkin
                     if (proc.Effect.Trigger == Trigger.DamageSpellCrit && proc.Effect.Stats.NatureDamage > 0)
                     {
                         float procInterval = rot.RotationData.Duration / (rot.RotationData.CastCount - rot.RotationData.InsectSwarmCasts + rot.RotationData.DotTicks);
-                        currentTrinketDPS += proc.Effect.GetAverageProcsPerSecond(procInterval, currentCrit, 3.0f, calcs.FightLength * 60.0f) * proc.Effect.Stats.NatureDamage;
+                        currentTrinketDPS += proc.Effect.GetAverageProcsPerSecond(procInterval, currentCrit, 3.0f, character.BossOptions.BerserkTimer * 60.0f) * proc.Effect.Stats.NatureDamage;
                     }
                     // Nested special effects
                     if (proc.Effect.Stats._rawSpecialEffectDataSize > 0)
@@ -378,18 +355,18 @@ namespace Rawr.Moonkin
                             float numNegativeStacks = childEffect.GetAverageStackSize(rot.RotationData.Duration / (rot.RotationData.CastCount - rot.RotationData.InsectSwarmCasts), Math.Min(1.0f, baseCrit + maxStack), 3.0f, proc.Effect.Duration);
                             float averageNegativeValue = childEffect.Stats.SpellCrit * numNegativeStacks;
                             float averageCrit = maxStack + averageNegativeValue;
-                            currentCrit += averageCrit * proc.Effect.GetAverageUptime(rot.RotationData.Duration / 2f, 1f, 3.0f, calcs.FightLength * 60.0f);
+                            currentCrit += averageCrit * proc.Effect.GetAverageUptime(rot.RotationData.Duration / 2f, 1f, 3.0f, character.BossOptions.BerserkTimer * 60.0f);
                         }
                     }
                     if (!handled)
                     {
                         if (proc.CalculateDPS != null)
                         {
-                            accumulatedDamage += proc.CalculateDPS(rot, calcs, currentSpellPower, baseHit, currentCrit, currentHaste) * rot.RotationData.Duration;
+                            accumulatedDamage += proc.CalculateDPS(rot, calcs, character.BossOptions.BerserkTimer, currentSpellPower, baseHit, currentCrit, currentHaste) * rot.RotationData.Duration;
                         }
                         if (proc.Activate != null)
                         {
-                            float upTime = proc.UpTime(rot, calcs);
+                            float upTime = proc.UpTime(rot, calcs, character.BossOptions.BerserkTimer, (float)(character.BossOptions.Under35Perc + character.BossOptions.Under20Perc));
                             // Procs with 100% uptime should be activated and not put into the combination loop
                             if (upTime == 1)
                             {
@@ -402,7 +379,7 @@ namespace Rawr.Moonkin
                         }
                         if (proc.CalculateMP5 != null)
                         {
-                            manaGained += proc.CalculateMP5(rot, calcs, currentSpellPower, baseHit, currentCrit, currentHaste) / 5.0f * calcs.FightLength * 60.0f;
+                            manaGained += proc.CalculateMP5(rot, calcs, character.BossOptions.BerserkTimer, currentSpellPower, baseHit, currentCrit, currentHaste) / 5.0f * character.BossOptions.BerserkTimer * 60.0f;
                         }
                     }
                 }
@@ -431,7 +408,7 @@ namespace Rawr.Moonkin
                             activatedEffects[idx].Activate(character, calcs, ref currentSpellPower, ref baseHit, ref currentCrit, ref currentHaste, ref currentMastery);
                         }
                         currentCrit = (float)Math.Min(1.0f, currentCrit);
-                        float tempDPS = rot.DamageDone(talents, calcs, calcOpts.TreantLifespan, currentSpellPower, baseHit, currentCrit, currentHaste, currentMastery) / rot.RotationData.Duration;
+                        float tempDPS = rot.DamageDone(character, calcs, calcOpts.TreantLifespan, currentSpellPower, baseHit, currentCrit, currentHaste, currentMastery, calcOpts.Latency) / rot.RotationData.Duration;
                         spellDetails[0] = rot.RotationData.StarfireAvgHit;
                         spellDetails[1] = rot.RotationData.WrathAvgHit;
                         spellDetails[2] = rot.RotationData.MoonfireAvgHit;
@@ -451,7 +428,7 @@ namespace Rawr.Moonkin
                         spellDetails[16] = rot.RotationData.MushroomDamage;
                         foreach (int idx in vals)
                         {
-                            tempUpTime *= activatedEffects[idx].UpTime(rot, calcs);
+                            tempUpTime *= activatedEffects[idx].UpTime(rot, calcs, character.BossOptions.BerserkTimer, (float)(character.BossOptions.Under35Perc + character.BossOptions.Under20Perc));
                             activatedEffects[idx].Deactivate(character, calcs, ref currentSpellPower, ref baseHit, ref currentCrit, ref currentHaste, ref currentMastery);
                         }
                         if (tempUpTime == 0) continue;
@@ -505,7 +482,7 @@ namespace Rawr.Moonkin
                         spellDetails[i] += kvp.Value * cachedDetails[kvp.Key][i];
                     }
                 }
-                float damageDone = rot.DamageDone(talents, calcs, calcOpts.TreantLifespan, currentSpellPower, baseHit, currentCrit, currentHaste, currentMastery);
+                float damageDone = rot.DamageDone(character, calcs, calcOpts.TreantLifespan, currentSpellPower, baseHit, currentCrit, currentHaste, currentMastery, calcOpts.Latency);
                 accumulatedDPS += (1 - totalUpTime) * damageDone / rot.RotationData.Duration;
                 spellDetails[0] += (1 - totalUpTime) * rot.RotationData.StarfireAvgHit;
                 spellDetails[1] += (1 - totalUpTime) * rot.RotationData.WrathAvgHit;
@@ -529,9 +506,9 @@ namespace Rawr.Moonkin
 
                 // Movement - Sunfire/IS/Sfall/WM/Shooting Stars/trees
                 Spell lunarShower = new Spell(Moonfire);
-                lunarShower.AllDamageModifier *= (1 + 0.15f * talents.LunarShower) * (1 + (float)Math.Floor(calcs.EclipseBase * 100 + currentMastery * 2.0f) / 100f);
+                lunarShower.AllDamageModifier *= (1 + 0.15f * talents.LunarShower) * (1 + (float)Math.Floor(MoonkinSolver.ECLIPSE_BASE * 100 + currentMastery * 2.0f) / 100f);
                 lunarShower.BaseManaCost *= 1 - (0.3f * talents.LunarShower);
-                rot.DoDotSpell(calcs, ref lunarShower, currentSpellPower, baseHit, currentCrit, currentHaste, 0.05f * talents.NaturesGrace, rot.RotationData.NaturesGraceUptime);
+                rot.DoDotSpell(calcs, ref lunarShower, currentSpellPower, baseHit, currentCrit, currentHaste, 0.05f * talents.NaturesGrace, rot.RotationData.NaturesGraceUptime, character.BossOptions.BerserkTimer);
                 float movementDPS = lunarShower.DamagePerHit / lunarShower.CastTime +
                     lunarShower.DotEffect.DamagePerHit / lunarShower.DotEffect.Duration +
                     rot.RotationData.InsectSwarmAvgHit / (rot.RotationData.InsectSwarmDuration == 0 ? 1 : rot.RotationData.InsectSwarmDuration);
@@ -545,14 +522,14 @@ namespace Rawr.Moonkin
                 // Mana calcs:
                 // Main rotation - all spells
                 // Movement rotation - Lunar Shower MF, IS, Shooting Stars procs, and Starfall only
-                rot.RotationData.ManaGained += manaGained / (calcs.FightLength * 60.0f) * rot.RotationData.Duration;
+                rot.RotationData.ManaGained += manaGained / (character.BossOptions.BerserkTimer * 60.0f) * rot.RotationData.Duration;
                 float timeToOOM = manaPool / ((rot.RotationData.ManaUsed - rot.RotationData.ManaGained) / rot.RotationData.Duration) * percentTimeInRotation +
                     (manaPool / movementManaPerSec) * movementShare;
-                if (timeToOOM <= 0) timeToOOM = calcs.FightLength * 60.0f;   // Happens when ManaUsed is less than 0
-                if (timeToOOM < calcs.FightLength * 60.0f)
+                if (timeToOOM <= 0) timeToOOM = character.BossOptions.BerserkTimer * 60.0f;   // Happens when ManaUsed is less than 0
+                if (timeToOOM < character.BossOptions.BerserkTimer * 60.0f)
                 {
                     rot.RotationData.TimeToOOM = new TimeSpan(0, (int)(timeToOOM / 60), (int)(timeToOOM % 60));
-                    sustainedDPS = burstDPS * timeToOOM / (calcs.FightLength * 60.0f);
+                    sustainedDPS = burstDPS * timeToOOM / (character.BossOptions.BerserkTimer * 60.0f);
                 }
                 
                 burstDPS += currentTrinketDPS;
@@ -621,7 +598,7 @@ namespace Rawr.Moonkin
         // Non-rotation-specific mana calculations
         private float GetEffectiveManaPool(Character character, CalculationOptionsMoonkin calcOpts, CharacterCalculationsMoonkin calcs)
         {
-            float fightLength = calcs.FightLength * 60.0f;
+            float fightLength = character.BossOptions.BerserkTimer * 60.0f;
 
             float innervateCooldown = 180;
 
@@ -647,7 +624,7 @@ namespace Rawr.Moonkin
 
             // Replenishment calculations
             float replenishmentPerTick = calcs.BasicStats.Mana * calcs.BasicStats.ManaRestoreFromMaxManaPerSecond;
-            float replenishmentMana = calcOpts.ReplenishmentUptime * replenishmentPerTick * calcs.FightLength * 60;
+            float replenishmentMana = calcOpts.ReplenishmentUptime * replenishmentPerTick * character.BossOptions.BerserkTimer * 60;
 
             return calcs.BasicStats.Mana + totalInnervateMana + totalManaRegen + manaRestoredByPots + replenishmentMana;
         }
@@ -780,7 +757,7 @@ namespace Rawr.Moonkin
             }
 
             // PTR changes go here
-            if (calcs.PtrMode)
+            if (((CalculationOptionsMoonkin)character.CalculationOptions).PTRMode)
             {
             }
         }

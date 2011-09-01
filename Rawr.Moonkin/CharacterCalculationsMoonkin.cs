@@ -14,20 +14,14 @@ namespace Rawr.Moonkin
         public override float[] SubPoints { get { return subPoints; } set { subPoints = value; } }
 
         public float SpellHit { get; set; }
+        public float SpellHitCap { get; set; }
         public float SpellCrit { get; set; }
         public float SpellHaste { get; set; }
         public float SpellPower { get; set; }
         public float Mastery { get; set; }
         public float ManaRegen { get; set; }
-        public float Latency { get; set; }
-        public int TargetLevel { get; set; }
-        public int PlayerLevel { get; set; }
-        public float FightLength { get; set; }
-        public float Sub35Percent { get; set; }
-        public bool PtrMode { get; set; }
-        public float EclipseBase = 0.25f;
-        private StatsMoonkin baseStats;
         public StatsMoonkin BasicStats { get { return baseStats; } set { baseStats = value; } }
+        private StatsMoonkin baseStats;
         public RotationData SelectedRotation { get; set; }
         public RotationData BurstRotation { get; set; }
         public Dictionary<string, RotationData> Rotations = new Dictionary<string, RotationData>();
@@ -48,7 +42,7 @@ namespace Rawr.Moonkin
             retVal.Add("Spirit", baseStats.Spirit.ToString());
             retVal.Add("Spell Power", SpellPower.ToString());
 
-            float totalHitDelta = StatConversion.GetSpellMiss(PlayerLevel - TargetLevel, false) - SpellHit;
+            float totalHitDelta = SpellHitCap - SpellHit;
 
             retVal.Add("Spell Hit", String.Format("{0:F}%*{1} Hit Rating, {2:F}% Hit From Gear" + (totalHitDelta != 0 ? ", {3} Rating {4}" : ""),
                 100 * SpellHit,

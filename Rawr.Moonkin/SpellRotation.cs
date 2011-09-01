@@ -79,10 +79,8 @@ namespace Rawr.Moonkin
         }
 
         // Calculate damage and casting time for a single, direct-damage spell.
-        public void DoMainNuke(CharacterCalculationsMoonkin calcs, ref Spell mainNuke, float spellPower, float spellHit, float spellCrit, float spellHaste, float naturesGraceBonusHaste, float naturesGraceUptime)
+        public void DoMainNuke(CharacterCalculationsMoonkin calcs, ref Spell mainNuke, float spellPower, float spellHit, float spellCrit, float spellHaste, float naturesGraceBonusHaste, float naturesGraceUptime, float latency)
         {
-            float latency = calcs.Latency;
-
             float overallDamageModifier = mainNuke.AllDamageModifier * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier);
             // Add a check for the higher of the two spell schools, as Starsurge always chooses the higher one
             overallDamageModifier *= mainNuke.School == SpellSchool.Arcane ? (1 + calcs.BasicStats.BonusArcaneDamageMultiplier) :
@@ -106,9 +104,8 @@ namespace Rawr.Moonkin
         }
 
         // Calculate damage and casting time for a damage-over-time effect.
-        public void DoDotSpell(CharacterCalculationsMoonkin calcs, ref Spell dotSpell, float spellPower, float spellHit, float spellCrit, float spellHaste, float naturesGraceBonusHaste, float naturesGraceUptime)
+        public void DoDotSpell(CharacterCalculationsMoonkin calcs, ref Spell dotSpell, float spellPower, float spellHit, float spellCrit, float spellHaste, float naturesGraceBonusHaste, float naturesGraceUptime, float latency)
         {
-            float latency = calcs.Latency;
             float schoolMultiplier = dotSpell.School == SpellSchool.Arcane ? calcs.BasicStats.BonusArcaneDamageMultiplier : calcs.BasicStats.BonusNatureDamageMultiplier;
 
             float overallDamageModifier = dotSpell.AllDamageModifier * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier) * (1 + schoolMultiplier);
@@ -165,10 +162,8 @@ namespace Rawr.Moonkin
         }
 
         // Now returns damage per cast to allow adjustments for fight length
-        private float DoTreeCalcs(CharacterCalculationsMoonkin calcs, float effectiveNatureDamage, float treantLifespan)
+        private float DoTreeCalcs(CharacterCalculationsMoonkin calcs, int playerLevel, int bossLevel, float effectiveNatureDamage, float treantLifespan)
         {
-            int bossLevel = calcs.TargetLevel;
-            int playerLevel = calcs.PlayerLevel;
             float sunderPercent = calcs.BasicStats.TargetArmorReduction;
             float meleeHit = calcs.SpellHit * (StatConversion.WHITE_MISS_CHANCE_CAP[bossLevel - playerLevel] / StatConversion.GetSpellMiss(playerLevel - bossLevel, false));
             float physicalDamageMultiplierBonus = (1f + calcs.BasicStats.BonusDamageMultiplier) * (1f + calcs.BasicStats.BonusPhysicalDamageMultiplier);
@@ -226,8 +221,9 @@ namespace Rawr.Moonkin
         }
 
         // Perform damage and mana calculations for all spells in the given rotation.  Returns damage done over the total duration.
-        public float DamageDone(DruidTalents talents, CharacterCalculationsMoonkin calcs, float treantLifespan, float spellPower, float spellHit, float spellCrit, float spellHaste, float masteryPoints)
+        public float DamageDone(Character character, CharacterCalculationsMoonkin calcs, float treantLifespan, float spellPower, float spellHit, float spellCrit, float spellHaste, float masteryPoints, float latency)
         {
+            DruidTalents talents = character.DruidTalents;
             Spell sf = Solver.Starfire;
             Spell ss = Solver.Starsurge;
             Spell w = Solver.Wrath;
@@ -238,11 +234,11 @@ namespace Rawr.Moonkin
             mfExtended.DotEffect.BaseDuration += 9.0f;
 
             // 4.1: The bug causing the Eclipse buff to be rounded down to the nearest percent has been fixed
-            float eclipseBonus = 1 + calcs.EclipseBase + masteryPoints * 0.02f;
+            float eclipseBonus = 1 + MoonkinSolver.ECLIPSE_BASE + masteryPoints * 0.02f;
 
-            DoMainNuke(calcs, ref sf, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, RotationData.NaturesGraceUptime);
-            DoMainNuke(calcs, ref ss, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, RotationData.NaturesGraceUptime);
-			DoMainNuke(calcs, ref w, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, RotationData.NaturesGraceUptime);
+            DoMainNuke(calcs, ref sf, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, RotationData.NaturesGraceUptime, latency);
+            DoMainNuke(calcs, ref ss, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, RotationData.NaturesGraceUptime, latency);
+            DoMainNuke(calcs, ref w, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, RotationData.NaturesGraceUptime, latency);
 
             RotationData.AverageInstantCast = 1.5f / (1 + spellHaste) * (1 - RotationData.NaturesGraceUptime) + (RotationData.NaturesGraceUptime * 1.5f / (1 + spellHaste) / (1 + 0.05f * talents.NaturesGrace));
 
@@ -257,11 +253,11 @@ namespace Rawr.Moonkin
             float extendedMFNGUptime = RotationData.MoonfireRefreshMode == DotMode.Twice ? (float)Math.Ceiling((15 - RotationData.AverageInstantCast) / sf.CastTime) * sf.CastTime / mfExtended.DotEffect.BaseDuration
                 : (BaselineDuration > 0 && NaturesGraceShortening > 0 ? mfOnCDNGUptime : 1f);
 
-            DoDotSpell(calcs, ref mf, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, normalMFNGUptime);
+            DoDotSpell(calcs, ref mf, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, normalMFNGUptime, latency);
             // Insect swarm never benefits from Nature's Grace
-            DoDotSpell(calcs, ref iSw, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, 0);
+            DoDotSpell(calcs, ref iSw, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, 0, latency);
             if (talents.GlyphOfStarfire)
-				DoDotSpell(calcs, ref mfExtended, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, extendedMFNGUptime);
+                DoDotSpell(calcs, ref mfExtended, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, extendedMFNGUptime, latency);
 
             RotationData.MoonfireAvgCast = mf.CastTime;
             RotationData.InsectSwarmAvgCast = iSw.CastTime;
@@ -271,7 +267,7 @@ namespace Rawr.Moonkin
             // Dragonwrath
             starfallBaseDamage *= 1 + (calcs.BasicStats.DragonwrathProc > 0 ? MoonkinSolver.DRAGONWRATH_PROC_RATE : 0f);
             float starfallEclipseDamage = starfallBaseDamage * eclipseBonus;
-            RotationData.TreantDamage = talents.ForceOfNature == 0 ? 0 : DoTreeCalcs(calcs, spellPower, treantLifespan);
+            RotationData.TreantDamage = talents.ForceOfNature == 0 ? 0 : DoTreeCalcs(calcs, character.Level, character.BossOptions.Level, spellPower, treantLifespan);
             // T12 2-piece: 2-sec cast, 5192-6035 damage, affected by hit, 15-sec duration
             // Hard-code 3.5 casts/proc based on EJ testing
             float T122PieceHitDamage = (5192 + 6035) / 2f * spellHit * (1 + calcs.BasicStats.BonusFireDamageMultiplier);

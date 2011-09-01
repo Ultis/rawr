@@ -8,12 +8,12 @@ namespace Rawr.Moonkin
     public delegate void Activate(Character theChar, CharacterCalculationsMoonkin calcs, ref float spellPower, ref float spellHit, ref float spellCrit, ref float spellHaste, ref float mastery);
     public delegate void Deactivate(Character theChar, CharacterCalculationsMoonkin calcs, ref float spellPower, ref float spellHit, ref float spellCrit, ref float spellHaste, ref float mastery);
     // Calculate the uptime of the effect.  This will be used to weight the proc when calculating the rotational DPS.
-    public delegate float UpTime(SpellRotation rotation, CharacterCalculationsMoonkin calcs);
+    public delegate float UpTime(SpellRotation rotation, CharacterCalculationsMoonkin calcs, float fightLength, float sub35Percent);
     // Optional calculations for complicated proc effects like Eclipse or trinkets that proc additional damage.
     // The return value of this calculation will be ADDED to the rotational DPS.
-    public delegate float CalculateDPS(SpellRotation rotation, CharacterCalculationsMoonkin calcs, float spellPower, float spellHit, float spellCrit, float spellHaste);
+    public delegate float CalculateDPS(SpellRotation rotation, CharacterCalculationsMoonkin calcs, float fightLength, float spellPower, float spellHit, float spellCrit, float spellHaste);
     // The return value of this calculation will be used to adjust the mana statistics of the rotation.
-    public delegate float CalculateMP5(SpellRotation rotation, CharacterCalculationsMoonkin calcs, float spellPower, float spellHit, float spellCrit, float spellHaste);
+    public delegate float CalculateMP5(SpellRotation rotation, CharacterCalculationsMoonkin calcs, float fightLength, float spellPower, float spellHit, float spellCrit, float spellHaste);
 
     // The proc effect public class itself.
     // NOTE: Adding constructor with special effect to allow efficient construction of the proc list in a loop.
@@ -28,7 +28,7 @@ namespace Rawr.Moonkin
                 effect.Stats.NatureDamage > 0 || effect.Stats.HolyDamage > 0 || effect.Stats.ArcaneDamage > 0 ||
                 effect.Stats.HolySummonedDamage > 0)
             {
-                CalculateDPS = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
+                CalculateDPS = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float fightLength, float sp, float sHi, float sc, float sHa)
                 {
                     SpecialEffect e = Effect;
                     float schoolModifier = 1 +
@@ -69,13 +69,13 @@ namespace Rawr.Moonkin
                         default:
                             return 0.0f;
                     }
-                    float procsPerSecond = e.GetAverageProcsPerSecond(triggerInterval, triggerChance, 3.0f, c.FightLength * 60.0f);
+                    float procsPerSecond = e.GetAverageProcsPerSecond(triggerInterval, triggerChance, 3.0f, fightLength * 60.0f);
                     return baseValue * (e.Duration == 0 ? 1 : e.Duration) * specialDamageModifier * procsPerSecond;
                 };
             }
             if (effect.Stats.Mp5 > 0)
             {
-                CalculateMP5 = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
+                CalculateMP5 = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float fightLength, float sp, float sHi, float sc, float sHa)
                 {
                     SpecialEffect e = Effect;
                     float triggerInterval = 0.0f, triggerChance = 1.0f;
@@ -107,13 +107,13 @@ namespace Rawr.Moonkin
                         default:
                             return 0.0f;
                     }
-                    float procsPerSecond = e.GetAverageProcsPerSecond(triggerInterval, triggerChance, 3.0f, c.FightLength * 60f);
+                    float procsPerSecond = e.GetAverageProcsPerSecond(triggerInterval, triggerChance, 3.0f, fightLength * 60f);
                     return (e.Stats.Mp5 / 5.0f * e.Duration) * procsPerSecond * 5.0f;
                 };
             }
             if (effect.Stats.ManaRestoreFromMaxManaPerSecond > 0)
             {
-                CalculateMP5 = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
+                CalculateMP5 = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float fightLength, float sp, float sHi, float sc, float sHa)
                 {
                     SpecialEffect e = Effect;
                     float triggerInterval = 0.0f, triggerChance = 1.0f;
@@ -145,7 +145,7 @@ namespace Rawr.Moonkin
                         default:
                             return 0.0f;
                     }
-                    float procsPerSecond = e.GetAverageProcsPerSecond(triggerInterval, triggerChance, 3.0f, c.FightLength * 60f);
+                    float procsPerSecond = e.GetAverageProcsPerSecond(triggerInterval, triggerChance, 3.0f, fightLength * 60f);
                     return e.Stats.ManaRestoreFromMaxManaPerSecond * c.BasicStats.Mana * e.Duration * procsPerSecond * 5.0f;
                 };
             }
@@ -212,10 +212,10 @@ namespace Rawr.Moonkin
                         sc -= storedStats.SpellCrit;
                     }
                 };
-                UpTime = delegate(SpellRotation r, CharacterCalculationsMoonkin c)
+                UpTime = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float fightLength, float sub35Percent)
                 {
                     float upTime = 0.0f;
-                    float procTime = c.FightLength * 60.0f * (Effect.LimitedToExecutePhase ? c.Sub35Percent : 1f);
+                    float procTime = fightLength * 60.0f * (Effect.LimitedToExecutePhase ? sub35Percent : 1f);
                     switch (Effect.Trigger)
                     {
                         case Trigger.Use:
@@ -223,7 +223,7 @@ namespace Rawr.Moonkin
                             break;
                         case Trigger.SpellHit:
                         case Trigger.DamageSpellHit:
-                            upTime = Effect.GetAverageUptime(r.RotationData.Duration / r.RotationData.CastCount, r.Solver.GetSpellHit(c), 3.0f, procTime);
+                            upTime = Effect.GetAverageUptime(r.RotationData.Duration / r.RotationData.CastCount, 1 - Math.Max(0, c.SpellHitCap - c.SpellHit), 3.0f, procTime);
                             break;
                         case Trigger.DamageSpellCrit:
                         case Trigger.SpellCrit:
@@ -261,7 +261,7 @@ namespace Rawr.Moonkin
                         default:
                             break;
                     }
-                    return upTime * (Effect.LimitedToExecutePhase ? c.Sub35Percent : 1f);
+                    return upTime * (Effect.LimitedToExecutePhase ? sub35Percent : 1f);
                 };
             }
         }

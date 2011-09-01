@@ -746,8 +746,8 @@ namespace Rawr.Moonkin
                             manaGainsList.Add(new ComparisonCalculationMoonkin()
                             {
                                 Name = "Euphoria",
-                                OverallPoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f,
-                                BurstDamagePoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f,
+                                OverallPoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * character.BossOptions.BerserkTimer * 60.0f,
+                                BurstDamagePoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * character.BossOptions.BerserkTimer * 60.0f,
                                 ImageSource = "achievement_boss_valithradreamwalker"
                             });
                         }
@@ -767,8 +767,8 @@ namespace Rawr.Moonkin
                             manaGainsList.Add(new ComparisonCalculationMoonkin()
                             {
                                 Name = "Replenishment",
-                                OverallPoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f,
-                                BurstDamagePoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f,
+                                OverallPoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * character.BossOptions.BerserkTimer * 60.0f,
+                                BurstDamagePoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * character.BossOptions.BerserkTimer * 60.0f,
                                 ImageSource = "spell_magic_managain"
                             });
                         }
@@ -786,8 +786,8 @@ namespace Rawr.Moonkin
                             manaGainsList.Add(new ComparisonCalculationMoonkin()
                             {
                                 Name = "Innervate",
-                                OverallPoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f,
-                                BurstDamagePoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f,
+                                OverallPoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * character.BossOptions.BerserkTimer * 60.0f,
+                                BurstDamagePoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * character.BossOptions.BerserkTimer * 60.0f,
                                 ImageSource = "spell_nature_lightning"
                             });
                         }
@@ -798,8 +798,8 @@ namespace Rawr.Moonkin
                     manaGainsList.Add(new ComparisonCalculationMoonkin()
                     {
                         Name = "MP5",
-                        OverallPoints = calcsManaBase.FightLength * 60.0f * calcsManaBase.ManaRegen,
-                        BurstDamagePoints = calcsManaBase.FightLength * 60.0f * calcsManaBase.ManaRegen
+                        OverallPoints = character.BossOptions.BerserkTimer * 60.0f * calcsManaBase.ManaRegen,
+                        BurstDamagePoints = character.BossOptions.BerserkTimer * 60.0f * calcsManaBase.ManaRegen
                     });
                     return manaGainsList.ToArray();
 
@@ -886,8 +886,25 @@ namespace Rawr.Moonkin
             _enableSpiritToHit = calcOpts.AllowReforgingSpiritToHit;
             StatsMoonkin stats = (StatsMoonkin)GetCharacterStats(character, additionalItem);
             calc = CalculationsMoonkin.GetInnerCharacterCalculations(character, stats, additionalItem);
-            calc.PlayerLevel = character.Level;
             // Run the solver to do final calculations
+
+            // Build the cycle for reference calculations or significant changes
+            // Reference calc will always be run first, so I can initialize the cast distribution here and use it in the solver
+            if (referenceCalculation || significantChange)
+            {
+                /*calcOpts.CastDistribution = new MoonkinCycleGenerator { Has4T12 = false,
+                    EuphoriaChance = 0.12 * character.DruidTalents.Euphoria,
+                    ShootingStarsChance = 0.02 * character.DruidTalents.ShootingStars,
+                    DotTickRate = 1 }.GenerateCycle();
+
+                calcOpts.CastDistribution4T12 = new MoonkinCycleGenerator
+                {
+                    Has4T12 = true,
+                    EuphoriaChance = 0.12 * character.DruidTalents.Euphoria,
+                    ShootingStarsChance = 0.02 * character.DruidTalents.ShootingStars,
+                    DotTickRate = 1
+                }.GenerateCycle();*/
+            }
             new MoonkinSolver().Solve(character, ref calc);
 
             return calc;
@@ -903,10 +920,10 @@ namespace Rawr.Moonkin
             //
             BossOptions bossOpts = character.BossOptions;
             calc.BasicStats = stats;
-            calc.Sub35Percent = (float)bossOpts.Under35Perc + (float)bossOpts.Under20Perc;
 
             calc.SpellCrit = StatConversion.GetSpellCritFromIntellect(stats.Intellect) + StatConversion.GetSpellCritFromRating(stats.CritRating) + stats.SpellCrit + stats.SpellCritOnTarget;
             calc.SpellHit = StatConversion.GetSpellHitFromRating(stats.HitRating) + stats.SpellHit;
+            calc.SpellHitCap = StatConversion.GetSpellMiss(character.Level - character.BossOptions.Level, false);
             calc.SpellHaste = (1 + StatConversion.GetSpellHasteFromRating(stats.HasteRating)) * (1 + stats.SpellHaste) - 1;
 
             // All spells: Damage +(1 * Int)
@@ -915,14 +932,8 @@ namespace Rawr.Moonkin
             float spellPowerFromStats = (float)Math.Floor(spellDamageFromIntPercent * (Math.Max(0f, stats.Intellect - 10)));
             calc.SpellPower = stats.SpellPower + spellPowerFromStats;
 
-            calc.Latency = calcOpts.Latency;
-
             // Mastery from rating
             calc.Mastery = 8.0f + StatConversion.GetMasteryFromRating(stats.MasteryRating);
-
-            calc.FightLength = bossOpts.BerserkTimer / 60f;
-            calc.TargetLevel = bossOpts.Level;
-            calc.PtrMode = calcOpts.PTRMode;
 
             // 3.1 spirit regen
             // Irrelevant in Cataclysm, when we never get spirit regen

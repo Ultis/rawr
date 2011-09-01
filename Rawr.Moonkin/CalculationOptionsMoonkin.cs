@@ -10,6 +10,8 @@ namespace Rawr.Moonkin
     {
         public bool Notify = true;
 
+        #region User Inputs (persisted)
+
         [DefaultValue(0.100f)]
         public float Latency { get { return latency; } set { latency = value; OnPropertyChanged("Latency"); } }
         private float latency = 0.100f;
@@ -51,6 +53,12 @@ namespace Rawr.Moonkin
         [DefaultValue(false)]
         public bool PTRMode { get { return ptrMode; } set { ptrMode = value; OnPropertyChanged("PTRMode"); } }
         private bool ptrMode = false;
+
+        #endregion
+
+        #region Program-generated Inputs (not persisted)
+
+        #endregion
 
         #region Stat Graph
         [DefaultValue(new bool[] { true, true, true, true, true, true, true, })]
