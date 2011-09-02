@@ -749,7 +749,7 @@ namespace Rawr.Moonkin
                 Starsurge.AllDamageModifier += MoonkinSolver.DRAGONWRATH_PROC_RATE;
                 Moonfire.AllDamageModifier += MoonkinSolver.DRAGONWRATH_PROC_RATE;
                 Moonfire.DotEffect.AllDamageModifier += MoonkinSolver.DRAGONWRATH_PROC_RATE;
-                InsectSwarm.AllDamageModifier += MoonkinSolver.DRAGONWRATH_PROC_RATE;
+                InsectSwarm.DotEffect.AllDamageModifier += MoonkinSolver.DRAGONWRATH_PROC_RATE;
             }
 
             // PTR changes go here
