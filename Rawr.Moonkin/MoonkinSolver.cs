@@ -27,7 +27,7 @@ namespace Rawr.Moonkin
                         new Spell()
                         {
                             Name = "SF",
-                            BaseDamage = (987 + 1229) / 2.0f,
+                            BaseDamage = (1214f + 1514f) / 2.0f,
                             SpellDamageModifier = 1.0f,
                             BaseCastTime = 3.2f,
                             BaseManaCost = (float)(int)(BaseMana * 0.11f),
@@ -54,7 +54,7 @@ namespace Rawr.Moonkin
                         new Spell()
                         {
                             Name = "W",
-                            BaseDamage = (675f + 761.0f) / 2.0f,
+                            BaseDamage = (831f + 937f) / 2.0f,
                             SpellDamageModifier = 2.5f/3.5f,
                             BaseCastTime = 2.5f,
                             BaseManaCost = (float)(int)(BaseMana * 0.09f),
@@ -738,10 +738,6 @@ namespace Rawr.Moonkin
             // Add set bonuses
             Moonfire.CriticalChanceModifier += stats.BonusCritChanceMoonfire;
             InsectSwarm.CriticalChanceModifier += stats.BonusCritChanceInsectSwarm;
-
-            // 4.2: Starfire and Wrath damage increased by 23%.
-            Starfire.BaseDamage *= 1.23f;
-            Wrath.BaseDamage *= 1.23f;
 
             // Dragonwrath, Tarecgosa's Rest: X% chance on damaging spell cast to proc a duplicate version of the spell.
             // If it duplicates a DoT tick, it fires Wrath of Tarecgosa for an equivalent amount of damage.
