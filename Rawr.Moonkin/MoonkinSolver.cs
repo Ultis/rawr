@@ -685,12 +685,12 @@ namespace Rawr.Moonkin
             switch (talents.StarlightWrath)
             {
                 case 1:
-                    Starfire.BaseCastTime -= 0.1f;
-                    Wrath.BaseCastTime -= 0.1f;
+                    Starfire.BaseCastTime -= 0.15f;
+                    Wrath.BaseCastTime -= 0.15f;
                     break;
                 case 2:
-                    Starfire.BaseCastTime -= 0.2f;
-                    Wrath.BaseCastTime -= 0.2f;
+                    Starfire.BaseCastTime -= 0.25f;
+                    Wrath.BaseCastTime -= 0.25f;
                     break;
                 case 3:
                     Starfire.BaseCastTime -= 0.5f;
