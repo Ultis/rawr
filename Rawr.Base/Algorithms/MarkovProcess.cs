@@ -194,7 +194,7 @@ namespace Rawr.Base.Algorithms
                 }
 
                 M.Decompose();
-                M.FSolve(x);
+                M.BSolve(x);
 
                 M.EndUnsafe();
             }
