@@ -111,6 +111,10 @@ namespace Rawr.UnitTests
             Assert.AreEqual(averageDamage, 100.0 * 4.0 / 3.0, 0.000000000001, "damage");
 
             Assert.AreEqual(averageDamage / mp.AverageTransitionDuration, 80.0, 0.000000000001, "dps");
+
+            double[] stateLengths = mp.GetAverageTimeToEnd(st => (st.Name == "S1"));
+
+            Assert.AreEqual(stateLengths[0], 4.0, "time to end");
         }
 
         [TestMethod]
