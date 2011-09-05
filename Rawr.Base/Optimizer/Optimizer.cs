@@ -1277,7 +1277,7 @@ namespace Rawr.Optimizer
             this.itemGenerator = itemGenerator;
             for (int slot = 0; slot < characterSlots; slot++)
             {
-                slotItems[slot] = itemGenerator.SlotItems[slot].ConvertAll(itemInstance => (object)itemInstance);
+                slotItems[slot] = itemGenerator.SlotRawItems[slot].ConvertAll(itemAvailability => (object)itemAvailability);
             }
 
             itemAvailable = itemGenerator.ItemAvailable;
@@ -1287,34 +1287,37 @@ namespace Rawr.Optimizer
             {
                 slotItemsRandom[slot] = new List<KeyedList<KeyedList<ItemInstance>>>();
                 int minJeweler = slotItems[slot].Count > 0 ? 3 : 0;
-                foreach (ItemInstance itemInstance in slotItems[slot])
+                foreach (ItemAvailabilityInformation itemAvailability in slotItems[slot])
                 {
-                    // jeweler data
-                    int jewelerCount = itemInstance == null ? 0 : itemInstance.JewelerCount;
-                    if (jewelerCount < minJeweler)
+                    KeyedList<KeyedList<ItemInstance>> list1 = null;
+                    foreach (var itemInstance in itemAvailability.ItemList)
                     {
-                        minJeweler = jewelerCount;
-                    }
+                        // jeweler data
+                        int jewelerCount = itemInstance == null ? 0 : itemInstance.JewelerCount;
+                        if (jewelerCount < minJeweler)
+                        {
+                            minJeweler = jewelerCount;
+                        }
 
-                    // random sampling
-                    string gemmedId = ((object)itemInstance == null) ? "0.0.0.0.0" : itemInstance.GemmedId;
-                    string key1 = ((object)itemInstance == null) ? "0" : itemInstance.Id.ToString();
-                    string key2 = ((object)itemInstance == null) ? "0" : itemInstance.EnchantId.ToString();
-                    KeyedList<KeyedList<ItemInstance>> list1 = slotItemsRandom[slot].Find(list => list.Key == key1);
-                    if (list1 == null)
-                    {
-                        list1 = new KeyedList<KeyedList<ItemInstance>>();
-                        list1.Key = key1;
-                        slotItemsRandom[slot].Add(list1);
+                        // random sampling
+                        string gemmedId = ((object)itemInstance == null) ? "0.0.0.0.0" : itemInstance.GemmedId;
+                        string key1 = ((object)itemInstance == null) ? "0" : itemInstance.Id.ToString();
+                        string key2 = ((object)itemInstance == null) ? "0" : itemInstance.EnchantId.ToString();
+                        if (list1 == null)
+                        {
+                            list1 = new KeyedList<KeyedList<ItemInstance>>();
+                            list1.Key = key1;
+                            slotItemsRandom[slot].Add(list1);
+                        }
+                        KeyedList<ItemInstance> list2 = list1.Find(list => list.Key == key2);
+                        if (list2 == null)
+                        {
+                            list2 = new KeyedList<ItemInstance>();
+                            list2.Key = key2;
+                            list1.Add(list2);
+                        }
+                        list2.Add(itemInstance);
                     }
-                    KeyedList<ItemInstance> list2 = list1.Find(list => list.Key == key2);
-                    if (list2 == null)
-                    {
-                        list2 = new KeyedList<ItemInstance>();
-                        list2.Key = key2;
-                        list1.Add(list2);
-                    }
-                    list2.Add(itemInstance);
                 }
 
                 this.minJeweler[slot] = minJeweler;
@@ -1429,14 +1432,14 @@ namespace Rawr.Optimizer
         public string CheckOneHandedWeaponUniqueness()
         {
             bool nonUniqueOneHander = false;
-            foreach (ItemInstance item in slotItems[(int)CharacterSlot.MainHand])
+            foreach (ItemAvailabilityInformation itemAvailability in slotItems[(int)CharacterSlot.MainHand])
             {
-                if (item != null && item.Item != null)
+                if (itemAvailability != null && itemAvailability.Item.Item != null)
                 {
-                    if((item.Item.Type == ItemType.OneHandAxe || item.Item.Type == ItemType.OneHandMace
-                        || item.Item.Type == ItemType.OneHandSword || item.Item.Type == ItemType.FistWeapon) && item.Item.Slot == ItemSlot.OneHand && !item.Item.Unique)
+                    if ((itemAvailability.Item.Item.Type == ItemType.OneHandAxe || itemAvailability.Item.Item.Type == ItemType.OneHandMace
+                        || itemAvailability.Item.Item.Type == ItemType.OneHandSword || itemAvailability.Item.Item.Type == ItemType.FistWeapon) && itemAvailability.Item.Item.Slot == ItemSlot.OneHand && !itemAvailability.Item.Item.Unique)
                     {
-                        if (slotItems[(int)CharacterSlot.OffHand].Contains(item))
+                        if (slotItems[(int)CharacterSlot.OffHand].Contains(itemAvailability))
                         {
                             nonUniqueOneHander = true;
                             break;
@@ -1715,7 +1718,7 @@ namespace Rawr.Optimizer
                 ItemInstance itemInstance = character._item[slot];
                 if (itemInstance != null)
                 {
-                    var availabilityInformation = itemInstance.GetItemAvailabilityInformation();
+                    var availabilityInformation = itemInstance.ItemAvailabilityInformation;
                     if (availabilityInformation != null)
                     {
                         if (availabilityInformation.PositiveCostItem)
@@ -1769,7 +1772,7 @@ namespace Rawr.Optimizer
 
             // we'll look what is the best gem for each color, separating the limited gems
             // then we'll construct a few item instances for each item and evaluate them
-            if (itemGenerator.SlotItems[slot].Count > 1 || (itemGenerator.SlotItems[slot].Count == 1 && itemGenerator.SlotItems[slot][0] != null) || slot == (int)lockedSlot)
+            if (itemGenerator.SlotRawItems[slot].Count > 1 || (itemGenerator.SlotRawItems[slot].Count == 1 && itemGenerator.SlotRawItems[slot][0] != null) || slot == (int)lockedSlot)
             {
                 object[] itemList = (object[])GetItems(bestIndividual).Clone();
                 itemList[slot] = null;
@@ -1894,15 +1897,15 @@ namespace Rawr.Optimizer
                 }
 
                 List<object> list = new List<object>();
-                List<SuffixItem> rawItems = itemGenerator.SlotRawItems[slot];
+                List<ItemAvailabilityInformation> rawItems = itemGenerator.SlotRawItems[slot];
                 if (slot == (int)lockedSlot)
                 {
-                    rawItems = new List<SuffixItem>() { new SuffixItem() { Item = ((ItemInstance)lockedItems[0]).Item, RandomSuffixId = ((ItemInstance)lockedItems[0]).RandomSuffixId} };
+                    rawItems = new List<ItemAvailabilityInformation>() { new ItemAvailabilityInformation() { Item = new SuffixItem() { Item = ((ItemInstance)lockedItems[0]).Item, RandomSuffixId = ((ItemInstance)lockedItems[0]).RandomSuffixId } } };
                 }
-                foreach (SuffixItem suffixItem in rawItems)
+                foreach (ItemAvailabilityInformation suffixItem in rawItems)
                 {
-                    Item item = suffixItem.Item;
-                    if (suffixItem.AvailabilityInformation == null || suffixItem.AvailabilityInformation.GenerativeEnchants.Count > 0)
+                    Item item = suffixItem.Item.Item;
+                    if (suffixItem == null || suffixItem.GenerativeEnchants.Count > 0)
                     {
                         Enchant enchant = bestEnchant;
                         if (enchant != null)
@@ -2074,9 +2077,9 @@ namespace Rawr.Optimizer
                             }
                         }
                     }
-                    if (suffixItem.AvailabilityInformation != null && suffixItem.AvailabilityInformation.GenerativeEnchants.Count == 0)
+                    if (suffixItem != null && suffixItem.GenerativeEnchants.Count == 0)
                     {
-                        foreach (DirectUpgradeEntry entry in suffixItem.AvailabilityInformation.SingleDirectUpgradeList)
+                        foreach (DirectUpgradeEntry entry in suffixItem.SingleDirectUpgradeList)
                         {
                             list.Add(entry.ItemInstance);
                         }
@@ -2187,77 +2190,80 @@ namespace Rawr.Optimizer
 
             // we don't want to look at all possible gem/enchant combinations
             // instead do a greedy search within each item for gems/enchants
-            var map = itemGenerator.SlotDirectUpgrades[slot];
-            foreach (var list in map)
+            foreach (var availabilityInfo in itemGenerator.SlotRawItems[slot])
             {
-                // find best within the list and then recurse on child list
-                List<DirectUpgradeEntry> childList = list;
-                while (childList != null)
+                var map = availabilityInfo.DirectUpgradeList;
+                foreach (var list in map)
                 {
-                    bool useThreadPool = ThreadPoolValuation && childList.Count > 1;
-                    List<DirectUpgradeEntry> bestList = null;
-                    if (useThreadPool)
+                    // find best within the list and then recurse on child list
+                    List<DirectUpgradeEntry> childList = list;
+                    while (childList != null)
                     {
-                        bestDirectValue = float.NegativeInfinity;
-                        directValuationFoundUpgrade = false;
-                        directValuationsIndex = 0;
-                        directValuationsComplete = 0;
-                        directValuationsListSingleChanges = childList;
-                        directValuationsTemplate = itemList;
-                        directValuationsSlot = slot;
-                        remainingThreadsToSpawn = EffectiveMaxConcurrencyLevel;
-
-                        startedThreads = 1;
-                        ThreadPoolDirectUpgradeValuationSingleChanges(null);
-
-                        lock (directValuationLock)
+                        bool useThreadPool = ThreadPoolValuation && childList.Count > 1;
+                        List<DirectUpgradeEntry> bestList = null;
+                        if (useThreadPool)
                         {
-                            while (directValuationsComplete < directValuationsListSingleChanges.Count || startedThreads > 0) Monitor.Wait(directValuationLock);
-                            if (directValuationFoundUpgrade)
+                            bestDirectValue = float.NegativeInfinity;
+                            directValuationFoundUpgrade = false;
+                            directValuationsIndex = 0;
+                            directValuationsComplete = 0;
+                            directValuationsListSingleChanges = childList;
+                            directValuationsTemplate = itemList;
+                            directValuationsSlot = slot;
+                            remainingThreadsToSpawn = EffectiveMaxConcurrencyLevel;
+
+                            startedThreads = 1;
+                            ThreadPoolDirectUpgradeValuationSingleChanges(null);
+
+                            lock (directValuationLock)
                             {
-                                if (bestDirectValue > best)
+                                while (directValuationsComplete < directValuationsListSingleChanges.Count || startedThreads > 0) Monitor.Wait(directValuationLock);
+                                if (directValuationFoundUpgrade)
                                 {
-                                    best = bestDirectValue;
-                                    bestValuation = bestDirectValuation;
-                                    bestIndividual = bestDirectIndividual;
-                                    foundUpgrade = true;
+                                    if (bestDirectValue > best)
+                                    {
+                                        best = bestDirectValue;
+                                        bestValuation = bestDirectValuation;
+                                        bestIndividual = bestDirectIndividual;
+                                        foundUpgrade = true;
+                                    }
+                                    bestList = bestDirectIndividual.DirectUpgradeEntry.DirectUpgradeList;
                                 }
-                                bestList = bestDirectIndividual.DirectUpgradeEntry.DirectUpgradeList;
-                            }
-                            bestDirectIndividual = null;
-                            bestDirectValuation = null;
-                            directValuationsListSingleChanges = null;
-                            directValuationsTemplate = null;
-                        }
-                    }
-                    else
-                    {
-                        float bestTemp = float.NegativeInfinity;
-                        foreach (DirectUpgradeEntry entry in childList)
-                        {
-                            itemList[slot] = entry.ItemInstance;
-                            if (IsIndividualValid(itemList))
-                            {
-                                swappedIndividual = GenerateIndividual(itemList, false, null);
-                                CharacterCalculationsBase valuation;
-                                value = GetOptimizationValue(swappedIndividual, valuation = GetValuation(swappedIndividual));
-                                ItemInstance itemInstance = entry.ItemInstance;
-                                if (value > best)
-                                {
-                                    best = value;
-                                    bestValuation = valuation;
-                                    bestIndividual = swappedIndividual;
-                                    foundUpgrade = true;
-                                }
-                                if (value > bestTemp)
-                                {
-                                    bestTemp = value;
-                                    bestList = entry.DirectUpgradeList;
-                                }
+                                bestDirectIndividual = null;
+                                bestDirectValuation = null;
+                                directValuationsListSingleChanges = null;
+                                directValuationsTemplate = null;
                             }
                         }
+                        else
+                        {
+                            float bestTemp = float.NegativeInfinity;
+                            foreach (DirectUpgradeEntry entry in childList)
+                            {
+                                itemList[slot] = entry.ItemInstance;
+                                if (IsIndividualValid(itemList))
+                                {
+                                    swappedIndividual = GenerateIndividual(itemList, false, null);
+                                    CharacterCalculationsBase valuation;
+                                    value = GetOptimizationValue(swappedIndividual, valuation = GetValuation(swappedIndividual));
+                                    ItemInstance itemInstance = entry.ItemInstance;
+                                    if (value > best)
+                                    {
+                                        best = value;
+                                        bestValuation = valuation;
+                                        bestIndividual = swappedIndividual;
+                                        foundUpgrade = true;
+                                    }
+                                    if (value > bestTemp)
+                                    {
+                                        bestTemp = value;
+                                        bestList = entry.DirectUpgradeList;
+                                    }
+                                }
+                            }
+                        }
+                        childList = bestList;
                     }
-                    childList = bestList;
                 }
             }
             if (foundUpgrade)
@@ -2375,7 +2381,7 @@ namespace Rawr.Optimizer
 
         private ItemInstance ReplaceGem(ItemInstance item, int index, Item gem)
         {
-            ItemInstance copy = new ItemInstance(item.Item, item.RandomSuffixId, item.Gem1, item.Gem2, item.Gem3, item.Enchant, item.Reforging, item.Tinkering);
+            ItemInstance copy = new ItemInstance(item.Item, item.RandomSuffixId, item.Gem1, item.Gem2, item.Gem3, item.Enchant, item.Reforging, item.Tinkering) { ItemAvailabilityInformation = item.ItemAvailabilityInformation };
             copy.SetGem(index, gem);
             return copy;
             // alternatively construct gemmedid and retrieve from cache, trading memory footprint for dictionary access
@@ -2625,8 +2631,8 @@ namespace Rawr.Optimizer
                 if (promising)
                 {
                     // mutate
-                    ItemInstance item1 = new ItemInstance(mutation1.ItemInstance.Item, mutation1.ItemInstance.RandomSuffixId, mutation1.ItemInstance.Gem1, mutation1.ItemInstance.Gem2, mutation1.ItemInstance.Gem3, mutation1.ItemInstance.Enchant, new Reforging(mutation1.Item, mutation1.RandomSuffixId, mutation2.Reforging.Id), mutation1.ItemInstance.Tinkering);
-                    ItemInstance item2 = new ItemInstance(mutation2.ItemInstance.Item, mutation2.ItemInstance.RandomSuffixId, mutation2.ItemInstance.Gem1, mutation2.ItemInstance.Gem2, mutation2.ItemInstance.Gem3, mutation2.ItemInstance.Enchant, new Reforging(mutation2.Item, mutation2.RandomSuffixId, mutation1.Reforging.Id), mutation2.ItemInstance.Tinkering);
+                    ItemInstance item1 = new ItemInstance(mutation1.ItemInstance.Item, mutation1.ItemInstance.RandomSuffixId, mutation1.ItemInstance.Gem1, mutation1.ItemInstance.Gem2, mutation1.ItemInstance.Gem3, mutation1.ItemInstance.Enchant, new Reforging(mutation1.Item, mutation1.RandomSuffixId, mutation2.Reforging.Id), mutation1.ItemInstance.Tinkering) { ItemAvailabilityInformation = mutation1.ItemInstance.ItemAvailabilityInformation };
+                    ItemInstance item2 = new ItemInstance(mutation2.ItemInstance.Item, mutation2.ItemInstance.RandomSuffixId, mutation2.ItemInstance.Gem1, mutation2.ItemInstance.Gem2, mutation2.ItemInstance.Gem3, mutation2.ItemInstance.Enchant, new Reforging(mutation2.Item, mutation2.RandomSuffixId, mutation1.Reforging.Id), mutation2.ItemInstance.Tinkering) { ItemAvailabilityInformation = mutation2.ItemInstance.ItemAvailabilityInformation };
                     if (((lockedSlot == mutation1.Slot && lockedItems.Contains(item1)) || (lockedSlot != mutation1.Slot && itemAvailable.ContainsKey(item1.GemmedId))) && ((lockedSlot == mutation2.Slot && lockedItems.Contains(item2)) || (lockedSlot != mutation2.Slot && itemAvailable.ContainsKey(item2.GemmedId))))
                     {
                         successful = true;
@@ -2846,1071 +2852,4 @@ namespace Rawr.Optimizer
             return optCharacter;
         }
     }
-    /*
-    #region ItemOptimizer
-    public class ItemOptimizer : OptimizerBase<object, Character, CharacterCalculationsBase>
-    {
-        private Character _character;
-        private string _calculationToOptimize;
-        private OptimizationRequirement[] _requirements;
-        private CalculationsBase model;
-
-        public CalculationsBase Model
-        {
-            get
-            {
-                return model;
-            }
-            set
-            {
-                model = value;
-                ThreadPoolValuation = model.SupportsMultithreading && Properties.GeneralSettings.Default.UseMultithreading;
-            }
-        }
-
-        private class UniqueItemValidator : OptimizerRangeValidatorBase<object>
-        {
-            public override bool IsValid(object[] items)
-            {
-                Item item1 = items[StartSlot] as Item;
-                Item item2 = items[EndSlot] as Item;
-                return !(item1 != null && item2 != null && item1.Unique && (item1.Id == item2.Id || (item1.UniqueId != null && item1.UniqueId.Contains(item2.Id))));
-            }
-        }
-
-        private class ItemAvailableValidator : OptimizerRangeValidatorBase<object>
-        {
-            private bool enchantable;
-
-            public override bool IsValid(object[] items)
-            {
-                Item item = items[StartSlot] as Item;
-                Item gem1 = items[StartSlot + 1] as Item;
-                Item gem2 = items[StartSlot + 2] as Item;
-                Item gem3 = items[StartSlot + 3] as Item;
-                Enchant enchant = items[StartSlot + 4] as Enchant;
-                int gemCount = item.AvailabilityInformation.GemCount;
-                string key = string.Format("{0}.{1}.{2}.{3}.{4}", 
-                    item != null ? item.Id : 0,
-                    gem1 != null && gemCount >= 1 ? gem1.Id : 0,
-                    gem2 != null && gemCount >= 2 ? gem2.Id : 0,
-                    gem3 != null && gemCount >= 3 ? gem3.Id : 0,
-                    enchantable && enchant != null ? enchant.Id : 0);
-                return item.AvailabilityInformation.ItemAvailable.ContainsKey(key);
-            }
-
-            public ItemAvailableValidator(bool enchantable, int slot)
-            {
-                this.enchantable = enchantable;
-                this.StartSlot = slot;
-                if (enchantable)
-                {
-                    EndSlot = slot + 4;
-                }
-                else
-                {
-                    EndSlot = slot + 3;
-                }
-            }
-        }
-
-        private const int characterSlots = 19;
-
-        public ItemOptimizer()
-        {
-            slotCount = characterSlots * 5;
-            slotItems = new List<object>[slotCount];
-            validators = new List<OptimizerRangeValidatorBase<object>>() {
-                new UniqueItemValidator() { StartSlot = 5 * (int)CharacterSlot.Finger1, EndSlot = 5 * (int)CharacterSlot.Finger2 },
-                new UniqueItemValidator() { StartSlot = 5 * (int)CharacterSlot.Trinket1, EndSlot = 5 * (int)CharacterSlot.Trinket2 },
-                new UniqueItemValidator() { StartSlot = 5 * (int)CharacterSlot.MainHand, EndSlot = 5 * (int)CharacterSlot.OffHand },
-                new ItemAvailableValidator(false, 5 * (int)CharacterSlot.Projectile),
-                new ItemAvailableValidator(true, 5 * (int)CharacterSlot.Head),
-                new ItemAvailableValidator(false, 5 * (int)CharacterSlot.Neck),
-                new ItemAvailableValidator(true, 5 * (int)CharacterSlot.Shoulders),
-                new ItemAvailableValidator(true, 5 * (int)CharacterSlot.Chest),
-                new ItemAvailableValidator(false, 5 * (int)CharacterSlot.Waist),
-                new ItemAvailableValidator(true, 5 * (int)CharacterSlot.Legs),
-                new ItemAvailableValidator(true, 5 * (int)CharacterSlot.Feet),
-                new ItemAvailableValidator(true, 5 * (int)CharacterSlot.Wrist),
-                new ItemAvailableValidator(true, 5 * (int)CharacterSlot.Hands),
-                new ItemAvailableValidator(true, 5 * (int)CharacterSlot.Finger1),
-                new ItemAvailableValidator(true, 5 * (int)CharacterSlot.Finger2),
-                new ItemAvailableValidator(false, 5 * (int)CharacterSlot.Trinket1),
-                new ItemAvailableValidator(false, 5 * (int)CharacterSlot.Trinket2),
-                new ItemAvailableValidator(true, 5 * (int)CharacterSlot.Back),
-                new ItemAvailableValidator(true, 5 * (int)CharacterSlot.MainHand),
-                new ItemAvailableValidator(true, 5 * (int)CharacterSlot.OffHand),
-                new ItemAvailableValidator(true, 5 * (int)CharacterSlot.Ranged),
-                new ItemAvailableValidator(false, 5 * (int)CharacterSlot.ProjectileBag),
-            };
-            optimizeCharacterProgressChangedDelegate = new SendOrPostCallback(PrivateOptimizeCharacterProgressChanged);
-            optimizeCharacterCompletedDelegate = new SendOrPostCallback(PrivateOptimizeCharacterCompleted);
-            optimizeCharacterThreadStartDelegate = new OptimizeCharacterThreadStartDelegate(OptimizeCharacterThreadStart);
-            computeUpgradesProgressChangedDelegate = new SendOrPostCallback(PrivateComputeUpgradesProgressChanged);
-            computeUpgradesCompletedDelegate = new SendOrPostCallback(PrivateComputeUpgradesCompleted);
-            computeUpgradesThreadStartDelegate = new ComputeUpgradesThreadStartDelegate(ComputeUpgradesThreadStart);
-            evaluateUpgradeProgressChangedDelegate = new SendOrPostCallback(PrivateEvaluateUpgradeProgressChanged);
-            evaluateUpgradeCompletedDelegate = new SendOrPostCallback(PrivateEvaluateUpgradeCompleted);
-            evaluateUpgradeThreadStartDelegate = new EvaluateUpgradeThreadStartDelegate(EvaluateUpgradeThreadStart);
-        }
-
-        public void InitializeItemCache(Character character, List<string> availableItems, bool overrideRegem, bool overrideReenchant, bool overrideReforge, bool templateGemsEnabled, CalculationsBase model)
-        {
-            _character = character;
-            Model = model;
-            PopulateAvailableIds(availableItems, templateGemsEnabled, overrideRegem, overrideReenchant, overrideReforge);
-        }
-
-        private enum OptimizationOperation
-        {
-            OptimizeCharacter,
-            ComputeUpgrades,
-            EvaluateUpgrade
-        }
-
-        private OptimizationOperation currentOperation;
-
-        #region Asynchronous Pattern Implementation
-        private void PrivateOptimizeCharacterProgressChanged(object state)
-        {
-            OnOptimizeCharacterProgressChanged(state as OptimizeCharacterProgressChangedEventArgs);
-        }
-
-        protected void OnOptimizeCharacterProgressChanged(OptimizeCharacterProgressChangedEventArgs e)
-        {
-            if (OptimizeCharacterProgressChanged != null)
-            {
-                OptimizeCharacterProgressChanged(this, e);
-            }
-        }
-
-        private void PrivateOptimizeCharacterCompleted(object state)
-        {
-            cancellationPending = false;
-            OnOptimizeCharacterCompleted(state as OptimizeCharacterCompletedEventArgs);
-        }
-
-        protected void OnOptimizeCharacterCompleted(OptimizeCharacterCompletedEventArgs e)
-        {
-            if (OptimizeCharacterCompleted != null)
-            {
-                OptimizeCharacterCompleted(this, e);
-            }
-        }
-
-        private void PrivateComputeUpgradesProgressChanged(object state)
-        {
-            OnComputeUpgradesProgressChanged(state as ComputeUpgradesProgressChangedEventArgs);
-        }
-
-        protected void OnComputeUpgradesProgressChanged(ComputeUpgradesProgressChangedEventArgs e)
-        {
-            if (ComputeUpgradesProgressChanged != null)
-            {
-                ComputeUpgradesProgressChanged(this, e);
-            }
-        }
-
-        private void PrivateComputeUpgradesCompleted(object state)
-        {
-            isBusy = false;
-            cancellationPending = false;
-            OnComputeUpgradesCompleted(state as ComputeUpgradesCompletedEventArgs);
-        }
-
-        protected void OnComputeUpgradesCompleted(ComputeUpgradesCompletedEventArgs e)
-        {
-            if (ComputeUpgradesCompleted != null)
-            {
-                ComputeUpgradesCompleted(this, e);
-            }
-        }
-
-        private void PrivateEvaluateUpgradeProgressChanged(object state)
-        {
-            OnEvaluateUpgradeProgressChanged(state as ProgressChangedEventArgs);
-        }
-
-        protected void OnEvaluateUpgradeProgressChanged(ProgressChangedEventArgs e)
-        {
-            if (EvaluateUpgradeProgressChanged != null)
-            {
-                EvaluateUpgradeProgressChanged(this, e);
-            }
-        }
-
-        private void PrivateEvaluateUpgradeCompleted(object state)
-        {
-            isBusy = false;
-            cancellationPending = false;
-            OnEvaluateUpgradeCompleted(state as EvaluateUpgradeCompletedEventArgs);
-        }
-
-        protected void OnEvaluateUpgradeCompleted(EvaluateUpgradeCompletedEventArgs e)
-        {
-            if (EvaluateUpgradeCompleted != null)
-            {
-                EvaluateUpgradeCompleted(this, e);
-            }
-        }
-
-        private bool isBusy;
-
-        public bool IsBusy
-        {
-            get
-            {
-                return isBusy;
-            }
-        }
-
-        private AsyncOperation asyncOperation;
-        private delegate void OptimizeCharacterThreadStartDelegate(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, bool injectCharacter);
-        private delegate void ComputeUpgradesThreadStartDelegate(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades);
-        private delegate void EvaluateUpgradeThreadStartDelegate(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, ItemInstance upgrade);
-
-        public event OptimizeCharacterCompletedEventHandler OptimizeCharacterCompleted;
-        public event OptimizeCharacterProgressChangedEventHandler OptimizeCharacterProgressChanged;
-        public event ComputeUpgradesProgressChangedEventHandler ComputeUpgradesProgressChanged;
-        public event ComputeUpgradesCompletedEventHandler ComputeUpgradesCompleted;
-        public event ProgressChangedEventHandler EvaluateUpgradeProgressChanged;
-        public event EvaluateUpgradeCompletedEventHandler EvaluateUpgradeCompleted;
-
-        private SendOrPostCallback optimizeCharacterProgressChangedDelegate;
-        private SendOrPostCallback optimizeCharacterCompletedDelegate;
-        private OptimizeCharacterThreadStartDelegate optimizeCharacterThreadStartDelegate;
-        private SendOrPostCallback computeUpgradesProgressChangedDelegate;
-        private SendOrPostCallback computeUpgradesCompletedDelegate;
-        private ComputeUpgradesThreadStartDelegate computeUpgradesThreadStartDelegate;
-        private SendOrPostCallback evaluateUpgradeProgressChangedDelegate;
-        private SendOrPostCallback evaluateUpgradeCompletedDelegate;
-        private EvaluateUpgradeThreadStartDelegate evaluateUpgradeThreadStartDelegate;
-
-        public void OptimizeCharacterAsync(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, bool injectCharacter)
-        {
-            if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
-            isBusy = true;
-            cancellationPending = false;
-            asyncOperation = AsyncOperationManager.CreateOperation(null);
-            optimizeCharacterThreadStartDelegate.BeginInvoke(character, calculationToOptimize, requirements, thoroughness, injectCharacter, null, null);
-        }
-
-        private void OptimizeCharacterThreadStart(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, bool injectCharacter)
-        {
-            Exception error = null;
-            Character optimizedCharacter = null;
-            float optimizedCharacterValue = 0.0f;
-            float currentCharacterValue = 0.0f;
-            bool injected = false;
-            try
-            {
-                optimizedCharacter = PrivateOptimizeCharacter(character, calculationToOptimize, requirements, thoroughness, injectCharacter, out injected, out error);
-                if (optimizedCharacter != null)
-                {
-                    optimizedCharacterValue = GetOptimizationValue(optimizedCharacter, model.GetCharacterCalculations(optimizedCharacter));
-                }
-                currentCharacterValue = GetOptimizationValue(character, model.GetCharacterCalculations(character));
-            }
-            catch (Exception ex)
-            {
-                error = ex;
-            }
-            asyncOperation.PostOperationCompleted(optimizeCharacterCompletedDelegate, new OptimizeCharacterCompletedEventArgs(optimizedCharacter, optimizedCharacterValue, character, currentCharacterValue, injected, error, cancellationPending));
-        }
-
-        public void ComputeUpgradesAsync(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness)
-        {
-            ComputeUpgradesAsync(character, calculationToOptimize, requirements, thoroughness, null);
-        }
-
-        public void ComputeUpgradesAsync(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades)
-        {
-            if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
-            isBusy = true;
-            cancellationPending = false;
-            asyncOperation = AsyncOperationManager.CreateOperation(null);
-            computeUpgradesThreadStartDelegate.BeginInvoke(character, calculationToOptimize, requirements, thoroughness, singleItemUpgrades, null, null);
-        }
-
-        private void ComputeUpgradesThreadStart(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades)
-        {
-            Exception error = null;
-            Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = null;
-            try
-            {
-                upgrades = PrivateComputeUpgrades(character, calculationToOptimize, requirements, thoroughness, singleItemUpgrades, out error);
-            }
-            catch (Exception ex)
-            {
-                error = ex;
-            }
-            asyncOperation.PostOperationCompleted(computeUpgradesCompletedDelegate, new ComputeUpgradesCompletedEventArgs(upgrades, error, cancellationPending));
-        }
-
-        public void EvaluateUpgradeAsync(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, ItemInstance upgrade)
-        {
-            if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
-            isBusy = true;
-            cancellationPending = false;
-            asyncOperation = AsyncOperationManager.CreateOperation(null);
-            evaluateUpgradeThreadStartDelegate.BeginInvoke(character, calculationToOptimize, requirements, thoroughness, upgrade, null, null);
-        }
-
-        private void EvaluateUpgradeThreadStart(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, ItemInstance upgrade)
-        {
-            Exception error = null;
-            float upgradeValue = 0f;
-            try
-            {
-                upgradeValue = PrivateEvaluateUpgrade(character, calculationToOptimize, requirements, thoroughness, upgrade, out error);
-            }
-            catch (Exception ex)
-            {
-                error = ex;
-            }
-            asyncOperation.PostOperationCompleted(evaluateUpgradeCompletedDelegate, new EvaluateUpgradeCompletedEventArgs(upgradeValue, null, error, cancellationPending));
-        }
-        #endregion
-
-        protected override void ReportProgress(int progressPercentage, float bestValue)
-        {
-            if (!cancellationPending && asyncOperation != null)
-            {
-                switch (currentOperation)
-                {
-                    case OptimizationOperation.OptimizeCharacter:
-                        asyncOperation.Post(optimizeCharacterProgressChangedDelegate, new OptimizeCharacterProgressChangedEventArgs(progressPercentage, bestValue));
-                        break;
-                    case OptimizationOperation.ComputeUpgrades:
-                        asyncOperation.Post(computeUpgradesProgressChangedDelegate, new ComputeUpgradesProgressChangedEventArgs(itemProgressPercentage, progressPercentage, currentItem));
-                        break;
-                    case OptimizationOperation.EvaluateUpgrade:
-                        asyncOperation.Post(evaluateUpgradeProgressChangedDelegate, new ProgressChangedEventArgs(progressPercentage, null));
-                        break;
-                }
-            }
-        }
-
-        public Character OptimizeCharacter(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, bool injectCharacter)
-        {
-            if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
-            isBusy = true;
-            cancellationPending = false;
-            asyncOperation = null;
-            Exception error;
-            bool injected;
-            Character optimizedCharacter = PrivateOptimizeCharacter(character, calculationToOptimize, requirements, thoroughness, injectCharacter, out injected, out error);
-            if (error != null) throw error;
-            isBusy = false;
-            return optimizedCharacter;
-        }
-
-        private Character PrivateOptimizeCharacter(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, bool injectCharacter, out bool injected, out Exception error)
-        {
-            if (!itemCacheInitialized) throw new InvalidOperationException("Optimization item cache was not initialized.");
-            error = null;
-            _character = character;
-            Model = Calculations.GetModel(_character.CurrentModel);
-            _calculationToOptimize = calculationToOptimize;
-            _requirements = requirements;
-            _thoroughness = thoroughness;
-
-            currentOperation = OptimizationOperation.OptimizeCharacter;
-            Character optimizedCharacter = null;
-            float bestValue = 0.0f;
-            injected = false;
-            lockedSlot = CharacterSlot.None;
-
-            try
-            {
-                if (_thoroughness == 1)
-                {
-                    // if we just start from current character and look for direct upgrades
-                    // then we have to deal with items that are currently equipped, but are not
-                    // currently available
-                    MarkEquippedItemsAsValid(_character);
-                }
-
-                if (injectCharacter || _thoroughness == 1)
-                {
-                    optimizedCharacter = Optimize(character, out bestValue, out injected);
-                }
-                else
-                {
-                    optimizedCharacter = Optimize(out bestValue);
-                }
-            }
-            catch (Exception ex)
-            {
-                error = ex;
-            }
-
-            ReportProgress(100, bestValue);
-            return optimizedCharacter;
-        }
-
-        public Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> ComputeUpgrades(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades)
-        {
-            if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
-            isBusy = true;
-            cancellationPending = false;
-            asyncOperation = null;
-            Exception error;
-            Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = PrivateComputeUpgrades(character, calculationToOptimize, requirements, thoroughness, singleItemUpgrades, out error);
-            if (error != null) throw error;
-            isBusy = false;
-            return upgrades;
-        }
-
-        private int itemProgressPercentage = 0;
-        private string currentItem = "";
-
-        private void MarkEquippedItemsAsValid(Character character)
-        {
-            for (int i = 0; i < slotCount; i++)
-            {
-                ItemInstance item = character[(CharacterSlot)i];
-                if ((object)item != null && item.Id != 0)
-                {
-                    if (!slotItems[5 * i].Contains(item.Item))
-                    {
-                        slotItems[5 * i].Add(item.Item);
-                    }
-                    Item it = item.Item;
-                    if (it != null)
-                    {
-                        if (it.AvailabilityInformation == null)
-                        {
-                            itemGenerator.GenerateItemAvailabilityInformation(it);
-                        }
-                        if (!it.AvailabilityInformation.ItemAvailable.ContainsKey(item.GemmedId))
-                        {
-                            it.AvailabilityInformation.ItemList.Add(item);
-                            it.AvailabilityInformation.ItemAvailable[item.GemmedId] = true;
-                        }
-                    }
-                }
-            }
-        }
-
-        private Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> PrivateComputeUpgrades(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades, out Exception error)
-        {
-            if (!itemCacheInitialized) throw new InvalidOperationException("Optimization item cache was not initialized.");
-            error = null;
-            _character = character;
-            Model = Calculations.GetModel(_character.CurrentModel);
-            _calculationToOptimize = calculationToOptimize;
-            _requirements = requirements;
-            _thoroughness = thoroughness;
-
-            currentOperation = OptimizationOperation.ComputeUpgrades;
-            Character saveCharacter = _character;
-            Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = null;
-            try
-            {
-                // make equipped gear/enchant valid
-                MarkEquippedItemsAsValid(_character);
-
-                upgrades = new Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>>();
-
-                Item[] items = ItemCache.GetRelevantItems(model, _character);
-                CharacterSlot[] slots = new CharacterSlot[] { CharacterSlot.Back, CharacterSlot.Chest, CharacterSlot.Feet, CharacterSlot.Finger1, CharacterSlot.Hands, CharacterSlot.Head, CharacterSlot.Legs, CharacterSlot.MainHand, CharacterSlot.Neck, CharacterSlot.OffHand, CharacterSlot.Projectile, CharacterSlot.ProjectileBag, CharacterSlot.Ranged, CharacterSlot.Shoulders, CharacterSlot.Trinket1, CharacterSlot.Waist, CharacterSlot.Wrist };
-                foreach (CharacterSlot slot in slots)
-                    upgrades[slot] = new List<ComparisonCalculationUpgrades>();
-
-                CharacterCalculationsBase baseCalculations = model.GetCharacterCalculations(_character);
-                float baseValue = GetOptimizationValue(_character, baseCalculations);
-                Dictionary<int, Item> itemById = new Dictionary<int, Item>();
-                foreach (Item item in items)
-                {
-                    itemById[item.Id] = item;
-                }
-
-                if (singleItemUpgrades != null)
-                {
-                    items = new Item[] { singleItemUpgrades };
-                }
-                else
-                {
-                    items = new List<Item>(itemById.Values).ToArray();
-                }
-
-                for (int i = 0; i < items.Length; i++)
-                {
-                    Item item = items[i];
-                    currentItem = item.Name;
-                    itemProgressPercentage = (int)Math.Round((float)i / ((float)items.Length / 100f));
-                    if (cancellationPending)
-                    {
-                        return null;
-                    }
-                    ReportProgress(0, 0);
-                    foreach (CharacterSlot slot in slots)
-                    {
-                        if (item.FitsInSlot(slot, _character))
-                        {
-                            List<ComparisonCalculationUpgrades> comparisons = upgrades[slot];
-                            PopulateLockedItems(item);
-                            lockedSlot = slot;
-                            if (lockedSlot == CharacterSlot.Finger1 && item.Unique && (object)_character.Finger2 != null && (_character.Finger2.Id == item.Id || (item.UniqueId != null && item.UniqueId.Contains(_character.Finger2.Id))))
-                            {
-                                lockedSlot = CharacterSlot.Finger2;
-                            }
-                            if (lockedSlot == CharacterSlot.Trinket1 && item.Unique && (object)_character.Trinket2 != null && (_character.Trinket2.Id == item.Id || (item.UniqueId != null && item.UniqueId.Contains(_character.Trinket2.Id))))
-                            {
-                                lockedSlot = CharacterSlot.Trinket2;
-                            }
-                            _character = BuildSingleItemSwapIndividual(_character, (int)lockedSlot, lockedItems[0]);
-                            // instead of just putting in the first gemming on the list select the best one
-                            float best = -10000000f;
-                            CharacterCalculationsBase bestCalculations;
-                            Character bestCharacter;
-                            if (lockedItems.Count > 1)
-                            {
-                                Character directUpgradeCharacter = LookForDirectItemUpgrades(null, lockedSlot, best, _character, out bestCalculations).Value;
-                                if (directUpgradeCharacter != null)
-                                {
-                                    _character = directUpgradeCharacter;
-                                }
-                            }
-                            if (_thoroughness > 1)
-                            {
-                                int saveThoroughness = _thoroughness;
-                                _thoroughness = 1;
-                                float injectValue;
-                                bool injected;
-                                Character inject = Optimize(_character, 0, out injectValue, out bestCalculations, out injected);
-                                _thoroughness = saveThoroughness;
-                                bestCharacter = Optimize(inject, injectValue, out best, out bestCalculations, out injected);
-                            }
-                            else
-                            {
-                                bool injected;
-                                bestCharacter = Optimize(_character, 0, out best, out bestCalculations, out injected);
-                            }
-                            if (best > baseValue)
-                            {
-                                ItemInstance bestItem = bestCharacter[lockedSlot];
-                                ComparisonCalculationUpgrades itemCalc = new ComparisonCalculationUpgrades();
-                                itemCalc.ItemInstance = bestItem;
-                                itemCalc.CharacterItems = bestCharacter.GetItems();
-                                itemCalc.Name = item.Name;
-                                itemCalc.Equipped = false;
-                                itemCalc.OverallPoints = best - baseValue;
-
-                                comparisons.Add(itemCalc);
-                            }
-                            _character = saveCharacter;
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                error = ex;
-            }
-            finally
-            {
-                _character = saveCharacter;
-            }
-
-            ReportProgress(100, 0f);
-            return upgrades;
-        }
-
-        public float EvaluateUpgrade(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, ItemInstance upgrade)
-        {
-            if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
-            isBusy = true;
-            cancellationPending = false;
-            asyncOperation = null;
-            Exception error;
-            float upgradeValue = PrivateEvaluateUpgrade(character, calculationToOptimize, requirements, thoroughness, upgrade, out error);
-            if (error != null) throw error;
-            isBusy = false;
-            return upgradeValue;
-        }
-
-        private float PrivateEvaluateUpgrade(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, ItemInstance upgrade, out Exception error)
-        {
-            if (!itemCacheInitialized) throw new InvalidOperationException("Optimization item cache was not initialized.");
-            error = null;
-            _character = character;
-            Model = Calculations.GetModel(_character.CurrentModel);
-            _calculationToOptimize = calculationToOptimize;
-            _requirements = requirements;
-            _thoroughness = thoroughness;
-
-            currentOperation = OptimizationOperation.EvaluateUpgrade;
-            Character saveCharacter = _character;
-            float upgradeValue = 0f;
-            try
-            {
-                // make equipped gear/enchant valid
-                // this is currently only called after calculate upgrades already marks items as valid, but we might have to do this here also if things change
-                // MarkEquippedItemsAsValid(_character);
-
-                CharacterSlot[] slots = new CharacterSlot[] { CharacterSlot.Back, CharacterSlot.Chest, CharacterSlot.Feet, CharacterSlot.Finger1, CharacterSlot.Hands, CharacterSlot.Head, CharacterSlot.Legs, CharacterSlot.MainHand, CharacterSlot.Neck, CharacterSlot.OffHand, CharacterSlot.Projectile, CharacterSlot.ProjectileBag, CharacterSlot.Ranged, CharacterSlot.Shoulders, CharacterSlot.Trinket1, CharacterSlot.Waist, CharacterSlot.Wrist };
-                CharacterCalculationsBase baseCalculations = model.GetCharacterCalculations(_character);
-                float baseValue = GetOptimizationValue(_character, baseCalculations);
-
-                ItemInstance item = upgrade;
-                foreach (CharacterSlot slot in slots)
-                {
-                    if (item.Item.FitsInSlot(slot, _character))
-                    {
-                        lockedItems = new List<ItemInstance>() { item };
-                        lockedSlot = slot;
-                        if (lockedSlot == CharacterSlot.Finger1 && item.Item.Unique && (object)_character.Finger2 != null && (_character.Finger2.Id == item.Id || (item.Item.UniqueId != null && item.Item.UniqueId.Contains(_character.Finger2.Id))))
-                        {
-                            lockedSlot = CharacterSlot.Finger2;
-                        }
-                        if (lockedSlot == CharacterSlot.Trinket1 && item.Item.Unique && (object)_character.Trinket2 != null && (_character.Trinket2.Id == item.Id || (item.Item.UniqueId != null && item.Item.UniqueId.Contains(_character.Trinket2.Id))))
-                        {
-                            lockedSlot = CharacterSlot.Trinket2;
-                        }
-                        _character = BuildSingleItemSwapIndividual(_character, (int)lockedSlot, upgrade);
-                        float best;
-                        CharacterCalculationsBase bestCalculations;
-                        Character bestCharacter;
-                        if (_thoroughness > 1)
-                        {
-                            int saveThoroughness = _thoroughness;
-                            _thoroughness = 1;
-                            float injectValue;
-                            bool injected;
-                            Character inject = Optimize(_character, 0, out injectValue, out bestCalculations, out injected);
-                            _thoroughness = saveThoroughness;
-                            bestCharacter = Optimize(inject, injectValue, out best, out bestCalculations, out injected);
-                        }
-                        else
-                        {
-                            bool injected;
-                            bestCharacter = Optimize(_character, 0, out best, out bestCalculations, out injected);
-                        }
-                        if ((object)bestCharacter[lockedSlot] == null || bestCharacter[lockedSlot].Id != item.Id) throw new Exception("There was an internal error in Optimizer when evaluating upgrade.");
-                        upgradeValue = best - baseValue;
-                        if (upgradeValue < 0 && ((object)saveCharacter[lockedSlot] == null || saveCharacter[lockedSlot].Id != item.Id)) upgradeValue = 0f;
-                        _character = saveCharacter;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                error = ex;
-            }
-            finally
-            {
-                _character = saveCharacter;
-            }
-
-            ReportProgress(100, 0f);
-            return upgradeValue;
-        }
-
-        private bool itemCacheInitialized;
-
-        int[] pairSlotList = new int[] { (int)CharacterSlot.Finger1, (int)CharacterSlot.MainHand, (int)CharacterSlot.Trinket1 };
-        int[] pairSlotMap;
-        List<ItemInstance>[] slotList;
-        List<ItemInstance> lockedItems;
-        CharacterSlot lockedSlot = CharacterSlot.None;
-        AvailableItemGenerator itemGenerator;
-
-        private void PopulateLockedItems(Item item)
-        {
-            lockedItems = itemGenerator.GetPossibleGemmedItemsForItem(item, item.Id.ToString());
-        }
-
-        private void PopulateAvailableIds(List<string> availableItems, bool templateGemsEnabled, bool overrideRegem, bool overrideReenchant, bool overrideReforge)
-        {
-            itemGenerator = new AvailableItemGenerator(availableItems, false, templateGemsEnabled, overrideRegem, overrideReenchant, overrideReforge, true, _character, model);
-            slotList = itemGenerator.SlotItems;
-
-            for (int i = 0; i < characterSlots; i++)
-            {
-                Dictionary<int, bool> itemUnique = new Dictionary<int, bool>();
-                slotItems[5 * i] = new List<object>();
-                foreach (ItemInstance itemInstance in slotList[i])
-                {
-                    int itemId = 0;
-                    if (itemInstance != null)
-                    {
-                        itemId = itemInstance.Id;
-                    }
-                    if (!itemUnique.ContainsKey(itemId))
-                    {
-                        slotItems[5 * i].Add(itemInstance != null ? itemInstance.Item : null);
-                        itemUnique[itemId] = true;
-                    }
-                }
-            }
-
-            pairSlotMap = new int[slotCount];
-            pairSlotMap[(int)CharacterSlot.Back] = -1;
-            pairSlotMap[(int)CharacterSlot.Chest] = -1;
-            pairSlotMap[(int)CharacterSlot.Feet] = -1;
-            pairSlotMap[(int)CharacterSlot.Finger1] = (int)CharacterSlot.Finger2;
-            pairSlotMap[(int)CharacterSlot.Finger2] = (int)CharacterSlot.Finger1;
-            pairSlotMap[(int)CharacterSlot.Hands] = -1;
-            pairSlotMap[(int)CharacterSlot.Head] = -1;
-            pairSlotMap[(int)CharacterSlot.Legs] = -1;
-            pairSlotMap[(int)CharacterSlot.MainHand] = (int)CharacterSlot.OffHand;
-            pairSlotMap[(int)CharacterSlot.OffHand] = (int)CharacterSlot.MainHand;
-            pairSlotMap[(int)CharacterSlot.Neck] = -1;
-            pairSlotMap[(int)CharacterSlot.Projectile] = -1;
-            pairSlotMap[(int)CharacterSlot.ProjectileBag] = -1;
-            pairSlotMap[(int)CharacterSlot.Ranged] = -1;
-            pairSlotMap[(int)CharacterSlot.Shoulders] = -1;
-            pairSlotMap[(int)CharacterSlot.Trinket1] = (int)CharacterSlot.Trinket2;
-            pairSlotMap[(int)CharacterSlot.Trinket2] = (int)CharacterSlot.Trinket1;
-            pairSlotMap[(int)CharacterSlot.Waist] = -1;
-            pairSlotMap[(int)CharacterSlot.Wrist] = -1;
-
-            itemCacheInitialized = true;
-        }
-
-        public string GetWarningPromptIfNeeded()
-        {
-            int gemLimit = 8;
-            int itemLimit = 512;
-            //int enchantLimit = 8;
-
-            List<string> emptyList = new List<string>();
-            List<string> tooManyList = new List<string>();
-
-            CalculateWarnings(itemGenerator.GemItems, "Gems", emptyList, tooManyList, gemLimit);
-            CalculateWarnings(itemGenerator.MetaGemItems, "Meta Gems", emptyList, tooManyList, gemLimit);
-
-            CalculateWarnings(slotList[(int)CharacterSlot.Head], "Head Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotList[(int)CharacterSlot.Neck], "Neck Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotList[(int)CharacterSlot.Shoulders], "Shoulder Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotList[(int)CharacterSlot.Back], "Back Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotList[(int)CharacterSlot.Chest], "Chest Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotList[(int)CharacterSlot.Wrist], "Wrist Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotList[(int)CharacterSlot.Hands], "Hands Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotList[(int)CharacterSlot.Waist], "Waist Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotList[(int)CharacterSlot.Legs], "Legs Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotList[(int)CharacterSlot.Feet], "Feet Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotList[(int)CharacterSlot.Finger1], "Finger Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotList[(int)CharacterSlot.Trinket1], "Trinket Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotList[(int)CharacterSlot.MainHand], "Main Hand Items", emptyList, tooManyList, itemLimit);
-            CalculateWarnings(slotList[(int)CharacterSlot.OffHand], "Offhand Items", null, tooManyList, itemLimit);
-            CalculateWarnings(slotList[(int)CharacterSlot.Ranged], "Ranged Items", null, tooManyList, itemLimit);
-            CalculateWarnings(slotList[(int)CharacterSlot.Projectile], "Projectile Items", null, tooManyList, itemLimit);
-            CalculateWarnings(slotList[(int)CharacterSlot.ProjectileBag], "Projectile Bag Items", null, tooManyList, itemLimit);
-
-            //CalculateWarnings(backEnchants, "Back Enchants", emptyList, tooManyList, enchantLimit);
-            //CalculateWarnings(chestEnchants, "Chest Enchants", emptyList, tooManyList, enchantLimit);
-            //CalculateWarnings(feetEnchants, "Feet Enchants", emptyList, tooManyList, enchantLimit);
-            //CalculateWarnings(fingerEnchants, "Finger Enchants", null, tooManyList, enchantLimit);
-            //CalculateWarnings(handsEnchants, "Hands Enchants", emptyList, tooManyList, enchantLimit);
-            //CalculateWarnings(headEnchants, "Head Enchants", emptyList, tooManyList, enchantLimit);
-            //CalculateWarnings(legsEnchants, "Legs Enchants", emptyList, tooManyList, enchantLimit);
-            //CalculateWarnings(shouldersEnchants, "Shoulder Enchants", emptyList, tooManyList, enchantLimit);
-            //CalculateWarnings(mainHandEnchants, "Main Hand Enchants", emptyList, tooManyList, enchantLimit);
-            //CalculateWarnings(offHandEnchants, "Offhand Enchants", null, tooManyList, enchantLimit);
-            //CalculateWarnings(rangedEnchants, "Ranged Enchants", null, tooManyList, enchantLimit);
-            //CalculateWarnings(wristEnchants, "Wrist Enchants", emptyList, tooManyList, enchantLimit);
-
-            if (emptyList.Count + tooManyList.Count > 0)
-            {
-                if (emptyList.Count > 5)
-                {
-                    emptyList.RemoveRange(5, emptyList.Count - 5);
-                    emptyList.Add("...");
-                }
-                if (tooManyList.Count > 5)
-                {
-                    tooManyList.RemoveRange(5, tooManyList.Count - 5);
-                    tooManyList.Add("...");
-                }
-                if (tooManyList.Count == 0)
-                {
-                    // good sizes but some are empty
-                    return "You have not selected any of the following:" + Environment.NewLine + Environment.NewLine + "\t" + string.Join(Environment.NewLine + "\t", emptyList.ToArray()) + Environment.NewLine + Environment.NewLine + "Do you want to continue with the optimization?";
-                }
-                else if (emptyList.Count == 0)
-                {
-                    return "The following slots have a very large number of items selected :" + Environment.NewLine + Environment.NewLine + "\t" + string.Join(Environment.NewLine + "\t", tooManyList.ToArray()) + Environment.NewLine + Environment.NewLine + "Do you want to continue with the optimization?";
-                }
-                else
-                {
-                    return "You have not selected any of the following:" + Environment.NewLine + Environment.NewLine + "\t" + string.Join(Environment.NewLine + "\t", emptyList.ToArray()) + Environment.NewLine + Environment.NewLine + "The following slots have a very large number of items selected :" + Environment.NewLine + Environment.NewLine + "\t" + string.Join(Environment.NewLine + "\t", tooManyList.ToArray()) + Environment.NewLine + Environment.NewLine + "Do you want to continue with the optimization?";
-                }
-            }
-            return null;
-        }
-
-        private void CalculateWarnings(System.Collections.IList list, string group, List<string> emptyList, List<string> tooManyList, int tooManyLimit)
-        {
-            object el0 = (list.Count > 0) ? list[0] : null;
-            if (emptyList != null && (list.Count == 0 || (list.Count == 1 && (el0 == null || (el0 is Enchant && ((Enchant)el0).Id == 0))))) emptyList.Add(group);
-            if (tooManyList != null && list.Count > tooManyLimit) tooManyList.Add(group);
-        }
-
-        public static float GetOptimizationValue(Character character, CalculationsBase model)
-        {
-            return GetCalculationsValue(character, model.GetCharacterCalculations(character), character.CalculationToOptimize, character.OptimizationRequirements.ToArray());
-        }
-
-        protected override float GetOptimizationValue(Character individual, CharacterCalculationsBase valuation)
-        {
-            return GetCalculationsValue(individual, valuation, _calculationToOptimize, _requirements);
-        }
-
-        protected override CharacterCalculationsBase GetValuation(Character individual)
-        {
-            bool oldVolatility = Item.OptimizerManagedVolatiliy;
-            try
-            {
-                Item.OptimizerManagedVolatiliy = true;
-                return model.GetCharacterCalculations(individual);
-            }
-            finally
-            {
-                Item.OptimizerManagedVolatiliy = oldVolatility;
-            }
-        }
-
-        protected override object GetItem(Character individual, int slot)
-        {
-            int characterSlot = slot / 5;
-            ItemInstance itemInstance = individual[(CharacterSlot)characterSlot];
-            if (itemInstance == null) return null;
-            switch (slot % 5)
-            {
-                case 0:
-                    return itemInstance.Item;
-                case 1:
-                    return itemInstance.Gem1;
-                case 2:
-                    return itemInstance.Gem2;
-                case 3:
-                    return itemInstance.Gem3;
-                case 4:
-                    return itemInstance.Enchant;
-            }
-            return null;
-        }
-
-        protected override object[] GetItems(Character individual)
-        {
-            object[] items = new object[slotCount];
-            for (int i = 0; i < characterSlots; i++)
-            {
-                ItemInstance itemInstance = individual[(CharacterSlot)i];
-                if (itemInstance != null)
-                {
-                    items[i * 5] = itemInstance.Item;
-                    items[i * 5 + 1] = itemInstance.Gem1;
-                    items[i * 5 + 2] = itemInstance.Gem2;
-                    items[i * 5 + 3] = itemInstance.Gem3;
-                    items[i * 5 + 4] = itemInstance.Enchant;
-                }
-            }
-            return items;
-        }
-
-        protected override Character GenerateIndividual(object[] items, bool canUseArray, Character recycledIndividual)
-        {
-            Item[] gems = new Item[3];
-            ItemInstance[] itemInstances = new ItemInstance[characterSlots];
-            for (int i = 0; i < characterSlots; i++)
-            {
-                Item item = items[i * 5] as Item;
-                if (item != null)
-                {
-                    Array.Clear(gems, 0, 3);
-                    for (int j = 0; j < item.AvailabilityInformation.GemCount; j++)
-                    {
-                        gems[j] = items[i * 5 + 1 + j] as Item;
-                    }
-                    itemInstances[i] = new ItemInstance(item, gems[0], gems[1], gems[2], items[i * 5 + 4] as Enchant);
-                }
-            }
-            Character character = new Character(_character.Name, _character.Realm, _character.Region, _character.Race, _character.BossOptions,
-                itemInstances, _character.ActiveBuffs, _character.CurrentModel);
-            character.CalculationOptions = _character.CalculationOptions;
-            character.BossOptions = _character.BossOptions;
-            character.Class = _character.Class;
-            character.AssignAllTalentsFromCharacter(_character, false);
-            //character.RecalculateSetBonuses();
-            return character;
-        }
-
-        private static float GetCalculationsValue(Character character, CharacterCalculationsBase calcs, string calculation, OptimizationRequirement[] requirements)
-        {
-            float gemValue = -100000 * character.GemRequirementsInvalid;
-            float ret = 0;
-            foreach (OptimizationRequirement requirement in requirements)
-            {
-                float calcValue = GetCalculationValue(character, calcs, requirement.Calculation);
-                if (requirement.LessThan)
-                {
-                    if (!(calcValue <= requirement.Value))
-                        ret += requirement.Value - calcValue;
-                }
-                else
-                {
-                    if (!(calcValue >= requirement.Value))
-                        ret += calcValue - requirement.Value;
-                }
-            }
-
-            if (ret < 0) return ret + gemValue;
-            else return GetCalculationValue(character, calcs, calculation) + gemValue;
-        }
-
-        private static float GetCalculationValue(Character character, CharacterCalculationsBase calcs, string calculation)
-        {
-            if (calculation == null || calculation == "[Overall]")
-            {
-                return calcs.OverallPoints;
-            }
-            else if (calculation.StartsWith("[SubPoint ", StringComparison.Ordinal))
-            {
-                return calcs.SubPoints[int.Parse(calculation.Substring(10).TrimEnd(']'))];
-            }
-            else if (calculation.StartsWith("[Talent ", StringComparison.Ordinal))
-            {
-                return character.CurrentTalents.Data[int.Parse(calculation.Substring(8).TrimEnd(']'))];
-            }
-            else if (calculation.StartsWith("[Glyph ", StringComparison.Ordinal))
-            {
-                return character.CurrentTalents.GlyphData[int.Parse(calculation.Substring(7).TrimEnd(']'))] ? 1 : 0;
-            }
-            else
-            {
-                return calcs.GetOptimizableCalculationValue(calculation);
-            }
-        }
-
-        protected override object GetRandomItem(int slot, object[] items)
-        {
-            int characterSlot = slot / 5;
-            if (lockedSlot == (CharacterSlot)characterSlot)
-            {
-                ItemInstance itemInstance = lockedItems[Rnd.Next(lockedItems.Count)];
-                switch (slot % 5)
-                {
-                    case 0:
-                        return itemInstance != null ? itemInstance.Item : null;
-                    case 1:
-                        return itemInstance != null ? itemInstance.Gem1 : null;
-                    case 2:
-                        return itemInstance != null ? itemInstance.Gem2 : null;
-                    case 3:
-                        return itemInstance != null ? itemInstance.Gem3 : null;
-                    case 4:
-                        return itemInstance != null ? itemInstance.Enchant : null;
-                }
-            }
-            else
-            {
-                Item item;
-                switch (slot % 5)
-                {
-                    case 0:
-                        return base.GetRandomItem(slot, items);
-                    case 1:
-                        item = items[5 * characterSlot] as Item;
-                        if (item != null)
-                        {
-                            List<ItemInstance> list = item.AvailabilityInformation.ItemList;
-                            return list[Rnd.Next(list.Count)].Gem1;
-                        }
-                        else
-                        {
-                            return null;
-                        }
-                    case 2:
-                        item = items[5 * characterSlot] as Item;
-                        if (item != null)
-                        {
-                            List<ItemInstance> list = item.AvailabilityInformation.ItemList;
-                            return list[Rnd.Next(list.Count)].Gem2;
-                        }
-                        else
-                        {
-                            return null;
-                        }
-                    case 3:
-                        item = items[5 * characterSlot] as Item;
-                        if (item != null)
-                        {
-                            List<ItemInstance> list = item.AvailabilityInformation.ItemList;
-                            return list[Rnd.Next(list.Count)].Gem3;
-                        }
-                        else
-                        {
-                            return null;
-                        }
-                    case 4:
-                        item = items[5 * characterSlot] as Item;
-                        if (item != null)
-                        {
-                            List<ItemInstance> list = item.AvailabilityInformation.ItemList;
-                            return list[Rnd.Next(list.Count)].Enchant;
-                        }
-                        else
-                        {
-                            return null;
-                        }
-                }
-                return null;
-            }
-            return null;
-        }
-
-        protected override KeyValuePair<float, Character> LookForDirectItemUpgrades(List<object> items, int slot, float best, Character bestIndividual, object[] itemList, out CharacterCalculationsBase bestValuation)
-        {
-            if (slot % 5 != 0)
-            {
-                bestValuation = null;
-                return new KeyValuePair<float, Character>(float.NegativeInfinity, null);
-            }
-            int characterSlot = slot / 5;
-            return LookForDirectItemUpgrades(slotList[characterSlot], (CharacterSlot)characterSlot, best, bestIndividual, out bestValuation);
-        }
-
-        private KeyValuePair<float, Character> LookForDirectItemUpgrades(List<ItemInstance> items, CharacterSlot slot, float best, Character bestCharacter, out CharacterCalculationsBase bestCalculations)
-        {
-            Character charSwap;
-            bestCalculations = null;
-            float value;
-            bool foundUpgrade = false;
-            if (slot == lockedSlot) items = lockedItems;
-            ItemInstance[] itemList = (ItemInstance[])bestCharacter._item.Clone();
-            foreach (ItemInstance item in items)
-            {
-                int pairSlot = pairSlotMap[(int)slot];
-                if ((object)item != null && ((object)bestCharacter[slot] == null || bestCharacter[slot].GemmedId != item.GemmedId) && !(pairSlot >= 0 && (object)bestCharacter[(CharacterSlot)pairSlot] != null && item.Item.Unique && (bestCharacter[(CharacterSlot)pairSlot].Id == item.Id || (item.Item.UniqueId != null && item.Item.UniqueId.Contains(bestCharacter[(CharacterSlot)pairSlot].Id)))))
-                {
-                    itemList[(int)slot] = item;
-                    charSwap = new Character(_character.Name, _character.Realm, _character.Region, _character.Race, _character.BossOptions,
-                        itemList, _character.ActiveBuffs, _character.CurrentModel);
-                    charSwap.CalculationOptions = _character.CalculationOptions;
-                    charSwap.BossOptions = _character.BossOptions;
-                    charSwap.Class = _character.Class;
-                    charSwap.AssignAllTalentsFromCharacter(_character, false);
-                    CharacterCalculationsBase calculations;
-                    value = GetOptimizationValue(charSwap, calculations = model.GetCharacterCalculations(charSwap));
-                    if (value > best)
-                    {
-                        best = value;
-                        bestCalculations = calculations;
-                        bestCharacter = charSwap;
-                        foundUpgrade = true;
-                    }
-                }
-            }
-            if (foundUpgrade)
-                return new KeyValuePair<float, Character>(best, bestCharacter);
-            return new KeyValuePair<float, Character>(float.NegativeInfinity, null);
-        }
-    }
-#endregion
-    */
 }

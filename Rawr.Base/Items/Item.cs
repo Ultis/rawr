@@ -1150,9 +1150,9 @@ namespace Rawr
             ((WowheadService)sender).GetItemCompleted -= new EventHandler<EventArgs<Item>>(wowheadService_GetItemCompleted);
         }
 
-        /// <summary>Used by optimizer to cache dictionary search result</summary>
+        /// <summary>Used by optimizer</summary>
         [XmlIgnore]
-        internal Optimizer.ItemAvailabilityInformation[] AvailabilityInformation;
+        internal List<Optimizer.ItemAvailabilityInformation> AvailabilityInformation;
 
         #region IComparable<Item> Members
 
@@ -1192,6 +1192,10 @@ namespace Rawr
         [DefaultValueAttribute(0)]
         [XmlElement("RandomSuffixId")]
         public int _randomSuffixId;
+
+        // Used by optimizer
+        [XmlIgnore]
+        internal Optimizer.ItemAvailabilityInformation ItemAvailabilityInformation { get; set; }
 
         [XmlIgnore]
         public int Id
@@ -1894,22 +1898,6 @@ namespace Rawr
         public override int GetHashCode()
         {
             return GemmedId.GetHashCode();
-        }
-
-        internal Optimizer.ItemAvailabilityInformation GetItemAvailabilityInformation()
-        {
-            if (Item != null && Item.AvailabilityInformation != null)
-            {
-                if (RandomSuffixId == 0)
-                {
-                    return Item.AvailabilityInformation[0];
-                }
-                else
-                {
-                    return Item.AvailabilityInformation[Item.AllowedRandomSuffixes.IndexOf(RandomSuffixId)];
-                }
-            }
-            return null;
         }
 
         public string Name 

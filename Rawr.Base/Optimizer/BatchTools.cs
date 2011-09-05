@@ -554,9 +554,12 @@ namespace Rawr
                         itemGenerator.AddItemRestrictions(workingCharacter);
                         // if we're evaluating an item that was already marked available then we must restrict to that version
                         // if it was used in this character
+                        // with the addition of support for multiples of the same item the semantics of this changes
+                        // we now treat the upgrade as completely separate item, so no need to restrict to it if it is used
+                        // as that one is a separate instance
                         SuffixItem item = itemList[itemIndex];
                         CharacterSlot slot = Character.GetCharacterSlotByItemSlot(item.Item.Slot);
-                        if (upgradeListPhase == 0)
+                        /*if (upgradeListPhase == 0)
                         {
                             foreach (CharacterSlot s in Character.CharacterSlots)
                             {
@@ -568,7 +571,7 @@ namespace Rawr
                                     break;
                                 }
                             }
-                        }
+                        }*/
                         Dictionary<string, UpgradeEntry> map;
                         if (!upgradeList.TryGetValue(slot, out map))
                         {
@@ -1328,6 +1331,72 @@ namespace Rawr
                 modelList[i] = BatchCharacterList[i].Model;
             }
             itemGenerator = new AvailableItemGenerator(BatchCharacterList[0].Character.AvailableItems, optimizer.GreedyOptimizationMethod != GreedyOptimizationMethod.AllCombinations, TemplateGemsEnabled, _overrideRegem, _overrideReenchant, _overrideReforge, false, characterList, modelList);
+            // link items to availability info
+            for (int i = 0; i < BatchCharacterList.Count; i++)
+            {
+                for (int slot = 0; slot < Character.OptimizableSlotCount; slot++)
+                {
+                    var item = BatchCharacterList[i].Character._item[slot];
+                    if (item != null)
+                    {
+                        item.ItemAvailabilityInformation = null;
+                    }
+                }
+            }
+            for (int i = 0; i < BatchCharacterList.Count; i++)
+            {
+                for (int slot = 0; slot < Character.OptimizableSlotCount; slot++)
+                {
+                    if (slot != (int)CharacterSlot.OffHand || BatchCharacterList[i].Character.CurrentCalculations.IncludeOffHandInCalculations(BatchCharacterList[i].Character))
+                    {
+                        var item = BatchCharacterList[i].Character._item[slot];
+                        if (item != null && item.ItemAvailabilityInformation == null)
+                        {
+                            // find a matching item availability info and assign, prefer blue diamonds
+                            // make sure we don't reuse the same item twice on the same character
+                            foreach (var iai in item.Item.AvailabilityInformation)
+                            {
+                                if (iai.ItemAvailable.ContainsKey(item.GemmedId))
+                                {
+                                    bool valid = true;
+                                    for (int slot2 = 0; slot2 < Character.OptimizableSlotCount; slot2++)
+                                    {
+                                        if (slot2 != (int)CharacterSlot.OffHand || BatchCharacterList[i].Character.CurrentCalculations.IncludeOffHandInCalculations(BatchCharacterList[i].Character))
+                                        {
+                                            var item2 = BatchCharacterList[i].Character._item[slot2];
+                                            if (item2 != null && item2.ItemAvailabilityInformation == iai)
+                                            {
+                                                valid = false;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    if (valid && item.ItemAvailabilityInformation == null || iai.ItemList.Count == 1)
+                                    {
+                                        item.ItemAvailabilityInformation = iai;
+                                    }
+                                }
+                            }
+                            // reuse the same iai for exact matches in subsequent characters, max one per character
+                            for (int j = i + 1; j < BatchCharacterList.Count; j++)
+                            {
+                                for (int slot2 = 0; slot2 < Character.OptimizableSlotCount; slot2++)
+                                {
+                                    if (slot2 != (int)CharacterSlot.OffHand || BatchCharacterList[j].Character.CurrentCalculations.IncludeOffHandInCalculations(BatchCharacterList[j].Character))
+                                    {
+                                        var item2 = BatchCharacterList[j].Character._item[slot2];
+                                        if (item2 != null && item2 == item)
+                                        {
+                                            item2.ItemAvailabilityInformation = item.ItemAvailabilityInformation;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             // create item restrictions for locked characters
             for (int i = 0; i < BatchCharacterList.Count; i++)
             {

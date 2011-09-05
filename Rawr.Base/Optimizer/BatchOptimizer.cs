@@ -65,7 +65,7 @@ namespace Rawr.Optimizer
 
         private const int characterSlots = 19;
 
-        public BatchIndividual(object[] items, int itemCount, Dictionary<string, int> indexFromId, string upgradeItem, List<Character> batchList)
+        public BatchIndividual(object[] items, int itemCount, Dictionary<ItemAvailabilityInformation, int> indexFromId, ItemAvailabilityInformation upgradeItem, List<Character> batchList)
         {
             Items = items;
             AvailableItem = new ItemInstance[itemCount + 1];
@@ -82,7 +82,7 @@ namespace Rawr.Optimizer
                 ItemInstance[] slotItems = new ItemInstance[characterSlots];
                 for (int i = 0; i < characterSlots; i++)
                 {
-                    string item = items[itemCount + 1 + c * characterSlots + i] as string;
+                    ItemAvailabilityInformation item = items[itemCount + 1 + c * characterSlots + i] as ItemAvailabilityInformation;
                     if (item != null)
                     {
                         if (item == upgradeItem)
@@ -638,9 +638,9 @@ namespace Rawr.Optimizer
         private bool itemCacheInitialized;
 
         List<ItemInstance> upgradeItems;
-        List<SuffixItem> itemList;
+        List<ItemAvailabilityInformation> itemList;
         List<object>[] slotItemList;
-        Dictionary<string, int> indexFromId;
+        Dictionary<ItemAvailabilityInformation, int> indexFromId;
 
         AvailableItemGenerator itemGenerator;
 
@@ -679,35 +679,18 @@ namespace Rawr.Optimizer
         private void PopulateAvailableIds(List<string> availableItems, bool templateGemsEnabled, bool overrideRegem, bool overrideReenchant, bool overrideReforge)
         {
             itemGenerator = new AvailableItemGenerator(availableItems, false, templateGemsEnabled, overrideRegem, overrideReenchant, overrideReforge, false, batchList.ToArray(), modelList.ToArray());
-            List<ItemInstance>[] slotList = itemGenerator.SlotItems;
+            //List<ItemInstance>[] slotList = itemGenerator.SlotItems;
             slotItemList = new List<object>[characterSlots];
 
-            Dictionary<string, bool> itemUnique = new Dictionary<string, bool>();
-            itemList = new List<SuffixItem>();
-            indexFromId = new Dictionary<string, int>();
-            for (int i = 0; i < slotList.Length; i++)
+            itemList = itemGenerator.RawItems;
+            indexFromId = new Dictionary<ItemAvailabilityInformation, int>();         
+            for (int i = 0; i < characterSlots; i++)
             {
-                Dictionary<int, bool> slotUnique = new Dictionary<int, bool>();
-                slotItemList[i] = new List<object>();
-                foreach (ItemInstance itemInstance in slotList[i])
-                {
-                    if (itemInstance != null && itemInstance.Item != null)
-                    {
-                        Item item = itemInstance.Item;
-                        if (!slotUnique.ContainsKey(itemInstance.Id))
-                        {
-                            slotItemList[i].Add(item);
-                            slotUnique[itemInstance.Id] = true;
-                        }
-                        string key = itemInstance.Id + "." + itemInstance.RandomSuffixId;
-                        if (!itemUnique.ContainsKey(key))
-                        {
-                            indexFromId[key] = itemList.Count;
-                            itemList.Add(new SuffixItem() { Item = item, RandomSuffixId = itemInstance.RandomSuffixId });
-                            itemUnique[key] = true;
-                        }
-                    }
-                }
+                slotItemList[i] = itemGenerator.SlotRawItems[i].ConvertAll(availabilityInfo => (object)availabilityInfo);
+            }
+            for (int i = 0; i < itemList.Count; i++)
+            {
+                indexFromId[itemList[i]] = i;
             }
 
             slotCount = itemList.Count + 1 + batchList.Count * characterSlots;
@@ -716,7 +699,7 @@ namespace Rawr.Optimizer
 
             for (int i = 0; i < itemList.Count; i++)
             {
-                slotItems[i] = itemList[i].AvailabilityInformation.ItemList.ConvertAll(item => (object)item);
+                slotItems[i] = itemList[i].ItemList.ConvertAll(item => (object)item);
             }
             slotItems[itemList.Count] = new List<object>();
             for (int c = 0; c < batchList.Count; c++)
@@ -740,22 +723,29 @@ namespace Rawr.Optimizer
             object[] items = new object[slotCount];
             for (int i = 0; i < itemList.Count; i++)
             {
-                items[i] = itemList[i].AvailabilityInformation.ItemList[0];
+                items[i] = itemList[i].ItemList[0];
             }
             for (int c = 0; c < batchList.Count; c++)
             {
                 for (int i = 0; i < characterSlots; i++)
                 {
-                    ItemInstance itemInstance = batchList[c]._item[i];
+                    ItemInstance itemInstance = batchList[c]._item[i].Clone();
                     if (itemInstance != null && itemInstance.Id != 0)
                     {
+                        foreach (var iai in itemInstance.Item.AvailabilityInformation)
+                        {
+                            if (iai.ItemAvailable.ContainsKey(itemInstance.GemmedId))
+                            {
+                                itemInstance.ItemAvailabilityInformation = iai;
+                                break;
+                            }
+                        }
                         int index;
-                        string key = itemInstance.Id + "." + itemInstance.RandomSuffixId;
-                        if (indexFromId.TryGetValue(key, out index))
+                        if (indexFromId.TryGetValue(itemInstance.ItemAvailabilityInformation, out index))
                         {
                             // only set the item if it's marked as available, otherwise leave it empty
                             items[index] = itemInstance;
-                            items[itemList.Count + 1 + c * characterSlots + i] = (itemInstance == null) ? null : itemInstance.Item;
+                            items[itemList.Count + 1 + c * characterSlots + i] = (itemInstance == null) ? null : itemInstance.ItemAvailabilityInformation;
                         }
                     }
                 }
@@ -844,7 +834,7 @@ namespace Rawr.Optimizer
 
         protected override BatchIndividual GenerateIndividual(object[] items, bool canUseArray, BatchIndividual recycledIndividual)
         {
-            return new BatchIndividual(canUseArray ? items : (object[])items.Clone(), itemList.Count, indexFromId, upgradeItems != null ? upgradeItems[0].Id + "." + upgradeItems[0].RandomSuffixId : null, batchList);
+            return new BatchIndividual(canUseArray ? items : (object[])items.Clone(), itemList.Count, indexFromId, upgradeItems != null ? upgradeItems[0].ItemAvailabilityInformation : null, batchList);
         }
 
         protected override BatchIndividual BuildMutantIndividual(BatchIndividual parent, BatchIndividual recycledIndividual)
@@ -876,7 +866,7 @@ namespace Rawr.Optimizer
 
         private ItemInstance ReplaceGem(ItemInstance item, int index, Item gem)
         {
-            ItemInstance copy = new ItemInstance(item.Item, item.RandomSuffixId, item.Gem1, item.Gem2, item.Gem3, item.Enchant, item.Reforging, item.Tinkering);
+            ItemInstance copy = new ItemInstance(item.Item, item.RandomSuffixId, item.Gem1, item.Gem2, item.Gem3, item.Enchant, item.Reforging, item.Tinkering) { ItemAvailabilityInformation = item.ItemAvailabilityInformation };
             copy.SetGem(index, gem);
             return copy;
         }
@@ -952,8 +942,8 @@ namespace Rawr.Optimizer
                         if (ItemAvailable(item1) && ItemAvailable(item2))
                         {
                             successful = true;
-                            items[(upgradeItems != null && item1.Id == upgradeItems[0].Id) ? itemList.Count : indexFromId[item1.Id + "." + item1.RandomSuffixId]] = item1;
-                            items[(upgradeItems != null && item2.Id == upgradeItems[0].Id) ? itemList.Count : indexFromId[item2.Id + "." + item2.RandomSuffixId]] = item2;
+                            items[(upgradeItems != null && item1.Id == upgradeItems[0].Id) ? itemList.Count : indexFromId[item1.ItemAvailabilityInformation]] = item1;
+                            items[(upgradeItems != null && item2.Id == upgradeItems[0].Id) ? itemList.Count : indexFromId[item2.ItemAvailabilityInformation]] = item2;
                         }
                     }
                 }
@@ -1024,7 +1014,7 @@ namespace Rawr.Optimizer
                                 // anything will be better than breaking the jeweler constraint
                                 // pick from available instances that don't have jewelers gems
                                 List<ItemInstance> list = new List<ItemInstance>();
-                                foreach (ItemInstance it in (upgradeItems != null && item.Id == upgradeItems[0].Id) ? upgradeItems : item.GetItemAvailabilityInformation().ItemList)
+                                foreach (ItemInstance it in (upgradeItems != null && item.Id == upgradeItems[0].Id) ? upgradeItems : item.ItemAvailabilityInformation.ItemList)
                                 {
                                     if (!ItemHasJewelerGem(it))
                                     {
@@ -1035,7 +1025,7 @@ namespace Rawr.Optimizer
                                 {
                                     item = list[rand.Next(list.Count)];
                                     // we got it
-                                    items[(upgradeItems != null && item.Id == upgradeItems[0].Id) ? itemList.Count : indexFromId[item.Id + "." + item.RandomSuffixId]] = item;
+                                    items[(upgradeItems != null && item.Id == upgradeItems[0].Id) ? itemList.Count : indexFromId[item.ItemAvailabilityInformation]] = item;
                                     // any item in up list that had it can be removed
                                     for (int j = oneUpList.Count - 1; j > i; j--)
                                     {
@@ -1091,7 +1081,7 @@ namespace Rawr.Optimizer
                                 if (pickTries <= 5)
                                 {
                                     // we got it
-                                    items[(upgradeItems != null && item.Id == upgradeItems[0].Id) ? itemList.Count : indexFromId[item.Id + "." + item.RandomSuffixId]] = item;
+                                    items[(upgradeItems != null && item.Id == upgradeItems[0].Id) ? itemList.Count : indexFromId[item.ItemAvailabilityInformation]] = item;
                                     // any item in down list that had it can be removed
                                     for (int j = oneDownList.Count - 1; j > i; j--)
                                     {
@@ -1121,7 +1111,7 @@ namespace Rawr.Optimizer
 
         private bool ItemAvailable(ItemInstance item)
         {
-            return ((upgradeItems != null && item.Id == upgradeItems[0].Id && upgradeItems.Contains(item)) || ((upgradeItems == null || item.Id != upgradeItems[0].Id) && item.GetItemAvailabilityInformation().ItemAvailable.ContainsKey(item.GemmedId)));
+            return ((upgradeItems != null && item.Id == upgradeItems[0].Id && upgradeItems.Contains(item)) || ((upgradeItems == null || item.Id != upgradeItems[0].Id) && item.ItemAvailabilityInformation.ItemAvailable.ContainsKey(item.GemmedId)));
         }
 
         private static bool ItemHasJewelerGem(ItemInstance item)
