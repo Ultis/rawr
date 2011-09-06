@@ -992,8 +992,10 @@ namespace Rawr {
                 int maxdmg = int.Parse(match.Groups["maxdmg"].Value);
                 float icd = 2.5f;
 
+                // September 06, 2011 discharge was buffed by 260% but only stacks to 5 stacks instead of 10
+                // TODO remove the 2.6 multiplier when the next patch hits.
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCrit,
-                     new Stats() { NatureDamage = (mindmg + maxdmg) / 2f },
+                     new Stats() { NatureDamage = ((mindmg + maxdmg) / 2f * 2.6f) },
                      0f, icd, 1f));
             }
             else if ((match = Regex.Match(line, @"You gain (?:a|an) (?<buffName>[\w\s]+) each time you cause a (?<trigger>non-periodic|damaging)+ spell critical strike\.(?:\s|nbsp;)+When you reach (?<stackSize>\d+) [\w\s]+, they will release, firing (?<projectile>[\w\s]+) for (?<mindmg>\d+) to (?<maxdmg>\d+) damage\.+[\w\s]+ cannot be gained more often than once every (?<icd>\d+(?:\.\d+)?) sec")).Success)

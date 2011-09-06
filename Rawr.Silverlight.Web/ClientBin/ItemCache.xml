@@ -101216,12 +101216,11 @@
     <Stats>
       <Agility>368</Agility>
       <Stamina>611</Stamina>
-      <MasteryRating>277</MasteryRating>
-      <HitRating>199</HitRating>
+      <MasteryRating>310</MasteryRating>
+      <HitRating>166</HitRating>
       <Armor>1592</Armor>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Obsidian Arborweave Battlegarb</SetName>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Druid</RequiredClasses>
@@ -101232,6 +101231,13 @@
       <Agility>20</Agility>
     </SocketBonus>
     <LocationInfo>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>Baradin Hold</Area>
+        <Heroic>false</Heroic>
+        <Boss>Occu'thar</Boss>
+        <Count>52</Count>
+        <OutOf>8026</OutOf>
+      </ItemLocation>
       <ItemLocation xsi:type="VendorItem">
         <TokenMap>
           <item>
@@ -101246,13 +101252,6 @@
         <Cost>0</Cost>
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
-      </ItemLocation>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Baradin Hold</Area>
-        <Heroic>false</Heroic>
-        <Boss>Occu'thar</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Obsidian Arborweave Legguards</Name>
@@ -101529,8 +101528,8 @@
     <Stats>
       <Agility>420</Agility>
       <Stamina>689</Stamina>
-      <MasteryRating>316</MasteryRating>
-      <HitRating>226</HitRating>
+      <MasteryRating>349</MasteryRating>
+      <HitRating>193</HitRating>
       <Armor>1687</Armor>
     </Stats>
     <Quality>Epic</Quality>
@@ -112499,7 +112498,7 @@
         <SpecialEffect>
           <Trigger>DamageSpellCrit</Trigger>
           <Stats>
-            <NatureDamage>1125.5</NatureDamage>
+            <NatureDamage>2926.3</NatureDamage>
           </Stats>
           <Duration>0</Duration>
           <Cooldown>2.5</Cooldown>
@@ -112543,7 +112542,7 @@
         <SpecialEffect>
           <Trigger>DamageSpellCrit</Trigger>
           <Stats>
-            <NatureDamage>1269.5</NatureDamage>
+            <NatureDamage>3300.7</NatureDamage>
           </Stats>
           <Duration>0</Duration>
           <Cooldown>2.5</Cooldown>
@@ -131492,7 +131491,6 @@
     <Faction>Neutral</Faction>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
       <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
     <Name>[Downloading from Wowhead]</Name>
