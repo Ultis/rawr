@@ -6206,7 +6206,7 @@ namespace Rawr.Mage
                     //rowEvocationIVHeroActivation = rowCount++;
                 }
             }
-            if ((manaPotionAvailable || effectPotionAvailable) && !CombinatorialSolver) rowPotion = rowCount++;
+            if (manaPotionAvailable || effectPotionAvailable) rowPotion = rowCount++;
             if (manaPotionAvailable && integralMana && !CombinatorialSolver) rowManaPotion = rowCount++;
             if (CalculationOptions.ManaGemEnabled)
             {
