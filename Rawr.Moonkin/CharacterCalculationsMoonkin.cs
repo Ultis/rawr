@@ -24,7 +24,7 @@ namespace Rawr.Moonkin
         private StatsMoonkin baseStats;
         public RotationData SelectedRotation { get; set; }
         public RotationData BurstRotation { get; set; }
-        public Dictionary<string, RotationData> Rotations = new Dictionary<string, RotationData>();
+        public RotationData[] Rotations = new RotationData[36];
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues() {
             Dictionary<string, string> retVal = new Dictionary<string, string>();

@@ -185,11 +185,8 @@ namespace Rawr.Moonkin
                         sHa += spellHaste;
                     if (st.Intellect > 0 || highestStat > 0)
                     {
-                        StatsMoonkin s = c.BasicStats.Clone() as StatsMoonkin;
-                        s.Intellect += (st.Intellect > 0 ? st.Intellect : highestStat);
-                        CharacterCalculationsMoonkin cNew = CalculationsMoonkin.GetInnerCharacterCalculations(ch, s, null);
-                        storedStats.SpellPower = cNew.SpellPower - c.SpellPower;
-                        storedStats.SpellCrit = cNew.SpellCrit - c.SpellCrit;
+                        storedStats.SpellPower = st.Intellect + st.HighestStat;
+                        storedStats.SpellCrit = StatConversion.GetSpellCritFromIntellect(st.Intellect + st.HighestStat);
                         sp += storedStats.SpellPower;
                         sc += storedStats.SpellCrit;
                     }

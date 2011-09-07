@@ -739,15 +739,15 @@ namespace Rawr.Moonkin
                     c2.DruidTalents.Euphoria = 0;
                     CharacterCalculationsMoonkin calcsManaMoonkin = GetCharacterCalculations(c2) as CharacterCalculationsMoonkin;
                     c2.DruidTalents.Euphoria = previousTalentValue;
-                    foreach (KeyValuePair<string, RotationData> pairs in calcsManaMoonkin.Rotations)
+                    foreach (RotationData rot in calcsManaMoonkin.Rotations)
                     {
-                        if (pairs.Key == manaGainsRot.Name)
+                        if (rot.Name == manaGainsRot.Name)
                         {
                             manaGainsList.Add(new ComparisonCalculationMoonkin()
                             {
                                 Name = "Euphoria",
-                                OverallPoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * character.BossOptions.BerserkTimer * 60.0f,
-                                BurstDamagePoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * character.BossOptions.BerserkTimer * 60.0f,
+                                OverallPoints = (manaGainsRot.ManaGained - rot.ManaGained) / manaGainsRot.Duration * character.BossOptions.BerserkTimer * 60.0f,
+                                BurstDamagePoints = (manaGainsRot.ManaGained - rot.ManaGained) / manaGainsRot.Duration * character.BossOptions.BerserkTimer * 60.0f,
                                 ImageSource = "achievement_boss_valithradreamwalker"
                             });
                         }
@@ -760,15 +760,15 @@ namespace Rawr.Moonkin
                     calcOpts.ReplenishmentUptime = 0.0f;
                     CharacterCalculationsMoonkin calcsManaReplenishment = GetCharacterCalculations(c2) as CharacterCalculationsMoonkin;
                     calcOpts.ReplenishmentUptime = oldReplenishmentUptime;
-                    foreach (KeyValuePair<string, RotationData> pairs in calcsManaReplenishment.Rotations)
+                    foreach (RotationData rot in calcsManaReplenishment.Rotations)
                     {
-                        if (pairs.Key == manaGainsRot.Name)
+                        if (rot.Name == manaGainsRot.Name)
                         {
                             manaGainsList.Add(new ComparisonCalculationMoonkin()
                             {
                                 Name = "Replenishment",
-                                OverallPoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * character.BossOptions.BerserkTimer * 60.0f,
-                                BurstDamagePoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * character.BossOptions.BerserkTimer * 60.0f,
+                                OverallPoints = (manaGainsRot.ManaGained - rot.ManaGained) / manaGainsRot.Duration * character.BossOptions.BerserkTimer * 60.0f,
+                                BurstDamagePoints = (manaGainsRot.ManaGained - rot.ManaGained) / manaGainsRot.Duration * character.BossOptions.BerserkTimer * 60.0f,
                                 ImageSource = "spell_magic_managain"
                             });
                         }
@@ -779,15 +779,15 @@ namespace Rawr.Moonkin
                     calcOpts.Innervate = false;
                     CharacterCalculationsMoonkin calcsManaInnervate = GetCharacterCalculations(c2) as CharacterCalculationsMoonkin;
                     calcOpts.Innervate = innervate;
-                    foreach (KeyValuePair<string, RotationData> pairs in calcsManaInnervate.Rotations)
+                    foreach (RotationData rot in calcsManaInnervate.Rotations)
                     {
-                        if (pairs.Key == manaGainsRot.Name)
+                        if (rot.Name == manaGainsRot.Name)
                         {
                             manaGainsList.Add(new ComparisonCalculationMoonkin()
                             {
                                 Name = "Innervate",
-                                OverallPoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * character.BossOptions.BerserkTimer * 60.0f,
-                                BurstDamagePoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * character.BossOptions.BerserkTimer * 60.0f,
+                                OverallPoints = (manaGainsRot.ManaGained - rot.ManaGained) / manaGainsRot.Duration * character.BossOptions.BerserkTimer * 60.0f,
+                                BurstDamagePoints = (manaGainsRot.ManaGained - rot.ManaGained) / manaGainsRot.Duration * character.BossOptions.BerserkTimer * 60.0f,
                                 ImageSource = "spell_nature_lightning"
                             });
                         }
@@ -836,14 +836,14 @@ namespace Rawr.Moonkin
                 case "Rotation Comparison":
                     List<ComparisonCalculationMoonkin> comparisons = new List<ComparisonCalculationMoonkin>();
                     calcsBase = GetCharacterCalculations(character) as CharacterCalculationsMoonkin;
-                    foreach (KeyValuePair<string, RotationData> kvp in calcsBase.Rotations)
+                    foreach (RotationData rot in calcsBase.Rotations)
                     {
                         comparisons.Add(new ComparisonCalculationMoonkin
                         {
-                            Name = kvp.Key,
-                            BurstDamagePoints = kvp.Value.BurstDPS,
-                            SustainedDamagePoints = kvp.Value.SustainedDPS,
-                            OverallPoints = kvp.Value.BurstDPS + kvp.Value.SustainedDPS
+                            Name = rot.Name,
+                            BurstDamagePoints = rot.BurstDPS,
+                            SustainedDamagePoints = rot.SustainedDPS,
+                            OverallPoints = rot.BurstDPS + rot.SustainedDPS
                         });
                     }
                     return comparisons.ToArray();
@@ -885,42 +885,18 @@ namespace Rawr.Moonkin
             _reforgePriority = calcOpts.ReforgePriority;
             _enableSpiritToHit = calcOpts.AllowReforgingSpiritToHit;
             StatsMoonkin stats = (StatsMoonkin)GetCharacterStats(character, additionalItem);
-            calc = CalculationsMoonkin.GetInnerCharacterCalculations(character, stats, additionalItem);
-
-            // Run the solver against the generated cycle
-            new MoonkinSolver().Solve(character, ref calc);
-
-            return calc;
-        }
-
-        public static CharacterCalculationsMoonkin GetInnerCharacterCalculations(Character character, StatsMoonkin stats, Item additionalItem)
-        {
-            // First things first, we need to ensure that we aren't using bad data
-            CharacterCalculationsMoonkin calc = new CharacterCalculationsMoonkin();
-            if (character == null) { return calc; }
-            CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
-            if (calcOpts == null) { return calc; }
-            //
             calc.BasicStats = stats;
 
+            calc.SpellPower = stats.SpellPower + stats.Intellect - 10;
             calc.SpellCrit = StatConversion.GetSpellCritFromIntellect(stats.Intellect) + StatConversion.GetSpellCritFromRating(stats.CritRating) + stats.SpellCrit + stats.SpellCritOnTarget;
             calc.SpellHit = StatConversion.GetSpellHitFromRating(stats.HitRating) + stats.SpellHit;
             calc.SpellHitCap = StatConversion.GetSpellMiss(character.Level - character.BossOptions.Level, false);
             calc.SpellHaste = (1 + StatConversion.GetSpellHasteFromRating(stats.HasteRating)) * (1 + stats.SpellHaste) - 1;
-
-            // All spells: Damage +(1 * Int)
-            float spellDamageFromIntPercent = 1f;
-            // Fix for rounding error in converting partial points of int/spirit to spell power
-            float spellPowerFromStats = (float)Math.Floor(spellDamageFromIntPercent * (Math.Max(0f, stats.Intellect - 10)));
-            calc.SpellPower = stats.SpellPower + spellPowerFromStats;
-
-            // Mastery from rating
             calc.Mastery = 8.0f + StatConversion.GetMasteryFromRating(stats.MasteryRating);
-
-            // 3.1 spirit regen
-            // Irrelevant in Cataclysm, when we never get spirit regen
-            //float spiritRegen = StatConversion.GetSpiritRegenSec(calcs.BasicStats.Spirit, calcs.BasicStats.Intellect);
             calc.ManaRegen = stats.Mp5 / 5f;
+
+            // Run the solver against the generated cycle
+            new MoonkinSolver().Solve(character, ref calc);
 
             return calc;
         }

@@ -187,33 +187,36 @@ namespace Rawr.Moonkin
                 return SpellData[4];
             }
         }
-        public void ResetSpellList()
+        private void ResetSpellList()
         {
             // Since the property rebuilding the array is based on this variable being null, this effectively forces a refresh
             _spellData = null;
         }
 
         // The spell rotations themselves.
-        private List<SpellRotation> rotations = null;
-        public List<SpellRotation> Rotations
+        private SpellRotation[] rotations = null;
+        public SpellRotation[] Rotations
         {
             get
             {
-                if (rotations == null) RecreateRotations();
+                if (rotations == null)
+                {
+                    rotations = new SpellRotation[37];
+                    RecreateRotations();
+                }
                 return rotations;
             }
         }
 
         // Results data from the calculations, which will be sent to the UI.
-        Dictionary<string, RotationData> cachedResults = new Dictionary<string, RotationData>();
+        RotationData[] cachedResults = new RotationData[36];
 
         public void Solve(Character character, ref CharacterCalculationsMoonkin calcs)
         {
             CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
             DruidTalents talents = character.DruidTalents;
             procEffects = new List<ProcEffect>();
-            RecreateSpells(character, ref calcs);
-            cachedResults = new Dictionary<string, RotationData>();
+            UpdateSpells(character, ref calcs);
 
             float trinketDPS = 0.0f;
             float baseSpellPower = calcs.SpellPower;
@@ -226,8 +229,8 @@ namespace Rawr.Moonkin
             BuildProcList(calcs);
 
             float maxDamageDone = 0.0f, maxBurstDamageDone = 0.0f;
-            SpellRotation maxBurstRotation = rotations[0];
-            SpellRotation maxRotation = rotations[0];
+            SpellRotation maxBurstRotation = Rotations[0];
+            SpellRotation maxRotation = Rotations[0];
 
             float manaPool = GetEffectiveManaPool(character, calcOpts, calcs);
 
@@ -236,7 +239,8 @@ namespace Rawr.Moonkin
             float oldArcaneMultiplier = calcs.BasicStats.BonusArcaneDamageMultiplier;
             float oldNatureMultiplier = calcs.BasicStats.BonusNatureDamageMultiplier;
 
-            foreach (SpellRotation rot in rotations)
+            int rotationIndex = 1;
+            foreach (SpellRotation rot in Rotations)
             {
                 if (rot.RotationData.Name == "None") continue;
                 rot.Solver = this;
@@ -386,9 +390,10 @@ namespace Rawr.Moonkin
                 }
                 // Calculate stat-boosting trinkets, taking into effect interactions with other stat-boosting procs
                 int sign = 1;
-                Dictionary<int, float> cachedDamages = new Dictionary<int, float>();
-                Dictionary<int, float> cachedUptimes = new Dictionary<int, float>();
-                Dictionary<int, float[]> cachedDetails = new Dictionary<int, float[]>();
+                float[] cachedDamages = new float[1 << activatedEffects.Count];
+                float[] cachedUptimes = new float[1 << activatedEffects.Count];
+                float[,] cachedDetails = new float[1 << activatedEffects.Count, NUM_SPELL_DETAILS];
+                List<int> calculatedPairs = new List<int>();
                 // Iterate over the entire set of trinket combinations (each trinket by itself, 2 at a time, ...)
                 for (int i = 1; i <= activatedEffects.Count; ++i)
                 {
@@ -439,8 +444,7 @@ namespace Rawr.Moonkin
                         // These adjustments only need to be made for higher levels of the table, and if the current probability is > 0.
                         if (lengthCounter > 1)
                         {
-                            List<int> keys = new List<int>(cachedUptimes.Keys);
-                            foreach (int subset in keys)
+                            foreach (int subset in calculatedPairs)
                             {
                                 // Truly a subset?
                                 if ((pairs & subset) != subset)
@@ -465,8 +469,11 @@ namespace Rawr.Moonkin
                         // Cache the results to be calculated later
                         cachedUptimes[pairs] = tempUpTime;
                         cachedDamages[pairs] = tempDPS;
-                        cachedDetails[pairs] = new float[NUM_SPELL_DETAILS];
-                        Array.Copy(spellDetails, cachedDetails[pairs], NUM_SPELL_DETAILS);
+                        for (int idx = 0; idx < NUM_SPELL_DETAILS; ++idx)
+                        {
+                            cachedDetails[pairs, idx] = spellDetails[idx];
+                        }
+                        calculatedPairs.Add(pairs);
                         totalUpTime += sign * tempUpTime;
                     }
                     sign = -sign;
@@ -474,13 +481,13 @@ namespace Rawr.Moonkin
                 float accumulatedDPS = 0.0f;
                 Array.Clear(spellDetails, 0, spellDetails.Length);
                 // Apply the above-calculated probabilities to the previously stored damage calculations and add to the result.
-                foreach (KeyValuePair<int, float> kvp in cachedUptimes)
+                for (int idx = 0; idx < cachedUptimes.Length; ++idx)
                 {
-                    if (kvp.Value == 0) continue;
-                    accumulatedDPS += kvp.Value * cachedDamages[kvp.Key];
+                    if (cachedUptimes[idx] == 0) continue;
+                    accumulatedDPS += cachedUptimes[idx] * cachedDamages[idx];
                     for (int i = 0; i < NUM_SPELL_DETAILS; ++i)
                     {
-                        spellDetails[i] += kvp.Value * cachedDetails[kvp.Key][i];
+                        spellDetails[i] += cachedUptimes[idx] * cachedDetails[idx,i];
                     }
                 }
                 float damageDone = rot.DamageDone(character, calcs, calcOpts.TreantLifespan, currentSpellPower, baseHit, currentCrit, currentHaste, currentMastery, calcOpts.Latency);
@@ -555,13 +562,15 @@ namespace Rawr.Moonkin
                     maxBurstDamageDone = burstDPS;
                     maxBurstRotation = rot;
                 }
-                cachedResults[rot.RotationData.Name] = rot.RotationData;
+                cachedResults[rotationIndex - 1] = rot.RotationData;
 
                 // Deactivate always-up procs
                 foreach (ProcEffect proc in alwaysUpEffects)
                 {
                     proc.Deactivate(character, calcs, ref currentSpellPower, ref baseHit, ref currentCrit, ref currentHaste, ref currentMastery);
                 }
+
+                ++rotationIndex;
             }
             // Present the findings to the user.
             calcs.SelectedRotation = maxRotation.RotationData;
@@ -615,18 +624,9 @@ namespace Rawr.Moonkin
             return calcs.BasicStats.Mana + totalInnervateMana + totalManaRegen + manaRestoredByPots + replenishmentMana;
         }
 
-        // Redo the spell calculations
-        private void RecreateSpells(Character character, ref CharacterCalculationsMoonkin calcs)
-        {
-            ResetSpellList();
-            RecreateRotations();
-            UpdateSpells(character, ref calcs);
-        }
-
         private void RecreateRotations()
         {
-            rotations = new List<SpellRotation>();
-            rotations.Add(new SpellRotation() { RotationData = new RotationData() { Name = "None" } });
+            rotations[0] = new SpellRotation() { RotationData = new RotationData() { Name = "None" } };
             for (int mfMode = 0; mfMode < 2; ++mfMode)
             {
                 for (int isMode = 0; isMode < 2; ++isMode)
@@ -635,6 +635,7 @@ namespace Rawr.Moonkin
                     {
                         for (int wmMode = 0; wmMode < 3; ++wmMode)
                         {
+                            int index = 1 + (wmMode + 3 * sfMode + 9 * isMode + 18 * mfMode);
                             DotMode mfModeEnum = (DotMode)mfMode;
                             DotMode isModeEnum = (DotMode)isMode;
                             StarfallMode sfModeEnum = (StarfallMode)sfMode;
@@ -644,7 +645,7 @@ namespace Rawr.Moonkin
                                 isModeEnum.ToString(),
                                 sfModeEnum.ToString(),
                                 wmModeEnum.ToString());
-                            rotations.Add(new SpellRotation()
+                            rotations[index] = new SpellRotation()
                             {
                                 RotationData = new RotationData()
                                 {
@@ -654,7 +655,7 @@ namespace Rawr.Moonkin
                                     StarfallCastMode = sfModeEnum,
                                     WildMushroomCastMode = wmModeEnum
                                 }
-                            });
+                            };
                         }
                     }
                 }

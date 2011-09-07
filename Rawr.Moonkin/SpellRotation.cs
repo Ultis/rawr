@@ -237,7 +237,7 @@ namespace Rawr.Moonkin
             }
         }
 
-        private Dictionary<string, double> GetInterpolatedCastTable(float actualHaste, bool use4T12Table)
+        private double[] GetInterpolatedCastTable(float actualHaste, bool use4T12Table)
         {
             // Get index and remainder for interpolation
             double r = actualHaste / 0.05;
@@ -251,23 +251,21 @@ namespace Rawr.Moonkin
                 r = 1;
             }
 
-            Dictionary<string, double> retval = new Dictionary<string, double>();
+            double[] retval = new double[MoonkinSolver.CastDistributionSpells.Length];
 
             // Index the table and interpolate the remainder
             if (use4T12Table)
             {
                 for (int index = 0; index < MoonkinSolver.CastDistributionSpells.Length; ++index)
                 {
-                    retval.Add(MoonkinSolver.CastDistributionSpells[index],
-                        MoonkinSolver.T12CastDistribution[i, index] + r * (MoonkinSolver.T12CastDistribution[i + 1, index] - MoonkinSolver.T12CastDistribution[i, index]));
+                    retval[index] = MoonkinSolver.T12CastDistribution[i, index] + r * (MoonkinSolver.T12CastDistribution[i + 1, index] - MoonkinSolver.T12CastDistribution[i, index]);
                 }
             }
             else
             {
                 for (int index = 0; index < MoonkinSolver.CastDistributionSpells.Length; ++index)
                 {
-                    retval.Add(MoonkinSolver.CastDistributionSpells[index],
-                        MoonkinSolver.CastDistribution[i, index] + r * (MoonkinSolver.CastDistribution[i + 1, index] - MoonkinSolver.CastDistribution[i, index]));
+                    retval[index] = MoonkinSolver.CastDistribution[i, index] + r * (MoonkinSolver.CastDistribution[i + 1, index] - MoonkinSolver.CastDistribution[i, index]);
                 }
             }
 
@@ -295,30 +293,30 @@ namespace Rawr.Moonkin
 
             double baselineNukesDuration = GetInterpolatedCastTime(calcs.SpellHaste, calcs.BasicStats.BonusWrathEnergy > 0);
 
-            Dictionary<string, double> castDistribution = GetInterpolatedCastTable(calcs.SpellHaste, calcs.BasicStats.BonusWrathEnergy > 0);
+            double[] castDistribution = GetInterpolatedCastTable(calcs.SpellHaste, calcs.BasicStats.BonusWrathEnergy > 0);
 
             // Break the cast distribution down into its component cast counts
-            double wrathCastsBase = castDistribution["Wrath"] * baselineNukesDuration / w.CastTime;
-            double eclipseWrathCastsBase = castDistribution["Wrath (Eclipse)"] * baselineNukesDuration / w.CastTime;
-            double nonEclipsedWrathPercentage = castDistribution["Wrath"] / (castDistribution["Wrath"] + castDistribution["Wrath (Eclipse)"]);
-            double eclipsedWrathPercentage = castDistribution["Wrath (Eclipse)"] / (castDistribution["Wrath"] + castDistribution["Wrath (Eclipse)"]);
+            double wrathCastsBase = castDistribution[1] * baselineNukesDuration / w.CastTime;
+            double eclipseWrathCastsBase = castDistribution[5] * baselineNukesDuration / w.CastTime;
+            double nonEclipsedWrathPercentage = castDistribution[1] / (castDistribution[1] + castDistribution[5]);
+            double eclipsedWrathPercentage = castDistribution[5] / (castDistribution[1] + castDistribution[5]);
             RotationData.WrathAvgHit = (float)(nonEclipsedWrathPercentage * w.DamagePerHit + eclipsedWrathPercentage * w.DamagePerHit * eclipseBonus);
             RotationData.WrathAvgEnergy = w.AverageEnergy;
             RotationData.WrathCount = (float)(wrathCastsBase + eclipseWrathCastsBase);
-            double starfireCastsBase = castDistribution["Starfire"] * baselineNukesDuration / sf.CastTime;
-            double eclipseStarfireCastsBase = castDistribution["Starfire (Eclipse)"] * baselineNukesDuration / sf.CastTime;
-            double nonEclipsedStarfirePercentage = castDistribution["Starfire"] / (castDistribution["Starfire"] + castDistribution["Starfire (Eclipse)"]);
-            double eclipsedStarfirePercentage = castDistribution["Starfire (Eclipse)"] / (castDistribution["Starfire"] + castDistribution["Starfire (Eclipse)"]);
+            double starfireCastsBase = castDistribution[0] * baselineNukesDuration / sf.CastTime;
+            double eclipseStarfireCastsBase = castDistribution[4] * baselineNukesDuration / sf.CastTime;
+            double nonEclipsedStarfirePercentage = castDistribution[0] / (castDistribution[0] + castDistribution[4]);
+            double eclipsedStarfirePercentage = castDistribution[4] / (castDistribution[0] + castDistribution[4]);
             RotationData.StarfireAvgHit = (float)(nonEclipsedStarfirePercentage * sf.DamagePerHit + eclipsedStarfirePercentage * sf.DamagePerHit * eclipseBonus);
             RotationData.StarfireAvgEnergy = sf.AverageEnergy;
             RotationData.StarfireCount = (float)(starfireCastsBase + eclipseStarfireCastsBase);
-            double starsurgeCastsBase = castDistribution["Starsurge"] * baselineNukesDuration / ss.CastTime;
-            double eclipseStarsurgeCastsBase = castDistribution["Starsurge (Eclipse)"] * baselineNukesDuration / ss.CastTime;
-            double shootingStarsProcsBase = castDistribution["Shooting Stars"] * baselineNukesDuration / gcd;
-            double eclipseShootingStarsProcsBase = castDistribution["Shooting Stars (Eclipse)"] * baselineNukesDuration / gcd;
-            double allStarsurgePercentage = castDistribution["Starsurge"] + castDistribution["Starsurge (Eclipse)"] + castDistribution["Shooting Stars"] + castDistribution["Shooting Stars (Eclipse)"];
-            double nonEclipsedStarsurgePercentage = (castDistribution["Starsurge"] + castDistribution["Shooting Stars"]) / allStarsurgePercentage;
-            double eclipsedStarsurgePercentage = (castDistribution["Starsurge (Eclipse)"] + castDistribution["Shooting Stars (Eclipse)"]) / allStarsurgePercentage;
+            double starsurgeCastsBase = castDistribution[2] * baselineNukesDuration / ss.CastTime;
+            double eclipseStarsurgeCastsBase = castDistribution[6] * baselineNukesDuration / ss.CastTime;
+            double shootingStarsProcsBase = castDistribution[3] * baselineNukesDuration / gcd;
+            double eclipseShootingStarsProcsBase = castDistribution[7] * baselineNukesDuration / gcd;
+            double allStarsurgePercentage = castDistribution[2] + castDistribution[6] + castDistribution[3] + castDistribution[7];
+            double nonEclipsedStarsurgePercentage = (castDistribution[2] + castDistribution[3]) / allStarsurgePercentage;
+            double eclipsedStarsurgePercentage = (castDistribution[6] + castDistribution[7]) / allStarsurgePercentage;
             RotationData.StarSurgeAvgHit = (float)(nonEclipsedStarsurgePercentage * ss.DamagePerHit + eclipsedStarsurgePercentage * ss.DamagePerHit * eclipseBonus);
             RotationData.StarSurgeAvgEnergy = ss.AverageEnergy;
             RotationData.StarSurgeCount = (float)(starsurgeCastsBase + eclipseStarsurgeCastsBase + shootingStarsProcsBase + eclipseShootingStarsProcsBase);
@@ -364,8 +362,8 @@ namespace Rawr.Moonkin
 
             RotationData.AverageInstantCast = (float)(gcd * (1 - RotationData.NaturesGraceUptime) + ngGcd * RotationData.NaturesGraceUptime);
 
-            RotationData.LunarUptime = (float)(castDistribution["Starfire (Eclipse)"] + 0.5 * castDistribution["Starsurge (Eclipse)"] + 0.5 * castDistribution["Shooting Stars (Eclipse)"]);
-            RotationData.SolarUptime = (float)(castDistribution["Wrath (Eclipse)"] + 0.5 * castDistribution["Starsurge (Eclipse)"] + 0.5 * castDistribution["Shooting Stars (Eclipse)"]);
+            RotationData.LunarUptime = (float)(castDistribution[4] + 0.5 * castDistribution[6] + 0.5 * castDistribution[7]);
+            RotationData.SolarUptime = (float)(castDistribution[5] + 0.5 * castDistribution[6] + 0.5 * castDistribution[7]);
 
             // Moonfire related local variables
             float mfBaseDur, mfMeanDur, mfMaxDur, mfMeanMaxDur, mfTicks, mfMaxTicks;
@@ -447,9 +445,9 @@ namespace Rawr.Moonkin
             {
                 percentOfMoonfiresExtended = RotationData.MoonfireRefreshMode == DotMode.Twice ?
                     (RotationData.Duration / 2 - mfMeanDur) / (mfMeanMaxDur - mfMeanDur) :
-                (float)(castDistribution["Starfire (Eclipse)"] + castDistribution["Starfire"] +
-                0.5 * castDistribution["Starsurge"] + 0.5 * castDistribution["Shooting Stars"] +
-                0.5 * castDistribution["Starsurge (Eclipse)"] + 0.5 * castDistribution["Shooting Stars (Eclipse)"] +
+                (float)(castDistribution[4] + castDistribution[0] +
+                0.5 * castDistribution[2] + 0.5 * castDistribution[3] +
+                0.5 * castDistribution[6] + 0.5 * castDistribution[7] +
                 mfMeanDur / RotationData.Duration);
             }
             float unextendedMoonfireAverage = mf.DamagePerHit + mf.DotEffect.DamagePerHit;
