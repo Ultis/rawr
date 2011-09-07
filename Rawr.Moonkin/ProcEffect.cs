@@ -227,7 +227,7 @@ namespace Rawr.Moonkin
                             break;
                         case Trigger.DamageSpellCrit:
                         case Trigger.SpellCrit:
-                            upTime = Effect.GetAverageUptime(r.RotationData.Duration / (r.RotationData.CastCount - (r.RotationData.InsectSwarmTicks / r.Solver.InsectSwarm.DotEffect.NumberOfTicks)), c.SpellCrit, 3.0f, procTime);
+                            upTime = Effect.GetAverageUptime(r.RotationData.Duration / (r.RotationData.CastCount - r.RotationData.InsectSwarmCasts), c.SpellCrit, 3.0f, procTime);
                             break;
                         case Trigger.SpellCast:
                         case Trigger.DamageSpellCast:

@@ -816,9 +816,9 @@ namespace Rawr.Moonkin
                     ComparisonCalculationMoonkin fon = new ComparisonCalculationMoonkin() { Name = "Force of Nature", ImageSource = "ability_druid_forceofnature" };
                     sf.BurstDamagePoints = calcsBase.SelectedRotation.StarfireAvgHit / calcsBase.SelectedRotation.StarfireAvgCast;
                     sf.OverallPoints = sf.BurstDamagePoints;
-                    mf.BurstDamagePoints = calcsBase.SelectedRotation.MoonfireAvgHit / calcsBase.SelectedRotation.AverageInstantCast;
+                    mf.BurstDamagePoints = calcsBase.SelectedRotation.MoonfireAvgHit / calcsBase.SelectedRotation.MoonfireAvgCast;
                     mf.OverallPoints = mf.BurstDamagePoints;
-                    iSw.BurstDamagePoints = calcsBase.SelectedRotation.InsectSwarmAvgHit / calcsBase.SelectedRotation.AverageInstantCast;
+                    iSw.BurstDamagePoints = calcsBase.SelectedRotation.InsectSwarmAvgHit / calcsBase.SelectedRotation.InsectSwarmAvgCast;
                     iSw.OverallPoints = iSw.BurstDamagePoints;
                     wr.BurstDamagePoints = calcsBase.SelectedRotation.WrathAvgHit / calcsBase.SelectedRotation.WrathAvgCast;
                     wr.OverallPoints = wr.BurstDamagePoints;
@@ -886,25 +886,8 @@ namespace Rawr.Moonkin
             _enableSpiritToHit = calcOpts.AllowReforgingSpiritToHit;
             StatsMoonkin stats = (StatsMoonkin)GetCharacterStats(character, additionalItem);
             calc = CalculationsMoonkin.GetInnerCharacterCalculations(character, stats, additionalItem);
-            // Run the solver to do final calculations
 
-            // Build the cycle for reference calculations or significant changes
-            // Reference calc will always be run first, so I can initialize the cast distribution here and use it in the solver
-            if (referenceCalculation || significantChange)
-            {
-                /*calcOpts.CastDistribution = new MoonkinCycleGenerator { Has4T12 = false,
-                    EuphoriaChance = 0.12 * character.DruidTalents.Euphoria,
-                    ShootingStarsChance = 0.02 * character.DruidTalents.ShootingStars,
-                    DotTickRate = 1 }.GenerateCycle();
-
-                calcOpts.CastDistribution4T12 = new MoonkinCycleGenerator
-                {
-                    Has4T12 = true,
-                    EuphoriaChance = 0.12 * character.DruidTalents.Euphoria,
-                    ShootingStarsChance = 0.02 * character.DruidTalents.ShootingStars,
-                    DotTickRate = 1
-                }.GenerateCycle();*/
-            }
+            // Run the solver against the generated cycle
             new MoonkinSolver().Solve(character, ref calc);
 
             return calc;
@@ -918,7 +901,6 @@ namespace Rawr.Moonkin
             CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
             if (calcOpts == null) { return calc; }
             //
-            BossOptions bossOpts = character.BossOptions;
             calc.BasicStats = stats;
 
             calc.SpellCrit = StatConversion.GetSpellCritFromIntellect(stats.Intellect) + StatConversion.GetSpellCritFromRating(stats.CritRating) + stats.SpellCrit + stats.SpellCritOnTarget;

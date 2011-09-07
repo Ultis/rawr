@@ -56,10 +56,6 @@ namespace Rawr.Moonkin
 
         #endregion
 
-        #region Program-generated Inputs (not persisted)
-
-        #endregion
-
         #region Stat Graph
         [DefaultValue(new bool[] { true, true, true, true, true, true, true, })]
         public bool[] StatsList { get { return _statsList; } set { _statsList = value; OnPropertyChanged("StatsList"); } }
