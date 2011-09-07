@@ -1950,7 +1950,7 @@ namespace Rawr.Bosses
             // Rag "dies" at 10% on normal (goes back under the lava).
             // Apparently Rag heals to about 48% once he hits phase 4 and starts moving around the platform
             // So for heroic his health is 90% to phase 4 and 50% while in Phase 4 so 140% health
-            Health = new float[] { 66995760f * 0.9f, 200987280f * 0.9f, 87300000f * 1.38f, 290500000f * 1.40f };
+            Health = new float[] { 66995760f * 0.9f, 200987280f * 0.9f, 74200000f * 1.40f, 246900000f * 1.40f };
             MobType = (int)MOB_TYPES.ELEMENTAL;
             BerserkTimer = new int[] { 18 * 60, 18 * 60, 18 * 60, 18 * 60 };
             SpeedKillTimer = new int[] { 5 * 60, 8 * 60, 12 * 60, 12 * 60 };
