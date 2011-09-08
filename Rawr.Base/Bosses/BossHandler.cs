@@ -378,8 +378,8 @@ namespace Rawr {
                 string systemic = " If this is occurring on one of the presets, please use the Submit an Issue button at the top-right of Rawr.";
                 string afterfix = " After fixing this issue, the regular summary data will appear.";
                 // Default Melee too Low
-                if (DefaultMeleeAttack != null && DefaultMeleeAttack.DamagePerHit < 115000f)
-                    return "The Damage Per Hit on your current Default Melee Attack is too low. You need to Edit the Attack or select a more appropriate boss." + systemic + afterfix;
+//                if (DefaultMeleeAttack != null && DefaultMeleeAttack.DamagePerHit < 115000f)
+//                    return "The Damage Per Hit on your current Default Melee Attack is too low. You need to Edit the Attack or select a more appropriate boss." + systemic + afterfix;
                 // One of these things just DOESN'T BELONG HERE!!!
                 foreach (Attack i in Attacks)       { if (!i.Validate) { return i.Name + " is invalid. You need to Edit the Attack." + systemic + afterfix; } }
                 foreach (TargetGroup i in Targets)  { if (!i.Validate) { return i.Name + " is invalid. You need to Edit the Target Group." + systemic + afterfix; } }
@@ -485,9 +485,11 @@ namespace Rawr {
         private double _inBackPerc_Ranged = 0.00d;
         private double UNDER35PERC = 0.10d;
         [DefaultValue(0.10d)]
+        [Percentage]
         public double Under35Perc { get { return UNDER35PERC; } set { UNDER35PERC = value; OnPropertyChanged("Under35Perc"); } }
         private double UNDER20PERC = 0.15d;
         [DefaultValue(0.15d)]
+        [Percentage]
         public double Under20Perc { get { return UNDER20PERC; } set { UNDER20PERC = value; OnPropertyChanged("Under20Perc"); } }
 
         #endregion
