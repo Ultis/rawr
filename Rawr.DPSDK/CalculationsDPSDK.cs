@@ -628,8 +628,8 @@ namespace Rawr.DPSDK
                     else if (t.ImprovedFrostPresence > 0)
                         PresenceStats.BonusRPMultiplier += .02f * t.ImprovedFrostPresence;
                     else if (t.ImprovedUnholyPresence > 0)
-                        PresenceStats.PhysicalHaste += .025f * t.ImprovedUnholyPresence;
-                    PresenceStats.PhysicalHaste += .1f;
+                        PresenceStats.PhysicalHaste = AddStatMultiplierStat(PresenceStats.PhysicalHaste, (.025f * t.ImprovedUnholyPresence));
+                    PresenceStats.PhysicalHaste = AddStatMultiplierStat(PresenceStats.PhysicalHaste, .1f);
                     //PresenceStats.BonusRuneRegeneration += .1f;
                     PresenceStats.MovementSpeed += .15f;
                     PresenceStats.ThreatReductionMultiplier += .20f; // Wowhead has this as effect #3
@@ -809,7 +809,7 @@ namespace Rawr.DPSDK
             statsTotal.PhysicalHit += StatConversion.GetPhysicalHitFromRating(statsTotal.HitRating);
             statsTotal.PhysicalCrit += StatConversion.GetPhysicalCritFromRating(statsTotal.CritRating);
             statsTotal.PhysicalCrit += StatConversion.GetPhysicalCritFromAgility(statsTotal.Agility, CharacterClass.DeathKnight);
-            statsTotal.PhysicalHaste = AddStatMultiplierStat((float)Math.Round(statsTotal.PhysicalHaste, 4), StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.DeathKnight));
+            statsTotal.PhysicalHaste = AddStatMultiplierStat(statsTotal.PhysicalHaste, StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.DeathKnight));
 
             statsTotal.SpellHit += StatConversion.GetSpellHitFromRating(statsTotal.HitRating);
             statsTotal.SpellCrit += StatConversion.GetSpellCritFromRating(statsTotal.CritRating);
@@ -926,7 +926,7 @@ namespace Rawr.DPSDK
                         // Frost Strike
                         // Icy Talons
                         // Melee Attack speed +20%
-                        FullCharacterStats.PhysicalHaste += .2f;
+                        FullCharacterStats.PhysicalHaste = AddStatMultiplierStat(FullCharacterStats.PhysicalHaste, .2f);
                         FullCharacterStats.BonusRuneRegeneration -= .2f; // Only this haste doesn't affect Rune Regen.  
 
                         // Blood of the North
@@ -1209,11 +1209,11 @@ namespace Rawr.DPSDK
                 // increases your haste by 5% all the time.
                 if (character.DeathKnightTalents.ImprovedIcyTalons > 0)
                 {
-                    FullCharacterStats.PhysicalHaste += 0.05f;
+                    FullCharacterStats.PhysicalHaste = AddStatMultiplierStat(FullCharacterStats.PhysicalHaste, 0.05f);
                     if (!character.ActiveBuffsContains("Improved Icy Talons")
                         && !character.ActiveBuffsContains("Windfury Totem"))
                     {
-                        FullCharacterStats.PhysicalHaste += .1f;
+                        FullCharacterStats.PhysicalHaste = AddStatMultiplierStat(FullCharacterStats.PhysicalHaste, .1f);
                         FullCharacterStats.RangedHaste += .1f;
                     }
                 }
