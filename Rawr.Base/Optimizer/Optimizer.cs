@@ -1030,8 +1030,6 @@ namespace Rawr.Optimizer
                             List<ComparisonCalculationUpgrades> comparisons = upgrades[slot];
                             PopulateLockedItems(item.Item, item.RandomSuffixId);
                             lockedSlot = slot;
-                            List<object> savedItems = slotItems[(int)lockedSlot];
-                            slotItems[(int)lockedSlot] = lockedItems;
                             if (lockedSlot == CharacterSlot.Finger1 && (object)_character.Finger2 != null && Item.ItemsAreConsideredUniqueEqual(_character.Finger2.Item, item.Item))
                             {
                                 lockedSlot = CharacterSlot.Finger2;
@@ -1040,6 +1038,8 @@ namespace Rawr.Optimizer
                             {
                                 lockedSlot = CharacterSlot.Trinket2;
                             }
+                            List<object> savedItems = slotItems[(int)lockedSlot];
+                            slotItems[(int)lockedSlot] = lockedItems;
                             __character = BuildSingleItemSwapIndividual(__baseCharacter, (int)lockedSlot, lockedItems[0]);
                             if (lockedSlot == CharacterSlot.MainHand && (object)_character.OffHand != null && Item.ItemsAreConsideredUniqueEqual(_character.OffHand.Item, item.Item))
                             {
@@ -1112,7 +1112,7 @@ namespace Rawr.Optimizer
 
                                 comparisons.Add(itemCalc);
                             }
-                            slotItems[(int)slot] = savedItems;
+                            slotItems[(int)lockedSlot] = savedItems;
                         }
                     }
                 }
@@ -1277,7 +1277,11 @@ namespace Rawr.Optimizer
             this.itemGenerator = itemGenerator;
             for (int slot = 0; slot < characterSlots; slot++)
             {
-                slotItems[slot] = itemGenerator.SlotRawItems[slot].ConvertAll(itemAvailability => (object)itemAvailability);
+                slotItems[slot] = new List<object>();
+                foreach (var itemAvailability in itemGenerator.SlotRawItems[slot])
+                {
+                    slotItems[slot].AddRange(itemAvailability.ItemList);
+                }
             }
 
             itemAvailable = itemGenerator.ItemAvailable;
@@ -1287,7 +1291,7 @@ namespace Rawr.Optimizer
             {
                 slotItemsRandom[slot] = new List<KeyedList<KeyedList<ItemInstance>>>();
                 int minJeweler = slotItems[slot].Count > 0 ? 3 : 0;
-                foreach (ItemAvailabilityInformation itemAvailability in slotItems[slot])
+                foreach (ItemAvailabilityInformation itemAvailability in itemGenerator.SlotRawItems[slot])
                 {
                     KeyedList<KeyedList<ItemInstance>> list1 = null;
                     foreach (var itemInstance in itemAvailability.ItemList)
@@ -1432,14 +1436,14 @@ namespace Rawr.Optimizer
         public string CheckOneHandedWeaponUniqueness()
         {
             bool nonUniqueOneHander = false;
-            foreach (ItemAvailabilityInformation itemAvailability in slotItems[(int)CharacterSlot.MainHand])
+            foreach (ItemInstance item in slotItems[(int)CharacterSlot.MainHand])
             {
-                if (itemAvailability != null && itemAvailability.Item.Item != null)
+                if (item != null && item.Item != null)
                 {
-                    if ((itemAvailability.Item.Item.Type == ItemType.OneHandAxe || itemAvailability.Item.Item.Type == ItemType.OneHandMace
-                        || itemAvailability.Item.Item.Type == ItemType.OneHandSword || itemAvailability.Item.Item.Type == ItemType.FistWeapon) && itemAvailability.Item.Item.Slot == ItemSlot.OneHand && !itemAvailability.Item.Item.Unique)
+                    if ((item.Item.Type == ItemType.OneHandAxe || item.Item.Type == ItemType.OneHandMace
+                        || item.Item.Type == ItemType.OneHandSword || item.Item.Type == ItemType.FistWeapon) && item.Item.Slot == ItemSlot.OneHand && !item.Item.Unique)
                     {
-                        if (slotItems[(int)CharacterSlot.OffHand].Contains(itemAvailability))
+                        if (slotItems[(int)CharacterSlot.OffHand].Contains(item))
                         {
                             nonUniqueOneHander = true;
                             break;
