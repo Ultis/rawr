@@ -293,11 +293,11 @@ namespace Rawr.Bear
                     _lacerateStats.DamageTick3Raw = 3f * (69f + AttackPower * 0.00369f) * DamageMultiplier * BleedDamageMultiplier * PhysicalDamageMultiplier * DamageMultiplierLacerate;
 					_lacerateStats.ThreatTick3Raw = _lacerateStats.DamageTick3Raw * ThreatMultiplier;
 					_lacerateStats.DamageAverage = ChanceNonAvoided * (
-																((ChanceCrit) * (_lacerateStats.DamageRaw * CritMultiplier)) +
+																((ChanceCrit) * (_lacerateStats.DamageRaw * Stats.BonusLacerateCritChance * CritMultiplier)) +
 																((1f - ChanceCrit) * (_lacerateStats.DamageRaw))
 															);
 					_lacerateStats.ThreatAverage = ChanceNonAvoided * (
-																((ChanceCrit) * (_lacerateStats.ThreatRaw * CritMultiplier)) +
+                                                                ((ChanceCrit) * (_lacerateStats.ThreatRaw * Stats.BonusLacerateCritChance * CritMultiplier)) +
 																((1f - ChanceCrit) * (_lacerateStats.ThreatRaw))
 															);
 				}

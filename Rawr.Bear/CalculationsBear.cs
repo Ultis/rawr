@@ -687,9 +687,9 @@ the Threat Scale defined on the Options tab.",
             calculatedStats.ThreatPoints = calculatedStats.HighestTPSRotation.TPS * calcOpts.ThreatScale / 10f;
         }
 
-        private static readonly SpecialEffect SpecialEffect4T12 = new SpecialEffect(Trigger.Barkskin, new Stats() { Dodge = 0.10f, }, 12f, 60f, 1f);
+        private static readonly SpecialEffect SpecialEffect4T12 = new SpecialEffect(Trigger.Use, new Stats() { Dodge = 0.10f, }, 12f, 60f, 1f);
         private static readonly SpecialEffect LeaderOfThePackSpecialEffect = new SpecialEffect(Trigger.PhysicalCrit, new Stats() { HealthRestoreFromMaxHealth = 0.04f, }, 0f, 6f, 1f);
-         /// <summary>
+        /// <summary>
         /// Gets the total Stats of the Character
         /// </summary>
         /// <param name="character">The Character to get the total Stats of</param>
@@ -730,7 +730,8 @@ the Threat Scale defined on the Options tab.",
                 BonusPhysicalDamageMultiplier = 0.04f * talents.MasterShapeshifter,
                 BonusMangleDamageMultiplier = talents.GlyphOfMangle ? 0.1f : 0f,
                 BonusLacerateCritChance = talents.GlyphOfLacerate ? 0.05f : 0f,
-                BonusFaerieFireStacks = talents.FeralAggression
+                BonusFaerieFireStacks = talents.FeralAggression,
+                BerserkDuration = (talents.GlyphOfBerserk ? 10f : 0f),
             };
 
             #region Set Bonuses
@@ -756,7 +757,7 @@ the Threat Scale defined on the Options tab.",
                 /*statsBuffs.AddSpecialEffect(new SpecialEffect(Trigger.MangleCatHit,
                     new Stats() { BonusAttackPowerMultiplier = 0.01f, },
                     30, 0, 1f, 3));*/
-                statsTotal.BonusSurvivalInstinctsDurationMultiplier = (1f + statsTotal.BonusSurvivalInstinctsDurationMultiplier) * (1f + 0.50f) - 1f;
+                statsTotal.BonusSurvivalInstinctsDurationMultiplier = 6f;
             }
             int T12Count;
             character.SetBonusCount.TryGetValue("Obsidian Arborweave Battlegarb", out T12Count);
@@ -770,9 +771,6 @@ the Threat Scale defined on the Options tab.",
                 statsTotal.AddSpecialEffect(SpecialEffect4T12);
             }
             #endregion
-
-            // Leader of the Pack self-heal
-            statsTotal.AddSpecialEffect(LeaderOfThePackSpecialEffect);
 
             statsTotal.Accumulate(BaseStats.GetBaseStats(character.Level, character.Class, character.Race, BaseStats.DruidForm.Bear));
             statsTotal.Accumulate(GetItemStats(character, additionalItem));
@@ -794,6 +792,29 @@ the Threat Scale defined on the Options tab.",
             statsTotal.FrostResistance += statsTotal.FrostResistanceBuff;
             statsTotal.ShadowResistance += statsTotal.ShadowResistanceBuff;
             statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff;
+
+            // Leader of the Pack self-heal
+            statsTotal.AddSpecialEffect(LeaderOfThePackSpecialEffect);
+
+            // Survival Instincts
+            SpecialEffect SurvivalInstinctsSpecialEffect = new SpecialEffect(Trigger.Use, new Stats() { DamageTakenReductionMultiplier = 0.50f, }, 12f + statsTotal.BonusSurvivalInstinctsDurationMultiplier, 180f, 1f);
+            statsTotal.AddSpecialEffect(SurvivalInstinctsSpecialEffect);
+
+            // Barkskin
+            SpecialEffect BarkskinSpecialEffect = new SpecialEffect(Trigger.Use, new Stats() { DamageTakenReductionMultiplier = 0.20f, CritChanceReduction = (talents.GlyphOfBarkskin ? 0.25f : 0f), }, 12f, 60f, 1f);
+            statsTotal.AddSpecialEffect(BarkskinSpecialEffect);
+
+            // Frenzied Regeneration
+            SpecialEffect FrenziedRegenerationSpecialEffect = new SpecialEffect(Trigger.Use, new Stats() { BonusHealthMultiplier = 0.15f, HealthRestoreFromMaxHealth = (talents.GlyphOfFrenziedRegeneration ? 0f : 0.15f), HealingReceivedMultiplier = (talents.GlyphOfFrenziedRegeneration ? 0.30f : 0f) }, 20f, 180f, 1f);
+            statsTotal.AddSpecialEffect(FrenziedRegenerationSpecialEffect);
+
+            // Berserk
+            SpecialEffect BerserkSpecialEffect = new SpecialEffect(Trigger.Use, new StatsBear() { MangleCooldownReduction = 6f }, 15f + statsTotal.BerserkDuration, 180f, 1f);
+            statsTotal.AddSpecialEffect(BerserkSpecialEffect);
+
+            // Enrage
+            SpecialEffect EnrageSpecialEffect = new SpecialEffect(Trigger.Use, new StatsBear() { BonusDamageMultiplier = (0.05f * talents.KingOfTheJungle) }, 10f, 60f, 1f);
+            statsTotal.AddSpecialEffect(EnrageSpecialEffect);
 
             AccumulateProcs(character, statsTotal);
 

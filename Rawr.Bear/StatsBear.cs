@@ -46,7 +46,7 @@ namespace Rawr.Bear
         /// </summary>
         public float BonusLacerateCritChance { get; set; }
         /// <summary>
-        /// Value mod for Mangle. Use as 1 = 1 bonus stack
+        /// Value mod for Faerie Fire. Use as 1 = 1 bonus stack
         /// </summary>
         public float BonusFaerieFireStacks { get; set; }
         /// <summary>
@@ -57,5 +57,9 @@ namespace Rawr.Bear
         /// Contains the individual values for the uptimes of Armor
         /// </summary>
         public WeightedStat[] TemporaryArmorUptimes { get; set; }
+        /// <summary>
+        /// Value mod for Berserk. Use as 1 = 1 sec bonus.
+        /// </summary>
+        public float BerserkDuration { get; set; }
     }
 }
