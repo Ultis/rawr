@@ -514,7 +514,7 @@ the Threat Scale defined on the Options tab.",
                 //crushes *= (100f - calculatedStats.Mitigation) * .015f;
                 hitsVeng *= (1f - calculatedStats.TotalConstantDamageReduction);
                 float damageTakenPercent = (hitsVeng + critsVeng) * (1f - stats.BossAttackSpeedReductionMultiplier);
-                float damageTakenPerHit = bossAttack.DamagePerHit * damageTakenPercent - stats.DamageAbsorbed;
+                float damageTakenPerHit = bossAttack.DamagePerHit * damageTakenPercent;
                 float damageTakenPerSecond = damageTakenPerHit / bossAttack.AttackSpeed;
                 float damageTakenPerVengeanceTick = damageTakenPerSecond * 2f;
                 float vengeanceCap = stats.Stamina + baseStats.Health * 0.1f;
@@ -551,7 +551,8 @@ the Threat Scale defined on the Options tab.",
             float blockChance = 1f - targetHitChance * ((float)Math.Pow(1f - averageSDAttackCritChance, targetAttackSpeedDebuffed / playerAttacksInterval)) *
                 1f / (1f - (1f - targetHitChance) * (float)Math.Pow(1f - averageSDAttackCritChance, targetAttackSpeedDebuffed / playerAttacksInterval));
             float blockValue = stats.AttackPower * 0.35f * masteryMultiplier;
-            float blockedPercent = Math.Min(1f, (blockValue * blockChance) / ((1f - calculatedStats.TotalConstantDamageReduction) * (bossAttack.DamagePerHit - stats.DamageAbsorbed)));
+            float healthrestore = (stats.Healed + stats.BonusHealingReceived + stats.HealthRestoreFromMaxHealth) * (1f + stats.HealingReceivedMultiplier);
+            float blockedPercent = Math.Min(1f, (blockValue * blockChance) / ((1f - calculatedStats.TotalConstantDamageReduction) * (bossAttack.DamagePerHit - stats.DamageAbsorbed - healthrestore)));
             calculatedStats.SavageDefenseChance = (float)Math.Round(blockChance, 5);
             calculatedStats.SavageDefenseValue = (float)Math.Floor(blockValue);
             calculatedStats.SavageDefensePercent = (float)Math.Round(blockedPercent, 5);
@@ -633,7 +634,7 @@ the Threat Scale defined on the Options tab.",
                 stats.TargetArmorReduction, stats.ArmorPenetration);
 
             float critMultiplier = 2f * (1 + stats.BonusCritDamageMultiplier);
-            float spellCritMultiplier = 1.5f * (1 + stats.BonusCritDamageMultiplier);
+            float spellCritMultiplier = 2f * (1 + stats.BonusCritDamageMultiplier);
 
             float hasteBonus = StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, CharacterClass.Druid);
             float attackSpeed = (2.5f) / (1f + hasteBonus);
@@ -669,19 +670,26 @@ the Threat Scale defined on the Options tab.",
             calculatedStats.ParriedAttacks = chanceParry;
             calculatedStats.MissedAttacks = chanceMiss;
 
+            float movementdowntime = 3f / 5.5f / (1 + stats.MovementSpeed); // Movement Duration / Movement Frequency / (1 + Movement Speed)
+            
             BearAbilityBuilder abilities = new BearAbilityBuilder(stats,
                 character.MainHand == null ? 0.75f : ((character.MainHand.MinDamage + character.MainHand.MaxDamage) / 2f) / character.MainHand.Speed,
                 attackSpeed, modArmor, chanceAvoided, chanceResist, chanceCrit, chanceCritSpell, chanceGlance, critMultiplier, spellCritMultiplier);
             var optimalRotations = BearRotationCalculator.GetOptimalRotations(abilities);
             calculatedStats.Abilities = abilities;
             calculatedStats.HighestDPSRotation = optimalRotations.Item1;
+            float bonusdamage = stats.ArcaneDamage + stats.FireDamage + stats.FrostDamage + stats.NatureDamage + stats.ShadowDamage + stats.HolyDamage;
+            calculatedStats.HighestDPSRotation.DPS += bonusdamage;
+            calculatedStats.HighestDPSRotation.DPS *= 1 - movementdowntime;
             calculatedStats.HighestTPSRotation = optimalRotations.Item2;
+            calculatedStats.HighestTPSRotation.TPS += bonusdamage * 5f;
+            calculatedStats.HighestTPSRotation.TPS *= 1 - movementdowntime;
             calculatedStats.ThreatPoints = calculatedStats.HighestTPSRotation.TPS * calcOpts.ThreatScale / 10f;
         }
 
         private static readonly SpecialEffect SpecialEffect4T12 = new SpecialEffect(Trigger.Barkskin, new Stats() { Dodge = 0.10f, }, 12f, 60f, 1f);
-
-        /// <summary>
+        private static readonly SpecialEffect LeaderOfThePackSpecialEffect = new SpecialEffect(Trigger.PhysicalCrit, new Stats() { HealthRestoreFromMaxHealth = 0.04f, }, 0f, 6f, 1f);
+         /// <summary>
         /// Gets the total Stats of the Character
         /// </summary>
         /// <param name="character">The Character to get the total Stats of</param>
@@ -715,7 +723,7 @@ the Threat Scale defined on the Options tab.",
                 PhysicalCrit = (hasCritBuff ? 0f : 0.05f * talents.LeaderOfThePack) + (talents.Pulverize > 0 ? 0.09f: 0f),
                 SpellCrit = (hasCritBuff ? 0f : 0.05f * talents.LeaderOfThePack),
                 BonusPulverizeDuration = 4f * talents.EndlessCarnage,
-                DamageTakenReductionMultiplier = 0.06f * talents.NaturalReaction,
+                DamageTakenReductionMultiplier = 0.09f * talents.NaturalReaction,
                 BonusMaulDamageMultiplier = 0.04f * talents.RendAndTear,
                 
                 BonusStaminaMultiplier = (1f + 0.02f * talents.HeartOfTheWild) * (Character.ValidateArmorSpecialization(character, ItemType.Leather) ? 1.05f : 1f) - 1f,
@@ -763,6 +771,9 @@ the Threat Scale defined on the Options tab.",
             }
             #endregion
 
+            // Leader of the Pack self-heal
+            //statsTotal.AddSpecialEffect(LeaderOfThePackSpecialEffect);
+
             statsTotal.Accumulate(BaseStats.GetBaseStats(character.Level, character.Class, character.Race, BaseStats.DruidForm.Bear));
             statsTotal.Accumulate(GetItemStats(character, additionalItem));
             statsTotal.Accumulate(GetBuffsStats(character, calcOpts));
@@ -770,7 +781,7 @@ the Threat Scale defined on the Options tab.",
             statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
             statsTotal.Strength = (float)Math.Floor(statsTotal.Strength * (1f + statsTotal.BonusStrengthMultiplier));
             statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1f + statsTotal.BonusAgilityMultiplier));
-            statsTotal.AttackPower += (float)Math.Floor(statsTotal.Strength - 20f) * 1f + 20f;
+            statsTotal.AttackPower += (float)Math.Floor(statsTotal.Strength);
             statsTotal.AttackPower += (float)Math.Floor(statsTotal.Agility - 20f) * 2f + 20f;
             statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
             statsTotal.Health += ((statsTotal.Stamina - 20f) * 14f) + 20f;
@@ -908,9 +919,9 @@ the Threat Scale defined on the Options tab.",
             statsProcs.Stamina = (float)Math.Floor(statsProcs.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
             statsProcs.Strength = (float)Math.Floor(statsProcs.Strength * (1f + statsTotal.BonusStrengthMultiplier));
             statsProcs.Agility = (float)Math.Floor(statsProcs.Agility * (1f + statsTotal.BonusAgilityMultiplier));
-            statsProcs.AttackPower += statsProcs.Strength * 2f + statsProcs.Agility * 2f;
+            statsProcs.AttackPower += statsProcs.Strength + statsProcs.Agility * 2f;
             statsProcs.AttackPower = (float)Math.Floor(statsProcs.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
-            statsProcs.Health += (float)Math.Floor(statsProcs.Stamina * 10f) + (float)Math.Floor(statsProcs.BattlemasterHealthProc);
+            statsProcs.Health += (float)Math.Floor(statsProcs.Stamina * 14f) + (float)Math.Floor(statsProcs.BattlemasterHealthProc);
             statsProcs.Health *= (1f + statsProcs.BonusHealthMultiplier);
             statsProcs.Armor += /*2f * (float)Math.Floor(statsProcs.Agility)*/ + statsProcs.BonusArmor; // Armor no longer gets bonuses from Agi in Cata
             statsProcs.Armor = (float)Math.Floor(statsProcs.Armor * (1f + statsTotal.BonusArmorMultiplier));
@@ -1374,11 +1385,25 @@ the Threat Scale defined on the Options tab.",
                 BossAttackSpeedReductionMultiplier = stats.BossAttackSpeedReductionMultiplier,
                 SpellCrit = stats.SpellCrit,
                 SpellCritOnTarget = stats.SpellCritOnTarget,
-                Intellect = stats.Intellect,
+                //Intellect = stats.Intellect,
+                ArcaneDamage = stats.ArcaneDamage,
+                BonusArcaneDamageMultiplier = stats.BonusArcaneDamageMultiplier,
+                FireDamage = stats.FireDamage,
+                BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
+                FrostDamage = stats.FrostDamage,
+                BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
+                NatureDamage = stats.NatureDamage,
                 BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier,
+                ShadowDamage = stats.ShadowDamage,
+                BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
+                BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
                 SpellHit = stats.SpellHit,
                 ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
                 DamageAbsorbed = stats.DamageAbsorbed,
+                Healed = stats.Healed,
+                HealthRestore = stats.HealthRestore,
+                HealthRestoreFromMaxHealth = stats.HealthRestoreFromMaxHealth,
+                BonusHealingReceived = stats.BonusHealingReceived,
                 //
                 MovementSpeed = stats.MovementSpeed,
                 FearDurReduc = stats.FearDurReduc,
@@ -1410,7 +1435,7 @@ the Threat Scale defined on the Options tab.",
                 stats.Agility + stats.BonusAgilityMultiplier +
                 stats.Stamina + stats.BonusStaminaMultiplier +
                 stats.Health + stats.BonusHealthMultiplier +
-                stats.Strength +
+                stats.Strength + stats.BonusStrengthMultiplier +
                 stats.AttackPower + stats.BonusAttackPowerMultiplier +
                 stats.CritRating + stats.PhysicalCrit + stats.BonusCritDamageMultiplier + 
                 stats.HasteRating + stats.PhysicalHaste +
@@ -1420,10 +1445,20 @@ the Threat Scale defined on the Options tab.",
                 stats.ExpertiseRating +
                 stats.ArmorPenetration +
                 stats.BonusDamageMultiplier +
-                stats.BonusWhiteDamageMultiplier +
-                stats.BonusNatureDamageMultiplier +
+                stats.BonusWhiteDamageMultiplier + stats.BonusArcaneDamageMultiplier +
+                stats.BonusFireDamageMultiplier + stats.BonusFrostDamageMultiplier + 
+                stats.BonusNatureDamageMultiplier + stats.BonusShadowDamageMultiplier + 
+                stats.ArcaneDamage + stats.FireDamage + stats.FrostDamage +
+                stats.NatureDamage + stats.ShadowDamage +
+                stats.BonusPhysicalDamageMultiplier + 
                 stats.MasteryRating +
                 stats.ThreatIncreaseMultiplier + 
+                // Health
+                stats.Healed +
+                stats.HealthRestore +
+                stats.HealthRestoreFromMaxHealth +
+                stats.DamageAbsorbed +
+                stats.BonusHealingReceived +
                 // Stats that are for Target
                 stats.TargetArmorReduction +
                 stats.BossAttackSpeedReductionMultiplier +
@@ -1433,8 +1468,8 @@ the Threat Scale defined on the Options tab.",
                 // Maybe Stats
                 stats.Resilience +
                 stats.WeaponDamage +
-                stats.SpellCrit + 
-                stats.Intellect + stats.SpellHit + 
+                //stats.SpellCrit + 
+                //stats.Intellect + stats.SpellHit + 
                 // Resistances
                 stats.ArcaneResistance + stats.ArcaneResistanceBuff +
                 stats.NatureResistance + stats.NatureResistanceBuff + 
@@ -1445,7 +1480,7 @@ the Threat Scale defined on the Options tab.",
                 stats.Miss +
                 stats.CritChanceReduction +
                 stats.BattlemasterHealthProc + stats.MoteOfAnger +
-                stats.HighestStat + stats.HighestSecondaryStat + stats.Paragon + stats.DamageAbsorbed +
+                stats.HighestStat + stats.HighestSecondaryStat + stats.Paragon +
                 // Specific to Bear
                 stats.BonusDamageMultiplierLacerate +
                 // Boss Handler
@@ -1574,7 +1609,7 @@ the Threat Scale defined on the Options tab.",
             character.BossOptions.InBack = false;
 
             int avg = character.AvgWornItemLevel;
-            int[] points = new int[] { 350, 358, 365 };
+            int[] points = new int[] { 365, 378, 384 };
             #region Need a Boss Attack
             character.BossOptions.DamagingTargs = true;
             if (character.BossOptions.DefaultMeleeAttack == null) {
@@ -1582,16 +1617,16 @@ the Threat Scale defined on the Options tab.",
             }
             if        (avg <= points[0]) {
                 character.BossOptions.Health = 20000000;
-                character.BossOptions.DefaultMeleeAttack.DamagePerHit = BossHandler.StandardMeleePerHit[(int)BossHandler.TierLevels.T11_10];
+                character.BossOptions.DefaultMeleeAttack.DamagePerHit = BossHandler.StandardMeleePerHit[(int)BossHandler.TierLevels.T12_10];
             } else if (avg <= points[1]) {
                 character.BossOptions.Health = 35000000;
-                character.BossOptions.DefaultMeleeAttack.DamagePerHit = BossHandler.StandardMeleePerHit[(int)BossHandler.TierLevels.T11_25];
+                character.BossOptions.DefaultMeleeAttack.DamagePerHit = BossHandler.StandardMeleePerHit[(int)BossHandler.TierLevels.T12_25];
             } else if (avg <= points[2]) {
                 character.BossOptions.Health = 50000000;
-                character.BossOptions.DefaultMeleeAttack.DamagePerHit = BossHandler.StandardMeleePerHit[(int)BossHandler.TierLevels.T11_10H];
+                character.BossOptions.DefaultMeleeAttack.DamagePerHit = BossHandler.StandardMeleePerHit[(int)BossHandler.TierLevels.T12_10H];
             } else if (avg >  points[2]) {
                 character.BossOptions.Health = 65000000;
-                character.BossOptions.DefaultMeleeAttack.DamagePerHit = BossHandler.StandardMeleePerHit[(int)BossHandler.TierLevels.T11_25H];
+                character.BossOptions.DefaultMeleeAttack.DamagePerHit = BossHandler.StandardMeleePerHit[(int)BossHandler.TierLevels.T12_25H];
             }
             #endregion
             #endregion

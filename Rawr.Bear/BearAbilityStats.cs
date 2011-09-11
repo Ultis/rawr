@@ -39,7 +39,7 @@ namespace Rawr.Bear
 		public float MaulDamageMultiplier { get { return 1f + Stats.BonusMaulDamageMultiplier; } }
 		public float MangleDamageMultiplier { get { return 1f + Stats.BonusMangleDamageMultiplier; } }
 		public float BleedDamageMultiplier { get { return 1f + Stats.BonusBleedDamageMultiplier; } }
-		public float ThreatMultiplier { get { return 3f * (1f + Stats.ThreatIncreaseMultiplier); } }
+		public float ThreatMultiplier { get { return 5f * (1f + Stats.ThreatIncreaseMultiplier); } }
 
 		public BearAbilityBuilder(StatsBear stats, float weaponDPS, float attackSpeed, float armorDamageMultiplier,
 			float chanceAvoided, float chanceResisted, float chanceCrit, float chanceCritSpell, float chanceGlance, float critMultiplier, float spellCritMultiplier)
