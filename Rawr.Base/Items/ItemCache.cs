@@ -485,7 +485,7 @@ namespace Rawr
             if (item.Unique && (item.Slot == ItemSlot.Trinket || item.Slot == ItemSlot.Finger || item.Slot == ItemSlot.OneHand)) // all items that have UniqueId rules are marked as Unique
             {
                 // find all items in item cache with same name
-                Item item251 = null, item258 = null, item264 = null, item271 = null, item277 = null, item284 = null, item308 = null, 
+                Item item251 = null, item258 = null, item264 = null, item271 = null, item277 = null, item284 = null, item308 = null,
                     item316 = null, item333 = null, item346 = null, item359 = null, item372 = null, item378 = null, item391 = null,
                     item384 = null, item397 = null;
 
@@ -626,6 +626,11 @@ namespace Rawr
                 else if (item.Id == 70940 || item.Id == 71210 || item.Id == 71208 || item.Id == 71211 || item.Id == 71209)
                 {
                     item.UniqueId = new List<int>() { 70940, 71210, 71208, 71211, 71209 };
+                }
+                //Signet of the Avengers (Fireland Rep Rings)
+                else if (item.Id == 70934 || item.Id == 71217 || item.Id == 71215 || item.Id == 71237 || item.Id == 71216)
+                {
+                    item.UniqueId = new List<int>() { 70934, 71217, 71215, 71237, 71216 };
                 }
 
                 // special rules for alchemist stones
