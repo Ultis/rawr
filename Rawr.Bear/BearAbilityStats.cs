@@ -232,7 +232,7 @@ namespace Rawr.Bear
 				{
 					_swipeStats = new SwipeStats();
 					_swipeStats.RageCostRaw = 15f;
-                    _swipeStats.DamageRaw = (929f + AttackPower * 0.171f) * 0.83f * DamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier;
+                    _swipeStats.DamageRaw = (929f + AttackPower * 0.123f) * 0.83f * DamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier;
 					_swipeStats.ThreatRaw = (_swipeStats.DamageRaw * 1.5f) * ThreatMultiplier;
 					_swipeStats.DamageAverage = ChanceNonAvoided * (
 																((ChanceCrit) * (_swipeStats.DamageRaw * CritMultiplier)) +

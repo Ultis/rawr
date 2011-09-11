@@ -772,7 +772,7 @@ the Threat Scale defined on the Options tab.",
             #endregion
 
             // Leader of the Pack self-heal
-            //statsTotal.AddSpecialEffect(LeaderOfThePackSpecialEffect);
+            statsTotal.AddSpecialEffect(LeaderOfThePackSpecialEffect);
 
             statsTotal.Accumulate(BaseStats.GetBaseStats(character.Level, character.Class, character.Race, BaseStats.DruidForm.Bear));
             statsTotal.Accumulate(GetItemStats(character, additionalItem));
