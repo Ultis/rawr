@@ -48,8 +48,8 @@ namespace Rawr.Retribution
         #region Seal Of Truth and Judgement Of Truth
         internal const float SOT_DMG = 0;
         internal const float SOT_SEAL_COEFF = .15F;
-        internal const float SOT_CENSURE_COEFF_AP = .0192f;
-        internal const float SOT_CENSURE_COEFF_SP = .01f;
+        internal const float SOT_CENSURE_COEFF_AP = .027f;
+        internal const float SOT_CENSURE_COEFF_SP = .014f;
         internal const float SOT_CENSURE_TICK = 3f;
         internal const float JOT_JUDGE_COEFF_AP = .1421f;
         internal const float JOT_JUDGE_COEFF_SP = .2229f;
