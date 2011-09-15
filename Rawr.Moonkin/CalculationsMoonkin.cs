@@ -895,6 +895,81 @@ namespace Rawr.Moonkin
             calc.Mastery = 8.0f + StatConversion.GetMasteryFromRating(stats.MasteryRating);
             calc.ManaRegen = stats.Mp5 / 5f;
 
+            // Generate the cycles
+            /*if (referenceCalculation)
+            {
+                using (System.IO.StreamWriter writer = System.IO.File.CreateText("C:\\users\\nmccalment\\Desktop\\CastDistribution.txt"))
+                {
+                    MoonkinCycleGenerator generator = new MoonkinCycleGenerator
+                    {
+                        EuphoriaChance = 0.24,
+                        Has4T12 = false,
+                        HasteLevel = 0,
+                        ShootingStarsChance = 0.04,
+                        StarlightWrathLevel = 3
+                    };
+
+                    writer.WriteLine("public static double[,] CastDistribution = new double[21, 8] {");
+
+                    double[] baseRotationLengths = new double[21];
+
+                    for (int haste = 0; haste <= 100; haste += 5)
+                    {
+                        generator.HasteLevel = haste / 100.0;
+                        double[] values = generator.GenerateCycle();
+                        writer.Write("{");
+                        for (int i = 0; i < values.Length; ++i)
+                        {
+                            writer.Write(String.Format(" {0},", values[i]));
+                        }
+                        writer.WriteLine(" },");
+                        baseRotationLengths[haste / 5] = generator.GetRotationLength();
+                    }
+
+                    writer.WriteLine("};");
+
+                    generator.Has4T12 = true;
+
+                    writer.WriteLine("public static double[,] T12CastDistribution = new double[21, 8] {");
+
+                    double[] T12RotationLengths = new double[21];
+
+                    for (int haste = 0; haste <= 100; haste += 5)
+                    {
+                        generator.HasteLevel = haste / 100.0;
+                        double[] values = generator.GenerateCycle();
+                        writer.Write("{");
+                        for (int i = 0; i < values.Length; ++i)
+                        {
+                            writer.Write(String.Format(" {0},", values[i]));
+                        }
+                        writer.WriteLine(" },");
+                        T12RotationLengths[haste / 5] = generator.GetRotationLength();
+                    }
+
+                    writer.WriteLine("};");
+
+                    writer.Write("public static double[] BaseRotationDurations = new double[21] {");
+
+                    for (int i = 0; i < baseRotationLengths.Length; ++i)
+                    {
+                        writer.Write(String.Format(" {0},", baseRotationLengths[i]));
+                    }
+
+                    writer.WriteLine(" };");
+
+                    writer.Write("public static double[] T12RotationDurations = new double[21] {");
+
+                    for (int i = 0; i < T12RotationLengths.Length; ++i)
+                    {
+                        writer.Write(String.Format(" {0},", T12RotationLengths[i]));
+                    }
+
+                    writer.WriteLine(" };");
+                }
+                System.Diagnostics.Debugger.Break();
+            }*/
+
             // Run the solver against the generated cycle
             new MoonkinSolver().Solve(character, ref calc);
 

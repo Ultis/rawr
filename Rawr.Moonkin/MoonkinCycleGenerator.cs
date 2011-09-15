@@ -88,7 +88,8 @@ namespace Rawr.Moonkin
         protected override State<MoonkinCycleAbility> GetInitialState()
         {
             // Cast time calculations
-            wrathCastTime = starsurgeCastTime = 2.5;
+            wrathCastTime = 2.5;
+            starsurgeCastTime = 2.0;
             starfireCastTime = 3.2;
             globalCooldown = 1.5;
             switch (StarlightWrathLevel)
@@ -477,14 +478,15 @@ namespace Rawr.Moonkin
             }
         }
 
-        public Dictionary<string, double> GenerateCycle()
+        public double[] GenerateCycle()
         {
             _process = new MarkovProcess<MoonkinCycleAbility>(_generator.GenerateStateSpace());
 
-            Dictionary<string, double> retval = new Dictionary<string, double>();
+            double[] retval = new double[8];
             foreach (KeyValuePair<MoonkinCycleAbility, double> kvp in _process.AbilityWeight)
             {
-                retval.Add(kvp.Key.Name, kvp.Value);
+                int idx = Array.IndexOf(MoonkinSolver.CastDistributionSpells, kvp.Key.Name);
+                retval[idx] = kvp.Value;
             }
 
             return retval;
