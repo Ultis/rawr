@@ -114,6 +114,7 @@
     <Compile Include="CharacterCalculationsMoonkin.cs" />
     <Compile Include="ComparisonCalculationMoonkin.cs" />
     <Compile Include="MoonkinCycleGenerator.cs" />
+    <Compile Include="MoonkinSimulator.cs" />
     <Compile Include="MoonkinSolver.cs" />
     <Compile Include="ProcEffect.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

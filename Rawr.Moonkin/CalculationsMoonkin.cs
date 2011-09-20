@@ -898,20 +898,24 @@ namespace Rawr.Moonkin
             // Generate the cycles
             /*if (referenceCalculation)
             {
-                using (System.IO.StreamWriter writer = System.IO.File.CreateText("C:\\users\\nmccalment\\Desktop\\CastDistribution.txt"))
+                using (System.IO.StreamWriter writer = System.IO.File.CreateText("C:\\users\\Noah\\Desktop\\CastDistribution.txt"))
                 {
-                    MoonkinCycleGenerator generator = new MoonkinCycleGenerator
-                    {
-                        EuphoriaChance = 0.24,
-                        Has4T12 = false,
-                        HasteLevel = 0,
-                        ShootingStarsChance = 0.04,
-                        StarlightWrathLevel = 3
-                    };
+                    //MoonkinCycleGenerator generator = new MoonkinCycleGenerator
+                    //{
+                        //EuphoriaChance = 0.24,
+                        //Has4T12 = false,
+                        //HasteLevel = 0,
+                        //ShootingStarsChance = 0.04,
+                        //StarlightWrathLevel = 3
+                    //};
 
-                    writer.WriteLine("public static double[,] CastDistribution = new double[21, 8] {");
+                    MoonkinSimulator generator = new MoonkinSimulator() { HasGlyphOfStarfire = true };
+
+                    writer.WriteLine("public static double[,] CastDistributionGoSF = new double[21, 12] {");
 
                     double[] baseRotationLengths = new double[21];
+                    double[] baseNGUptimes = new double[21];
+                    double[] baseMFExtended = new double[21];
 
                     for (int haste = 0; haste <= 100; haste += 5)
                     {
@@ -924,15 +928,19 @@ namespace Rawr.Moonkin
                         }
                         writer.WriteLine(" },");
                         baseRotationLengths[haste / 5] = generator.GetRotationLength();
+                        baseNGUptimes[haste / 5] = generator.GetNGUptime();
+                        baseMFExtended[haste / 5] = generator.GetPercentMoonfiresExtended();
                     }
 
                     writer.WriteLine("};");
 
                     generator.Has4T12 = true;
 
-                    writer.WriteLine("public static double[,] T12CastDistribution = new double[21, 8] {");
+                    writer.WriteLine("public static double[,] T12CastDistributionGoSF = new double[21, 12] {");
 
                     double[] T12RotationLengths = new double[21];
+                    double[] T12NGUptimes = new double[21];
+                    double[] T12MFExtended = new double[21];
 
                     for (int haste = 0; haste <= 100; haste += 5)
                     {
@@ -945,11 +953,13 @@ namespace Rawr.Moonkin
                         }
                         writer.WriteLine(" },");
                         T12RotationLengths[haste / 5] = generator.GetRotationLength();
+                        T12NGUptimes[haste / 5] = generator.GetNGUptime();
+                        T12MFExtended[haste / 5] = generator.GetPercentMoonfiresExtended();
                     }
 
                     writer.WriteLine("};");
 
-                    writer.Write("public static double[] BaseRotationDurations = new double[21] {");
+                    writer.Write("public static double[] BaseRotationDurationsGoSF = new double[21] {");
 
                     for (int i = 0; i < baseRotationLengths.Length; ++i)
                     {
@@ -958,7 +968,7 @@ namespace Rawr.Moonkin
 
                     writer.WriteLine(" };");
 
-                    writer.Write("public static double[] T12RotationDurations = new double[21] {");
+                    writer.Write("public static double[] T12RotationDurationsGoSF = new double[21] {");
 
                     for (int i = 0; i < T12RotationLengths.Length; ++i)
                     {
@@ -966,8 +976,44 @@ namespace Rawr.Moonkin
                     }
 
                     writer.WriteLine(" };");
+
+                    writer.Write("public static double[] BaseNGUptimesGoSF = new double[21] {");
+
+                    for (int i = 0; i < baseNGUptimes.Length; ++i)
+                    {
+                        writer.Write(String.Format(" {0},", baseNGUptimes[i]));
+                    }
+
+                    writer.WriteLine(" };");
+
+                    writer.Write("public static double[] T12NGUptimesGoSF = new double[21] {");
+
+                    for (int i = 0; i < T12NGUptimes.Length; ++i)
+                    {
+                        writer.Write(String.Format(" {0},", T12NGUptimes[i]));
+                    }
+
+                    writer.WriteLine(" };");
+
+                    writer.Write("public static double[] BasePercentMoonfiresExtended = new double[21] {");
+
+                    for (int i = 0; i < baseMFExtended.Length; ++i)
+                    {
+                        writer.Write(String.Format(" {0},", baseMFExtended[i]));
+                    }
+
+                    writer.WriteLine(" };");
+
+                    writer.Write("public static double[] T12PercentMoonfiresExtended = new double[21] {");
+
+                    for (int i = 0; i < T12MFExtended.Length; ++i)
+                    {
+                        writer.Write(String.Format(" {0},", T12MFExtended[i]));
+                    }
+
+                    writer.WriteLine(" };");
                 }
-                System.Diagnostics.Debugger.Break();
+                System.Windows.Application.Current.Shutdown();
             }*/
 
             // Run the solver against the generated cycle

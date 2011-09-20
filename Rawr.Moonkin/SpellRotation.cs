@@ -3,18 +3,13 @@ using System.Collections.Generic;
 
 namespace Rawr.Moonkin
 {
-    public enum DotMode { Twice, Always };
     public enum StarfallMode { Unused, LunarOnly, OnCooldown };
-    public enum MushroomMode { Unused, SolarOnly, OnCooldown };
     // Rotation information for display to the user.
     public class RotationData
     {
         #region Inputs
         public string Name { get; set; }
-        public DotMode MoonfireRefreshMode { get; set; }
-        public DotMode InsectSwarmRefreshMode { get; set; }
         public StarfallMode StarfallCastMode { get; set; }
-        public MushroomMode WildMushroomCastMode { get; set; }
         #endregion
         #region Outputs
         public float SustainedDPS = 0.0f;
@@ -74,8 +69,10 @@ namespace Rawr.Moonkin
         }
 
         // Calculate damage and casting time for a single, direct-damage spell.
-        public void DoMainNuke(CharacterCalculationsMoonkin calcs, ref Spell mainNuke, float spellPower, float spellHit, float spellCrit, float spellHaste, float latency)
+        public void DoMainNuke(CharacterCalculationsMoonkin calcs, ref Spell mainNuke, float spellPower, float spellHit, float spellCrit, float spellHaste, float naturesGraceUptime, float latency)
         {
+            float naturesGraceBonusHaste = 0.15f;
+
             float overallDamageModifier = mainNuke.AllDamageModifier * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier);
             // Add a check for the higher of the two spell schools, as Starsurge always chooses the higher one
             overallDamageModifier *= mainNuke.School == SpellSchool.Arcane ? (1 + calcs.BasicStats.BonusArcaneDamageMultiplier) :
@@ -83,11 +80,14 @@ namespace Rawr.Moonkin
                 (1 + (calcs.BasicStats.BonusArcaneDamageMultiplier > calcs.BasicStats.BonusNatureDamageMultiplier ? calcs.BasicStats.BonusArcaneDamageMultiplier : calcs.BasicStats.BonusNatureDamageMultiplier)));
 
             float gcd = 1.5f / (1.0f + spellHaste);
+            float ngGcd = gcd / (1 + naturesGraceBonusHaste);
             float instantCast = (float)Math.Max(gcd, 1.0f) + latency;
+            float instantCastNG = (float)Math.Max(ngGcd, 1.0f) + latency;
 
             float totalCritChance = spellCrit + mainNuke.CriticalChanceModifier;
             float baseCastTime = (float)Math.Max(mainNuke.BaseCastTime / (1 + spellHaste), instantCast);
-            mainNuke.CastTime = baseCastTime;
+            float ngCastTime = (float)Math.Max(mainNuke.BaseCastTime / (1 + spellHaste) / (1 + naturesGraceBonusHaste), instantCastNG);
+            mainNuke.CastTime = (1 - naturesGraceUptime) * baseCastTime + naturesGraceUptime * ngCastTime;
             // Damage calculations
             float damagePerNormalHit = (mainNuke.BaseDamage + mainNuke.SpellDamageModifier * spellPower) * overallDamageModifier;
             float damagePerCrit = damagePerNormalHit * mainNuke.CriticalDamageModifier;
@@ -96,8 +96,10 @@ namespace Rawr.Moonkin
         }
 
         // Calculate damage and casting time for a damage-over-time effect.
-        public void DoDotSpell(CharacterCalculationsMoonkin calcs, ref Spell dotSpell, float spellPower, float spellHit, float spellCrit, float spellHaste, float naturesGraceBonusHaste, float naturesGraceUptime, float latency)
+        public void DoDotSpell(CharacterCalculationsMoonkin calcs, ref Spell dotSpell, float spellPower, float spellHit, float spellCrit, float spellHaste, float naturesGraceUptime, float latency)
         {
+            float naturesGraceBonusHaste = 0.15f;
+
             float schoolMultiplier = dotSpell.School == SpellSchool.Arcane ? calcs.BasicStats.BonusArcaneDamageMultiplier : calcs.BasicStats.BonusNatureDamageMultiplier;
 
             float overallDamageModifier = dotSpell.AllDamageModifier * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier) * (1 + schoolMultiplier);
@@ -212,7 +214,7 @@ namespace Rawr.Moonkin
             return avgNumBigStarsHit * averageDamagePerBigStar;
         }
 
-        private double GetInterpolatedCastTime(float actualHaste, bool use4T12Table)
+        private double GetInterpolatedCastTime(float actualHaste, bool use4T12Table, bool useGoSFTable)
         {
             // Get index and remainder for interpolation
             double r = actualHaste / 0.05;
@@ -229,15 +231,52 @@ namespace Rawr.Moonkin
             // Index the table and interpolate the remainder
             if (use4T12Table)
             {
-                return MoonkinSolver.T12RotationDurations[i] + r * (MoonkinSolver.T12RotationDurations[i + 1] - MoonkinSolver.T12RotationDurations[i]);
+                if (useGoSFTable)
+                    return MoonkinSolver.T12RotationDurationsGoSF[i] + r * (MoonkinSolver.T12RotationDurationsGoSF[i + 1] - MoonkinSolver.T12RotationDurationsGoSF[i]);
+                else
+                    return MoonkinSolver.T12RotationDurations[i] + r * (MoonkinSolver.T12RotationDurations[i + 1] - MoonkinSolver.T12RotationDurations[i]);
             }
             else
             {
-                return MoonkinSolver.BaseRotationDurations[i] + r * (MoonkinSolver.BaseRotationDurations[i + 1] - MoonkinSolver.BaseRotationDurations[i]);
+                if (useGoSFTable)
+                    return MoonkinSolver.BaseRotationDurationsGoSF[i] + r * (MoonkinSolver.BaseRotationDurationsGoSF[i + 1] - MoonkinSolver.BaseRotationDurationsGoSF[i]);
+                else
+                    return MoonkinSolver.BaseRotationDurations[i] + r * (MoonkinSolver.BaseRotationDurations[i + 1] - MoonkinSolver.BaseRotationDurations[i]);
             }
         }
 
-        private double[] GetInterpolatedCastTable(float actualHaste, bool use4T12Table)
+        private double GetInterpolatedNGUpime(float actualHaste, bool use4T12Table, bool useGoSFTable)
+        {
+            // Get index and remainder for interpolation
+            double r = actualHaste / 0.05;
+            int i = (int)r;
+            r -= i;
+
+            // If we're out of bounds, clip to the edge of the table
+            if (i + 1 >= 21)
+            {
+                i = 19;
+                r = 1;
+            }
+
+            // Index the table and interpolate the remainder
+            if (use4T12Table)
+            {
+                if (useGoSFTable)
+                    return MoonkinSolver.T12NGUptimesGoSF[i] + r * (MoonkinSolver.T12NGUptimesGoSF[i + 1] - MoonkinSolver.T12NGUptimesGoSF[i]);
+                else
+                    return MoonkinSolver.T12NGUptimes[i] + r * (MoonkinSolver.T12NGUptimes[i + 1] - MoonkinSolver.T12NGUptimes[i]);
+            }
+            else
+            {
+                if (useGoSFTable)
+                    return MoonkinSolver.BaseNGUptimesGoSF[i] + r * (MoonkinSolver.BaseNGUptimesGoSF[i + 1] - MoonkinSolver.BaseNGUptimesGoSF[i]);
+                else
+                    return MoonkinSolver.BaseNGUptimes[i] + r * (MoonkinSolver.BaseNGUptimes[i + 1] - MoonkinSolver.BaseNGUptimes[i]);
+            }
+        }
+
+        private double[] GetInterpolatedCastTable(float actualHaste, bool use4T12Table, bool useGoSFTable)
         {
             // Get index and remainder for interpolation
             double r = actualHaste / 0.05;
@@ -254,22 +293,50 @@ namespace Rawr.Moonkin
             double[] retval = new double[MoonkinSolver.CastDistributionSpells.Length];
 
             // Index the table and interpolate the remainder
-            if (use4T12Table)
+            for (int index = 0; index < MoonkinSolver.CastDistributionSpells.Length; ++index)
             {
-                for (int index = 0; index < MoonkinSolver.CastDistributionSpells.Length; ++index)
+                if (use4T12Table)
                 {
-                    retval[index] = MoonkinSolver.T12CastDistribution[i, index] + r * (MoonkinSolver.T12CastDistribution[i + 1, index] - MoonkinSolver.T12CastDistribution[i, index]);
+                    if (useGoSFTable)
+                        retval[index] = MoonkinSolver.T12CastDistributionGoSF[i, index] + r * (MoonkinSolver.T12CastDistributionGoSF[i + 1, index] - MoonkinSolver.T12CastDistributionGoSF[i, index]);
+                    else
+                        retval[index] = MoonkinSolver.T12CastDistribution[i, index] + r * (MoonkinSolver.T12CastDistribution[i + 1, index] - MoonkinSolver.T12CastDistribution[i, index]);
                 }
-            }
-            else
-            {
-                for (int index = 0; index < MoonkinSolver.CastDistributionSpells.Length; ++index)
+                else
                 {
-                    retval[index] = MoonkinSolver.CastDistribution[i, index] + r * (MoonkinSolver.CastDistribution[i + 1, index] - MoonkinSolver.CastDistribution[i, index]);
+                    if (useGoSFTable)
+                        retval[index] = MoonkinSolver.CastDistributionGoSF[i, index] + r * (MoonkinSolver.CastDistributionGoSF[i + 1, index] - MoonkinSolver.CastDistributionGoSF[i, index]);
+                    else
+                        retval[index] = MoonkinSolver.CastDistribution[i, index] + r * (MoonkinSolver.CastDistribution[i + 1, index] - MoonkinSolver.CastDistribution[i, index]);
                 }
             }
 
             return retval;
+        }
+
+        double GetPercentOfMoonfiresExtended(float actualHaste, bool use4T12Table)
+        {
+            // Get index and remainder for interpolation
+            double r = actualHaste / 0.05;
+            int i = (int)r;
+            r -= i;
+
+            // If we're out of bounds, clip to the edge of the table
+            if (i + 1 >= 21)
+            {
+                i = 19;
+                r = 1;
+            }
+
+            // Index the table and interpolate the remainder
+            if (use4T12Table)
+            {
+                return MoonkinSolver.T12PercentMoonfiresExtended[i] + r * (MoonkinSolver.T12PercentMoonfiresExtended[i + 1] - MoonkinSolver.T12PercentMoonfiresExtended[i]);
+            }
+            else
+            {
+                return MoonkinSolver.BasePercentMoonfiresExtended[i] + r * (MoonkinSolver.BasePercentMoonfiresExtended[i + 1] - MoonkinSolver.BasePercentMoonfiresExtended[i]);
+            }
         }
 
         // Perform damage and mana calculations for all spells in the given rotation.  Returns damage done over the total duration.
@@ -286,84 +353,19 @@ namespace Rawr.Moonkin
             // 4.1: The bug causing the Eclipse buff to be rounded down to the nearest percent has been fixed
             float eclipseBonus = 1 + MoonkinSolver.ECLIPSE_BASE + masteryPoints * 0.02f;
 
-            DoMainNuke(calcs, ref sf, spellPower, spellHit, spellCrit, spellHaste, latency);
-            DoMainNuke(calcs, ref ss, spellPower, spellHit, spellCrit, spellHaste, latency);
-            DoMainNuke(calcs, ref w, spellPower, spellHit, spellCrit, spellHaste, latency);
+            RotationData.NaturesGraceUptime = (float)GetInterpolatedNGUpime(spellHaste, calcs.BasicStats.BonusWrathEnergy > 0, talents.GlyphOfStarfire);
+
+            RotationData.Duration = (float)GetInterpolatedCastTime(calcs.SpellHaste, calcs.BasicStats.BonusWrathEnergy > 0, talents.GlyphOfStarfire);
+
+            double[] castDistribution = GetInterpolatedCastTable(calcs.SpellHaste, calcs.BasicStats.BonusWrathEnergy > 0, talents.GlyphOfStarfire);
+
+            double percentOfMoonfiresExtended = talents.GlyphOfStarfire ? GetPercentOfMoonfiresExtended(calcs.SpellHaste, calcs.BasicStats.BonusWrathEnergy > 0) : 0;
+
+            DoMainNuke(calcs, ref sf, spellPower, spellHit, spellCrit, spellHaste, RotationData.NaturesGraceUptime, latency);
+            DoMainNuke(calcs, ref ss, spellPower, spellHit, spellCrit, spellHaste, RotationData.NaturesGraceUptime, latency);
+            DoMainNuke(calcs, ref w, spellPower, spellHit, spellCrit, spellHaste, RotationData.NaturesGraceUptime, latency);
             double gcd = Math.Max(1, 1.5 / (1 + spellHaste)) + latency;
-
-            double baselineNukesDuration = GetInterpolatedCastTime(calcs.SpellHaste, calcs.BasicStats.BonusWrathEnergy > 0);
-
-            double[] castDistribution = GetInterpolatedCastTable(calcs.SpellHaste, calcs.BasicStats.BonusWrathEnergy > 0);
-
-            // Break the cast distribution down into its component cast counts
-            double wrathCastsBase = castDistribution[1] * baselineNukesDuration / w.CastTime;
-            double eclipseWrathCastsBase = castDistribution[5] * baselineNukesDuration / w.CastTime;
-            double nonEclipsedWrathPercentage = castDistribution[1] / (castDistribution[1] + castDistribution[5]);
-            double eclipsedWrathPercentage = castDistribution[5] / (castDistribution[1] + castDistribution[5]);
-            RotationData.WrathAvgHit = (float)(nonEclipsedWrathPercentage * w.DamagePerHit + eclipsedWrathPercentage * w.DamagePerHit * eclipseBonus);
-            RotationData.WrathAvgEnergy = w.AverageEnergy;
-            RotationData.WrathCount = (float)(wrathCastsBase + eclipseWrathCastsBase);
-            double starfireCastsBase = castDistribution[0] * baselineNukesDuration / sf.CastTime;
-            double eclipseStarfireCastsBase = castDistribution[4] * baselineNukesDuration / sf.CastTime;
-            double nonEclipsedStarfirePercentage = castDistribution[0] / (castDistribution[0] + castDistribution[4]);
-            double eclipsedStarfirePercentage = castDistribution[4] / (castDistribution[0] + castDistribution[4]);
-            RotationData.StarfireAvgHit = (float)(nonEclipsedStarfirePercentage * sf.DamagePerHit + eclipsedStarfirePercentage * sf.DamagePerHit * eclipseBonus);
-            RotationData.StarfireAvgEnergy = sf.AverageEnergy;
-            RotationData.StarfireCount = (float)(starfireCastsBase + eclipseStarfireCastsBase);
-            double starsurgeCastsBase = castDistribution[2] * baselineNukesDuration / ss.CastTime;
-            double eclipseStarsurgeCastsBase = castDistribution[6] * baselineNukesDuration / ss.CastTime;
-            double shootingStarsProcsBase = castDistribution[3] * baselineNukesDuration / gcd;
-            double eclipseShootingStarsProcsBase = castDistribution[7] * baselineNukesDuration / gcd;
-            double allStarsurgePercentage = castDistribution[2] + castDistribution[6] + castDistribution[3] + castDistribution[7];
-            double nonEclipsedStarsurgePercentage = (castDistribution[2] + castDistribution[3]) / allStarsurgePercentage;
-            double eclipsedStarsurgePercentage = (castDistribution[6] + castDistribution[7]) / allStarsurgePercentage;
-            RotationData.StarSurgeAvgHit = (float)(nonEclipsedStarsurgePercentage * ss.DamagePerHit + eclipsedStarsurgePercentage * ss.DamagePerHit * eclipseBonus);
-            RotationData.StarSurgeAvgEnergy = ss.AverageEnergy;
-            RotationData.StarSurgeCount = (float)(starsurgeCastsBase + eclipseStarsurgeCastsBase + shootingStarsProcsBase + eclipseShootingStarsProcsBase);
-
-            double wrathNGCast = Math.Max(1, (w.CastTime - latency) / (1 + 0.05 * talents.NaturesGrace)) + latency;
-            double sfNGCast = Math.Max(1, (sf.CastTime - latency) / (1 + 0.05 * talents.NaturesGrace)) + latency;
-            double ssNGCast = Math.Max(1, (ss.CastTime - latency) / (1 + 0.05 * talents.NaturesGrace)) + latency;
             double ngGcd = Math.Max(1, 1.5 / (1 + spellHaste) / (1 + 0.05 * talents.NaturesGrace)) + latency;
-
-            double wrathCastsUnderNG = Math.Ceiling(15 - gcd - ngGcd / wrathNGCast);
-            double starfireCastsUnderNG = Math.Ceiling(15 - gcd - ngGcd / sfNGCast);
-            double wrathNGReduction = wrathCastsUnderNG * (w.CastTime - wrathNGCast);
-            double starfireNGReduction = starfireCastsUnderNG * (sf.CastTime - sfNGCast);
-
-            w.CastTime = (float)((wrathCastsUnderNG / (wrathCastsBase + eclipseWrathCastsBase)) * wrathNGCast +
-                         (1 - wrathCastsUnderNG / (wrathCastsBase + eclipseWrathCastsBase)) * w.CastTime);
-            sf.CastTime = (float)((starfireCastsUnderNG / (starfireCastsBase + eclipseStarfireCastsBase)) * sfNGCast +
-                         (1 - starfireCastsUnderNG / (starfireCastsBase + eclipseStarfireCastsBase)) * sf.CastTime);
-
-            // First-order estimate of NG uptime for Starsurge
-            double starsurgeCastsUnderNG = (30 / (baselineNukesDuration - wrathNGReduction - starfireNGReduction)) * (eclipseStarsurgeCastsBase + starsurgeCastsBase);
-            double shootingStarsProcsUnderNG = (30 / (baselineNukesDuration - wrathNGReduction - starfireNGReduction)) * (shootingStarsProcsBase + eclipseShootingStarsProcsBase);
-            double starsurgeNGReduction = starsurgeCastsUnderNG * (ss.CastTime - ssNGCast);
-            double shootingStarsNGReduction = shootingStarsProcsUnderNG * (gcd - ngGcd);
-            float ssCastTime = (float)((starsurgeCastsUnderNG / (starsurgeCastsBase + shootingStarsProcsBase + eclipseStarsurgeCastsBase + eclipseShootingStarsProcsBase)) * ssNGCast +
-                (shootingStarsProcsUnderNG / (starsurgeCastsBase + shootingStarsProcsBase + eclipseStarsurgeCastsBase + eclipseShootingStarsProcsBase)) * ngGcd +
-                ((starsurgeCastsBase + eclipseStarsurgeCastsBase - starsurgeCastsUnderNG) / (starsurgeCastsBase + shootingStarsProcsBase + eclipseStarsurgeCastsBase + eclipseShootingStarsProcsBase)) * ss.CastTime +
-                ((shootingStarsProcsBase + eclipseShootingStarsProcsBase - shootingStarsProcsUnderNG) / (starsurgeCastsBase + shootingStarsProcsBase + eclipseStarsurgeCastsBase + eclipseShootingStarsProcsBase)) * gcd);
-
-            ss.CastTime = ssCastTime;
-
-            RotationData.StarfireAvgCast = sf.CastTime;
-            RotationData.WrathAvgCast = w.CastTime;
-            RotationData.StarSurgeAvgCast = ss.CastTime;
-
-            double NaturesGraceShortening = wrathNGReduction + starfireNGReduction + starsurgeNGReduction + shootingStarsNGReduction;
-
-            double mainNukeDuration = baselineNukesDuration - NaturesGraceShortening;
-
-            if (calcs.BasicStats.DragonwrathProc > 0) mainNukeDuration /= (1 + MoonkinSolver.DRAGONWRATH_PROC_RATE);
-
-            RotationData.NaturesGraceUptime = (float)((30 - 2 * gcd) / (mainNukeDuration + 2 * ngGcd));
-
-            RotationData.AverageInstantCast = (float)(gcd * (1 - RotationData.NaturesGraceUptime) + ngGcd * RotationData.NaturesGraceUptime);
-
-            RotationData.LunarUptime = (float)(castDistribution[4] + 0.5 * castDistribution[6] + 0.5 * castDistribution[7]);
-            RotationData.SolarUptime = (float)(castDistribution[5] + 0.5 * castDistribution[6] + 0.5 * castDistribution[7]);
 
             // Moonfire related local variables
             float mfBaseDur, mfMeanDur, mfMaxDur, mfMeanMaxDur, mfTicks, mfMaxTicks;
@@ -371,11 +373,10 @@ namespace Rawr.Moonkin
             mfMaxDur = mfBaseDur + (talents.GlyphOfStarfire ? 9f : 0f);
 
             // Determine Nature's Grace uptime against Moonfire
-            // The expression for DotMode.Always is approximate
-            float mfNGUptime = RotationData.MoonfireRefreshMode == DotMode.Always ? (float)Math.Min(2 * mfMaxDur / (mainNukeDuration + 2 * gcd), 1) : (RotationData.MoonfireRefreshMode == DotMode.Twice ? (talents.GlyphOfStarfire ? RotationData.NaturesGraceUptime : 1f) : 0f);
-            DoDotSpell(calcs, ref mf, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, mfNGUptime, latency);
+            float mfNGUptime = (float)Math.Min(2 * mfMaxDur / RotationData.Duration, 1);
+            DoDotSpell(calcs, ref mf, spellPower, spellHit, spellCrit, spellHaste, mfNGUptime, latency);
             // Insect Swarm never benefits from Nature's Grace
-            DoDotSpell(calcs, ref iSw, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, 0, latency);
+            DoDotSpell(calcs, ref iSw, spellPower, spellHit, spellCrit, spellHaste, 0, latency);
 
             mfTicks = mf.DotEffect.NumberOfTicks;
             mfMaxTicks = mfTicks + (talents.GlyphOfStarfire ? 6 : 0);
@@ -385,29 +386,73 @@ namespace Rawr.Moonkin
             RotationData.MoonfireAvgCast = mf.CastTime;
             RotationData.InsectSwarmAvgCast = iSw.CastTime;
 
-            float insectSwarmRatio = RotationData.InsectSwarmRefreshMode == DotMode.Always ? iSw.CastTime / iSw.DotEffect.Duration : 0f;
-            float insectSwarmTime = RotationData.InsectSwarmRefreshMode == DotMode.Twice ? 2 * iSw.CastTime : 0;
+            // Break the cast distribution down into its component cast counts
+            double wrathCasts = castDistribution[1] * RotationData.Duration / w.CastTime;
+            double eclipseWrathCasts = castDistribution[5] * RotationData.Duration / w.CastTime;
+            double nonEclipsedWrathPercentage = castDistribution[1] / (castDistribution[1] + castDistribution[5]);
+            double eclipsedWrathPercentage = castDistribution[5] / (castDistribution[1] + castDistribution[5]);
+            RotationData.WrathAvgHit = (float)(nonEclipsedWrathPercentage * w.DamagePerHit + eclipsedWrathPercentage * w.DamagePerHit * eclipseBonus);
+            RotationData.WrathAvgEnergy = w.AverageEnergy;
+            RotationData.WrathCount = (float)(wrathCasts + eclipseWrathCasts);
+            double starfireCasts = castDistribution[0] * RotationData.Duration / sf.CastTime;
+            double eclipseStarfireCasts = castDistribution[4] * RotationData.Duration / sf.CastTime;
+            double nonEclipsedStarfirePercentage = castDistribution[0] / (castDistribution[0] + castDistribution[4]);
+            double eclipsedStarfirePercentage = castDistribution[4] / (castDistribution[0] + castDistribution[4]);
+            RotationData.StarfireAvgHit = (float)(nonEclipsedStarfirePercentage * sf.DamagePerHit + eclipsedStarfirePercentage * sf.DamagePerHit * eclipseBonus);
+            RotationData.StarfireAvgEnergy = sf.AverageEnergy;
+            RotationData.StarfireCount = (float)(starfireCasts + eclipseStarfireCasts);
+            double starsurgeCasts = castDistribution[2] * RotationData.Duration / ss.CastTime;
+            double eclipseStarsurgeCasts = castDistribution[6] * RotationData.Duration / ss.CastTime;
+            double shootingStarsProcs = castDistribution[3] * RotationData.Duration / gcd;
+            double eclipseShootingStarsProcs = castDistribution[7] * RotationData.Duration / gcd;
+            double allStarsurgePercentage = castDistribution[2] + castDistribution[6] + castDistribution[3] + castDistribution[7];
+            double nonEclipsedStarsurgePercentage = (castDistribution[2] + castDistribution[3]) / allStarsurgePercentage;
+            double eclipsedStarsurgePercentage = (castDistribution[6] + castDistribution[7]) / allStarsurgePercentage;
+            RotationData.StarSurgeAvgHit = (float)(nonEclipsedStarsurgePercentage * ss.DamagePerHit + eclipsedStarsurgePercentage * ss.DamagePerHit * eclipseBonus);
+            RotationData.StarSurgeAvgEnergy = ss.AverageEnergy;
+            RotationData.StarSurgeCount = (float)(starsurgeCasts + eclipseStarsurgeCasts + shootingStarsProcs + eclipseShootingStarsProcs);
+            double moonfireCasts = castDistribution[8] * RotationData.Duration / mf.CastTime;
+            double eclipsedMoonfireCasts = castDistribution[10] * RotationData.Duration / mf.CastTime;
+            double nonEclipsedMoonfirePercentage = castDistribution[8] / (castDistribution[8] + castDistribution[10]);
+            double eclipsedMoonfirePercentage = castDistribution[10] / (castDistribution[8] + castDistribution[10]);
+            RotationData.MoonfireCasts = (float)(moonfireCasts + eclipsedMoonfireCasts);
+            double insectSwarmCasts = castDistribution[9] * RotationData.Duration / iSw.CastTime;
+            double eclipsedInsectSwarmCasts = castDistribution[11] * RotationData.Duration / iSw.CastTime;
+            double nonEclipsedInsectSwarmPercentage = castDistribution[9] / (castDistribution[9] + castDistribution[11]);
+            double eclipsedInsectSwarmPercentage = castDistribution[11] / (castDistribution[9] + castDistribution[11]);
+            RotationData.InsectSwarmCasts = (float)(insectSwarmCasts + eclipsedInsectSwarmCasts);
 
-            float moonfireTime = RotationData.MoonfireRefreshMode == DotMode.Twice ? 2 * mf.CastTime : 0f;
-            float moonfireRatio = RotationData.MoonfireRefreshMode == DotMode.Always ? mf.CastTime / mfMeanMaxDur : 0f;
+            double unextendedMoonfireAverage = nonEclipsedMoonfirePercentage * (mf.DamagePerHit + mf.DotEffect.DamagePerHit) +
+                eclipsedMoonfirePercentage * (mf.DamagePerHit + mf.DotEffect.DamagePerHit) * eclipseBonus;
+            double mfExtendedDotDamage = mfMaxTicks * (mf.DotEffect.DamagePerHit / mf.DotEffect.NumberOfTicks);
+            double extendedMoonfireAverage = nonEclipsedMoonfirePercentage * (mf.DamagePerHit + mfExtendedDotDamage) +
+                eclipsedMoonfirePercentage * (mf.DamagePerHit + mfExtendedDotDamage) * eclipseBonus;
 
-            float mushroomPlantTime = 3f;
-            float detonateCooldown = 10f;
-            float starfallReduction = (float)(starsurgeCastsBase + shootingStarsProcsBase + eclipseStarsurgeCastsBase + eclipseShootingStarsProcsBase) * 5f;
+            RotationData.MoonfireTicks = (float)(percentOfMoonfiresExtended * mfMaxTicks + (1 - percentOfMoonfiresExtended) * mfTicks);
+            RotationData.MoonfireDuration = (float)(percentOfMoonfiresExtended * mfMeanDur + (1 - percentOfMoonfiresExtended) * mfMeanMaxDur);
+            RotationData.MoonfireAvgHit = (float)(percentOfMoonfiresExtended * extendedMoonfireAverage + (1 - percentOfMoonfiresExtended) * unextendedMoonfireAverage);
+
+            RotationData.InsectSwarmTicks = RotationData.InsectSwarmCasts * iSw.DotEffect.NumberOfTicks;
+            RotationData.InsectSwarmDuration = iSw.DotEffect.Duration;
+            RotationData.InsectSwarmAvgHit = (float)(nonEclipsedInsectSwarmPercentage * iSw.DotEffect.DamagePerHit +
+                eclipsedInsectSwarmPercentage * iSw.DotEffect.DamagePerHit * eclipseBonus);
+
+            RotationData.StarfireAvgCast = sf.CastTime;
+            RotationData.WrathAvgCast = w.CastTime;
+            RotationData.StarSurgeAvgCast = ss.CastTime;
+
+            RotationData.AverageInstantCast = (float)(gcd * (1 - RotationData.NaturesGraceUptime) + ngGcd * RotationData.NaturesGraceUptime);
+
+            RotationData.LunarUptime = (float)(castDistribution[4] + 0.5 * castDistribution[6] + 0.5 * castDistribution[7]);
+            RotationData.SolarUptime = (float)(castDistribution[5] + 0.5 * castDistribution[6] + 0.5 * castDistribution[7]);
+
+            float starfallReduction = (float)(starsurgeCasts + shootingStarsProcs + eclipseStarsurgeCasts + eclipseShootingStarsProcs) * 5f;
             float starfallCooldown = (90f - (talents.GlyphOfStarfall ? 30f : 0f)) - (talents.GlyphOfStarsurge ? starfallReduction : 0);
             float starfallRatio = talents.Starfall == 1 ?
                 (RotationData.StarfallCastMode == StarfallMode.OnCooldown ? RotationData.AverageInstantCast / (starfallCooldown + RotationData.AverageInstantCast) : 0f)
                 : 0f;
             float starfallTime = RotationData.StarfallCastMode == StarfallMode.LunarOnly ? RotationData.AverageInstantCast : 0f;
             float treantRatio = talents.ForceOfNature == 1 ? RotationData.AverageInstantCast / (180f + RotationData.AverageInstantCast) : 0;
-            float mushroomRatio = RotationData.WildMushroomCastMode == MushroomMode.OnCooldown ? mushroomPlantTime / detonateCooldown : 0f;
-            float mushroomTime = RotationData.WildMushroomCastMode == MushroomMode.SolarOnly ? (float)mainNukeDuration * RotationData.SolarUptime / detonateCooldown * mushroomPlantTime : 0f;
-            float totalOnCooldownRatio = moonfireRatio + insectSwarmRatio + starfallRatio + treantRatio + mushroomRatio;
-
-            RotationData.Duration = (float)(mainNukeDuration + (RotationData.MoonfireRefreshMode == DotMode.Twice ? moonfireTime : 0f) +
-                (RotationData.InsectSwarmRefreshMode == DotMode.Twice ? insectSwarmTime : 0f) +
-                (RotationData.StarfallCastMode == StarfallMode.LunarOnly ? starfallTime : 0f) +
-                (RotationData.WildMushroomCastMode == MushroomMode.SolarOnly ? mushroomTime : 0f)) / (1 - totalOnCooldownRatio);
 
             float starfallBaseDamage = (talents.Starfall > 0 && RotationData.StarfallCastMode == StarfallMode.Unused) ? 0 : DoStarfallCalcs(calcs, spellPower, spellHit, spellCrit);
             starfallBaseDamage *= 1 + (talents.GlyphOfFocus ? 0.1f : 0f);
@@ -422,10 +467,6 @@ namespace Rawr.Moonkin
             // Use 2.5% crit rate based on EJ testing
             // Hard-code 4.5 casts/proc based on EJ testing
             float T122PieceBaseDamage = (0.975f * T122PieceHitDamage + 0.025f * T122PieceCritDamage) * 4.5f;
-            float mushroomBaseDamage = RotationData.WildMushroomCastMode == MushroomMode.Unused ? 0 : DoMushroomCalcs(calcs, spellPower, spellHit, spellCrit);
-            // Dragonwrath
-            mushroomBaseDamage *= 1 + (calcs.BasicStats.DragonwrathProc > 0 ? MoonkinSolver.DRAGONWRATH_PROC_RATE : 0f);
-            float mushroomEclipseDamage = mushroomBaseDamage * eclipseBonus;
 
             // Without glyph of Starsurge, you cannot fit a Starfall in every Lunar eclipse.
             // The actual result will be better than 1/2, because you will be able to cast SFall later in each Eclipse as the fight goes on,
@@ -436,43 +477,13 @@ namespace Rawr.Moonkin
             RotationData.StarfallCasts = RotationData.StarfallCastMode == StarfallMode.OnCooldown ? starfallRatio * RotationData.Duration / RotationData.AverageInstantCast
                 : (RotationData.StarfallCastMode == StarfallMode.LunarOnly ? starfallFraction : 0f);
             RotationData.TreantCasts = treantRatio * RotationData.Duration / RotationData.AverageInstantCast;
-            RotationData.MushroomCasts = RotationData.WildMushroomCastMode == MushroomMode.OnCooldown ? mushroomRatio * RotationData.Duration / mushroomPlantTime
-                : (RotationData.WildMushroomCastMode == MushroomMode.SolarOnly ? RotationData.SolarUptime * RotationData.Duration / detonateCooldown : 0f);
             RotationData.StarfallStars = 10f;
 
-            float percentOfMoonfiresExtended = 0f;
-            if (talents.GlyphOfStarfire)
-            {
-                percentOfMoonfiresExtended = RotationData.MoonfireRefreshMode == DotMode.Twice ?
-                    (RotationData.Duration / 2 - mfMeanDur) / (mfMeanMaxDur - mfMeanDur) :
-                (float)(castDistribution[4] + castDistribution[0] +
-                0.5 * castDistribution[2] + 0.5 * castDistribution[3] +
-                0.5 * castDistribution[6] + 0.5 * castDistribution[7] +
-                mfMeanDur / RotationData.Duration);
-            }
-            float unextendedMoonfireAverage = mf.DamagePerHit + mf.DotEffect.DamagePerHit;
-            float extendedMoonfireAverage = mf.DamagePerHit + (mfMaxTicks * (mf.DotEffect.DamagePerHit / mf.DotEffect.NumberOfTicks));
-            float moonfireEclipseMultiplier = 1 + (eclipseBonus - 1) * (RotationData.MoonfireRefreshMode == DotMode.Always ?
-                RotationData.LunarUptime + (talents.Sunfire > 0 ? RotationData.SolarUptime : 0f) :
-                (RotationData.MoonfireRefreshMode == DotMode.Twice ? (talents.Sunfire > 0 ? 1 : 0.5f) : 0f));
-
-            RotationData.MoonfireCasts = RotationData.MoonfireRefreshMode == DotMode.Twice ? moonfireTime / mf.CastTime : RotationData.Duration * moonfireRatio;
-            RotationData.MoonfireTicks = percentOfMoonfiresExtended * mfMaxTicks + (1 - percentOfMoonfiresExtended) * mfTicks;
-            RotationData.MoonfireDuration = percentOfMoonfiresExtended * mfMeanDur + (1 - percentOfMoonfiresExtended) * mfMeanMaxDur;
-            RotationData.MoonfireAvgHit = (percentOfMoonfiresExtended * extendedMoonfireAverage + (1 - percentOfMoonfiresExtended) * unextendedMoonfireAverage) * moonfireEclipseMultiplier;
-
-            RotationData.InsectSwarmCasts = RotationData.InsectSwarmRefreshMode == DotMode.Twice ? insectSwarmTime / iSw.CastTime : RotationData.Duration * insectSwarmRatio;
-            RotationData.InsectSwarmTicks = RotationData.InsectSwarmCasts * iSw.DotEffect.NumberOfTicks;
-            RotationData.InsectSwarmDuration = iSw.DotEffect.Duration;
-            RotationData.InsectSwarmAvgHit = iSw.DotEffect.DamagePerHit * (1 + (eclipseBonus - 1) * (RotationData.InsectSwarmRefreshMode == DotMode.Twice ? 0.5f : RotationData.SolarUptime));
+            RotationData.Duration += (RotationData.TreantCasts * RotationData.AverageInstantCast + RotationData.StarfallCasts * RotationData.AverageInstantCast);
 
             RotationData.StarfallDamage = RotationData.StarfallCastMode == StarfallMode.OnCooldown ?
                 RotationData.LunarUptime * starfallEclipseDamage + (1 - RotationData.LunarUptime) * starfallBaseDamage :
                 starfallEclipseDamage;
-
-            RotationData.MushroomDamage = RotationData.WildMushroomCastMode == MushroomMode.OnCooldown ?
-                RotationData.SolarUptime * mushroomEclipseDamage + (1 - RotationData.SolarUptime) * mushroomBaseDamage :
-                mushroomEclipseDamage;
 
             float starSurgeDamage = RotationData.StarSurgeAvgHit * RotationData.StarSurgeCount;
 
@@ -482,7 +493,6 @@ namespace Rawr.Moonkin
             // Calculate total damage done for external cooldowns per rotation
             float starfallDamage = RotationData.StarfallDamage * RotationData.StarfallCasts;
             float treantDamage = RotationData.TreantDamage * RotationData.TreantCasts;
-            float mushroomDamage = RotationData.MushroomDamage * RotationData.MushroomCasts;
             float T122PieceDamage = 0f;
             if (calcs.BasicStats.ContainsSpecialEffect(se => se.Trigger == Trigger.MageNukeCast))
             {
@@ -495,13 +505,11 @@ namespace Rawr.Moonkin
             // Calculate mana cost per cast.
             // Starfall - 35% of base mana
             float starfallManaCost = (int)(0.35f * MoonkinSolver.BaseMana) - calcs.BasicStats.SpellsManaCostReduction - calcs.BasicStats.NatureSpellsManaCostReduction;
-            // Wild Mushroom - 3x 11% of base mana
-            float mushroomManaCost = (int)(0.33f * MoonkinSolver.BaseMana) - calcs.BasicStats.SpellsManaCostReduction - calcs.BasicStats.NatureSpellsManaCostReduction;
             // Force of Nature - 12% of base mana
             float treantManaCost = (int)(0.12f * MoonkinSolver.BaseMana) - calcs.BasicStats.SpellsManaCostReduction - calcs.BasicStats.NatureSpellsManaCostReduction;
 
             RotationData.CastCount = RotationData.WrathCount + RotationData.StarfireCount + RotationData.StarSurgeCount +
-                RotationData.MoonfireCasts + RotationData.InsectSwarmCasts + RotationData.StarfallCasts + RotationData.MushroomCasts + RotationData.TreantCasts;
+                RotationData.MoonfireCasts + RotationData.InsectSwarmCasts + RotationData.StarfallCasts + RotationData.TreantCasts;
             RotationData.DotTicks = RotationData.InsectSwarmTicks + RotationData.MoonfireTicks;
             RotationData.ManaUsed = RotationData.WrathCount * w.BaseManaCost +
                 RotationData.StarfireCount * sf.BaseManaCost +
@@ -509,7 +517,6 @@ namespace Rawr.Moonkin
                 RotationData.MoonfireCasts * mf.BaseManaCost +
                 RotationData.InsectSwarmCasts * iSw.BaseManaCost +
                 RotationData.StarfallCasts * starfallManaCost +
-                RotationData.MushroomCasts * mushroomManaCost +
                 RotationData.TreantCasts * treantManaCost;
 
             float manaSavingsFromOOC = MoonkinSolver.OOC_PROC_CHANCE * (RotationData.MoonfireCasts / RotationData.CastCount * mf.BaseManaCost) +
@@ -517,8 +524,7 @@ namespace Rawr.Moonkin
                 MoonkinSolver.OOC_PROC_CHANCE * (RotationData.StarfireCount / RotationData.CastCount * sf.BaseManaCost) +
                 MoonkinSolver.OOC_PROC_CHANCE * (RotationData.WrathCount / RotationData.CastCount * w.BaseManaCost) +
                 MoonkinSolver.OOC_PROC_CHANCE * (RotationData.StarSurgeCount / RotationData.CastCount * ss.BaseManaCost) +
-                MoonkinSolver.OOC_PROC_CHANCE * (RotationData.StarfallCasts / RotationData.CastCount * starfallManaCost) +
-                MoonkinSolver.OOC_PROC_CHANCE * (RotationData.MushroomCasts / RotationData.CastCount * mushroomManaCost);
+                MoonkinSolver.OOC_PROC_CHANCE * (RotationData.StarfallCasts / RotationData.CastCount * starfallManaCost);
 
             RotationData.ManaUsed -= manaSavingsFromOOC;
 
@@ -527,7 +533,7 @@ namespace Rawr.Moonkin
             return RotationData.WrathAvgHit * RotationData.WrathCount +
                 RotationData.StarfireAvgHit * RotationData.StarfireCount +
                 RotationData.StarSurgeAvgHit * RotationData.StarSurgeCount +
-                moonfireDamage + insectSwarmDamage + starSurgeDamage + treantDamage + starfallDamage + mushroomDamage + T122PieceDamage;
+                moonfireDamage + insectSwarmDamage + starSurgeDamage + treantDamage + starfallDamage + T122PieceDamage;
         }
     }
 }
