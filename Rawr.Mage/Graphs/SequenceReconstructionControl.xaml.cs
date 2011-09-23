@@ -283,7 +283,7 @@ namespace Rawr.Mage.Graphs
                     CastingState state = sequence[i].CastingState;
                     if (cycle != null)
                     {
-                        float dps = (float)cycle.GetDamagePerSecond(state.ManaAdeptBonus);
+                        float dps = (float)cycle.GetDamagePerSecond(state.ManaAdeptBonus, 1);
                         if (dps > maxDps) maxDps = dps;
                     }
                     float mps = (float)sequence[i].Mps;
@@ -510,7 +510,7 @@ namespace Rawr.Mage.Graphs
                                 DateTime timet = baseTime + TimeSpan.FromSeconds(time + 0.1f * t * duration);
                                 if (cycle != null)
                                 {
-                                    dps = (float)cycle.GetDamagePerSecond((float)(calculations.ManaAdeptBonus * GetManaAtTime(manaList, timet) / maxMana));
+                                    dps = (float)cycle.GetDamagePerSecond(calculations.ManaAdeptBonus, GetManaAtTime(manaList, timet) / maxMana);
                                 }
                                 // apply state multipliers
                                 if (calculationOptions.DisplaySegmentCooldowns)

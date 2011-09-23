@@ -388,7 +388,7 @@ namespace Rawr.Mage
             }
         }
 
-        public double GetDamagePerSecond(double manaAdeptBonus)
+        public double GetDamagePerSecond(double manaAdeptBonus, double manaPercent)
         {
             CalculateEffects();
 
@@ -400,7 +400,7 @@ namespace Rawr.Mage
                 manaAdeptBonus += 0.015f * effectMasteryRating / 14 * CastingState.CalculationOptions.LevelScalingFactor;
             }
 
-            return (damagePerSecond + effectDamagePerSecondSpell) * (1 + manaAdeptBonus * effectManaAdeptMultiplier) + effectDamagePerSecondProc;
+            return (damagePerSecond + effectDamagePerSecondSpell) * (1 + manaPercent * manaAdeptBonus * effectManaAdeptMultiplier) + effectDamagePerSecondProc;
         }
 
         public double GetQuadraticSpellDPS()

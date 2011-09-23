@@ -29,6 +29,13 @@ namespace Rawr.Mage
         public double MaximumStackingDuration;
     }
 
+    public class CooldownOffset
+    {
+        public StandardEffect Effect {get;set;}
+        public string Name {get;set;}
+        public double Offset {get;set;}
+    }
+
     [GenerateSerializer]
     public sealed class CalculationOptionsMage : ICalculationOptionBase, INotifyPropertyChanged, ICharacterCalculationOptions
     {
@@ -1005,6 +1012,7 @@ namespace Rawr.Mage
             IncrementalSetManaSegment = null;
             IncrementalSetVariableType = null;
             CooldownRestrictionList = null;
+            CooldownOffsetList = null;
         }
 
         private bool _ReconstructSequence;
@@ -1134,6 +1142,16 @@ namespace Rawr.Mage
         }
 
         public Encounter Encounter { get; set; }*/
+
+        [XmlIgnore]
+        public List<CooldownOffset> CooldownOffsetList;
+
+        private string _CooldownOffset;
+        public string CooldownOffset
+        {
+            get { return _CooldownOffset; }
+            set { _CooldownOffset = value; OnPropertyChanged("CooldownOffset"); }
+        }
 
         [XmlIgnore]
         public List<CooldownRestriction> CooldownRestrictionList;

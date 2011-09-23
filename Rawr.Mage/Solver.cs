@@ -2143,10 +2143,13 @@ namespace Rawr.Mage
                 ConstructCombStateList();
 
                 // simplify mana constraints
-                for (int i = 0; i < combStateList.Count; i++)
+                if (CalculationOptions.ArcaneLight || CalculationOptions.DisableManaRegenCycles)
                 {
-                    combStateList[i].OverflowConstraint = ((combStateList[i].CastingState.Evocation && (i == combStateList.Count - 1 || !combStateList[i + 1].CastingState.Evocation)) || (i > 0 && combStateList[i].CastingState.ManaGemEffect && !combStateList[i - 1].CastingState.ManaGemEffect)) ? 0 : -1;
-                    combStateList[i].UnderflowConstraint = (!combStateList[i].CastingState.Evocation && i < combStateList.Count - 1 && combStateList[i + 1].CastingState.Evocation) ? 0 : -1;
+                    for (int i = 0; i < combStateList.Count; i++)
+                    {
+                        combStateList[i].OverflowConstraint = ((combStateList[i].CastingState.Evocation && (i == combStateList.Count - 1 || !combStateList[i + 1].CastingState.Evocation)) || (i > 0 && combStateList[i].CastingState.ManaGemEffect && !combStateList[i - 1].CastingState.ManaGemEffect)) ? 0 : -1;
+                        combStateList[i].UnderflowConstraint = (!combStateList[i].CastingState.Evocation && i < combStateList.Count - 1 && combStateList[i + 1].CastingState.Evocation) ? 0 : -1;
+                    }
                 }
 
                 SolveBasicProblem();
@@ -6460,6 +6463,91 @@ namespace Rawr.Mage
                         }
                     }
                 }
+
+                if (!string.IsNullOrEmpty(CalculationOptions.CooldownOffset))
+                {
+                    if (CalculationOptions.CooldownOffsetList == null)
+                    {
+                        List<CooldownOffset> list = new List<CooldownOffset>();
+                        var split = CalculationOptions.CooldownOffset.Split(',');
+                        foreach (var e in split)
+                        {
+                            var tokens = e.Split('=');
+                            if (tokens.Length == 2)
+                            {
+                                list.Add(new CooldownOffset() { Name = tokens[0].Trim(), Offset = double.Parse(tokens[1].Trim(), System.Globalization.CultureInfo.InvariantCulture) });
+                            }
+                        }
+                        CalculationOptions.CooldownOffsetList = list;
+                    }
+
+                    foreach (var offset in CalculationOptions.CooldownOffsetList)
+                    {
+                        int activation = -1;
+                        if (offset.Effect != StandardEffect.None)
+                        {
+                            for (int i = 0; i < combList.Count; i++)
+                            {
+                                if (combList[i].Activation && CooldownList[combList[i].Cooldown].StandardEffect == offset.Effect)
+                                {
+                                    activation = i;
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            for (int i = 0; i < combList.Count; i++)
+                            {
+                                var c = CooldownList[combList[i].Cooldown];
+                                if (combList[i].Activation && c.Name == offset.Name)
+                                {
+                                    activation = i;
+                                    if (c.StandardEffect != StandardEffect.None)
+                                    {
+                                        offset.Effect = c.StandardEffect;
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                        if (activation >= 0)
+                        {
+                            int minSeg = 0;
+                            int maxSeg = combList[activation].StateIndex - 1;
+                            int ccCount = rowCombinatorialConstraintCount;
+                            if (ccCount >= rowCombinatorialConstraint.Length)
+                            {
+                                CombinatorialConstraint[] newArr = new CombinatorialConstraint[rowCombinatorialConstraint.Length * 2];
+                                Array.Copy(rowCombinatorialConstraint, 0, newArr, 0, ccCount);
+                                rowCombinatorialConstraint = newArr;
+                            }
+                            CombinatorialConstraint[] arr = rowCombinatorialConstraint;
+                            int ccRow;
+                            for (ccRow = 0; ccRow < ccCount; ccRow++)
+                            {
+                                if (arr[ccRow].MinSegment == minSeg && arr[ccRow].MaxSegment == maxSeg)
+                                {
+                                    break;
+                                }
+                            }
+                            if (ccRow == ccCount)
+                            {
+                                arr[ccCount].Row = rowCount++;
+                                arr[ccCount].MinSegment = minSeg;
+                                arr[ccCount].MaxSegment = maxSeg;
+                                arr[ccCount].MinTime = offset.Offset;
+                                arr[ccCount].MaxTime = CalculationOptions.FightDuration;
+                                rowCombinatorialConstraintCount = ccCount + 1;
+                            }
+                            else
+                            {
+                                arr[ccRow].MinTime = Math.Max(arr[ccRow].MinTime, offset.Offset);
+                                arr[ccRow].MaxTime = Math.Min(arr[ccRow].MaxTime, CalculationOptions.FightDuration);
+                            }
+                        }
+                    }
+                }
             }
 
             //rowManaPotionManaGem = rowCount++;
@@ -6864,7 +6952,7 @@ namespace Rawr.Mage
             //lp[rowManaPotionManaGem, index] = (statsList[buffset].FlameCap ? 1 : 0) + (statsList[buffset].DestructionPotion ? 40.0 / 15.0 : 0);
             if (needsQuadratic)
             {
-                double dps = cycle.GetDamagePerSecond(state.ManaAdeptBonus);
+                double dps = cycle.GetDamagePerSecond(state.ManaAdeptBonus, StartingMana / BaseStats.Mana);
                 lp.SetElementUnsafe(rowTargetDamage, column, -dps * multiplier);
                 lp.SetCostUnsafe(column, minimizeTime ? -1 : dps * multiplier);
                 lp.SetSpellDpsUnsafe(column, cycle.GetQuadraticSpellDPS() * multiplier);

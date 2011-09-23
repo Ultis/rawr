@@ -8,7 +8,7 @@
     mc:Ignorable="d" xmlns:System="clr-namespace:System;assembly=mscorlib"
     xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
     x:Class="Rawr.Mage.CalculationOptionsPanelMage" 
-	d:DesignWidth="330" d:DesignHeight="600"
+	d:DesignWidth="330" d:DesignHeight="700"
     Width="Auto" Height="Auto" Loaded="UserControl_Loaded">
     <UserControl.Resources>
         <local:CalculationOptionsMage x:Key="CalculationOptionsMageDataSource" d:IsDataSource="True"/>
@@ -518,6 +518,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.6*" />
@@ -549,9 +550,10 @@
                     <TextBlock Grid.Column="0" Grid.Row="22" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Genetic Solver: *" TextWrapping="Wrap" ToolTipService.ToolTip="Similar to Combinatorial Solver, except using genetic algorithm instead of exhaustive search." />
                     <TextBlock Grid.Column="0" Grid.Row="23" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Genetic Thorougness: *" TextWrapping="Wrap" ToolTipService.ToolTip="Thorougness for Genetic Solver." />
                     <TextBlock Grid.Column="0" Grid.Row="24" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Fixed Ordering: *" TextWrapping="Wrap" ToolTipService.ToolTip="A fixed activation ordering as used by combinatorial solver, mainly used for debugging. A comma separated list of cooldown indexes as seen in combinatorial solver logs." />
-                    <TextBlock Grid.Column="0" Grid.Row="25" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Additional Segment Splits: *" TextWrapping="Wrap" ToolTipService.ToolTip="A comma-separated list of segment splits in seconds, useful in combination with debug segmentation." />
-                    <TextBlock Grid.Column="0" Grid.Row="26" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Lower Bound Hint: *" TextWrapping="Wrap" ToolTipService.ToolTip="A lower bound supplied to guide depth-first and hybrid search, if you use this make sure it is an actual lower bound." />
-                    <TextBlock Grid.Column="0" Grid.Row="27" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Max Redecompose: *" TextWrapping="Wrap" ToolTipService.ToolTip="Maximum number of solver iterations before redecomposing the basis. Lowering this value might improve stability of the advanced solver if you're having problems." />
+                    <TextBlock Grid.Column="0" Grid.Row="25" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Cooldown Offset: *" TextWrapping="Wrap" ToolTipService.ToolTip="Initial offset for cooldowns in a comma separated list (for example Arcane Power=40,Improved Mana Gem=20). Only applies to genetic solver currently." />
+                    <TextBlock Grid.Column="0" Grid.Row="26" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Additional Segment Splits: *" TextWrapping="Wrap" ToolTipService.ToolTip="A comma-separated list of segment splits in seconds, useful in combination with debug segmentation." />
+                    <TextBlock Grid.Column="0" Grid.Row="27" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Lower Bound Hint: *" TextWrapping="Wrap" ToolTipService.ToolTip="A lower bound supplied to guide depth-first and hybrid search, if you use this make sure it is an actual lower bound." />
+                    <TextBlock Grid.Column="0" Grid.Row="28" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Max Redecompose: *" TextWrapping="Wrap" ToolTipService.ToolTip="Maximum number of solver iterations before redecomposing the basis. Lowering this value might improve stability of the advanced solver if you're having problems." />
                     <CheckBox Grid.Column="2" Grid.Row="1" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=IncrementalOptimizations, UpdateSourceTrigger=Default}" />
                     <CheckBox Grid.Column="2" Grid.Row="2" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=ForceIncrementalOptimizations, UpdateSourceTrigger=Default}" />
                     <CheckBox Grid.Column="2" Grid.Row="3" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=ReconstructSequence, UpdateSourceTrigger=Default}" d:LayoutOverrides="Height, VerticalMargin" />
@@ -571,9 +573,10 @@
                     </ComboBox>
                     <TextBox Grid.Column="1" Grid.Row="23" Height="20" Margin="0,2,0,2" Text="{Binding Mode=TwoWay, Path=GeneticThoroughness, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.ColumnSpan="2" />
                     <TextBox Grid.Column="1" Grid.Row="24" Height="20" Margin="0,2,0,2" Text="{Binding Mode=TwoWay, Path=CombinatorialFixedOrdering, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.ColumnSpan="2" />
-                    <TextBox Grid.Column="1" Grid.Row="25" Height="20" Margin="0,2,0,2" Text="{Binding Mode=TwoWay, Path=AdditionalSegmentSplits, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.ColumnSpan="2" />
-                    <TextBox Grid.Column="1" Grid.Row="26" Height="20" Margin="0,2,0,2" Text="{Binding Mode=TwoWay, Path=LowerBoundHint, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.ColumnSpan="2" />
-                    <TextBox Grid.Column="1" Grid.Row="27" Height="20" Margin="0,2,0,2" Text="{Binding Mode=TwoWay, Path=MaxRedecompose, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.ColumnSpan="2" />
+                    <TextBox Grid.Column="1" Grid.Row="25" Height="20" Margin="0,2,0,2" Text="{Binding Mode=TwoWay, Path=CooldownOffset, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.ColumnSpan="2" />
+                    <TextBox Grid.Column="1" Grid.Row="26" Height="20" Margin="0,2,0,2" Text="{Binding Mode=TwoWay, Path=AdditionalSegmentSplits, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.ColumnSpan="2" />
+                    <TextBox Grid.Column="1" Grid.Row="27" Height="20" Margin="0,2,0,2" Text="{Binding Mode=TwoWay, Path=LowerBoundHint, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.ColumnSpan="2" />
+                    <TextBox Grid.Column="1" Grid.Row="28" Height="20" Margin="0,2,0,2" Text="{Binding Mode=TwoWay, Path=MaxRedecompose, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.ColumnSpan="2" />
                     <CheckBox Grid.Column="2" Grid.Row="0" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=SmartOptimization, UpdateSourceTrigger=Default}" />
                     <TextBox Grid.Column="1" Grid.Row="11" Height="20" Margin="0,2,0,2" Text="{Binding Mode=TwoWay, Path=GlobalRestarts, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.ColumnSpan="2" />
                     <TextBox Grid.Column="1" Grid.Row="12" Height="20" Margin="0,2,0,2" Text="{Binding Mode=TwoWay, Path=MaxHeapLimit, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.ColumnSpan="2" />
