@@ -834,7 +834,7 @@ namespace Rawr.Mage
                     if (effect.Stats.FireSummonedDamage > 0)
                     {
                         boltDps = CastingState.FireSummonedAverageDamage * effect.Stats.FireSummonedDamage * effectsPerSecond;
-                        name = "Holy Damage";
+                        name = "Fire Damage";
                     }
                     if (!dict.TryGetValue(name, out contrib))
                     {
