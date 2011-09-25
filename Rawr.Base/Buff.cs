@@ -2879,6 +2879,30 @@ namespace Rawr
             });
             #endregion
             #endregion
+            #region Tier 13 | Deep Earth
+            #region Regalia (Balance)
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Deep Earth Regalia 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = new Stats() { },
+                SetName = "Deep Earth Regalia",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Deep Earth Regalia 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = new Stats() { },
+                SetName = "Deep Earth Regalia",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+            });
+            #endregion
+            #endregion
             #endregion
             #region PvP
             #region Gladiator's Wildhide (Balance)

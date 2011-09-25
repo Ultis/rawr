@@ -13,11 +13,11 @@ namespace Rawr.Moonkin
 {
     public class StatsMoonkin : Stats
     {
-        public float EclipseBonus { get; set; }
         public float BonusCritChanceInsectSwarm { get; set; }
         public float BonusCritChanceMoonfire { get; set; }
-        public float T122PieceSummonChance { get; set; }
         public float BonusWrathEnergy { get; set; }
         public float BonusStarfireEnergy { get; set; }
+        public float BonusNukeDamageModifier { get; set; }
+        public bool T13FourPieceActive { get; set; }
     }
 }

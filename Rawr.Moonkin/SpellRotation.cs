@@ -214,7 +214,7 @@ namespace Rawr.Moonkin
             return avgNumBigStarsHit * averageDamagePerBigStar;
         }
 
-        private double GetInterpolatedCastTime(float actualHaste, bool use4T12Table, bool useGoSFTable)
+        private double GetInterpolatedCastTime(float actualHaste, bool use4T12Table, bool use4T13Table, bool useGoSFTable)
         {
             // Get index and remainder for interpolation
             double r = actualHaste / 0.05;
@@ -236,6 +236,13 @@ namespace Rawr.Moonkin
                 else
                     return MoonkinSolver.T12RotationDurations[i] + r * (MoonkinSolver.T12RotationDurations[i + 1] - MoonkinSolver.T12RotationDurations[i]);
             }
+            else if (use4T13Table)
+            {
+                if (useGoSFTable)
+                    return MoonkinSolver.T13RotationDurationsGoSF[i] + r * (MoonkinSolver.T13RotationDurationsGoSF[i + 1] - MoonkinSolver.T13RotationDurationsGoSF[i]);
+                else
+                    return MoonkinSolver.T13RotationDurations[i] + r * (MoonkinSolver.T13RotationDurations[i + 1] - MoonkinSolver.T13RotationDurations[i]);
+            }
             else
             {
                 if (useGoSFTable)
@@ -245,7 +252,7 @@ namespace Rawr.Moonkin
             }
         }
 
-        private double GetInterpolatedNGUpime(float actualHaste, bool use4T12Table, bool useGoSFTable)
+        private double GetInterpolatedNGUpime(float actualHaste, bool use4T12Table, bool use4T13Table, bool useGoSFTable)
         {
             // Get index and remainder for interpolation
             double r = actualHaste / 0.05;
@@ -267,6 +274,13 @@ namespace Rawr.Moonkin
                 else
                     return MoonkinSolver.T12NGUptimes[i] + r * (MoonkinSolver.T12NGUptimes[i + 1] - MoonkinSolver.T12NGUptimes[i]);
             }
+            else if (use4T13Table)
+            {
+                if (useGoSFTable)
+                    return MoonkinSolver.T13NGUptimesGoSF[i] + r * (MoonkinSolver.T13NGUptimesGoSF[i + 1] - MoonkinSolver.T13NGUptimesGoSF[i]);
+                else
+                    return MoonkinSolver.T13NGUptimes[i] + r * (MoonkinSolver.T13NGUptimes[i + 1] - MoonkinSolver.T13NGUptimes[i]);
+            }
             else
             {
                 if (useGoSFTable)
@@ -276,7 +290,7 @@ namespace Rawr.Moonkin
             }
         }
 
-        private double[] GetInterpolatedCastTable(float actualHaste, bool use4T12Table, bool useGoSFTable)
+        private double[] GetInterpolatedCastTable(float actualHaste, bool use4T12Table, bool use4T13Table, bool useGoSFTable)
         {
             // Get index and remainder for interpolation
             double r = actualHaste / 0.05;
@@ -302,6 +316,13 @@ namespace Rawr.Moonkin
                     else
                         retval[index] = MoonkinSolver.T12CastDistribution[i, index] + r * (MoonkinSolver.T12CastDistribution[i + 1, index] - MoonkinSolver.T12CastDistribution[i, index]);
                 }
+                else if (use4T13Table)
+                {
+                    if (useGoSFTable)
+                        retval[index] = MoonkinSolver.T13CastDistributionGoSF[i, index] + r * (MoonkinSolver.T13CastDistributionGoSF[i + 1, index] - MoonkinSolver.T13CastDistributionGoSF[i, index]);
+                    else
+                        retval[index] = MoonkinSolver.T13CastDistribution[i, index] + r * (MoonkinSolver.T13CastDistribution[i + 1, index] - MoonkinSolver.T13CastDistribution[i, index]);
+                }
                 else
                 {
                     if (useGoSFTable)
@@ -314,7 +335,7 @@ namespace Rawr.Moonkin
             return retval;
         }
 
-        double GetPercentOfMoonfiresExtended(float actualHaste, bool use4T12Table)
+        double GetPercentOfMoonfiresExtended(float actualHaste, bool use4T12Table, bool use4T13Table)
         {
             // Get index and remainder for interpolation
             double r = actualHaste / 0.05;
@@ -332,6 +353,10 @@ namespace Rawr.Moonkin
             if (use4T12Table)
             {
                 return MoonkinSolver.T12PercentMoonfiresExtended[i] + r * (MoonkinSolver.T12PercentMoonfiresExtended[i + 1] - MoonkinSolver.T12PercentMoonfiresExtended[i]);
+            }
+            else if (use4T13Table)
+            {
+                return MoonkinSolver.T13PercentMoonfiresExtended[i] + r * (MoonkinSolver.T13PercentMoonfiresExtended[i + 1] - MoonkinSolver.T13PercentMoonfiresExtended[i]);
             }
             else
             {
@@ -353,13 +378,13 @@ namespace Rawr.Moonkin
             // 4.1: The bug causing the Eclipse buff to be rounded down to the nearest percent has been fixed
             float eclipseBonus = 1 + MoonkinSolver.ECLIPSE_BASE + masteryPoints * 0.02f;
 
-            RotationData.NaturesGraceUptime = (float)GetInterpolatedNGUpime(spellHaste, calcs.BasicStats.BonusWrathEnergy > 0, talents.GlyphOfStarfire);
+            RotationData.NaturesGraceUptime = (float)GetInterpolatedNGUpime(spellHaste, calcs.BasicStats.BonusWrathEnergy > 0, calcs.BasicStats.T13FourPieceActive, talents.GlyphOfStarfire);
 
-            RotationData.Duration = (float)GetInterpolatedCastTime(calcs.SpellHaste, calcs.BasicStats.BonusWrathEnergy > 0, talents.GlyphOfStarfire);
+            RotationData.Duration = (float)GetInterpolatedCastTime(calcs.SpellHaste, calcs.BasicStats.BonusWrathEnergy > 0, calcs.BasicStats.T13FourPieceActive, talents.GlyphOfStarfire);
 
-            double[] castDistribution = GetInterpolatedCastTable(calcs.SpellHaste, calcs.BasicStats.BonusWrathEnergy > 0, talents.GlyphOfStarfire);
+            double[] castDistribution = GetInterpolatedCastTable(calcs.SpellHaste, calcs.BasicStats.BonusWrathEnergy > 0, calcs.BasicStats.T13FourPieceActive, talents.GlyphOfStarfire);
 
-            double percentOfMoonfiresExtended = talents.GlyphOfStarfire ? GetPercentOfMoonfiresExtended(calcs.SpellHaste, calcs.BasicStats.BonusWrathEnergy > 0) : 0;
+            double percentOfMoonfiresExtended = talents.GlyphOfStarfire ? GetPercentOfMoonfiresExtended(calcs.SpellHaste, calcs.BasicStats.BonusWrathEnergy > 0, calcs.BasicStats.T13FourPieceActive) : 0;
 
             DoMainNuke(calcs, ref sf, spellPower, spellHit, spellCrit, spellHaste, RotationData.NaturesGraceUptime, latency);
             DoMainNuke(calcs, ref ss, spellPower, spellHit, spellCrit, spellHaste, RotationData.NaturesGraceUptime, latency);

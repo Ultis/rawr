@@ -14,6 +14,7 @@ namespace Rawr.Moonkin
 
         public bool HasGlyphOfStarfire { get; set; }
         public bool Has4T12 { get; set; }
+        public bool Has4T13 { get; set; }
 
         private double ShootingStarsChance = 0.04;
         private double EuphoriaChance = 0.24;
@@ -219,7 +220,7 @@ namespace Rawr.Moonkin
                     currentNGCooldown = Math.Max(0, currentNGCooldown - ssCastTime);
                     currentActionTime = ssCastTime;
                     currentShSProc = 0;
-                    eclipseEnergy = Math.Min(100, Math.Max(-100, eclipseEnergy + eclipseDirection * 15));
+                    eclipseEnergy = Math.Min(100, Math.Max(-100, eclipseEnergy + eclipseDirection * ((!inEclipse && Has4T13) ? 30 : 15)));
                     if (eclipseEnergy == -100 || eclipseEnergy == 100)
                     {
                         currentNGCooldown = 0;
@@ -245,7 +246,7 @@ namespace Rawr.Moonkin
                     currentNGTimer = Math.Max(0, currentNGTimer - ssCastTime);
                     currentNGCooldown = Math.Max(0, currentNGCooldown - ssCastTime);
                     currentActionTime = ssCastTime;
-                    eclipseEnergy = Math.Min(100, Math.Max(-100, eclipseEnergy + eclipseDirection * 15));
+                    eclipseEnergy = Math.Min(100, Math.Max(-100, eclipseEnergy + eclipseDirection * ((!inEclipse && Has4T13) ? 30 : 15)));
                     if (eclipseEnergy == -100 || eclipseEnergy == 100)
                     {
                         currentNGCooldown = 0;

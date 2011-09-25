@@ -334,7 +334,8 @@ namespace Rawr.Moonkin
 
         public override bool IsBuffRelevant(Buff buff, Character character)
         {
-            if (buff.SetName == "Stormrider's Regalia" || buff.SetName == "Obsidian Arborweave Regalia")
+            // Any "Regalia" set bonus that applies to Druids is the Balance set
+            if (!String.IsNullOrEmpty(buff.SetName) && buff.AllowedClasses.Contains(CharacterClass.Druid) && buff.SetName.EndsWith("Regalia"))
                 return true;
 
             // for buffs that are non-exclusive, allow anything that could be useful even slightly
@@ -898,7 +899,7 @@ namespace Rawr.Moonkin
             // Generate the cycles
             /*if (referenceCalculation)
             {
-                using (System.IO.StreamWriter writer = System.IO.File.CreateText("C:\\users\\Noah\\Desktop\\CastDistribution.txt"))
+                using (System.IO.StreamWriter writer = System.IO.File.CreateText("C:\\users\\nmccalment\\Desktop\\CastDistribution.txt"))
                 {
                     //MoonkinCycleGenerator generator = new MoonkinCycleGenerator
                     //{
@@ -909,9 +910,9 @@ namespace Rawr.Moonkin
                         //StarlightWrathLevel = 3
                     //};
 
-                    MoonkinSimulator generator = new MoonkinSimulator() { HasGlyphOfStarfire = true };
+                    MoonkinSimulator generator = new MoonkinSimulator() { HasGlyphOfStarfire = false, Has4T13 = true };
 
-                    writer.WriteLine("public static double[,] CastDistributionGoSF = new double[21, 12] {");
+                    writer.WriteLine("public static double[,] T13CastDistribution = new double[21, 12] {");
 
                     double[] baseRotationLengths = new double[21];
                     double[] baseNGUptimes = new double[21];
@@ -929,14 +930,14 @@ namespace Rawr.Moonkin
                         writer.WriteLine(" },");
                         baseRotationLengths[haste / 5] = generator.GetRotationLength();
                         baseNGUptimes[haste / 5] = generator.GetNGUptime();
-                        baseMFExtended[haste / 5] = generator.GetPercentMoonfiresExtended();
+                        //baseMFExtended[haste / 5] = generator.GetPercentMoonfiresExtended();
                     }
 
                     writer.WriteLine("};");
 
-                    generator.Has4T12 = true;
+                    generator.HasGlyphOfStarfire = true;
 
-                    writer.WriteLine("public static double[,] T12CastDistributionGoSF = new double[21, 12] {");
+                    writer.WriteLine("public static double[,] T13CastDistributionGoSF = new double[21, 12] {");
 
                     double[] T12RotationLengths = new double[21];
                     double[] T12NGUptimes = new double[21];
@@ -959,7 +960,7 @@ namespace Rawr.Moonkin
 
                     writer.WriteLine("};");
 
-                    writer.Write("public static double[] BaseRotationDurationsGoSF = new double[21] {");
+                    writer.Write("public static double[] T13RotationDurations = new double[21] {");
 
                     for (int i = 0; i < baseRotationLengths.Length; ++i)
                     {
@@ -968,7 +969,7 @@ namespace Rawr.Moonkin
 
                     writer.WriteLine(" };");
 
-                    writer.Write("public static double[] T12RotationDurationsGoSF = new double[21] {");
+                    writer.Write("public static double[] T13RotationDurationsGoSF = new double[21] {");
 
                     for (int i = 0; i < T12RotationLengths.Length; ++i)
                     {
@@ -977,7 +978,7 @@ namespace Rawr.Moonkin
 
                     writer.WriteLine(" };");
 
-                    writer.Write("public static double[] BaseNGUptimesGoSF = new double[21] {");
+                    writer.Write("public static double[] T13NGUptimes = new double[21] {");
 
                     for (int i = 0; i < baseNGUptimes.Length; ++i)
                     {
@@ -986,7 +987,7 @@ namespace Rawr.Moonkin
 
                     writer.WriteLine(" };");
 
-                    writer.Write("public static double[] T12NGUptimesGoSF = new double[21] {");
+                    writer.Write("public static double[] T13NGUptimesGoSF = new double[21] {");
 
                     for (int i = 0; i < T12NGUptimes.Length; ++i)
                     {
@@ -1004,7 +1005,7 @@ namespace Rawr.Moonkin
 
                     writer.WriteLine(" };");
 
-                    writer.Write("public static double[] T12PercentMoonfiresExtended = new double[21] {");
+                    writer.Write("public static double[] T13PercentMoonfiresExtended = new double[21] {");
 
                     for (int i = 0; i < T12MFExtended.Length; ++i)
                     {
@@ -1063,9 +1064,10 @@ namespace Rawr.Moonkin
             statsTotal.Accumulate(GetBuffsStats(character, calcOpts));
 
             #region Set Bonuses
-            int T11Count, T12Count;
+            int T11Count, T12Count, T13Count;
             character.SetBonusCount.TryGetValue("Stormrider's Regalia", out T11Count);
             character.SetBonusCount.TryGetValue("Obsidian Arborweave Regalia", out T12Count);
+            character.SetBonusCount.TryGetValue("Deep Earth Regalia", out T13Count);
             if (T11Count >= 2) {
                 // 2 pieces: Increases the critical strike chance of your Insect Swarm and Moonfire spells by 5%.
                 statsTotal.BonusCritChanceInsectSwarm = 0.05f;
@@ -1087,6 +1089,16 @@ namespace Rawr.Moonkin
                 // 4 piece: Your Wrath generates +3 and your Starfire generates +5 energy when not in Eclipse.
                 statsTotal.BonusWrathEnergy = 3f + 1/3f;
                 statsTotal.BonusStarfireEnergy = 5f;
+            }
+            if (T13Count >= 2)
+            {
+                // 2 piece: Your nukes deal 3% more damage when Insect Swarm is active on the target.
+                statsTotal.BonusNukeDamageModifier = 0.03f;
+            }
+            if (T13Count >= 4)
+            {
+                // 4 piece: Your Starsurge generates +100% Lunar or Solar energy when not in Eclipse.
+                statsTotal.T13FourPieceActive = true;
             }
             #endregion
 
