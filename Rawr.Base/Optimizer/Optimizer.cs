@@ -1280,7 +1280,14 @@ namespace Rawr.Optimizer
                 slotItems[slot] = new List<object>();
                 foreach (var itemAvailability in itemGenerator.SlotRawItems[slot])
                 {
+#if SILVERLIGHT
+                    foreach (var itemInstance in itemAvailability.ItemList)
+                    {
+                        slotItems[slot].Add(itemInstance);
+                    }
+#else
                     slotItems[slot].AddRange(itemAvailability.ItemList);
+#endif
                 }
             }
 

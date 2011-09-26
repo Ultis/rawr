@@ -160,6 +160,63 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes()
         {
+#region Rawr 4.2.5 (September 25, 2011) [r63191]
+            VNStuff.Add("Rawr 4.2.5 (September 25, 2011) [r63191]",
+            @"Cataclysm Release
+Rawr.Base:
+- Add override reforge option in batch tools.
+- Support for multiple of the same item (each diamond represents a separate item).
+
+Rawr.Items:
+- Fixed a small issue with the filtering system.
+- Variable Pulse Lightning Capacitor was buffed by 260% but only stacks to 5 stacks, down from 10
+- Feral Druid Tier 12 legs had wrong stats, fixed
+- You cannot equip 2 different Signet of the Avengers (Fireland Rep) rings at the same time
+
+Rawr.BossHandler:
+- Updated Sinestra and Ragnaros with better Under 35% and 20% numbers.
+
+Rawr.Bear:
+- Added PvP set bonuses.
+- added Damage Absorb and Healing trinket procs functionality
+- Added Damaging Procs from trinket
+- Movement enhancing buffs should be valued a lot higher than what they were before
+- Added Leader of the Pack self-healing
+- Implemented Survival Instincts, King of the Jungle, partially Frenzied Regen (the healing portion is not working as intended as of this moment), and Barkskin cooldowns
+- Berserk is implemented but has not been added to the rotation calculator yet.
+
+Rawr.Mage:
+- Hyper regen cycle analysis.
+- Solver for arcane dragonwrath cycles.
+- Fix for cost multiplier 0.
+- Fix for mana potion constraint in combinatorial/genetic solver.
+- Cooldown offset option for genetic solver.
+
+Rawr.Retribution:
+- Censure hotfix applied
+
+Rawr.DPSDK:
+- Fix Crit rate of DS.
+
+Rawr.TankDK:
+- Stop filtering out ALL caster stats since it was filtering out things like Kings.
+
+Rawr.Cat:
+- Added PvP set bonuses.
+
+Rawr.Moonkin:
+- Dragonwrath proc modeling.
+- Euphoria now correctly includes the 4T12 set bonus when it procs.
+- Moonkin Solver engine version 3.0
+- Add T13 set bonuses.
+
+Rawr.Hunter:
+- Update Base Stats.
+- Update to GetStats methods. On MM hunter w/i 2% for RAP.
+- Working on getting displayed values closer to in-game paper-doll.
+- Adjust GCD to 1 Second.
+");
+#endregion
 #region Rawr 4.2.4 (August 15, 2011) [r62567]
 VNStuff.Add("Rawr 4.2.4 (August 15, 2011) [r62567]",
 @"Cataclysm Release
