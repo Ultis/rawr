@@ -534,13 +534,9 @@ namespace Rawr.DPSDK
 
             calc.OverallPoints = calc.DPSPoints = rot.m_DPS 
                 // Add in supplemental damage from other sources
-                + calc.dpsSub[(int)DKability.Ghoul] + calc.dpsSub[(int)DKability.Gargoyle]
+                + calc.dpsSub[(int)DKability.Ghoul] 
+                + calc.dpsSub[(int)DKability.Gargoyle]
                 + calc.dpsSub[(int)DKability.OtherArcane] + calc.dpsSub[(int)DKability.OtherFire] + calc.dpsSub[(int)DKability.OtherFrost] + calc.dpsSub[(int)DKability.OtherHoly] + calc.dpsSub[(int)DKability.OtherNature] + calc.dpsSub[(int)DKability.OtherShadow];
-            float[] PetDPS = new float[(int)EnumHelper.GetCount(typeof(DKability))];
-            PetDPS[(int)DKability.Army] = calc.dpsSub[(int)DKability.Army];
-            PetDPS[(int)DKability.BloodParasite] = calc.dpsSub[(int)DKability.BloodParasite];
-            PetDPS[(int)DKability.Gargoyle] = calc.dpsSub[(int)DKability.Gargoyle];
-            PetDPS[(int)DKability.Ghoul] = calc.dpsSub[(int)DKability.Ghoul];
             if (needsDisplayCalculations)
             {
                 AbilityDK_Base a = rot.GetAbilityOfType(DKability.White);
@@ -550,7 +546,7 @@ namespace Rawr.DPSDK
                     b = rot.GetAbilityOfType(DKability.ScourgeStrike);
                     if (b == null) b = rot.GetAbilityOfType(DKability.FrostStrike);
                     if (b == null) b = rot.GetAbilityOfType(DKability.DeathStrike);
-                    calc.YellowHitChance = b.HitChance + b.CritChance;
+                    calc.YellowHitChance = b.HitChance;
                 }
                 calc.WhiteHitChance = (a == null ? 0 : a.HitChance + a.CritChance + .23f); // + glancing
                 calc.MHWeaponDPS = (a == null ? 0 : rot.GetAbilityOfType(DKability.White).DPS);
@@ -573,7 +569,8 @@ namespace Rawr.DPSDK
                 }
                 calcOpts.szRotReport = rot.ReportRotation();
                 calc.m_RuneCD = (float)rot.m_SingleRuneCD / 1000;
-                calc.DPSBreakdown(rot, PetDPS);
+
+                calc.DPSBreakdown(rot);
             }  
 
             return calc;

@@ -27,7 +27,13 @@ namespace Rawr.DPSDK
             set { _subPoints[0] = value; }
         }
 
+        /// <summary>
+        /// DPS for each category
+        /// </summary>
         public float[] dpsSub = new float[EnumHelper.GetCount(typeof(DKability))];
+        /// <summary>
+        /// Total Damage during the rotation for each category.
+        /// </summary>
         public float[] damSub = new float[EnumHelper.GetCount(typeof(DKability))];
         public float[] threatSub = new float[EnumHelper.GetCount(typeof(DKability))];
         public float[] tpsSub = new float[EnumHelper.GetCount(typeof(DKability))];
@@ -282,16 +288,23 @@ namespace Rawr.DPSDK
 
         public float m_RuneCD {get; set; }
 
-        public void DPSBreakdown(Rotation rot, float[] petDPS)
+        public void DPSBreakdown(Rotation rot)
         {
-            float fTotalPetDPS = 0;
+            float[] PetDPS = new float[(int)EnumHelper.GetCount(typeof(DKability))];
+            PetDPS[(int)DKability.Army] = dpsSub[(int)DKability.Army];
+            PetDPS[(int)DKability.BloodParasite] = dpsSub[(int)DKability.BloodParasite];
+            PetDPS[(int)DKability.Gargoyle] = dpsSub[(int)DKability.Gargoyle];
+            PetDPS[(int)DKability.Ghoul] = dpsSub[(int)DKability.Ghoul];
+
+            float fTotalPetDamage = 0;
             foreach (DKability b in EnumHelper.GetValues(typeof(DKability)))
             {
-                petDPS[(int)b] *= rot.CurRotationDuration;
-                fTotalPetDPS += petDPS[(int)b];
+                fTotalPetDamage += PetDPS[(int)b] * rot.CurRotationDuration;
             }
-            float fTotalDam = rot.TotalDamage + fTotalPetDPS;
+            float fTotalDam = rot.TotalDamage + fTotalPetDamage;
             float fTotalDPS = fTotalDam / rot.CurRotationDuration;
+            // Check to mak sure fTotalDPS == DPSpoints
+            fTotalDPS = Math.Max(fTotalDPS, DPSPoints);
             // We already have the total damage done.
             if (null != rot.ml_Rot)
             {
@@ -304,7 +317,7 @@ namespace Rawr.DPSDK
             }
             foreach (DKability b in EnumHelper.GetValues(typeof(DKability)))
             {
-                damSub[(int)b] += petDPS[(int)b];
+//                damSub[(int)b] += PetDPS[(int)b];
                 dpsSub[(int)b] = DPSPoints * (damSub[(int)b] / fTotalDam);
                 tpsSub[(int)b] = rot.m_TPS * (threatSub[(int)b] / rot.TotalThreat);
             }
