@@ -39,6 +39,7 @@ namespace Rawr.Cat
 
 		public float PercentOfTimeAbove80Percent = 0.17f; //TODO: Make this dynamic/customizable
 		public float PercentOfTimeBelow25Percent = 0.22f; //TODO: Make this dynamic/customizable
+        public float PercentOfTimeBelow60Percent = 0.57f; //TODO: Make this dynamic/customizable
 
 		public CatRotationCalculation GetOptimalRotation()
 		{
@@ -147,7 +148,7 @@ namespace Rawr.Cat
 
 			//1. Rip
 			float ripUptimeSec = FightDuration - ripLeadUpTime;
-			RipCount = (ripUptimeSec - FightDuration * BiteStats.RipRefreshChanceOnTargetsBelow25Percent * PercentOfTimeBelow25Percent) / RipStats.Duration;
+            RipCount = (ripUptimeSec - FightDuration * BiteStats.RipRefreshChanceOnTargetsBelow25Percent * (Abilities.Stats.Tier_13_2_piece ? PercentOfTimeBelow60Percent : PercentOfTimeBelow25Percent)) / RipStats.Duration;
             Rip(RipCount);
 			RipTick(ripUptimeSec / 2f);
 
@@ -173,7 +174,7 @@ namespace Rawr.Cat
 			//4. Ravage
 			if (RavageStats.FeralChargeCooldown > 0f)
 			{
-				float ravageCount = FightDuration / RavageStats.FeralChargeCooldown;
+				float ravageCount = (FightDuration / RavageStats.FeralChargeCooldown) * (Abilities.Stats.Tier_13_4_piece ? 2f : 1f);
 				Ravage(ravageCount * PercentOfTimeAbove80Percent, true, true);
 				Ravage(ravageCount * (1f - PercentOfTimeAbove80Percent), true, false);
 			}

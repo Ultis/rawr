@@ -635,6 +635,20 @@ namespace Rawr.Cat
                 // statsTotal.AddSpecialEffect(primary); 
                 statsTotal.Tier_12_4pc = true;
             }
+            statsTotal.Tier_13_2_piece = false;
+            statsTotal.Tier_13_4_piece = false;
+            int T13Count;
+            character.SetBonusCount.TryGetValue("Deep Earth Battlegarb", out T13Count);
+            if (T13Count >= 2)
+            {
+                // Your Blood in the Water talent now causes Ferocious Bite to refresh the duration of your Rip on targets with 60% or less health.
+                statsTotal.Tier_13_2_piece = true;
+            }
+            if (T13Count >= 4)
+            {
+                // Your Stampede talent now grants two charges after using Feral Charge (Cat).
+                statsTotal.Tier_13_4_piece = true;
+            }
             #endregion
 
             statsTotal.Accumulate(BaseStats.GetBaseStats(character.Level, character.Class, character.Race, BaseStats.DruidForm.Cat));
@@ -867,7 +881,8 @@ namespace Rawr.Cat
                 && !string.IsNullOrEmpty(buff.SetName)
                 && buff.SetName == "Gladiator's Sanctuary"
                 && buff.SetName == "Stormrider's Battlegarb"	
-                && buff.SetName == "Obsidian Arborweave Battlegarb")
+                && buff.SetName == "Obsidian Arborweave Battlegarb"
+                && buff.SetName == "Deep Earth Battlegarb")
             { return true; }
             return base.IsBuffRelevant(buff, character);
         }

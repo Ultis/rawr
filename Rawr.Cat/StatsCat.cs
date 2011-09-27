@@ -24,6 +24,8 @@ namespace Rawr.Cat
 		public float RipRefreshChanceOnFerociousBiteOnTargetsBelow25Percent { get; set; }
         public bool Tier_11_4pc { get; set; }
         public bool Tier_12_4pc { get; set; }
+        public bool Tier_13_2_piece { get; set; }
+        public bool Tier_13_4_piece { get; set; }
 		
 		public WeightedStat[] TemporaryCritRatingUptimes { get; set; }
 	}
