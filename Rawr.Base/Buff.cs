@@ -382,28 +382,28 @@ namespace Rawr
                 Name = "Trueshot Aura",
                 Source = "MM Hunter",
                 Group = "Attack Power (%)",
-                Stats = { BonusAttackPowerMultiplier = 0.1f }
+                Stats = { BonusAttackPowerMultiplier = 0.1f /*0.2f*/, BonusRangeAttackPowerMultiplier = 0.1f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Unleashed Rage",
                 Source = "Enhance Shaman",
                 Group = "Attack Power (%)",
-                Stats = { BonusAttackPowerMultiplier = 0.1f }
+                Stats = { BonusAttackPowerMultiplier = 0.1f /*0.2f*/, BonusRangeAttackPowerMultiplier = 0.1f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Abomination's Might",
                 Source = "Blood Death Knight",
                 Group = "Attack Power (%)",
-                Stats = { BonusAttackPowerMultiplier = 0.1f }
+                Stats = { BonusAttackPowerMultiplier = 0.1f /*0.2f*/, BonusRangeAttackPowerMultiplier = 0.1f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Blessing of Might (AP%)",
                 Source = "Paladin",
                 Group = "Attack Power (%)",
-                Stats = { BonusAttackPowerMultiplier = 0.1f }
+                Stats = { BonusAttackPowerMultiplier = 0.1f /*0.2f*/, BonusRangeAttackPowerMultiplier = 0.1f }
             });
             #endregion
 

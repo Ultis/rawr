@@ -153,6 +153,7 @@ namespace Rawr
         BonusSpiritMultiplier,
         // Secondary
         BonusAttackPowerMultiplier,
+        BonusRangeAttackPowerMultiplier,
         BonusSpellPowerMultiplier,
         BonusCritDamageMultiplier,
         BonusSpellCritDamageMultiplier,
@@ -1417,6 +1418,15 @@ namespace Rawr
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusAttackPowerMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusAttackPowerMultiplier] = value; }
+        }
+        [DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Buffs / Debuffs")]
+        [DisplayName("% RAP")]
+        public float BonusRangeAttackPowerMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusRangeAttackPowerMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusRangeAttackPowerMultiplier] = value; }
         }
         [DefaultValueAttribute(0f)]
         [Percentage]
