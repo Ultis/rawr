@@ -433,9 +433,9 @@ namespace Rawr
         [GlyphData(21, 44928, 62080, "Glyph of Focus", GlyphType.Major,
             @"Increases the damage done by Starfall by 10%, but decreases its radius by 50%.")]
         public bool GlyphOfFocus { get { return _glyphData[21]; } set { _glyphData[21] = value; } }
-        /// <summary>While Frenzied Regeneration is active, healing effects on you are 30% more powerful but causes your Frenzied Regeneration to longer convert rage into health.</summary>
+        /// <summary>While Frenzied Regeneration is active, healing effects on you are 30% more powerful but causes your Frenzied Regeneration to no longer convert rage into health.</summary>
         [GlyphData(22, 40896, 54810, "Glyph of Frenzied Regeneration", GlyphType.Major,
-            @"While Frenzied Regeneration is active, healing effects on you are 30% more powerful but causes your Frenzied Regeneration to longer convert rage into health.")]
+            @"While Frenzied Regeneration is active, healing effects on you are 30% more powerful but causes your Frenzied Regeneration to no longer convert rage into health.")]
         public bool GlyphOfFrenziedRegeneration { get { return _glyphData[22]; } set { _glyphData[22] = value; } }
         /// <summary>When you Healing Touch, the cooldown on your Nature's Swiftness is reduced by 10 sec.</summary>
         [GlyphData(23, 40914, 54825, "Glyph of Healing Touch", GlyphType.Major,

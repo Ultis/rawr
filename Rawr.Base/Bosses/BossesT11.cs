@@ -2014,7 +2014,7 @@ namespace Rawr.Bosses
             // Dragons = 4,150,000 / 12,600,649 / 5,810,000 / 17,640,909
             // Halfus = 32,467,000 / 115,954,200 / 45,453,800 / 162,335,880
             // Health values were lowered on normal by 20% in 4.2
-            Health = new float[] { 32467000f * 0.80f, 115954200f * 0.80f, 45453800f, 184667808f };
+            Health = new float[] { 25939384f, 115954200f * 0.80f, 51535200f, 184667808f };
             MobType = (int)MOB_TYPES.HUMANOID;
             BerserkTimer = new int[] { 6 * 60, 6 * 60, 6 * 60, 6 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
@@ -2237,7 +2237,7 @@ namespace Rawr.Bosses
             // His current health going into P3 is whatever is the remainder of what is currently on all mobs put together
             // So for P3, it's best to keep everyone at or close to 25% as possible going into each phase.
             // Health values were lowered on normal by 20% in patch 4.2
-            Health = new float[] { ((4724060f * 2f) + (6871060f * 2f)), ((14600000f * 2f) + (21900000f * 2f)), ((6613600f * 2f) + (9619400f * 2f)), ((24600000f * 2f) + (38000000f * 2f)) };
+            Health = new float[] { ((4724060f * 2f) + (6871060f * 2f)), ((14600000f * 2f) + (21900000f * 2f)), ((12850854f * 2f) + (8374470f * 2f)), ((24600000f * 2f) + (38000000f * 2f)) };
             MobType = (int)MOB_TYPES.ELEMENTAL;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
@@ -2529,7 +2529,7 @@ namespace Rawr.Bosses
             // Her health starts at 60%
             // you bring her to 30% to start P2
             // At the end of P2, she restors her health to 100%
-            Health = new float[] { 46895800f * 1.3f, 128838000f * 1.3f, 0f, 0f };
+            Health = new float[] { 42946000f * 1.3f, 128838000f * 1.3f, 0f, 0f };
             MobType = (int)MOB_TYPES.DRAGONKIN;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 0, 0 };
             SpeedKillTimer = new int[] { 7 * 60, 7 * 60, 0, 0 };
@@ -2726,7 +2726,7 @@ namespace Rawr.Bosses
             // Anshal = 4,120,000 / 14,429,856 / 5,768,000 / 20,201,799
             // Nezir = 7,210,000 / 25,252,248 / 10,094,000 / 35,353,148
             // Health values were lowered on normal by 20% in 4.2
-            Health = new float[] { (4120000f + 4120000f + 7210000f) * 0.80f, (14429856f + 14429856f + 25252248f) * 0.80f, (5768000f + 5768000f + 10094000f), (20201799f + 20201799f + 35353148f) };
+            Health = new float[] { (4294600f + 4294600f + 7300820f) * 0.80f, (14601640f + 14601640f + 25252248f) * 0.80f, (5768000f + 5768000f + 10094000f), (23362624f + 23362624f + 41228160f) };
             MobType = (int)MOB_TYPES.ELEMENTAL;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
@@ -2845,7 +2845,7 @@ namespace Rawr.Bosses
             #endregion
             #region Basics
             // Health values were lowered on Normal by 20% in 4.2
-            Health = new float[] { 30100000f * 0.80f, 105200000f * 0.80f, 42140000f, 168300000f };
+            Health = new float[] { 24049760f, 84174160f, 48099520f, 168348320f };
             MobType = (int)MOB_TYPES.ELEMENTAL;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };

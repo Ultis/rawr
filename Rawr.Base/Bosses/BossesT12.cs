@@ -253,7 +253,7 @@ namespace Rawr.Bosses
             Comment = "Main Tank is tanking Beth'tilac, Off Tank is tanking adds during Cinderweb phase.";
             #endregion
             #region Basics
-            Health = new float[] { 20871756f, 62615268f, 32839376f, 98518128f };
+            Health = new float[] { 17693752f, 53167148f, 27829008f, 83658808f };
             MobType = (int)MOB_TYPES.BEAST;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 7 * 60, 7 * 60, 7 * 60, 7 * 60 };
@@ -651,7 +651,7 @@ namespace Rawr.Bosses
             // Legs health are tied together
             // All three have low health, however they start out with an 80% damage
             // reduction applied to them.
-            Health = new float[] { 15500000f, 47000000f, 21700000f, 70000000f};
+            Health = new float[] { 13100001f, 40000000f, 20000000f, 60000004f};
             MobType = (int)MOB_TYPES.ELEMENTAL;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 7 * 60, 7 * 60, 7 * 60, 7 * 60 };
@@ -936,7 +936,7 @@ namespace Rawr.Bosses
             Comment = "Not modeled in detail yet.";
             #endregion
             #region Basics
-            Health = new float[] { 51352000f, 154605600f, 71892800f, 231900000f };
+            Health = new float[] { 38651400f, 115954200f, 71892800f, 197122144f }; // TODO: double check 25-man normal health pool
             MobType = (int)MOB_TYPES.ELEMENTAL;
             // 3 full phases or 15 minute enrage timer.
             BerserkTimer = new int[] { 15 * 60, 15 * 60, 15 * 60, 15 * 60 };
@@ -1263,7 +1263,7 @@ namespace Rawr.Bosses
             #region Basics
             // Baleroc's health consists of both himself and his dogs Ripgut and Rageface
             // On heroic mode, you do not kill the dogs. Instead you burn Shannox instead
-            Health = new float[] { (24049760f + (9619904f * 2f)), (81597400f + (33669664f * 2f)), 33669664f, 114236360f };
+            Health = new float[] { (20442296f + (7901028f * 2f)), (61198050f + (25252248f * 2f)), 28619216f, 97100904f };
             MobType = (int)MOB_TYPES.HUMANOID;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 7 * 60, 7 * 60, 7 * 60, 7 * 60 };
@@ -1570,7 +1570,7 @@ namespace Rawr.Bosses
             Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T12_10, BossHandler.TierLevels.T12_25, BossHandler.TierLevels.T12_10H, BossHandler.TierLevels.T12_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 42087080f, 133304384f, 58921912f, 195600000f };
+            Health = new float[] { 31565310f, 99978288f, 59428676f, 166239664f };
             MobType = (int)MOB_TYPES.ELEMENTAL;
             BerserkTimer = new int[] { 6 * 60, 6 * 60, 6 * 60, 6 * 60 };
             SpeedKillTimer = new int[] { 5 * 60, 5 * 60, 5 * 60, 5 * 60 };
@@ -1789,7 +1789,7 @@ namespace Rawr.Bosses
             Comment = "Not modeled in detail yet.";
             #endregion
             #region Basics
-            Health = new float[] { 51019848f, 178569472f, 124714283f, 432500000f };
+            Health = new float[] { 38221940f, 133927104f, 105990728f, 367274176f }; // TODO: Double check 25-man normal health value
             MobType = (int)MOB_TYPES.HUMANOID;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 5 * 60, 5 * 60, 5 * 60, 5 * 60 };
@@ -1948,9 +1948,9 @@ namespace Rawr.Bosses
             #endregion
             #region Basics
             // Rag "dies" at 10% on normal (goes back under the lava).
-            // Apparently Rag heals to about 48% once he hits phase 4 and starts moving around the platform
+            // Apparently Rag heals to about 50% once he hits phase 4 and starts moving around the platform
             // So for heroic his health is 90% to phase 4 and 50% while in Phase 4 so 140% health
-            Health = new float[] { 66995760f * 0.9f, 200987280f * 0.9f, 74200000f * 1.40f, 246900000f * 1.40f };
+            Health = new float[] { 50246820f * 0.9f, 150740464f * 0.9f, 74200000f * 1.40f, 246910064f * 1.40f }; // TODO: Double check Heroic 10-man health
             MobType = (int)MOB_TYPES.ELEMENTAL;
             BerserkTimer = new int[] { 18 * 60, 18 * 60, 18 * 60, 18 * 60 };
             SpeedKillTimer = new int[] { 5 * 60, 8 * 60, 12 * 60, 12 * 60 };
@@ -1958,10 +1958,10 @@ namespace Rawr.Bosses
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
             Max_Players = new int[] { 10, 25, 10, 25 };
             Min_Tanks = new int[] { 2, 2, 2, 2 };
-            Min_Healers = new int[] { 3, 5, 3, 5 };
-            TimeBossIsInvuln = new float[] { 60, 60, 90, 90 }; // Assume 30 seconds during each phase transition
-            Under35Perc = new double[] { 0.175824176, 0.175824176, 0.225352112, 0.225352112 };
-            Under20Perc = new double[] { 0.10989011, 0.10989011, 0.211267606, 0.211267606 };
+            Min_Healers = new int[] { 2, 5, 2, 3 };
+            TimeBossIsInvuln = new float[] { 45f * 2f, 45f * 2f, (45 * 2f) + 30f, (45 * 2f) + 30f }; // Assume 45 seconds during each phase transition, and 30 seconds going into phase 4
+            Under35Perc = new double[] { 0.166666667, 0.166666667, 0.214285714, 0.214285714 };
+            Under20Perc = new double[] { 0.122222222, 0.122222222, 0.221428571, 0.221428571 };
             #endregion
             #region Offensive
             //MaxNumTargets = new double[] { 1, 1, 0, 0 };
