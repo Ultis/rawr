@@ -2273,6 +2273,49 @@ namespace Rawr
             });
             #endregion
             #endregion
+            #region Tier 13 | Necrotic Boneplate
+            #region Battlearmor (Blood)
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Necrotic Boneplate Battlearmor (T13) 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Necrotic Boneplate Battlearmor",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Necrotic Boneplate Battlearmor (T13) 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Necrotic Boneplate Battlearmor",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
+            });
+            #endregion
+            #region Battlegear (DPS)
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Necrotic Boneplate Battlegear (T13) 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Necrotic Boneplate Battlegear",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
+            });
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Necrotic Boneplate Battlegear (T13) 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Necrotic Boneplate Battlegear",
+                Stats = new Stats(),
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
+            });
+            #endregion
+            #endregion
             #endregion
             #region PvP
             defaultBuffs.Add(new Buff()
@@ -3164,6 +3207,26 @@ namespace Rawr
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
             });
             #endregion
+            #region Tier 13 | Wrymstalker's Battlegear
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Wrymstalker's Battlegear (T13) 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Wrymstalker's Battlegear",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Wrymstalker's Battlegear (T13) 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Wrymstalker's Battlegear",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
+            });
+            #endregion
             #endregion
             #region PvP
             defaultBuffs.Add(new Buff()
@@ -4009,6 +4072,48 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Regalia of the Cleansing Flame",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
+            });
+            #endregion
+            #endregion
+            #region Tier 13 | of Dying Light
+            #region Vestments (Heals)
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Vestments of Dying Light (T13) 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Vestments of Dying Light",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Vestments of Dying Light (T13) 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Vestments of Dying Light",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
+            });
+            #endregion
+            #region Regalia (Shadow)
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Regalia of Dying Light (T13) 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Regalia of Dying Light",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Regalia of Dying Light (T13) 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Regalia of Dying Light",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
             });

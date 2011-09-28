@@ -321,7 +321,7 @@ namespace Rawr
                     S.StunDurReduc = 0.15f;
                     if (characterClass == CharacterClass.Shaman)
                         S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { AttackPower = 65 + (level * 13), SpellPower = 75 + (level * 6) }, 15f, 120f));
-                    else if (characterClass == CharacterClass.Warlock)
+                    else if (characterClass == CharacterClass.Warlock || characterClass == CharacterClass.Mage)
                         S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { SpellPower = 75 + (level * 6) }, 15f, 120f));
                     else
                         S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { AttackPower = 65 + (level * 13) }, 15f, 120f));
