@@ -315,6 +315,7 @@ namespace Rawr.Cat
             character.SetBonusCount.TryGetValue("Stormrider's Battlegarb", out T11Count);
             MangleUsage mangleusage = maintainMangleBecauseNooneElseIs ? MangleUsage.MaintainMangle : MangleUsage.None;
             if (calcOpts.CustomUseMangle && T11Count >= 4) { mangleusage = MangleUsage.Maintain4T11; }
+     //       else if (calcOpts.CustomUseMangle) { mangleusage = MangleUsage.MangleDPS; }
             if (mangleusage != MangleUsage.None) {
                 stats.BonusBleedDamageMultiplier = (1f + stats.BonusBleedDamageMultiplier)
                     * (1f + (maintainMangleBecauseNooneElseIs ? 0.30f : 0f)) // if someone else is putting up mangle, don't try to add to it here as it won't stack
@@ -493,7 +494,7 @@ namespace Rawr.Cat
                 ((character.MainHand.MinDamage + character.MainHand.MaxDamage) / 2f) / character.MainHand.Speed,
                 attackSpeed, modArmor, hasteBonus, critMultiplier, chanceAvoided, chanceCritWhite, chanceCritYellow, chanceCritYellow,
                 chanceCritYellow, chanceCritYellow, chanceCritRake, chanceCritRip, chanceCritBite, chanceGlance);
-            var rotationCalculator = new CatRotationCalculator(abilities, 450/*bossOpts.BerserkTimer*/, mangleusage);
+            var rotationCalculator = new CatRotationCalculator(abilities, 750/*bossOpts.BerserkTimer*/, mangleusage);
             var optimalRotation = rotationCalculator.GetOptimalRotation(); //TODO: Check for 4T11, maintain it if so
             calculatedStats.Abilities = abilities;
             calculatedStats.HighestDPSRotation = optimalRotation;

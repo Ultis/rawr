@@ -410,8 +410,14 @@ namespace Rawr {
             "Tier 12 25N",
             "Tier 12 10H",
             "Tier 12 25H",
+            /* "Tier 13 LFR",
+             * "Tier 13 10N",
+             * "Tier 13 25N",
+             * "Tier 13 10H",
+             * "Tier 13 25H",
+             */
         };
-        public enum TierLevels : int { T11_10 = 0, T11_25, T11_10H, T11_25H, T12_10, T12_25, T12_10H, T12_25H }
+        public enum TierLevels : int { T11_10 = 0, T11_25, T11_10H, T11_25H, T12_10, T12_25, T12_10H, T12_25H, T13_LFR, T13_10, T13_25, T13_10H, T13_25H }
         public static readonly float[] StandardMeleePerHit = new float[] {
              95192.308f, // T11_10 // 4.2 lowered the base damage on all T11 Normal mode damage by 20%
             118990.385f, // T11_25 // 4.2 lowered the base damage on all T11 Normal mode damage by 20%
@@ -423,6 +429,11 @@ namespace Rawr {
             146250f, // T12_25,  // Not Tested and verified, initial numbers
             208250f, // T12_10H, // Not Tested and verified, initial numbers
             232050f, // T12_25H, // Not Tested and verified, initial numbers
+            220000f, // T13_LFR, // Not Tested and verified, initial numbers
+            245000f, // T13_10, // Not Tested and verified, initial numbers
+            273000f, // T13_25, // Not Tested and verified, initial numbers
+            343000f, // T13_10H, // Not Tested and verified, initial numbers
+            382200f, // T13_25H, // Not Tested and verified, initial numbers
         };
         #endregion
         #region ==== Info ====
@@ -452,12 +463,12 @@ namespace Rawr {
         [DefaultValue(20000000f)]
         public float Health { get { return _health; } set { _health = value; OnPropertyChanged("Health"); } }
         private float _health = 20000000f;
-        [DefaultValue(8 * 60)]
+        [DefaultValue(10 * 60)]
         public int BerserkTimer { get { return _berserkTimer; } set { _berserkTimer = value; OnPropertyChanged("BerserkTimer"); } }
-        private int _berserkTimer = 8 * 60;
-        [DefaultValue(3 * 60)]
+        private int _berserkTimer = 10 * 60;
+        [DefaultValue(5 * 60)]
         public int SpeedKillTimer { get { return _speedKillTimer; } set { _speedKillTimer = value; OnPropertyChanged("SpeedKillTimer"); } }
-        private int _speedKillTimer = 3 * 60;
+        private int _speedKillTimer = 5 * 60;
         [DefaultValue(88)]
         public int Level { get { return _level; } set { _level = value; OnPropertyChanged("Level"); } }
         private int _level = (int)POSSIBLE_LEVELS.LVLP3;

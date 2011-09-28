@@ -189,13 +189,21 @@ namespace Rawr.Cat
 				case MangleUsage.Maintain4T11:
 					mangleCount = FightDuration / 27f - 1f; //Minus the one from the lead up
 					break;
+                case MangleUsage.MangleDPS:
+                    if (CPRemaining < 0)
+                        mangleCount = -CPRemaining / MangleStats.ComboPointsGenerated;
+                    break;
 			}
 			Mangle(mangleCount);
 
 			//6. Shred
 			if (CPRemaining < 0)
 			{
-				float shredCount = -CPRemaining / ShredStats.ComboPointsGenerated;
+                float shredCount = 0;
+                if (MangleUsage == MangleUsage.MangleDPS)
+                    shredCount = 0;
+                else
+				    shredCount = -CPRemaining / ShredStats.ComboPointsGenerated;
 				Shred(shredCount);
 			}
 
@@ -377,7 +385,8 @@ namespace Rawr.Cat
 	{
 		None,
 		MaintainMangle,
-		Maintain4T11
+		Maintain4T11,
+        MangleDPS
 	}
 
 	public enum BiteUsage

@@ -40,7 +40,7 @@ namespace Rawr.Cat
 		protected float RipRefreshChanceOnFerociousBiteOnTargetsBelow25Percent { get { return Stats.RipRefreshChanceOnFerociousBiteOnTargetsBelow25Percent; } }
 
         protected float BonusRakeDuration { get { return 3f * Talents.EndlessCarnage; } }
-        protected float BonusRipDuration { get { return Talents.GlyphOfShred ? 6f : 0f; } }
+        protected float BonusRipDuration { get { return Talents.GlyphOfShred /*Talents.GlyphOfBloodletting*/ ? 6f : 0f; } }
         protected float BonusSavageRoarDuration { get { return 4f * Talents.EndlessCarnage; } }
 		protected float BonusBerserkDuration { get { return Stats.BonusBerserkDuration; } }
 		

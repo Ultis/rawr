@@ -1783,7 +1783,7 @@ namespace Rawr.Bosses
         {
             // If not listed here use values from defaults
             #region Info
-            Name = "MajordomoStaghelm";
+            Name = "Majordomo Staghelm";
             Instance = "Firelands";
             Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T12_10, BossHandler.TierLevels.T12_25, BossHandler.TierLevels.T12_10H, BossHandler.TierLevels.T12_25H, };
             Comment = "Not modeled in detail yet.";

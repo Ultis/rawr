@@ -231,6 +231,19 @@ namespace Rawr {
                 MajordomoStaghelm[0],MajordomoStaghelm[1],MajordomoStaghelm[2],MajordomoStaghelm[3],
                 Ragnaros[0],Ragnaros[1],Ragnaros[2],Ragnaros[3],
                 #endregion
+                #region ==== Tier 13 Content ====
+                // Baradin Hold
+//                Alizabal[0], Alizabal[1],
+                // Dragon Soul
+//                Morchok[0],Morchok[1],Morchok[2],Morchok[3],
+//                WarlordZonozz[0],WarlordZonozz[1],WarlordZonozz[2],WarlordZonozz[3],
+//                Yorsahj[0],Yorsahj[1],Yorsahj[2],Yorsahj[3],
+//                Hagara[0],Hagara[1],Hagara[2],Hagara[3],
+//                Ultraxion[0],Ultraxion[1],Ultraxion[2],Ultraxion[3],
+//                WarmasterBlackhorn[0],WarmasterBlackhorn[1],WarmasterBlackhorn[2],WarmasterBlackhorn[3],
+//                SpineofDeathwing[0],SpineofDeathwing[1],SpineofDeathwing[2],SpineofDeathwing[3],
+//                MadnessofDeathwing[0],MadnessofDeathwing[1],MadnessofDeathwing[2],MadnessofDeathwing[3],
+                #endregion
 
             };
             TheEZModeBoss  = GenTheEZModeBoss(list);
