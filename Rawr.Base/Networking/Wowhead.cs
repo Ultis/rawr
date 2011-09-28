@@ -3758,6 +3758,8 @@ namespace Rawr
                             case "5416": 
                             case "5630": return "The Maelstrom";
                             case "5733": return "Molten Front";
+                            case "5861": return "Darkmoon Island";
+
                             #endregion
                             #region Dungeons
                             case "4926": return "Blackrock Caverns";
@@ -3767,6 +3769,9 @@ namespace Rawr
                             case "5035": return "The Vortex Pinnacle";
                             case "5088": return "The Stonecore";
                             case "5396": return "Lost City of the Tol'vir";
+                            case "5788": return "Well of Eternity";
+                            case "5789": return "End Time";
+                            case "5844": return "Hour of Twilight";
                             #endregion
                             #region Raids
                             case "5094": return "Blackwing Descent";
@@ -3774,6 +3779,9 @@ namespace Rawr
                             case "5600": return "Baradin Hold";
                             case "5638": return "Throne of the Four Winds";
                             case "5723": return "Firelands";
+                            case "5806": // Spine of the Destroyer
+                            case "5880": // Maelstrom Deathwing Fight
+                            case "5892": return "Dragon Soul";
                             #endregion
                             case "5706": return "The Steam Pools";
                             #endregion
