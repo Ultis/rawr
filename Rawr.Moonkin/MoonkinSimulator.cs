@@ -215,12 +215,12 @@ namespace Rawr.Moonkin
                     if (currentNGTimer > 0) ngTimeSpent += ssCastTime;
                     currentMFTimer = Math.Max(0, currentMFTimer - ssCastTime);
                     currentISTimer = Math.Max(0, currentISTimer - ssCastTime);
-                    currentSSCooldown = 15 - ssCastTime;
+                    currentSSCooldown = (Has4T13 ? 10 : 15) - ssCastTime;
                     currentNGTimer = Math.Max(0, currentNGTimer - ssCastTime);
                     currentNGCooldown = Math.Max(0, currentNGCooldown - ssCastTime);
                     currentActionTime = ssCastTime;
                     currentShSProc = 0;
-                    eclipseEnergy = Math.Min(100, Math.Max(-100, eclipseEnergy + eclipseDirection * ((!inEclipse && Has4T13) ? 30 : 15)));
+                    eclipseEnergy = Math.Min(100, Math.Max(-100, eclipseEnergy + eclipseDirection * 15));
                     if (eclipseEnergy == -100 || eclipseEnergy == 100)
                     {
                         currentNGCooldown = 0;
@@ -242,11 +242,11 @@ namespace Rawr.Moonkin
                     if (currentNGTimer > 0) ngTimeSpent += ssCastTime;
                     currentMFTimer = Math.Max(0, currentMFTimer - ssCastTime);
                     currentISTimer = Math.Max(0, currentISTimer - ssCastTime);
-                    currentSSCooldown = 15 - ssCastTime;
+                    currentSSCooldown = (Has4T13 ? 10 : 15) - ssCastTime;
                     currentNGTimer = Math.Max(0, currentNGTimer - ssCastTime);
                     currentNGCooldown = Math.Max(0, currentNGCooldown - ssCastTime);
                     currentActionTime = ssCastTime;
-                    eclipseEnergy = Math.Min(100, Math.Max(-100, eclipseEnergy + eclipseDirection * ((!inEclipse && Has4T13) ? 30 : 15)));
+                    eclipseEnergy = Math.Min(100, Math.Max(-100, eclipseEnergy + eclipseDirection * 15));
                     if (eclipseEnergy == -100 || eclipseEnergy == 100)
                     {
                         currentNGCooldown = 0;
