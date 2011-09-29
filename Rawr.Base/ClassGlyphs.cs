@@ -386,6 +386,10 @@ namespace Rawr
         [GlyphData(10, 40901, 54815, "Glyph of Shred", GlyphType.Prime,
             @"Each time you Shred, the duration of your Rip on the target is extended 2 sec, up to a maximum of 6 sec.")]
         public bool GlyphOfShred { get { return _glyphData[10]; } set { _glyphData[10] = value; } }
+        // /// <summary>Each time you Shred or Mangle in Cat Form, the duration of your Rip on the target is extended 2 sec, up to a maximum of 6 sec.</summary>
+        // [GlyphData(10, 40901, 54815, "Glyph of Bloodletting", GlyphType.Prime,
+        //     @"Each time you Shred or Mangle in Cat Form, the duration of your Rip on the target is extended 2 sec, up to a maximum of 6 sec.")]
+        // public bool GlyphOfBloodletting { get { return _glyphData[10]; } set { _glyphData[10] = value; } }
         /// <summary>Your Starfire ability increases the duration of yoru Moonfire effect on the target by 3 sec, up to a maximum of 9 additional seconds.</summary>
         [GlyphData(11, 40916, 54845, "Glyph of Starfire", GlyphType.Prime,
             @"Your Starfire ability increases the duration of yoru Moonfire effect on the target by 3 sec, up to a maximum of 9 additional seconds.")]

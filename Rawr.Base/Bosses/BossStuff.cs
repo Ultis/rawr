@@ -14,7 +14,7 @@ namespace Rawr {
     /// <summary>Enumerator for creating a list of possible values for the Level box</summary>
     public enum POSSIBLE_LEVELS { LVLP0 = 85, LVLP1 = 86, LVLP2 = 87, LVLP3 = 88, }
     /// <summary>Enumerator for creating a list of possible values for the Mob Type box</summary>
-    public enum MOB_TYPES { BEAST = 0, DEMON, DRAGONKIN, ELEMENTAL, GIANT, HUMANOID, MECHANICAL, UNDEAD }
+    public enum MOB_TYPES { BEAST = 0, DEMON, DRAGONKIN, ELEMENTAL, GIANT, HUMANOID, MECHANICAL, UNDEAD, UNCATEGORIZED }
     public enum ImpedanceTypes { Fear, Root, Stun, Move, Silence, Disarm };
     /// <summary>Enumerator for attack types, this mostly is for raid members that aren't being directly attacked to know when AoE damage is coming from the boss</summary>
     public enum ATTACK_TYPES { AT_MELEE = 0, AT_RANGED, AT_AOE, AT_DOT }

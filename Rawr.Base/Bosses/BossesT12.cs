@@ -18,19 +18,19 @@ namespace Rawr.Bosses
             #region Info
             Name = "Occu'thar";
             Instance = "Baradin Hold";
-            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T12_10, BossHandler.TierLevels.T12_25, BossHandler.TierLevels.T12_10H, BossHandler.TierLevels.T12_25H };
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T12_10, BossHandler.TierLevels.T12_25, BossHandler.TierLevels.T12_10H, BossHandler.TierLevels.T12_25H, BossHandler.TierLevels.T12_LFR };
             #endregion
             #region Basics
-            Health = new float[] { 53946000f, 80900000f, 0, 0 };
+            Health = new float[] { 53946000f, 80900000f, 0, 0, 0 };
             MobType = (int)MOB_TYPES.DEMON;
             // 5 minute Berserk timer
-            BerserkTimer = new int[] { 5 * 60, 5 * 60, 0, 0 };
-            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 0, 0 };
-            InBackPerc_Melee = new double[] { 0.60f, 0.60f, 0, 0 };
-            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0, 0 };
-            Max_Players = new int[] { 10, 25, 0, 0 };
-            Min_Tanks = new int[] { 2, 2, 0, 0 };
-            Min_Healers = new int[] { 3, 5, 0, 0 };
+            BerserkTimer = new int[] { 5 * 60, 5 * 60, 0, 0, 0 };
+            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 0, 0, 0 };
+            InBackPerc_Melee = new double[] { 0.60f, 0.60f, 0, 0, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Max_Players = new int[] { 10, 25, 0, 0, 0 };
+            Min_Tanks = new int[] { 2, 2, 0, 0, 0 };
+            Min_Healers = new int[] { 3, 5, 0, 0, 0 };
             #endregion
             #region The Phases
             for (int i = 0; i < 2; i++)
@@ -49,7 +49,7 @@ namespace Rawr.Bosses
                     DamageType = ItemDamageType.Physical,
                     DamagePerHit = BossHandler.StandardMeleePerHit[(int)Content[i]],
                     MaxNumTargets = 1f,
-                    AttackSpeed = 2.0f,
+                    AttackSpeed = 5f,
                 });
                 EntireFight.LastAttack.AffectsRole[PLAYER_ROLES.MainTank] = true;
 
@@ -61,7 +61,7 @@ namespace Rawr.Bosses
                     DamageType = ItemDamageType.Physical,
                     DamagePerHit = BossHandler.StandardMeleePerHit[(int)Content[i]],
                     MaxNumTargets = 1f,
-                    AttackSpeed = 2.0f,
+                    AttackSpeed = 5f,
                 });
                 EntireFight.LastAttack.AffectsRole[PLAYER_ROLES.OffTank] = true;
                 #endregion
@@ -75,12 +75,12 @@ namespace Rawr.Bosses
                 EntireFight.Attacks.Add(new Attack
                 {
                     Name = "Searing Shadows [Main Tank]",
-                    SpellID = new float[] { 96913, 101007, 0, 0 }[i],
+                    SpellID = new float[] { 96913, 101007, 0, 0, 0 }[i],
                     DamageType = ItemDamageType.Shadow,
                     AttackType = ATTACK_TYPES.AT_MELEE,
                     DamagePerHit = ( 102375f + 107625f) / 2f,
                     MaxNumTargets = 1f,
-                    AttackSpeed = 22f,
+                    AttackSpeed = 24f * 2f,
                 });
                 EntireFight.LastAttack.SetUnavoidable();
                 EntireFight.LastAttack.AffectsRole[PLAYER_ROLES.MainTank] = true;
@@ -88,12 +88,12 @@ namespace Rawr.Bosses
                 EntireFight.Attacks.Add(new Attack
                 {
                     Name = "Searing Shadows [Off Tank]",
-                    SpellID = new float[] { 96913, 101007, 0, 0 }[i],
+                    SpellID = new float[] { 96913, 101007, 0, 0, 0 }[i],
                     DamageType = ItemDamageType.Shadow,
                     AttackType = ATTACK_TYPES.AT_MELEE,
                     DamagePerHit = (102375f + 107625f) / 2f,
                     MaxNumTargets = 1f,
-                    AttackSpeed = 22f,
+                    AttackSpeed = 24f * 2f,
                 });
                 EntireFight.LastAttack.SetUnavoidable();
                 EntireFight.LastAttack.AffectsRole[PLAYER_ROLES.OffTank] = true;
@@ -110,7 +110,7 @@ namespace Rawr.Bosses
                 EntireFight.Attacks.Add(new Attack
                 {
                     Name = "Focused Fire",
-                    SpellID = new float[] { 96883, 101004, 0, 0 }[i],
+                    SpellID = new float[] { 96883, 101004, 0, 0, 0 }[i],
                     IsDoT = true,
                     // From videos watched, it only appeares to affect range dps and healers.
                     AttackType = ATTACK_TYPES.AT_RANGED,
@@ -120,10 +120,10 @@ namespace Rawr.Bosses
                     TickInterval = 1f,
                     DamagePerTick = (34125f + 35875f) / 2f,
                     // Need verification on how many are hit.
-                    MaxNumTargets = new float[] { 3, 3 }[i],
+                    MaxNumTargets = new float[] { 3, 3, 0, 0, 0 }[i],
                     // Initial release, one video I saw showed 15 seconds between each cast with the zone lasting
                     // about 5 seconds into the next zone's time frame.
-                    AttackSpeed = 15.5f,
+                    AttackSpeed = 15.7f,
                 });
                 EntireFight.LastAttack.SetUnavoidable();
                 EntireFight.LastAttack.SetAffectsRoles_DPS();
@@ -149,7 +149,7 @@ namespace Rawr.Bosses
                     Name = "Eyes of Occu'thar",
                     TargetID = new float[] { 52389, 52428, 0, 0 }[i],
                     // Initial release, assume 15 seconds
-                    Frequency = 60f,
+                    Frequency = 58f,
                     // Need verification on how many are released in 25 man
                     // Does not appear to target tanks
                     NumTargs = new float[] { 5, 20, 0, 0 }[i],
@@ -164,7 +164,7 @@ namespace Rawr.Bosses
                 // Assume 2 seconds to clump up together to AOE down the adds, the 2 seconds to run back out after all have been killed
                 EntireFight.Moves.Add(new Impedance
                 {
-                    Name = "Eyes of Occu'thar",
+                    Name = "Eyes of Occu'thar Movement",
                     Chance = EntireFight.LastTarget.Chance,
                     Duration = 4f * 1000f,
                     Frequency = EntireFight.LastTarget.Frequency,
@@ -226,15 +226,15 @@ namespace Rawr.Bosses
             }
             #endregion
             #region Defensive
-            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
-            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0, 0 };
         }
     }
     #endregion
@@ -249,19 +249,19 @@ namespace Rawr.Bosses
             #region Info
             Name = "Beth'tilac";
             Instance = "Firelands";
-            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T12_10, BossHandler.TierLevels.T12_25, BossHandler.TierLevels.T12_10H, BossHandler.TierLevels.T12_25H, };
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T12_10, BossHandler.TierLevels.T12_25, BossHandler.TierLevels.T12_10H, BossHandler.TierLevels.T12_25H, BossHandler.TierLevels.T12_LFR };
             Comment = "Main Tank is tanking Beth'tilac, Off Tank is tanking adds during Cinderweb phase.";
             #endregion
             #region Basics
-            Health = new float[] { 17693752f, 53167148f, 27829008f, 83658808f };
+            Health = new float[] { 17693752f, 53167148f, 27829008f, 83658808f, 0 };
             MobType = (int)MOB_TYPES.BEAST;
-            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
-            SpeedKillTimer = new int[] { 7 * 60, 7 * 60, 7 * 60, 7 * 60 };
-            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
-            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
-            Max_Players = new int[] { 10, 25, 10, 25 };
-            Min_Tanks = new int[] { 2, 2, 2, 2 };
-            Min_Healers = new int[] { 3, 5, 3, 5 };
+            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, 0 };
+            SpeedKillTimer = new int[] { 7 * 60, 7 * 60, 7 * 60, 7 * 60, 0 };
+            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f, 0 };
+            Max_Players = new int[] { 10, 25, 10, 25, 0 };
+            Min_Tanks = new int[] { 2, 2, 2, 2, 0 };
+            Min_Healers = new int[] { 3, 5, 3, 5, 0 };
             #endregion
             #region Offensive
             for (int i = 0; i < 4; i++)
@@ -274,11 +274,12 @@ namespace Rawr.Bosses
                     Name = "Default Melee",
                     AttackType = ATTACK_TYPES.AT_MELEE,
                     DamagePerHit = BossHandler.StandardMeleePerHit[(int)Content[i]],
-                    AttackSpeed = 2.4f,
+                    AttackSpeed = 2.5f,
                 };
                 Melee.AffectsRole[PLAYER_ROLES.MainTank] = true;
                 TheCinderweb.Attacks.Add(Melee);
                 Attack MeleeP2 = Melee.Clone();
+                MeleeP2.AttackSpeed = 5f;
                 Melee.AffectsRole[PLAYER_ROLES.OffTank] = true;
                 TheFrenzy.Attacks.Add(MeleeP2);
 
@@ -292,48 +293,55 @@ namespace Rawr.Bosses
                  * some of her energy when they are depleted. Whenever Beth'tilac runs out of Fire Energy, she will
                  * set herself ablaze, causing Smoldering Devastation. */
 
+                #region Phase 1 Ember Flare
                 /* Ember Flare
                  * Intense heat burns enemies near Beth'tilac dealing 18500 to 21500 Fire damage to those on the
                  * same side of the web as she is. */
-                // 8 different ids for this, using the "tighter" band of damage for now but listing the alt id beside
-                // it until further notice.
-                // 10 man - http://ptr.wowhead.com/spell=98934; alt - http://ptr.wowhead.com/spell=99859
+                // 10 man - http://ptr.wowhead.com/spell=98934 (Upstairs); alt - http://ptr.wowhead.com/spell=99859 (on ground)
                 // 25 man - http://ptr.wowhead.com/spell=100648; alt - http://ptr.wowhead.com/spell=100649
                 // 10 man heroic - http://ptr.wowhead.com/spell=100834; alt - http://ptr.wowhead.com/spell=100935
                 // 25 man heroic - http://ptr.wowhead.com/spell=100835; alt - http://ptr.wowhead.com/spell=100936
                 Attack EmberFlare = new Attack
                 {
                     Name = "Ember Flare",
-                    DamagePerHit = new float[]{ 20000, 23000, 
-                        20000 * 1.5f, 23000 * 1.5f, }[i], // Heroic values are a guess.
-                    AttackSpeed = 2f,
-                    MaxNumTargets = 25,
+                    DamagePerHit = new float[]{ (14152f + 16447f), (15725f + 18275f), (20229f + 23510f), (25858f + 30051f), 0f }[i] / 2f, // Heroic values are a guess.
+                    AttackSpeed = 6f,
+                    MaxNumTargets = new float[]{ 3f, 5f, 3f, 5f, 0f }[i],
                 };
                 EmberFlare.AffectsRole[PLAYER_ROLES.MainTank] = true;
                 EmberFlare.AffectsRole[PLAYER_ROLES.MainTankHealer] = true;
+                EmberFlare.AffectsRole[PLAYER_ROLES.MeleeDPS] = true;
                 TheCinderweb.Attacks.Add(EmberFlare);
+                #endregion
 
+                #region Meteor Burn
                 /* Meteor Burn
                  * Meteors crash down onto the web, dealing 37000 to 43000 Fire damage to those who stand beneath
                  * them. Additionally, they burn a hole in the web through which players may fall. */
                 // http://ptr.wowhead.com/spell=99076
+                // Players should not be hit by these
                 Impedance Move_MeteorBurn = new Impedance
                 {
-                    Chance = .25f,
+                    Chance = new float[]{ 3f, 5f, 3f, 5f, 0f }[i] / Max_Players[i],
                     Name = "Meteor Burn",
                     Duration = 4f * 1000f,
                     Frequency = 10, // Guess
                 };
                 Move_MeteorBurn.AffectsRole[PLAYER_ROLES.MainTank] = true;
                 Move_MeteorBurn.AffectsRole[PLAYER_ROLES.MainTankHealer] = true;
+                Move_MeteorBurn.AffectsRole[PLAYER_ROLES.MeleeDPS] = true;
                 TheCinderweb.Moves.Add(Move_MeteorBurn);
+                #endregion
 
+                #region Consume
                 /* Consume
                  * Beth'tilac consumes Cinderweb Spiderlings healing for 10% of her life. */
                 // 2 spell ids with similar wording, providing both
                 // http://ptr.wowhead.com/spell=99332; alt - http://ptr.wowhead.com/spell=99857
+                // This should not happen
+                #endregion
 
-
+                #region Smoldering Devastation
                 /* Smoldering Devastation
                  * When Beth'tilac is depleted of Fire Energy she will set herself ablaze, obliterating those who
                  * are not shielded by her web. */
@@ -343,11 +351,13 @@ namespace Rawr.Bosses
                     Chance = 1,
                     Name = "Smoldering Devastation",
                     Duration = 12f * 1000f, // 8 sec cast + a few secs to get a new line to climb.
-                    Frequency = 82, // Max freq. is once every 82 secs.
+                    Frequency = 90, // Max freq. is once every 82 secs.
                 };
                 Move_SmolderingDevastion.AffectsRole[PLAYER_ROLES.MainTank] = true;
                 Move_SmolderingDevastion.AffectsRole[PLAYER_ROLES.MainTankHealer] = true;
+                Move_SmolderingDevastion.AffectsRole[PLAYER_ROLES.MeleeDPS] = true;
                 TheCinderweb.Moves.Add(Move_SmolderingDevastion);
+                #endregion
                 #endregion
 
                 #region Cinderweb Spinner
@@ -359,32 +369,34 @@ namespace Rawr.Bosses
                 {
                     Name = "Cinderweb Spinner",
                     NearBoss = false,
-                    NumTargs = 1,
-                    Frequency = 15 * 1000f,
-                    Duration = 5, // Assuming they last for only a few seconds since it's a taunt, and a couple swings.
-                    TargetID = 52981,
+                    NumTargs = new float[] { 2, 5, 2, 5, 0}[i],
+                    // 3 groups drop after each devastation
+                    Frequency = (Move_SmolderingDevastion.Frequency / 3f),
+                    Duration = 10f * 1000f, // Assuming they last for only a few seconds since it's a taunt, and a couple swings.
+                    TargetID = 52524,
+                    LevelOfTargets = 85,
                 };
                 CinderwebSpinner.SetAffectsRoles_All();
                 TheCinderweb.Targets.Add(CinderwebSpinner);
 
+                #region Cinderweb Spinner Burning Acid
                 /* Burning Acid
                  * The Cinderweb Spinner spits burning venom at a random enemy, dealing 19016 to 21316 Fire damage. */
                 // 12 different version with layering damage ranges posting the most probable with alts
-                // 10 man - http://ptr.wowhead.com/spell=99934; alt - http://ptr.wowhead.com/spell=98471
-                // 25 man - http://ptr.wowhead.com/spell=100829; alt - http://ptr.wowhead.com/spell=100826
-                // 10 man heroic - http://ptr.wowhead.com/spell=100831; alt - http://ptr.wowhead.com/spell=100828
-                // 25 man heroic - http://ptr.wowhead.com/spell=100125
-                /* Others
-                 * http://ptr.wowhead.com/spell=100830; http://ptr.wowhead.com/spell=100827
-                 * http://ptr.wowhead.com/spell=99647; http://ptr.wowhead.com/spell=99974; http://ptr.wowhead.com/spell=100127 */
+                // 10 man - http://ptr.wowhead.com/spell=98471
+                // 25 man - http://ptr.wowhead.com/spell=100826
+                // 10 man heroic - http://ptr.wowhead.com/spell=100827
+                // 25 man heroic - http://ptr.wowhead.com/spell=100828
                 Attack BurningAcid = new Attack
                 {
-                    Name = "Burning Acid",
-                    DamagePerHit = new float[]{ 20000, 23000, 40000, 46000, }[i],
+                    Name = "Cinderweb Spinner: Burning Acid",
+                    DamagePerHit = new float[]{ (14420f + 16179f), (16022f + 17977f), (20612f + 23127f), (26347f + 29562f), 0f }[i],
                     DamageType = ItemDamageType.Fire,
-                    AttackSpeed = 2f,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    // assume only one casts is cast per add before being taunted down
+                    AttackSpeed = (Move_SmolderingDevastion.Frequency / 3f) / CinderwebSpinner.NumTargs,
                     IsFromAnAdd = true,
-                    MaxNumTargets = 1,
+                    MaxNumTargets = CinderwebSpinner.NumTargs,
                     Dodgable = false,
                     Parryable = false,
                     Blockable = false,
@@ -392,13 +404,16 @@ namespace Rawr.Bosses
                 };
                 BurningAcid.SetAffectsRoles_All();
                 TheCinderweb.Attacks.Add(BurningAcid);
+                #endregion
 
+                #region Fiery Web Spin
                 /* Fiery Web Spin [Heroic Only]
                  * The Cinderweb Spinner channels a web onto a random player, stunning them.*/
                 // http://ptr.wowhead.com/spell=97202
+                // This should never happen
                 if (i > 2) 
                 {
-                    Impedance WebSpin = new Impedance
+                    /*Impedance WebSpin = new Impedance
                     {
                         Name = "Web Spin",
                         Breakable = false,
@@ -409,81 +424,122 @@ namespace Rawr.Bosses
                     WebSpin.AffectsRole[PLAYER_ROLES.MainTank] = false;
                     WebSpin.AffectsRole[PLAYER_ROLES.OffTank] = false;
                     TheCinderweb.Stuns.Add(WebSpin);
+                     */
                 }
+                #endregion
                 #endregion
 
                 #region Cinderweb Drone
                 /* These large spiders climb out of caves below the Cinderweb. When they are depleted of Fire
                  * Energy, they will climb up to Beth'tilac and siphon Fire Energy from her. */
-                // http://www.wowhead.com/npc=52581#abilities:mode=normal10
+                // http://ptr.wowhead.com/npc=52581#abilities
                 TargetGroup CinderwebDrone = new TargetGroup
                 {
                     Name = "Cinderweb Drone",
                     NearBoss = false,
                     NumTargs = 1,
-                    Duration = 85, // Max duration
+                    Duration = 85f * 1000f, // Max duration
                     TargetID = 52581,
                     Frequency = 60,
+                    LevelOfTargets = 85,
                 };
                 CinderwebDrone.AffectsRole[PLAYER_ROLES.OffTank] = true;
                 CinderwebDrone.AffectsRole[PLAYER_ROLES.MeleeDPS] = true;
                 CinderwebDrone.AffectsRole[PLAYER_ROLES.RangedDPS] = true;
                 TheCinderweb.Targets.Add(CinderwebDrone);
 
+                #region Cinderweb Melee
                 Attack DroneMelee = new Attack
                 {
                     Name = "Melee from Drones",
-                    DamagePerHit = new float[] { 28000, 56000, 28000*1.5f, 56000*1.5f, }[i],
-                    AttackSpeed = 2f,
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)Content[i]] / 2f,
+                    AttackSpeed = 2.125f,
                     IsFromAnAdd = true,
                     MaxNumTargets = 1,
                 };
                 DroneMelee.AffectsRole[PLAYER_ROLES.OffTank] = true;
                 TheCinderweb.Attacks.Add(DroneMelee);
+                #endregion
 
+                #region Cinderweb Drone Consume
                 /* Consume
                  * Cinderweb Drones consume Spinderweb Spiderlings for 20% of their maximum life and provide
                  * them additional movement and attack speed.*/
                 // http://ptr.wowhead.com/spell=99304
+                // this should never happen
+                #endregion
 
+                #region Boiling Splatter
                 /* Boiling Splatter
                  * The Cinderweb Drone spits burning venom at enemies in a 60 degree cone, dealing 58968 to
                  * 68531 Fire damage.*/
+                // 10 man - http://ptr.wowhead.com/spell=99463
+                // 25 man - http://ptr.wowhead.com/spell=100121
+                // 10 man heroic - http://ptr.wowhead.com/spell=100832
+                // 25 man heroic - http://ptr.wowhead.com/spell=100833
+                // This should only be hit by the off-tank tanking the drones
                 Attack BoilingSplatter = new Attack
                 {
                     Name = "Boiling Splatter",
-                    DamagePerHit = new float[] { 65000, 75000, 82000, 95000, }[i],
+                    DamagePerHit = new float[] { (50122f + 58251f), (58968f + 68531f), (64472f + 74927f), (76658f + 89089f), 0f }[i] / 2f,
                     DamageType = ItemDamageType.Fire,
-                    AttackSpeed = 2f,
+                    AttackSpeed = 15f,
                     IsFromAnAdd = true,
                     MaxNumTargets = 1,
                     Dodgable = false,
                     Parryable = false,
                     Blockable = false,
                     Missable = false,
-                    SpellID = 99463, // Normal10
+                    SpellID = new float[] { 99463f, 100121f, 100832f, 100833f, 0f }[i],
                 };
-                BoilingSplatter.SetAffectsRoles_All();
+                BoilingSplatter.AffectsRole[PLAYER_ROLES.OffTank] = true;
                 TheCinderweb.Attacks.Add(BoilingSplatter);
+                #endregion
 
+                #region Cinderweb Drone Burning Acid
                 /* Burning Acid
                  * The Cinderweb Drone spits burning venom at a random enemy, dealing 19016 to 21316 Fire damage. */
                 // 12 different version with layering damage ranges posting the most probable with alts
-                // 10 man - http://ptr.wowhead.com/spell=99934; alt - http://ptr.wowhead.com/spell=98471
-                // 25 man - http://ptr.wowhead.com/spell=100829; alt - http://ptr.wowhead.com/spell=100826
-                // 10 man heroic - http://ptr.wowhead.com/spell=100831; alt - http://ptr.wowhead.com/spell=100828
-                // 25 man heroic - http://ptr.wowhead.com/spell=100125
-                /* Others
-                 * http://ptr.wowhead.com/spell=100830; http://ptr.wowhead.com/spell=100827
-                 * http://ptr.wowhead.com/spell=99647; http://ptr.wowhead.com/spell=99974; http://ptr.wowhead.com/spell=100127 */
-                // Already added above... note that they continue throughout the phase. 
+                // 10 man - http://ptr.wowhead.com/spell=99934
+                // 25 man - http://ptr.wowhead.com/spell=100829
+                // 10 man heroic - http://ptr.wowhead.com/spell=100830
+                // 25 man heroic - http://ptr.wowhead.com/spell=100831
+                Attack DroneBurningAcid = new Attack
+                {
+                    Name = "Cinderweb Drone: Burning Acid",
+                    DamagePerHit = new float[] { (14419f + 16179f), (16022f + 17976f), (20612f + 23126f), (26347f + 29561f), 0f }[i],
+                    DamageType = ItemDamageType.Fire,
+                    AttackSpeed = 8f,
+                    IsFromAnAdd = true,
+                    MaxNumTargets = 1,
+                    Dodgable = false,
+                    Parryable = false,
+                    Blockable = false,
+                    Missable = false,
+                    SpellID = new float[] { 99934f, 100829f, 100830f, 100831f, 0f }[i],
+                };
+                DroneBurningAcid.SetAffectsRoles_DPS();
+                DroneBurningAcid.SetAffectsRoles_Healers();
+                DroneBurningAcid.AffectsRole[PLAYER_ROLES.OffTank] = true;
+                TheCinderweb.Attacks.Add(DroneBurningAcid);
+                #endregion
 
-
+                #region Fixate
                 /* Fixate [Heroic Only]
                  * The Cinderweb Drone fixates on a random player, ignoring all others.*/
                 // Two different ids used
                 // http://www.wowhead.com/spell=99526
-                if (i > 2) { }
+                if (i > 1)
+                {
+                    Attack DroneFixate = DroneMelee.Clone();
+                    DroneFixate.DamagePerHit *= .25f;
+                    DroneFixate.Duration = 10f;
+                    DroneFixate.SpellID = 99526f;
+                    DroneFixate.SetAffectsRoles_DPS();
+                    DroneFixate.SetAffectsRoles_Healers();
+                    TheCinderweb.Attacks.Add(DroneFixate);
+                }
+                #endregion
                 #endregion
 
                 #region Cinderweb Spiderling
@@ -495,15 +551,16 @@ namespace Rawr.Bosses
                 {
                     Name = "Cinderweb Spiderling",
                     NearBoss = false,
-                    NumTargs = 10,
-                    Duration = 30,
-                    TargetID = 53765,
-                    Frequency = 30,
+                    NumTargs = 10f,
+                    Duration = 15f * 1000f,
+                    TargetID = 52447f,
+                    Frequency = 20f,
+                    LevelOfTargets = 85,
                 };
                 CinderwebSpiderling.AffectsRole[PLAYER_ROLES.RangedDPS] = true;
                 TheCinderweb.Targets.Add(CinderwebSpiderling);
-                TheFrenzy.Targets.Add(CinderwebSpiderling);
 
+                #region Seeping Venom
                 /* Seeping venom
                  * The Cinderweb Spiderling leaps onto a random enemy within 5 yards, injecting them with venom,
                  * which sears them for 6937 to 8062 Fire damage every 2 seconds for 10 sec.*/
@@ -511,7 +568,10 @@ namespace Rawr.Bosses
                 Attack SeepingVenom = new Attack
                 {
                     Name = "Seeping Venom",
-                    DamagePerHit = new float[] { 7500, 7500, 7500, 7500, }[i],
+                    DamagePerTick = (6937f + 8062f)/ 2f,
+                    Duration = 10f,
+                    IsDoT = true,
+                    TickInterval = 2f,
                     DamageType = ItemDamageType.Nature,
                     AttackSpeed = 20f,
                     IsFromAnAdd = true,
@@ -525,31 +585,51 @@ namespace Rawr.Bosses
                 SeepingVenom.SetAffectsRoles_DPS();
                 SeepingVenom.SetAffectsRoles_Healers();
                 TheCinderweb.Attacks.Add(SeepingVenom);
-                TheFrenzy.Attacks.Add(SeepingVenom);
+                #endregion
 
                 #endregion
 
                 #region Cinderweb Broodling [Heroic Only]
                 // These unstable spiders fixate on a random player and explode when they reach their target.
-                if (i > 2)
+                if (i > 1)
                 {
-                    TargetGroup CinderwebBroodling = new TargetGroup
+                    TargetGroup EngorgedBroodling = new TargetGroup
                     {
-                        Name = "Cinderweb Broodling",
+                        // These die when touched so they should not be up for more than 3 seconds each
+                        Name = "Engorged Broodling",
                         NearBoss = false,
-                        NumTargs = 1,
-                        Duration = 10,
-                        TargetID = 53765,
-                        Frequency = 30,
+                        NumTargs = new float[] { 0, 0, 1, 3, 0 }[i],
+                        Duration = 2f * 1000f,
+                        LevelOfTargets = 85,
+                        TargetID = new float[] { 0, 0, 53743, 53753, 0 }[i],
+                        Frequency = 2f,
                     };
-                    CinderwebBroodling.SetAffectsRoles_All();
-                    TheCinderweb.Targets.Add(CinderwebBroodling);
+                    EngorgedBroodling.SetAffectsRoles_All();
+                    TheCinderweb.Targets.Add(EngorgedBroodling);
                 }
 
+                #region Volatile Burst
                 /* Volatile Burst [Heroic Only]
                  * Upon contact with any enemy, Cinderweb Broodling explode dealing 55500 to 64500 Fire damage
                  * to all enemies within 6 yards.*/
-                // http://ptr.wowhead.com/spell=99990; alt - http://ptr.wowhead.com/spell=100838 (60125 to 69875)
+                // 10-man Heroic - http://ptr.wowhead.com/spell=99990
+                // 25-man Heroic - http://ptr.wowhead.com/spell=100838
+                Attack VolatileBurst = new Attack
+                {
+                    Name = "Volatile Burst",
+                    DamagePerHit = new float[] { 0f, 0f, (38918f + 45229f), (43243f + 50256f), 0f }[i] / 2f, // Heroic values are a guess.
+                    AttackSpeed = 2f,
+                    MaxNumTargets = new float[] { 0f, 0f, 1f, 3f, 0f }[i],
+                    SpellID = new float[] { 0f, 0f, 99990f, 100838f, 0f }[i],
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamageType = ItemDamageType.Nature,
+                    IsFromAnAdd = true,
+                };
+                VolatileBurst.AffectsRole[PLAYER_ROLES.RangedDPS] = true;
+                VolatileBurst.AffectsRole[PLAYER_ROLES.OffAndTertTankHealer] = true;
+                VolatileBurst.AffectsRole[PLAYER_ROLES.RaidHealer] = true;
+                TheCinderweb.Attacks.Add(VolatileBurst);
+                #endregion
                 #endregion
                 #endregion
 
@@ -557,82 +637,97 @@ namespace Rawr.Bosses
                 /* After she has performed Smouldering Devastation three times, Beth'tilac becomes frenzied. She
                  * emerges from the safety of her Cinderweb canopy and no longer calls for aid from her brood.*/
 
+                #region Frenzy
                 /* Frenzy
                  * a stacking buff which increases Beth'tilac's damage done by 5% per stack. A stack is added 
                  * every 5 seconds. It acts as a soft enrage timer and this is the reason you want to have 
                  * the boss as low on health as possible when entering this phase. */
-                // Two possible ids
-                // http://ptr.wowhead.com/spell=99497 (10% increase damage)
-                // http://ptr.wowhead.com/spell=100522 (30% increase damage)
+                // http://www.wowhead.com/spell=99497
+                SpecialEffect FrenzySpecialEffect = new SpecialEffect(Trigger.Use, new Stats() { DamageTakenReductionMultiplier = -0.05f, }, 4.983f * 60f, 5f, 1f, 50);
+                Stats FrenzyStats = new Stats();
+                FrenzyStats.AddSpecialEffect(FrenzySpecialEffect);
                 BuffState Frenzy = new BuffState
                 {
                     Name = "Frenzy",
                     Breakable = false,
-                    Frequency = 5,
-                    Duration = this[i].BerserkTimer,
-                    Stats = new Stats { BonusDamageMultiplier = 0.05f },
+                    Frequency = BerserkTimer[i] - 1f,
+                    Duration = BerserkTimer[i] * 1000f,
+                    Stats = FrenzyStats,
+                    Chance = 1f,
                 };
-                // Affects boss.
-                //TheFrenzy.BuffStates.Add(Frenzy);
+                Frenzy.SetAffectsRoles_All();
+                TheFrenzy.BuffStates.Add(Frenzy);
+                #endregion
 
+                #region The Widow's Kiss
                 /* The Widow's Kiss
                  * Beth'tilac's deadly kiss boils the blood of her current target, reducing the amount that they
-                 * can be healed by 2% every 2 seconds for 20 sec. If also causes the target to deal growing Fire
+                 * can be healed by 10% every 2 seconds for 20 sec. If also causes the target to deal growing Fire
                  * damage to their surrounding allies within 10 yards.*/
-                // Two possible ids
-                // http://ptr.wowhead.com/spell=99476
-                // http://ptr.wowhead.com/spell=99506
+                // Tanks should not be standing next to each other to be taking the fire damage
+                // http://ptr.wowhead.com/spell=99506 (10%)
+                SpecialEffect widowsKissSpecialEffect = new SpecialEffect(Trigger.Use, new Stats() { HealingReceivedMultiplier = -0.10f, }, 5f, 2f, 1f, 10);
+                Stats widowsKissStats = new Stats();
+                widowsKissStats.AddSpecialEffect(widowsKissSpecialEffect);
+                widowsKissSpecialEffect = new SpecialEffect(Trigger.Use, widowsKissStats, 25f, 60f, 1f);
+                widowsKissStats = new Stats();
+                widowsKissStats.AddSpecialEffect(widowsKissSpecialEffect);
                 BuffState WidowsKiss = new BuffState
                 {
-                    Name = "Widow's Kiss",
+                    Name = "The Widow's Kiss",
                     Breakable = false,
-                    Frequency = 2,
-                    Duration = 20,
-                    Stats = new Stats { HealingReceivedMultiplier = -0.1f },
+                    Frequency = 30f * 2f,
+                    Duration = 20f * 1000f,
+                    Stats = widowsKissStats,
                 };
                 WidowsKiss.SetAffectsRoles_Tanks();
                 TheFrenzy.BuffStates.Add(WidowsKiss);
+                #endregion
 
+                #region Phase 2 Ember Flare
                 /* Ember Flare
                 * Intense heat burns enemies near Beth'tilac dealing 18500 to 21500 Fire damage to those on the
                 * same side of the web as she is. */
-                // 8 different ids for this, using the "tighter" band of damage for now but listing the alt id beside
-                // it until further notice.
-                // 10 man - http://ptr.wowhead.com/spell=98934; alt - http://ptr.wowhead.com/spell=99859
-                // 25 man - http://ptr.wowhead.com/spell=100648; alt - http://ptr.wowhead.com/spell=100649
-                // 10 man heroic - http://ptr.wowhead.com/spell=100834; alt - http://ptr.wowhead.com/spell=100935
-                // 25 man heroic - http://ptr.wowhead.com/spell=100835; alt - http://ptr.wowhead.com/spell=100936
-                Attack EFp2 = EmberFlare.Clone();
-                EFp2.Name = "EmberFlare P2";
-                EFp2.SetAffectsRoles_All();
-                TheFrenzy.Attacks.Add(EFp2);
+                // 10 man - http://ptr.wowhead.com/spell=99859
+                // 25 man - http://ptr.wowhead.com/spell=100649
+                // 10 man heroic - http://ptr.wowhead.com/spell=100935
+                // 25 man heroic - http://ptr.wowhead.com/spell=100936
+                Attack EmberFlarep2 = EmberFlare.Clone();
+                EmberFlarep2.Name = "Ember Flare Phase 2";
+                EmberFlarep2.DamagePerHit = new float[] { (15660f + 20340f), (17400f + 22600f), (23809f + 27670f), (30421f + 35355f), 0f }[i] / 2f;
+                EmberFlarep2.SetAffectsRoles_All();
+                TheFrenzy.Attacks.Add(EmberFlarep2);
+                #endregion
 
+                #region Consume
                 /* Consume
                  * Beth'tilac consumes Cinderweb Spiderlings healing for 10% of her life. */
                 // 2 spell ids with similar wording, providing both
                 // http://ptr.wowhead.com/spell=99332; alt - http://ptr.wowhead.com/spell=99857
+                // This should never happen
+                #endregion
 
                 #endregion
 
                 #region Apply Phases
                 float p1duration = (Move_SmolderingDevastion.Frequency * 3);
-                ApplyAPhasesValues(ref TheCinderweb, i, 0, 0, p1duration, this[i].BerserkTimer);
+                ApplyAPhasesValues(ref TheCinderweb, i, 1, 0, p1duration, this[i].BerserkTimer);
                 AddAPhase(TheCinderweb, i);
-                ApplyAPhasesValues(ref TheFrenzy, i, 1, p1duration, this[i].BerserkTimer - p1duration, this[i].BerserkTimer);
+                ApplyAPhasesValues(ref TheFrenzy, i, 2, p1duration, this[i].BerserkTimer - p1duration, this[i].BerserkTimer);
                 AddAPhase(TheFrenzy, i);
                 #endregion
             }
             #endregion
             #region Defensive
-            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
-            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0, 0 };
         }
     }
 
@@ -644,32 +739,33 @@ namespace Rawr.Bosses
             #region Info
             Name = "Lord Rhyolith";
             Instance = "Firelands";
-            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T12_10, BossHandler.TierLevels.T12_25, BossHandler.TierLevels.T12_10H, BossHandler.TierLevels.T12_25H, };
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T12_10, BossHandler.TierLevels.T12_25, BossHandler.TierLevels.T12_10H, BossHandler.TierLevels.T12_25H, BossHandler.TierLevels.T12_LFR };
             #endregion
             #region Basics
             // Lord Rhyolith has three parts, Left Leg, Right Leg, Chest
             // Legs health are tied together
             // All three have low health, however they start out with an 80% damage
             // reduction applied to them.
-            Health = new float[] { 13100001f, 40000000f, 20000000f, 60000004f};
+            Health = new float[] { 13100001f, 40000000f, 20000000f, 60000004f, 0 };
             MobType = (int)MOB_TYPES.ELEMENTAL;
-            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
-            SpeedKillTimer = new int[] { 7 * 60, 7 * 60, 7 * 60, 7 * 60 };
-            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
-            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
-            Max_Players = new int[] { 10, 25, 10, 25 };
-            Min_Tanks = new int[] { 1, 1, 1, 1 }; // Most guilds will only use 1 tank for the adds.
-            Min_Healers = new int[] { 3, 5, 3, 5 };
+            // Assume people can withstand being in Superheaded for 1 minute
+            // Superheated happens after 6 minutes on normal and 5 minutes on heroic
+            BerserkTimer = new int[] { 480, 480, 400, 400, 0 };
+            SpeedKillTimer = new int[] { 5 * 60, 5 * 60, 5 * 60, 5 * 60, 0 };
+            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f, 0 };
+            Max_Players = new int[] { 10, 25, 10, 25, 0 };
+            Min_Tanks = new int[] { 1, 1, 2, 2, 0 }; // Most guilds will only use 1 tank for the adds on normal, 2 on heroic.
+            Min_Healers = new int[] { 2, 5, 3, 5, 0 };
             #endregion
             #region Offensive
             #region Attacks
             for (int i = 0; i < 4; i++)
             {
-                Phase ObsidianForm = new Phase() { Name = "Obsidian Form" };
-                Phase LiquidForm = new Phase() { Name = "Liquid Form" };
+                Phase ObsidianForm = new Phase() { Name = "Stage One: Nuisances, Nuisances!" };
+                Phase LiquidForm = new Phase() { Name = "Stage Two: Now you will BURN!" };
 
                 // He doesn't have a default melee attack during Obsidian Form (p1)
-                // this[i].Attacks.Add(GenAStandardMelee(this[i].Content)); 
 
                 #region Obsidian Form
                 /* Lord Rhyolith ignores players while his armor is intact, but they can attack his feet to
@@ -683,99 +779,204 @@ namespace Rawr.Bosses
                  * *Warning* When damaged, Lord Rhyolith's armor comes to life. If not killed, it will restore
                  * 1% of his armor.*/
                 // http://ptr.wowhead.com/spell=98632
+                Stats ObsidianArmor = new Stats();
+                ObsidianArmor.BonusDamageMultiplier = -0.80f;
+                BuffState ObsidianArmorBuffState;
+                float superheated = 0f;
+                if (i < 2)
+                {
+                    superheated = 6f * 60f;
+                    int StacksNormal = 80 / 16;
+                    SpecialEffect ObsidianArmorSpecialEffectNormal = new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.16f, }, superheated, superheated / StacksNormal, 1f, StacksNormal);
+                    ObsidianArmor.AddSpecialEffect(ObsidianArmorSpecialEffectNormal);
+                }
+                else
+                {
+                    superheated = 5f * 60f;
+                    int StacksHeroic = 80 / 10;
+                    SpecialEffect ObsidianArmorSpecialEffectHeroic = new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.10f, }, superheated, superheated / StacksHeroic, 1f, StacksHeroic);
+                    ObsidianArmor.AddSpecialEffect(ObsidianArmorSpecialEffectHeroic);
+                }
+                ObsidianArmorBuffState = new BuffState
+                {
+                    Name = "Obsidian Armor",
+                    Chance = 1f,
+                    Duration = superheated * 1000f,
+                    Frequency = BerserkTimer[i] - 1f,
+                    Breakable = false,
+                    Stats = ObsidianArmor,
+                };
+                ObsidianArmorBuffState.SetAffectsRoles_All();
+                ObsidianForm.BuffStates.Add(ObsidianArmorBuffState);
+                #endregion
 
                 #region Liquid Obsidian
                 /* The Liquid Obsidian attempts to move within 5 yards of Lord Rhyolith, then use the Fuse
                  * ability on him.*/
                 // http://db.mmo-champion.com/c/52619/liquid-obsidian/ (Elemental)
-                TargetGroup LiquidObsidian = new TargetGroup 
+                // Only happens on heroic
+                if (i > 1)
                 {
-                    Name = "Liquid Obsidian",
-                    NumTargs = 5,
-                    LevelOfTargets = 85,
-                    Frequency = 20,
-                    Duration = 5,
-                };
-                LiquidObsidian.SetAffectsRoles_DPS();
-                ObsidianForm.Targets.Add(LiquidObsidian);
+                    TargetGroup LiquidObsidian = new TargetGroup
+                    {
+                        Name = "Liquid Obsidian",
+                        NumTargs = 5,
+                        LevelOfTargets = 85,
+                        Frequency = (5f * 60f) / 8f, // all 40 should be released by the 5 minute mark
+                        Duration = 20f * 1000f,
+                    };
+                    LiquidObsidian.SetAffectsRoles_DPS();
+                    ObsidianForm.Targets.Add(LiquidObsidian);
 
-                /* Fuse
-                 * The Liquid Obsidian fuses to Lord Rhyolith granting him an additional 1% of damage reduction.*/
-                // http://ptr.wowhead.com/spell=99875
+                    #region Fuse
+                    /* Fuse
+                     * The Liquid Obsidian fuses to Lord Rhyolith granting him an additional 1% of damage reduction.*/
+                    // http://ptr.wowhead.com/spell=99875
+                    // This should not happen
+                    #endregion
+                }
                 #endregion
-                #endregion
-
+                
+                #region Concussive Stomp
                 /* Concussive Stomp
                  * Lord Rhyolith smashes the ground, dealing 32375 to 37625 Fire damage to all players and
                  * knocking away targets within 20 yards. Each stomp creates two to three volcanoes.*/
-                // 10 man - http://ptr.wowhead.com/spell=97282
-                // 25 man - http://ptr.wowhead.com/spell=100411
-                // 10 man heroic - http://ptr.wowhead.com/spell=100968
-                // 25 man heroic - http://ptr.wowhead.com/spell=100969
+                // 10 man - http://ptr.wowhead.com/spell=102306
+                // 25 man - http://ptr.wowhead.com/spell=102307
+                // 10 man heroic - http://ptr.wowhead.com/spell=102308
+                // 25 man heroic - http://ptr.wowhead.com/spell=102309
                 Attack ConcussiveStomp = new Attack
                 {
                     Name = "Concussive Stomp",
-                    DamagePerHit = new float[] {32375, 37625, 32375, 37625 }[i],
+                    DamagePerHit = new float[] { (32375f + 37625f), (32375f + 37625f), (42087f + 48912f), (42087f + 48912f), 0 }[i] / 2f,
                     AttackSpeed = 30,
                     AttackType = ATTACK_TYPES.AT_AOE,
                     DamageType = ItemDamageType.Fire,
+                    SpellID = new float[] { 102306, 102307, 102308, 102309, 0 }[i],
                 };
                 ConcussiveStomp.SetUnavoidable();
                 ConcussiveStomp.SetAffectsRoles_All();
                 ObsidianForm.Attacks.Add(ConcussiveStomp);
+                #endregion
 
+                #region Drink Magma
                 /* Drink Magma
                  * If Lord Rhyolith is ever permitted to reach the edge of his plateau, he will drink from the
                  * liquid magma, then deal 35000 fire damage to all players every second for 4 sec.*/
                 // Drink = http://ptr.wowhead.com/spell=98034
                 // Spit = http://ptr.wowhead.com/spell=99867
+                // This should never happen
+                #endregion
+
+                #region Volcano
+                /* Volcano
+                 * Lord Rhyolith creates volcanoes when he stomps. Periodically, Lord Rhyolith will bring a
+                 * volcano to life, causing it to deal 12000 Fire damage to 3 players every 2 sec. When struck,
+                 * the player takes 5% additional Fire damage for 20 sec. Stacks up to 20 times.
+                 * 
+                 * *Warning* In 25 player raids, the Volcano does damage to 6 players.*/
+                // http://ptr.wowhead.com/npc=52582
+
+                #region Eruption
+                // http://ptr.wowhead.com/spell=98492
+                // You should only have 1 active volcano up at any given time
+                // Assume the drivers can hit the volcanoes within 20 seconds
+                Attack EruptionAttack = new Attack
+                {
+                    Name = "Eruption",
+                    DamagePerTick = 12000f,
+                    DamageType = ItemDamageType.Fire,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    MaxNumTargets = new float[] { 3, 6, 3, 6, 0 }[i],
+                    IsDoT = true,
+                    TickInterval = 2f,
+                    Duration = 25f * 1000f,
+                    SpellID = 98492f,
+                    AttackSpeed = ((i < 2) ? 40f : 25.5f),
+                };
+                EruptionAttack.SetUnavoidable();
+                EruptionAttack.SetAffectsRoles_All();
+                ObsidianForm.Attacks.Add(EruptionAttack);
+
+                Stats EruptionStats = new Stats();
+                SpecialEffect EruptionSpecialEffect = new SpecialEffect(Trigger.Use, new Stats() { FireDamageTakenMultiplier = 0.05f }, 15f, 2f, EruptionAttack.MaxNumTargets / Max_Players[i], 20);
+                EruptionStats.AddSpecialEffect(EruptionSpecialEffect);
+                BuffState EruptionBuffState = new BuffState
+                {
+                    Name = "Eruption Debuff",
+                    Frequency = EruptionAttack.AttackSpeed,
+                    Duration = EruptionAttack.Duration,
+                    Chance = EruptionAttack.MaxNumTargets / Max_Players[i],
+                    Breakable = false,
+                    Stats = EruptionStats,
+                };
+                EruptionBuffState.SetAffectsRoles_All();
+                ObsidianForm.BuffStates.Add(EruptionBuffState);
+                #endregion
+                #endregion
+
+                #region Crater
+                /* Crater
+                 * Lord Rhyolith creates a crater when he stops on an active volcano. Occasionally, Lord
+                 * Rhyolith will cause streams of lava to flow from a crater. The streams will deal 75000*2]
+                 * Fire damage to anyone who stands on them for too long.*/
+                // Crater - http://ptr.wowhead.com/npc=52866
+
+                #region Magma Flow
+                // You need to move way from the lines that come from the craters
+                // 3 volcanoes spawn appoximately every 25 seconds
+                // Assume 2/3rds get stomped causing craters
+                Impedance Move_MagmaFlow = new Impedance
+                {
+                    Chance = 0.50f,
+                    Name = "Meteor Burn",
+                    Duration = 2f * 1000f,
+                    Frequency = 25f / (2f / 3f),
+                };
+                Move_MagmaFlow.SetAffectsRoles_All();
+                ObsidianForm.Moves.Add(Move_MagmaFlow);
+                #endregion
+                #endregion
 
                 #region Thermal Ignition
                 /* Lord Rhyolith releases a jet of cinders, which deals 15000 Fire damage to players within 7 yards
                  * and forms part of himself into an elemental. Lord Rhyolith alternates between bringing multiple
                  * Fragments of Lord Rhyolith and single Sparks of Rhyolith to life.*/
 
-                #endregion
-
-                /* Volcano
-                 * Lord Rhyolith creates volcanoes when he stomps. Periodically, Lord Rhyolith will bring a
-                 * volcano to life, causing it to deal 6000 Fire damage to 3 players every 1 sec. When struck,
-                 * the player takes 6000s2% additional Fire damage for 20 sec. Stacks up to 20 times.
-                 * 
-                 * *Warning* In 25 player raids, the Volcano does damage to 6 players.*/
-                // http://ptr.wowhead.com/npc=52582
-
-                /* Crater
-                 * Lord Rhyolith creates a crater when he stops on an active volcano. Occasionally, Lord
-                 * Rhyolith will cause streams of lava to flow from a crater. The streams will deal 75000*2]
-                 * Fire damage to anyone who stands on them for too long.*/
-                // Crater - http://db.mmo-champion.com/c/52866/crater/
-
-                #region Adds
-                // Summon 
+                // Summon Fragment of Rhyolith - http://ptr.wowhead.com/spell=100392
+                // Summon Spark of Rhyolith - http://ptr.wowhead.com/spell=98552
                 Attack SummonAdds = new Attack
                 {
-                    Name = "Summon Adds",
-                    DamagePerHit = new float[] { 15000, 15000, 15000, 15000 }[i],
-                    AttackSpeed = 25,
+                    Name = "Summon Fragment or Spark",
+                    DamagePerHit = new float[] { 15000, 15000, 15000, 15000, 0 }[i],
+                    AttackSpeed = 22.5f,
                     IsDoT = false,
                     AttackType = ATTACK_TYPES.AT_AOE,
                     DamageType = ItemDamageType.Fire,
                     IsFromAnAdd = true,
                 };
                 SummonAdds.SetUnavoidable();
-                SummonAdds.AffectsRole[PLAYER_ROLES.MeleeDPS] = true;
+                SummonAdds.SetAffectsRoles_All();
                 ObsidianForm.Attacks.Add(SummonAdds);
                 
                 #region Fragments of Rhyolith
+                // Fragments of Rhyolith have low Heath. If not slain within 30 sec, they inflict
+                // damage equal to their current health to a random player.
+                // In 25 person raids, they deal damage equal to half their current health to a 
+                // random player.
+                
+                // Fragments should not be damaging anyone besides the tank tanking them.
+                // Meaning they should be killed within the 30 second timeframe.
                 // 5 x Fragments to be tanked & DPS'd down
                 TargetGroup Fragments = new TargetGroup
                 {
                     Name = "Fragments of Rhyolith",
                     NumTargs = 5,
                     LevelOfTargets = 85,
-                    Frequency = 60,
-                    Duration = 25,
+                    Frequency = 45f,
+                    Duration = 30f * 1000f,
+                    TargetID = 52620,
+                    NearBoss = true,
                 };
                 Fragments.SetAffectsRoles_DPS();
                 Fragments.SetAffectsRoles_Tanks();
@@ -784,62 +985,98 @@ namespace Rawr.Bosses
                 Attack FragmentMelee = new Attack
                 {
                     Name = "Melee from Fragment Adds",
-                    DamagePerHit = new float[] { 10000, 20000,
-                        10000 * 1.5f, 20000 * 1.5f, }[i], // Heroic Unknown
-                    AttackSpeed = 2f / 5f, // 5 mobs hitting every 2 secs.
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)Content[i]] * 0.1f,
+                    AttackSpeed = 2.5f / 5f, // 5 mobs hitting every 2.5 secs.
                     AttackType = ATTACK_TYPES.AT_MELEE,
                     DamageType = ItemDamageType.Physical,
                     IsFromAnAdd = true,
                 };
                 FragmentMelee.SetAffectsRoles_Tanks();
                 ObsidianForm.Attacks.Add(FragmentMelee);
-
                 #endregion
+
                 #region Spark of Rhyolith
                 // 1 x Spark to be tanked & DPS'd down.
+                // Sparks should not be up with more than 10 stacks of Infernal Rage
                 TargetGroup Spark = new TargetGroup
                 {
                     Name = "Spark of Rhyolith",
                     NumTargs = 1,
                     LevelOfTargets = 85,
-                    Frequency = 60,
-                    Duration = 25 * 1000,
+                    Frequency = 70f,
+                    Duration = 5f * 10f * 1000f,
+                    TargetID = 53211,
+                    NearBoss = false,
                 };
                 Spark.SetAffectsRoles_DPS();
                 Spark.SetAffectsRoles_Tanks();
                 ObsidianForm.Targets.Add(Spark);
 
+                #region Spark Melee
                 Attack SparkMelee = new Attack
                 {
                     Name = "Melee from Spark Add",
-                    DamagePerHit = new float[] { 30000, 70000,
-                        30000 * 1.5f, 70000 * 1.5f, }[i], // Heroic Unknown
-                    AttackSpeed = 2, 
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)Content[i]] * 0.35f,
+                    AttackSpeed = 2.5f, 
                     AttackType = ATTACK_TYPES.AT_MELEE,
                     DamageType = ItemDamageType.Physical,
+                    Dodgable = true,
+                    Missable = true,
+                    Parryable = true,
+                    Blockable =  true,
                 };
                 SparkMelee.SetAffectsRoles_Tanks();
                 ObsidianForm.Attacks.Add(SparkMelee);
+                #endregion
 
+                #region Immolation
+                // 10-man - http://ptr.wowhead.com/spell=98598
+                // 25-man - http://ptr.wowhead.com/spell=100414
+                // 10-man Heroic - http://ptr.wowhead.com/spell=98598
+                // 25-man Heroic - http://ptr.wowhead.com/spell=100414
                 Attack SparkImmolation = new Attack
                 {
                     Name = "Immolation from Spark",
-                    DamagePerTick = new float[] {8500, 8500, 
-                        8500 * 1.5f, 8500 * 1.5f, }[i], // Heroic damage is a guess.
+                    DamagePerTick = (6840f + 7560f) / 2f,
                     IsDoT = true,
                     AttackType = ATTACK_TYPES.AT_AOE,
                     DamageType = ItemDamageType.Fire,
                     TickInterval = 1,
-                    Duration = SummonAdds.AttackSpeed, // Max length is how long it takes to drop him.  Let's assume just as long until the next add pack.
+                    Duration = Spark.Duration, // Max length is how long it takes to drop him.  Let's assume just as long until the next add pack.
                     Missable = false,
                     Dodgable = false,
                     Parryable = false,
                     Blockable = false,
+                    SpellID = new float[] { 98598f, 100414, 98598, 100414, 0 }[i],
                 };
                 SparkImmolation.SetAffectsRoles_Tanks();
-                SparkImmolation.AffectsRole[PLAYER_ROLES.MeleeDPS] = true;
+                SparkImmolation.AffectsRole[PLAYER_ROLES.RangedDPS] = true;
                 ObsidianForm.Attacks.Add(SparkImmolation);
+                #endregion
 
+                #region Infernal Rage
+                // Sparks of Rhyolith increase their damage dealt by 10% and damage taken
+                // by 10% every 5 seconds. This effect stacks up to 20 times.
+                // This should not stack up more than 10 stacks
+                Stats InfernalRageStats = new Stats();
+                // all adds disappear going into Phase 2, so have the debuff last until superheated should be appropriat
+                SpecialEffect InfernalRageSpecialEffect = new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.10f, DamageTakenReductionMultiplier = -0.10f, }, superheated, 5f, 1f, 20);
+                InfernalRageStats.AddSpecialEffect(InfernalRageSpecialEffect);
+                InfernalRageSpecialEffect = new SpecialEffect(Trigger.Use, InfernalRageStats, Spark.Duration / 1000f, Spark.Frequency, 1f);
+                InfernalRageStats = new Stats();
+                InfernalRageStats.AddSpecialEffect(InfernalRageSpecialEffect);
+                BuffState InfernalRage = new BuffState
+                {
+                    Name = "Infernal Rage",
+                    Duration = Spark.Duration,
+                    Chance = 1f,
+                    Frequency = Spark.Frequency,
+                    Breakable = false,
+                    Stats = InfernalRageStats,
+                };
+                InfernalRage.SetAffectsRoles_Tanks();
+                ObsidianForm.BuffStates.Add(InfernalRage);
+                #endregion
                 #endregion
                 #endregion
                 #endregion
@@ -847,12 +1084,13 @@ namespace Rawr.Bosses
                 #region Liquid Form
                 /* When Lord Rhyolith reaches 25% health, his armor shatters. He becomes attackable and
                  * no longer ignores players.*/
+                #region Melee Attack
                 Attack BasicMeleeMT = new Attack
                 {
                     Name = "Default Melee",
-                    AttackSpeed = 2f,
+                    AttackSpeed = 5f,
                     AttackType = ATTACK_TYPES.AT_MELEE,
-                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)Content[i]] * 1.3f, // Heroic values are unkonwn at this point.
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)Content[i]],
                     Missable = true,
                     Dodgable = true,
                     Parryable = true,
@@ -860,29 +1098,59 @@ namespace Rawr.Bosses
                 };
                 BasicMeleeMT.AffectsRole[PLAYER_ROLES.MainTank] = true;
                 LiquidForm.Attacks.Add(BasicMeleeMT);
+                #endregion
 
+                #region Immolation
                 /* Immolation
                  * Lord Rhyolith's fiery presence deals 7003 to 9004 Fire damage to all players every second.*/
                 // http://ptr.wowhead.com/spell=99845
                 Attack Immolation = new Attack
                 {
-                    Name = "Immolation",
-                    DamagePerTick = new float[] {7003, 9004, 
-                        7003 * 1.5f, 9004 * 1.5f, }[i], // Heroic damage is a guess.
+                    Name = "Phase 2 Immolation",
+                    DamagePerTick = (7000f + 9000f) / 2f,
                     IsDoT = true,
                     AttackType = ATTACK_TYPES.AT_AOE,
                     DamageType = ItemDamageType.Fire,
                     TickInterval = 1,
-                    Duration = this[i].BerserkTimer * .25f, // for the duration of this phase.
+                    Duration = this[i].BerserkTimer * .25f * 1000f, // for the duration of this phase.
+                    SpellID = 99845f,
                 };
                 Immolation.SetUnavoidable();
                 Immolation.SetAffectsRoles_All();
                 LiquidForm.Attacks.Add(Immolation);
+                #endregion
 
+                #region Concussive Stomp
+                //Concussive Stomp
+                Attack ConcussiveStopPhase2 = ConcussiveStomp.Clone();
+                ConcussiveStopPhase2.AttackSpeed = 10f;
+                LiquidForm.Attacks.Add(ConcussiveStopPhase2);
+                #endregion
+
+                #region Unleashed Flame
                 /* Unleashed Flame
                  * Lord Rhyolithunleashes beams of fire which pursue random players, dealing 10000 Fire damage
                  * to all players within 5 yards.*/
                 // http://ptr.wowhead.com/spell=100974
+                if (i > 1)
+                {
+                    Attack UnleashedFlame = new Attack
+                    {
+                        Name = "Unleashed Flame",
+                        DamagePerTick = 10000f,
+                        MaxNumTargets = Max_Players[i],
+                        IsDoT = true,
+                        TickInterval = 1f,
+                        Duration = Immolation.Duration,
+                        AttackType = ATTACK_TYPES.AT_AOE,
+                        DamageType = ItemDamageType.Fire,
+                        SpellID = 100974f,
+                    };
+                    UnleashedFlame.SetUnavoidable();
+                    UnleashedFlame.SetAffectsRoles_All();
+                    LiquidForm.Attacks.Add(UnleashedFlame);
+                }
+                #endregion
                 #endregion
 
                 #region Add Phases
@@ -899,13 +1167,13 @@ namespace Rawr.Bosses
             #endregion
             #endregion
             #region Defensive
-            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0, 0};
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
             #region Impedances
             for (int i = 0; i < 2; i++)
@@ -916,7 +1184,7 @@ namespace Rawr.Bosses
                 //Roots;
                 //Disarms;
             }
-            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
             /* TODO:
              * Impedances.  This is a rediculous movement fight and I'm not sure how to model that yet.
@@ -932,20 +1200,20 @@ namespace Rawr.Bosses
             #region Info
             Name = "Alysrazor";
             Instance = "Firelands";
-            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T12_10, BossHandler.TierLevels.T12_25, BossHandler.TierLevels.T12_10H, BossHandler.TierLevels.T12_25H, };
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T12_10, BossHandler.TierLevels.T12_25, BossHandler.TierLevels.T12_10H, BossHandler.TierLevels.T12_25H, BossHandler.TierLevels.T12_LFR };
             Comment = "Not modeled in detail yet.";
             #endregion
             #region Basics
-            Health = new float[] { 38651400f, 115954200f, 71892800f, 197122144f }; // TODO: double check 25-man normal health pool
+            Health = new float[] { 38651400f, 115954200f, 71892800f, 197122144f, 0 }; // TODO: double check 25-man normal health pool
             MobType = (int)MOB_TYPES.ELEMENTAL;
             // 3 full phases or 15 minute enrage timer.
-            BerserkTimer = new int[] { 15 * 60, 15 * 60, 15 * 60, 15 * 60 };
-            SpeedKillTimer = new int[] { 8 * 60, 8 * 60, 8 * 60, 8 * 60 };
-            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
-            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
-            Max_Players = new int[] { 10, 25, 10, 25 };
-            Min_Tanks = new int[] { 2, 2, 2, 2 };
-            Min_Healers = new int[] { 3, 5, 3, 5 };
+            BerserkTimer = new int[] { 15 * 60, 15 * 60, 15 * 60, 15 * 60, 0 };
+            SpeedKillTimer = new int[] { 8 * 60, 8 * 60, 8 * 60, 8 * 60, 0 };
+            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f, 0 };
+            Max_Players = new int[] { 10, 25, 10, 25, 0 };
+            Min_Tanks = new int[] { 2, 2, 2, 2, 0 };
+            Min_Healers = new int[] { 3, 5, 3, 5, 0 };
             #endregion
             #region Offensive
             #region Attacks
@@ -1225,13 +1493,13 @@ namespace Rawr.Bosses
             #endregion
             #endregion
             #region Defensive
-            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
             #region Impedances
             for (int i = 0; i < 2; i++)
@@ -1242,7 +1510,7 @@ namespace Rawr.Bosses
                 //Roots;
                 //Disarms;
             }
-            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
             /* TODO:
              * All
@@ -1258,20 +1526,20 @@ namespace Rawr.Bosses
             #region Info
             Name = "Shannox";
             Instance = "Firelands";
-            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T12_10, BossHandler.TierLevels.T12_25, BossHandler.TierLevels.T12_10H, BossHandler.TierLevels.T12_25H, };
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T12_10, BossHandler.TierLevels.T12_25, BossHandler.TierLevels.T12_10H, BossHandler.TierLevels.T12_25H, BossHandler.TierLevels.T12_LFR };
             #endregion
             #region Basics
             // Baleroc's health consists of both himself and his dogs Ripgut and Rageface
             // On heroic mode, you do not kill the dogs. Instead you burn Shannox instead
-            Health = new float[] { (20442296f + (7901028f * 2f)), (61198050f + (25252248f * 2f)), 28619216f, 97100904f };
+            Health = new float[] { (20442296f + (7901028f * 2f)), (61198050f + (25252248f * 2f)), 28619216f, 97100904f, 0 };
             MobType = (int)MOB_TYPES.HUMANOID;
-            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
-            SpeedKillTimer = new int[] { 7 * 60, 7 * 60, 7 * 60, 7 * 60 };
-            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
-            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
-            Max_Players = new int[] { 10, 25, 10, 25 };
-            Min_Tanks = new int[] { 2, 2, 2, 2 };
-            Min_Healers = new int[] { 3, 5, 3, 5 };
+            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, 0 };
+            SpeedKillTimer = new int[] { 7 * 60, 7 * 60, 7 * 60, 7 * 60, 0 };
+            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f, 0 };
+            Max_Players = new int[] { 10, 25, 10, 25, 0 };
+            Min_Tanks = new int[] { 2, 2, 2, 2, 0 };
+            Min_Healers = new int[] { 3, 5, 3, 5, 0 };
             #endregion
             #region Offensive
             #region Attacks
@@ -1519,13 +1787,13 @@ namespace Rawr.Bosses
             #endregion
             #endregion
             #region Defensive
-            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
             #region Impedances
             for (int i = 0; i < 2; i++)
@@ -1549,7 +1817,7 @@ namespace Rawr.Bosses
                 // NPC - http://db.mmo-champion.com/c/53713/
 
             }
-            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
             /* TODO:
              * Moves for Hurl Spear & Traps.
@@ -1567,18 +1835,18 @@ namespace Rawr.Bosses
             #region Info
             Name = "Baleroc, the Gatekeeper";
             Instance = "Firelands";
-            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T12_10, BossHandler.TierLevels.T12_25, BossHandler.TierLevels.T12_10H, BossHandler.TierLevels.T12_25H, };
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T12_10, BossHandler.TierLevels.T12_25, BossHandler.TierLevels.T12_10H, BossHandler.TierLevels.T12_25H, BossHandler.TierLevels.T12_LFR };
             #endregion
             #region Basics
-            Health = new float[] { 31565310f, 99978288f, 59428676f, 166239664f };
+            Health = new float[] { 31565310f, 99978288f, 59428676f, 166239664f, 0 };
             MobType = (int)MOB_TYPES.ELEMENTAL;
-            BerserkTimer = new int[] { 6 * 60, 6 * 60, 6 * 60, 6 * 60 };
-            SpeedKillTimer = new int[] { 5 * 60, 5 * 60, 5 * 60, 5 * 60 };
-            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
-            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
-            Max_Players = new int[] { 10, 25, 10, 25 };
-            Min_Tanks = new int[] { 2, 2, 2, 2 };
-            Min_Healers = new int[] { 3, 5, 3, 5 };
+            BerserkTimer = new int[] { 6 * 60, 6 * 60, 6 * 60, 6 * 60, 0 };
+            SpeedKillTimer = new int[] { 5 * 60, 5 * 60, 5 * 60, 5 * 60, 0 };
+            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f, 0 };
+            Max_Players = new int[] { 10, 25, 10, 25, 0 };
+            Min_Tanks = new int[] { 2, 2, 2, 2, 0 };
+            Min_Healers = new int[] { 3, 5, 3, 5, 0 };
             #endregion
             #region Offensive
             #region Attacks
@@ -1752,13 +2020,13 @@ namespace Rawr.Bosses
             #endregion
             #endregion
             #region Defensive
-            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
             #region Impedances
             for (int i = 0; i < 2; i++)
@@ -1769,7 +2037,7 @@ namespace Rawr.Bosses
                 //Roots;
                 //Disarms;
             }
-            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
             /* TODO:
              * Heroic
@@ -1785,19 +2053,19 @@ namespace Rawr.Bosses
             #region Info
             Name = "Majordomo Staghelm";
             Instance = "Firelands";
-            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T12_10, BossHandler.TierLevels.T12_25, BossHandler.TierLevels.T12_10H, BossHandler.TierLevels.T12_25H, };
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T12_10, BossHandler.TierLevels.T12_25, BossHandler.TierLevels.T12_10H, BossHandler.TierLevels.T12_25H, BossHandler.TierLevels.T12_LFR };
             Comment = "Not modeled in detail yet.";
             #endregion
             #region Basics
-            Health = new float[] { 38221940f, 133927104f, 105990728f, 367274176f }; // TODO: Double check 25-man normal health value
+            Health = new float[] { 38221940f, 133927104f, 105990728f, 367274176f, 0 }; // TODO: Double check 25-man normal health value
             MobType = (int)MOB_TYPES.HUMANOID;
-            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
-            SpeedKillTimer = new int[] { 5 * 60, 5 * 60, 5 * 60, 5 * 60 };
-            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
-            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
-            Max_Players = new int[] { 10, 25, 10, 25 };
-            Min_Tanks = new int[] { 1, 1, 1, 1 };
-            Min_Healers = new int[] { 3, 5, 3, 5 };
+            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, 0 };
+            SpeedKillTimer = new int[] { 5 * 60, 5 * 60, 5 * 60, 5 * 60, 0 };
+            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f, 0 };
+            Max_Players = new int[] { 10, 25, 10, 25, 0 };
+            Min_Tanks = new int[] { 1, 1, 1, 1, 0 };
+            Min_Healers = new int[] { 3, 5, 3, 5, 0 };
             #endregion
             #region Offensive
             //MaxNumTargets = new double[] { 1, 1, 0, 0 };
@@ -1910,13 +2178,13 @@ namespace Rawr.Bosses
             #endregion
             #endregion
             #region Defensive
-            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
             #region Impedances
             for (int i = 0; i < 2; i++)
@@ -1927,7 +2195,7 @@ namespace Rawr.Bosses
                 //Roots;
                 //Disarms;
             }
-            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
             /* TODO:
              * all
@@ -1943,25 +2211,25 @@ namespace Rawr.Bosses
             #region Info
             Name = "Ragnaros";
             Instance = "Firelands";
-            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T12_10, BossHandler.TierLevels.T12_25, BossHandler.TierLevels.T12_10H, BossHandler.TierLevels.T12_25H, };
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T12_10, BossHandler.TierLevels.T12_25, BossHandler.TierLevels.T12_10H, BossHandler.TierLevels.T12_25H, BossHandler.TierLevels.T12_LFR };
             Comment = "Not modeled in detail yet.";
             #endregion
             #region Basics
             // Rag "dies" at 10% on normal (goes back under the lava).
             // Apparently Rag heals to about 50% once he hits phase 4 and starts moving around the platform
             // So for heroic his health is 90% to phase 4 and 50% while in Phase 4 so 140% health
-            Health = new float[] { 50246820f * 0.9f, 150740464f * 0.9f, 74200000f * 1.40f, 246910064f * 1.40f }; // TODO: Double check Heroic 10-man health
+            Health = new float[] { 50246820f * 0.9f, 150740464f * 0.9f, 74200000f * 1.40f, 246910064f * 1.40f, 0 }; // TODO: Double check Heroic 10-man health
             MobType = (int)MOB_TYPES.ELEMENTAL;
-            BerserkTimer = new int[] { 18 * 60, 18 * 60, 18 * 60, 18 * 60 };
-            SpeedKillTimer = new int[] { 5 * 60, 8 * 60, 12 * 60, 12 * 60 };
-            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
-            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
-            Max_Players = new int[] { 10, 25, 10, 25 };
-            Min_Tanks = new int[] { 2, 2, 2, 2 };
-            Min_Healers = new int[] { 2, 5, 2, 3 };
-            TimeBossIsInvuln = new float[] { 45f * 2f, 45f * 2f, (45 * 2f) + 30f, (45 * 2f) + 30f }; // Assume 45 seconds during each phase transition, and 30 seconds going into phase 4
-            Under35Perc = new double[] { 0.166666667, 0.166666667, 0.214285714, 0.214285714 };
-            Under20Perc = new double[] { 0.122222222, 0.122222222, 0.221428571, 0.221428571 };
+            BerserkTimer = new int[] { 18 * 60, 18 * 60, 18 * 60, 18 * 60, 0 };
+            SpeedKillTimer = new int[] { 5 * 60, 8 * 60, 12 * 60, 12 * 60, 0 };
+            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f, 0 };
+            Max_Players = new int[] { 10, 25, 10, 25, 0 };
+            Min_Tanks = new int[] { 2, 2, 2, 2, 0 };
+            Min_Healers = new int[] { 2, 5, 2, 3, 0 };
+            TimeBossIsInvuln = new float[] { 45f * 2f, 45f * 2f, (45 * 2f) + 30f, (45 * 2f) + 30f, 0 }; // Assume 45 seconds during each phase transition, and 30 seconds going into phase 4
+            Under35Perc = new double[] { 0.166666667, 0.166666667, 0.214285714, 0.214285714, 0 };
+            Under20Perc = new double[] { 0.122222222, 0.122222222, 0.221428571, 0.221428571, 0 };
             #endregion
             #region Offensive
             //MaxNumTargets = new double[] { 1, 1, 0, 0 };
@@ -2383,13 +2651,13 @@ namespace Rawr.Bosses
             #endregion
             #endregion
             #region Defensive
-            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
             #region Impedances
             for (int i = 0; i < 2; i++)
@@ -2400,7 +2668,7 @@ namespace Rawr.Bosses
                 //Roots;
                 //Disarms;
             }
-            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
             /* TODO:
              */

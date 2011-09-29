@@ -410,30 +410,32 @@ namespace Rawr {
             "Tier 12 25N",
             "Tier 12 10H",
             "Tier 12 25H",
-            /* "Tier 13 LFR",
+            /* "Tier 11 LFR",
+             * "Tier 12 LFR",
+             * "Tier 13 LFR",
              * "Tier 13 10N",
              * "Tier 13 25N",
              * "Tier 13 10H",
              * "Tier 13 25H",
              */
         };
-        public enum TierLevels : int { T11_10 = 0, T11_25, T11_10H, T11_25H, T12_10, T12_25, T12_10H, T12_25H, T13_LFR, T13_10, T13_25, T13_10H, T13_25H }
+        public enum TierLevels : int { T11_10 = 0, T11_25, T11_10H, T11_25H, T12_10, T12_25, T12_10H, T12_25H, T11_LFR, T12_LFR, T13_LFR, T13_10, T13_25, T13_10H, T13_25H }
         public static readonly float[] StandardMeleePerHit = new float[] {
-             95192.308f, // T11_10 // 4.2 lowered the base damage on all T11 Normal mode damage by 20%
-            118990.385f, // T11_25 // 4.2 lowered the base damage on all T11 Normal mode damage by 20%
-//            114230.769f, // T11_10,  //     Tested and verified, Used a Magmaw Kill from April, 2011
-//            142788.462f, // T11_25,  //     Tested and verified, Used a Magmaw Kill from April, 2011
-            163186.923f, // T11_10H, // Not tested and verified, assumed based on other values
-            183585.385f, // T11_25H, //     Tested and verified, Used a Magmaw Kill from April, 2011
-            131250f, // T12_10,  // Not Tested and verified, initial numbers
-            146250f, // T12_25,  // Not Tested and verified, initial numbers
-            208250f, // T12_10H, // Not Tested and verified, initial numbers
-            232050f, // T12_25H, // Not Tested and verified, initial numbers
-            220000f, // T13_LFR, // Not Tested and verified, initial numbers
-            245000f, // T13_10, // Not Tested and verified, initial numbers
-            273000f, // T13_25, // Not Tested and verified, initial numbers
-            343000f, // T13_10H, // Not Tested and verified, initial numbers
-            382200f, // T13_25H, // Not Tested and verified, initial numbers
+             95192.308f, // T11_10   // 4.2 lowered the base damage on all T11 Normal mode damage by 20%
+            118990.385f, // T11_25   // 4.2 lowered the base damage on all T11 Normal mode damage by 20%
+            163186.923f, // T11_10H  // Not tested and verified, assumed based on other values
+            183585.385f, // T11_25H  //     Tested and verified, Used a Magmaw Kill from April, 2011
+            131250f, // T12_10,      // Not Tested and verified, initial numbers
+            146250f, // T12_25,      // Not Tested and verified, initial numbers
+            208250f, // T12_10H,     // Not Tested and verified, initial numbers
+            232050f, // T12_25H,     // Not Tested and verified, initial numbers
+             90000f, // T11_LFR      // At this time, this is just a placeholder and not likely going to be used
+            120000f, // T12_LFR      // At this time, this is just a placeholder and not likely going to be used
+            220000f, // T13_LFR,     // Not Tested and verified, initial numbers
+            245000f, // T13_10,      // Not Tested and verified, initial numbers
+            273000f, // T13_25,      // Not Tested and verified, initial numbers
+            343000f, // T13_10H,     // Not Tested and verified, initial numbers
+            382200f, // T13_25H,     // Not Tested and verified, initial numbers
         };
         #endregion
         #region ==== Info ====
@@ -444,9 +446,9 @@ namespace Rawr {
         private string _name = "Generic";
         // Content
         /// <summary>The Boss's Tier Content Level, T10, T11, etc</summary>
-        [DefaultValue(TierLevels.T11_25H)]
+        [DefaultValue(TierLevels.T11_10)]
         public TierLevels Content { get { return _content; } set { _content = value; OnPropertyChanged("Content"); } }
-        private TierLevels _content = TierLevels.T11_25H;
+        private TierLevels _content = TierLevels.T11_10;
         public string ContentString { get { return GetContentString(_content); } }
         protected string GetContentString(TierLevels c) { return BossTierStrings[(int)c]; }
         // Instance
@@ -767,7 +769,7 @@ namespace Rawr {
                 DamagePerHit = StandardMeleePerHit[(int)TierLevels.T11_10],
                 DamageIsPerc = false,
                 MaxNumTargets = 1,
-                AttackSpeed = 2.0f,
+                AttackSpeed = 2.5f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
                 Interruptable = false,
                 // Player Avoidances
@@ -1745,11 +1747,12 @@ namespace Rawr {
             this.Add(new BossHandler());
             this.Add(new BossHandler());
             this.Add(new BossHandler());
+            this.Add(new BossHandler());
             // Basic Setups we don't want to repeat over and over again
-            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H };
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, BossHandler.TierLevels.T11_LFR };
             // Fight Requirements
-            Min_Tanks = new int[] { 2, 2, 2, 2 };
-            Min_Healers = new int[] { 2, 5, 2, 5 };
+            Min_Tanks = new int[] { 2, 2, 2, 2, 2 };
+            Min_Healers = new int[] { 2, 5, 2, 5, 5 };
         }
         #region Variable Convenience Overrides
 
@@ -1812,6 +1815,7 @@ namespace Rawr {
                 this[1].Name = value;
                 this[2].Name = value;
                 this[3].Name = value;
+                this[4].Name = value;
             }
         }
         public string Instance
@@ -1823,6 +1827,7 @@ namespace Rawr {
                 this[1].Instance = value;
                 this[2].Instance = value;
                 this[3].Instance = value;
+                this[4].Instance = value;
             }
         }
         public BossHandler.TierLevels[] Content
@@ -1834,11 +1839,13 @@ namespace Rawr {
                     this[1].Content,
                     this[2].Content,
                     this[3].Content,
+                    this[4].Content,
                 };
             }
             set
             {
                 int i = 0;
+                this[i].Content = value[i]; i++;
                 this[i].Content = value[i]; i++;
                 this[i].Content = value[i]; i++;
                 this[i].Content = value[i]; i++;
@@ -1854,6 +1861,7 @@ namespace Rawr {
                 this[1].Comment = value;
                 this[2].Comment = value;
                 this[3].Comment = value;
+                this[4].Comment = value;
             }
         }
         // Basics
@@ -1866,11 +1874,13 @@ namespace Rawr {
                     this[1].Health,
                     this[2].Health,
                     this[3].Health,
+                    this[4].Health,
                 };
             }
             set
             {
                 int i = 0;
+                this[i].Health = value[i]; i++;
                 this[i].Health = value[i]; i++;
                 this[i].Health = value[i]; i++;
                 this[i].Health = value[i]; i++;
@@ -1886,6 +1896,7 @@ namespace Rawr {
                 this[1].MobType = value;
                 this[2].MobType = value;
                 this[3].MobType = value;
+                this[4].MobType = value;
             }
         }
         public int[] BerserkTimer
@@ -1897,11 +1908,13 @@ namespace Rawr {
                     this[1].BerserkTimer,
                     this[2].BerserkTimer,
                     this[3].BerserkTimer,
+                    this[4].BerserkTimer,
                 };
             }
             set
             {
                 int i = 0;
+                this[i].BerserkTimer = value[i]; i++;
                 this[i].BerserkTimer = value[i]; i++;
                 this[i].BerserkTimer = value[i]; i++;
                 this[i].BerserkTimer = value[i]; i++;
@@ -1917,11 +1930,13 @@ namespace Rawr {
                     this[1].SpeedKillTimer,
                     this[2].SpeedKillTimer,
                     this[3].SpeedKillTimer,
+                    this[4].SpeedKillTimer,
                 };
             }
             set
             {
                 int i = 0;
+                this[i].SpeedKillTimer = value[i]; i++;
                 this[i].SpeedKillTimer = value[i]; i++;
                 this[i].SpeedKillTimer = value[i]; i++;
                 this[i].SpeedKillTimer = value[i]; i++;
@@ -1937,11 +1952,13 @@ namespace Rawr {
                     this[1].InBackPerc_Melee,
                     this[2].InBackPerc_Melee,
                     this[3].InBackPerc_Melee,
+                    this[4].InBackPerc_Melee,
                 };
             }
             set
             {
                 int i = 0;
+                this[i].InBackPerc_Melee = value[i]; i++;
                 this[i].InBackPerc_Melee = value[i]; i++;
                 this[i].InBackPerc_Melee = value[i]; i++;
                 this[i].InBackPerc_Melee = value[i]; i++;
@@ -1957,11 +1974,13 @@ namespace Rawr {
                     this[1].InBackPerc_Ranged,
                     this[2].InBackPerc_Ranged,
                     this[3].InBackPerc_Ranged,
+                    this[4].InBackPerc_Ranged,
                 };
             }
             set
             {
                 int i = 0;
+                this[i].InBackPerc_Ranged = value[i]; i++;
                 this[i].InBackPerc_Ranged = value[i]; i++;
                 this[i].InBackPerc_Ranged = value[i]; i++;
                 this[i].InBackPerc_Ranged = value[i]; i++;
@@ -1977,11 +1996,13 @@ namespace Rawr {
                     this[1].Max_Players,
                     this[2].Max_Players,
                     this[3].Max_Players,
+                    this[4].Max_Players,
                 };
             }
             set
             {
                 int i = 0;
+                this[i].Max_Players = value[i]; i++;
                 this[i].Max_Players = value[i]; i++;
                 this[i].Max_Players = value[i]; i++;
                 this[i].Max_Players = value[i]; i++;
@@ -1997,11 +2018,13 @@ namespace Rawr {
                     this[1].Min_Tanks,
                     this[2].Min_Tanks,
                     this[3].Min_Tanks,
+                    this[4].Min_Tanks,
                 };
             }
             set
             {
                 int i = 0;
+                this[i].Min_Tanks = value[i]; i++;
                 this[i].Min_Tanks = value[i]; i++;
                 this[i].Min_Tanks = value[i]; i++;
                 this[i].Min_Tanks = value[i]; i++;
@@ -2017,11 +2040,13 @@ namespace Rawr {
                     this[1].Min_Healers,
                     this[2].Min_Healers,
                     this[3].Min_Healers,
+                    this[4].Min_Healers,
                 };
             }
             set
             {
                 int i = 0;
+                this[i].Min_Healers = value[i]; i++;
                 this[i].Min_Healers = value[i]; i++;
                 this[i].Min_Healers = value[i]; i++;
                 this[i].Min_Healers = value[i]; i++;
@@ -2037,11 +2062,13 @@ namespace Rawr {
                     this[1].Under35Perc,
                     this[2].Under35Perc,
                     this[3].Under35Perc,
+                    this[4].Under35Perc,
                 };
             }
             set
             {
                 int i = 0;
+                this[i].Under35Perc = value[i]; i++;
                 this[i].Under35Perc = value[i]; i++;
                 this[i].Under35Perc = value[i]; i++;
                 this[i].Under35Perc = value[i]; i++;
@@ -2057,11 +2084,13 @@ namespace Rawr {
                     this[1].Under20Perc,
                     this[2].Under20Perc,
                     this[3].Under20Perc,
+                    this[4].Under20Perc,
                 };
             }
             set
             {
                 int i = 0;
+                this[i].Under20Perc = value[i]; i++;
                 this[i].Under20Perc = value[i]; i++;
                 this[i].Under20Perc = value[i]; i++;
                 this[i].Under20Perc = value[i]; i++;
@@ -2079,11 +2108,13 @@ namespace Rawr {
                     this[1].Resist_Physical,
                     this[2].Resist_Physical,
                     this[3].Resist_Physical,
+                    this[4].Resist_Physical,
                 };
             }
             set
             {
                 int i = 0;
+                this[i].Resist_Physical = value[i]; i++;
                 this[i].Resist_Physical = value[i]; i++;
                 this[i].Resist_Physical = value[i]; i++;
                 this[i].Resist_Physical = value[i]; i++;
@@ -2099,11 +2130,13 @@ namespace Rawr {
                     this[1].Resist_Frost,
                     this[2].Resist_Frost,
                     this[3].Resist_Frost,
+                    this[4].Resist_Frost,
                 };
             }
             set
             {
                 int i = 0;
+                this[i].Resist_Frost = value[i]; i++;
                 this[i].Resist_Frost = value[i]; i++;
                 this[i].Resist_Frost = value[i]; i++;
                 this[i].Resist_Frost = value[i]; i++;
@@ -2119,11 +2152,13 @@ namespace Rawr {
                     this[1].Resist_Fire,
                     this[2].Resist_Fire,
                     this[3].Resist_Fire,
+                    this[4].Resist_Fire,
                 };
             }
             set
             {
                 int i = 0;
+                this[i].Resist_Fire = value[i]; i++;
                 this[i].Resist_Fire = value[i]; i++;
                 this[i].Resist_Fire = value[i]; i++;
                 this[i].Resist_Fire = value[i]; i++;
@@ -2139,11 +2174,13 @@ namespace Rawr {
                     this[1].Resist_Nature,
                     this[2].Resist_Nature,
                     this[3].Resist_Nature,
+                    this[4].Resist_Nature,
                 };
             }
             set
             {
                 int i = 0;
+                this[i].Resist_Nature = value[i]; i++;
                 this[i].Resist_Nature = value[i]; i++;
                 this[i].Resist_Nature = value[i]; i++;
                 this[i].Resist_Nature = value[i]; i++;
@@ -2159,11 +2196,13 @@ namespace Rawr {
                     this[1].Resist_Arcane,
                     this[2].Resist_Arcane,
                     this[3].Resist_Arcane,
+                    this[4].Resist_Arcane,
                 };
             }
             set
             {
                 int i = 0;
+                this[i].Resist_Arcane = value[i]; i++;
                 this[i].Resist_Arcane = value[i]; i++;
                 this[i].Resist_Arcane = value[i]; i++;
                 this[i].Resist_Arcane = value[i]; i++;
@@ -2179,11 +2218,13 @@ namespace Rawr {
                     this[1].Resist_Shadow,
                     this[2].Resist_Shadow,
                     this[3].Resist_Shadow,
+                    this[4].Resist_Shadow,
                 };
             }
             set
             {
                 int i = 0;
+                this[i].Resist_Shadow = value[i]; i++;
                 this[i].Resist_Shadow = value[i]; i++;
                 this[i].Resist_Shadow = value[i]; i++;
                 this[i].Resist_Shadow = value[i]; i++;
@@ -2199,11 +2240,13 @@ namespace Rawr {
                     this[1].Resist_Holy,
                     this[2].Resist_Holy,
                     this[3].Resist_Holy,
+                    this[4].Resist_Holy,
                 };
             }
             set
             {
                 int i = 0;
+                this[i].Resist_Holy = value[i]; i++;
                 this[i].Resist_Holy = value[i]; i++;
                 this[i].Resist_Holy = value[i]; i++;
                 this[i].Resist_Holy = value[i]; i++;
@@ -2220,11 +2263,13 @@ namespace Rawr {
                     this[1].TimeBossIsInvuln,
                     this[2].TimeBossIsInvuln,
                     this[3].TimeBossIsInvuln,
+                    this[4].TimeBossIsInvuln,
                 };
             }
             set
             {
                 int i = 0;
+                this[i].TimeBossIsInvuln = value[i]; i++;
                 this[i].TimeBossIsInvuln = value[i]; i++;
                 this[i].TimeBossIsInvuln = value[i]; i++;
                 this[i].TimeBossIsInvuln = value[i]; i++;

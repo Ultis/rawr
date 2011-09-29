@@ -23,19 +23,19 @@ namespace Rawr.Bosses
             #region Info
             Name = "Pit Lord Argaloth";
             Instance = "Baradin Hold";
-            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, BossHandler.TierLevels.T11_LFR };
             #endregion
             #region Basics
-            Health = new float[] { 21473000f, 64419000f, 0, 0 };
+            Health = new float[] { 21473000f, 64419000f, 0, 0, 0 };
             MobType = (int)MOB_TYPES.DEMON;
             // 5 minute Berserk timer
-            BerserkTimer = new int[] { 5 * 60, 5 * 60, 0, 0 };
-            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 0, 0 };
-            InBackPerc_Melee = new double[] { 0.60f, 0.60f, 0, 0 };
-            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0, 0 };
-            Max_Players = new int[] { 10, 25, 0, 0 };
-            Min_Tanks = new int[] { 2, 2, 0, 0 };
-            Min_Healers = new int[] { 3, 5, 0, 0 };
+            BerserkTimer = new int[] { 5 * 60, 5 * 60, 0, 0, 0 };
+            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 0, 0, 0 };
+            InBackPerc_Melee = new double[] { 0.60f, 0.60f, 0, 0, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Max_Players = new int[] { 10, 25, 0, 0, 0 };
+            Min_Tanks = new int[] { 2, 2, 0, 0, 0 };
+            Min_Healers = new int[] { 3, 5, 0, 0, 0 };
             #endregion
             #region The Phases
             for (int i = 0; i < 2; i++)
@@ -200,15 +200,15 @@ namespace Rawr.Bosses
             }
             #endregion
             #region Defensive
-            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
-            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0, 0 };
         }
     }
     #endregion
@@ -223,19 +223,19 @@ namespace Rawr.Bosses
             #region Info
             Name = "Magmaw";
             Instance = "Blackwing Descent";
-            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, BossHandler.TierLevels.T11_LFR };
             #endregion
             #region Basics
             // Health values were lowered on Normal by 20% in 4.2
-            Health = new float[] { 33497880f * 0.80f, 81082048f, 46895800f, 120016400f };
+            Health = new float[] { 33497880f * 0.80f, 81082048f, 46895800f, 120016400f, 0 };
             MobType = (int)MOB_TYPES.BEAST;
-            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
-            SpeedKillTimer = new int[] { 6 * 60, 6 * 60, 6 * 60, 6 * 60 };
-            InBackPerc_Melee = new double[] { 0.70f, 0.70f, 0.70f, 0.70f };
-            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
-            Max_Players = new int[] { 10, 25, 10, 25 };
-            Min_Tanks = new int[] { 2, 2, 3, 3 };
-            Min_Healers = new int[] { 3, 5, 3, 6 };
+            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, 0 };
+            SpeedKillTimer = new int[] { 6 * 60, 6 * 60, 6 * 60, 6 * 60, 0 };
+            InBackPerc_Melee = new double[] { 0.70f, 0.70f, 0.70f, 0.70f, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f, 0 };
+            Max_Players = new int[] { 10, 25, 10, 25, 0 };
+            Min_Tanks = new int[] { 2, 2, 3, 3, 0 };
+            Min_Healers = new int[] { 3, 5, 3, 6, 0 };
             #endregion
             #region Phase Info
             for (int i = 0; i < 4; i++)
@@ -561,15 +561,15 @@ namespace Rawr.Bosses
             }
             #endregion
             #region Defensive
-            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
-            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0.00f, 0.00f };
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0.00f, 0.00f, 0 };
         }
     }
 
@@ -581,19 +581,19 @@ namespace Rawr.Bosses
             #region Info
             Name = "Omnotron Defense System";
             Instance = "Blackwing Descent";
-            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, BossHandler.TierLevels.T11_LFR };
             #endregion
             #region Basics
             // Health values were lowered on Normal by 20% in 4.2
-            Health = new float[] { 32209000f * 0.80f, 79364208f, 45080000f, 126261240f };
+            Health = new float[] { 32209000f * 0.80f, 79364208f, 45080000f, 126261240f, 0 };
             MobType = (int)MOB_TYPES.MECHANICAL;
-            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
-            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
-            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
-            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
-            Max_Players = new int[] { 10, 25, 10, 25 };
-            Min_Tanks = new int[] { 2, 2, 2, 2 };
-            Min_Healers = new int[] { 3, 5, 3, 5 };
+            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, 0 };
+            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60, 0 };
+            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f, 0 };
+            Max_Players = new int[] { 10, 25, 10, 25, 0 };
+            Min_Tanks = new int[] { 2, 2, 2, 2, 0 };
+            Min_Healers = new int[] { 3, 5, 3, 5, 0 };
             #endregion
             #region Phase Info
             for (int i = 0; i < 4; i++)
@@ -744,15 +744,15 @@ namespace Rawr.Bosses
             }
             #endregion
             #region Defensive
-            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
-            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0.00f, 0.00f };
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0.00f, 0.00f, 0 };
         }
     }
 
@@ -764,19 +764,19 @@ namespace Rawr.Bosses
             #region Info
             Name = "Maloriak";
             Instance = "Blackwing Descent";
-            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, BossHandler.TierLevels.T11_LFR };
             #endregion
             #region Basics
             // Health values were lowered on Normla by 80% in 4.2
-            Health = new float[] { 24700000f * 0.80f, 68713600f, 34631000f, 121310000f };
+            Health = new float[] { 24700000f * 0.80f, 68713600f, 34631000f, 121310000f, 0 };
             MobType = (int)MOB_TYPES.DRAGONKIN;
-            BerserkTimer = new int[] { 7 * 60, 7 * 60, 12 * 60, 12 * 60 }; // Source: http://us.battle.net/wow/en/blog/1232869
-            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
-            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
-            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
-            Max_Players = new int[] { 10, 25, 10, 25 };
-            Min_Tanks = new int[] { 2, 2, 3, 3 };
-            Min_Healers = new int[] { 3, 5, 3, 5 };
+            BerserkTimer = new int[] { 7 * 60, 7 * 60, 12 * 60, 12 * 60, 0 }; // Source: http://us.battle.net/wow/en/blog/1232869
+            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60, 0 };
+            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f, 0 };
+            Max_Players = new int[] { 10, 25, 10, 25, 0 };
+            Min_Tanks = new int[] { 2, 2, 3, 3, 0 };
+            Min_Healers = new int[] { 3, 5, 3, 5, 0 };
             #endregion
             #region Offensive
             #region Multiple Targets
@@ -1181,15 +1181,15 @@ namespace Rawr.Bosses
             #endregion
             #endregion
             #region Defensive
-            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
-            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0.00f, 0.00f };
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0.00f, 0.00f, 0 };
         }
     }
 
@@ -1201,18 +1201,18 @@ namespace Rawr.Bosses
             #region Info
             Name = "Atramedes";
             Instance = "Blackwing Descent";
-            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, BossHandler.TierLevels.T11_LFR };
             #endregion
             #region Basics
-            Health = new float[] { 32632000f * 0.80f, 78333504f, 45684800f, 103070400f };
+            Health = new float[] { 32632000f * 0.80f, 78333504f, 45684800f, 103070400f, 0 };
             MobType = (int)MOB_TYPES.DRAGONKIN;
-            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
-            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
-            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
-            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
-            Max_Players = new int[] { 10, 25, 10, 25 };
-            Min_Tanks = new int[] { 1, 1, 1, 1 };
-            Min_Healers = new int[] { 3, 5, 3, 5 };
+            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, 0 };
+            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60, 0 };
+            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f, 0 };
+            Max_Players = new int[] { 10, 25, 10, 25, 0 };
+            Min_Tanks = new int[] { 1, 1, 1, 1, 0 };
+            Min_Healers = new int[] { 3, 5, 3, 5, 0 };
             #endregion
             #region Offensive
             #region Multiple Targets
@@ -1374,13 +1374,13 @@ namespace Rawr.Bosses
             #endregion
             #endregion
             #region Defensive
-            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
             #region Impedances
             /*for (int i = 0; i < 2; i++)
@@ -1391,7 +1391,7 @@ namespace Rawr.Bosses
                 //Roots;
                 //Disarms;
             }*/
-            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
             /* TODO: "Ancient Dwarven Shield" - There are 8 of these (4 on each side of the room) and can be interacted with by any raid member. Using one
              *      causes a Resonating Clash which clears all sound meters and interrupts any spells being cast by Atramedes, as well as giving him a
@@ -1410,19 +1410,19 @@ namespace Rawr.Bosses
             #region Info
             Name = "Chimaron";
             Instance = "Blackwing Descent";
-            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, BossHandler.TierLevels.T11_LFR };
             #endregion
             #region Basics
             // Health values were lowered on Normal by 20% in 4.2
-            Health = new float[] { 25939000f * 0.80f, 90616064f * 0.80f, 36246000f, 126776592f };
+            Health = new float[] { 25939000f * 0.80f, 90616064f * 0.80f, 36246000f, 126776592f, 0 };
             MobType = (int)MOB_TYPES.BEAST;
-            BerserkTimer = new int[] { 10 * 60, 10 * 60, 450, 450 };
-            SpeedKillTimer = new int[] { 6 * 60, 6 * 60, 6 * 60, 6 * 60 };
-            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
-            InBackPerc_Ranged = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
-            Max_Players = new int[] { 10, 25, 10, 25 };
-            Min_Tanks = new int[] { 2, 3, 2, 3 };
-            Min_Healers = new int[] { 3, 6, 3, 6 };
+            BerserkTimer = new int[] { 10 * 60, 10 * 60, 450, 450, 0 };
+            SpeedKillTimer = new int[] { 6 * 60, 6 * 60, 6 * 60, 6 * 60, 0 };
+            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f, 0 };
+            InBackPerc_Ranged = new double[] { 0.95f, 0.95f, 0.95f, 0.95f, 0 };
+            Max_Players = new int[] { 10, 25, 10, 25, 0 };
+            Min_Tanks = new int[] { 2, 3, 2, 3, 0 };
+            Min_Healers = new int[] { 3, 6, 3, 6, 0 };
             #endregion
             #region Offensive
             //MaxNumTargets = new double[] { 1, 1, 0, 0 };
@@ -1480,13 +1480,13 @@ namespace Rawr.Bosses
             #endregion
             #endregion
             #region Defensive
-            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
             #region Impedances
             for (int i = 0; i < 2; i++)
@@ -1497,7 +1497,7 @@ namespace Rawr.Bosses
                 //Roots;
                 //Disarms;
             }
-            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
             /* TODO:
              * "Bile-O-Tron" - This is a minion of Finkle Einhorn (who is locked in a cage behind the boss) and plays a crucial role in this fight. It grants
@@ -1544,22 +1544,22 @@ namespace Rawr.Bosses
             #region Info
             Name = "Nefarian";
             Instance = "Blackwing Descent";
-            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, BossHandler.TierLevels.T11_LFR };
             #endregion
             #region Basics
             // Onyxia = 6,600,000 / 24,000,000 / 9,017,400 / 31,500,000
             // Nefarion = 28,500,000 / 98000000 / 36,316,000 / 126,815,650
             // Health values were lowered on Normal by 20% in 4.2
-            Health = new float[] { (5582980f + 22761380f), (19755160f + 79707776f), (9240000f + 36316000f), (34786260f + 179342496f) };
+            Health = new float[] { (5582980f + 22761380f), (19755160f + 79707776f), (9240000f + 36316000f), (34786260f + 179342496f), 0 };
             MobType = (int)MOB_TYPES.DRAGONKIN;
-            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
-            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
-            InBackPerc_Melee = new double[] { 0.65f, 0.65f, 0.65f, 0.65f };
-            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
-            Max_Players = new int[] { 10, 25, 10, 25 };
+            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, 0 };
+            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60, 0 };
+            InBackPerc_Melee = new double[] { 0.65f, 0.65f, 0.65f, 0.65f, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f, 0 };
+            Max_Players = new int[] { 10, 25, 10, 25, 0 };
             // 1 tank to tank Oyxia, 1 for kiting (though a hunter or kiting class can do this), and 1 for Nafarion
-            Min_Tanks = new int[] { 3, 3, 3, 3 };
-            Min_Healers = new int[] { 3, 5, 3, 5 };
+            Min_Tanks = new int[] { 3, 3, 3, 3, 0 };
+            Min_Healers = new int[] { 3, 5, 3, 5, 0 };
             #endregion
             #region Offensive
             //MaxNumTargets = new double[] { 1, 1, 0, 0 };
@@ -1840,20 +1840,20 @@ namespace Rawr.Bosses
                     #region Heroic Only
                     if ( i == 2 || i == 3 )
                     {
-                // Mind Controlled part of
-                // Free Your Mind - Focus your will to break Nefarian's dominion over your actions.
-                // Stolen Power - Damage and healing of your next spell or ability is increased by 15%.
-                // each stolen Power generates compounting stacking buff
-                // 1, 2, 4, 7, 11, 16, 22, 29, 37, 46
-                // Once at 46 stacks, use "Free Your Mind" to remove the mind control
-                // Basically allow 10 seconds of MC for each person.
-                // Only happens in P1 and P3
-                // First one does not happen until a minute into the fight
-                // each one happens every 18 seconds
-                // 4 MCs in 25 man, possible 2 in 10 man
-                // Does not target MT or OT
-                // Gain a 15% damage bonus for 15 seconds
-                // Does not affect Rip or Bane of Doom
+                        // Mind Controlled part of
+                        // Free Your Mind - Focus your will to break Nefarian's dominion over your actions.
+                        // Stolen Power - Damage and healing of your next spell or ability is increased by 15%.
+                        // each stolen Power generates compounting stacking buff
+                        // 1, 2, 4, 7, 11, 16, 22, 29, 37, 46
+                        // Once at 46 stacks, use "Free Your Mind" to remove the mind control
+                        // Basically allow 10 seconds of MC for each person.
+                        // Only happens in P1 and P3
+                        // First one does not happen until a minute into the fight
+                        // each one happens every 18 seconds
+                        // 4 MCs in 25 man, possible 2 in 10 man
+                        // Does not target MT or OT
+                        // Gain a 15% damage bonus for 15 seconds
+                        // Does not affect Rip or Bane of Doom
                         // DPS should take the full duration
                         float timer = BerserkTimer[i] / ((BerserkTimer[i] * .7f) / 30f);
                         this[i].Stuns.Add(new Impedance
@@ -1892,14 +1892,14 @@ namespace Rawr.Bosses
                             = this[i].Stuns[this[i].Stuns.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer]
                             = true;
 
-                // Heroic Only
-                // Explosive Cinders - Burns several enemies at random, coating them in explosive residue that inflicts periodic fire damage. 
-                //     The residue detonates after 8 sec, inflicting 42750 to 47250 Fire damage in a small area.
-                // Only happens in P2
-                // Basically the player needs to jump into the lava and let the explosion explode outside the piller group so as not to
-                //      spread the explosion to the rest of the piller group
-                // 3 people are targeted each time.
-                // Targeted players will also have to deal with lava damage (4k damage every second) [assume 5 seconds of in the lava]
+                        // Heroic Only
+                        // Explosive Cinders - Burns several enemies at random, coating them in explosive residue that inflicts periodic fire damage. 
+                        //     The residue detonates after 8 sec, inflicting 42750 to 47250 Fire damage in a small area.
+                        // Only happens in P2
+                        // Basically the player needs to jump into the lava and let the explosion explode outside the piller group so as not to
+                        //      spread the explosion to the rest of the piller group
+                        // 3 people are targeted each time.
+                        // Targeted players will also have to deal with lava damage (4k damage every second) [assume 5 seconds of in the lava]
                         timer = BerserkTimer[i] / ((BerserkTimer[i] * .3f) / 25f);
                         this[i].Attacks.Add(new Attack
                         {
@@ -1964,20 +1964,19 @@ namespace Rawr.Bosses
                             = this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS]
                             = this[i].Moves[this[i].Moves.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
                             = true;
-
                     }
                     #endregion
-            }
+                }
             #endregion
             #endregion
             #region Defensive
-            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
             #region Impedances
             for (int i = 0; i < 2; i++)
@@ -1988,7 +1987,7 @@ namespace Rawr.Bosses
                 //Roots;
                 //Disarms;
             }
-            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
             /* TODO:
              */
@@ -2006,7 +2005,7 @@ namespace Rawr.Bosses
             #region Info
             Name = "Halfus Wyrmbreaker";
             Instance = "The Bastion of Twilight";
-            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, BossHandler.TierLevels.T11_LFR };
             #endregion
             #region Basics
             // Kill 3 of the 4 dragons plus Halfus, tanked on top of the boss
@@ -2014,15 +2013,15 @@ namespace Rawr.Bosses
             // Dragons = 4,150,000 / 12,600,649 / 5,810,000 / 17,640,909
             // Halfus = 32,467,000 / 115,954,200 / 45,453,800 / 162,335,880
             // Health values were lowered on normal by 20% in 4.2
-            Health = new float[] { 25939384f, 115954200f * 0.80f, 51535200f, 184667808f };
+            Health = new float[] { 25939384f, 115954200f * 0.80f, 51535200f, 184667808f, 0 };
             MobType = (int)MOB_TYPES.HUMANOID;
-            BerserkTimer = new int[] { 6 * 60, 6 * 60, 6 * 60, 6 * 60 };
-            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
-            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
-            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
-            Max_Players = new int[] { 10, 25, 10, 25 };
-            Min_Tanks = new int[] { 2, 2, 3, 4 };
-            Min_Healers = new int[] { 3, 5, 3, 6 };
+            BerserkTimer = new int[] { 6 * 60, 6 * 60, 6 * 60, 6 * 60, 0 };
+            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60, 0 };
+            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f, 0 };
+            Max_Players = new int[] { 10, 25, 10, 25, 0 };
+            Min_Tanks = new int[] { 2, 2, 3, 4, 0 };
+            Min_Healers = new int[] { 3, 5, 3, 6, 0 };
             #endregion
             #region Offensive
             //MaxNumTargets = new double[] { 1, 1, 0, 0 };
@@ -2035,13 +2034,13 @@ namespace Rawr.Bosses
             #endregion
             #endregion
             #region Defensive
-            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
             #region Impedances
             for (int i = 0; i < 2; i++)
@@ -2052,7 +2051,7 @@ namespace Rawr.Bosses
                 //Roots;
                 //Disarms;
             }
-            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
             /* TODO:
              * Melee - Halfus Wyrmbreaker's melee attacks hit for around 12-18k(10m)/15-22k(25m) after mitigation.
@@ -2106,20 +2105,20 @@ namespace Rawr.Bosses
             #region Info
             Name = "Valiona & Theralion";
             Instance = "The Bastion of Twilight";
-            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, BossHandler.TierLevels.T11_LFR };
             #endregion
             #region Basics
             // Health is split between both Valiona and Theralion
             // Health values was lowered on normal by 20% in 4.2
-            Health = new float[] { 25767600f, 97916880f * 0.80f, 48099520f, 164912640f };
+            Health = new float[] { 25767600f, 97916880f * 0.80f, 48099520f, 164912640f, 0 };
             MobType = (int)MOB_TYPES.DRAGONKIN;
-            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
-            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
-            InBackPerc_Melee = new double[] { 0.97f, 0.97f, 0.97f, 0.97f };
-            InBackPerc_Ranged = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
-            Max_Players = new int[] { 10, 25, 10, 25 };
-            Min_Tanks = new int[] { 1, 1, 2, 2 };
-            Min_Healers = new int[] { 2, 6, 3, 6 };
+            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, 0 };
+            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60, 0 };
+            InBackPerc_Melee = new double[] { 0.97f, 0.97f, 0.97f, 0.97f, 0 };
+            InBackPerc_Ranged = new double[] { 0.95f, 0.95f, 0.95f, 0.95f, 0 };
+            Max_Players = new int[] { 10, 25, 10, 25, 0 };
+            Min_Tanks = new int[] { 1, 1, 2, 2, 0 };
+            Min_Healers = new int[] { 2, 6, 3, 6, 0 };
             #endregion
             #region Offensive
             //MaxNumTargets = new double[] { 1, 1, 0, 0 };
@@ -2132,13 +2131,13 @@ namespace Rawr.Bosses
             #endregion
             #endregion
             #region Defensive
-            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
             #region Impedances
             for (int i = 0; i < 2; i++)
@@ -2149,7 +2148,7 @@ namespace Rawr.Bosses
                 //Roots;
                 //Disarms;
             }
-            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
             /* TODO:
              * Taken from Tankspot - http://www.tankspot.com/showthread.php?71345-Preview-of-Cataclysm-Raid-Bosses
@@ -2226,7 +2225,7 @@ namespace Rawr.Bosses
             #region Info
             Name = "Twilight Ascendant Council";
             Instance = "The Bastion of Twilight";
-            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, BossHandler.TierLevels.T11_LFR };
             #endregion
             #region Basics
             // Arion = 4,724,000 / 14,600,000 / 6,613,600 (Guess) / 20,440,000 (Guess)
@@ -2237,15 +2236,15 @@ namespace Rawr.Bosses
             // His current health going into P3 is whatever is the remainder of what is currently on all mobs put together
             // So for P3, it's best to keep everyone at or close to 25% as possible going into each phase.
             // Health values were lowered on normal by 20% in patch 4.2
-            Health = new float[] { ((4724060f * 2f) + (6871060f * 2f)), ((14600000f * 2f) + (21900000f * 2f)), ((12850854f * 2f) + (8374470f * 2f)), ((24600000f * 2f) + (38000000f * 2f)) };
+            Health = new float[] { ((4724060f * 2f) + (6871060f * 2f)), ((14600000f * 2f) + (21900000f * 2f)), ((12850854f * 2f) + (8374470f * 2f)), ((24600000f * 2f) + (38000000f * 2f)), 0 };
             MobType = (int)MOB_TYPES.ELEMENTAL;
-            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
-            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
-            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
-            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
-            Max_Players = new int[] { 10, 25, 10, 25 };
-            Min_Tanks = new int[] { 2, 2, 2, 2 };
-            Min_Healers = new int[] { 3, 5, 3, 5 };
+            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, 0 };
+            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60, 0 };
+            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f, 0 };
+            Max_Players = new int[] { 10, 25, 10, 25, 0 };
+            Min_Tanks = new int[] { 2, 2, 2, 2, 0 };
+            Min_Healers = new int[] { 3, 5, 3, 5, 0 };
             #endregion
             #region Offensive
             //MaxNumTargets = new double[] { 1, 1, 0, 0 };
@@ -2258,13 +2257,13 @@ namespace Rawr.Bosses
             #endregion
             #endregion
             #region Defensive
-            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
             #region Impedances
             for (int i = 0; i < 2; i++)
@@ -2275,7 +2274,7 @@ namespace Rawr.Bosses
                 //Roots;
                 //Disarms;
             }
-            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
             /* TODO:
              * "Ignacious, the fire ascendant"
@@ -2394,19 +2393,19 @@ namespace Rawr.Bosses
             #region Info
             Name = "Cho'gall";
             Instance = "The Bastion of Twilight";
-            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, BossHandler.TierLevels.T11_LFR };
             #endregion
             #region Basics
             // Health values on Normal were lowered by 20% in 4.2
-            Health = new float[] { 26798304f, 101352560f * 0.80f, 47000000f, 146000000f };
+            Health = new float[] { 26798304f, 101352560f * 0.80f, 47000000f, 146000000f, 0 };
             MobType = (int)MOB_TYPES.HUMANOID;
-            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
-            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
-            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
-            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
-            Max_Players = new int[] { 10, 25, 10, 25 };
-            Min_Tanks = new int[] { 2, 2, 3, 3 };
-            Min_Healers = new int[] { 3, 5, 3, 6 };
+            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, 0 };
+            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60, 0 };
+            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f, 0 };
+            Max_Players = new int[] { 10, 25, 10, 25, 0 };
+            Min_Tanks = new int[] { 2, 2, 3, 3, 0 };
+            Min_Healers = new int[] { 3, 5, 3, 6, 0 };
             #endregion
             #region Offensive
             //MaxNumTargets = new double[] { 1, 1, 0, 0 };
@@ -2419,13 +2418,13 @@ namespace Rawr.Bosses
             #endregion
             #endregion
             #region Defensive
-            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
             #region Impedances
             for (int i = 0; i < 2; i++)
@@ -2436,7 +2435,7 @@ namespace Rawr.Bosses
                 //Roots;
                 //Disarms;
             }
-            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
             /* TODO:
              * "Corrupted Blood"
@@ -2523,28 +2522,28 @@ namespace Rawr.Bosses
             Name = "Lady Sinestra";
             Instance = "The Bastion of Twilight";
             // She is only available in the Heroic version
-            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, BossHandler.TierLevels.T11_LFR };
             #endregion
             #region Basics
             // Her health starts at 60%
             // you bring her to 30% to start P2
             // At the end of P2, she restors her health to 100%
-            Health = new float[] { 42946000f * 1.3f, 128838000f * 1.3f, 0f, 0f };
+            Health = new float[] { 42946000f * 1.3f, 128838000f * 1.3f, 0f, 0f, 0f };
             MobType = (int)MOB_TYPES.DRAGONKIN;
-            BerserkTimer = new int[] { 10 * 60, 10 * 60, 0, 0 };
-            SpeedKillTimer = new int[] { 7 * 60, 7 * 60, 0, 0 };
-            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0, 0 };
-            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0, 0 };
-            Max_Players = new int[] { 10, 25, 0, 0 };
-            Min_Tanks = new int[] { 2, 2, 0, 0 };
-            Min_Healers = new int[] { 3, 5, 0, 0 };
-            Under35Perc = new double[] { 0.166666667, 0.166666667, 0, 0 };
-            Under20Perc = new double[] { 0.151515152, 0.151515152, 0, 0 };
+            BerserkTimer = new int[] { 10 * 60, 10 * 60, 0, 0, 0 };
+            SpeedKillTimer = new int[] { 7 * 60, 7 * 60, 0, 0, 0 };
+            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0, 0, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Max_Players = new int[] { 10, 25, 0, 0, 0 };
+            Min_Tanks = new int[] { 2, 2, 0, 0, 0 };
+            Min_Healers = new int[] { 3, 5, 0, 0, 0 };
+            Under35Perc = new double[] { 0.166666667, 0.166666667, 0, 0, 0 };
+            Under20Perc = new double[] { 0.151515152, 0.151515152, 0, 0, 0 };
 
             // Assume it takes 60 seconds to get through P2.
             // Technically she isn't invulneratble, it's just while in P2, she heals herself fairly quickly
             // so whatever damage you do to her is healed immediately. But for all intense and purpose, she is invulnerable.
-            TimeBossIsInvuln = new float[] { 60, 60, 0, 0 };
+            TimeBossIsInvuln = new float[] { 60, 60, 0, 0, 0 };
             #endregion
             #region Offensive
             //MaxNumTargets = new double[] { 1, 1, 0, 0 };
@@ -2630,13 +2629,13 @@ namespace Rawr.Bosses
             #endregion
             #endregion
             #region Defensive
-            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
             #region Impedances
             for (int i = 0; i < 2; i++)
@@ -2719,22 +2718,22 @@ namespace Rawr.Bosses
             #region Info
             Name = "Conclave Of Wind";
             Instance = "Throne of the Four Winds";
-            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, BossHandler.TierLevels.T11_LFR };
             #endregion
             #region Basics
             // Rohash = 4,120,000 / 14,429,856 / 5,768,000 / 20,201,799
             // Anshal = 4,120,000 / 14,429,856 / 5,768,000 / 20,201,799
             // Nezir = 7,210,000 / 25,252,248 / 10,094,000 / 35,353,148
             // Health values were lowered on normal by 20% in 4.2
-            Health = new float[] { (4294600f + 4294600f + 7300820f) * 0.80f, (14601640f + 14601640f + 25252248f) * 0.80f, (5768000f + 5768000f + 10094000f), (23362624f + 23362624f + 41228160f) };
+            Health = new float[] { (4294600f + 4294600f + 7300820f) * 0.80f, (14601640f + 14601640f + 25252248f) * 0.80f, (5768000f + 5768000f + 10094000f), (23362624f + 23362624f + 41228160f), 0 };
             MobType = (int)MOB_TYPES.ELEMENTAL;
-            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
-            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
-            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
-            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
-            Max_Players = new int[] { 10, 25, 10, 25 };
-            Min_Tanks = new int[] { 2, 2, 2, 2 };
-            Min_Healers = new int[] { 3, 5, 3, 6 };
+            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, 0 };
+            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60, 0 };
+            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f, 0 };
+            Max_Players = new int[] { 10, 25, 10, 25, 0 };
+            Min_Tanks = new int[] { 2, 2, 2, 2, 0 };
+            Min_Healers = new int[] { 3, 5, 3, 6, 0 };
             #endregion
             #region Offensive
             //MaxNumTargets = new double[] { 1, 1, 0, 0 };
@@ -2747,13 +2746,13 @@ namespace Rawr.Bosses
             #endregion
             #endregion
             #region Defensive
-            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
             #region Impedances
             for (int i = 0; i < 2; i++)
@@ -2764,7 +2763,7 @@ namespace Rawr.Bosses
                 //Roots;
                 //Disarms;
             }
-            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
             /* TODO:
              * "Nezir, Djinn of the North Wind"
@@ -2841,19 +2840,19 @@ namespace Rawr.Bosses
             #region Info
             Name = "Al'Akir";
             Instance = "Throne of the Four Winds";
-            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, };
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, BossHandler.TierLevels.T11_LFR };
             #endregion
             #region Basics
             // Health values were lowered on Normal by 20% in 4.2
-            Health = new float[] { 24049760f, 84174160f, 48099520f, 168348320f };
+            Health = new float[] { 24049760f, 84174160f, 48099520f, 168348320f, 0 };
             MobType = (int)MOB_TYPES.ELEMENTAL;
-            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
-            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
-            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
-            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
-            Max_Players = new int[] { 10, 25, 10, 25 };
-            Min_Tanks = new int[] { 2, 2, 2, 2 };
-            Min_Healers = new int[] { 3, 5, 3, 6 };
+            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, 0 };
+            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60, 0 };
+            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f, 0 };
+            Max_Players = new int[] { 10, 25, 10, 25, 0 };
+            Min_Tanks = new int[] { 2, 2, 2, 2, 0 };
+            Min_Healers = new int[] { 3, 5, 3, 6, 0 };
             #endregion
             #region Offensive
             //MaxNumTargets = new double[] { 1, 1, 0, 0 };
@@ -2866,13 +2865,13 @@ namespace Rawr.Bosses
             #endregion
             #endregion
             #region Defensive
-            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
             #region Impedances
             for (int i = 0; i < 2; i++)
@@ -2883,7 +2882,7 @@ namespace Rawr.Bosses
                 //Roots;
                 //Disarms;
             }
-            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
             /* TODO:
              * "Fair Weather Phase"
