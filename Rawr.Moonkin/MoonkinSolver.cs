@@ -197,7 +197,7 @@ namespace Rawr.Moonkin
                         {
                             Name = "SF",
                             BaseDamage = (1214f + 1514f) / 2.0f,
-                            SpellDamageModifier = 1.0f,
+                            SpellDamageModifier = 1.231f,
                             BaseCastTime = 3.2f,
                             BaseManaCost = (float)(int)(BaseMana * 0.11f),
                             DotEffect = null,
@@ -224,7 +224,7 @@ namespace Rawr.Moonkin
                         {
                             Name = "W",
                             BaseDamage = (831f + 937f) / 2.0f,
-                            SpellDamageModifier = 2.5f/3.5f,
+                            SpellDamageModifier = 3.075f/3.5f,
                             BaseCastTime = 2.5f,
                             BaseManaCost = (float)(int)(BaseMana * 0.09f),
                             DotEffect = null,
