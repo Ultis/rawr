@@ -136,6 +136,9 @@ namespace Rawr.Moonkin
             int mfExtendedCount = 0;
             int numMoonfiresExtended = 0;
             int numMoonfiresCast = 0;
+            int rotationMoonfiresCast = 0;
+            int rotationMoonfiresExtended = 0;
+            long[] rotationCastCounts = new long[12];
 
             double currentMFTimer = 0;
             double currentISTimer = 0;
@@ -161,22 +164,7 @@ namespace Rawr.Moonkin
                 double isTickTime = isTicksSoFar * (currentISHasNG ? NGTickRate : CurrentTickRate);
                 double timeSinceLastISTick = (currentMFHasNG ? NGTickRate : CurrentTickRate) - (currentISTimer - isTickTime);
 
-                // If we're eligible for Nature's Grace and both dots are up for refresh, cast Insect Swarm first
-                /*if (currentNGCooldown == 0 && currentISTimer <= CurrentTickRate && currentMFTimer <= CurrentTickRate)
-                {
-                    double isCastTime = (currentNGTimer > 0 ? NGGlobalCooldown : CurrentGlobalCooldown);
-                    if (currentNGTimer > 0) ngTimeSpent += isCastTime;
-                    currentMFTimer = Math.Max(0, currentMFTimer - isCastTime);
-                    currentISTimer = (currentNGTimer > 0 ? NGISDuration : CurrentISDuration) - isCastTime;
-                    currentSSCooldown = Math.Max(0, currentSSCooldown - isCastTime);
-                    currentISHasNG = currentNGTimer > 0;
-                    currentNGTimer = currentNGCooldown == 0 ? 15 - (currentNGTimer > 0 ? NGGlobalCooldown : CurrentGlobalCooldown) : Math.Max(0, currentNGTimer - NGGlobalCooldown);
-                    currentNGCooldown = 60 - isCastTime;
-                    currentActionTime = isCastTime;
-                    if (inEclipse && eclipseDirection == -1) ++castCounts[11];
-                    else ++castCounts[9];
-                }*/
-                // Second priority: Refresh Insect Swarm
+                // First priority: Refresh Insect Swarm
                 if (currentISTimer < (currentISHasNG ? NGTickRate : CurrentTickRate))
                 {
                     double isCastTime = (currentNGTimer > 0 ? NGGlobalCooldown : CurrentGlobalCooldown);
@@ -188,10 +176,10 @@ namespace Rawr.Moonkin
                     currentNGTimer = currentNGCooldown == 0 ? 15 - (currentNGTimer > 0 ? NGGlobalCooldown : CurrentGlobalCooldown) : Math.Max(0, currentNGTimer - NGGlobalCooldown);
                     if (currentNGCooldown == 0) currentNGCooldown = 60 - isCastTime;
                     currentActionTime = isCastTime;
-                    if (inEclipse && eclipseDirection == -1) ++castCounts[11];
-                    else ++castCounts[9];
+                    if (inEclipse && eclipseDirection == -1) ++rotationCastCounts[11];
+                    else ++rotationCastCounts[9];
                 }
-                // Top priority: Refresh Moonfire
+                // Second priority: Refresh Moonfire
                 else if (currentMFTimer < (currentMFHasNG ? NGTickRate : CurrentTickRate))
                 {
                     ++numMoonfiresCast;
@@ -205,8 +193,8 @@ namespace Rawr.Moonkin
                     currentNGTimer = currentNGCooldown == 0 ? 15 - (currentNGTimer > 0 ? NGGlobalCooldown : CurrentGlobalCooldown) : Math.Max(0, currentNGTimer - NGGlobalCooldown);
                     if (currentNGCooldown == 0) currentNGCooldown = 60 - mfCastTime;
                     currentActionTime = mfCastTime;
-                    if (inEclipse) ++castCounts[10];
-                    else ++castCounts[8];
+                    if (inEclipse) ++rotationCastCounts[10];
+                    else ++rotationCastCounts[8];
                 }
                 // Third priority: Shooting Stars proc
                 else if (currentShSProc > 0)
@@ -221,6 +209,8 @@ namespace Rawr.Moonkin
                     currentActionTime = ssCastTime;
                     currentShSProc = 0;
                     eclipseEnergy = Math.Min(100, Math.Max(-100, eclipseEnergy + eclipseDirection * 15));
+                    if (inEclipse) ++rotationCastCounts[7];
+                    else ++rotationCastCounts[3];
                     if (eclipseEnergy == -100 || eclipseEnergy == 100)
                     {
                         currentNGCooldown = 0;
@@ -231,9 +221,10 @@ namespace Rawr.Moonkin
                         ++rotationCount;
                         ngUptime = ngTimeSpent;
                         completeRotationTime = currentDuration + ssCastTime;
+                        rotationMoonfiresCast = numMoonfiresCast;
+                        rotationMoonfiresExtended = numMoonfiresExtended;
+                        Array.Copy(rotationCastCounts, castCounts, 12);
                     }
-                    if (inEclipse) ++castCounts[7];
-                    else ++castCounts[3];
                 }
                 // Fourth priority: Starsurge
                 else if (currentSSCooldown == 0)
@@ -247,6 +238,8 @@ namespace Rawr.Moonkin
                     currentNGCooldown = Math.Max(0, currentNGCooldown - ssCastTime);
                     currentActionTime = ssCastTime;
                     eclipseEnergy = Math.Min(100, Math.Max(-100, eclipseEnergy + eclipseDirection * 15));
+                    if (inEclipse) ++rotationCastCounts[6];
+                    else ++rotationCastCounts[2];
                     if (eclipseEnergy == -100 || eclipseEnergy == 100)
                     {
                         currentNGCooldown = 0;
@@ -257,9 +250,10 @@ namespace Rawr.Moonkin
                         ++rotationCount;
                         ngUptime = ngTimeSpent;
                         completeRotationTime = currentDuration + ssCastTime;
+                        rotationMoonfiresCast = numMoonfiresCast;
+                        rotationMoonfiresExtended = numMoonfiresExtended;
+                        Array.Copy(rotationCastCounts, castCounts, 12);
                     }
-                    if (inEclipse) ++castCounts[6];
-                    else ++castCounts[2];
                 }
                 // Fifth priority: Current nuke
                 // Headed in the Solar direction, cast Starfire
@@ -295,6 +289,8 @@ namespace Rawr.Moonkin
                         sfEclipseEnergy *= 2;
                     }
                     eclipseEnergy = Math.Min(100, eclipseEnergy + sfEclipseEnergy);
+                    if (inEclipse) ++rotationCastCounts[4];
+                    else ++rotationCastCounts[0];
                     if (eclipseEnergy == 100)
                     {
                         currentNGCooldown = 0;
@@ -302,9 +298,10 @@ namespace Rawr.Moonkin
                         ++rotationCount;
                         ngUptime = ngTimeSpent;
                         completeRotationTime = currentDuration + sfCastTime;
+                        rotationMoonfiresCast = numMoonfiresCast;
+                        rotationMoonfiresExtended = numMoonfiresExtended;
+                        Array.Copy(rotationCastCounts, castCounts, 12);
                     }
-                    if (inEclipse) ++castCounts[4];
-                    else ++castCounts[0];
                 }
                 // Headed in the Lunar direction, cast Wrath
                 else
@@ -330,8 +327,8 @@ namespace Rawr.Moonkin
                         currentNGCooldown = 0;
                         eclipseDirection = 1;
                     }
-                    if (inEclipse) ++castCounts[5];
-                    else ++castCounts[1];
+                    if (inEclipse) ++rotationCastCounts[5];
+                    else ++rotationCastCounts[1];
                 }
                 // Determine the chance to proc Shooting Stars over the last action time
                 double mfTicks = (timeSinceLastMFTick + currentActionTime) / (currentMFHasNG ? NGTickRate : CurrentTickRate);
@@ -347,7 +344,7 @@ namespace Rawr.Moonkin
 
             rotationLength = completeRotationTime / rotationCount;
             ngUptime /= completeRotationTime;
-            percentMoonfiresExtended = numMoonfiresExtended / (double)numMoonfiresCast;
+            percentMoonfiresExtended = rotationMoonfiresExtended / (double)rotationMoonfiresCast;
         }
         private int GetWrathEnergy(bool t12BonusActive, int currentWrathCounter)
         {

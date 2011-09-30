@@ -899,15 +899,15 @@ namespace Rawr.Moonkin
             // Generate the cycles
             /*if (referenceCalculation)
             {
-                using (System.IO.StreamWriter writer = System.IO.File.CreateText("C:\\users\\nmccalment\\Desktop\\CastDistribution.txt"))
+                using (System.IO.StreamWriter writer = System.IO.File.CreateText("C:\\users\\Noah\\Desktop\\CastDistribution.txt"))
                 {
                     //MoonkinCycleGenerator generator = new MoonkinCycleGenerator
                     //{
-                        //EuphoriaChance = 0.24,
-                        //Has4T12 = false,
-                        //HasteLevel = 0,
-                        //ShootingStarsChance = 0.04,
-                        //StarlightWrathLevel = 3
+                    //EuphoriaChance = 0.24,
+                    //Has4T12 = false,
+                    //HasteLevel = 0,
+                    //ShootingStarsChance = 0.04,
+                    //StarlightWrathLevel = 3
                     //};
 
                     MoonkinSimulator generator = new MoonkinSimulator() { HasGlyphOfStarfire = false, Has4T13 = true };
@@ -996,14 +996,14 @@ namespace Rawr.Moonkin
 
                     writer.WriteLine(" };");
 
-                    writer.Write("public static double[] BasePercentMoonfiresExtended = new double[21] {");
+                    //writer.Write("public static double[] BasePercentMoonfiresExtended = new double[21] {");
 
-                    for (int i = 0; i < baseMFExtended.Length; ++i)
-                    {
-                        writer.Write(String.Format(" {0},", baseMFExtended[i]));
-                    }
+                    //for (int i = 0; i < baseMFExtended.Length; ++i)
+                    //{
+                        //writer.Write(String.Format(" {0},", baseMFExtended[i]));
+                    //}
 
-                    writer.WriteLine(" };");
+                    //writer.WriteLine(" };");
 
                     writer.Write("public static double[] T13PercentMoonfiresExtended = new double[21] {");
 
