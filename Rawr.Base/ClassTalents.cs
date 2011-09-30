@@ -1698,12 +1698,12 @@ Send your pet into a rage causing 20% additional damage for 10 sec.  The beast d
 @"When you Steady Shot twice in a row, your ranged attack speed will be increased by 15% for 8 sec.",})]
         public int ImprovedSteadyShot { get { return _data[23]; } set { _data[23] = value; } }
         /// <summary>
-        /// Increases the critical strike chance of your Steady Shot, Cobra Shot and Aimed Shot by [30 * Pts]% on targets who are above 80% health.
+        /// Increases the critical strike chance of your Steady Shot, Cobra Shot and Aimed Shot by [30 * Pts]% on targets who are above 90% health.
         /// </summary>
         [TalentData(index: 24, name: "Careful Aim", maxPoints: 2, icon: "ability_hunter_zenarchery",
          tree: 1, column: 3, row: 2, prerequisite: -1, description: new[] {
-@"Increases the critical strike chance of your Steady Shot, Cobra Shot and Aimed Shot by 30% on targets who are above 80% health.",
-@"Increases the critical strike chance of your Steady Shot, Cobra Shot and Aimed Shot by 60% on targets who are above 80% health.",})]
+@"Increases the critical strike chance of your Steady Shot, Cobra Shot and Aimed Shot by 30% on targets who are above 90% health.",
+@"Increases the critical strike chance of your Steady Shot, Cobra Shot and Aimed Shot by 60% on targets who are above 90% health.",})]
         public int CarefulAim { get { return _data[24]; } set { _data[24] = value; } }
         /// <summary>
         /// Silencing Shot - 5-35 yd range

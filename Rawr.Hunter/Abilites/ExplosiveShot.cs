@@ -26,6 +26,7 @@ namespace Rawr.Hunter.Skills
 
             Name = "Explosive Shot";
             ReqTalent = true;
+            Talent2ChksValue = ((Specialization)Talents.HighestTree == Specialization.Survival ? 1 : 0);
             ReqRangedWeap = true;
             ReqSkillsRange = true;
             Cd = 6f; // In Seconds

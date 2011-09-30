@@ -4,8 +4,21 @@ using System.Text;
 
 namespace Rawr.Hunter.Skills
 {
+    public class AbilWrapper
+    {
+        public AbilWrapper(Skills.Ability abil) { ability = abil; }
+        public Skills.Ability ability { get; set; }
+        public float numActivates { get; set; }
+        public float Focus { get { return ability.GetFocusUseOverDur(numActivates); } }
+        public float DPS { get { return ability.GetDPS(numActivates); } }
+//        public float HPS { get { return ability.GetHPS(numActivates); } }
+        public bool isDamaging { get { return ability.DamageOverride > 0f; } }
+        public string GenTooltip(float fRotationDPS) { return this.ability.GenTooltip(numActivates, fRotationDPS); }
+    }
+
     public enum AttackTableSelector { Missed = 0, Crit, Hit }
 
+    // TODO: refactor this to inherit from Base Ability?
     public class WhiteAttacks
     {
         // Constructors
@@ -44,11 +57,12 @@ namespace Rawr.Hunter.Skills
         private float Targets { get { return TARGETS; } set { TARGETS = value; } }
         private float AvgTargets {
             get {
-                if (BossOpts.MultiTargs)
-                {
-                    return 1f + (BossOpts.MultiTargsTime / BossOpts.BerserkTimer)  + StatS.BonusTargets;
-                }
-                else { return 1f; }
+//                if (BossOpts.MultiTargs)
+//                {
+//                    return 1f + (BossOpts.MultiTargsTime / BossOpts.BerserkTimer)  + StatS.BonusTargets;
+//                }
+//                else 
+                { return 1f; }
             }
         }
         // Get/Set
@@ -56,10 +70,8 @@ namespace Rawr.Hunter.Skills
         public float CLOverridesOverDur { get { return OVDOVERDUR_CL; } set { OVDOVERDUR_CL = value; } }
         public float Steady_Freq;
         #endregion
-        // bah
-        private float SlamFreqSpdMod { get { return 0f; } }// (Slam_Freq == 0f ? 0f : ((1.5f - (0.5f * Talents.ImprovedSlam)) * (Slam_Freq / FightDuration))); } }
-        // Main Hand
-        public float RwEffectiveSpeed { get { return combatFactors.RWSpeed + SlamFreqSpdMod; } }
+        // Ranged Weapon
+        public float RwEffectiveSpeed { get { return combatFactors.RWSpeed; } }
         public float RwDamage
         {
             get
@@ -95,11 +107,11 @@ namespace Rawr.Hunter.Skills
                 return _RwDamageOnUse;
             }
         }
-        public float AvgRwDamageOnUse { get { return RwDamageOnUse * RwActivates; } }
+        public float TotalRwDamageOnUse { get { return RwDamageOnUse * RwActivates; } }
         public float RwActivates {
             get {
                 if (RwEffectiveSpeed != 0)
-                    return FightDuration / RwEffectiveSpeed - HSOverridesOverDur - CLOverridesOverDur;
+                    return FightDuration / RwEffectiveSpeed;
                 else return 0f;
             }
         }
@@ -110,7 +122,7 @@ namespace Rawr.Hunter.Skills
                 else return 0f;
             }
         }
-        public float RwDPS { get { return AvgRwDamageOnUse / FightDuration; } }
+        public float RwDPS { get { return TotalRwDamageOnUse / FightDuration; } }
         // Attacks Over Fight Duration
         public float LandedAtksOverDur { get { return LandedAtksOverDurRw; } }
         public float LandedAtksOverDurRw { get { return RwActivates * RWAtkTable.AnyLand; } }
@@ -145,41 +157,25 @@ namespace Rawr.Hunter.Skills
             }
             return retVal;
         }
-        public virtual string GenTooltip(float ttldpsRW, /*float ttldpsOH,*/ float ttldps)
+        public string GenTooltip(float totalDPS = 0)
         {
-            // ==== MAIN HAND ====
             float acts = RwActivates;
             float misses = GetXActs(AttackTableSelector.Missed, acts), missesPerc = (acts == 0f ? 0f : misses / acts);
-            //float dodges = GetXActs(AttackTableSelector.Dodged, acts), dodgesPerc = (acts == 0f ? 0f : dodges / acts);
-            //float parrys = GetXActs(AttackTableSelector.Parried, acts), parrysPerc = (acts == 0f ? 0f : parrys / acts);
-            //float blocks = GetXActs(AttackTableSelector.Blocked, acts), blocksPerc = (acts == 0f ? 0f : blocks / acts);
             float crits = GetXActs(AttackTableSelector.Crit, acts), critsPerc = (acts == 0f ? 0f : crits / acts);
-            //float glncs = GetXActs(AttackTableSelector.Glance, acts), glncsPerc = (acts == 0f ? 0f : glncs / acts);
             float hits = GetXActs(AttackTableSelector.Hit, acts), hitsPerc = (acts == 0f ? 0f : hits / acts);
 
             bool showmisss = misses > 0f;
-            //bool showdodge = dodges > 0f;
-            //bool showparry = parrys > 0f;
-            //bool showblock = blocks > 0f;
             bool showcrits = crits > 0f;
 
-            string tooltip = "*" + "White Damage (Ranged Weapon)" +
-                Environment.NewLine + "Cast Time: Instant"
-                                    + ", CD: " + (RwEffectiveSpeed != -1 ? RwEffectiveSpeed.ToString("0.00") : "None")
-                                    + //", Focus Generated: " + (MHSwingMana != -1 ? MHSwingMana.ToString("0.00") : "None") +
+            string tooltip = string.Format("{0:0.0}*White Damage (Ranged Weapon)", RwDPS) +
+                Environment.NewLine + "Shot Speed: " + (RwEffectiveSpeed != -1 ? RwEffectiveSpeed.ToString("0.00") : "None") +
             Environment.NewLine + Environment.NewLine + acts.ToString("000.00") + " Activates over Attack Table:" +
             (showmisss ? Environment.NewLine + "- " + misses.ToString("000.00") + " : " + missesPerc.ToString("00.00%") + " : Missed " : "") +
-            //(showdodge ? Environment.NewLine + "- " + dodges.ToString("000.00") + " : " + dodgesPerc.ToString("00.00%") + " : Dodged " : "") +
-            //(showparry ? Environment.NewLine + "- " + parrys.ToString("000.00") + " : " + parrysPerc.ToString("00.00%") + " : Parried " : "") +
-            //(showblock ? Environment.NewLine + "- " + blocks.ToString("000.00") + " : " + blocksPerc.ToString("00.00%") + " : Blocked " : "") +
             (showcrits ? Environment.NewLine + "- " + crits.ToString("000.00") + " : " + critsPerc.ToString("00.00%") + " : Crit " : "") +
-                         //Environment.NewLine + "- " + glncs.ToString("000.00") + " : " + glncsPerc.ToString("00.00%") + " : Glanced " +
                          Environment.NewLine + "- " + hits.ToString("000.00") + " : " + hitsPerc.ToString("00.00%") + " : Hit " +
                 Environment.NewLine +
-                //Environment.NewLine + "Damage per Blocked|Hit|Crit: x|x|x" +
-                Environment.NewLine + "Targets Hit: " + (Targets != -1 ? Targets.ToString("0.00") : "None") +
-                Environment.NewLine + "DPS: " + (ttldpsRW > 0 ? ttldpsRW.ToString("0.00") : "None") +
-                Environment.NewLine + "Percentage of Total DPS: " + (ttldpsRW > 0 ? (ttldpsRW / ttldps).ToString("00.00%") : "None");
+                Environment.NewLine + string.Format("DPS: {0}", RwDPS) +
+                Environment.NewLine + string.Format("% of Total: {0:0.0}%", (totalDPS > 0 ? (this.RwDPS / totalDPS) * 100 : 100));
 
             return tooltip;
         }
@@ -202,9 +198,6 @@ namespace Rawr.Hunter.Skills
             // Ability Related
             Name = "Invalid";
             ReqTalent = false;
-//            CanBeDodged = true;
-//            CanBeParried = true;
-//            CanBeBlocked = true;
             CanCrit = true;
             CRITBONUS = 0.5f;
             CRITBONUSMULTIPLIER = 1.0f;
@@ -217,15 +210,11 @@ namespace Rawr.Hunter.Skills
             MaxRange = 5f; // In Yards 
             CD = -1f; // In Seconds
             Duration = -1f; // In Seconds
-            //ManaCost = -1f;
             FocusCost = -1f;
-            //ManaCostisPerc = false;
             CastTime = -1f; // In Seconds
             UseReact = false;
             DamageBase = 0f;
             DamageBonus = 1f;
-            HealingBase = 0f;
-            HealingBonus = 1f;
             BonusCritChance = 0.00f;
             UseSpellHit = false;
             Consumes_Tier12_4pc = false;
@@ -238,9 +227,6 @@ namespace Rawr.Hunter.Skills
         private float HEALINGBASE;
         private float HEALINGBONUS;
         private float BONUSCRITCHANCE;
-//        private bool CANBEDODGED;
-//        private bool CANBEPARRIED;
-//        private bool CANBEBLOCKED;
         private bool CANCRIT;
         private float CRITBONUS;
         private float CRITBONUSMULTIPLIER;
@@ -304,23 +290,20 @@ namespace Rawr.Hunter.Skills
         {
             get
             {
-                //float extraTargetsHit = Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f;
                 if (_AvgTargets == -1f)
                 {
-                    _AvgTargets = 1f +
-                       (BossOpts.MultiTargs ?
-                           StatS.BonusTargets +
-                           (BossOpts.MultiTargsTime / BossOpts.BerserkTimer) // *
-                           //(Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f)
-                           : 0f);
+                    _AvgTargets = 1f; 
+                        // only Multishot will be multi-target
+                        //+ (BossOpts.MultiTargs ?
+                        //   StatS.BonusTargets +
+                        //   (BossOpts.MultiTargsTime / BossOpts.BerserkTimer) // *
+                        //   (Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f)
+                        //   : 0f);
                 }
                 return _AvgTargets;
             }
         }
         protected float Targets { get { return TARGETS; } set { TARGETS = value; } }
-//        public bool CanBeDodged { get { return CANBEDODGED; } set { CANBEDODGED = value; } }
-//        public bool CanBeParried { get { return CANBEPARRIED; } set { CANBEPARRIED = value; } }
-//        public bool CanBeBlocked { get { return CANBEBLOCKED; } set { CANBEBLOCKED = value; } }
         public bool CanCrit { get { return CANCRIT; } set { CANCRIT = value; } }
         public float MinRange { get { return MINRANGE; } set { MINRANGE = value; } } // In Yards 
         public float MaxRange { get { return MAXRANGE; } set { MAXRANGE = value; } } // In Yards
@@ -342,18 +325,25 @@ namespace Rawr.Hunter.Skills
             }
         }
         public float Duration { get { return DURATION; } set { DURATION = value; } } // In Seconds
-        // TODO Zhok: remove all referencen.. 
-        //public float ManaCost { get { return MANACOST; } set { MANACOST = value; } }
         public float FocusCost { get { return FOCUSCOST; } set { FOCUSCOST = value; } }
-        //public bool ManaCostisPerc { get { return MANACOSTISPERC; } set { MANACOSTISPERC = value; } }
         public float CastTime { get { return CASTTIME; } set { CASTTIME = value; } } // In Seconds
         /// <summary>Base Damage Value (500 = 500.00 Damage)</summary>
         protected float DamageBase { get { return DAMAGEBASE; } set { DAMAGEBASE = value; } }
         /// <summary>Percentage Based Damage Bonus (1.5 = 150% damage)</summary>
         protected float DamageBonus { get { return DAMAGEBONUS; } set { DAMAGEBONUS = value; } }
-        protected float HealingBase { get { return HEALINGBASE; } set { HEALINGBASE = value; } }
-        protected float HealingBonus { get { return HEALINGBONUS; } set { HEALINGBONUS = value; } }
-        protected float BonusCritChance { get { return BONUSCRITCHANCE; } set { BONUSCRITCHANCE = value; } }
+        public float BonusCritChance { 
+            get { return BONUSCRITCHANCE; } 
+            set 
+            {
+                if (BONUSCRITCHANCE != value)
+                {
+                    BONUSCRITCHANCE = value;
+                    // Recalc because it's a new value.
+                    if (RWAtkTable != null)
+                        this.RWAtkTable.Reset();
+                }
+            } 
+        }
         protected bool UseReact { get { return USEREACT; } set { USEREACT = value; } }
         protected Character Char
         {
@@ -364,6 +354,7 @@ namespace Rawr.Hunter.Skills
                 if (CHARACTER != null)
                 {
                     Talents = CHARACTER.HunterTalents;
+                    if (BossOpts == null) BossOpts = CHARACTER.BossOptions;
                     //StatS = CalculationsHunter.GetCharacterStats(CHARACTER, null);
                     //combatFactors = new CombatFactors(CHARACTER, StatS);
                     //Whiteattacks = Whiteattacks;
@@ -416,14 +407,11 @@ namespace Rawr.Hunter.Skills
                     return (validatedSet == true);
                 }
 
-                /*if (Char == null || Char.MainHand == null || CalcOpts == null || Talents == null) {
-                    validatedSet = false;
-                } else */
                 if (ReqTalent && Talent2ChksValue < 1)
                 {
                     validatedSet = false;
                 }
-                else if (ReqRangedWeap && (Char.MainHand == null || Char.MainHand.MaxDamage <= 0))
+                else if (ReqRangedWeap && (Char.Ranged == null || Char.Ranged.MaxDamage <= 0))
                 {
                     validatedSet = false;
                 }
@@ -432,27 +420,13 @@ namespace Rawr.Hunter.Skills
                     validatedSet = false;
                 }
                 else validatedSet = true;
-                /*if (
-                    // Null crap is bad
-                   (Char == null || Char.MainHand == null || CalcOpts == null || Talents == null) ||
-                // Rotational Changes (Options Panel) (Arms Only right now)
-                    (AbilIterater != -1 && !CalcOpts.Maintenance[AbilIterater]) ||
-                // Talent Requirements
-                    (ReqTalent && Talent2ChksValue < 1) ||
-                // Need a weapon
-                   (ReqMeleeWeap && Char.MainHand.MaxDamage <= 0) ||
-                // Need Multiple Targets or it's useless
-                   (ReqMultiTargs && (!CalcOpts.MultipleTargets || CalcOpts.MultipleTargetsPerc == 0)) ||
-                // Proper Stance
-                   ((CalcOpts.FuryStance && !StanceOkFury)
-                    || (!CalcOpts.FuryStance && !StanceOkArms)
-                  )) { return false; } */
 
                 return (validatedSet == true);
             }
         }
         /// <summary>Number of times it can possibly be activated (# times actually used may be less or same).</summary>
         public virtual float Activates { get { return !Validated ? 0f : ActivatesOverride; } }
+
         /// <summary>
         /// Number of times it can possibly be activated (# times actually used may
         /// be less or same). This one does not check for stance/weapon info, etc.
@@ -463,32 +437,20 @@ namespace Rawr.Hunter.Skills
             {
                 float LatentGCD = 1.5f + CalcOpts.Latency + (UseReact ? CalcOpts.AllowedReact : 0f);
                 float GCDPerc = LatentGCD / ((Duration > Cd ? Duration : Cd) + CalcOpts.Latency + (UseReact ? CalcOpts.AllowedReact : 0f));
-                //float Every = LatentGCD / GCDPerc;
                 if (FocusCost > 0f)
                 {
-                    /*float manaSlip = (float)Math.Pow(Whiteattacks.MHAtkTable.AnyNotLand, Whiteattacks.AvoidanceStreak * Every);
-                    float manaSlip2 = Whiteattacks.MHAtkTable.AnyNotLand / Every / Whiteattacks.AvoidanceStreak * ManaCost / Whiteattacks.MHSwingMana;
-                    float ret = FightDuration / Every * (1f - manaSlip);
-                    return ret;*/
                     return Math.Max(0f, FightDuration / (LatentGCD / GCDPerc) * (1f - Whiteattacks.FocusSlip(LatentGCD / GCDPerc, FocusCost)));
                 }
                 else return FightDuration / (LatentGCD / GCDPerc);
-                /*double test = Math.Pow((double)Whiteattacks.MHAtkTable.AnyNotLand, (double)Whiteattacks.AvoidanceStreak * Every);
-                return Math.Max(0f, FightDuration / Every * (1f - Whiteattacks.AvoidanceStreak));*/
             }
         }
-        protected virtual float Healing { get { return !Validated ? 0f : HealingBase * HealingBonus; } }
-        protected virtual float HealingOnUse
-        {
-            get
-            {
-                return Healing * combatFactors.HealthBonus;
-            }
-        }
-        protected virtual float AvgHealingOnUse { get { return HealingOnUse * Activates; } }
-        protected virtual float HPS { get { return AvgHealingOnUse / FightDuration; } }
         protected virtual float Damage { get { return !Validated ? 0f : DamageOverride; } }
-        public virtual float DamageOverride { get { return Math.Max(0f, DamageBase * (1f * DamageBonus) /** AvgTargets * (1f * Mastery)*/); } }
+        public virtual float DamageOverride { 
+            get 
+            { 
+                return Math.Max(0f, DamageBase * DamageBonus ); 
+            } 
+        }
         public virtual float DamageOnUse
         {
             get
@@ -500,19 +462,12 @@ namespace Rawr.Hunter.Skills
                 // Work the Attack Table
                 float dmgDrop = (1f
                     - RWAtkTable.Miss   // no damage when being missed
-//                    - RWAtkTable.Dodge  // no damage when being dodged
-//                    - RWAtkTable.Parry  // no damage when being parried
-//                    - RWAtkTable.Glance // glancing handled below
-//                    - RWAtkTable.Block  // blocked handled below
                     - RWAtkTable.Crit); // crits   handled below
 
-//                float dmgGlance = dmg * RWAtkTable.Glance * combatFactors.ReducWhGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
-//                float dmgBlock = dmg * RWAtkTable.Block * combatFactors.ReducYwBlockedDmg;//Partial damage when blocked
-                float dmgCrit = dmg * RWAtkTable.Crit * (1f + combatFactors.BonusYellowCritDmg);//Bonus   Damage when critting
+                float dmgCrit = dmg * RWAtkTable.Crit * (1f + combatFactors.BonusYellowCritDmg); //Bonus Damage when critting
 
                 dmg *= dmgDrop;
-
-                dmg += /*dmgGlance + dmgBlock +*/ dmgCrit;
+                dmg += dmgCrit;
 
                 return dmg;
             }
@@ -565,17 +520,6 @@ namespace Rawr.Hunter.Skills
             //float adou = GetAvgDamageOnUse(acts);
             return GetAvgDamageOnUse(acts) / (FightDuration * perc);
         }
-        public virtual float GetAvgHealingOnUse(float acts)
-        {
-            if (!Validated) { return 0f; }
-            return HealingOnUse * acts;
-        }
-        public virtual float GetHPS(float acts)
-        {
-            if (!Validated) { return 0f; }
-            //float adou = GetAvgHealingOnUse(acts);
-            return GetAvgHealingOnUse(acts) / FightDuration;
-        }
         public virtual float ContainCritValue_RW { get { return Math.Min(1f, combatFactors._c_rwycrit + BonusCritChance); } }
         /*public virtual float ContainCritValue(bool IsMH) {
             //float BaseCrit = IsMH ? combatFactors._c_mhycrit : combatFactors._c_ohycrit;
@@ -587,47 +531,35 @@ namespace Rawr.Hunter.Skills
             switch (i)
             {
                 case AttackTableSelector.Missed: { retVal = acts * RWAtkTable.Miss; break; }
-                //case AttackTableSelector.Dodged: { retVal = acts * RWAtkTable.Dodge; break; }
-                //case AttackTableSelector.Parried: { retVal = acts * RWAtkTable.Parry; break; }
-                //case AttackTableSelector.Blocked: { retVal = acts * RWAtkTable.Block; break; }
-                //case AttackTableSelector.Glance: { retVal = acts * RWAtkTable.Glance; break; }
                 case AttackTableSelector.Crit: { retVal = acts * RWAtkTable.Crit; break; }
                 case AttackTableSelector.Hit: { retVal = acts * RWAtkTable.Hit; break; }
                 default: { break; }
             }
             return retVal;
         }
-        public virtual string GenTooltip(float acts, float ttldpsperc)
+        public virtual string GenTooltip(float acts, float ttldps)
         {
             float misses = GetXActs(AttackTableSelector.Missed, acts), missesPerc = (acts == 0f ? 0f : misses / acts);
-            //float dodges = GetXActs(AttackTableSelector.Dodged, acts), dodgesPerc = (acts == 0f ? 0f : dodges / acts);
-            //float parrys = GetXActs(AttackTableSelector.Parried, acts), parrysPerc = (acts == 0f ? 0f : parrys / acts);
-            //float blocks = GetXActs(AttackTableSelector.Blocked, acts), blocksPerc = (acts == 0f ? 0f : blocks / acts);
             float crits = GetXActs(AttackTableSelector.Crit, acts), critsPerc = (acts == 0f ? 0f : crits / acts);
             float hits = GetXActs(AttackTableSelector.Hit, acts), hitsPerc = (acts == 0f ? 0f : hits / acts);
 
             bool showmisss = misses > 0f;
-            //bool showdodge = CanBeDodged && dodges > 0f;
-            //bool showparry = CanBeParried && parrys > 0f;
-            //bool showblock = CanBeBlocked && blocks > 0f;
             bool showcrits = CanCrit && crits > 0f;
+            float localDPS = GetDPS(acts);
 
-            string tooltip = "*" + Name +
-                Environment.NewLine + "Cast Time: " + (CastTime != -1 ? CastTime.ToString() : "Instant")
-                                    + ", CD: " + (Cd != -1 ? Cd.ToString() : "None")
-                                    + ", FocusCost: " + (FocusCost != -1 ? FocusCost.ToString() : "None") +
-            Environment.NewLine + Environment.NewLine + acts.ToString("000.00") + " Activates over Attack Table:" +
+            string tooltip = string.Format("{0:0.0}*{1}\n", localDPS, Name)
+                                    + string.Format("Cast Time: {0}, CD: {1}, FocusCost: {2}\n", 
+                                    (CastTime != -1 ? CastTime.ToString() : "Instant"), 
+                                    (Cd != -1 ? Cd.ToString() : "None"), 
+                                    (FocusCost != -1 ? FocusCost.ToString() : "None")) +
+                Environment.NewLine + acts.ToString("000.00") + " Activates over Attack Table:" +
             (showmisss ? Environment.NewLine + "- " + misses.ToString("000.00") + " : " + missesPerc.ToString("00.00%") + " : Missed " : "") +
-            //(showdodge ? Environment.NewLine + "- " + dodges.ToString("000.00") + " : " + dodgesPerc.ToString("00.00%") + " : Dodged " : "") +
-            //(showparry ? Environment.NewLine + "- " + parrys.ToString("000.00") + " : " + parrysPerc.ToString("00.00%") + " : Parried " : "") +
-            //(showblock ? Environment.NewLine + "- " + blocks.ToString("000.00") + " : " + blocksPerc.ToString("00.00%") + " : Blocked " : "") +
             (showcrits ? Environment.NewLine + "- " + crits.ToString("000.00") + " : " + critsPerc.ToString("00.00%") + " : Crit " : "") +
                          Environment.NewLine + "- " + hits.ToString("000.00") + " : " + hitsPerc.ToString("00.00%") + " : Hit " +
                 Environment.NewLine +
-                //Environment.NewLine + "Damage per Blocked|Hit|Crit: x|x|x" +
                 Environment.NewLine + "Targets Hit: " + (Targets != -1 ? AvgTargets.ToString("0.00") : "None") +
-                Environment.NewLine + "DPS: " + (GetDPS(acts) > 0 ? GetDPS(acts).ToString("0.00") : "None") +
-                Environment.NewLine + "Percentage of Total DPS: " + (ttldpsperc > 0 ? ttldpsperc.ToString("00.00%") : "None");
+                Environment.NewLine + "DPS: " + (localDPS > 0 ? localDPS.ToString("0.00") : "None") +
+                Environment.NewLine + string.Format("Percentage of Total DPS: {0}", (ttldps > 0 ? (localDPS / ttldps).ToString("00.00%") : "None"));
 
             return tooltip;
         }

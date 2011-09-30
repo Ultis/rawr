@@ -7,7 +7,7 @@ namespace Rawr.Hunter.Skills
     public class SteadyShot : Ability
     {
         /// <summary>
-        /// TODO Zhok: Generate Focus! Careful Aim, Dazzled Prey, Sniper Training, Termination
+        /// TODO Zhok: Careful Aim, Dazzled Prey, Sniper Training, Termination
         /// <b>Steady Shot</b>, 5-40yd, 1.5 sec cast
         /// <para>A steady shot that causes 100% weapon damage 
         /// plus RAP*0.021+280. Generates 9 Focus.</para>
@@ -33,6 +33,7 @@ namespace Rawr.Hunter.Skills
             CastTime = 1.5f;
             DamageBase = combatFactors.AvgRwWeaponDmgUnhasted + (StatS.RangedAttackPower * 0.021f) + 280f;
             DamageBonus = 1f + (Talents.GlyphOfSteadyShot ? 0.10f : 0f);
+            FocusCost = -9;
             //
             Initialize();
         }

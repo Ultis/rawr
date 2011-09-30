@@ -20,7 +20,6 @@ namespace Rawr.Hunter.Skills
             Cd = 3f * 60f; // In Seconds
             Duration = 0f;
             UseHitTable = false;
-            ReqTalent = true;
             Initialize();
         }
     }

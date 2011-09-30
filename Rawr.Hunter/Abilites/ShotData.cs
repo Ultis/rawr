@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace Rawr.Hunter
 {
-    /*
+#if FALSE
     public class ShotData
     {
         public const float GCD = 1f;
@@ -313,5 +313,5 @@ namespace Rawr.Hunter
             return ret;
         }
     }
-     */
+     #endif
 }

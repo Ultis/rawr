@@ -20,17 +20,46 @@ namespace Rawr.Hunter
             set { _desc = value; }
         }
 
-        private float[] _subPoints = new float[] { 0f, 0f, 0f, 0f };
         private float _overallPoints = 0f;
-
-        public override float[] SubPoints { get { return _subPoints; } set { _subPoints = value; } }
-
-        public float HunterDPSPoints  { get { return _subPoints[0]; } set { _subPoints[0] = value; } }
-        public float PetDPSPoints     { get { return _subPoints[1]; } set { _subPoints[1] = value; } }
-        public float HunterSurvPoints { get { return _subPoints[2]; } set { _subPoints[2] = value; } }
-        public float PetSurvPoints    { get { return _subPoints[3]; } set { _subPoints[3] = value; } }
-
-        public override float OverallPoints { get { return _overallPoints; } set { _overallPoints = value; } }
+        private float[] _subPoints = new float[] { 0f, 0f, 0f, 0f };
+        public override float[] SubPoints
+        {
+            get { return _subPoints; }
+            set { _subPoints = value; }
+        }
+        public float HunterDpsPoints
+        {
+            get { return _subPoints[(int)subpointINDEX.HUNTERDPS]; }
+            set { _subPoints[(int)subpointINDEX.HUNTERDPS] = value; }
+        }
+        public float HunterSurvPoints
+        {
+            get { return _subPoints[(int)subpointINDEX.HUNTERSURVIVAL]; }
+            set { _subPoints[(int)subpointINDEX.HUNTERSURVIVAL] = value; }
+        }
+        public float PetDpsPoints
+        {
+            get { return _subPoints[(int)subpointINDEX.PETDPS]; }
+            set { _subPoints[(int)subpointINDEX.PETDPS] = value; }
+        }
+        public float PetSurvPoints
+        {
+            get { return _subPoints[(int)subpointINDEX.PETSURVIVAL]; }
+            set { _subPoints[(int)subpointINDEX.PETSURVIVAL] = value; }
+        }
+        public override float OverallPoints
+        {
+            get
+            {
+                _overallPoints = 0;
+                _overallPoints += HunterDpsPoints;
+                _overallPoints += HunterSurvPoints;
+                _overallPoints += PetDpsPoints;
+                _overallPoints += PetSurvPoints;
+                return _overallPoints;
+            }
+            set { _overallPoints = value; }
+        }
 
         private Item _item = null;
         public override Item Item
@@ -57,7 +86,7 @@ namespace Rawr.Hunter
 
         public override string ToString() {
             return string.Format("{0}: ({1}O {2}HD {3}PD {4}HS {5}PS)",
-                Name, Math.Round(OverallPoints), Math.Round(HunterDPSPoints ), Math.Round(PetDPSPoints ),
+                Name, Math.Round(OverallPoints), Math.Round(HunterDpsPoints ), Math.Round(PetDpsPoints ),
                                                  Math.Round(HunterSurvPoints), Math.Round(PetSurvPoints));
         }
     }

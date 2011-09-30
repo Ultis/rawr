@@ -29,14 +29,13 @@ namespace Rawr.Hunter.Skills
 
             Name = "Arcane Shot";
 
-            ReqTalent = true;
             ReqRangedWeap = true;
             ReqSkillsRange = true;
 
             FocusCost = _basefocuscost - (Talents.Efficiency * 2f);
 
             DamageBase = cf.AvgRwWeaponDmgUnhasted + (StatS.RangedAttackPower * 0.0483f) + 289f;
-            DamageBonus = (Talents.GlyphOfArcaneShot ? 0.12f : 0f);
+            DamageBonus = 1 + (Talents.GlyphOfArcaneShot ? 0.12f : 0f);
 
             Consumes_Tier12_4pc = true;
 

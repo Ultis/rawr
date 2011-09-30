@@ -119,7 +119,7 @@ namespace Rawr.UnitTests
                 string szCharXML = System.IO.File.ReadAllText(szFullPath);
                 Character c = Character.LoadFromXml(szCharXML);
                 Assert.AreEqual(szModel, c.CurrentModel, true);
-                CharacterCalculationsBase CharCalcs = c.CurrentCalculations.GetCharacterCalculations(c);
+                CharacterCalculationsBase CharCalcs = c.CurrentCalculations.GetCharacterCalculations(c, null, true, true, true);
                 Assert.IsNotNull(CharCalcs, szModel);
                 CharCalcs.GetCharacterDisplayCalculationValues();
                 Assert.IsTrue(CharCalcs.OverallPoints >= 0, szModel);

@@ -7,7 +7,7 @@ namespace Rawr.Hunter.Skills
     public class CobraShot : Ability
     {
         /// <summary>
-        /// TODO Zhok: Generate Focus! Careful Aim, Sniper Training, Termination
+        /// TODO Zhok: Careful Aim, Sniper Training, Termination
         /// <b>Cobra Shot</b>, 5-40yd, 1.5 sec cast
         /// <para>Deals weapon damage plus (276 + (RAP * 0.017)) in the form of Nature damage 
         /// and increases the duration of your Serpent Sting on 
@@ -27,10 +27,12 @@ namespace Rawr.Hunter.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Cobra Shot";
-            //AbilIterater = (int)CalculationOptionsHunter.Maintenances.MortalStrike_;
+            ReqTalent = true;
+            Talent2ChksValue = ((Specialization)Talents.HighestTree == Specialization.Marksmanship ? 0 : 1);
             ReqRangedWeap = true;
             ReqSkillsRange = true;
             CastTime = 2f;
+            FocusCost = -9;
             //Targets += StatS.BonusTargets;
             DamageBase = combatFactors.AvgRwWeaponDmgUnhasted + (StatS.RangedAttackPower * 0.017f) + 277.21f;
             Initialize();

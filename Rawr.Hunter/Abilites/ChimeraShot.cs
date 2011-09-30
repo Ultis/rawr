@@ -23,9 +23,8 @@ namespace Rawr.Hunter.Skills
         public ChimeraShot(Character c, StatsHunter s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
-            //
+
             Name = "Chimera Shot";
-            //AbilIterater = (int)CalculationOptionsHunter.Maintenances.MortalStrike_;
             ReqTalent = true;
             Talent2ChksValue = Talents.ChimeraShot;
             ReqRangedWeap = true;

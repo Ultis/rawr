@@ -24,7 +24,8 @@ namespace Rawr.Hunter.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Aimed Shot";
-            ReqTalent = true;
+            ReqTalent = true; // Reqiures MM spec.
+            Talent2ChksValue = ((Specialization)Talents.HighestTree == Specialization.Marksmanship ? 1 : 0);
             ReqRangedWeap = true;
             ReqSkillsRange = true;
             CastTime = 2.9f;

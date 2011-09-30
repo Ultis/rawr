@@ -5,6 +5,14 @@ using System.Diagnostics;
 
 namespace Rawr.Hunter
 {
+    enum subpointINDEX : int
+    {
+        HUNTERDPS,
+        HUNTERSURVIVAL,
+        PETDPS,
+        PETSURVIVAL,
+    }
+
     public class HunterBase
     {
         public HunterBase (Character charac, StatsHunter stats, HunterTalents talents, Specialization spec, int targetLvL)

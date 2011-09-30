@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using Rawr.Hunter.Skills;
 
 namespace Rawr.Hunter
 {
@@ -56,30 +57,54 @@ namespace Rawr.Hunter
             get { return _subPoints; }
             set { _subPoints = value; }
         }
-        public float HunterDpsPoints { get; set; }
-        public float HunterSurvPoints { get; set; }
-        public float PetDpsPoints { get; set; }
-        public float PetSurvPoints { get; set; }
+        public float HunterDpsPoints 
+        {
+            get { return _subPoints[(int)subpointINDEX.HUNTERDPS]; }
+            set { _subPoints[(int)subpointINDEX.HUNTERDPS] = value; }
+        }
+        public float HunterSurvPoints
+        {
+            get { return _subPoints[(int)subpointINDEX.HUNTERSURVIVAL]; }
+            set { _subPoints[(int)subpointINDEX.HUNTERSURVIVAL] = value; }
+        }
+        public float PetDpsPoints
+        {
+            get { return _subPoints[(int)subpointINDEX.PETDPS]; }
+            set { _subPoints[(int)subpointINDEX.PETDPS] = value; }
+        }
+        public float PetSurvPoints
+        {
+            get { return _subPoints[(int)subpointINDEX.PETSURVIVAL]; }
+            set { _subPoints[(int)subpointINDEX.PETSURVIVAL] = value; }
+        }
         public override float OverallPoints
         {
-            get { return _overallPoints; }
+            get 
+            {
+                _overallPoints = 0;
+                _overallPoints += HunterDpsPoints;
+                _overallPoints += HunterSurvPoints;
+                _overallPoints += PetDpsPoints;
+                _overallPoints += PetSurvPoints;
+                return _overallPoints; 
+            }
             set { _overallPoints = value; }
         }
 
         #region Skills
         public Skills.WhiteAttacks Whites { get; set; }
-        public Skills.ExplosiveShot Explosive { get; set; }
-        public Skills.SteadyShot Steady { get; set; }
-        public Skills.CobraShot Cobra { get; set; }
-        public Skills.AimedShot Aimed { get; set; }
-        public Skills.MultiShot Multi { get; set; }
-        public Skills.ArcaneShot Arcane { get; set; }
-        public Skills.KillShot Kill { get; set; }
+        public AbilWrapper Explosive { get; set; }
+        public AbilWrapper Steady { get; set; }
+        public AbilWrapper Cobra { get; set; }
+        public AbilWrapper Aimed { get; set; }
+        public AbilWrapper Multi { get; set; }
+        public AbilWrapper Arcane { get; set; }
+        public AbilWrapper Kill { get; set; }
         public Skills.BlackArrow BlackArrowD { get; set; }
         //        public Skills.BlackArrowBuff BlackArrowB { get; set; }
         public Skills.PiercingShots Piercing { get; set; }
-        public Skills.SerpentSting Serpent { get; set; }
-        public Skills.ChimeraShot_Serpent Chimera { get; set; }
+        public AbilWrapper Serpent { get; set; }
+        public AbilWrapper Chimera { get; set; }
         public Skills.ImmolationTrap Immolation { get; set; }
         public Skills.ExplosiveTrap ExplosiveT { get; set; }
         public Skills.FreezingTrap Freezing { get; set; }
@@ -219,11 +244,6 @@ namespace Rawr.Hunter
         #endregion
 
         public float damageReductionFromArmor { get; set; }
-        public float baseMana { get; set; }
-
-        // stuff for rotation test
-        public float autoShotSpeed { get; set; }
-        public float autoShotStaticSpeed { get; set; }
 
         #region Focus
         public float focus { get; set; }
@@ -252,15 +272,7 @@ namespace Rawr.Hunter
 
         public float BaseAttackSpeed
         {
-            get { return _baseAttackSpeed; }
-            set { _baseAttackSpeed = value; }
-        }
-
-        public float AutoshotDPS
-        {
-            get { return Whites.RwDPS; }
-//            get { return _autoshotDPS; }
-//            set { _autoshotDPS = value; }
+            get { return Whites.RwEffectiveSpeed; }
         }
 
         public float BonusAttackProcsDPS
@@ -304,43 +316,6 @@ namespace Rawr.Hunter
             get { return _customDPS; }
             set { _customDPS = value; }
         }
-
-/*        public override float OverallPoints
-        {
-            get { return _overallPoints; }
-            set { _overallPoints = value; }
-        }
-
-        public override float[] SubPoints
-        {
-            get { return _subPoints; }
-            set { _subPoints = value; }
-        }
-
-        public float HunterDpsPoints
-        {
-            get { return _subPoints[0]; }
-            set { _subPoints[0] = value; }
-        }
-
-        public float PetDpsPoints
-        {
-            get { return _subPoints[1]; }
-            set { _subPoints[1] = value; }
-        }
-
-        public float HunterSurvPoints
-        {
-            get { return _subPoints[2]; }
-            set { _subPoints[2] = value; }
-        }
-
-        public float PetSurvPoints
-        {
-            get { return _subPoints[3]; }
-            set { _subPoints[3] = value; }
-        }
-*/
 
         public List<string> ActiveBuffs { get; set; }
 
@@ -442,15 +417,15 @@ namespace Rawr.Hunter
                             pet.priorityRotation.getSkillFrequency(PetAttacks.Bite), pet.priorityRotation.dps - petWhiteDPS));
 */
             // Shot Stats
-//            dictValues.Add("Aimed Shot", aimedShot.GenTooltip());
-//            dictValues.Add("Arcane Shot", arcaneShot.GenTooltip());
+            dictValues.Add("Aimed Shot", this.Aimed.GenTooltip(this.CustomDPS));
+            dictValues.Add("Arcane Shot", this.Arcane.GenTooltip(this.CustomDPS));
 //            dictValues.Add("Multi Shot", multiShot.GenTooltip());
 //            dictValues.Add("Cobra Shot", cobraShot.GenTooltip());
-//            dictValues.Add("Steady Shot", steadyShot.GenTooltip());
-//            dictValues.Add("Kill Shot", killShot.GenTooltip());
+            dictValues.Add("Steady Shot", this.Steady.GenTooltip(this.CustomDPS));
+            dictValues.Add("Kill Shot", this.Kill.GenTooltip(this.CustomDPS));
 //            dictValues.Add("Explosive Shot", explosiveShot.GenTooltip());
 //            dictValues.Add("Black Arrow", blackArrow.GenTooltip());
-//            dictValues.Add("Chimera Shot", chimeraShot.GenTooltip());
+            dictValues.Add("Chimera Shot", this.Chimera.GenTooltip(this.CustomDPS));
             
             //dictValues.Add("Rapid Fire", rapidFire.GenTooltip());
             //dictValues.Add("Readiness", readiness.GenTooltip());
@@ -466,7 +441,7 @@ namespace Rawr.Hunter
             //dictValues.Add("Frost Trap", frostTrap.GenTooltip());
 
             // Hunter DPS
-            dictValues.Add("Autoshot DPS", AutoshotDPS.ToString("F2"));
+            dictValues.Add("Autoshot DPS", Whites.GenTooltip(CustomDPS));
             dictValues.Add("Priority Rotation DPS", CustomDPS.ToString("F2"));
             dictValues.Add("Wild Quiver DPS", WildQuiverDPS.ToString("F2"));
 //            dictValues.Add("Kill Shot low HP gain", killShotSub20FinalGain.ToString("F2")+"*"+
@@ -486,10 +461,9 @@ namespace Rawr.Hunter
             dictValues.Add("Special DMG Procs DPS", SpecProcDPS.ToString("F2"));
 
             // Combined DPS
-            //string zod = (BonusAttackProcsDPS != 0 ? string.Format("*Includes:\r\nZod's Proc: {0:0.0}", BonusAttackProcsDPS) : "");
-            //dictValues.Add("Hunter DPS", HunterDpsPoints.ToString("F2")/* + zod*/);
-            //dictValues.Add("Pet DPS", PetDpsPoints.ToString("F2"));
-            //dictValues.Add("Total DPS", OverallPoints.ToString("F2"));
+            dictValues.Add("Hunter DPS", HunterDpsPoints.ToString("F2"));
+            dictValues.Add("Pet DPS", PetDpsPoints.ToString("F2"));
+            dictValues.Add("Total DPS", OverallPoints.ToString("F2"));
 
             return dictValues;
         }

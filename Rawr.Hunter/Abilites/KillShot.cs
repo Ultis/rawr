@@ -20,7 +20,6 @@ namespace Rawr.Hunter.Skills
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             Name = "Kill Shot";
-            ReqTalent = true;
             ReqRangedWeap = true;
             ReqSkillsRange = true;
             // In terms of modeling, the Glyph of Kill Shot is basically a 4 second cooldown reduction.

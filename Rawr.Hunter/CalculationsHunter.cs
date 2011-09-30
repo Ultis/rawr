@@ -1202,8 +1202,8 @@ namespace Rawr.Hunter {
             CharacterCalculationsHunter calcStat = GetCharacterCalculations(character, new Item() { Stats = stats }) as CharacterCalculationsHunter;
 
             comp.Name = label;
-            comp.HunterDPSPoints = calcStat.HunterDpsPoints - calcBase.HunterDpsPoints;
-            comp.PetDPSPoints = calcStat.PetDpsPoints - calcBase.PetDpsPoints;
+            comp.HunterDpsPoints = calcStat.HunterDpsPoints - calcBase.HunterDpsPoints;
+            comp.PetDpsPoints = calcStat.PetDpsPoints - calcBase.PetDpsPoints;
             comp.OverallPoints = calcStat.OverallPoints - calcBase.OverallPoints;
 
             return comp;
@@ -1429,11 +1429,9 @@ namespace Rawr.Hunter {
             CombatFactors combatFactors = new CombatFactors(character, calc.Hunter.Stats, calcOpts, bossOpts);
 //            WhiteAttacks whiteAttacks = new WhiteAttacks(character, calc.Hunter.Stats, combatFactors, calcOpts, bossOpts);
 
-            Rotation Rot = new Rotation();
-            Rot.CombatFactors = combatFactors;
+            Rotation Rot = new Rotation(combatFactors, talents);
             Rot.Initialize(calc); // Sets up the shots in the rotation and provides connection with the Calc object.
-
-
+            calc.HunterDpsPoints = calc.CustomDPS;
 
             if (needsDisplayCalculations)
             {

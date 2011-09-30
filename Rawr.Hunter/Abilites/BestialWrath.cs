@@ -24,6 +24,7 @@ namespace Rawr.Hunter.Skills
             Duration = 10f;
             UseHitTable = false;
             ReqTalent = true;
+            Talent2ChksValue = Talents.BestialWrath;
             // TODO: Move these to static SEs.
             Effect = new SpecialEffect(Trigger.Use,
                 new Stats() { BonusPetDamageMultiplier = 0.20f }, Duration, Cd);
