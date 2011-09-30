@@ -331,8 +331,8 @@ namespace Rawr.Moonkin
                     else ++rotationCastCounts[1];
                 }
                 // Determine the chance to proc Shooting Stars over the last action time
-                double mfTicks = (timeSinceLastMFTick + currentActionTime) / (currentMFHasNG ? NGTickRate : CurrentTickRate);
-                double isTicks = (timeSinceLastISTick + currentActionTime) / (currentISHasNG ? NGTickRate : CurrentTickRate);
+                double mfTicks = Math.Floor((timeSinceLastMFTick + currentActionTime) / (currentMFHasNG ? NGTickRate : CurrentTickRate));
+                double isTicks = Math.Floor((timeSinceLastISTick + currentActionTime) / (currentISHasNG ? NGTickRate : CurrentTickRate));
                 double dotTicks = (currentMFTimer > 0 ? mfTicks : 0) + (currentISTimer > 0 ? isTicks : 0);
                 if (rng.NextDouble() <= 1 - Math.Pow(1 - ShootingStarsChance, dotTicks))
                 {
