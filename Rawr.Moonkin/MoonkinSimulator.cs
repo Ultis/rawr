@@ -156,9 +156,10 @@ namespace Rawr.Moonkin
                     (eclipseEnergy < 0 && eclipseEnergy >= -100 && eclipseDirection == 1);
 
                 // Rules for recasting Moonfire:
+                // Always, if the timer is down
                 // Less than 2 ticks remaining
                 // Not overwriting Sunfire with Moonfire or vice versa
-                bool recastMF = (currentMFTimer < (currentMFHasNG ? NGTickRate : CurrentTickRate)) && (currentMFIsSF == (inEclipse && eclipseEnergy > 0));
+                bool recastMF = currentMFTimer == 0 || (currentMFTimer < (currentMFHasNG ? NGTickRate : CurrentTickRate)) && (currentMFIsSF == (inEclipse && eclipseEnergy > 0));
 
                 double currentActionTime = 0;
 
