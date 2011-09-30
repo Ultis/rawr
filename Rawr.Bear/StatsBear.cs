@@ -26,6 +26,10 @@ namespace Rawr.Bear
         /// </summary>
         public float MangleCooldownReduction { get; set; }
         /// <summary>
+        /// Percentage mod reduction for Mangle Cost. Use as 0.05 = 5% reduction in cost
+        /// </summary>
+        public float MangleCostReduction { get; set; }
+        /// <summary>
         /// Percentage mod for Swipe. Use as 1.05 = 105% = +5%
         /// </summary>
         public float BonusSwipeDamageMultiplier { get; set; }
@@ -61,5 +65,13 @@ namespace Rawr.Bear
         /// Value mod for Berserk. Use as 1 = 1 sec bonus.
         /// </summary>
         public float BerserkDuration { get; set; }
+        /// <summary>
+        /// While Berserk is active, Savage Defense absorbs are 100% larger.
+        /// </summary>
+        public bool Tier_13_2_piece { get; set; }
+        /// <summary>
+        /// Frenzied Regeneration also affects all raid and party members.
+        /// </summary>
+        public float Tier_13_4_piece { get; set; }
     }
 }

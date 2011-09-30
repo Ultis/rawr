@@ -481,14 +481,19 @@ the Threat Scale defined on the Options tab.",
             #region Defensive Part A
             //Calculate avoidance, considering diminishing returns
             float levelDifferenceAvoidance = levelDifference * 0.002f;
+
+            float DR_k_coefficient = StatConversion.DR_COEFFIENT[11] * 0.01f; // This is the Diminishing Returns' "k" value that changes based on what class the user is
+            float DR_C_d_coefficient = StatConversion.CAP_DODGE[11]; // This is the % cap for dodge
+            float DR_miss_cap = 16f;
+
             //float defSkill = (float)Math.Floor(StatConversion.GetDefenseFromRating(stats.DefenseRating, CharacterClass.Druid));
             float dodgeThatsNotAffectedByDR = stats.Dodge - levelDifferenceAvoidance + StatConversion.GetDodgeFromAgility(baseStats.Agility, CharacterClass.Druid);
             float missThatsNotAffectedByDR = stats.Miss - levelDifferenceAvoidance;
             float dodgeBeforeDRApplied = StatConversion.GetDodgeFromAgility(stats.Agility - baseStats.Agility, CharacterClass.Druid)
                                        + StatConversion.GetDodgeFromRating(stats.DodgeRating, CharacterClass.Druid);
             float missBeforeDRApplied = 0f;
-            float dodgeAfterDRApplied = 0.01f / (1f / 116.890707f + 0.00972f / dodgeBeforeDRApplied);
-            float missAfterDRApplied = 0.01f / (1f / 16f + 0.00972f / missBeforeDRApplied);
+            float dodgeAfterDRApplied = 0.01f / (1f / DR_C_d_coefficient + DR_k_coefficient / dodgeBeforeDRApplied);
+            float missAfterDRApplied = 0.01f / (1f / DR_miss_cap + DR_k_coefficient / missBeforeDRApplied);
             float dodgeTotal = dodgeThatsNotAffectedByDR + dodgeAfterDRApplied;
             float missTotal = missThatsNotAffectedByDR + missAfterDRApplied;
 
@@ -542,17 +547,18 @@ the Threat Scale defined on the Options tab.",
             #region Defensive Part B
             float targetAttackSpeedDebuffed = bossAttack.AttackSpeed / (1f - stats.BossAttackSpeedReductionMultiplier);
             float targetHitChance = 1f - calculatedStats.AvoidancePostDR;
-            float autoSpecialAttacksPerSecond = 1f / 1.5f + 1f / playerAttackSpeed + 1f / 3f;
+            float autoSpecialAttacksPerSecond = 1f / 1.5f + 1f / playerAttackSpeed + 1f / 3f + (stats.Tier_13_2_piece ? (1f / calculatedStats.Abilities.MangleStats.Cooldown) : 0);
 
             float masteryMultiplier = 1f + (8f + StatConversion.GetMasteryFromRating(stats.MasteryRating)) * 0.04f;
             float totalAttacksPerSecond = autoSpecialAttacksPerSecond;
             float averageSDAttackCritChance = 0.5f * (playerChanceToCrit * (autoSpecialAttacksPerSecond / totalAttacksPerSecond)); //Include the 50% chance to proc per crit here.
+            float T13_2PSDAttackCritChance = (playerChanceToCrit * (autoSpecialAttacksPerSecond / totalAttacksPerSecond));
+            averageSDAttackCritChance = (1 + averageSDAttackCritChance) * (1 + (stats.Tier_13_2_piece ? T13_2PSDAttackCritChance : 0)) - 1f;
             float playerAttacksInterval = 1f / totalAttacksPerSecond;
             float blockChance = 1f - targetHitChance * ((float)Math.Pow(1f - averageSDAttackCritChance, targetAttackSpeedDebuffed / playerAttacksInterval)) *
                 1f / (1f - (1f - targetHitChance) * (float)Math.Pow(1f - averageSDAttackCritChance, targetAttackSpeedDebuffed / playerAttacksInterval));
             float blockValue = stats.AttackPower * 0.35f * masteryMultiplier;
-            float healthrestore = (stats.Healed + stats.BonusHealingReceived + stats.HealthRestoreFromMaxHealth) * (1f + stats.HealingReceivedMultiplier);
-            float blockedPercent = Math.Min(1f, (blockValue * blockChance) / ((1f - calculatedStats.TotalConstantDamageReduction) * (bossAttack.DamagePerHit - stats.DamageAbsorbed - healthrestore)));
+            float blockedPercent = Math.Min(1f, (blockValue * blockChance) / ((1f - calculatedStats.TotalConstantDamageReduction) * bossAttack.DamagePerHit));
             calculatedStats.SavageDefenseChance = (float)Math.Round(blockChance, 5);
             calculatedStats.SavageDefenseValue = (float)Math.Floor(blockValue);
             calculatedStats.SavageDefensePercent = (float)Math.Round(blockedPercent, 5);
@@ -574,7 +580,11 @@ the Threat Scale defined on the Options tab.",
             #endregion
 
             #region Survivability Points
-            calculatedStats.SurvivalPointsRaw = (stats.Health / (1f - calculatedStats.TotalConstantDamageReduction));
+            float healingincoming = (stats.Health / 2.5f) * (1f + stats.HealingReceivedMultiplier);
+            float healthRestoreFromMaxHealth = stats.Health * stats.HealthRestoreFromMaxHealth;
+            float healthrestore = stats.Healed + stats.HealthRestore + stats.BonusHealingReceived + ((healingincoming > healthRestoreFromMaxHealth) ? (healingincoming - healthRestoreFromMaxHealth) : healthRestoreFromMaxHealth);
+            
+            calculatedStats.SurvivalPointsRaw = ((stats.Health + stats.DamageAbsorbed + healthrestore) / (1f - calculatedStats.TotalConstantDamageReduction));
             double survivalCap = /*bossAttack.DamagePerHit * calcOpts.HitsToSurvive*/ calcOpts.SurvivalSoftCap / 1000d;
             double survivalRaw = calculatedStats.SurvivalPointsRaw / 1000d;
 
@@ -753,24 +763,61 @@ the Threat Scale defined on the Options tab.",
                 //statsTotal.BonusDamageMultiplierRakeTick = (1f + statsTotal.BonusDamageMultiplierRakeTick) * (1f + 0.10f) - 1f;
                 statsTotal.BonusDamageMultiplierLacerate = (1f + statsTotal.BonusDamageMultiplierLacerate) * (1f + 0.10f) - 1f;
             }
-            if (T11Count >= 4) {
+            if (T11Count >= 4)
+            {
                 /*statsBuffs.AddSpecialEffect(new SpecialEffect(Trigger.MangleCatHit,
                     new Stats() { BonusAttackPowerMultiplier = 0.01f, },
                     30, 0, 1f, 3));*/
-                statsTotal.BonusSurvivalInstinctsDurationMultiplier = 6f;
+                statsTotal.BonusSurvivalInstinctsDurationMultiplier = 0.5f;
             }
             int T12Count;
             character.SetBonusCount.TryGetValue("Obsidian Arborweave Battlegarb", out T12Count);
             if (T12Count >= 2)
-                statsTotal.BonusMangleDamageMultiplier= (1f + statsTotal.BonusMangleDamageMultiplier) * (1f + 0.10f) - 1f;
-                statsTotal.BonusMaulDamageMultiplier = (1f + statsTotal.BonusMaulDamageMultiplier) * (1f + 0.10f) - 1f;
             {
+                statsTotal.BonusMangleDamageMultiplier = (1f + statsTotal.BonusMangleDamageMultiplier) * (1f + 0.10f) - 1f;
+                statsTotal.BonusMaulDamageMultiplier = (1f + statsTotal.BonusMaulDamageMultiplier) * (1f + 0.10f) - 1f;
             }
             if (T12Count >= 4)
             {
                 statsTotal.AddSpecialEffect(SpecialEffect4T12);
             }
+            
+            int T13Count;
+            character.SetBonusCount.TryGetValue("Deep Earth Battlegarb", out T13Count);
+            if (T13Count >= 2)
+            {
+                statsTotal.Tier_13_2_piece = true;
+            }
+            if (T13Count >= 4)
+            {
+                statsTotal.Tier_13_4_piece = (10f + 25f)/2;
+            }
             #endregion
+
+            // Leader of the Pack self-heal
+            statsTotal.AddSpecialEffect(LeaderOfThePackSpecialEffect);
+
+            // Survival Instincts
+            SpecialEffect SurvivalInstinctsSpecialEffect = new SpecialEffect(Trigger.Use, new Stats() { DamageTakenReductionMultiplier = 0.50f, }, 12f * (1f + statsTotal.BonusSurvivalInstinctsDurationMultiplier), 180f, 1f);
+            statsTotal.AddSpecialEffect(SurvivalInstinctsSpecialEffect);
+
+            // Barkskin
+            SpecialEffect BarkskinSpecialEffect = new SpecialEffect(Trigger.Use, new Stats() { DamageTakenReductionMultiplier = 0.20f, CritChanceReduction = (talents.GlyphOfBarkskin ? 0.25f : 0f), }, 12f, 60f, 1f);
+            statsTotal.AddSpecialEffect(BarkskinSpecialEffect);
+
+            // Frenzied Regeneration
+            SpecialEffect FrenziedRegenerationSpecialEffect = new SpecialEffect(Trigger.Use, new Stats() { BonusHealthMultiplier = 0.15f, HealthRestoreFromMaxHealth = (talents.GlyphOfFrenziedRegeneration ? 0f : (0.015f * (1f + statsTotal.Tier_13_4_piece))), HealingReceivedMultiplier = (talents.GlyphOfFrenziedRegeneration ? (0.30f * (1f + statsTotal.Tier_13_4_piece)) : 0f) }, 20f, 180f, 1f);
+            statsTotal.AddSpecialEffect(FrenziedRegenerationSpecialEffect);
+
+            // Berserk
+            StatsBear tempBear = new StatsBear();
+            tempBear.AddSpecialEffect(new SpecialEffect(Trigger.LacerateTick, new StatsBear() { MangleCooldownReduction = 6f, MangleCostReduction = 1f }, float.PositiveInfinity, 0, 0.5f));
+            SpecialEffect BerserkSpecialEffect = new SpecialEffect(Trigger.Use, tempBear, 15f + statsTotal.BerserkDuration, 180f, 1f);
+            statsTotal.AddSpecialEffect(BerserkSpecialEffect);
+
+            // Enrage
+            SpecialEffect EnrageSpecialEffect = new SpecialEffect(Trigger.Use, new StatsBear() { BonusDamageMultiplier = (0.05f * talents.KingOfTheJungle) }, 10f, 60f, 1f);
+            statsTotal.AddSpecialEffect(EnrageSpecialEffect);
 
             statsTotal.Accumulate(BaseStats.GetBaseStats(character.Level, character.Class, character.Race, BaseStats.DruidForm.Bear));
             statsTotal.Accumulate(GetItemStats(character, additionalItem));
@@ -792,29 +839,6 @@ the Threat Scale defined on the Options tab.",
             statsTotal.FrostResistance += statsTotal.FrostResistanceBuff;
             statsTotal.ShadowResistance += statsTotal.ShadowResistanceBuff;
             statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff;
-
-            // Leader of the Pack self-heal
-            statsTotal.AddSpecialEffect(LeaderOfThePackSpecialEffect);
-
-            // Survival Instincts
-            SpecialEffect SurvivalInstinctsSpecialEffect = new SpecialEffect(Trigger.Use, new Stats() { DamageTakenReductionMultiplier = 0.50f, }, 12f + statsTotal.BonusSurvivalInstinctsDurationMultiplier, 180f, 1f);
-            statsTotal.AddSpecialEffect(SurvivalInstinctsSpecialEffect);
-
-            // Barkskin
-            SpecialEffect BarkskinSpecialEffect = new SpecialEffect(Trigger.Use, new Stats() { DamageTakenReductionMultiplier = 0.20f, CritChanceReduction = (talents.GlyphOfBarkskin ? 0.25f : 0f), }, 12f, 60f, 1f);
-            statsTotal.AddSpecialEffect(BarkskinSpecialEffect);
-
-            // Frenzied Regeneration
-            SpecialEffect FrenziedRegenerationSpecialEffect = new SpecialEffect(Trigger.Use, new Stats() { BonusHealthMultiplier = 0.15f, HealthRestoreFromMaxHealth = (talents.GlyphOfFrenziedRegeneration ? 0f : 0.15f), HealingReceivedMultiplier = (talents.GlyphOfFrenziedRegeneration ? 0.30f : 0f) }, 20f, 180f, 1f);
-            statsTotal.AddSpecialEffect(FrenziedRegenerationSpecialEffect);
-
-            // Berserk
-            SpecialEffect BerserkSpecialEffect = new SpecialEffect(Trigger.Use, new StatsBear() { MangleCooldownReduction = 6f }, 15f + statsTotal.BerserkDuration, 180f, 1f);
-            statsTotal.AddSpecialEffect(BerserkSpecialEffect);
-
-            // Enrage
-            SpecialEffect EnrageSpecialEffect = new SpecialEffect(Trigger.Use, new StatsBear() { BonusDamageMultiplier = (0.05f * talents.KingOfTheJungle) }, 10f, 60f, 1f);
-            statsTotal.AddSpecialEffect(EnrageSpecialEffect);
 
             AccumulateProcs(character, statsTotal);
 
@@ -1343,7 +1367,8 @@ the Threat Scale defined on the Options tab.",
                 && !string.IsNullOrEmpty(buff.SetName)
                 && buff.SetName == "Gladiator's Sanctuary"
                 && buff.SetName == "Stormrider's Battlegarb"
-                && buff.SetName == "Obsidian Arborweave Battlegarb")
+                && buff.SetName == "Obsidian Arborweave Battlegarb"
+                && buff.SetName == "Deep Earth Battlegarb")
             { return true; }
             return base.IsBuffRelevant(buff, character);
         }

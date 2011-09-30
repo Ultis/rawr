@@ -37,6 +37,7 @@ namespace Rawr.Bear
         public float DamageMultiplierLacerate { get { return 1f + Stats.BonusDamageMultiplierLacerate; } }
 		public float NatureDamageMultiplier { get { return 1f + Stats.BonusNatureDamageMultiplier; } }
 		public float MaulDamageMultiplier { get { return 1f + Stats.BonusMaulDamageMultiplier; } }
+        public float MangeCostReduction { get { return 1f - Stats.MangleCostReduction; } }
 		public float MangleDamageMultiplier { get { return 1f + Stats.BonusMangleDamageMultiplier; } }
 		public float BleedDamageMultiplier { get { return 1f + Stats.BonusBleedDamageMultiplier; } }
 		public float ThreatMultiplier { get { return 5f * (1f + Stats.ThreatIncreaseMultiplier); } }
@@ -108,6 +109,7 @@ namespace Rawr.Bear
 				if (_thornsStats == null)
 				{
 					_thornsStats = new ThornsStats();
+                    _thrashStats.Cooldown = 45f;
 					_thornsStats.DamageRaw = (214f + AttackPower * 0.168f) * DamageMultiplier * NatureDamageMultiplier;
 					_thornsStats.ThreatRaw = _thornsStats.DamageRaw * ThreatMultiplier;
 					_thornsStats.DamageAverage =	((ChanceCritSpell) * (_thornsStats.DamageRaw * SpellCritMultiplier)) +
@@ -126,6 +128,7 @@ namespace Rawr.Bear
 				if (_faerieFireStats == null)
 				{
 					_faerieFireStats = new FaerieFireStats();
+                    _faerieFireStats.Cooldown = 6f;
 					_faerieFireStats.DamageRaw = (2950f + AttackPower * 0.108f) * DamageMultiplier * NatureDamageMultiplier;
 					_faerieFireStats.ThreatRaw = (_faerieFireStats.DamageRaw + (BonusFaerieFireStacks * 48f)) * ThreatMultiplier;
 					_faerieFireStats.DamageAverage =	ChanceNonResisted * (
@@ -147,7 +150,8 @@ namespace Rawr.Bear
 				if (_mangleStats == null)
 				{
 					_mangleStats = new MangleStats();
-					_mangleStats.RageCostRaw = 15f;
+					_mangleStats.RageCostRaw = 15f * MangeCostReduction;
+                    _maulStats.Cooldown = 6f - Stats.MangleCooldownReduction;
 					_mangleStats.DamageRaw = (3306f + BaseDamage) * 1.9f * DamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier * MangleDamageMultiplier;
 					_mangleStats.ThreatRaw = _mangleStats.DamageRaw * ThreatMultiplier;
 					_mangleStats.DamageAverage = ChanceNonAvoided * (
@@ -169,6 +173,7 @@ namespace Rawr.Bear
 				{
 					_maulStats = new MaulStats();
 					_maulStats.RageCostRaw = 30f;
+                    _maulStats.Cooldown = 0f;
 					_maulStats.DamageRaw = (35f + AttackPower * 0.19f) * MaulDamageMultiplier * DamageMultiplier * BleedDamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier;
 					_maulStats.ThreatRaw = (30f + _maulStats.DamageRaw) * ThreatMultiplier;
 					_maulStats.DamageAverage = ChanceNonAvoided * (
@@ -190,6 +195,7 @@ namespace Rawr.Bear
 				{
 					_pulverizeStats = new PulverizeStats();
 					_pulverizeStats.RageCostRaw = 15f;
+                    _pulverizeStats.Cooldown = 10f + Stats.BonusPulverizeDuration;
 					_pulverizeStats.DamageRaw = ((1623f * 0f) + BaseDamage) * 0.6f * DamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier;
 					_pulverizeStats.ThreatRaw = _pulverizeStats.DamageRaw * ThreatMultiplier;
 					_pulverizeStats.Damage1Raw = ((1623f * 1f) + BaseDamage) * 0.6f * DamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier;
@@ -232,6 +238,7 @@ namespace Rawr.Bear
 				{
 					_swipeStats = new SwipeStats();
 					_swipeStats.RageCostRaw = 15f;
+                    _swipeStats.Cooldown = 3f;
                     _swipeStats.DamageRaw = (929f + AttackPower * 0.123f) * 0.83f * DamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier;
 					_swipeStats.ThreatRaw = (_swipeStats.DamageRaw * 1.5f) * ThreatMultiplier;
 					_swipeStats.DamageAverage = ChanceNonAvoided * (
@@ -256,6 +263,7 @@ namespace Rawr.Bear
 				{
 					_thrashStats = new ThrashStats();
 					_thrashStats.RageCostRaw = 25f;
+                    _thrashStats.Cooldown = 6;
 					_thrashStats.DamageInitialRaw = (1042f + AttackPower * 0.0982f) * 0.83f * DamageMultiplier * BleedDamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier;
 					_thrashStats.ThreatInitialRaw = (_thrashStats.DamageInitialRaw * 1.5f) * ThreatMultiplier;
 					_thrashStats.DamageTickRaw = (581f + AttackPower * 0.0167f) * 0.83f * DamageMultiplier * BleedDamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier;
@@ -284,6 +292,7 @@ namespace Rawr.Bear
 				{
 					_lacerateStats = new LacerateStats();
 					_lacerateStats.RageCostRaw = 15f;
+                    _lacerateStats.Cooldown = 0f;
 					_lacerateStats.DamageRaw = (3608f + AttackPower * 0.0552f) * DamageMultiplier * BleedDamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier;
 					_lacerateStats.ThreatRaw = (2269f + _lacerateStats.DamageRaw) * ThreatMultiplier;
 					_lacerateStats.DamageTick1Raw = 1f * (69f + AttackPower * 0.00369f) * DamageMultiplier * BleedDamageMultiplier * PhysicalDamageMultiplier * DamageMultiplierLacerate;
@@ -314,6 +323,7 @@ namespace Rawr.Bear
 		public float RageCostAverage { get; set; }
 		public float DamageAverage { get; set; }
 		public float ThreatAverage { get; set; }
+        public float Cooldown { get; set; }
 
 		public override string ToString()
 		{
