@@ -203,7 +203,7 @@ namespace Rawr.Moonkin
                     if (currentNGTimer > 0) ngTimeSpent += ssCastTime;
                     currentMFTimer = Math.Max(0, currentMFTimer - ssCastTime);
                     currentISTimer = Math.Max(0, currentISTimer - ssCastTime);
-                    currentSSCooldown = Has4T13 ? 10 : 15;
+                    currentSSCooldown = (Has4T13 ? 10 : 15) - ssCastTime;
                     currentNGTimer = Math.Max(0, currentNGTimer - ssCastTime);
                     currentNGCooldown = Math.Max(0, currentNGCooldown - ssCastTime);
                     currentActionTime = ssCastTime;
