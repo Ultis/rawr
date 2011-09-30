@@ -146,6 +146,7 @@ namespace Rawr.Moonkin
             double currentSSCooldown = 0;
             double currentShSProc = 0;
             double currentNGCooldown = 0;
+            bool currentMFIsSF = false;
             bool currentMFHasNG = false;
             bool currentISHasNG = false;
 
@@ -154,15 +155,15 @@ namespace Rawr.Moonkin
                 bool inEclipse = (eclipseEnergy > 0 && eclipseEnergy <= 100 && eclipseDirection == -1) ||
                     (eclipseEnergy < 0 && eclipseEnergy >= -100 && eclipseDirection == 1);
 
+                // Rules for recasting Moonfire:
+                // Less than 2 ticks remaining
+                // Not overwriting Sunfire with Moonfire or vice versa
+                bool recastMF = (currentMFTimer < (currentMFHasNG ? NGTickRate : CurrentTickRate)) && (currentMFIsSF == (inEclipse && eclipseEnergy > 0));
+
                 double currentActionTime = 0;
 
-                double mfTicksLeft = Math.Floor(currentMFTimer / (currentMFHasNG ? NGTickRate : CurrentTickRate));
-                double mfTickTime = mfTicksLeft * (currentMFHasNG ? NGTickRate : CurrentTickRate);
-                double timeSinceLastMFTick = (currentMFHasNG ? NGTickRate : CurrentTickRate) - (currentMFTimer - mfTickTime);
-
-                double isTicksLeft = Math.Floor(currentISTimer / (currentISHasNG ? NGTickRate : CurrentTickRate));
-                double isTickTime = isTicksLeft * (currentISHasNG ? NGTickRate : CurrentTickRate);
-                double timeSinceLastISTick = (currentISHasNG ? NGTickRate : CurrentTickRate) - (currentISTimer - isTickTime);
+                double mfTicksLeft = Math.Ceiling(currentMFTimer / (currentMFHasNG ? NGTickRate : CurrentTickRate));
+                double isTicksLeft = Math.Ceiling(currentISTimer / (currentISHasNG ? NGTickRate : CurrentTickRate));
 
                 // First priority: Refresh Insect Swarm
                 if (currentISTimer < (currentISHasNG ? NGTickRate : CurrentTickRate))
@@ -180,8 +181,10 @@ namespace Rawr.Moonkin
                     else ++rotationCastCounts[9];
                 }
                 // Second priority: Refresh Moonfire
-                else if (currentMFTimer < (currentMFHasNG ? NGTickRate : CurrentTickRate))
+                else if (recastMF)
                 {
+                    // Current MF is Sunfire if we are in Solar Eclipse when we cast it
+                    currentMFIsSF = inEclipse && eclipseEnergy > 0;
                     ++numMoonfiresCast;
                     double mfCastTime = (currentNGTimer > 0 ? NGGlobalCooldown : CurrentGlobalCooldown);
                     if (currentNGTimer > 0) ngTimeSpent += mfCastTime;
@@ -234,6 +237,13 @@ namespace Rawr.Moonkin
                     currentMFTimer = Math.Max(0, currentMFTimer - ssCastTime);
                     currentISTimer = Math.Max(0, currentISTimer - ssCastTime);
                     currentSSCooldown = Has4T13 ? 10 : 15;
+                    // From Erdluf: At extremely high haste levels, the actual cast may have been less than 1s,
+                    // meaning that we have burned a bit of cooldown already
+                    if (ssCastTime == 1.0)
+                    {
+                        // Take advantage of the fact that SS cast time == DoT tick rate
+                        currentSSCooldown -= (ssCastTime - (currentNGTimer > 0 ? NGTickRate : CurrentTickRate));
+                    }
                     currentNGTimer = Math.Max(0, currentNGTimer - ssCastTime);
                     currentNGCooldown = Math.Max(0, currentNGCooldown - ssCastTime);
                     currentActionTime = ssCastTime;
@@ -331,8 +341,11 @@ namespace Rawr.Moonkin
                     else ++rotationCastCounts[1];
                 }
                 // Determine the chance to proc Shooting Stars over the last action time
-                double mfTicks = Math.Floor((timeSinceLastMFTick + currentActionTime) / (currentMFHasNG ? NGTickRate : CurrentTickRate));
-                double isTicks = Math.Floor((timeSinceLastISTick + currentActionTime) / (currentISHasNG ? NGTickRate : CurrentTickRate));
+                double newMFTicksLeft = Math.Ceiling(currentMFTimer / (currentMFHasNG ? NGTickRate : CurrentTickRate));
+                double newISTicksLeft = Math.Ceiling(currentISTimer / (currentISHasNG ? NGTickRate : CurrentTickRate));
+
+                double mfTicks = mfTicksLeft - newMFTicksLeft;
+                double isTicks = isTicksLeft - newISTicksLeft;
                 double dotTicks = (currentMFTimer > 0 ? mfTicks : 0) + (currentISTimer > 0 ? isTicks : 0);
                 if (rng.NextDouble() <= 1 - Math.Pow(1 - ShootingStarsChance, dotTicks))
                 {
