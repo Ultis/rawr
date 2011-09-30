@@ -156,13 +156,13 @@ namespace Rawr.Moonkin
 
                 double currentActionTime = 0;
 
-                double mfTicksSoFar = Math.Floor(currentMFTimer / (currentMFHasNG ? NGTickRate : CurrentTickRate));
-                double mfTickTime = mfTicksSoFar * (currentMFHasNG ? NGTickRate : CurrentTickRate);
+                double mfTicksLeft = Math.Floor(currentMFTimer / (currentMFHasNG ? NGTickRate : CurrentTickRate));
+                double mfTickTime = mfTicksLeft * (currentMFHasNG ? NGTickRate : CurrentTickRate);
                 double timeSinceLastMFTick = (currentMFHasNG ? NGTickRate : CurrentTickRate) - (currentMFTimer - mfTickTime);
 
-                double isTicksSoFar = Math.Floor(currentISTimer / (currentISHasNG ? NGTickRate : CurrentTickRate));
-                double isTickTime = isTicksSoFar * (currentISHasNG ? NGTickRate : CurrentTickRate);
-                double timeSinceLastISTick = (currentMFHasNG ? NGTickRate : CurrentTickRate) - (currentISTimer - isTickTime);
+                double isTicksLeft = Math.Floor(currentISTimer / (currentISHasNG ? NGTickRate : CurrentTickRate));
+                double isTickTime = isTicksLeft * (currentISHasNG ? NGTickRate : CurrentTickRate);
+                double timeSinceLastISTick = (currentISHasNG ? NGTickRate : CurrentTickRate) - (currentISTimer - isTickTime);
 
                 // First priority: Refresh Insect Swarm
                 if (currentISTimer < (currentISHasNG ? NGTickRate : CurrentTickRate))
