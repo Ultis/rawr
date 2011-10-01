@@ -18,20 +18,10 @@
 			<Button Click="OpenButton_Click" Content="..."/>
 		</DataTemplate>
 		<DataTemplate x:Key="DataTemplateShowButton">
-			<!--IFWPF
 			<Button Click="ShowButton_Click" Visibility="{Binding Character, Converter={StaticResource nullToVisibilityConverter}, FallbackValue=Hidden}" Content="Show"/>
-			ENDIFWPF-->
-			<!--IFSL-->
-			<Button Click="ShowButton_Click" Visibility="{Binding Character, Converter={StaticResource nullToVisibilityConverter}}" Content="Show"/>
-			<!--ENDIFSL-->
 		</DataTemplate>
 		<DataTemplate x:Key="DataTemplateDiffButton">
-			<!--IFWPF
 			<Button Click="DiffButton_Click" Visibility="{Binding Character, Converter={StaticResource nullToVisibilityConverter}, FallbackValue=Hidden}" Content="Diff"/>
-			ENDIFWPF-->
-			<!--IFSL-->
-			<Button Click="DiffButton_Click" Visibility="{Binding Character, Converter={StaticResource nullToVisibilityConverter}}" Content="Diff"/>
-			<!--ENDIFSL-->
 		</DataTemplate>
 	</UserControl.Resources>
 	<UserControl.DataContext>
@@ -69,9 +59,9 @@
 				<splitButton:MenuButton.ButtonMenuItemsSource>
                     <menu:MenuItem Header="New" Click="New"/>
                     <menu:MenuItem Header="Import" Click="Import"/>
-                    <menu:MenuItem Header="Open" Click="Open"/>
-                    <menu:MenuItem Header="Save" Click="Save"/>
-                    <menu:MenuItem Header="Save As..." Click="SaveAs"/>
+                    <menu:MenuItem Header="Open" Click="Open" IsEnabled="False"/>
+                    <menu:MenuItem Header="Save" Click="Save" IsEnabled="False"/>
+                    <menu:MenuItem Header="Save As..." Click="SaveAs" IsEnabled="False"/>
                     <menu:Separator/>
                     <menu:MenuItem Header="Exit" Click="Close"/>
 				</splitButton:MenuButton.ButtonMenuItemsSource>
@@ -91,7 +81,6 @@
                     <menu:MenuItem Header="Save Characters As Copy" Click="SaveCharactersAs"/>
 				</splitButton:MenuButton.ButtonMenuItemsSource>
 			</splitButton:MenuButton>
-
 		</StackPanel>
 		<!--ENDIFSL-->
 		<!--IFWPF

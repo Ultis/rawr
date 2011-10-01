@@ -131,6 +131,7 @@
                         <System:String>Humanoid</System:String>
                         <System:String>Mechanical</System:String>
                         <System:String>Undead</System:String>
+                        <System:String>Uncategorized</System:String>
                     </ComboBox>
                     <TextBlock x:Name="LB_Duration" Margin="2" Text="Berserk Timer: *" TextWrapping="Wrap" Grid.Row="2" VerticalAlignment="Center" Grid.ColumnSpan="2" ToolTipService.ToolTip="Also used as the Fight Duration"/>
                     <inputToolkit:NumericUpDown x:Name="NUD_Duration" Margin="2" Maximum="1200" Minimum="30" Value="{Binding BerserkTimer, Mode=TwoWay, UpdateSourceTrigger=Default}" IsEditable="True" Grid.Column="2" Grid.Row="2" VerticalAlignment="Center"/>
