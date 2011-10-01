@@ -4181,10 +4181,13 @@ namespace Rawr.Mage
 
             // just in case
             // if feasible return the best we got
+            ComputePrimalSolution(false);
+            feasible = IsPrimalFeasible(eps);
             if (feasible) return ComputeReturnSolution();
             if (lastFeasible > 0 && !shortLimit)
             {
                 limit = lastFeasible;
+                lastFeasible = 0;
                 for (i = 0; i < rows; i++)
                 {
                     B[i] = cols + i;
