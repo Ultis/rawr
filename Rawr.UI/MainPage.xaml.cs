@@ -257,6 +257,7 @@ namespace Rawr.UI
         void character_AvailableItemsChanged(object sender, EventArgs e)
         {
             _unsavedChanges = true;
+            SetTitle();
         }
         private void character_ClassChanged(object sender, EventArgs e)
         {
@@ -305,7 +306,11 @@ namespace Rawr.UI
                 oldCalcs.CancelAsynchronousCharacterDisplayCalculation();
                 asyncCalculation = null;
             }
-            //_unsavedChanges = true;
+            if (!_unsavedChanges && !(sender == null || sender == this))
+            {
+                _unsavedChanges = true;
+                SetTitle();
+            }
             referenceCalculation = Calculations.GetCharacterCalculations(character, null, true, true, true);
             UpdateDisplayCalculationValues(referenceCalculation.GetCharacterDisplayCalculationValues(), referenceCalculation);
             if (Character.PrimaryProfession == Profession.Blacksmithing || Character.SecondaryProfession == Profession.Blacksmithing) {
@@ -404,8 +409,8 @@ namespace Rawr.UI
         {
             if (_batchCharacter == character)
             {
-                //_unsavedChanges = false;
-                //SetTitle();
+                _unsavedChanges = false;
+                SetTitle();
             }
         }
 
@@ -416,14 +421,15 @@ namespace Rawr.UI
                 if (_batchCharacter == null)
                 {
                     _storedCharacter = this.character;
-                    //_storedCharacterPath = _characterPath;
-                    //_storedUnsavedChanged = _unsavedChanges;
+                    _storedLastSavedPath = lastSavedPath;
+                    _storedUnsavedChanged = _unsavedChanges;
                 }
                 _batchCharacter = character;
-                //_characterPath = character.AbsulutePath;
+                lastSavedPath = character.AbsolutePath;
+                _unsavedChanges = character.UnsavedChanges;
                 EnsureItemsLoaded(character.Character.GetAllEquippedAndAvailableGearIds());
-                //LoadCharacterIntoForm(character.Character, character.UnsavedChanges);
                 Character = character.Character;
+                SetTitle();
             }
         }
 
@@ -432,10 +438,11 @@ namespace Rawr.UI
             if (_batchCharacter != null)
             {
                 _batchCharacter = null;
-                //_characterPath = _storedCharacterPath;
-                //LoadCharacterIntoForm(_storedCharacter, _storedUnsavedChanged);
+                lastSavedPath = _storedLastSavedPath;
+                _unsavedChanges = _storedUnsavedChanged;
                 Character = _storedCharacter;
                 _storedCharacter = null;
+                SetTitle();
             }
         }
         #endregion
@@ -962,6 +969,8 @@ If that is still not working for you, right-click anywhere within the web versio
         #region Menus
         #region File Menu
         public string lastSavedPath = "";
+        private string _storedLastSavedPath;
+        private bool _storedUnsavedChanged;
 
         public void NewCharacter(object sender, RoutedEventArgs args)
         {
@@ -975,6 +984,7 @@ If that is still not working for you, right-click anywhere within the web versio
             c.RecalculateSetBonuses();
             Character = c;
             _unsavedChanges = false;
+            SetTitle();
         }
 
         public void OpenCharacter(object sender, RoutedEventArgs args)
@@ -1005,6 +1015,7 @@ If that is still not working for you, right-click anywhere within the web versio
                     Character = loadedCharacter;
                 }
                 _unsavedChanges = false;
+                SetTitle();
             }
         }
 
@@ -1024,10 +1035,26 @@ If that is still not working for you, right-click anywhere within the web versio
                 // TODO: we'll have to expand this considerably to get to Rawr2 functionality // uhh what?
                 Character loadedCharacter = Character.LoadFromXml(reader.ReadToEnd());
                 EnsureItemsLoaded(loadedCharacter.GetAllEquippedAndAvailableGearIds());
+                _unsavedChanges = false;
                 Character = loadedCharacter;
+                SetTitle();
             }
         }
 #endif
+
+        private void SetTitle()
+        {
+#if !SILVERLIGHT
+            if (string.IsNullOrEmpty(lastSavedPath))
+            {
+                App.Current.MainWindow.Title = "Rawr";
+            }
+            else
+            {
+                App.Current.MainWindow.Title = "Rawr - " + System.IO.Path.GetFileName(lastSavedPath) + (_unsavedChanges ? " *" : "");
+            }
+#endif
+        }
 
         private static bool CancelToSave = false;
         public void NeedToSaveCharacter() {
@@ -1068,6 +1095,7 @@ If that is still not working for you, right-click anywhere within the web versio
                     CancelToSave = false;
 #if !SILVERLIGHT
                     lastSavedPath = sfd.FileName;
+                    SetTitle();
 #endif
                 }
             }
@@ -1085,6 +1113,7 @@ If that is still not working for you, right-click anywhere within the web versio
                 _unsavedChanges = false;
                 CancelToSave = false;
                 lastSavedPath = sfd.FileName;
+                SetTitle();
             }
 #endif
         }
@@ -1104,6 +1133,7 @@ If that is still not working for you, right-click anywhere within the web versio
                 }
                 _unsavedChanges = false;
                 CancelToSave = false;
+                SetTitle();
             }
         }
 
