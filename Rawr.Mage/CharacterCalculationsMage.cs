@@ -761,7 +761,7 @@ namespace Rawr.Mage
                         case VariableType.Spell:
                             double value;
                             Cycle s = SolutionVariable[i].Cycle;
-                            s.AddDamageContribution(DamageSources, (float)Solution[i]);
+                            s.AddDamageContribution(DamageSources, (float)Solution[i], 0);
                             s.AddManaUsageContribution(ManaUsage, (float)Solution[i]);
                             s.AddManaSourcesContribution(ManaSources, (float)Solution[i]);
                             string label = ((SolutionVariable[i].State.BuffLabel.Length > 0) ? (SolutionVariable[i].State.BuffLabel + "+") : "") + s.Name;
@@ -772,6 +772,12 @@ namespace Rawr.Mage
                             break;
                     }
                 }
+            }
+            if (Specialization == Specialization.Arcane)
+            {
+                // we need to special case damage sources because of mana adept
+                DamageSources.Clear();
+                CalculateArcaneDamageSources();
             }
             if (!segmentedOutput)
             {
@@ -882,6 +888,141 @@ namespace Rawr.Mage
             dictValues.Add("Threat Reduction", String.Format("{0:F}%", ThreatReduction * 100));
             CalculationOptions.Calculations = this;
             return dictValues;
+        }
+
+        private void CalculateArcaneDamageSources()
+        {
+            // for now requires solution variables to work
+            int[] sort = new int[SolutionVariable.Count];
+            for (int j = 0; j < SolutionVariable.Count; j++)
+            {
+                sort[j] = j;
+            }
+            Array.Sort(sort, (x, y) =>
+            {
+                SolutionVariable vx = SolutionVariable[x];
+                SolutionVariable vy = SolutionVariable[y];
+                int comp = vx.Segment.CompareTo(vy.Segment);
+                if (comp != 0) return comp;
+                comp = vx.ManaSegment.CompareTo(vy.ManaSegment);
+                if (comp != 0) return comp;
+                // first instant mana gain, then negative mps
+                // then mana overflow, then positive mps
+                comp = Solver.GetQuadraticIndex(vx).CompareTo(Solver.GetQuadraticIndex(vy));
+                if (comp != 0) return comp;
+                return vx.Mps.CompareTo(vy.Mps);
+            });
+
+            float mana = StartingMana;
+            int gemCount = 0;
+            float time = 0;
+            float maxMana = BaseStats.Mana;
+
+            for (int j = 0; j < SolutionVariable.Count; j++)
+            {
+                int i = sort[j];
+                if (Solution[i] > 0.01)
+                {
+                    double mps = SolutionVariable[i].Mps;
+                    Cycle cycle = SolutionVariable[i].Cycle;
+                    var variableType = SolutionVariable[i].Type;
+
+                    if (variableType == VariableType.Wand)
+                    {
+                        cycle = Wand;
+                        mps = cycle.ManaPerSecond;
+                    }
+                    else if (variableType == VariableType.ManaGem)
+                    {
+                        mps = 0.0;
+                    }
+                    else if (variableType == VariableType.ManaPotion)
+                    {
+                        mps = 0.0;
+                    }
+                    else if (variableType == VariableType.Drinking)
+                    {
+                        mps = -BaseState.ManaRegenDrinking;
+                    }
+                    else if (variableType == VariableType.AfterFightRegen)
+                    {
+                        mps = -BaseState.ManaRegenDrinking;
+                    }
+
+                    float duration = (float)Solution[i];
+                    CastingState state = SolutionVariable[i].State;
+                    if (variableType == VariableType.ManaPotion || variableType == VariableType.ManaGem)
+                    {
+                        float value = duration;
+                        duration = 0;
+                        if (variableType == VariableType.ManaGem)
+                        {
+                            mana += (float)((1 + BaseStats.BonusManaGem) * ManaGemValue * value);
+                            gemCount++;
+                        }
+                        else if (variableType == VariableType.ManaPotion)
+                        {
+                            mana += (float)((1 + BaseStats.BonusManaPotionEffectMultiplier) * ManaPotionValue * value);
+                        }
+                        if (mana < 0) mana = 0;
+                        if (mana > maxMana)
+                        {
+                            mana = maxMana;
+                        }
+                    }
+                    else
+                    {
+                        float partTime = duration;
+                        if (mana - mps * duration < 0) partTime = (float)(mana / mps);
+                        else if (mana - mps * duration > maxMana) partTime = (float)((mana - maxMana) / mps);
+
+                        float startMana = mana;
+                        mana -= (float)(mps * duration);
+                        if (mana < 0) mana = 0;
+                        if (mana > maxMana)
+                        {
+                            mana = maxMana;
+                        }
+
+                        float averageMana = (partTime * (startMana + mana) / 2.0f + (duration - partTime) * mana) / duration;
+
+                        switch (variableType)
+                        {
+                            case VariableType.SummonWaterElemental:
+                                {
+                                    Spell waterbolt = SolutionVariable[i].State.GetSpell(SpellId.Waterbolt);
+                                    SpellContribution contrib;
+                                    if (!DamageSources.TryGetValue(waterbolt.Name, out contrib))
+                                    {
+                                        contrib = new SpellContribution() { Name = waterbolt.Name };
+                                        DamageSources[waterbolt.Name] = contrib;
+                                    }
+                                    contrib.Hits += (float)Solution[i] / waterbolt.CastTime;
+                                    contrib.Damage += waterbolt.DamagePerSecond * (float)Solution[i];
+                                }
+                                break;
+                            case VariableType.SummonMirrorImage:
+                                {
+                                    Spell mirrorImage = SolutionVariable[i].State.GetSpell(SpellId.MirrorImage);
+                                    SpellContribution contrib;
+                                    if (!DamageSources.TryGetValue("Mirror Image", out contrib))
+                                    {
+                                        contrib = new SpellContribution() { Name = "Mirror Image" };
+                                        DamageSources["Mirror Image"] = contrib;
+                                    }
+                                    contrib.Hits += 3 * (MageTalents.GlyphOfMirrorImage ? 4 : 3) * (float)Solution[i] / mirrorImage.CastTime;
+                                    contrib.Damage += mirrorImage.DamagePerSecond * (float)Solution[i];
+                                }
+                                break;
+                            case VariableType.Wand:
+                            case VariableType.Spell:
+                                cycle.AddDamageContribution(DamageSources, (float)Solution[i], averageMana);
+                                break;
+                        }
+                    }
+                    time += duration;
+                }
+            }
         }
 
         private string GetSpellTooltip(Spell bs, bool abcost = false)

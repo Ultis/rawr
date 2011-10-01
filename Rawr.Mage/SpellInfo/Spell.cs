@@ -901,7 +901,7 @@ namespace Rawr.Mage
             AverageCost = cost;
         }
 
-        public void AddSpellContribution(Dictionary<string, SpellContribution> dict, float count, float dotUptime, float effectSpellPower, float effectMastery, float effectCrit)
+        public void AddSpellContribution(Dictionary<string, SpellContribution> dict, float count, float dotUptime, float effectSpellPower, float effectMastery, float effectCrit, float effectManaAdeptMultiplier, float averageMana)
         {
             SpellContribution contrib;
             if (!dict.TryGetValue(Name, out contrib))
@@ -925,6 +925,12 @@ namespace Rawr.Mage
             contrib.Hits += (HitProcs - CritProcs) * count;
             contrib.Crits += CritProcs * count;
             float damage = (AverageDamage + effectSpellPower * DamagePerSpellPower + effectMastery * DamagePerMastery + effectCrit * DamagePerCrit) * count - igniteContribution;
+            if (castingState.Solver.Specialization == Specialization.Arcane)
+            {
+                double manaAdeptBonus = castingState.ManaAdeptBonus + 0.015f * effectMastery;
+                float spellMultiplier = (float)(1 + averageMana / castingState.BaseStats.Mana * manaAdeptBonus * effectManaAdeptMultiplier);
+                damage *= spellMultiplier;
+            }
             contrib.Damage += damage;
             if (dotUptime > 0)
             {

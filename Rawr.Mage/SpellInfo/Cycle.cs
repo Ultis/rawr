@@ -293,11 +293,11 @@ namespace Rawr.Mage
             DpsPerCrit /= CastTime;
         }
 
-        public virtual void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration, float effectSpellPower, float effectMastery, float effectCrit)
+        public virtual void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration, float effectSpellPower, float effectMastery, float effectCrit, float averageMana)
         {
             foreach (var spell in Spell)
             {
-                spell.Spell.AddSpellContribution(dict, spell.Weight * duration / (float)CastTime, spell.DotUptime, effectSpellPower, effectMastery, effectCrit);
+                spell.Spell.AddSpellContribution(dict, spell.Weight * duration / (float)CastTime, spell.DotUptime, effectSpellPower, effectMastery, effectCrit, (float)effectManaAdeptMultiplier, averageMana);
             }
         }
 
@@ -478,10 +478,10 @@ namespace Rawr.Mage
         public double DamageProcs;
         public double OO5SR;
 
-        public void AddDamageContribution(Dictionary<string, SpellContribution> dict, float duration)
+        public void AddDamageContribution(Dictionary<string, SpellContribution> dict, float duration, float averageMana)
         {
-            AddSpellContribution(dict, duration, (float)effectSpellPower, (float)effectMastery, (float)effectCrit);
-            AddEffectContribution(dict, duration);
+            AddSpellContribution(dict, duration, (float)effectSpellPower, (float)effectMastery, (float)effectCrit, averageMana);
+            AddEffectContribution(dict, duration, averageMana);
         }
 
         private void CalculateEffects()
@@ -758,7 +758,7 @@ namespace Rawr.Mage
             }
         }
 
-        public void AddEffectContribution(Dictionary<string, SpellContribution> dict, float duration)
+        public void AddEffectContribution(Dictionary<string, SpellContribution> dict, float duration, float averageMana)
         {
             SpellContribution contrib;
             if (CastingState.WaterElemental)
@@ -786,7 +786,7 @@ namespace Rawr.Mage
             if (CastingState.CalculationOptions.ProcCombustion && CastingState.MageTalents.Combustion == 1)
             {
                 Spell combustion = CastingState.GetSpell(SpellId.Combustion);
-                combustion.AddSpellContribution(dict, GetAverageFactor(Solver.SpecialEffectCombustion) * duration / 10f, 0, (float)effectSpellPower, (float)effectMastery, (float)effectCrit);
+                combustion.AddSpellContribution(dict, GetAverageFactor(Solver.SpecialEffectCombustion) * duration / 10f, 0, (float)effectSpellPower, (float)effectMastery, (float)effectCrit, (float)effectManaAdeptMultiplier, averageMana);
             }
             if (Ticks > 0)
             {
@@ -796,34 +796,40 @@ namespace Rawr.Mage
                     string name = null;
                     float effectsPerSecond = GetAverageFactor(effect);
                     float boltDps = 0f;
+                    float spellMultiplier = 1f;
+                    if (CastingState.Solver.Specialization == Specialization.Arcane)
+                    {
+                        double manaAdeptBonus = CastingState.ManaAdeptBonus + 0.015f * effectMasteryRating / 14 * CastingState.CalculationOptions.LevelScalingFactor;
+                        spellMultiplier = (float)(1 + averageMana / CastingState.BaseStats.Mana * manaAdeptBonus * effectManaAdeptMultiplier);
+                    }
                     if (effect.Stats.ArcaneDamage > 0)
                     {
-                        boltDps = CastingState.ArcaneAverageDamage * effect.Stats.ArcaneDamage * effectsPerSecond;
+                        boltDps = CastingState.ArcaneAverageDamage * effect.Stats.ArcaneDamage * effectsPerSecond * spellMultiplier;
                         name = "Arcane Damage Proc";
                     }
                     if (effect.Stats.FireDamage > 0)
                     {
-                        boltDps = CastingState.FireAverageDamage * effect.Stats.FireDamage * effectsPerSecond;
+                        boltDps = CastingState.FireAverageDamage * effect.Stats.FireDamage * effectsPerSecond * spellMultiplier;
                         name = "Fire Damage Proc";
                     }
                     if (effect.Stats.FrostDamage > 0)
                     {
-                        boltDps = CastingState.FrostAverageDamage * effect.Stats.FrostDamage * effectsPerSecond;
+                        boltDps = CastingState.FrostAverageDamage * effect.Stats.FrostDamage * effectsPerSecond * spellMultiplier;
                         name = "Frost Damage Proc";
                     }
                     if (effect.Stats.ShadowDamage > 0)
                     {
-                        boltDps = CastingState.ShadowAverageDamage * effect.Stats.ShadowDamage * effectsPerSecond;
+                        boltDps = CastingState.ShadowAverageDamage * effect.Stats.ShadowDamage * effectsPerSecond * spellMultiplier;
                         name = "Shadow Damage Proc";
                     }
                     if (effect.Stats.NatureDamage > 0)
                     {
-                        boltDps = CastingState.NatureAverageDamage * effect.Stats.NatureDamage * effectsPerSecond;
+                        boltDps = CastingState.NatureAverageDamage * effect.Stats.NatureDamage * effectsPerSecond * spellMultiplier;
                         name = "Nature Damage Proc";
                     }
                     if (effect.Stats.HolyDamage > 0)
                     {
-                        boltDps = CastingState.HolyAverageDamage * effect.Stats.HolyDamage * effectsPerSecond;
+                        boltDps = CastingState.HolyAverageDamage * effect.Stats.HolyDamage * effectsPerSecond * spellMultiplier;
                         name = "Holy Damage Proc";
                     }
                     if (effect.Stats.HolySummonedDamage > 0)

@@ -135,8 +135,8 @@ namespace Rawr.Mage
 
             Dictionary<string, SpellContribution> dict1 = new Dictionary<string, SpellContribution>();
             Dictionary<string, SpellContribution> dict2 = new Dictionary<string, SpellContribution>();
-            c1.AddDamageContribution(dict1, 1.0f);
-            c2.AddDamageContribution(dict2, 1.0f);
+            c1.AddDamageContribution(dict1, 1.0f, 0);
+            c2.AddDamageContribution(dict2, 1.0f, 0);
 
             float predicted = dict2["Pyroblast"].Hits / dict2["Fireball"].Hits;
             float actual = dict1["Pyroblast"].Hits / dict1["Fireball"].Hits;

@@ -7318,7 +7318,7 @@ namespace Rawr.Mage
         #endregion
 
         #region Quadratic Solver
-        private int GetQuadraticIndex(SolutionVariable v)
+        internal static int GetQuadraticIndex(SolutionVariable v)
         {
             if (v.IsZeroTime)
             {
