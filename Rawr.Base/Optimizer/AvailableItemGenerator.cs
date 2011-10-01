@@ -1074,13 +1074,29 @@ namespace Rawr.Optimizer
                                             }
                                         }
                                         Enchant enchant = item.Enchant;
-                                        if (enchant != null && enchant.Id != 0)
+                                        if (enchant != null && enchant.Id != 0 && character.CurrentCalculations.IsEnchantRelevant(enchant, character))
                                         {
                                             // ignore if we have something strictly better marked
                                             if (!ArrayContains(SlotEnchants[slot], e => e.Id == enchant.Id || e.Stats >= enchant.Stats))
                                             {
                                                 // enchant is not available
                                                 line = item.Enchant.Name + " is not available";
+                                                if (!warnings.Contains(line))
+                                                {
+                                                    warnings.Add(line);
+                                                    s.AppendLine(line);
+                                                }
+                                                valid = false;
+                                            }
+                                        }
+                                        Tinkering tinkering = item.Tinkering;
+                                        if (tinkering != null && tinkering.Id != 0 && character.CurrentCalculations.IsTinkeringRelevant(tinkering, character))
+                                        {
+                                            // ignore if we have something strictly better marked
+                                            if (!ArrayContains(SlotTinkerings[slot], t => t.Id == tinkering.Id || t.Stats >= tinkering.Stats))
+                                            {
+                                                // tinkering is not available
+                                                line = item.Tinkering.Name + " is not available";
                                                 if (!warnings.Contains(line))
                                                 {
                                                     warnings.Add(line);
@@ -1126,7 +1142,7 @@ namespace Rawr.Optimizer
                                         break;
                                     case ItemAvailability.NotAvailable:
                                         // they could have some other gemming/enchant marked as available, but not in general
-                                        line = item.Item.Name + " gemming/enchant is not available";
+                                        line = item.Item.Name + " gemming/enchant/tinkering is not available";
                                         if (!warnings.Contains(line))
                                         {
                                             warnings.Add(line);
@@ -1138,7 +1154,7 @@ namespace Rawr.Optimizer
                             }
                             else
                             {
-                                line = item.Item.Name + " gemming/enchant is not available";
+                                line = item.Item.Name + " gemming/enchant/tinkering is not available";
                                 if (!warnings.Contains(line))
                                 {
                                     warnings.Add(line);
@@ -1187,7 +1203,7 @@ namespace Rawr.Optimizer
         }
 
         /// <summary>
-        /// Adds missing items/enchants/gems as available. This requires recreation of the item generator.
+        /// Adds missing items/enchants/gems/tinkerings as available. This requires recreation of the item generator.
         /// </summary>
         public void MakeCharacterValid(Character character)
         {
@@ -1251,6 +1267,19 @@ namespace Rawr.Optimizer
                                             if (character.GetItemAvailability(item.Enchant) != ItemAvailability.Available)
                                             {
                                                 character.ToggleItemAvailability(item.Enchant);
+                                            }
+                                        }
+                                    }
+                                    Tinkering tinkering = item.Tinkering;
+                                    if (tinkering != null && tinkering.Id != 0)
+                                    {
+                                        // ignore if we have something strictly better marked
+                                        if (!ArrayContains(SlotTinkerings[slot], t => t.Id == tinkering.Id || t.Stats >= tinkering.Stats))
+                                        {
+                                            // enchant is not available
+                                            if (character.GetItemAvailability(item.Tinkering) != ItemAvailability.Available)
+                                            {
+                                                character.ToggleItemAvailability(item.Tinkering);
                                             }
                                         }
                                     }
