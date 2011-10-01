@@ -56,13 +56,13 @@ namespace Rawr.UI
 				doBadPrepop = true;
 			}
 			if (doBadPrepop) {
-				NameText.Text = string.Format("{0} {1} {2} {3}",
+				NameText.Text = string.Format("{0}.{1}.{2}.{3}",
 					(MainPage.Instance.RegionCombo.SelectedItem as ComboBoxItem).Content as string,
 					!String.IsNullOrEmpty(MainPage.Instance.RealmText.Text) ? MainPage.Instance.RealmText.Text : "[Realm]",
 					!String.IsNullOrEmpty(MainPage.Instance.NameText.Text) ? MainPage.Instance.NameText.Text : "[CharacterName]",
 					MainPage.Instance.Character.CurrentModel);
 			}
-            NameText.Text = NameText.Text.Replace(".", " ");
+            //NameText.Text = NameText.Text.Replace(".", " "); // as far as I know this isn't needed
 			BT_CancelProcessing.IsEnabled = false;
 		}
 
