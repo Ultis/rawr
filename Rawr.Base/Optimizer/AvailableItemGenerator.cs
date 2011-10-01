@@ -2036,12 +2036,15 @@ namespace Rawr.Optimizer
                                 itemInstance.Item.AllowedRandomSuffixes.Add(itemInstance.RandomSuffixId);
                             }
                         }
-                        foreach (var availabilityInformation in itemInstance.Item.AvailabilityInformation)
+                        if (itemInstance.Item.AvailabilityInformation != null)
                         {
-                            if (availabilityInformation.Item.RandomSuffixId == itemInstance.RandomSuffixId && availabilityInformation.DefaultItemInstance == null)
+                            foreach (var availabilityInformation in itemInstance.Item.AvailabilityInformation)
                             {
-                                availabilityInformation.DefaultItemInstance = itemInstance.Clone();
-                                availabilityInformation.DefaultItemInstance.ItemAvailabilityInformation = availabilityInformation;
+                                if (availabilityInformation.Item.RandomSuffixId == itemInstance.RandomSuffixId && availabilityInformation.DefaultItemInstance == null)
+                                {
+                                    availabilityInformation.DefaultItemInstance = itemInstance.Clone();
+                                    availabilityInformation.DefaultItemInstance.ItemAvailabilityInformation = availabilityInformation;
+                                }
                             }
                         }
                     }

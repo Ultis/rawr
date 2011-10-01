@@ -449,7 +449,7 @@ the Threat Scale defined on the Options tab.",
             calculatedStats.TargetLevel = bossOpts.Level;
             calculatedStats.CharacterLevel = character.Level;
 
-            calcOpts.SurvivalSoftCap = bossOpts.DefaultMeleeAttack.DamagePerHit * 3f;
+            //calcOpts.SurvivalSoftCap = bossOpts.DefaultMeleeAttack.DamagePerHit * 3f;
             #endregion
 
             int levelDifference = (bossOpts.Level - character.Level);
