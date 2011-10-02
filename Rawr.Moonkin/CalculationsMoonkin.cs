@@ -823,7 +823,9 @@ namespace Rawr.Moonkin
                     iSw.OverallPoints = iSw.BurstDamagePoints;
                     wr.BurstDamagePoints = calcsBase.SelectedRotation.WrathAvgHit / calcsBase.SelectedRotation.WrathAvgCast;
                     wr.OverallPoints = wr.BurstDamagePoints;
-                    ss.BurstDamagePoints = calcsBase.SelectedRotation.StarSurgeAvgHit / calcsBase.SelectedRotation.StarSurgeAvgCast;
+                    // Use the Wrath average cast here because the Starsurge average cast is actually the combined weighted average
+                    // of Starsurge and Shooting Stars
+                    ss.BurstDamagePoints = calcsBase.SelectedRotation.StarSurgeAvgHit / calcsBase.SelectedRotation.WrathAvgCast;
                     ss.OverallPoints = ss.BurstDamagePoints;
                     ssInst.BurstDamagePoints = calcsBase.SelectedRotation.StarSurgeAvgHit / calcsBase.SelectedRotation.AverageInstantCast;
                     ssInst.OverallPoints = ssInst.BurstDamagePoints;
