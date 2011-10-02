@@ -477,7 +477,7 @@ namespace Rawr.Moonkin
                         if (childEffect.Stats.SpellPower > 0)
                         {
                             float averageStack = childEffect.GetAverageStackSize(rot.RotationData.Duration / rot.RotationData.CastCount, baseHit, 3.0f, proc.Effect.Duration);
-                            currentSpellPower += childEffect.Stats.SpellPower * averageStack * proc.Effect.GetAverageUptime(rot.RotationData.Duration / rot.RotationData.CastCount, baseHit);
+                            currentSpellPower += (float)Math.Floor((1 + calcs.BasicStats.BonusSpellPowerMultiplier) * childEffect.Stats.SpellPower) * averageStack * proc.Effect.GetAverageUptime(rot.RotationData.Duration / rot.RotationData.CastCount, baseHit);
                         }
                         // 4T11
                         if (childEffect.Stats.SpellCrit != 0)
