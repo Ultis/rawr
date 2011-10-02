@@ -890,7 +890,7 @@ namespace Rawr.Moonkin
             StatsMoonkin stats = (StatsMoonkin)GetCharacterStats(character, additionalItem);
             calc.BasicStats = stats;
 
-            calc.SpellPower = stats.SpellPower + stats.Intellect - 10;
+            calc.SpellPower = (float)Math.Floor((1 + stats.BonusSpellPowerMultiplier) * (stats.SpellPower + stats.Intellect - 10));
             calc.SpellCrit = StatConversion.GetSpellCritFromIntellect(stats.Intellect) + StatConversion.GetSpellCritFromRating(stats.CritRating) + stats.SpellCrit + stats.SpellCritOnTarget;
             calc.SpellHit = StatConversion.GetSpellHitFromRating(stats.HitRating) + stats.SpellHit;
             calc.SpellHitCap = StatConversion.GetSpellMiss(character.Level - character.BossOptions.Level, false);
@@ -1108,11 +1108,11 @@ namespace Rawr.Moonkin
             Stats statsTalents = new StatsMoonkin()
             {
                 BonusIntellectMultiplier = (1 + 0.02f * character.DruidTalents.HeartOfTheWild) * (Character.ValidateArmorSpecialization(character, ItemType.Leather) ? 1.05f : 1f) - 1f,
-                BonusManaMultiplier = 0.05f * character.DruidTalents.Furor,
-                BonusSpellPowerMultiplier = 1.1f * (1 + 0.01f * character.DruidTalents.BalanceOfPower) * (1 + 0.02f * character.DruidTalents.EarthAndMoon) *
-                                            (1 + 0.01f * character.DruidTalents.MoonkinForm) *
-                                            (1 + (character.DruidTalents.MoonkinForm > 0 ? 0.04f * character.DruidTalents.MasterShapeshifter : 0.0f)) - 1,
+                BonusManaMultiplier = 0.05f * character.DruidTalents.Furor
             };
+            statsTotal.BonusSpellDamageMultiplier = (1 + 0.01f * character.DruidTalents.BalanceOfPower) * (1 + 0.02f * character.DruidTalents.EarthAndMoon) *
+                                            (1 + 0.01f * character.DruidTalents.MoonkinForm) *
+                                            (1 + (character.DruidTalents.MoonkinForm > 0 ? 0.04f * character.DruidTalents.MasterShapeshifter : 0.0f)) - 1;
 
             statsTotal.Accumulate(statsTalents);
 

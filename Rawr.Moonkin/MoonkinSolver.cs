@@ -207,7 +207,8 @@ namespace Rawr.Moonkin
                             BaseManaCost = (float)(int)(BaseMana * 0.11f),
                             DotEffect = null,
                             School = SpellSchool.Arcane,
-                            BaseEnergy = 20
+                            BaseEnergy = 20,
+                            AllDamageModifier = 1.1f
                         },
                         new Spell()
                         {
@@ -221,9 +222,11 @@ namespace Rawr.Moonkin
                                     BaseDuration = 12.0f,
                                     BaseTickLength = 2.0f,
                                     TickDamage = 93.0f,
-                                    SpellDamageModifierPerTick = 0.18f
+                                    SpellDamageModifierPerTick = 0.18f,
+                                    AllDamageModifier = 1.1f
                                 },
-                            School = SpellSchool.Arcane
+                            School = SpellSchool.Arcane,
+                            AllDamageModifier = 1.1f
                         },
                         new Spell()
                         {
@@ -234,7 +237,8 @@ namespace Rawr.Moonkin
                             BaseManaCost = (float)(int)(BaseMana * 0.09f),
                             DotEffect = null,
                             School = SpellSchool.Nature,
-                            BaseEnergy = 40/3f
+                            BaseEnergy = 40/3f,
+                            AllDamageModifier = 1.1f
                         },
                         new Spell()
                         {
@@ -248,7 +252,8 @@ namespace Rawr.Moonkin
                                 BaseDuration = 12.0f,
                                 BaseTickLength = 2.0f,
                                 TickDamage = 136.0f,
-                                SpellDamageModifierPerTick = 0.13f
+                                SpellDamageModifierPerTick = 0.13f,
+                                AllDamageModifier = 1.1f
                             },
                             School = SpellSchool.Nature
                         },
@@ -261,7 +266,8 @@ namespace Rawr.Moonkin
                             BaseManaCost = (float)(int)(BaseMana * 0.11f),
                             DotEffect = null,
                             School = SpellSchool.Spellstorm,
-                            BaseEnergy = 15
+                            BaseEnergy = 15,
+                            AllDamageModifier = 1.1f
                         }
                     };
                 }
@@ -390,7 +396,7 @@ namespace Rawr.Moonkin
                     if (proc.Effect.Stats.SpellPower > 0 || proc.Effect.Stats.CritRating > 0 || proc.Effect.Stats.MasteryRating > 0)
                     {
                         handled = true;
-                        float procSpellPower = proc.Effect.Stats.SpellPower;
+                        float procSpellPower = (float)Math.Floor((1 + calcs.BasicStats.BonusSpellPowerMultiplier) * proc.Effect.Stats.SpellPower);
                         float procSpellCrit = StatConversion.GetSpellCritFromRating(proc.Effect.Stats.CritRating);
                         float procMastery = StatConversion.GetMasteryFromRating(proc.Effect.Stats.MasteryRating);
 
@@ -810,15 +816,15 @@ namespace Rawr.Moonkin
             float insectSwarmGlyph = talents.GlyphOfInsectSwarm ? 0.3f : 0.0f;
             // Add spell-specific damage
             // Moonfire, Insect Swarm: glyphs
-            Moonfire.DotEffect.AllDamageModifier *= 1 + moonfireDotGlyph;
-            InsectSwarm.DotEffect.AllDamageModifier *= 1 + insectSwarmGlyph;
+            Moonfire.DotEffect.AllDamageModifier += moonfireDotGlyph;
+            InsectSwarm.DotEffect.AllDamageModifier += insectSwarmGlyph;
             // Moonfire: Direct damage +(0.03 * Blessing of the Grove)
-            Moonfire.AllDamageModifier *= 1 + 0.03f * talents.BlessingOfTheGrove;
+            Moonfire.AllDamageModifier += 0.03f * talents.BlessingOfTheGrove;
             // Moonfire, Insect Swarm: +2/4/6 seconds for Genesis
             Moonfire.DotEffect.BaseDuration += 2f * talents.Genesis;
             InsectSwarm.DotEffect.BaseDuration += 2f * talents.Genesis;
             // Wrath: 10% for glyph
-            Wrath.AllDamageModifier *= 1 + (talents.GlyphOfWrath ? 0.1f : 0f);
+            Wrath.AllDamageModifier += (talents.GlyphOfWrath ? 0.1f : 0f);
 
             // Add spell-specific critical strike damage
             // Burning Shadowspirit Diamond
