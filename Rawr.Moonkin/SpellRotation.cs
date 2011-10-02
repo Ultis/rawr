@@ -471,6 +471,16 @@ namespace Rawr.Moonkin
 
             RotationData.StarSurgeAvgCast = (float)(starsurgePercentage * ss.CastTime + shootingStarsPercentage * RotationData.AverageInstantCast);
 
+            // Modify the rotation duration to simulate the energy bonus from Dragonwrath procs
+            if (calcs.BasicStats.DragonwrathProc > 0)
+            {
+                float baselineNukeDuration = RotationData.StarfireCount * RotationData.StarfireAvgCast +
+                    RotationData.WrathCount * RotationData.WrathAvgCast +
+                    RotationData.StarSurgeCount * RotationData.StarSurgeAvgCast;
+                float dragonwrathNukeDuration = baselineNukeDuration / (1 + MoonkinSolver.DRAGONWRATH_PROC_RATE);
+                RotationData.Duration -= (baselineNukeDuration - dragonwrathNukeDuration);
+            }
+
             RotationData.LunarUptime = (float)(castDistribution[4] + 0.5 * castDistribution[6] + 0.5 * castDistribution[7] + 0.5 * castDistribution[10]);
             RotationData.SolarUptime = (float)(castDistribution[5] + 0.5 * castDistribution[6] + 0.5 * castDistribution[7] + 0.5 * castDistribution[10] + castDistribution[11]);
 
