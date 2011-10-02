@@ -433,6 +433,8 @@ namespace Rawr.Moonkin
             double allStarsurgePercentage = castDistribution[2] + castDistribution[6] + castDistribution[3] + castDistribution[7];
             double nonEclipsedStarsurgePercentage = (castDistribution[2] + castDistribution[3]) / allStarsurgePercentage;
             double eclipsedStarsurgePercentage = (castDistribution[6] + castDistribution[7]) / allStarsurgePercentage;
+            double starsurgePercentage = (castDistribution[2] + castDistribution[6]) / allStarsurgePercentage;
+            double shootingStarsPercentage = (castDistribution[3] + castDistribution[7]) / allStarsurgePercentage;
             RotationData.StarSurgeAvgHit = (float)(nonEclipsedStarsurgePercentage * ss.DamagePerHit + eclipsedStarsurgePercentage * ss.DamagePerHit * eclipseBonus);
             RotationData.StarSurgeAvgEnergy = ss.AverageEnergy;
             RotationData.StarSurgeCount = (float)(starsurgeCasts + eclipseStarsurgeCasts + shootingStarsProcs + eclipseShootingStarsProcs);
@@ -464,9 +466,10 @@ namespace Rawr.Moonkin
 
             RotationData.StarfireAvgCast = sf.CastTime;
             RotationData.WrathAvgCast = w.CastTime;
-            RotationData.StarSurgeAvgCast = ss.CastTime;
 
             RotationData.AverageInstantCast = (float)(gcd * (1 - RotationData.NaturesGraceUptime) + ngGcd * RotationData.NaturesGraceUptime);
+
+            RotationData.StarSurgeAvgCast = (float)(starsurgePercentage * ss.CastTime + shootingStarsPercentage * RotationData.AverageInstantCast);
 
             RotationData.LunarUptime = (float)(castDistribution[4] + 0.5 * castDistribution[6] + 0.5 * castDistribution[7] + 0.5 * castDistribution[10]);
             RotationData.SolarUptime = (float)(castDistribution[5] + 0.5 * castDistribution[6] + 0.5 * castDistribution[7] + 0.5 * castDistribution[10] + castDistribution[11]);
