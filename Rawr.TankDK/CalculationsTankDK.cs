@@ -1631,7 +1631,7 @@ Points individually may be important.",
                     statSE.AttackPower += (statSE.Armor / 180f) * (float)character.DeathKnightTalents.BladedArmor;
                 }
                 statSE.AttackPower += StatConversion.ApplyMultiplier((statSE.Strength * 2), statsTotal.BonusAttackPowerMultiplier);
-                statSE.ParryRating += statSE.Strength * 0.25f;
+                statSE.ParryRating += statSE.Strength * 0.27f;
 
                 // Any Modifiers from statSE need to be applied to stats
                 statsTotal.Strength = StatConversion.ApplyMultiplier(statsTotal.Strength, statSE.BonusStrengthMultiplier);
