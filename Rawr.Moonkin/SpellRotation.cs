@@ -468,8 +468,8 @@ namespace Rawr.Moonkin
 
             RotationData.AverageInstantCast = (float)(gcd * (1 - RotationData.NaturesGraceUptime) + ngGcd * RotationData.NaturesGraceUptime);
 
-            RotationData.LunarUptime = (float)(castDistribution[4] + 0.5 * castDistribution[6] + 0.5 * castDistribution[7]);
-            RotationData.SolarUptime = (float)(castDistribution[5] + 0.5 * castDistribution[6] + 0.5 * castDistribution[7]);
+            RotationData.LunarUptime = (float)(castDistribution[4] + 0.5 * castDistribution[6] + 0.5 * castDistribution[7] + 0.5 * castDistribution[10]);
+            RotationData.SolarUptime = (float)(castDistribution[5] + 0.5 * castDistribution[6] + 0.5 * castDistribution[7] + 0.5 * castDistribution[10] + castDistribution[11]);
 
             float starfallReduction = (float)(starsurgeCasts + shootingStarsProcs + eclipseStarsurgeCasts + eclipseShootingStarsProcs) * 5f;
             float starfallCooldown = (90f - (talents.GlyphOfStarfall ? 30f : 0f)) - (talents.GlyphOfStarsurge ? starfallReduction : 0);
