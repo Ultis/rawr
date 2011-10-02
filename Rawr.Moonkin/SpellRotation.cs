@@ -507,8 +507,6 @@ namespace Rawr.Moonkin
             RotationData.TreantCasts = treantRatio * RotationData.Duration / RotationData.AverageInstantCast;
             RotationData.StarfallStars = 10f;
 
-            RotationData.Duration += (RotationData.TreantCasts * RotationData.AverageInstantCast + RotationData.StarfallCasts * RotationData.AverageInstantCast);
-
             RotationData.StarfallDamage = RotationData.StarfallCastMode == StarfallMode.OnCooldown ?
                 RotationData.LunarUptime * starfallEclipseDamage + (1 - RotationData.LunarUptime) * starfallBaseDamage :
                 starfallEclipseDamage;
