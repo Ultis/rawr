@@ -510,8 +510,6 @@ namespace Rawr.Moonkin
                 RotationData.LunarUptime * starfallEclipseDamage + (1 - RotationData.LunarUptime) * starfallBaseDamage :
                 starfallEclipseDamage;
 
-            float starSurgeDamage = RotationData.StarSurgeAvgHit * RotationData.StarSurgeCount;
-
             float moonfireDamage = RotationData.MoonfireAvgHit * RotationData.MoonfireCasts;
             float insectSwarmDamage = RotationData.InsectSwarmAvgHit * RotationData.InsectSwarmCasts;
 
@@ -558,7 +556,7 @@ namespace Rawr.Moonkin
             return RotationData.WrathAvgHit * RotationData.WrathCount +
                 RotationData.StarfireAvgHit * RotationData.StarfireCount +
                 RotationData.StarSurgeAvgHit * RotationData.StarSurgeCount +
-                moonfireDamage + insectSwarmDamage + starSurgeDamage + treantDamage + starfallDamage + T122PieceDamage;
+                moonfireDamage + insectSwarmDamage + treantDamage + starfallDamage + T122PieceDamage;
         }
     }
 }
