@@ -374,7 +374,7 @@ namespace Rawr.Moonkin
 
                 // Reset variables modified in the pre-loop to base values
                 float currentSpellPower = baseSpellPower;
-                float currentCrit = baseCrit + StatConversion.NPC_LEVEL_SPELL_CRIT_MOD[character.BossOptions.Level - character.Level];
+                float currentCrit = baseCrit;
                 float currentHaste = baseHaste;
                 float currentMastery = baseMastery;
                 float currentTrinketDPS = trinketDPS;
