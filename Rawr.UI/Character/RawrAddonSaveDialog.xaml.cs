@@ -106,7 +106,7 @@ namespace Rawr.UI
             foreach (ComparisonCalculationBase itemCalc in DUCalcs)
             {
                 ItemInstance item = itemCalc.ItemInstance;
-                if (item.SlotId != 0)
+                if (item != null && item.SlotId != 0)
                     WriteItem(8, item, itemCalc, item.SlotId);
             }
             WriteLine(4, "}, ");

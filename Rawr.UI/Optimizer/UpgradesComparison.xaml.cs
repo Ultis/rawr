@@ -284,8 +284,13 @@ namespace Rawr.UI
                         null,
                         null,
                         comparisonCalculation.OverallPoints);
-                    foreach (float subPoint in comparisonCalculation.SubPoints)
-                        sb.AppendFormat(",\"{0}\"", subPoint);
+                    if (comparisonCalculation.SubPoints != null)
+                    {
+                        foreach (float subPoint in comparisonCalculation.SubPoints)
+                        {
+                            sb.AppendFormat(",\"{0}\"", subPoint);
+                        }
+                    }
                     sb.AppendLine();
                 }
             }
