@@ -323,8 +323,9 @@ namespace Rawr.Moonkin
             {
                 if (rotations == null)
                 {
-                    rotations = new SpellRotation[3]
+                    rotations = new SpellRotation[4]
                     {
+                        new SpellRotation() { RotationData = new RotationData() { Name = "None" } },
                         new SpellRotation() { RotationData = new RotationData() { Name = "Starfall Unused" } },
                         new SpellRotation() { RotationData = new RotationData() { Name = "Starfall Lunar Only", StarfallCastMode = StarfallMode.LunarOnly } },
                         new SpellRotation() { RotationData = new RotationData() { Name = "Starfall On CD", StarfallCastMode = StarfallMode.OnCooldown } },

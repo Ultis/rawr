@@ -516,10 +516,6 @@ namespace Rawr.Moonkin
                 : (RotationData.StarfallCastMode == StarfallMode.LunarOnly ? starfallFraction : 0f);
             RotationData.TreantCasts = treantRatio * RotationData.Duration / RotationData.AverageInstantCast;
             RotationData.StarfallStars = 10f;
-
-            RotationData.StarfallDamage = RotationData.StarfallCastMode == StarfallMode.OnCooldown ?
-                RotationData.LunarUptime * starfallEclipseDamage + (1 - RotationData.LunarUptime) * starfallBaseDamage :
-                starfallEclipseDamage;
             if (RotationData.StarfallCastMode == StarfallMode.LunarOnly)
                 RotationData.LunarUptime += starfallFraction * RotationData.AverageInstantCast / RotationData.Duration;
             else if (RotationData.StarfallCastMode == StarfallMode.OnCooldown)
@@ -527,6 +523,10 @@ namespace Rawr.Moonkin
                 RotationData.SolarUptime *= 1 + starfallRatio;
                 RotationData.LunarUptime *= 1 + starfallRatio;
             }
+
+            RotationData.StarfallDamage = RotationData.StarfallCastMode == StarfallMode.OnCooldown ?
+                RotationData.LunarUptime * starfallEclipseDamage + (1 - RotationData.LunarUptime) * starfallBaseDamage :
+                starfallEclipseDamage;
 
             float moonfireDamage = RotationData.MoonfireAvgHit * RotationData.MoonfireCasts;
             float insectSwarmDamage = RotationData.InsectSwarmAvgHit * RotationData.InsectSwarmCasts;
