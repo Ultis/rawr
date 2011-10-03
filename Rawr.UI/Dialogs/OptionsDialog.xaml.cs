@@ -38,6 +38,7 @@ namespace Rawr.UI
             CK_EnforceJC.IsEnabled                          = CK_EnforceGemCheck.IsChecked == true;
             CK_EnforceUnique.IsEnabled                      = CK_EnforceGemCheck.IsChecked == true;
             CK_CompactMode.IsChecked                        = GeneralSettings.Default.DisplayInCompactMode;
+            SL_UIScale.Value                                = GeneralSettings.Default.UIScale;
             CK_PTRModeCheck.IsChecked                       = GeneralSettings.Default.PTRMode;
             LO_EnforceGemSubs.Visibility                    = Visibility.Collapsed; // Astry doesn't want those options visible
             WarningsCheck.IsChecked                         = OptimizerSettings.Default.WarningsEnabled;
@@ -68,6 +69,7 @@ namespace Rawr.UI
             GeneralSettings.Default.EnforceGemRequirements_JC     = CK_EnforceJC.IsChecked.GetValueOrDefault(true);
             GeneralSettings.Default.EnforceGemRequirements_Unique = CK_EnforceUnique.IsChecked.GetValueOrDefault(true);
             GeneralSettings.Default.DisplayInCompactMode          = CK_CompactMode.IsChecked.GetValueOrDefault(false);
+            GeneralSettings.Default.UIScale                       = SL_UIScale.Value;
             GeneralSettings.Default.ItemNameWidthSetting          = CB_ItemNameWidthSetting.SelectedIndex;
             GeneralSettings.Default.PTRMode                       = CK_PTRModeCheck.IsChecked.GetValueOrDefault(false);
             OptimizerSettings.Default.OptimizationMethod          = (OptimizationMethod)OptimizationMethodCombo.SelectedIndex;

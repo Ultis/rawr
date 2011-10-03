@@ -220,14 +220,46 @@
         </Menu>
         ENDIFWPF-->
         <toolkit:WrapPanel x:Name="Wrap_LeftSide" Margin="2,2,0,0" Grid.Column="0" Grid.Row="1" Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Right">
-            <local:ItemButtonWithEnchant x:Name="HeadButton" Margin="2"/>
-            <local:ItemButtonWithEnchant x:Name="NeckButton" Margin="2" ShowEnchant="False"/>
-            <local:ItemButtonWithEnchant x:Name="ShoulderButton" Margin="2"/>
-            <local:ItemButtonWithEnchant x:Name="BackButton" Margin="2" ShowTinker="True"/>
-            <local:ItemButtonWithEnchant x:Name="ChestButton" Margin="2"/>
-            <local:ItemButtonWithEnchant x:Name="ShirtButton" Margin="2" ShowEnchant="False" ShowReforge="False" ShowGems="False" />
-            <local:ItemButtonWithEnchant x:Name="TabardButton" Margin="2" ShowEnchant="False" ShowReforge="False" ShowGems="False" />
-            <local:ItemButtonWithEnchant x:Name="WristButton" Margin="2" ShowBSSocket="True" EnableBSSocket="False" />
+            <local:ItemButtonWithEnchant x:Name="HeadButton" Margin="2">
+                <local:ItemButtonWithEnchant.RenderTransform>
+                    <ScaleTransform />
+                </local:ItemButtonWithEnchant.RenderTransform>
+            </local:ItemButtonWithEnchant>
+            <local:ItemButtonWithEnchant x:Name="NeckButton" Margin="2" ShowEnchant="False">
+                <local:ItemButtonWithEnchant.RenderTransform>
+                    <ScaleTransform />
+                </local:ItemButtonWithEnchant.RenderTransform>
+            </local:ItemButtonWithEnchant>
+            <local:ItemButtonWithEnchant x:Name="ShoulderButton" Margin="2">
+                <local:ItemButtonWithEnchant.RenderTransform>
+                    <ScaleTransform />
+                </local:ItemButtonWithEnchant.RenderTransform>
+            </local:ItemButtonWithEnchant>
+            <local:ItemButtonWithEnchant x:Name="BackButton" Margin="2" ShowTinker="True">
+                <local:ItemButtonWithEnchant.RenderTransform>
+                    <ScaleTransform />
+                </local:ItemButtonWithEnchant.RenderTransform>
+            </local:ItemButtonWithEnchant>
+            <local:ItemButtonWithEnchant x:Name="ChestButton" Margin="2">
+                <local:ItemButtonWithEnchant.RenderTransform>
+                    <ScaleTransform />
+                </local:ItemButtonWithEnchant.RenderTransform>
+            </local:ItemButtonWithEnchant>
+            <local:ItemButtonWithEnchant x:Name="ShirtButton" Margin="2" ShowEnchant="False" ShowReforge="False" ShowGems="False">
+                <local:ItemButtonWithEnchant.RenderTransform>
+                    <ScaleTransform />
+                </local:ItemButtonWithEnchant.RenderTransform>
+            </local:ItemButtonWithEnchant>
+            <local:ItemButtonWithEnchant x:Name="TabardButton" Margin="2" ShowEnchant="False" ShowReforge="False" ShowGems="False">
+                <local:ItemButtonWithEnchant.RenderTransform>
+                    <ScaleTransform />
+                </local:ItemButtonWithEnchant.RenderTransform>
+            </local:ItemButtonWithEnchant>
+            <local:ItemButtonWithEnchant x:Name="WristButton" Margin="2" ShowBSSocket="True" EnableBSSocket="False">
+                <local:ItemButtonWithEnchant.RenderTransform>
+                    <ScaleTransform />
+                </local:ItemButtonWithEnchant.RenderTransform>
+            </local:ItemButtonWithEnchant>
         </toolkit:WrapPanel>
         <toolkit:DockPanel Grid.Column="1" Grid.Row="1" LastChildFill="True" Margin="2">
             <StackPanel toolkit:DockPanel.Dock="Bottom" HorizontalAlignment="Center" VerticalAlignment="Top" Orientation="Horizontal" Margin="2,2,2,0">
@@ -383,14 +415,46 @@
             </controls:TabControl>
         </toolkit:DockPanel>
         <toolkit:WrapPanel x:Name="Wrap_RightSide" Margin="0,2,2,0" Grid.Column="2" Grid.Row="1" Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Left">
-            <local:ItemButtonWithEnchant x:Name="HandButton" Margin="2" ShowBSSocket="True" EnableBSSocket="False" ShowTinker="True"/>
-            <local:ItemButtonWithEnchant x:Name="BeltButton" Margin="2" ShowEnchant="False" ShowBSSocket="True" EnableBSSocket="True" ShowTinker="True"/>
-            <local:ItemButtonWithEnchant x:Name="LegButton" Margin="2"/>
-            <local:ItemButtonWithEnchant x:Name="FeetButton" Margin="2"/>
-            <local:ItemButtonWithEnchant x:Name="Ring1Button" Margin="2"/>
-            <local:ItemButtonWithEnchant x:Name="Ring2Button" Margin="2"/>
-            <local:ItemButtonWithEnchant x:Name="Trinket1Button" Margin="2" ShowEnchant="False"/>
-            <local:ItemButtonWithEnchant x:Name="Trinket2Button" Margin="2" ShowEnchant="False"/>
+            <local:ItemButtonWithEnchant x:Name="HandButton" Margin="2" ShowBSSocket="True" EnableBSSocket="False" ShowTinker="True">
+                <local:ItemButtonWithEnchant.RenderTransform>
+                    <ScaleTransform />
+                </local:ItemButtonWithEnchant.RenderTransform>
+            </local:ItemButtonWithEnchant>
+            <local:ItemButtonWithEnchant x:Name="BeltButton" Margin="2" ShowEnchant="False" ShowBSSocket="True" EnableBSSocket="True" ShowTinker="True">
+                <local:ItemButtonWithEnchant.RenderTransform>
+                    <ScaleTransform />
+                </local:ItemButtonWithEnchant.RenderTransform>
+            </local:ItemButtonWithEnchant>
+            <local:ItemButtonWithEnchant x:Name="LegButton" Margin="2">
+                <local:ItemButtonWithEnchant.RenderTransform>
+                    <ScaleTransform />
+                </local:ItemButtonWithEnchant.RenderTransform>
+            </local:ItemButtonWithEnchant>
+            <local:ItemButtonWithEnchant x:Name="FeetButton" Margin="2">
+                <local:ItemButtonWithEnchant.RenderTransform>
+                    <ScaleTransform />
+                </local:ItemButtonWithEnchant.RenderTransform>
+            </local:ItemButtonWithEnchant>
+            <local:ItemButtonWithEnchant x:Name="Ring1Button" Margin="2">
+                <local:ItemButtonWithEnchant.RenderTransform>
+                    <ScaleTransform />
+                </local:ItemButtonWithEnchant.RenderTransform>
+            </local:ItemButtonWithEnchant>
+            <local:ItemButtonWithEnchant x:Name="Ring2Button" Margin="2">
+                <local:ItemButtonWithEnchant.RenderTransform>
+                    <ScaleTransform />
+                </local:ItemButtonWithEnchant.RenderTransform>
+            </local:ItemButtonWithEnchant>
+            <local:ItemButtonWithEnchant x:Name="Trinket1Button" Margin="2" ShowEnchant="False">
+                <local:ItemButtonWithEnchant.RenderTransform>
+                    <ScaleTransform />
+                </local:ItemButtonWithEnchant.RenderTransform>
+            </local:ItemButtonWithEnchant>
+            <local:ItemButtonWithEnchant x:Name="Trinket2Button" Margin="2" ShowEnchant="False">
+                <local:ItemButtonWithEnchant.RenderTransform>
+                    <ScaleTransform />
+                </local:ItemButtonWithEnchant.RenderTransform>
+            </local:ItemButtonWithEnchant>
         </toolkit:WrapPanel>
         <local:GraphDisplay x:Name="ComparisonGraph" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="3" Margin="0,-2" Grid.Row="1"/>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="0" Grid.ColumnSpan="4">
@@ -414,9 +478,15 @@
                 </LinearGradientBrush>
             </Rectangle.Fill>
         </Rectangle>
-        <TextBlock x:Name="StatusText" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4" Margin="8,4" Text="Status"/>
-        <!--<Grid Margin="0" UseLayoutRounding="True" Grid.ColumnSpan="4" Grid.Row="2"></Grid>-->
-        <TextBlock x:Name="LB_Models" Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2" Margin="0,4,120,4" Text="Check the Model Status Page for information on the Development Status" HorizontalAlignment="Right" TextAlignment="Right"/>
-        <TextBlock x:Name="VersionText" Grid.Row="4" Grid.Column="3" Text="Rawr b3.0.3.20" Foreground="#99393939" Margin="8,4" HorizontalAlignment="Right" TextAlignment="Right"/>
+        <Grid Grid.Row="2" Grid.ColumnSpan="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock x:Name="StatusText" Grid.Column="0" Margin="4" Text="Status"/>
+            <TextBlock x:Name="LB_Models" Grid.Column="1" Margin="4" Text="Check the Model Status Page for information on the Development Status" />
+            <TextBlock x:Name="VersionText" Grid.Column="2" Margin="4" Text="Rawr 4.2.5.00" Foreground="#99393939" />
+        </Grid>
     </Grid>
 </UserControl>

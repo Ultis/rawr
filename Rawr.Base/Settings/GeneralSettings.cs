@@ -32,6 +32,8 @@ namespace Rawr.Properties
             _default.ShowRelativeToEquipped = false;
             _default.DisplayUnusedStats = false;
 
+            _default.UIScale = 0.90;
+
             _default.WelcomeScreenSeen = false;
 
             _default.EnforceGemRequirements = true;
@@ -133,6 +135,12 @@ namespace Rawr.Properties
         public bool HasSeenHelpWindow { get; set; }
 
         public bool AlertMeToBetaReleases { get; set; }
+
+        public double UIScale {
+            get { if (_UIScale <= 0) { _UIScale = 0.90; } return _UIScale; }
+            set { _UIScale = Math.Round(value, 2); if (_UIScale <= 0) { _UIScale = 0.90; } }
+        }
+        public double _UIScale = 0.90;
 
         public int CountGemmingsShown { get; set; }
         public bool UseMultithreading { get; set; }

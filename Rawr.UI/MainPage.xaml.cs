@@ -573,6 +573,66 @@ If that is still not working for you, right-click anywhere within the web versio
                 if (Wrap_LeftSide.Children.Contains(HandButton)) { Wrap_LeftSide.Children.Remove(HandButton); }
                 if (!Wrap_RightSide.Children.Contains(HandButton)) { Wrap_RightSide.Children.Insert(0, HandButton); }
             }
+            // X
+            (HeadButton.RenderTransform as ScaleTransform).ScaleX =
+            (NeckButton.RenderTransform as ScaleTransform).ScaleX =
+            (ShoulderButton.RenderTransform as ScaleTransform).ScaleX =
+            (BackButton.RenderTransform as ScaleTransform).ScaleX =
+            (ChestButton.RenderTransform as ScaleTransform).ScaleX =
+            (ShirtButton.RenderTransform as ScaleTransform).ScaleX =
+            (TabardButton.RenderTransform as ScaleTransform).ScaleX =
+            (WristButton.RenderTransform as ScaleTransform).ScaleX =
+            (HandButton.RenderTransform as ScaleTransform).ScaleX =
+            (BeltButton.RenderTransform as ScaleTransform).ScaleX =
+            (LegButton.RenderTransform as ScaleTransform).ScaleX =
+            (FeetButton.RenderTransform as ScaleTransform).ScaleX =
+            (Ring1Button.RenderTransform as ScaleTransform).ScaleX =
+            (Ring2Button.RenderTransform as ScaleTransform).ScaleX =
+            (Trinket1Button.RenderTransform as ScaleTransform).ScaleX =
+            (Trinket2Button.RenderTransform as ScaleTransform).ScaleX =
+            // Y
+            (HeadButton.RenderTransform as ScaleTransform).ScaleY =
+            (NeckButton.RenderTransform as ScaleTransform).ScaleY =
+            (ShoulderButton.RenderTransform as ScaleTransform).ScaleY =
+            (BackButton.RenderTransform as ScaleTransform).ScaleY =
+            (ChestButton.RenderTransform as ScaleTransform).ScaleY =
+            (ShirtButton.RenderTransform as ScaleTransform).ScaleY =
+            (TabardButton.RenderTransform as ScaleTransform).ScaleY =
+            (WristButton.RenderTransform as ScaleTransform).ScaleY =
+            (HandButton.RenderTransform as ScaleTransform).ScaleY =
+            (BeltButton.RenderTransform as ScaleTransform).ScaleY =
+            (LegButton.RenderTransform as ScaleTransform).ScaleY =
+            (FeetButton.RenderTransform as ScaleTransform).ScaleY =
+            (Ring1Button.RenderTransform as ScaleTransform).ScaleY =
+            (Ring2Button.RenderTransform as ScaleTransform).ScaleY =
+            (Trinket1Button.RenderTransform as ScaleTransform).ScaleY =
+            (Trinket2Button.RenderTransform as ScaleTransform).ScaleY =
+            // Value
+            (Rawr.Properties.GeneralSettings.Default.DisplayInCompactMode) ? Rawr.Properties.GeneralSettings.Default.UIScale : 1.00;
+            Thickness thickness = new Thickness(2);
+            if (Rawr.Properties.GeneralSettings.Default.DisplayInCompactMode)
+            {
+                double widthLoss = HeadButton.ActualWidth * (1d - Rawr.Properties.GeneralSettings.Default.UIScale);
+                double heightLoss = HeadButton.ActualHeight * (1d - Rawr.Properties.GeneralSettings.Default.UIScale);
+                thickness = new Thickness(2, 2, 2 - widthLoss, 2 - heightLoss);
+            }
+            HeadButton.Margin =
+            NeckButton.Margin =
+            ShoulderButton.Margin =
+            BackButton.Margin =
+            ChestButton.Margin =
+            ShirtButton.Margin =
+            TabardButton.Margin =
+            WristButton.Margin =
+            HandButton.Margin =
+            BeltButton.Margin =
+            LegButton.Margin =
+            FeetButton.Margin =
+            Ring1Button.Margin =
+            Ring2Button.Margin =
+            Trinket1Button.Margin =
+            Trinket2Button.Margin =
+                thickness;
         }
 
         #region Character Importing Functions
