@@ -167,9 +167,7 @@ namespace Rawr.Moonkin
                 Effect.Trigger == Trigger.InsectSwarmTick ||
 				Effect.Trigger == Trigger.DoTTick) &&
                 (Effect.Stats.HasteRating > 0 ||
-                Effect.Stats.SpellHaste > 0  ||
-                Effect.Stats.HighestStat > 0 ||
-                Effect.Stats.Intellect > 0))
+                Effect.Stats.SpellHaste > 0))
             {
                 Activate = delegate(Character ch, CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa, ref float m)
                 {
@@ -179,18 +177,18 @@ namespace Rawr.Moonkin
                     float hasteRating = st.HasteRating;
                     float spellHaste = StatConversion.GetSpellHasteFromRating(hasteRating * maxStack);
                     spellHaste += st.SpellHaste;
-                    float highestStat = st.HighestStat;
+                    //float highestStat = st.HighestStat;
 
                     if (spellHaste > 0)
                         sHa += spellHaste;
-                    if (st.Intellect > 0 || highestStat > 0)
+                    /*if (st.Intellect > 0 || highestStat > 0)
                     {
                         float procIntellect = (float)Math.Floor((1 + c.BasicStats.BonusIntellectMultiplier) * (st.Intellect + st.HighestStat));
                         storedStats.SpellPower = (float)Math.Floor((1 + c.BasicStats.BonusSpellPowerMultiplier) * procIntellect);
                         storedStats.SpellCrit = StatConversion.GetSpellCritFromIntellect(procIntellect);
                         sp += storedStats.SpellPower;
                         sc += storedStats.SpellCrit;
-                    }
+                    }*/
                 };
                 Deactivate = delegate(Character ch, CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa, ref float m)
                 {
@@ -200,15 +198,15 @@ namespace Rawr.Moonkin
                     float hasteRating = st.HasteRating;
                     float spellHaste = StatConversion.GetSpellHasteFromRating(hasteRating * maxStack);
                     spellHaste += st.SpellHaste;
-                    float highestStat = st.HighestStat;
+                    //float highestStat = st.HighestStat;
 
                     if (spellHaste > 0)
                         sHa -= spellHaste;
-                    if (st.Intellect > 0 || highestStat > 0)
+                    /*if (st.Intellect > 0 || highestStat > 0)
                     {
                         sp -= storedStats.SpellPower;
                         sc -= storedStats.SpellCrit;
-                    }
+                    }*/
                 };
                 UpTime = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float fightLength, float sub35Percent)
                 {

@@ -391,14 +391,16 @@ namespace Rawr.Moonkin
 
                 // Calculate spell power/spell damage modifying trinkets in a separate pre-loop
                 // Add spell crit effects here as well, since they no longer affect timing
+                // Add Intellect procs here, since they are a combination of spell power and spell crit
                 foreach (ProcEffect proc in procEffects)
                 {
                     bool handled = false;
-                    if (proc.Effect.Stats.SpellPower > 0 || proc.Effect.Stats.CritRating > 0 || proc.Effect.Stats.MasteryRating > 0)
+                    if (proc.Effect.Stats.SpellPower > 0 || proc.Effect.Stats.CritRating > 0 || proc.Effect.Stats.MasteryRating > 0 || proc.Effect.Stats.Intellect > 0 || proc.Effect.Stats.HighestStat > 0)
                     {
                         handled = true;
-                        float procSpellPower = (float)Math.Floor((1 + calcs.BasicStats.BonusSpellPowerMultiplier) * proc.Effect.Stats.SpellPower);
-                        float procSpellCrit = StatConversion.GetSpellCritFromRating(proc.Effect.Stats.CritRating);
+                        float procIntellect = (float)Math.Floor((1 + calcs.BasicStats.BonusIntellectMultiplier) * (proc.Effect.Stats.Intellect + proc.Effect.Stats.HighestStat));
+                        float procSpellPower = (float)Math.Floor((1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (proc.Effect.Stats.SpellPower + procIntellect));
+                        float procSpellCrit = StatConversion.GetSpellCritFromRating(proc.Effect.Stats.CritRating) + StatConversion.GetSpellCritFromIntellect(procIntellect);
                         float procMastery = StatConversion.GetMasteryFromRating(proc.Effect.Stats.MasteryRating);
 
                         float triggerInterval = 0.0f, triggerChance = 1.0f;
