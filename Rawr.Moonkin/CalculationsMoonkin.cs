@@ -1111,7 +1111,7 @@ namespace Rawr.Moonkin
                 BonusManaMultiplier = 0.05f * character.DruidTalents.Furor
             };
             statsTotal.BonusSpellDamageMultiplier = (1 + 0.01f * character.DruidTalents.BalanceOfPower) * (1 + 0.02f * character.DruidTalents.EarthAndMoon) *
-                                            (1 + 0.01f * character.DruidTalents.MoonkinForm) *
+                                            (1 + 0.1f * character.DruidTalents.MoonkinForm) *
                                             (1 + (character.DruidTalents.MoonkinForm > 0 ? 0.04f * character.DruidTalents.MasterShapeshifter : 0.0f)) - 1;
 
             statsTotal.Accumulate(statsTalents);
