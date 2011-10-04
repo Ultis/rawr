@@ -524,6 +524,8 @@ namespace Rawr.Moonkin
                 RotationData.LunarUptime *= 1 + starfallRatio;
             }
 
+            RotationData.Duration += RotationData.StarfallCasts * RotationData.AverageInstantCast + RotationData.TreantCasts * RotationData.AverageInstantCast;
+
             RotationData.StarfallDamage = RotationData.StarfallCastMode == StarfallMode.OnCooldown ?
                 RotationData.LunarUptime * starfallEclipseDamage + (1 - RotationData.LunarUptime) * starfallBaseDamage :
                 starfallEclipseDamage;
