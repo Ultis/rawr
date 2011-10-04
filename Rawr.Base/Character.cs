@@ -947,14 +947,20 @@ namespace Rawr
         public bool ilvlF_8 { get { return _iLvl[8]; } set { _iLvl[8] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersSettings_9")][DefaultValue(true)]
         public bool ilvlF_9 { get { return _iLvl[9]; } set { _iLvl[9] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersSettings_10")]
+        [DefaultValue(true)]
+        public bool ilvlF_10 { get { return _iLvl[10]; } set { _iLvl[10] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersSettings_11")]
+        [DefaultValue(true)]
+        public bool ilvlF_11 { get { return _iLvl[11]; } set { _iLvl[11] = value; OnFiltersChanged(); } }
 
         [XmlIgnore]
         private double _ilvlF_SLMin = 285;
         [XmlElement("ItemFiltersSettings_SLMin")][DefaultValue(285)]
         public double ilvlF_SLMin { get { return _ilvlF_SLMin; } set { _ilvlF_SLMin = value; OnFiltersChanged(); } }
         [XmlIgnore]
-        private double _ilvlF_SLMax = 397;
-        [XmlElement("ItemFiltersSettings_SLMax")][DefaultValue(397)]
+        private double _ilvlF_SLMax = 404;
+        [XmlElement("ItemFiltersSettings_SLMax")][DefaultValue(404)]
         public double ilvlF_SLMax { get { return _ilvlF_SLMax; } set { _ilvlF_SLMax = value; OnFiltersChanged(); } }
         #endregion
 
