@@ -81,7 +81,11 @@ namespace Rawr
             Clipboard.SetText(string.Format("I have performed the Suggested Fix and continue to receive this error. "
                         + "If I am posting this message without having performed the Suggested Fix I am aware that "
                         + "I am consuming the Developer(s) time in managing my Issue unnecessarily."
-                        + (readIt ? string.Format("\r\n\r\n== Version: {0} ==", version) : "")
+#if SILVERLIGHT
+                        + (readIt ? string.Format("\r\n\r\n== Version: {0} SL ==", version) : "")
+#else
+                        + (readIt ? string.Format("\r\n\r\n== Version: {0} WPF ==", version) : "")
+#endif
                         + "\r\n\r\n== Error Message ==\r\n{0}"
                         + "\r\n\r\n== StackTrace ==\r\n{1}"
                         + "\r\n\r\n== These are the Steps that I have tried ==\r\n[Please fill in steps here]",
