@@ -207,10 +207,11 @@ namespace Rawr.UI
                         theSet.BuffsToAdd.Add("Critical Mass", "Debuff: Critical Mass (SpellCrit Debuff)");
                     } else if (theSet.Spec == "Arcane") {
                         theSet.BuffsToAdd.Add("Arcane Tactics", "Buff: Arcane Tactics (Bonus Damage)");
-                    }
-                    // Focus Magic
-                    if ((string)CB_Mage_Focus.SelectedItem != "None") {
-                        theSet.BuffsToAdd.Add((string)CB_Mage_Focus.SelectedItem, "Buff: " + (string)CB_Mage_Focus.SelectedItem);
+                        // Focus Magic
+                        if ((string)CB_Mage_Focus.SelectedItem != "None")
+                        {
+                            theSet.BuffsToAdd.Add((string)CB_Mage_Focus.SelectedItem, "Buff: " + (string)CB_Mage_Focus.SelectedItem);
+                        }
                     }
                     break;
                 }
