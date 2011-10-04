@@ -171,10 +171,19 @@ namespace Rawr.UI
             get { return _GraphBarStart + (Rawr.Properties.GeneralSettings.Default.ItemNameWidthSetting * 20); }
             set { _GraphBarStart = value; }
         }
+        /// <summary>This should help prevent the total label's clipping on the right side</summary>
+        public float GraphBarEnd
+        {
+            get {
+                bool addZero = TotalLabel.Text.Contains(".") && TotalLabel.Text.Split('.')[1].Length < 2;
+                return 6 * (TotalLabel.Text.Length + (addZero ? 1 : 0)) - 20;
+                //return (float)(TotalLabel.ActualWidth - (TotalLabel.Margin.Left + Math.Abs(TotalLabel.Margin.Right)));
+            }
+        }
 
         private void ChangedSize(object sender, System.Windows.SizeChangedEventArgs e)
         {
-            if (ActualWidth > (GraphBarStart + 8))//170
+            if (ActualWidth > (GraphBarStart + 8 + GraphBarEnd))//170
             {
                 if (NameGridCol.Width == null || NameGridCol.Width.Value != GraphBarStart)
                     NameGridCol.Width = new GridLength(GraphBarStart);
@@ -202,7 +211,7 @@ namespace Rawr.UI
                 else
                 {
                     Grid.SetColumn(PositiveStack, minTick + 1);
-                    Grid.SetColumnSpan(PositiveStack, maxTick);
+                    Grid.SetColumnSpan(PositiveStack, maxTick+2);
                     PositiveStack.Visibility = Visibility.Visible;
                 }
                 int negIndex = 0, posIndex = 0;
@@ -211,12 +220,12 @@ namespace Rawr.UI
                     // Your chart broke, so lets handle it so it doesn't crash
                     if (float.IsNaN(values[i]) || float.IsInfinity(values[i])) { values[i] = 0f; }
                     if (values[i] > 0) {
-                        int newWidth = (int)Math.Round((ActualWidth - (GraphBarStart + 9)) * (values[i] / (MaxScale - MinScale))); // 171
+                        int newWidth = (int)Math.Round((ActualWidth - (GraphBarStart + 9 + GraphBarEnd)) * (values[i] / (MaxScale - MinScale))); // 171
                         if ((int)rects[i].Width != newWidth)
                             rects[i].Width = newWidth;
                         AddRectToStack(rects[i], true, posIndex++);
                     } else {
-                        int newWidth = (int)Math.Round((ActualWidth - (GraphBarStart + 9)) * (-values[i] / (MaxScale - MinScale))); // 171
+                        int newWidth = (int)Math.Round((ActualWidth - (GraphBarStart + 9 + GraphBarEnd)) * (-values[i] / (MaxScale - MinScale))); // 171
                         if ((int)rects[i].Width != newWidth)
                             rects[i].Width = newWidth;
                         AddRectToStack(rects[i], false, negIndex++);

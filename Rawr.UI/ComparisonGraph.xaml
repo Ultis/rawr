@@ -15,14 +15,15 @@
     <Grid x:Name="ColumnsGrid" Grid.Row="1" Margin="0,0,0,0" VerticalAlignment="Top">
       <Grid.ColumnDefinitions>
         <ColumnDefinition x:Name="NameColumn" Width="170" />
-        <ColumnDefinition Width="*" />
-        <ColumnDefinition Width="*" />
-        <ColumnDefinition Width="*" />
-        <ColumnDefinition Width="*" />
-        <ColumnDefinition Width="*" />
-        <ColumnDefinition Width="*" />
-        <ColumnDefinition Width="*" />
-        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="100*" />
+        <ColumnDefinition Width="100*" />
+        <ColumnDefinition Width="100*" />
+        <ColumnDefinition Width="100*" />
+        <ColumnDefinition Width="100*" />
+        <ColumnDefinition Width="100*" />
+        <ColumnDefinition Width="100*" />
+        <ColumnDefinition Width="100*" />
+        <ColumnDefinition Width="025*" />
         <ColumnDefinition Width="4" />
       </Grid.ColumnDefinitions>
 
@@ -45,7 +46,7 @@
       <TextBlock x:Name="AxisLabel7" Grid.Column="6" Margin="0,4,-25,0" Width="50" Foreground="#BF000000" HorizontalAlignment="Right" Text="25" TextAlignment="Center" VerticalAlignment="Top" />
       <TextBlock x:Name="AxisLabel8" Grid.Column="7" Margin="0,4,-25,0" Width="50" Foreground="#BF000000" HorizontalAlignment="Right" Text="25" TextAlignment="Center" VerticalAlignment="Top" />
       <TextBlock x:Name="AxisLabel9" Grid.Column="8" Margin="0,4,-25,0" Width="50" Foreground="#BF000000" HorizontalAlignment="Right" Text="25" TextAlignment="Center" VerticalAlignment="Top" />
-      <StackPanel x:Name="ItemStack" Grid.ColumnSpan="9" Margin="0,28,0,4" HorizontalAlignment="Stretch" />
+      <StackPanel x:Name="ItemStack" Grid.ColumnSpan="10" Margin="0,28,0,4" HorizontalAlignment="Stretch" />
     </Grid>
   </Grid>
 </UserControl>

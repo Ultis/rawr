@@ -10,9 +10,8 @@ using System.Windows.Shapes;
 
 namespace Rawr.UI
 {
-	public partial class ComparisonGraphBar : UserControl
-	{
-
+    public partial class ComparisonGraphBar : UserControl
+    {
         public Color Color
         {
             set { BaseRect.Fill = new SolidColorBrush(value); }
@@ -21,13 +20,32 @@ namespace Rawr.UI
         public string Title
         {
             get { return TextLabel.Text; }
-            set { TextLabel.Text = value; }
+            set { TextLabel.Text = value; (AToolTip.Content as TextBlock).Text = value; }
         }
 
-		public ComparisonGraphBar()
-		{
-			// Required to initialize variables
-			InitializeComponent();
-		}
-	}
+        private TextBlock ToolTipText = null;
+        private ToolTip _toolTip = null;
+        public ToolTip AToolTip
+        {
+            get {
+                if (_toolTip == null)
+                {
+                    _toolTip = new ToolTip();
+                    ToolTipText = new TextBlock() { Text = "", };
+                    _toolTip.Content = ToolTipText;
+                    ToolTipService.SetToolTip(this, _toolTip);
+                    ToolTipService.SetToolTip(BaseRect, _toolTip);
+                    ToolTipService.SetToolTip(TextLabel, _toolTip);
+                }
+                return _toolTip;
+            }
+            set { _toolTip = value; }
+        }
+
+        public ComparisonGraphBar()
+        {
+            // Required to initialize variables
+            InitializeComponent();
+        }
+    }
 }
