@@ -159,6 +159,7 @@ namespace Rawr.UI
             CK_iLvl_9.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("ilvlF_9") { Mode = BindingMode.TwoWay });
             CK_iLvl_10.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("ilvlF_10") { Mode = BindingMode.TwoWay });
             CK_iLvl_11.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("ilvlF_11") { Mode = BindingMode.TwoWay });
+            CK_iLvl_12.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("ilvlF_12") { Mode = BindingMode.TwoWay });
             RS_iLvl.SetBinding(RangeSlider.LowerValueProperty, new System.Windows.Data.Binding("ilvlF_SLMin") { Mode = BindingMode.TwoWay });
             RS_iLvl.SetBinding(RangeSlider.UpperValueProperty, new System.Windows.Data.Binding("ilvlF_SLMax") { Mode = BindingMode.TwoWay });
             #endregion
@@ -1451,6 +1452,10 @@ namespace Rawr.UI
             {
                 UpdateGraphDirectUpgradesGear(true);
             }
+            else if (subgraph == "Valor Points")
+            {
+                ItemCache.LoadTokenItemCost("Valor Points");
+            }
             else if (subgraph == "Enchants")
             {
                 UpdateGraphDirectUpgradesEnchants();
@@ -1812,7 +1817,7 @@ namespace Rawr.UI
                                             continue;
                                         }
                                     }
-
+                                    
                                     if (!divideByCost || item.Item.Cost > 0.0f)
                                     {
                                         ComparisonCalculationBase itemCalc = Calculations.GetItemCalculations(item, Character, slot);

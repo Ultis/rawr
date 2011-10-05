@@ -561,7 +561,7 @@
     <ItemFilterRegex>
       <Name>Dungeons (Heroic)</Name>
       <Enabled>true</Enabled>
-      <Pattern>Heroic.*(Throne of the Tides|Blackrock Caverns|Grim Batol|Halls of Origination|Lost City of the Tol'vir|Shadowfang Keep|The Deadmines|The Stonecore|The Vortex Pinnacle|Dungeons|Zul'Aman|Zul'Gurub)|Commander Springvale</Pattern>
+      <Pattern>Heroic.*(Throne of the Tides|Blackrock Caverns|Grim Batol|Halls of Origination|Lost City of the Tol'vir|Shadowfang Keep|The Deadmines|The Stonecore|The Vortex Pinnacle|Dungeons|Zul'Aman|Zul'Gurub)|Commander Springvale|End Time|Well of Eternity|Hour of Twilight</Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
       <BoP>true</BoP>
@@ -601,6 +601,29 @@
           <AppliesToGems>false</AppliesToGems>
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
+        </ItemFilterRegex>
+        <ItemFilterRegex>
+          <Name>End Time</Name>
+          <Enabled>true</Enabled>
+          <Pattern>End Time</Pattern>
+          <BoA>true</BoA>
+          <BoE>true</BoE>
+          <BoP>true</BoP>
+          <BoU>true</BoU>
+          <BoN>true</BoN>
+          <MinItemLevel>0</MinItemLevel>
+          <MaxItemLevel>1000</MaxItemLevel>
+          <MinDropRatePerc>0</MinDropRatePerc>
+          <MaxDropRatePerc>100</MaxDropRatePerc>
+          <MinItemQuality>Temp</MinItemQuality>
+          <MinItemQualityIndex>0</MinItemQualityIndex>
+          <MaxItemQuality>Heirloom</MaxItemQuality>
+          <MaxItemQualityIndex>8</MaxItemQualityIndex>
+          <AdditiveFilter>true</AdditiveFilter>
+          <AppliesToItems>true</AppliesToItems>
+          <AppliesToGems>false</AppliesToGems>
+          <RegexList />
+          <OtherRegexEnabled>false</OtherRegexEnabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <Name>Grim Batol</Name>
@@ -647,6 +670,29 @@
           <AppliesToGems>false</AppliesToGems>
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
+        </ItemFilterRegex>
+        <ItemFilterRegex>
+          <Name>Hour of Twilight</Name>
+          <Enabled>true</Enabled>
+          <Pattern>Hour of Twilight</Pattern>
+          <BoA>true</BoA>
+          <BoE>true</BoE>
+          <BoP>true</BoP>
+          <BoU>true</BoU>
+          <BoN>true</BoN>
+          <MinItemLevel>0</MinItemLevel>
+          <MaxItemLevel>1000</MaxItemLevel>
+          <MinDropRatePerc>0</MinDropRatePerc>
+          <MaxDropRatePerc>100</MaxDropRatePerc>
+          <MinItemQuality>Temp</MinItemQuality>
+          <MinItemQualityIndex>0</MinItemQualityIndex>
+          <MaxItemQuality>Heirloom</MaxItemQuality>
+          <MaxItemQualityIndex>8</MaxItemQualityIndex>
+          <AdditiveFilter>true</AdditiveFilter>
+          <AppliesToItems>true</AppliesToItems>
+          <AppliesToGems>false</AppliesToGems>
+          <RegexList />
+          <OtherRegexEnabled>false</OtherRegexEnabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <Name>Lost City of the Tol'vir</Name>
@@ -767,6 +813,29 @@
           <Name>Vortex Pinnacle</Name>
           <Enabled>true</Enabled>
           <Pattern>The Vortex Pinnacle</Pattern>
+          <BoA>true</BoA>
+          <BoE>true</BoE>
+          <BoP>true</BoP>
+          <BoU>true</BoU>
+          <BoN>true</BoN>
+          <MinItemLevel>0</MinItemLevel>
+          <MaxItemLevel>1000</MaxItemLevel>
+          <MinDropRatePerc>0</MinDropRatePerc>
+          <MaxDropRatePerc>100</MaxDropRatePerc>
+          <MinItemQuality>Temp</MinItemQuality>
+          <MinItemQualityIndex>0</MinItemQualityIndex>
+          <MaxItemQuality>Heirloom</MaxItemQuality>
+          <MaxItemQualityIndex>8</MaxItemQualityIndex>
+          <AdditiveFilter>true</AdditiveFilter>
+          <AppliesToItems>true</AppliesToItems>
+          <AppliesToGems>false</AppliesToGems>
+          <RegexList />
+          <OtherRegexEnabled>false</OtherRegexEnabled>
+        </ItemFilterRegex>
+        <ItemFilterRegex>
+          <Name>Well of Eternity</Name>
+          <Enabled>true</Enabled>
+          <Pattern>Well of Eternity</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -2091,6 +2160,653 @@
       <OtherRegexEnabled>true</OtherRegexEnabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
+      <Name>Tier 13 Raid Dragon Soul</Name>
+      <Enabled>true</Enabled>
+      <Pattern>Dragon Soul</Pattern>
+      <BoA>true</BoA>
+      <BoE>true</BoE>
+      <BoP>true</BoP>
+      <BoU>true</BoU>
+      <BoN>true</BoN>
+      <MinItemLevel>0</MinItemLevel>
+      <MaxItemLevel>1000</MaxItemLevel>
+      <MinDropRatePerc>0</MinDropRatePerc>
+      <MaxDropRatePerc>100</MaxDropRatePerc>
+      <MinItemQuality>Temp</MinItemQuality>
+      <MinItemQualityIndex>0</MinItemQualityIndex>
+      <MaxItemQuality>Heirloom</MaxItemQuality>
+      <MaxItemQualityIndex>8</MaxItemQualityIndex>
+      <AdditiveFilter>true</AdditiveFilter>
+      <AppliesToItems>true</AppliesToItems>
+      <AppliesToGems>false</AppliesToGems>
+      <RegexList>
+        <ItemFilterRegex>
+          <Name>Looking For Raid</Name>
+          <Enabled>true</Enabled>
+          <BoA>true</BoA>
+          <BoE>true</BoE>
+          <BoP>true</BoP>
+          <BoU>true</BoU>
+          <BoN>true</BoN>
+          <MinItemLevel>0</MinItemLevel>
+          <MaxItemLevel>1000</MaxItemLevel>
+          <MinDropRatePerc>0</MinDropRatePerc>
+          <MaxDropRatePerc>100</MaxDropRatePerc>
+          <MinItemQuality>Temp</MinItemQuality>
+          <MinItemQualityIndex>0</MinItemQualityIndex>
+          <MaxItemQuality>Heirloom</MaxItemQuality>
+          <MaxItemQualityIndex>8</MaxItemQualityIndex>
+          <AdditiveFilter>true</AdditiveFilter>
+          <AppliesToItems>true</AppliesToItems>
+          <AppliesToGems>false</AppliesToGems>
+          <RegexList>
+            <ItemFilterRegex>
+              <Name>Morchok</Name>
+              <Enabled>true</Enabled>
+              <Pattern>Morchok</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinDropRatePerc>0</MinDropRatePerc>
+              <MaxDropRatePerc>100</MaxDropRatePerc>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MinItemQualityIndex>0</MinItemQualityIndex>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <MaxItemQualityIndex>8</MaxItemQualityIndex>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>false</AppliesToGems>
+              <RegexList />
+              <OtherRegexEnabled>false</OtherRegexEnabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <Name>Warlord Zon'ozz</Name>
+              <Enabled>true</Enabled>
+              <Pattern>Warlord Zon'ozz</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinDropRatePerc>0</MinDropRatePerc>
+              <MaxDropRatePerc>100</MaxDropRatePerc>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MinItemQualityIndex>0</MinItemQualityIndex>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <MaxItemQualityIndex>8</MaxItemQualityIndex>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>false</AppliesToGems>
+              <RegexList />
+              <OtherRegexEnabled>false</OtherRegexEnabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <Name>Yor'sahj the Unsleeping</Name>
+              <Enabled>true</Enabled>
+              <Pattern>Yor'sahj the Unsleeping</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinDropRatePerc>0</MinDropRatePerc>
+              <MaxDropRatePerc>100</MaxDropRatePerc>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MinItemQualityIndex>0</MinItemQualityIndex>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <MaxItemQualityIndex>8</MaxItemQualityIndex>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>false</AppliesToGems>
+              <RegexList />
+              <OtherRegexEnabled>false</OtherRegexEnabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <Name>Hagara the Stormbinder</Name>
+              <Enabled>true</Enabled>
+              <Pattern>Hagara the Stormbinder</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinDropRatePerc>0</MinDropRatePerc>
+              <MaxDropRatePerc>100</MaxDropRatePerc>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MinItemQualityIndex>0</MinItemQualityIndex>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <MaxItemQualityIndex>8</MaxItemQualityIndex>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>false</AppliesToGems>
+              <RegexList />
+              <OtherRegexEnabled>false</OtherRegexEnabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <Name>Ultraxion</Name>
+              <Enabled>true</Enabled>
+              <Pattern>Ultraxion</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinDropRatePerc>0</MinDropRatePerc>
+              <MaxDropRatePerc>100</MaxDropRatePerc>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MinItemQualityIndex>0</MinItemQualityIndex>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <MaxItemQualityIndex>8</MaxItemQualityIndex>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>false</AppliesToGems>
+              <RegexList />
+              <OtherRegexEnabled>false</OtherRegexEnabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <Name>Warmaster Blackhorn</Name>
+              <Enabled>true</Enabled>
+              <Pattern>Warmaster Blackhorn</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinDropRatePerc>0</MinDropRatePerc>
+              <MaxDropRatePerc>100</MaxDropRatePerc>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MinItemQualityIndex>0</MinItemQualityIndex>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <MaxItemQualityIndex>8</MaxItemQualityIndex>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>false</AppliesToGems>
+              <RegexList />
+              <OtherRegexEnabled>false</OtherRegexEnabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <Name>Spine of Deathwing</Name>
+              <Enabled>true</Enabled>
+              <Pattern>Spine of Deathwing</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinDropRatePerc>0</MinDropRatePerc>
+              <MaxDropRatePerc>100</MaxDropRatePerc>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MinItemQualityIndex>0</MinItemQualityIndex>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <MaxItemQualityIndex>8</MaxItemQualityIndex>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>false</AppliesToGems>
+              <RegexList />
+              <OtherRegexEnabled>false</OtherRegexEnabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <Name>Madness of Deathwing</Name>
+              <Enabled>true</Enabled>
+              <Pattern>Madness of Deathwing</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinDropRatePerc>0</MinDropRatePerc>
+              <MaxDropRatePerc>100</MaxDropRatePerc>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MinItemQualityIndex>0</MinItemQualityIndex>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <MaxItemQualityIndex>8</MaxItemQualityIndex>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>false</AppliesToGems>
+              <RegexList />
+              <OtherRegexEnabled>false</OtherRegexEnabled>
+            </ItemFilterRegex>
+          </RegexList>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
+        </ItemFilterRegex>
+        <ItemFilterRegex>
+          <Name>Normal</Name>
+          <Enabled>true</Enabled>
+          <Pattern>(?&lt;! Heroic )Dragon Soul</Pattern>
+          <BoA>true</BoA>
+          <BoE>true</BoE>
+          <BoP>true</BoP>
+          <BoU>true</BoU>
+          <BoN>true</BoN>
+          <MinItemLevel>0</MinItemLevel>
+          <MaxItemLevel>1000</MaxItemLevel>
+          <MinDropRatePerc>0</MinDropRatePerc>
+          <MaxDropRatePerc>100</MaxDropRatePerc>
+          <MinItemQuality>Temp</MinItemQuality>
+          <MinItemQualityIndex>0</MinItemQualityIndex>
+          <MaxItemQuality>Heirloom</MaxItemQuality>
+          <MaxItemQualityIndex>8</MaxItemQualityIndex>
+          <AdditiveFilter>true</AdditiveFilter>
+          <AppliesToItems>true</AppliesToItems>
+          <AppliesToGems>false</AppliesToGems>
+          <RegexList>
+            <ItemFilterRegex>
+              <Name>Morchok</Name>
+              <Enabled>true</Enabled>
+              <Pattern>Morchok</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinDropRatePerc>0</MinDropRatePerc>
+              <MaxDropRatePerc>100</MaxDropRatePerc>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MinItemQualityIndex>0</MinItemQualityIndex>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <MaxItemQualityIndex>8</MaxItemQualityIndex>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>false</AppliesToGems>
+              <RegexList />
+              <OtherRegexEnabled>false</OtherRegexEnabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <Name>Warlord Zon'ozz</Name>
+              <Enabled>true</Enabled>
+              <Pattern>Warlord Zon'ozz</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinDropRatePerc>0</MinDropRatePerc>
+              <MaxDropRatePerc>100</MaxDropRatePerc>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MinItemQualityIndex>0</MinItemQualityIndex>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <MaxItemQualityIndex>8</MaxItemQualityIndex>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>false</AppliesToGems>
+              <RegexList />
+              <OtherRegexEnabled>false</OtherRegexEnabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <Name>Yor'sahj the Unsleeping</Name>
+              <Enabled>true</Enabled>
+              <Pattern>Yor'sahj the Unsleeping</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinDropRatePerc>0</MinDropRatePerc>
+              <MaxDropRatePerc>100</MaxDropRatePerc>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MinItemQualityIndex>0</MinItemQualityIndex>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <MaxItemQualityIndex>8</MaxItemQualityIndex>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>false</AppliesToGems>
+              <RegexList />
+              <OtherRegexEnabled>false</OtherRegexEnabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <Name>Hagara the Stormbinder</Name>
+              <Enabled>true</Enabled>
+              <Pattern>Hagara the Stormbinder</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinDropRatePerc>0</MinDropRatePerc>
+              <MaxDropRatePerc>100</MaxDropRatePerc>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MinItemQualityIndex>0</MinItemQualityIndex>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <MaxItemQualityIndex>8</MaxItemQualityIndex>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>false</AppliesToGems>
+              <RegexList />
+              <OtherRegexEnabled>false</OtherRegexEnabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <Name>Ultraxion</Name>
+              <Enabled>true</Enabled>
+              <Pattern>Ultraxion</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinDropRatePerc>0</MinDropRatePerc>
+              <MaxDropRatePerc>100</MaxDropRatePerc>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MinItemQualityIndex>0</MinItemQualityIndex>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <MaxItemQualityIndex>8</MaxItemQualityIndex>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>false</AppliesToGems>
+              <RegexList />
+              <OtherRegexEnabled>false</OtherRegexEnabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <Name>Warmaster Blackhorn</Name>
+              <Enabled>true</Enabled>
+              <Pattern>Warmaster Blackhorn</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinDropRatePerc>0</MinDropRatePerc>
+              <MaxDropRatePerc>100</MaxDropRatePerc>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MinItemQualityIndex>0</MinItemQualityIndex>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <MaxItemQualityIndex>8</MaxItemQualityIndex>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>false</AppliesToGems>
+              <RegexList />
+              <OtherRegexEnabled>false</OtherRegexEnabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <Name>Spine of Deathwing</Name>
+              <Enabled>true</Enabled>
+              <Pattern>Spine of Deathwing</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinDropRatePerc>0</MinDropRatePerc>
+              <MaxDropRatePerc>100</MaxDropRatePerc>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MinItemQualityIndex>0</MinItemQualityIndex>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <MaxItemQualityIndex>8</MaxItemQualityIndex>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>false</AppliesToGems>
+              <RegexList />
+              <OtherRegexEnabled>false</OtherRegexEnabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <Name>Madness of Deathwing</Name>
+              <Enabled>true</Enabled>
+              <Pattern>Madness of Deathwing</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinDropRatePerc>0</MinDropRatePerc>
+              <MaxDropRatePerc>100</MaxDropRatePerc>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MinItemQualityIndex>0</MinItemQualityIndex>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <MaxItemQualityIndex>8</MaxItemQualityIndex>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>false</AppliesToGems>
+              <RegexList />
+              <OtherRegexEnabled>false</OtherRegexEnabled>
+            </ItemFilterRegex>
+          </RegexList>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
+        </ItemFilterRegex>
+        <ItemFilterRegex>
+          <Name>Heroic</Name>
+          <Enabled>true</Enabled>
+          <Pattern>Heroic Dragon Soul</Pattern>
+          <BoA>true</BoA>
+          <BoE>true</BoE>
+          <BoP>true</BoP>
+          <BoU>true</BoU>
+          <BoN>true</BoN>
+          <MinItemLevel>0</MinItemLevel>
+          <MaxItemLevel>1000</MaxItemLevel>
+          <MinDropRatePerc>0</MinDropRatePerc>
+          <MaxDropRatePerc>100</MaxDropRatePerc>
+          <MinItemQuality>Temp</MinItemQuality>
+          <MinItemQualityIndex>0</MinItemQualityIndex>
+          <MaxItemQuality>Heirloom</MaxItemQuality>
+          <MaxItemQualityIndex>8</MaxItemQualityIndex>
+          <AdditiveFilter>true</AdditiveFilter>
+          <AppliesToItems>true</AppliesToItems>
+          <AppliesToGems>false</AppliesToGems>
+          <RegexList>
+            <ItemFilterRegex>
+              <Name>Morchok</Name>
+              <Enabled>true</Enabled>
+              <Pattern>Morchok</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinDropRatePerc>0</MinDropRatePerc>
+              <MaxDropRatePerc>100</MaxDropRatePerc>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MinItemQualityIndex>0</MinItemQualityIndex>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <MaxItemQualityIndex>8</MaxItemQualityIndex>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>false</AppliesToGems>
+              <RegexList />
+              <OtherRegexEnabled>false</OtherRegexEnabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <Name>Warlord Zon'ozz</Name>
+              <Enabled>true</Enabled>
+              <Pattern>Warlord Zon'ozz</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinDropRatePerc>0</MinDropRatePerc>
+              <MaxDropRatePerc>100</MaxDropRatePerc>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MinItemQualityIndex>0</MinItemQualityIndex>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <MaxItemQualityIndex>8</MaxItemQualityIndex>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>false</AppliesToGems>
+              <RegexList />
+              <OtherRegexEnabled>false</OtherRegexEnabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <Name>Yor'sahj the Unsleeping</Name>
+              <Enabled>true</Enabled>
+              <Pattern>Yor'sahj the Unsleeping</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinDropRatePerc>0</MinDropRatePerc>
+              <MaxDropRatePerc>100</MaxDropRatePerc>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MinItemQualityIndex>0</MinItemQualityIndex>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <MaxItemQualityIndex>8</MaxItemQualityIndex>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>false</AppliesToGems>
+              <RegexList />
+              <OtherRegexEnabled>false</OtherRegexEnabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <Name>Hagara the Stormbinder</Name>
+              <Enabled>true</Enabled>
+              <Pattern>Hagara the Stormbinder</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinDropRatePerc>0</MinDropRatePerc>
+              <MaxDropRatePerc>100</MaxDropRatePerc>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MinItemQualityIndex>0</MinItemQualityIndex>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <MaxItemQualityIndex>8</MaxItemQualityIndex>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>false</AppliesToGems>
+              <RegexList />
+              <OtherRegexEnabled>false</OtherRegexEnabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <Name>Ultraxion</Name>
+              <Enabled>true</Enabled>
+              <Pattern>Ultraxion</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinDropRatePerc>0</MinDropRatePerc>
+              <MaxDropRatePerc>100</MaxDropRatePerc>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MinItemQualityIndex>0</MinItemQualityIndex>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <MaxItemQualityIndex>8</MaxItemQualityIndex>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>false</AppliesToGems>
+              <RegexList />
+              <OtherRegexEnabled>false</OtherRegexEnabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <Name>Warmaster Blackhorn</Name>
+              <Enabled>true</Enabled>
+              <Pattern>Warmaster Blackhorn</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinDropRatePerc>0</MinDropRatePerc>
+              <MaxDropRatePerc>100</MaxDropRatePerc>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MinItemQualityIndex>0</MinItemQualityIndex>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <MaxItemQualityIndex>8</MaxItemQualityIndex>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>false</AppliesToGems>
+              <RegexList />
+              <OtherRegexEnabled>false</OtherRegexEnabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <Name>Spine of Deathwing</Name>
+              <Enabled>true</Enabled>
+              <Pattern>Spine of Deathwing</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinDropRatePerc>0</MinDropRatePerc>
+              <MaxDropRatePerc>100</MaxDropRatePerc>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MinItemQualityIndex>0</MinItemQualityIndex>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <MaxItemQualityIndex>8</MaxItemQualityIndex>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>false</AppliesToGems>
+              <RegexList />
+              <OtherRegexEnabled>false</OtherRegexEnabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <Name>Madness of Deathwing</Name>
+              <Enabled>true</Enabled>
+              <Pattern>Madness of Deathwing</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinDropRatePerc>0</MinDropRatePerc>
+              <MaxDropRatePerc>100</MaxDropRatePerc>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MinItemQualityIndex>0</MinItemQualityIndex>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <MaxItemQualityIndex>8</MaxItemQualityIndex>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>false</AppliesToGems>
+              <RegexList />
+              <OtherRegexEnabled>false</OtherRegexEnabled>
+            </ItemFilterRegex>
+          </RegexList>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
+        </ItemFilterRegex>
+      </RegexList>
+      <OtherRegexEnabled>true</OtherRegexEnabled>
+    </ItemFilterRegex>
+    <ItemFilterRegex>
       <Name>Baradin Hold</Name>
       <Enabled>true</Enabled>
       <Pattern>Baradin Hold|Argaloth|Occuthar</Pattern>
@@ -2111,6 +2827,29 @@
       <AppliesToItems>true</AppliesToItems>
       <AppliesToGems>false</AppliesToGems>
       <RegexList>
+        <ItemFilterRegex>
+          <Name>Alizabal</Name>
+          <Enabled>true</Enabled>
+          <Pattern>Alizabal</Pattern>
+          <BoA>true</BoA>
+          <BoE>true</BoE>
+          <BoP>true</BoP>
+          <BoU>true</BoU>
+          <BoN>true</BoN>
+          <MinItemLevel>0</MinItemLevel>
+          <MaxItemLevel>1000</MaxItemLevel>
+          <MinDropRatePerc>0</MinDropRatePerc>
+          <MaxDropRatePerc>100</MaxDropRatePerc>
+          <MinItemQuality>Temp</MinItemQuality>
+          <MinItemQualityIndex>0</MinItemQualityIndex>
+          <MaxItemQuality>Heirloom</MaxItemQuality>
+          <MaxItemQualityIndex>8</MaxItemQualityIndex>
+          <AdditiveFilter>true</AdditiveFilter>
+          <AppliesToItems>true</AppliesToItems>
+          <AppliesToGems>false</AppliesToGems>
+          <RegexList />
+          <OtherRegexEnabled>false</OtherRegexEnabled>
+        </ItemFilterRegex>
         <ItemFilterRegex>
           <Name>Pit Lord Argaloth</Name>
           <Enabled>true</Enabled>
@@ -2230,7 +2969,7 @@
         <ItemFilterRegex>
           <Name>Armor Tokens</Name>
           <Enabled>true</Enabled>
-          <Pattern>Regalia|Forgotten|Lost|Wayward|Fallen|Vanquished|Desecrated|Trophy|Dubin Clay| 1 \[Mark of Sanctification|Sanctified|Champion Isimode|Trophy of the Crusade|Valiant Laradia|Valiant Bressia|Witch's|Lasherweave|Vanquisher|Conqueror|Protector|Forlorn|Fiery</Pattern>
+          <Pattern>Regalia|Forgotten|Lost|Wayward|Fallen|Vanquished|Desecrated|Trophy|Dubin Clay| 1 \[Mark of Sanctification|Sanctified|Champion Isimode|Trophy of the Crusade|Valiant Laradia|Valiant Bressia|Vanquisher|Conqueror|Protector|Forlorn|Fiery</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -2249,9 +2988,32 @@
           <AppliesToGems>false</AppliesToGems>
           <RegexList>
             <ItemFilterRegex>
+              <Name>Tier 13</Name>
+              <Enabled>true</Enabled>
+              <Pattern>Necrotic Boneplate|Deep Earth|Wyrmstalker|Timelord's|of Radiant Glory|of Dying Light|Blackfang|Spiritwalker's|of the Faceless Shroud|Colossal Dragonplate</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinDropRatePerc>0</MinDropRatePerc>
+              <MaxDropRatePerc>100</MaxDropRatePerc>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MinItemQualityIndex>0</MinItemQualityIndex>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <MaxItemQualityIndex>8</MaxItemQualityIndex>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>false</AppliesToGems>
+              <RegexList />
+              <OtherRegexEnabled>false</OtherRegexEnabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
               <Name>Tier 12</Name>
               <Enabled>true</Enabled>
-              <Pattern>Fiery|Elementium Deathplate|Obsidian Arborweave|Flamewaker's|Firehawk|Immolation|of the Cleansing Flame|Dark Phoenix|Erupting Volcanic|Balespider's|Molten Giant</Pattern>
+              <Pattern>Elementium Deathplate|Obsidian Arborweave|Flamewaker's|Firehawk|Immolation|of the Cleansing Flame|Dark Phoenix|Erupting Volcanic|Balespider's|Molten Giant</Pattern>
               <BoA>true</BoA>
               <BoE>true</BoE>
               <BoP>true</BoP>
@@ -2274,7 +3036,7 @@
             <ItemFilterRegex>
               <Name>Tier 11</Name>
               <Enabled>true</Enabled>
-              <Pattern>Forlorn|Magma Plated|Stormrider's|Lightning-Charged|Firelord's|Reinforced Sapphirium|MercurialWind Dancer's|of the Raging Elements|Shadowflame|Earthen</Pattern>
+              <Pattern>Magma Plated|Stormrider's|Lightning-Charged|Firelord's|Reinforced Sapphirium|Mercurial|Wind Dancer's|of the Raging Elements|Shadowflame|Earthen|Gunra|Magatha Silverton</Pattern>
               <BoA>true</BoA>
               <BoE>true</BoE>
               <BoP>true</BoP>
@@ -2322,7 +3084,7 @@
         </ItemFilterRegex>
         <ItemFilterRegex>
           <Name>Crystalized Firestone</Name>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
           <Pattern>Crystalized Firestone|Lurah Wrathvine</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
