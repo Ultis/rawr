@@ -1652,10 +1652,7 @@ Points individually may be important.",
             // Apply the Multipliers
             ProcessStatModifiers(statsTotal, character.DeathKnightTalents.BladedArmor, character);
             ProcessAvoidance(statsTotal, TDK.bo.Level, TDK.Char, PreRatingsBase);
-            if (statsTotal.Mastery < 8) {
-//                throw new Exception("Mastery over-written during GetCharacterStats");
-                statsTotal.Mastery = 8; 
-            }
+
             return (statsTotal);
         }
 
@@ -1697,9 +1694,8 @@ Points individually may be important.",
         {
             // Expertise Rating -> Expertise:
             statsTotal.Expertise += StatConversion.GetExpertiseFromRating(statsTotal.ExpertiseRating);
-            // Mastery Rating
-            if (statsTotal.Mastery < 8) statsTotal.Mastery += 8;  // Incase the Mastery is getting filtered out.
-            statsTotal.Mastery += StatConversion.GetMasteryFromRating(statsTotal.MasteryRating);
+            // Mastery Rating  Handled during AccumulateTalents.
+//            statsTotal.Mastery += StatConversion.GetMasteryFromRating(statsTotal.MasteryRating);
 
             statsTotal.PhysicalHit += StatConversion.GetPhysicalHitFromRating(statsTotal.HitRating);
             statsTotal.PhysicalCrit += StatConversion.GetPhysicalCritFromRating(statsTotal.CritRating);

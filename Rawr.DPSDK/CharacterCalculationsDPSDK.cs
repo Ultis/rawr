@@ -38,6 +38,9 @@ namespace Rawr.DPSDK
         public float[] threatSub = new float[EnumHelper.GetCount(typeof(DKability))];
         public float[] tpsSub = new float[EnumHelper.GetCount(typeof(DKability))];
 
+        /// <summary>
+        /// Damage per Use
+        /// </summary>
         public float[] DPUdpsSub = new float[EnumHelper.GetCount(typeof(DKability))];
         public float[] DPUdamSub = new float[EnumHelper.GetCount(typeof(DKability))];
         public float[] DPUthreatSub = new float[EnumHelper.GetCount(typeof(DKability))];

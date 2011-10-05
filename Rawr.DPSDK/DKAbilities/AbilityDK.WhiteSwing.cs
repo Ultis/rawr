@@ -66,15 +66,14 @@ namespace Rawr.DK
             }
             // Start w/ getting the base damage values.
             float iDamage = this.GetTickDamage();
+            float reducedHitChance = HitChance;
+            if ((glancechance + CritChance + HitChance) > 1f)
+                reducedHitChance = HitChance - (glancechance + CritChance + HitChance - 1);
 
             // Factor in max value for Crit, Hit, Glancing
             float glancedamage = iDamage * .5f * glancechance;
             float critdamage = iDamage * CritChance * 2;
-            float hitdamage = iDamage * HitChance;
-#if DEBUG
-            if ((glancechance + CritChance + HitChance) > 1f)
-                throw new Exception("Over hit cap Check values.");
-#endif
+            float hitdamage = iDamage * reducedHitChance;
             iDamage = critdamage + hitdamage + glancedamage;
             if (wMH.twohander)
                 iDamage *= (1f + .04f * CState.m_Talents.MightOfTheFrozenWastes);

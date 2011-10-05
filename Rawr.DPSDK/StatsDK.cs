@@ -11,7 +11,7 @@ namespace Rawr.DK
     {
         private float _Mastery = 8;
         public float Mastery { 
-            get{ return _Mastery;}
+            get { return _Mastery;}
             set {_Mastery = value;} 
         }
         /// <summary>
