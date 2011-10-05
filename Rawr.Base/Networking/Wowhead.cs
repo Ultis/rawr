@@ -1060,6 +1060,7 @@ namespace Rawr
                     htmlTooltip = htmlTooltip.Substring(htmlTooltip.LastIndexOf(">") + 1);
                     htmlTooltip = htmlTooltip
                         #region Cataclysm PVP Set Names
+                        .Replace("Cataclysmic ", "")    // Season 11
                         .Replace("Ruthless ", "")       // Season 10
                         .Replace("Vicious ", "")        // Season 9
                         .Replace("Bloodthirsty ", "")   // Starting set
@@ -2771,6 +2772,7 @@ namespace Rawr
                             case "5416": return "Der Mahlstrom";
                             case "5630": return "Der Mahlstrom";
                             case "5733": return "Geschmolzene Front";
+                            case "5861": return "Darkmoon Island";
                             #endregion
                             #region Dungeons
                             case "4926": return "Schwarzfelshöhlen";
@@ -2780,6 +2782,9 @@ namespace Rawr
                             case "5035": return "Der Vortexgipfel";
                             case "5088": return "Der Steinerne Kern";
                             case "5396": return "Die Verlorene Stadt der Tol'vir";
+                            case "5788": return "Well of Eternity";
+                            case "5789": return "Eindtijd";
+                            case "5844": return "Uur van Twilight";
                             #endregion
                             #region Raids
                             case "5094": return "Pechschwingenabstieg";
@@ -2787,6 +2792,9 @@ namespace Rawr
                             case "5600": return "Baradinfestung";
                             case "5638": return "Thron der Vier Winde";
                             case "5723": return "Feuerlande";
+                            case "5806": // Spine of the Destroyer
+                            case "5880": // Maelstrom Deathwing Fight
+                            case "5892": return "Dragon Soul";
                             #endregion
                             case "5706": return "Die Dampfteiche";
                             #endregion
@@ -3017,6 +3025,7 @@ namespace Rawr
                             case "5416": return "La Vorágine";
                             case "5630": return "La Vorágine";
                             case "5733": return "Frente de Magma";
+                            case "5861": return "Luna Negra Isla";
                             #endregion
                             #region Dungeons
                             case "4926": return "Cavernas Roca Negra";
@@ -3027,6 +3036,9 @@ namespace Rawr
                             case "5088": return "El Núcleo Pétreo";
                             case "5396": return "Ciudad Perdida de los Tol'vir";
 							case "1977": return "Zul'Gurub";
+                            case "5788": return "Pozo de la Eternidad";
+                            case "5789": return "Hora de Finalización";
+                            case "5844": return "Hora del Crepúsculo";
                             #endregion
                             #region Raids
                             case "5094": return "Descenso de Alanegra";
@@ -3034,6 +3046,9 @@ namespace Rawr
                             case "5600": return "Bastión de Baradin";
                             case "5638": return "Trono de los Cuatro Vientos";
                             case "5723": return "Tierras de Fuego";
+                            case "5806": // Spine of the Destroyer
+                            case "5880": // Maelstrom Deathwing Fight
+                            case "5892": return "Alma del Dragón";
                             #endregion
                             case "5706": return "The Steam Pools";
                             #endregion
@@ -3264,6 +3279,7 @@ namespace Rawr
                             case "5416": return "Le Maelström";
                             case "5630": return "Le Maelström";
                             case "5733": return "Front du Magma";
+                            case "5861": return "Sombrelune île";
                             #endregion
                             #region Dungeons
                             case "4926": return "Cavernes de Rochenoire";
@@ -3274,6 +3290,9 @@ namespace Rawr
                             case "5088": return "Le Cœur-de-pierre";
                             case "5396": return "Cité perdue des Tol'vir";
                             case "1977": return "Zul'Gurub";
+                            case "5788": return "Puits d'Eternité";
+                            case "5789": return "Heure de Fin";
+                            case "5844": return "Heure du Crépuscule";
                             #endregion
                             #region Raids
                             case "5094": return "Descente de l'Aile noire";
@@ -3281,6 +3300,9 @@ namespace Rawr
                             case "5600": return "Bastion de Baradin";
                             case "5638": return "Trône des quatre vents";
                             case "5723": return "Terres de Feu";
+                            case "5806": // Spine of the Destroyer
+                            case "5880": // Maelstrom Deathwing Fight
+                            case "5892": return "Dragon Soul";
                             #endregion
                             case "5706": return "Les bassins de Vapeur";
                             #endregion
@@ -3511,6 +3533,7 @@ namespace Rawr
                             case "5416": return "Водоворот";
                             case "5630": return "Водоворот";
                             case "5733": return "Огненная передовая";
+                            case "5861": return "Новолуния острова";
                             #endregion
                             #region Dungeons
                             case "4926": return "Пещеры Черной горы";
@@ -3521,6 +3544,9 @@ namespace Rawr
                             case "5088": return "Каменные Недра";
                             case "5396": return "Затерянный город Тол'вир";
                             case "1977": return "Зул'Гуруб";
+                            case "5788": return "Колодца Вечности";
+                            case "5789": return "Время окончания";
+                            case "5844": return "Час Сумерки";
                             #endregion
                             #region Raids
                             case "5094": return "Твердыня Крыла Тьмы";
@@ -3528,6 +3554,9 @@ namespace Rawr
                             case "5600": return "Крепость Барадин";
                             case "5638": return "Трон Четырех Ветров";
                             case "5723": return "Огненные Просторы";
+                            case "5806": // Spine of the Destroyer
+                            case "5880": // Maelstrom Deathwing Fight
+                            case "5892": return "Душа Дракона";
                             #endregion
                             case "5706": return "The Steam Pools";
                             #endregion
@@ -3759,7 +3788,6 @@ namespace Rawr
                             case "5630": return "The Maelstrom";
                             case "5733": return "Molten Front";
                             case "5861": return "Darkmoon Island";
-
                             #endregion
                             #region Dungeons
                             case "4926": return "Blackrock Caverns";
