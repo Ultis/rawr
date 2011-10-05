@@ -812,8 +812,9 @@ namespace Rawr
             new RangeValue { Min = 365, Max = 371 }, // 7
             new RangeValue { Min = 372, Max = 377 }, // 8
             new RangeValue { Min = 378, Max = 390 }, // 9
-            new RangeValue { Min = 391, Max = 403 }, // 10
-            new RangeValue { Min = 404, Max = 500 }, // 11
+            new RangeValue { Min = 391, Max = 396 }, // 10
+            new RangeValue { Min = 397, Max = 409 }, // 11
+            new RangeValue { Min = 410, Max = 416 }, // 12
         };
         private readonly static PercRangeValue[] DropRangeValues = new PercRangeValue[] {
             new PercRangeValue { Min = 0.00f, Max = 0.01f },
@@ -885,8 +886,9 @@ namespace Rawr
             true, // 7 365-371 (Molten Front)
             true, // 8 372 - 377 (Tier 11.5)
             true, // 9 378 - 390 (Tier 12.0)
-            true, // 10 391 - 403 (Tier 12.5)
-            true, // 11 404+      (Tier 13.0)
+            true, // 10 391 - 396 (Tier 12.5)
+            true, // 11 397 - 409 (Tier 13.0)
+            true, // 12 410 - 416 (Tier 13.5)
         };
         [XmlIgnore]
         public bool[] iLvl {
@@ -898,11 +900,14 @@ namespace Rawr
                         true, // 2 200 - 284 (Tier 07-10)
                         true, // 3 285 - 333 (Cata Dungeons)
                         true, // 4 334 - 358 (Cata Heroics)
-                        true, // 5 359 - 371 (Tier 11.0)
-                        true, // 6 372 - 377 (Tier 11.5)
-                        true, // 7 378 - 390 (Tier 12.0)
-                        true, // 8 391 - 403 (Tier 12.5)
-                        true, // 9 404+      (Tier 13.0)
+                        true, // 5 353-358 (Rise of Zandalar)
+                        true, // 6 359-364 (Tier 11.0)
+                        true, // 7 365-371 (Molten Front)
+                        true, // 8 372 - 377 (Tier 11.5)
+                        true, // 9 378 - 390 (Tier 12.0)
+                        true, // 10 391 - 396 (Tier 12.5)
+                        true, // 11 397 - 409 (Tier 13.0)
+                        true, // 12 410 - 416 (Tier 13.5)
                     };
                 }
                 return _iLvl;
@@ -915,11 +920,14 @@ namespace Rawr
                         true, // 2 200 - 284 (Tier 07-10)
                         true, // 3 285 - 333 (Cata Dungeons)
                         true, // 4 334 - 358 (Cata Heroics)
-                        true, // 5 359 - 371 (Tier 11.0)
-                        true, // 6 372 - 377 (Tier 11.5)
-                        true, // 7 378 - 390 (Tier 12.0)
-                        true, // 8 391 - 403 (Tier 12.5)
-                        true, // 9 404+      (Tier 13.0)
+                        true, // 5 353-358 (Rise of Zandalar)
+                        true, // 6 359-364 (Tier 11.0)
+                        true, // 7 365-371 (Molten Front)
+                        true, // 8 372 - 377 (Tier 11.5)
+                        true, // 9 378 - 390 (Tier 12.0)
+                        true, // 10 391 - 396 (Tier 12.5)
+                        true, // 11 397 - 409 (Tier 13.0)
+                        true, // 12 410 - 416 (Tier 13.5)
                     };
                 } else {
                     _iLvl = value;
@@ -947,20 +955,20 @@ namespace Rawr
         public bool ilvlF_8 { get { return _iLvl[8]; } set { _iLvl[8] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersSettings_9")][DefaultValue(true)]
         public bool ilvlF_9 { get { return _iLvl[9]; } set { _iLvl[9] = value; OnFiltersChanged(); } }
-        [XmlElement("ItemFiltersSettings_10")]
-        [DefaultValue(true)]
+        [XmlElement("ItemFiltersSettings_10")][DefaultValue(true)]
         public bool ilvlF_10 { get { return _iLvl[10]; } set { _iLvl[10] = value; OnFiltersChanged(); } }
-        [XmlElement("ItemFiltersSettings_11")]
-        [DefaultValue(true)]
+        [XmlElement("ItemFiltersSettings_11")][DefaultValue(true)]
         public bool ilvlF_11 { get { return _iLvl[11]; } set { _iLvl[11] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersSettings_12")][DefaultValue(true)]
+        public bool ilvlF_12 { get { return _iLvl[12]; } set { _iLvl[12] = value; OnFiltersChanged(); } }
 
         [XmlIgnore]
         private double _ilvlF_SLMin = 285;
         [XmlElement("ItemFiltersSettings_SLMin")][DefaultValue(285)]
         public double ilvlF_SLMin { get { return _ilvlF_SLMin; } set { _ilvlF_SLMin = value; OnFiltersChanged(); } }
         [XmlIgnore]
-        private double _ilvlF_SLMax = 404;
-        [XmlElement("ItemFiltersSettings_SLMax")][DefaultValue(404)]
+        private double _ilvlF_SLMax = 416;
+        [XmlElement("ItemFiltersSettings_SLMax")][DefaultValue(416)]
         public double ilvlF_SLMax { get { return _ilvlF_SLMax; } set { _ilvlF_SLMax = value; OnFiltersChanged(); } }
         #endregion
 
