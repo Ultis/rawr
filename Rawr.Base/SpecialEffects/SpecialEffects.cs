@@ -639,7 +639,7 @@ namespace Rawr {
             {   // Preternatural Evasion
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeAttack,
                      new Stats() { DodgeRating = int.Parse(match.Groups["amount"].Value) },
-                     int.Parse(match.Groups["dur"].Value), int.Parse(match.Groups["dur"].Value), 1f, int.Parse(match.Groups["stack"].Value));
+                     int.Parse(match.Groups["dur"].Value), int.Parse(match.Groups["dur"].Value), 1f, int.Parse(match.Groups["stack"].Value)));
             }
             #endregion
             #region Haste Rating
