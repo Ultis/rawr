@@ -174,7 +174,7 @@ namespace Rawr.Cat
 			//4. Ravage
 			if (RavageStats.FeralChargeCooldown > 0f)
 			{
-				float ravageCount = (FightDuration / RavageStats.FeralChargeCooldown) * (Abilities.Stats.Tier_13_4_piece ? 2f : 1f);
+				float ravageCount = (FightDuration / RavageStats.FeralChargeCooldown) + (Abilities.Stats.Tier_13_4_piece ? (FightDuration / TigersFuryStats.Cooldown) : 0f);
 				Ravage(ravageCount * PercentOfTimeAbove80Percent, true, true);
 				Ravage(ravageCount * (1f - PercentOfTimeAbove80Percent), true, false);
 			}
