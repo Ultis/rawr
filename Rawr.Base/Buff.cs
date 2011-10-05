@@ -2274,22 +2274,22 @@ namespace Rawr
             #endregion
             #endregion
             #region Tier 13 | Necrotic Boneplate
-            #region Battlearmor (Blood)
+            #region Armor (Blood)
             defaultBuffs.Add(new Buff()
             {
-                Name = "Necrotic Boneplate Battlearmor (T13) 2 Piece Bonus",
+                Name = "Necrotic Boneplate Armor (T13) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Necrotic Boneplate Battlearmor",
+                SetName = "Necrotic Boneplate Armor",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Necrotic Boneplate Battlearmor (T13) 4 Piece Bonus",
+                Name = "Necrotic Boneplate Armor (T13) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Necrotic Boneplate Battlearmor",
+                SetName = "Necrotic Boneplate Armor",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
             });
@@ -3451,10 +3451,10 @@ namespace Rawr
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Mage, },
             });
             #endregion
-            #region Tier 13 | Timelord Regalia
+            #region Tier 13 | Timelord's Regalia
             defaultBuffs.Add(new Buff()
             {
-                Name = "Timelord Regalia (T13) 2 Piece Bonus",
+                Name = "Timelord's Regalia (T13) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { },
@@ -3464,7 +3464,7 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Timelord Regalia (T13) 4 Piece Bonus",
+                Name = "Timelord's Regalia (T13) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { },
@@ -3651,22 +3651,22 @@ namespace Rawr
             });
 
             #endregion
-            #region Battlearmor (Protection)
+            #region Armor (Protection)
             defaultBuffs.Add(new Buff()
             {
-                Name = "Battlearmor of Radiant Glory (T13) 2 Piece Bonus",
+                Name = "Armor of Radiant Glory (T13) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Battlearmor of Radiant Glory",
+                SetName = "Armor of Radiant Glory",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
             });
             defaultBuffs.Add(buff = new Buff()
             {
-                Name = "Battlearmor of Radiant Glory (T13) 4 Piece Bonus",
+                Name = "Armor of Radiant Glory (T13) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Battlearmor of Radiant Glory",
+                SetName = "Armor of Radiant Glory",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
             });
@@ -5201,22 +5201,22 @@ namespace Rawr
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warlock, },
             });
             #endregion
-            #region Tier 13 | Faceless Shroud
+            #region Tier 13 | Vestments of the Faceless Shroud
             defaultBuffs.Add(new Buff()
             {
-                Name = "Faceless Shroud (T13) 2 Piece Bonus",
+                Name = "Vestments of the Faceless Shroud (T13) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Faceless Shroud",
+                SetName = "Vestments of the Faceless Shroud",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warlock, },
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Faceless Shroud (T13) 4 Piece Bonus",
+                Name = "Vestments of the Faceless Shroud (T13) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Faceless Shroud",
+                SetName = "Vestments of the Faceless Shroud",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warlock, },
             });
@@ -5514,42 +5514,42 @@ namespace Rawr
             #endregion
             #endregion
             #region Tier 13 | Colossal Dragonplate
-            #region Warplate (DPS)
+            #region Battlegear (DPS)
             defaultBuffs.Add(new Buff()
             {
-                Name = "Colossal Dragonplate Warplate (T13) 2P",
+                Name = "Colossal Dragonplate Battlegear (T13) 2P",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Colossal Dragonplate Warplate",
+                SetName = "Colossal Dragonplate Battlegear",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
             });
             defaultBuffs.Add(buff = new Buff()
             {
-                Name = "Colossal Dragonplate Warplate (T13) 4P",
+                Name = "Colossal Dragonplate Battlegear (T13) 4P",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Colossal Dragonplate Warplate",
+                SetName = "Colossal Dragonplate Battlegear",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
             });
             #endregion
-            #region Battleplate (Protection)
+            #region Armor (Protection)
             defaultBuffs.Add(new Buff()
             {
-                Name = "Colossal Dragonplate Battleplate (T13) 2P",
+                Name = "Colossal Dragonplate Armor (T13) 2P",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Colossal Dragonplate Battleplate",
+                SetName = "Colossal Dragonplate Armor",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Colossal Dragonplate Battleplate (T13) 4P",
+                Name = "Colossal Dragonplate Armor (T13) 4P",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Colossal Dragonplate Battleplate",
+                SetName = "Colossal Dragonplate Armor",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
             });

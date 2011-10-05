@@ -487,7 +487,7 @@ namespace Rawr
                 // find all items in item cache with same name
                 Item item251 = null, item258 = null, item264 = null, item271 = null, item277 = null, item284 = null, item308 = null,
                     item316 = null, item333 = null, item346 = null, item359 = null, item372 = null, item378 = null, item391 = null,
-                    item384 = null, item397 = null;
+                    item384 = null, item397 = null, item403 = null, item410 = null, item416 = null;
 
                 lock (Items)
                 {
@@ -522,6 +522,9 @@ namespace Rawr
                             else if (i.ItemLevel == 384) { item384 = i; }
                             else if (i.ItemLevel == 391) { item391 = i; }
                             else if (i.ItemLevel == 397) { item397 = i; }
+                            else if (i.ItemLevel == 403) { item403 = i; }
+                            else if (i.ItemLevel == 410) { item410 = i; }
+                            else if (i.ItemLevel == 416) { item416 = i; }
                         }
                     }
                 }
@@ -596,6 +599,20 @@ namespace Rawr
                     item397.UniqueId = new List<int>() { item384.Id, item397.Id };
                 }
 
+                // LFR/normal/heroic grouping Demon Soul raid with same name
+                if ((object)item397 != null && (object)item410 != null)
+                {
+                    item397.UniqueId = new List<int>() { item397.Id, item410.Id };
+                    item410.UniqueId = new List<int>() { item397.Id, item410.Id };
+                }
+
+                // LFR/normal/heroic Deathwing weapons with same name
+                if ((object)item403 != null && (object)item416 != null)
+                {
+                    item403.UniqueId = new List<int>() { item403.Id, item416.Id };
+                    item416.UniqueId = new List<int>() { item403.Id, item416.Id };
+                }
+
                 // special rules for Ashen Verdict Rings
                 // Ashen Band of Courage
                 if (item.Id == 50375 || item.Id == 50404 || item.Id == 50388 || item.Id == 50403)
@@ -623,14 +640,43 @@ namespace Rawr
                     item.UniqueId = new List<int>() { 50400, 50386, 50399, 50378 };
                 }
                 // Brimstone Rings
-                else if (item.Id == 70940 || item.Id == 71210 || item.Id == 71208 || item.Id == 71211 || item.Id == 71209)
+                // 4.3 added 10 more 397 ilvl Brimstone Rings
+                else if (item.Id == 70940 || item.Id == 71210 || item.Id == 71208 || item.Id == 71211 || item.Id == 71209 ||
+                         item.Id == 77108 || item.Id == 77109 || item.Id == 77110 || item.Id == 77111 || item.Id == 77112 ||
+                         item.Id == 77228 || item.Id == 77229 || item.Id == 77230 || item.Id == 77231 || item.Id == 77232)
                 {
-                    item.UniqueId = new List<int>() { 70940, 71210, 71208, 71211, 71209 };
+                    item.UniqueId = new List<int>() { 70940, 71210, 71208, 71211, 71209, 77108, 77109, 77110, 77111, 77112, 77228, 77229, 77230, 77231, 77232 };
                 }
                 //Signet of the Avengers (Fireland Rep Rings)
                 else if (item.Id == 70934 || item.Id == 71217 || item.Id == 71215 || item.Id == 71237 || item.Id == 71216)
                 {
                     item.UniqueId = new List<int>() { 70934, 71217, 71215, 71237, 71216 };
+                }
+                // 4.3 introduced several trinkets that are supposedly part of the Fireland Rep rewards
+                // Rune of Zeth
+                else if (item.Id == 68998 || item.Id == 77114 || item.Id == 77198 || item.Id == 77203 || item.Id == 77208)
+                {
+                    item.UniqueId = new List<int>() { 69001, 77114, 77198, 77203, 77208 };
+                }
+                // Fiery Quintessence
+                else if (item.Id == 69000 || item.Id == 77115 || item.Id == 77199 || item.Id == 77204 || item.Id == 77209)
+                {
+                    item.UniqueId = new List<int>() { 69001, 77115, 77199, 77204, 77209 };
+                }
+                // Ancient Petrified Seed
+                else if (item.Id == 69001 || item.Id == 77113 || item.Id == 77197 || item.Id == 77202 || item.Id == 77207)
+                {
+                    item.UniqueId = new List<int>() { 69001, 77113, 77197, 77202, 77207 };
+                }
+                // Essence of the Eternal Flame
+                else if (item.Id == 69002 || item.Id == 77116 || item.Id == 77200 || item.Id == 77205 || item.Id == 77210)
+                {
+                    item.UniqueId = new List<int>() { 69001, 77116, 77200, 77205, 77210 };
+                }
+                // Stay of Execution
+                else if (item.Id == 68996 || item.Id == 77117 || item.Id == 77201 || item.Id == 77206 || item.Id == 77211)
+                {
+                    item.UniqueId = new List<int>() { 69001, 77117, 77201, 77206, 77211 };
                 }
 
                 // special rules for alchemist stones
