@@ -1354,26 +1354,29 @@ namespace Rawr
                         {
                             // find a matching item availability info and assign, prefer blue diamonds
                             // make sure we don't reuse the same item twice on the same character
-                            foreach (var iai in item.Item.AvailabilityInformation)
+                            if (item.Item.AvailabilityInformation != null)
                             {
-                                if (iai.ItemAvailable.ContainsKey(item.GemmedId))
+                                foreach (var iai in item.Item.AvailabilityInformation)
                                 {
-                                    bool valid = true;
-                                    for (int slot2 = 0; slot2 < Character.OptimizableSlotCount; slot2++)
+                                    if (iai.ItemAvailable.ContainsKey(item.GemmedId))
                                     {
-                                        if (slot2 != (int)CharacterSlot.OffHand || BatchCharacterList[i].Character.CurrentCalculations.IncludeOffHandInCalculations(BatchCharacterList[i].Character))
+                                        bool valid = true;
+                                        for (int slot2 = 0; slot2 < Character.OptimizableSlotCount; slot2++)
                                         {
-                                            var item2 = BatchCharacterList[i].Character._item[slot2];
-                                            if (item2 != null && item2.ItemAvailabilityInformation == iai)
+                                            if (slot2 != (int)CharacterSlot.OffHand || BatchCharacterList[i].Character.CurrentCalculations.IncludeOffHandInCalculations(BatchCharacterList[i].Character))
                                             {
-                                                valid = false;
-                                                break;
+                                                var item2 = BatchCharacterList[i].Character._item[slot2];
+                                                if (item2 != null && item2.ItemAvailabilityInformation == iai)
+                                                {
+                                                    valid = false;
+                                                    break;
+                                                }
                                             }
                                         }
-                                    }
-                                    if (valid && item.ItemAvailabilityInformation == null || iai.ItemList.Count == 1)
-                                    {
-                                        item.ItemAvailabilityInformation = iai;
+                                        if (valid && item.ItemAvailabilityInformation == null || iai.ItemList.Count == 1)
+                                        {
+                                            item.ItemAvailabilityInformation = iai;
+                                        }
                                     }
                                 }
                             }
