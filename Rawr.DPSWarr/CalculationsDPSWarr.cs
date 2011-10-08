@@ -2003,7 +2003,7 @@ a GCD's length, you will use this while running back into place",
             // First Let's add InnerRage in, because that affects other calcs
             if (charStruct.CalcOpts.M_InnerRage) {
                 AbilityWrapper ir = charStruct.Rot.GetWrapper<Skills.InnerRage>();
-                statsTotal.Accumulate(((ir.Ability as Skills.InnerRage).Effect.Stats as Base.StatsWarrior), (ir.Ability as Skills.InnerRage).GetUptime(ir.AllNumActivates));
+                statsTotal.Accumulate(((ir.Ability as Skills.InnerRage).Effect.Stats as Base.StatsWarrior), (ir.Ability as Skills.InnerRage).Effect.GetAverageUptime(0f, 1.00f));
             }
 
             List<SpecialEffect> critEffects = new List<SpecialEffect>();

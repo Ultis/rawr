@@ -7,7 +7,7 @@
   mc:Ignorable="d"
   d:DesignHeight="523" d:DesignWidth="571">
 
-  <Grid x:Name="LayoutRoot" Margin="0,0,10,10" SizeChanged="ChangedSize">
+  <Grid x:Name="LayoutRoot" Margin="0,0,0,10" SizeChanged="ChangedSize">
     <Grid.RowDefinitions>
       <RowDefinition Height="*" />
     </Grid.RowDefinitions>
@@ -23,7 +23,7 @@
         <ColumnDefinition Width="100*" />
         <ColumnDefinition Width="100*" />
         <ColumnDefinition Width="100*" />
-        <ColumnDefinition Width="025*" />
+        <ColumnDefinition Width="025*" x:Name="EndPaddingColumn" />
         <ColumnDefinition Width="4" />
       </Grid.ColumnDefinitions>
 
@@ -37,6 +37,7 @@
       <Rectangle x:Name="AxisLine7" Grid.Column="6" Margin="0,20,0,0" Width="1" Fill="#3F000000" HorizontalAlignment="Right" StrokeThickness="0" VerticalAlignment="Stretch" />
       <Rectangle x:Name="AxisLine8" Grid.Column="7" Margin="0,20,0,0" Width="1" Fill="#3F000000" HorizontalAlignment="Right" StrokeThickness="0" VerticalAlignment="Stretch" />
       <Rectangle x:Name="AxisLine9" Grid.Column="8" Margin="0,20,0,0" Width="1" Fill="#3F000000" HorizontalAlignment="Right" StrokeThickness="0" VerticalAlignment="Stretch" />
+      <Rectangle x:Name="AxisLine10" Grid.Column="9" Margin="0,20,0,0" Width="1" Fill="#3F000000" HorizontalAlignment="Right" StrokeThickness="0" VerticalAlignment="Stretch" />
       <TextBlock x:Name="AxisLabel1" Grid.Column="0" Margin="0,4,-25,0" Width="50" Foreground="#BF000000" HorizontalAlignment="Right" Text="25" TextAlignment="Center" VerticalAlignment="Top" />
       <TextBlock x:Name="AxisLabel2" Grid.Column="1" Margin="0,4,-25,0" Width="50" Foreground="#BF000000" HorizontalAlignment="Right" Text="25" TextAlignment="Center" VerticalAlignment="Top" />
       <TextBlock x:Name="AxisLabel3" Grid.Column="2" Margin="0,4,-25,0" Width="50" Foreground="#BF000000" HorizontalAlignment="Right" Text="25" TextAlignment="Center" VerticalAlignment="Top" />

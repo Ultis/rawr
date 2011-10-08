@@ -24,9 +24,9 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: Glyph of Mortal Strike [+10% Dmg]</para>
         /// <para>Sets: T8 4P [+Crit %]</para>
         /// </summary>
-        public MortalStrike(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public MortalStrike(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             AbilIterater = (int)Maintenance.MortalStrike;
             ReqMeleeWeap = ReqMeleeRange = StanceOkArms = true;
@@ -64,9 +64,9 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: Colossus Smash [Refreshes Sunder Armor on target]</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public ColossusSmash(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public ColossusSmash(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             AbilIterater = (int)Maintenance.ColossusSmash;
             ReqMeleeWeap = ReqMeleeRange = StanceOkArms = StanceOkFury = true;
@@ -116,9 +116,9 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: Glyph of Overpower [+10% DMG]</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public Overpower(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public Overpower(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             AbilIterater = (int)Maintenance.Overpower;
             ReqMeleeWeap = ReqMeleeRange = true;
@@ -185,9 +185,9 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: none</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public TasteForBlood(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public TasteForBlood(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             AbilIterater = (int)Maintenance.TasteForBlood;
             ReqTalent = true;
@@ -297,9 +297,9 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: Slam [+5% Crit]</para>
         /// <para>Sets: T7 Deadnaught Battlegear 2 Pc [+10% Damage]</para>
         /// </summary>
-        public Slam(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public Slam(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             AbilIterater = (int)Maintenance.Slam;
             ReqMeleeWeap = ReqMeleeRange = StanceOkArms = StanceOkDef = true;
@@ -345,9 +345,9 @@ namespace Rawr.DPSWarr.Skills
         /// </para>
         /// <para>Sets: </para>
         /// </summary>
-        public VictoryRush(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public VictoryRush(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             AbilIterater = (int)Maintenance.VictoryRush;
             ReqMeleeWeap = ReqMeleeRange = true;
@@ -383,9 +383,9 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: Glyph of Bladestorm [-15 sec Cd]</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public Bladestorm(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public Bladestorm(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             AbilIterater = (int)Maintenance.Bladestorm;
             ReqTalent = true;
@@ -458,9 +458,9 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: Heroic Throw [Applies a Stack of Sunder Armor]</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public HeroicThrow(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public HeroicThrow(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             //AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.HeroicThrow_;
             ReqMeleeWeap = ReqMeleeRange = StanceOkFury = StanceOkArms = StanceOkDef = true;
@@ -640,9 +640,9 @@ Percentage of Total DPS: {15:00.00%}",
         /// <para>Glyphs: Glyph of Rending [+2 damage ticks]</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public Rend(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public Rend(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             AbilIterater = (int)Maintenance.Rend;
             ReqMeleeWeap = true;

@@ -6,19 +6,20 @@
   xmlns:menu="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   SizeChanged="ChangedSize"
   mc:Ignorable="d"
-  d:DesignHeight="40" d:DesignWidth="360">
+  d:DesignHeight="40" d:DesignWidth="571">
 
   <Grid x:Name="GraphItemGrid">
     <Grid.ColumnDefinitions>
       <ColumnDefinition x:Name="NameGridCol" Width="170" />
-      <ColumnDefinition Width="*" />
-      <ColumnDefinition Width="*" />
-      <ColumnDefinition Width="*" />
-      <ColumnDefinition Width="*" />
-      <ColumnDefinition Width="*" />
-      <ColumnDefinition Width="*" />
-      <ColumnDefinition Width="*" />
-      <ColumnDefinition Width="*" />
+      <ColumnDefinition Width="100*" />
+      <ColumnDefinition Width="100*" />
+      <ColumnDefinition Width="100*" />
+      <ColumnDefinition Width="100*" />
+      <ColumnDefinition Width="100*" />
+      <ColumnDefinition Width="100*" />
+      <ColumnDefinition Width="100*" />
+      <ColumnDefinition Width="100*" />
+      <ColumnDefinition Width="025*" x:Name="EndPaddingColumn" />
     </Grid.ColumnDefinitions>
 
     <Grid x:Name="NameGrid" Grid.Column="0" Margin="2" Width="162" Background="#FFFFFFFF" MouseLeftButtonDown="NameGrid_MouseLeftButtonUp" MouseRightButtonDown="NameGrid_MouseLeftButtonUp">

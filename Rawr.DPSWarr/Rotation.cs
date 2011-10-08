@@ -1753,18 +1753,9 @@ namespace Rawr.DPSWarr {
                     } catch (Exception) { } // Do nothing, this is a Silverlight retard bug*/
                     statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusTargets = 1f, }, landedAtksInterval * 5f, SW.CD));
                 }
-                if (RK.Validated && DPSWarrChar.CombatFactors.FuryStance)
+                if (RK.Validated /*&& DPSWarrChar.CombatFactors.FuryStance*/)
                 {
-                    /*try {
-                        float interval = (float)Math.Round(landedAtksInterval * 3f, 3);
-                        if (!_SE_Recklessness.ContainsKey(interval)) {
-                            try {
-                                _SE_Recklessness.Add(interval, new SpecialEffect(Trigger.Use, new Stats() { PhysicalCrit = 1f }, landedAtksInterval * 3f, RK.Cd));
-                            } catch (Exception) { } // Do nothing, this is a Silverlight retard bug
-                        }
-                        statsTotal.AddSpecialEffect(_SE_Recklessness[interval]);
-                    } catch (Exception) { } // Do nothing, this is a Silverlight retard bug*/
-                    statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { PhysicalCrit = 1f }, landedAtksInterval * 3f, RK.CD));
+                    statsTotal.AddSpecialEffect(TalentsAsSpecialEffects._SE_Recklessness[talents.IntensifyRage]);
                 }
                 /*if (talents.Flurry > 0 && CalcOpts.FuryStance)
                 { // NOTE!!!! This comment is still using the old method, we need to cache values like you see above

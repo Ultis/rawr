@@ -17,7 +17,7 @@ using System.Windows.Shapes;
  * Threat Value/Weight
  * Vigilance Threat pulling
  * Pot Usage (Needs to pull GCDs)
- * Healing Recieved
+ * Healing Received
  */
 
 namespace Rawr.DPSWarr {
@@ -1105,20 +1105,20 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             #endregion
             #region Fury
             // Fury
-            else if (sender == CK_M_F_WW) tooltip.Setup(Skills.Whirlwind.SName, Skills.Whirlwind.SDesc, Skills.Whirlwind.SIcon, "A GCD is consumed and Damage is put out. " + MultiTargets);
-            else if (sender == CK_M_F_BT) tooltip.Setup(Skills.Bloodthirst.SName, Skills.Bloodthirst.SDesc, Skills.Bloodthirst.SIcon, "A GCD is consumed and Damage is put out.");
-            else if (sender == CK_M_F_BS) tooltip.Setup(Skills.BloodSurge.SName, Skills.BloodSurge.SDesc, Skills.BloodSurge.SIcon, "A GCD is consumed and Damage is put out.");
-            else if (sender == CK_M_F_RB) tooltip.Setup(Skills.RagingBlow.SName, Skills.RagingBlow.SDesc, Skills.RagingBlow.SIcon, "A GCD is consumed and Damage is put out.");
+            else if (sender == CK_M_F_WW ) tooltip.Setup(Skills.Whirlwind.SName, Skills.Whirlwind.SDesc, Skills.Whirlwind.SIcon, "A GCD is consumed and Damage is put out. " + MultiTargets);
+            else if (sender == CK_M_F_BT ) tooltip.Setup(Skills.Bloodthirst.SName, Skills.Bloodthirst.SDesc, Skills.Bloodthirst.SIcon, "A GCD is consumed and Damage is put out.");
+            else if (sender == CK_M_F_BS ) tooltip.Setup(Skills.BloodSurge.SName, Skills.BloodSurge.SDesc, Skills.BloodSurge.SIcon, "A GCD is consumed and Damage is put out.");
+            else if (sender == CK_M_F_RB ) tooltip.Setup(Skills.RagingBlow.SName, Skills.RagingBlow.SDesc, Skills.RagingBlow.SIcon, "A GCD is consumed and Damage is put out.");
             //
-            else if (sender == CK_M_F_DW) tooltip.Setup(Skills.DeathWish.SName, Skills.DeathWish.SDesc, Skills.DeathWish.SIcon, "A GCD will be consumed and the buff will become active after each cooldown period");
-            else if (sender == CK_M_F_RK) tooltip.Setup(Skills.Recklessness.SName, Skills.Recklessness.SDesc, Skills.Recklessness.SIcon, "A GCD will be consumed and the buff will become active after each cooldown period");
+            else if (sender == CK_M_F_DW ) tooltip.Setup(Skills.DeathWish.SName, Skills.DeathWish.SDesc, Skills.DeathWish.SIcon, "A GCD will be consumed and the buff will become active after each cooldown period");
+            else if (sender == CK_M_F_RK ) tooltip.Setup(Skills.Recklessness.SName, Skills.Recklessness.SDesc, Skills.Recklessness.SIcon, "A GCD will be consumed and the buff will become active after each cooldown period");
             #endregion
             #region Rage Gen
-            else if (sender == CK_Zerker) tooltip.Setup(Skills.BerserkerRage.SName, Skills.BerserkerRage.SDesc, Skills.BerserkerRage.SIcon, "This affects Boss Handler situations (Fears, Roots) and when taking Boss Damage you will gain extra rage to maintain your rotation (usually resulting in more Heroic Strikes).");
+            else if (sender == CK_Zerker ) tooltip.Setup(Skills.BerserkerRage.SName, Skills.BerserkerRage.SDesc, Skills.BerserkerRage.SIcon, "This affects Boss Handler situations (Fears, Roots) and when taking Boss Damage you will gain extra rage to maintain your rotation (usually resulting in more Heroic Strikes).");
             else if (sender == CK_DeadlyCalm) tooltip.Setup(Skills.DeadlyCalm.SName, Skills.DeadlyCalm.SDesc, Skills.DeadlyCalm.SIcon, "You will gain extra rage to maintain your rotation (usually resulting in more Heroic Strikes and Execute Damage).");
             #endregion
             #region Rage Dump
-            else if (sender == CK_Cleave) tooltip.Setup(Skills.Cleave.SName, Skills.Cleave.SDesc, Skills.Cleave.SIcon, "You White Attack DPS will go down and you will see new (greater) DPS from Cleaves, this also consumes considerably more rage. However we have assigned only rage that is not used by your rotation. To increase Cleaves, generate more rage. Cleave will also only activate when there are multiple mobs present (per the Boss Handler), otherwise you will Heroic Strike instead (if selected).");
+            else if (sender == CK_Cleave ) tooltip.Setup(Skills.Cleave.SName, Skills.Cleave.SDesc, Skills.Cleave.SIcon, "You White Attack DPS will go down and you will see new (greater) DPS from Cleaves, this also consumes considerably more rage. However we have assigned only rage that is not used by your rotation. To increase Cleaves, generate more rage. Cleave will also only activate when there are multiple mobs present (per the Boss Handler), otherwise you will Heroic Strike instead (if selected).");
             else if (sender == CK_HeroicStrike) tooltip.Setup(Skills.HeroicStrike.SName, Skills.HeroicStrike.SDesc, Skills.HeroicStrike.SIcon, "Your White Attack DPS will go down and you will see new (greater) DPS from Heroic Strikes, this also consumes considerably more rage. However we have assigned only rage that is not used by your rotation. To increase Heroic Strikes, generate more rage. If there are multiple Targets and Cleave is active, Cleave will override Heroc Strike.");
             else if (sender == CK_InnerRage) tooltip.Setup(Skills.InnerRage.SName, Skills.InnerRage.SDesc, Skills.InnerRage.SIcon,
                 "This is not modeled yet.");

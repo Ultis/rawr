@@ -298,7 +298,11 @@ namespace Rawr.DPSWarr
         };
         #endregion
         #region Recklessness, Shattering Throw, ThunderClap, Sunder Armor, Sweeping Strikes
-        //public static Dictionary<float, SpecialEffect> _SE_Recklessness = new Dictionary<float, SpecialEffect>();
+        public static SpecialEffect[] _SE_Recklessness = new SpecialEffect[] {
+            new SpecialEffect(Trigger.Use, new Stats() { PhysicalCrit = 0.50f, DamageTakenReductionMultiplier = -0.20f }, 12f, 5f * 60f * (1f - 0.10f * 0)),
+            new SpecialEffect(Trigger.Use, new Stats() { PhysicalCrit = 0.50f, DamageTakenReductionMultiplier = -0.20f }, 12f, 5f * 60f * (1f - 0.10f * 1)),
+            new SpecialEffect(Trigger.Use, new Stats() { PhysicalCrit = 0.50f, DamageTakenReductionMultiplier = -0.20f }, 12f, 5f * 60f * (1f - 0.10f * 2)),
+        };
         //public static Dictionary<float, SpecialEffect> _SE_ShatteringThrow = new Dictionary<float, SpecialEffect>();
         //public static Dictionary<float, SpecialEffect> _SE_ThunderClap = new Dictionary<float, SpecialEffect>();
         //public static Dictionary<float, SpecialEffect> _SE_SunderArmor = new Dictionary<float, SpecialEffect>();

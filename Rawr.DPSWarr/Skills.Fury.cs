@@ -24,7 +24,7 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: Glyph of Bloodthirst [+10% damage]</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public Bloodthirst(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public Bloodthirst(DPSWarrCharacter dpswarrchar)
         {
             DPSWarrChar = dpswarrchar; //Char = c; StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
@@ -60,7 +60,7 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: Glyph of Whirlwind [-2 sec Cooldown]</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public Whirlwind(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public Whirlwind(DPSWarrCharacter dpswarrchar)
         {
             DPSWarrChar = dpswarrchar; //Char = c; StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
@@ -217,7 +217,7 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: RagingBlow [+5% Crit Chance]</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public RagingBlow(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public RagingBlow(DPSWarrCharacter dpswarrchar)
         {
             DPSWarrChar = dpswarrchar; //Char = c; StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
@@ -318,7 +318,7 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: Glyph of Heroic Strike [+10 rage on crits]</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public HeroicStrike(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public HeroicStrike(DPSWarrCharacter dpswarrchar)
         {
             DPSWarrChar = dpswarrchar; //Char = c; StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
@@ -390,7 +390,7 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: Glyph of Cleaving [+1 targets hit]</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public Cleave(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public Cleave(DPSWarrCharacter dpswarrchar)
         {
             DPSWarrChar = dpswarrchar; //Char = c; StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //

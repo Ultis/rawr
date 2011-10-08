@@ -327,9 +327,9 @@ namespace Rawr
             LoadString(talents, glyphEncodes);
         }
         public static string[] TreeNames = new[] {
-			@"Arms",
-			@"Fury",
-			@"Protection",};
+            @"Arms",
+            @"Fury",
+            @"Protection",};
 
         #region Arms
         public override int TreeStartingIndexes_0 { get { return 0; } }
@@ -890,9 +890,9 @@ Sends a wave of force in front of you, causing [75% of AP] damage (based on atta
             LoadString(talents, glyphEncodes);
         }
         public static string[] TreeNames = new[] {
-			@"Holy",
-			@"Protection",
-			@"Retribution",};
+            @"Holy",
+            @"Protection",
+            @"Retribution",};
 
         #region Holy
         public override int TreeStartingIndexes_0 { get { return 0; } }
@@ -1475,9 +1475,9 @@ Your Crusader Strike generates 3 charges of Holy Power per strike for the next 2
             LoadString(talents, glyphEncodes);
         }
         public static string[] TreeNames = new[] {
-			@"Beast Mastery",
-			@"Marksmanship",
-			@"Survival",};
+            @"Beast Mastery",
+            @"Marksmanship",
+            @"Survival",};
 
         #region Beast Mastery
         public override int TreeStartingIndexes_0 { get { return 0; } }
@@ -2050,9 +2050,9 @@ Requires Ranged Weapon - Fires a Black Arrow at the target, dealing 2035 Shadow 
             LoadString(talents, glyphEncodes);
         }
         public static string[] TreeNames = new[] {
-			@"Assassination",
-			@"Combat",
-			@"Subtlety",};
+            @"Assassination",
+            @"Combat",
+            @"Subtlety",};
 
         #region Assassination
         public override int TreeStartingIndexes_0 { get { return 0; } }
@@ -2578,9 +2578,9 @@ Enter the Shadow Dance for 6 sec, allowing the use of Sap, Garrote, Ambush, Chea
             LoadString(talents, glyphEncodes);
         }
         public static string[] TreeNames = new[] {
-			@"Discipline",
-			@"Holy",
-			@"Shadow",};
+            @"Discipline",
+            @"Holy",
+            @"Shadow",};
 
         #region Discipline
         public override int TreeStartingIndexes_0 { get { return 0; } }
@@ -3255,9 +3255,9 @@ Dispersion can be cast while stunned, feared or silenced and clears all snare an
             LoadString(talents, glyphEncodes);
         }
         public static string[] TreeNames = new[] {
-			@"Blood",
-			@"Frost",
-			@"Unholy",};
+            @"Blood",
+            @"Frost",
+            @"Unholy",};
 
         #region Blood
         public override int TreeStartingIndexes_0 { get { return 0; } }
@@ -3820,9 +3820,9 @@ A Gargoyle flies into the area and bombards the target with Nature damage modifi
             LoadString(talents, glyphEncodes);
         }
         public static string[] TreeNames = new[] {
-			@"Elemental",
-			@"Enhancement",
-			@"Restoration",};
+            @"Elemental",
+            @"Enhancement",
+            @"Restoration",};
 
         #region Elemental
         public override int TreeStartingIndexes_0 { get { return 0; } }
@@ -4354,9 +4354,9 @@ Heals a friendly target for 2363 and another 3725 over 15 sec.  Your next Chain 
             LoadString(talents, glyphEncodes);
         }
         public static string[] TreeNames = new[] {
-			@"Arcane",
-			@"Fire",
-			@"Frost",};
+            @"Arcane",
+            @"Fire",
+            @"Frost",};
 
         #region Arcane
         public override int TreeStartingIndexes_0 { get { return 0; } }
@@ -4918,9 +4918,9 @@ Stuns the target for 5 sec.  Only usable on Frozen targets.  Deals 1144 to 1434 
             LoadString(talents, glyphEncodes);
         }
         public static string[] TreeNames = new[] {
-			@"Affliction",
-			@"Demonology",
-			@"Destruction",};
+            @"Affliction",
+            @"Demonology",
+            @"Destruction",};
 
         #region Affliction
         public override int TreeStartingIndexes_0 { get { return 0; } }
@@ -5546,9 +5546,9 @@ Sends a bolt of chaotic fire at the enemy, dealing 1311 to 1665 Fire damage. Cha
             LoadString(talents, glyphEncodes);
         }
         public static string[] TreeNames = new[] {
-			@"Balance",
-			@"Feral Combat",
-			@"Restoration",};
+            @"Balance",
+            @"Feral Combat",
+            @"Restoration",};
 
         #region Balance
         public override int TreeStartingIndexes_0 { get { return 0; } }

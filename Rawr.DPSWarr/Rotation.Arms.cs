@@ -154,9 +154,9 @@ namespace Rawr.DPSWarr {
                     }
                 }*/
 
-                // Inner Rage, Gives a 15% Damage Buff but 50% Rage Cost Debuff, should only be used when Rage is too high
+                // Inner Rage, Reduces Cd of HeroicStrike and Cleave by 50% for 15s. Should only be used when rage is too high
                 if (IR.Ability.Validated && percFailRageO20 == 1f && gcdsAvailableO20 > 0) {
-                    acts = (IR.Ability as InnerRage).GetActivates(repassAvailRageO20, TimeOver20Perc) * percTimeInDPS;
+                    acts = IR.Ability.Activates * percTimeInDPS;
                     IR.NumActivatesO20 = acts;
                     //availRageO20 -= IR.RageO20 * RageMOD_Total;
                     //gcdsAvailableO20 -= IR.GCDUsageO20;
@@ -393,7 +393,7 @@ namespace Rawr.DPSWarr {
                 }
 
                 //float TotalSpace = (RDspace + THspace + BLSspace + MSspace + OPspace + TFBspace + CSspace + SLspace + HSspace + CLspace + VRspace);
-                (IR.Ability as InnerRage).FreeRageO20 = repassAvailRageO20 = availRageO20; // check for not enough rage to maintain rotation
+                repassAvailRageO20 = availRageO20; // check for not enough rage to maintain rotation
                 InvalidateCache();
                 Iterator++;
             }
@@ -548,7 +548,7 @@ namespace Rawr.DPSWarr {
 
                 // Inner Rage, Gives a 15% Damage Buff but 50% Rage Cost Debuff, should only be used when Rage is too high
                 if (IR.Ability.Validated && percFailRageU20 == 1f) {
-                    acts = (IR.Ability as InnerRage).GetActivates(repassAvailRageU20, TimeUndr20Perc) * percTimeInDPS;
+                    acts = IR.Ability.Activates * percTimeInDPS;
                     IR.NumActivatesU20 = acts;
                     //availRageU20 -= IR.RageU20 * RageMOD_Total;
                     //gcdsAvailableU20 -= IR.GCDUsageU20;
@@ -707,7 +707,7 @@ namespace Rawr.DPSWarr {
                 }
 
                 //float TotalSpace = (CSspace + RDspace + THspace + BLSspace /*+ MSspace*/ + OPspace + TFBspace /*+ SLspace*/ + EXspace /*+ HSspace + CLspace*/);
-                (IR.Ability as InnerRage).FreeRageU20 = (EX.Ability as Execute).FreeRage = repassAvailRageU20 = availRageU20; // check for not enough rage to maintain rotation and set Execute's FreeRage to this value
+                (EX.Ability as Execute).FreeRage = repassAvailRageU20 = availRageU20; // check for not enough rage to maintain rotation and set Execute's FreeRage to this value
                 InvalidateCache();
                 Iterator++;
             }

@@ -236,7 +236,7 @@ namespace Rawr.DPSWarr {
 
  
                 (HS.Ability as HeroicStrike).InciteBonusCrits(HS.NumActivatesO20);
-                (IR.Ability as InnerRage).FreeRageO20 = repassAvailRageO20 = availRageO20;
+                repassAvailRageO20 = availRageO20;
                 // check for not enough rage to maintain rotation
                 InvalidateCache();
                 Iterator++;

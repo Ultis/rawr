@@ -22,9 +22,9 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: none</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public DeepWounds(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public DeepWounds(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             ReqTalent = true;
             Talent2ChksValue = DPSWarrChar.Talents.DeepWounds;
@@ -76,7 +76,7 @@ namespace Rawr.DPSWarr.Skills
     public sealed class BerserkerRage : BuffEffect
     {
         public static new string SName { get { return "Berserker Rage"; } }
-        public static new string SDesc { get { return "The warrior enters a berserker rage, becoming immune to Fear, Sap and Incapacitate effects and generating extra tage when taking damage. Lasts 10 sec."; } }
+        public static new string SDesc { get { return "The warrior enters a berserker rage, becoming immune to Fear, Sap and Incapacitate effects and generating extra rage when taking damage. Lasts 10 sec."; } }
         public static new string SIcon { get { return "spell_nature_ancestralguardian"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
@@ -88,12 +88,12 @@ namespace Rawr.DPSWarr.Skills
         /// Enter a berserker rage, removing and granting immunity to Fear, Sap and Incapacitate effects
         /// and generating extra rage when taking damage. Lasts 10 sec.
         /// <para>DPSWarrChar.Talents: Intensify Rage [-(10*Pts)% Cd]</para>
-        /// <para>Glyphs: Glyph of Berserer Rage [+5 Rage Gen]</para>
+        /// <para>Glyphs: Glyph of Berserker Rage [+5 Rage Gen]</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public BerserkerRage(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public BerserkerRage(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             CD = 30f * (1f - 0.10f * DPSWarrChar.Talents.IntensifyRage); // In Seconds
             Duration = 10f;
@@ -126,9 +126,9 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: none</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public EnragedRegeneration(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public EnragedRegeneration(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             AbilIterater = (int)Maintenance.EnragedRegeneration;
             CD = 3f * 60f; // In Seconds
@@ -178,9 +178,9 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: Glyph of Battle [+1*Pts min duration, +(25*Pts)% AoE]</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public BattleShout(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public BattleShout(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             AbilIterater = (int)Maintenance.BattleShout;
             MaxRange = 30f; // In Yards 
@@ -210,9 +210,9 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: none</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public CommandingShout(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public CommandingShout(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             AbilIterater = (int)Maintenance.CommandingShout;
             MaxRange = 30f * (1f + (DPSWarrChar.Talents.GlyphOfCommand ? 0.50f : 0f)); // In Yards 
@@ -277,9 +277,9 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: none</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public DeathWish(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public DeathWish(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             AbilIterater = (int)Maintenance.DeathWish;
             ReqTalent = true;
@@ -297,7 +297,7 @@ namespace Rawr.DPSWarr.Skills
     public sealed class Recklessness : BuffEffect
     {
         public static new string SName { get { return "Recklessness"; } }
-        public static new string SDesc { get { return "Your next 3 special ability attacks have an additional 100% chance to critically hit but all damage taken is increased by 20%. Lasts 12 sec."; } }
+        public static new string SDesc { get { return "Grants your special attacks an additional 50% chance to critically hit, but increases all damage taken by 20%. Lasts 12 sec."; } }
         public static new string SIcon { get { return "ability_criticalstrike"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
@@ -305,15 +305,15 @@ namespace Rawr.DPSWarr.Skills
         public static new int SSpellId { get { return 1719; } }
         public override int SpellId { get { return SSpellId; } }
         /// <summary>
-        /// Your next 3 special ability attacks have an additional 100% chance to critically hit
-        /// but all damage taken is increased by 20%. Lasts 12 sec.
+        /// Grants your special attacks an additional 50% chance to critically hit,
+        /// but increases all damage taken by 20%. Lasts 12 sec.
         /// <para>DPSWarrChar.Talents: none</para>
         /// <para>Glyphs: none</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public Recklessness(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public Recklessness(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             AbilIterater = (int)Maintenance.Recklessness;
             CD = (5f * 60f) * (1f - 0.10f * DPSWarrChar.Talents.IntensifyRage); // In Seconds
@@ -351,9 +351,9 @@ namespace Rawr.DPSWarr.Skills
         /// * Sweeping Strikes does not trigger the GCD.
         /// </remarks>
         /// </summary>
-        public SweepingStrikes(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public SweepingStrikes(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             AbilIterater = (int)Maintenance.SweepingStrikes;
             ReqTalent = true; Talent2ChksValue = DPSWarrChar.Talents.SweepingStrikes;
@@ -405,9 +405,9 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: Glyph of Sweeping Strikes [-100% Rage cost]</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public SecondWind(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public SecondWind(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             //AbilIterater = -1f;
             ReqTalent = true;
@@ -455,9 +455,9 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: none</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public DeadlyCalm(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public DeadlyCalm(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             CD = 2 * 60f; // In Seconds
             Duration = 10f;
@@ -477,7 +477,7 @@ namespace Rawr.DPSWarr.Skills
     public sealed class InnerRage : BuffEffect
     {
         public static new string SName { get { return "Inner Rage"; } }
-        public static new string SDesc { get { return "Usable when you have over 75 Rage to increase all damage you deal by 15% but increase the rage cost of all abilities by 50%. Lasts 15 sec."; } }
+        public static new string SDesc { get { return "Reduces the cooldown of Heroic Strike and Cleave by 50% for 15 sec."; } }
         public static new string SIcon { get { return "warrior_talent_icon_innerrage"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
@@ -485,101 +485,33 @@ namespace Rawr.DPSWarr.Skills
         public static new int SSpellId { get { return 1134; } }
         public override int SpellId { get { return SSpellId; } }
         /// <summary>
-        /// Instant, 1.5 sec Cd
-        /// Usable when you have over 75 Rage to increase all damage you deal by 15%
-        /// but increase the rage cost of all abilities by 50%. Lasts 15 sec.
-        /// <para>DPSWarrChar.Talents: Deadly Calm [Requires Talent]</para>
+        /// Instant, 30 sec Cd
+        /// Reduces the cooldown of Heroic Strike and Cleave by 50% for 15 sec.
+        /// <para>DPSWarrChar.Talents: Deadly Calm</para>
         /// <para>Glyphs: none</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public InnerRage(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public InnerRage(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
-            CD = 1.50f; // In Seconds
+            CD = 30f; // In Seconds
             Duration = 15f;
             RageCost = -1f;
             AbilIterater = (int)Maintenance.InnerRage;
             StanceOkArms = StanceOkDef = StanceOkFury = true;
             UseHitTable = false;
             Targets = -1;
-            UseReact = true;
-            IsMaint = false; // Intentional so we can handle it against Deadly Calm and how often we have tons of rage
+            UseReact = false;
+            IsMaint = true;
             UsesGCD = false;
             Effect = effect;
             //
             Initialize();
         }
-        // Trigger isn't really MortalStrikeHit, it's RageGoesAbove75
         private static SpecialEffect effect = new SpecialEffect(Trigger.Use,
             new Base.StatsWarrior { HeroicStrikeCleaveCooldownReduction = 0.50f },
             15f, 30f);
-        private float FREERAGEO20 = -1f, FREERAGEU20 = -1f;
-        public float FreeRageO20 { get { return FREERAGEO20; } set { FREERAGEO20 = Math.Max(0f, value); } } // Must be above zero to prevent other calc problems
-        public float FreeRageU20 { get { return FREERAGEU20; } set { FREERAGEU20 = Math.Max(0f, value); } } // Must be above zero to prevent other calc problems
-        public float GetActivates(float repassAvailRage, float perc) {
-            if (repassAvailRage < 0) { return 0f; }
-            float avgFreeRagePerSec = repassAvailRage / (FightDuration * perc);
-            //float origprocs = 0f;
-            float procs = Math.Min((FightDuration * perc) / Duration,
-                                        /*origprocs = */(Effect.GetAverageProcsPerSecond(CD, Math.Max(0f, Math.Min(1f, avgFreeRagePerSec * 0.025f)), 3, (FightDuration * perc)) * (FightDuration * perc)));
-
-            /*// Over 20
-            float avgFreeRageO20 = FreeRageO20 / FightDurationO20;
-            float origprocsO20 = 0f;
-            float procsO20 = avgFreeRageO20 > 0
-                            ? Math.Min(FightDurationO20 / Duration,
-                                        origprocsO20 = (Effect.GetAverageProcsPerSecond(Cd, Math.Max(0f, Math.Min(1f, avgFreeRageO20 * 0.25f)), 3, FightDurationO20) * FightDurationO20))
-                            : 0f;
-            // Under 20 (Guess based on O20 if we don't have it yet)
-            float origprocsU20 = 0f;
-            float guessAvgFreeRageU20 = FreeRageU20 == -1f ? (avgFreeRageO20 / (FightDurationO20 / FightDuration)) * (FightDurationU20 / FightDuration) : 0f;
-            float avgFreeRageU20 = (CalcOpts.M_ExecuteSpam && FreeRageU20 != 0) ? (FreeRageU20 == -1 ? guessAvgFreeRageU20 : FreeRageU20 / FightDurationU20) : 0f;
-            float procsU20 = CalcOpts.M_ExecuteSpam && avgFreeRageU20 > 0
-                            ? Math.Min(FightDurationU20 / Duration,
-                                        origprocsU20 = (Effect.GetAverageProcsPerSecond(Cd, Math.Max(0f, Math.Min(1f, avgFreeRageU20 * 0.25f)), 3, FightDurationU20) * FightDurationU20))
-                            : 0f;*/
-            // Results
-            return procs/*procsO20 /*+ procsU20*/;
-        }
-        protected override float ActivatesOverride {
-            get {
-                // This ability can only be activated at >75 Rage so we need to limit its chance to activate to that
-                if (FreeRageO20 > 0f || FreeRageU20 > 0f) {
-                    // Over 20
-                    float avgFreeRageO20 = FreeRageO20 / FightDurationO20;
-                    //float origprocsO20 = 0f;
-                    float procsO20 = avgFreeRageO20 > 0
-                                    ? Math.Min(FightDurationO20 / Duration,
-                                                /*origprocsO20 =*/ (Effect.GetAverageProcsPerSecond(CD, Math.Max(0f, Math.Min(1f, avgFreeRageO20 * 0.25f)), 3, FightDurationO20) * FightDurationO20))
-                                    : 0f;
-                    // Under 20 (Guess based on O20 if we don't have it yet)
-                    //float origprocsU20 = 0f;
-                    float guessAvgFreeRageU20 = FreeRageU20 == -1f ? (avgFreeRageO20 / (FightDurationO20 / FightDuration)) * (FightDurationU20 / FightDuration) : 0f;
-                    float avgFreeRageU20 = (DPSWarrChar.CalcOpts.M_ExecuteSpam && FreeRageU20 != 0) ? (FreeRageU20 == -1 ? guessAvgFreeRageU20 : FreeRageU20 / FightDurationU20) : 0f;
-                    float procsU20 = DPSWarrChar.CalcOpts.M_ExecuteSpam && avgFreeRageU20 > 0
-                                    ? Math.Min(FightDurationU20 / Duration,
-                                                /*origprocsU20 =*/ (Effect.GetAverageProcsPerSecond(CD, Math.Max(0f, Math.Min(1f, avgFreeRageU20 * 0.25f)), 3, FightDurationU20) * FightDurationU20))
-                                    : 0f;
-                    // Results
-                    return procsO20 + procsU20;
-                } else { return 0; }
-            }
-        }
-        public float GetUptime(float acts) {
-            float retVal = 0f;
-            if (acts > FightDuration / Duration)
-            {
-                // We have 100% uptime
-                retVal = 1f;
-            }
-            else if (acts > 0f)
-            {
-                // we have less than 100% uptime
-                retVal = (acts * Duration) / FightDuration;
-            }
-            return retVal;
-        }
     }
     #endregion
     #region DeBuff Abilities
@@ -601,9 +533,9 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: Glyph of Thunder Clap [+2 yds MaxRange], Glyph of Resonating Power [-5 RageCost]</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public ThunderClap(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public ThunderClap(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             AbilIterater = (int)Maintenance.ThunderClap;
             ReqMeleeRange = StanceOkArms = StanceOkDef = true;
@@ -729,9 +661,9 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: Glyph of Sunder Armor [+1 Targets]</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public SunderArmor(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public SunderArmor(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             AbilIterater = (int)Maintenance.SunderArmor;
             ReqMeleeWeap = true;
@@ -796,9 +728,9 @@ namespace Rawr.DPSWarr.Skills
         /// Throws your weapon at the enemy causing (12+AP*0.50) damage (based on attack power),
         /// reducing the armor on the target by 20% for 10 sec or removing any invulnerabilities.
         /// </summary>
-        public ShatteringThrow(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public ShatteringThrow(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             AbilIterater = (int)Maintenance.ShatteringThrow;
             ReqMeleeWeap = true;
@@ -832,9 +764,9 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: Demo Shout [+15s Dur, +50% AoE]</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public DemoralizingShout(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public DemoralizingShout(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             AbilIterater = (int)Maintenance.DemoralizingShout;
             ReqMeleeWeap = ReqMeleeRange = false;
@@ -883,9 +815,9 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: Glyph of Hamstring [Gives a 10% chance to immobilize the target for 5 sec.]</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public Hamstring(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public Hamstring(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             AbilIterater = (int)Maintenance.Hamstring;
             ReqMeleeWeap = true;
@@ -944,9 +876,9 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: none</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public EveryManForHimself(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public EveryManForHimself(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             CD = 2f * 60f;
             StanceOkArms = StanceOkFury = StanceOkDef = true;
@@ -975,9 +907,9 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: none</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public EscapeArtist(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public EscapeArtist(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             CD = 105f;
             StanceOkArms = StanceOkFury = StanceOkDef = true;
@@ -1006,9 +938,9 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: none</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public WillOfTheForsaken(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public WillOfTheForsaken(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             CD = 2f * 60f;
             StanceOkArms = StanceOkFury = StanceOkDef = true;
@@ -1036,9 +968,9 @@ namespace Rawr.DPSWarr.Skills
         /// </summary>
         /// <para>DPSWarrChar.Talents: </para>
         /// <para>Glyphs: </para>
-        public HeroicFury(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public HeroicFury(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             ReqTalent = true;
             Talent2ChksValue = DPSWarrChar.Talents.HeroicFury;
@@ -1071,9 +1003,9 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: Glyph of Rapid Charge [-7% Cd], Glyph of Charge [+5 yds MaxRange]</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public Charge(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public Charge(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             MinRange = 8f;
             MaxRange = 25f + (DPSWarrChar.Talents.GlyphOfLongCharge ? 5f : 0f); // In Yards 
@@ -1110,9 +1042,9 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: Intercept [+1s Stun Dur]</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public Intercept(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public Intercept(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             MinRange = 8f;
             MaxRange = 25f; // In Yards 
@@ -1143,9 +1075,9 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: Glyph of Intervene [Increases the number of attacks you intercept for your intervene target by 1.]</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public Intervene(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public Intervene(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             MinRange = 0f;
             MaxRange = 25f; // In Yards 
@@ -1175,9 +1107,9 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: none</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public HeroicLeap(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public HeroicLeap(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             MinRange = 8f;
             MaxRange = 40f;
             CD = 60f - (DPSWarrChar.CombatFactors.FuryStance ? (10f * DPSWarrChar.Talents.Skirmisher) : 0f);
@@ -1242,9 +1174,9 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: none</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public Retaliation(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public Retaliation(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             StanceOkArms = true;
             StanceOkFury = true;
