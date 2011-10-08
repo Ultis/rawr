@@ -41,12 +41,12 @@
                                   ToolTipService.ToolTip="Hides the Shirt and Tabard slots and moves the Gloves slot to the left side.&#x0a;Use on low resolution monitors."/>
                         <StackPanel Orientation="Horizontal" Margin="12,0,0,0">
                             <TextBlock Text="UI Scale:" VerticalAlignment="Center" Margin="2" />
-                            <!-- IFWPF
+                            <!-- IFWPF -->
                             <Slider Width="125" Margin="2" Name="SL_UIScale" Value="0.9" Maximum="1" LargeChange="0.1" SmallChange="0.05" TickFrequency="0.05" Minimum="0" IsEnabled="{Binding ElementName=CK_CompactMode, Path=IsChecked}" IsSnapToTickEnabled="True" TickPlacement="BottomRight" />
-                            ENDIFWPF -->
-                            <!-- IFSL-->
+                            <!-- ENDIFWPF -->
+                            <!-- IFSL
                             <Slider Width="125" Margin="2" Name="SL_UIScale" Value="0.9" Maximum="1" LargeChange="0.1" SmallChange="0.05" Minimum="0" IsEnabled="{Binding ElementName=CK_CompactMode, Path=IsChecked}" />
-                            ENDIFSL-->
+                            ENDIFSL -->
                             <TextBlock Text="{Binding ElementName=SL_UIScale, Path=Value, StringFormat=\{0:P0\}}" VerticalAlignment="Center" Margin="2" />
                         </StackPanel>
                         <CheckBox x:Name="CK_DisplayUnusedStats" Margin="4,2" Content="Display Unused Stats on Items" />

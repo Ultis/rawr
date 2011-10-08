@@ -1014,7 +1014,7 @@ namespace Rawr.Optimizer
             s.AppendLine();
             string line;
             List<string> warnings = new List<string>();
-            bool valid = true;
+            bool valid = true; bool markGemTemplatesNotice = false;
             // if item is not available pick the one that is available
             for (int slot = 0; slot < Character.OptimizableSlotCount; slot++)
             {
@@ -1062,6 +1062,7 @@ namespace Rawr.Optimizer
                                                     (g.Slot != ItemSlot.Meta && g.Slot != ItemSlot.Cogwheel && g.Slot != ItemSlot.Hydraulic &&
                                                     !ArrayContains(GemItems, gg => gg != null && (gg.Id == g.Id || (gg.Stats >= g.Stats && !gg.IsLimitedGem)))))
                                                 {
+                                                    if (!markGemTemplatesNotice) { markGemTemplatesNotice = true; }
                                                     // gem is not available
                                                     line = g.Name + " is not available";
                                                     if (!warnings.Contains(line))
@@ -1117,6 +1118,7 @@ namespace Rawr.Optimizer
                                                 if ((g.Slot == ItemSlot.Meta && !ArrayContains(MetaGemItems, gg => gg.Stats >= g.Stats)) ||
                                                     (g.Slot != ItemSlot.Meta && !ArrayContains(GemItems, gg => gg.Id == g.Id || (gg.Stats >= g.Stats && !gg.IsLimitedGem))))
                                                 {
+                                                    if (!markGemTemplatesNotice) { markGemTemplatesNotice = true; }
                                                     // gem is not available
                                                     line = g.Name + " is not available";
                                                     if (!warnings.Contains(line))
@@ -1141,6 +1143,7 @@ namespace Rawr.Optimizer
                                         }
                                         break;
                                     case ItemAvailability.NotAvailable:
+                                        if (!markGemTemplatesNotice) { markGemTemplatesNotice = true; }
                                         // they could have some other gemming/enchant marked as available, but not in general
                                         line = item.Item.Name + " gemming/enchant/tinkering is not available";
                                         if (!warnings.Contains(line))
@@ -1154,6 +1157,7 @@ namespace Rawr.Optimizer
                             }
                             else
                             {
+                                if (!markGemTemplatesNotice) { markGemTemplatesNotice = true; }
                                 line = item.Item.Name + " gemming/enchant/tinkering is not available";
                                 if (!warnings.Contains(line))
                                 {
@@ -1186,6 +1190,10 @@ namespace Rawr.Optimizer
             }
             if (!valid)
             {
+                if (markGemTemplatesNotice) {
+                    s.AppendLine();
+                    s.AppendLine("You most likely haven't enabled the correct Gemming Templates. See Options > Edit Gemming Templates ");
+                }
                 s.AppendLine();
 #if SILVERLIGHT
                 // In Silverlight the only real blocking option only gives two options, so deal with it
