@@ -786,6 +786,11 @@ namespace Rawr
                 enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.RangedHit, new Stats() { RangedAttackPower = 800 }, 10, 45, 0.10f));
                 defaultEnchants.Add(new Enchant(4175, "Gnomish X-Ray Scope", ItemSlot.Ranged, enchantTemp, "inv_misc_scopea"));
             }
+            {
+                enchantTemp = new Stats();
+                enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.RangedHit, new Stats() { PhysicalDamage = (550f+1650f)/2f, Agility = 300, }, 10, 45, 0.10f));
+                defaultEnchants.Add(new Enchant(4267, "Flintlocke's Woodchucker", ItemSlot.Ranged, enchantTemp, "inv_misc_scopeb"));
+            }
             defaultEnchants.Add(new Enchant(4176, "R19 Threatfinder", ItemSlot.Ranged, new Stats() { HitRating = 88 }, "inv_misc_scopec"));
             defaultEnchants.Add(new Enchant(4177, "Safety Catch Removal Kit", ItemSlot.Ranged, new Stats() { HasteRating = 88 }, "inv_misc_enggizmos_37"));
             #endregion
