@@ -260,9 +260,7 @@ namespace Rawr.UI
 
             OptionsDialog.DisplayBuffChanged += new EventHandler(GeneralSettings_DisplayBuffChanged);
             OptionsDialog.HideProfessionsChanged += new EventHandler(GeneralSettings_HideProfessionsChanged);
-#if RAWR4
             Buff.BuffsLoaded += new EventHandler<EventArgs>(Buff_BuffsLoaded);
-#endif
         }
 
         void Buff_BuffsLoaded(object sender, EventArgs e)

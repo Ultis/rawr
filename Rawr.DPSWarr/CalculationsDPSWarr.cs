@@ -568,15 +568,15 @@ a GCD's length, you will use this while running back into place",
             if (_relevantGlyphs == null) {
                 _relevantGlyphs = new List<string>() {
                     #region Prime
-                    "Glyph of Bladestorm", //@"Reduces the cooldown on Bladestorm by 15 sec.")]
-                    "Glyph of Bloodthirst", //@"Increases the healing your recieve from Bloodthirst ability by 100%.")]
-                    //"Glyph of Devastate", //@"Your Devastate ability now applies two stacks of Sunder Armor.")]
-                    "Glyph of Mortal Strike", //@"Increases the damage of your Mortal Strike ability by 10%.")]
-                    "Glyph of Overpower", //@"Adds a 100% chance to enable your Overpower when your attacks are parried.")]
-                    "Glyph of Raging Blow", //@"Increases the critical strike chance of Raging Blow by 5%.")]
-                    //"Glyph of Revenge", //@"After using Revenge, your next Heroic Strike costs no rage.")]
-                    //"Glyph of Shield Slam", //@"Increases the damage of your Shield Slam by 10%.")]
-                    "Glyph of Slam", //@"Increases the critical strike chance of Slam by 5%.")]
+                    "Glyph of Bladestorm", //@"Reduces the cooldown on Bladestorm by 15 sec."
+                    "Glyph of Bloodthirst", //@"Increases the healing your receive from Bloodthirst ability by 100%."
+                    //"Glyph of Devastate", //@"Your Devastate ability now applies two stacks of Sunder Armor."
+                    "Glyph of Mortal Strike", //@"Increases the damage of your Mortal Strike ability by 10%."
+                    "Glyph of Overpower", //@"Adds a 100% chance to enable your Overpower when your attacks are parried."
+                    "Glyph of Raging Blow", //@"Increases the critical strike chance of Raging Blow by 5%."
+                    //"Glyph of Revenge", //@"After using Revenge, your next Heroic Strike costs no rage."
+                    //"Glyph of Shield Slam", //@"Increases the damage of your Shield Slam by 10%."
+                    "Glyph of Slam", //@"Increases the critical strike chance of Slam by 5%."
                     #endregion
                     #region Major
                     "Glyph of Cleaving", // Increases the number of targets your Cleave hits by 1.
@@ -922,7 +922,9 @@ a GCD's length, you will use this while running back into place",
             // Force some buffs to go away
             else if (!buff.AllowedClasses.Contains(CharacterClass.Warrior))
             { return false; }
-            else if (character != null && Rawr.Properties.GeneralSettings.Default.HideProfEnchants && !character.HasProfession(buff.Professions))
+            else if (character != null
+                && Rawr.Properties.GeneralSettings.Default.HideProfEnchants
+                && !character.HasProfession(buff.Professions))
             { return false; }
             //
             bool haswantedStats = HasWantedStats(buff.Stats);
@@ -943,11 +945,11 @@ a GCD's length, you will use this while running back into place",
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
             if (dpswarchar.CalcOpts.M_SunderArmor) {
                 buffGroup.Clear();
-                buffGroup.Add(Buff.GetBuffByName("Sunder Armor"));
-                buffGroup.Add(Buff.GetBuffByName("Expose Armor"));
-                buffGroup.Add(Buff.GetBuffByName("Faerie Fire"));
-                buffGroup.Add(Buff.GetBuffByName("Corrosive Spit"));
-                buffGroup.Add(Buff.GetBuffByName("Tear Armor"));
+                buffGroup.Add(Buff.GetBuffBySpellId(7386));//Buff.GetBuffByName("Sunder Armor"));
+                buffGroup.Add(Buff.GetBuffBySpellId(8647));//Buff.GetBuffByName("Expose Armor"));
+                buffGroup.Add(Buff.GetBuffBySpellId(770));//Buff.GetBuffByName("Faerie Fire"));
+                buffGroup.Add(Buff.GetBuffBySpellId(35387));//Buff.GetBuffByName("Corrosive Spit"));
+                buffGroup.Add(Buff.GetBuffBySpellId(50498));//Buff.GetBuffByName("Tear Armor"));
                 MaintBuffHelper(buffGroup, dpswarchar.Char, removedBuffs);
             }
 
@@ -955,7 +957,7 @@ a GCD's length, you will use this while running back into place",
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
             if (dpswarchar.CalcOpts.M_ShatteringThrow) {
                 buffGroup.Clear();
-                buffGroup.Add(Buff.GetBuffByName("Shattering Throw"));
+                buffGroup.Add(Buff.GetBuffBySpellId(64382));//Buff.GetBuffByName("Shattering Throw"));
                 MaintBuffHelper(buffGroup, dpswarchar.Char, removedBuffs);
             }
 
@@ -964,10 +966,10 @@ a GCD's length, you will use this while running back into place",
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
             if (dpswarchar.CalcOpts.M_ThunderClap) {
                 buffGroup.Clear();
-                buffGroup.Add(Buff.GetBuffByName("Thunder Clap"));
-                buffGroup.Add(Buff.GetBuffByName("Frost Fever"));
-                buffGroup.Add(Buff.GetBuffByName("Judgements of the Just"));
-                buffGroup.Add(Buff.GetBuffByName("Infected Wounds"));
+                buffGroup.Add(Buff.GetBuffBySpellId(6343));//Buff.GetBuffByName("Thunder Clap"));
+                buffGroup.Add(Buff.GetBuffBySpellId(59921));//Buff.GetBuffByName("Frost Fever"));
+                buffGroup.Add(Buff.GetBuffBySpellId(53696));//Buff.GetBuffByName("Judgements of the Just"));
+                buffGroup.Add(Buff.GetBuffBySpellId(48484));//Buff.GetBuffByName("Infected Wounds"));
                 MaintBuffHelper(buffGroup, dpswarchar.Char, removedBuffs);
             }
 
@@ -975,8 +977,11 @@ a GCD's length, you will use this while running back into place",
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
             if (dpswarchar.CalcOpts.M_DemoralizingShout) {
                 buffGroup.Clear();
-                buffGroup.Add(Buff.GetBuffByName("Demoralizing Shout"));
-                buffGroup.Add(Buff.GetBuffByName("Improved Demoralizing Shout"));
+                buffGroup.Add(Buff.GetBuffBySpellId(1160));//Buff.GetBuffByName("Demoralizing Shout"));
+                buffGroup.Add(Buff.GetBuffBySpellId(99));//Buff.GetBuffByName("Demoralizing Roar"));
+                buffGroup.Add(Buff.GetBuffBySpellId(26016));//Buff.GetBuffByName("Vindication"));
+                buffGroup.Add(Buff.GetBuffBySpellId(702));//Buff.GetBuffByName("Curse of Weakness"));
+                buffGroup.Add(Buff.GetBuffBySpellId(81132));//Buff.GetBuffByName("Scarlet Fever"));
                 MaintBuffHelper(buffGroup, dpswarchar.Char, removedBuffs);
             }
 
@@ -985,10 +990,10 @@ a GCD's length, you will use this while running back into place",
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
             if (dpswarchar.CalcOpts.M_BattleShout) {
                 buffGroup.Clear();
-                buffGroup.Add(Buff.GetBuffByName("Battle Shout"));
-                buffGroup.Add(Buff.GetBuffByName("Strength of Earth Totem"));
-                buffGroup.Add(Buff.GetBuffByName("Horn of Winter"));
-                buffGroup.Add(Buff.GetBuffByName("Roar of Courage"));
+                buffGroup.Add(Buff.GetBuffBySpellId(6673));//Buff.GetBuffByName("Battle Shout"));
+                buffGroup.Add(Buff.GetBuffBySpellId(8075));//Buff.GetBuffByName("Strength of Earth Totem"));
+                buffGroup.Add(Buff.GetBuffBySpellId(57730));//Buff.GetBuffByName("Horn of Winter"));
+                buffGroup.Add(Buff.GetBuffBySpellId(93435));//Buff.GetBuffByName("Roar of Courage"));
                 MaintBuffHelper(buffGroup, dpswarchar.Char, removedBuffs);
             }
 
@@ -997,10 +1002,10 @@ a GCD's length, you will use this while running back into place",
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
             if (dpswarchar.CalcOpts.M_CommandingShout) {
                 buffGroup.Clear();
-                buffGroup.Add(Buff.GetBuffByName("Commanding Shout"));
-                buffGroup.Add(Buff.GetBuffByName("Power Word: Fortitude"));
-                buffGroup.Add(Buff.GetBuffByName("Quiraji Fortitude"));
-                buffGroup.Add(Buff.GetBuffByName("Blood Pact"));
+                buffGroup.Add(Buff.GetBuffBySpellId(469));//Buff.GetBuffByName("Commanding Shout"));
+                buffGroup.Add(Buff.GetBuffBySpellId(21562));//Buff.GetBuffByName("Power Word: Fortitude"));
+                buffGroup.Add(Buff.GetBuffBySpellId(90364));//Buff.GetBuffByName("Quiraji Fortitude"));
+                buffGroup.Add(Buff.GetBuffBySpellId(6307));//Buff.GetBuffByName("Blood Pact"));
                 MaintBuffHelper(buffGroup, dpswarchar.Char, removedBuffs);
             }
             #endregion
@@ -1012,18 +1017,18 @@ a GCD's length, you will use this while running back into place",
             if (dpswarchar.Char.WarriorTalents.BloodFrenzy > 0)
             {
                 buffGroup.Clear();
-                buffGroup.Add(Buff.GetBuffByName("Trauma"));
-                buffGroup.Add(Buff.GetBuffByName("Mangle"));
-                buffGroup.Add(Buff.GetBuffByName("Hemorrhage"));
-                buffGroup.Add(Buff.GetBuffByName("Tendon Rip"));
-                buffGroup.Add(Buff.GetBuffByName("Gore"));
-                buffGroup.Add(Buff.GetBuffByName("Stampede"));
+                buffGroup.Add(Buff.GetBuffBySpellId(29859));//Buff.GetBuffByName("Blood Frenzy (Bleed)"));
+                buffGroup.Add(Buff.GetBuffBySpellId(33876));//Buff.GetBuffByName("Mangle"));
+                buffGroup.Add(Buff.GetBuffBySpellId(16511));//Buff.GetBuffByName("Hemorrhage"));
+                buffGroup.Add(Buff.GetBuffBySpellId(50271));//Buff.GetBuffByName("Tendon Rip"));
+                buffGroup.Add(Buff.GetBuffBySpellId(35290));//Buff.GetBuffByName("Gore"));
+                buffGroup.Add(Buff.GetBuffBySpellId(57386));//Buff.GetBuffByName("Stampede"));
                 //
-                buffGroup.Add(Buff.GetBuffByName("Blood Frenzy"));
-                buffGroup.Add(Buff.GetBuffByName("Savage Combat"));
-                buffGroup.Add(Buff.GetBuffByName("Brittle Bones"));
-                buffGroup.Add(Buff.GetBuffByName("Ravage"));
-                buffGroup.Add(Buff.GetBuffByName("Acid Spit"));
+                buffGroup.Add(Buff.GetBuffBySpellId(29859*10));//Buff.GetBuffByName("Blood Frenzy (Vuln)"));
+                buffGroup.Add(Buff.GetBuffBySpellId(58413));//Buff.GetBuffByName("Savage Combat"));
+                buffGroup.Add(Buff.GetBuffBySpellId(81328));//Buff.GetBuffByName("Brittle Bones"));
+                buffGroup.Add(Buff.GetBuffBySpellId(50518));//Buff.GetBuffByName("Ravage"));
+                buffGroup.Add(Buff.GetBuffBySpellId(55749));//Buff.GetBuffByName("Acid Spit"));
                 MaintBuffHelper(buffGroup, dpswarchar.Char, removedBuffs);
             }
 
@@ -1032,12 +1037,12 @@ a GCD's length, you will use this while running back into place",
             if (dpswarchar.Char.WarriorTalents.Rampage > 0 && dpswarchar.CombatFactors.FuryStance)
             {
                 buffGroup.Clear();
-                buffGroup.Add(Buff.GetBuffByName("Rampage"));
-                buffGroup.Add(Buff.GetBuffByName("Leader of the Pack"));
-                buffGroup.Add(Buff.GetBuffByName("Honor Among Thieves"));
-                buffGroup.Add(Buff.GetBuffByName("Elemental Oath"));
-                buffGroup.Add(Buff.GetBuffByName("Furious Howl"));
-                buffGroup.Add(Buff.GetBuffByName("Terrifying Roar"));
+                buffGroup.Add(Buff.GetBuffBySpellId(29801));//Buff.GetBuffByName("Rampage"));
+                buffGroup.Add(Buff.GetBuffBySpellId(17007));//Buff.GetBuffByName("Leader of the Pack"));
+                buffGroup.Add(Buff.GetBuffBySpellId(51701));//Buff.GetBuffByName("Honor Among Thieves"));
+                buffGroup.Add(Buff.GetBuffBySpellId(51470));//Buff.GetBuffByName("Elemental Oath"));
+                buffGroup.Add(Buff.GetBuffBySpellId(24604));//Buff.GetBuffByName("Furious Howl"));
+                buffGroup.Add(Buff.GetBuffBySpellId(90309));//Buff.GetBuffByName("Terrifying Roar"));
                 MaintBuffHelper(buffGroup, dpswarchar.Char, removedBuffs);
             }
             #endregion

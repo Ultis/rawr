@@ -9,6 +9,8 @@ namespace Rawr
         // Numbers reverse engineered by Whitetooth (hotdogee [at] gmail [dot] com)
 
         #region Character Constants
+        public const int DEFAULTPLAYERLEVEL = 85;
+
         /*  Here are the values data-mined from build 12942 and imported into SimulationCraft:
 
             Base Chance to Melee Crit%: 2.9219999909401%

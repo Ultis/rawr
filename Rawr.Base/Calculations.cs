@@ -1173,7 +1173,6 @@ namespace Rawr
                 {
                     if (activeBuffs[i] != buff)
                     {
-                        //Buff b2 = Buff.GetBuffByName(activeBuffs[i]);
                         Buff b2 = activeBuffs[i];
                         foreach (string buffName in b2.ConflictingBuffs)
                         {
