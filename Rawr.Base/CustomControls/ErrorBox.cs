@@ -179,6 +179,30 @@ namespace Rawr.Base
                 System.Diagnostics.Debug.WriteLine(Title + "\n" + buildFullMessage());
             }catch(Exception){ }
         }
+        public static void CreateNew(Exception ex, string title, string function = "", string info = "", string sugfix = "")
+        {
+            ErrorBox b = new ErrorBox();
+
+            b.TheException = ex;
+            b.Title = title;
+            b.Function = function;
+            b.Info = info;
+            b.SuggestedFix = sugfix;
+            b.Show();
+        }
+        public static void CreateNew(string title, string message, string innerMessage = "", string function = "", string info = "", string sugfix = "")
+        {
+            ErrorBox b = new ErrorBox();
+
+            b.Message = message;
+            b.InnerMessage = innerMessage;
+            b.StackTrace = "";
+            b.Title = title;
+            b.Function = function;
+            b.Info = info;
+            b.SuggestedFix = sugfix;
+            b.Show();
+        }
         #endregion
     }
 }
