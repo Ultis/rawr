@@ -67,7 +67,7 @@ namespace Rawr.ProtPaladin
                 //int cog_rigid = 59493;                             // Hit
                 //int cog_subtle = 59477;                            // Dodge
 
-                string[] qualityGroupNames = new string[] { "Uncommon", "Perfect Uncommon", "Rare", "Jeweler" };
+                string[] qualityGroupNames = new string[] { "Uncommon", "Perfect Uncommon", "Rare", "Jewelcrafter" };
                 string[] typeGroupNames = new string[] { "Survivability", "Mitigation (Dodge)", "Mitigation (Parry)", "Mitigation (Mastery)", "Threat" };
                 
                 int[] metaTemplates = new int[] { austere, eternal, fleet };

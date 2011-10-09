@@ -165,40 +165,40 @@ namespace Rawr.DPSWarr {
 
                 #region Cogs
                 templates.AddRange(new GemmingTemplate[] {
-                        new GemmingTemplate() { Model = "DPSWarr", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_hit[0], MetaId = 68779, },
-                        new GemmingTemplate() { Model = "DPSWarr", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_mst[0], MetaId = 68779, },
-                        new GemmingTemplate() { Model = "DPSWarr", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_crt[0], MetaId = 68779, },
-                        new GemmingTemplate() { Model = "DPSWarr", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_has[0], MetaId = 68779, },
-                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_pry[0], MetaId = 68779, },
-                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_ddg[0], MetaId = 68779, },
-                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_spr[0], MetaId = 68779, },
+                        new GemmingTemplate() { Model = "DPSWarr", Group = "Engineer", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_hit[0], MetaId = 68779, },
+                        new GemmingTemplate() { Model = "DPSWarr", Group = "Engineer", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_mst[0], MetaId = 68779, },
+                        new GemmingTemplate() { Model = "DPSWarr", Group = "Engineer", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_crt[0], MetaId = 68779, },
+                        new GemmingTemplate() { Model = "DPSWarr", Group = "Engineer", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_has[0], MetaId = 68779, },
+                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Engineer", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_pry[0], MetaId = 68779, },
+                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Engineer", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_ddg[0], MetaId = 68779, },
+                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Engineer", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_spr[0], MetaId = 68779, },
 
-                        new GemmingTemplate() { Model = "DPSWarr", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_mst[0], MetaId = 68779, },
-                        new GemmingTemplate() { Model = "DPSWarr", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_crt[0], MetaId = 68779, },
-                        new GemmingTemplate() { Model = "DPSWarr", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_has[0], MetaId = 68779, },
-                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_pry[0], MetaId = 68779, },
-                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_ddg[0], MetaId = 68779, },
-                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_spr[0], MetaId = 68779, },
+                        new GemmingTemplate() { Model = "DPSWarr", Group = "Engineer", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_mst[0], MetaId = 68779, },
+                        new GemmingTemplate() { Model = "DPSWarr", Group = "Engineer", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_crt[0], MetaId = 68779, },
+                        new GemmingTemplate() { Model = "DPSWarr", Group = "Engineer", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_has[0], MetaId = 68779, },
+                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Engineer", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_pry[0], MetaId = 68779, },
+                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Engineer", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_ddg[0], MetaId = 68779, },
+                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Engineer", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_spr[0], MetaId = 68779, },
 
-                        new GemmingTemplate() { Model = "DPSWarr", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_crt[0], MetaId = 68779, },
-                        new GemmingTemplate() { Model = "DPSWarr", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_has[0], MetaId = 68779, },
-                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_pry[0], MetaId = 68779, },
-                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_ddg[0], MetaId = 68779, },
-                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_spr[0], MetaId = 68779, },
+                        new GemmingTemplate() { Model = "DPSWarr", Group = "Engineer", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_crt[0], MetaId = 68779, },
+                        new GemmingTemplate() { Model = "DPSWarr", Group = "Engineer", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_has[0], MetaId = 68779, },
+                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Engineer", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_pry[0], MetaId = 68779, },
+                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Engineer", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_ddg[0], MetaId = 68779, },
+                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Engineer", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_spr[0], MetaId = 68779, },
 
-                        new GemmingTemplate() { Model = "DPSWarr", Group = "Cogwheels", Enabled = false, CogwheelId = cog_crt[0], Cogwheel2Id = cog_has[0], MetaId = 68779, },
-                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Cogwheels", Enabled = false, CogwheelId = cog_crt[0], Cogwheel2Id = cog_pry[0], MetaId = 68779, },
-                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Cogwheels", Enabled = false, CogwheelId = cog_crt[0], Cogwheel2Id = cog_ddg[0], MetaId = 68779, },
-                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Cogwheels", Enabled = false, CogwheelId = cog_crt[0], Cogwheel2Id = cog_spr[0], MetaId = 68779, },
+                        new GemmingTemplate() { Model = "DPSWarr", Group = "Engineer", Enabled = false, CogwheelId = cog_crt[0], Cogwheel2Id = cog_has[0], MetaId = 68779, },
+                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Engineer", Enabled = false, CogwheelId = cog_crt[0], Cogwheel2Id = cog_pry[0], MetaId = 68779, },
+                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Engineer", Enabled = false, CogwheelId = cog_crt[0], Cogwheel2Id = cog_ddg[0], MetaId = 68779, },
+                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Engineer", Enabled = false, CogwheelId = cog_crt[0], Cogwheel2Id = cog_spr[0], MetaId = 68779, },
 
-                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Cogwheels", Enabled = false, CogwheelId = cog_pry[0], Cogwheel2Id = cog_has[0], MetaId = 68779, },
-                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Cogwheels", Enabled = false, CogwheelId = cog_pry[0], Cogwheel2Id = cog_ddg[0], MetaId = 68779, },
-                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Cogwheels", Enabled = false, CogwheelId = cog_pry[0], Cogwheel2Id = cog_spr[0], MetaId = 68779, },
+                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Engineer", Enabled = false, CogwheelId = cog_pry[0], Cogwheel2Id = cog_has[0], MetaId = 68779, },
+                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Engineer", Enabled = false, CogwheelId = cog_pry[0], Cogwheel2Id = cog_ddg[0], MetaId = 68779, },
+                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Engineer", Enabled = false, CogwheelId = cog_pry[0], Cogwheel2Id = cog_spr[0], MetaId = 68779, },
 
-                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Cogwheels", Enabled = false, CogwheelId = cog_ddg[0], Cogwheel2Id = cog_has[0], MetaId = 68779, },
-                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Cogwheels", Enabled = false, CogwheelId = cog_ddg[0], Cogwheel2Id = cog_spr[0], MetaId = 68779, },
+                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Engineer", Enabled = false, CogwheelId = cog_ddg[0], Cogwheel2Id = cog_has[0], MetaId = 68779, },
+                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Engineer", Enabled = false, CogwheelId = cog_ddg[0], Cogwheel2Id = cog_spr[0], MetaId = 68779, },
 
-                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Cogwheels", Enabled = false, CogwheelId = cog_spr[0], Cogwheel2Id = cog_has[0], MetaId = 68779, },
+                        //new GemmingTemplate() { Model = "DPSWarr", Group = "Engineer", Enabled = false, CogwheelId = cog_spr[0], Cogwheel2Id = cog_has[0], MetaId = 68779, },
                     }
                 );
                 #endregion

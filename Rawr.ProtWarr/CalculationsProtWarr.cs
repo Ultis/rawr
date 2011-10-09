@@ -67,7 +67,7 @@ namespace Rawr.ProtWarr
                 // Meta
                 int[] austere   = { 52294 };                // Stamina + 2% Armor
 
-                string[] groupNames = new string[] { "Uncommon", "Rare", "Jeweler" };
+                string[] groupNames = new string[] { "Uncommon", "Rare", "Jewelcrafter" };
                 int[,][] gemmingTemplates = new int[,][]
                 {
                     //Red       Yellow      Blue        Prismatic   Meta

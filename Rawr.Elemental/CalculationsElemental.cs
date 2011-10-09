@@ -51,7 +51,7 @@ namespace Rawr.Elemental {
                     _defaultGemmingTemplates = new List<GemmingTemplate>();
                     AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon", true, brilliant[0], sparkling[0], quick[0], fractured[0], purified[0], zen[0], artful[0], reckless[0], chaotic);
                     AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon", true, brilliant[1], sparkling[1], quick[1], fractured[1], purified[1], zen[1], artful[1], reckless[1], chaotic);
-                    AddJCGemmingTemplateGroup(_defaultGemmingTemplates, "Jewelcrafting", false, brilliant[2], quick[2], fractured[2], sparkling[2], chaotic);
+                    AddJCGemmingTemplateGroup(_defaultGemmingTemplates, "Jewelcrafter", false, brilliant[2], quick[2], fractured[2], sparkling[2], chaotic);
                 }
                 return _defaultGemmingTemplates;
             }

@@ -10,7 +10,7 @@ namespace Rawr.Moonkin
     {
         #region Variables and Properties
         #region Gemming Templates
-        private string[] tierNames = { "Uncommon", "Rare", "Epic", "Jeweler" };
+        private string[] tierNames = { "Uncommon", "Rare", "Epic", "Jewelcrafter" };
 
         // Red
         private int[] brilliant = { 52173, 52207, 52207, 52257 };
@@ -108,7 +108,7 @@ namespace Rawr.Moonkin
             return new GemmingTemplate
             {
                 Model = "Moonkin",
-                Group = "Engineering",
+                Group = "Engineer",
                 Enabled = false,
                 MetaId = meta,
                 CogwheelId = cogwheel1,

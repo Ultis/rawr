@@ -34,8 +34,8 @@ namespace Rawr.Healadin
                 int insightful = 41401;
                 int revitalizing = 52297;
                 int ember = 52296;
-            
-                string[] qualityGroupNames = new string[] { "Uncommon", "Rare", "Epic", "Jeweler" };
+
+                string[] qualityGroupNames = new string[] { "Uncommon", "Rare", "Epic", "Jewelcrafter" };
                 string[] typeGroupNames = new string[] { "Intellect" };
 
                 int[] metaTemplates = new int[] { insightful, revitalizing, ember };

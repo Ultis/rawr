@@ -117,37 +117,37 @@ namespace Rawr.TankDK
                     new GemmingTemplate() { Model = "TankDK", Group = "Epic",Enabled = true,  //Stamina
                         RedId = regal[2], YellowId = enduring[2], BlueId = solid[2], PrismaticId = nightmare, MetaId = austere },
 */
-                    new GemmingTemplate() { Model = "TankDK", Group = "Jeweler", //Max Mastery
+                    new GemmingTemplate() { Model = "TankDK", Group = "Jewelcrafter", //Max Mastery
                         RedId = fractured[3], YellowId = fractured[3], BlueId = fractured[3], PrismaticId = fractured[3], MetaId = fleet, HydraulicId = 0 },
-                    new GemmingTemplate() { Model = "TankDK", Group = "Jeweler", //Max Dodge
+                    new GemmingTemplate() { Model = "TankDK", Group = "Jewelcrafter", //Max Dodge
                         RedId = subtle[3], YellowId = subtle[3], BlueId = subtle[3], PrismaticId = subtle[3], MetaId = austere, HydraulicId = 0 },
-                    new GemmingTemplate() { Model = "TankDK", Group = "Jeweler", //Max parry
+                    new GemmingTemplate() { Model = "TankDK", Group = "Jewelcrafter", //Max parry
                         RedId = flashing[3], YellowId = flashing[3], BlueId = flashing[3], PrismaticId = flashing[3], MetaId = austere, HydraulicId = 0 },
-                    new GemmingTemplate() { Model = "TankDK", Group = "Jeweler", //Max Stamina
+                    new GemmingTemplate() { Model = "TankDK", Group = "Jewelcrafter", //Max Stamina
                         RedId = solid[3], YellowId = solid[3], BlueId = solid[3], PrismaticId = solid[3], MetaId = effulgent, HydraulicId = 0 },
 
-                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_hit[0], MetaId = austere, },
-                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_mst[0], MetaId = austere, },
-                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_crt[0], MetaId = austere, },
-                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_has[0], MetaId = austere, },
-                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_pry[0], MetaId = austere, },
-                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_ddg[0], MetaId = austere, },
+                    new GemmingTemplate() { Model = "TankDK", Group = "Engineer", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_hit[0], MetaId = austere, },
+                    new GemmingTemplate() { Model = "TankDK", Group = "Engineer", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_mst[0], MetaId = austere, },
+                    new GemmingTemplate() { Model = "TankDK", Group = "Engineer", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_crt[0], MetaId = austere, },
+                    new GemmingTemplate() { Model = "TankDK", Group = "Engineer", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_has[0], MetaId = austere, },
+                    new GemmingTemplate() { Model = "TankDK", Group = "Engineer", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_pry[0], MetaId = austere, },
+                    new GemmingTemplate() { Model = "TankDK", Group = "Engineer", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_ddg[0], MetaId = austere, },
 
-                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_mst[0], MetaId = austere, },
-                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_crt[0], MetaId = austere, },
-                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_has[0], MetaId = austere, },
-                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_pry[0], MetaId = austere, },
-                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_ddg[0], MetaId = austere, },
+                    new GemmingTemplate() { Model = "TankDK", Group = "Engineer", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_mst[0], MetaId = austere, },
+                    new GemmingTemplate() { Model = "TankDK", Group = "Engineer", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_crt[0], MetaId = austere, },
+                    new GemmingTemplate() { Model = "TankDK", Group = "Engineer", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_has[0], MetaId = austere, },
+                    new GemmingTemplate() { Model = "TankDK", Group = "Engineer", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_pry[0], MetaId = austere, },
+                    new GemmingTemplate() { Model = "TankDK", Group = "Engineer", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_ddg[0], MetaId = austere, },
 
-                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_crt[0], MetaId = austere, },
-                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_has[0], MetaId = austere, },
-                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_pry[0], MetaId = austere, },
-                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_ddg[0], MetaId = austere, },
+                    new GemmingTemplate() { Model = "TankDK", Group = "Engineer", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_crt[0], MetaId = austere, },
+                    new GemmingTemplate() { Model = "TankDK", Group = "Engineer", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_has[0], MetaId = austere, },
+                    new GemmingTemplate() { Model = "TankDK", Group = "Engineer", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_pry[0], MetaId = austere, },
+                    new GemmingTemplate() { Model = "TankDK", Group = "Engineer", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_ddg[0], MetaId = austere, },
                             
-                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_pry[0], Cogwheel2Id = cog_has[0], MetaId = austere, },
-                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_pry[0], Cogwheel2Id = cog_ddg[0], MetaId = austere, },
+                    new GemmingTemplate() { Model = "TankDK", Group = "Engineer", Enabled = false, CogwheelId = cog_pry[0], Cogwheel2Id = cog_has[0], MetaId = austere, },
+                    new GemmingTemplate() { Model = "TankDK", Group = "Engineer", Enabled = false, CogwheelId = cog_pry[0], Cogwheel2Id = cog_ddg[0], MetaId = austere, },
 
-                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_ddg[0], Cogwheel2Id = cog_has[0], MetaId = austere, },
+                    new GemmingTemplate() { Model = "TankDK", Group = "Engineer", Enabled = false, CogwheelId = cog_ddg[0], Cogwheel2Id = cog_has[0], MetaId = austere, },
 
  
                 };

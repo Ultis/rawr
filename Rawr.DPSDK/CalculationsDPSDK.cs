@@ -78,19 +78,19 @@ namespace Rawr.DPSDK
                 string group; bool enabled;
                 List<GemmingTemplate> templates = new List<GemmingTemplate>()
                     {
-                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_hit[0], MetaId = Reverberating, },
-                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_mst[0], MetaId = Reverberating, },
-                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_crt[0], MetaId = Reverberating, },
-                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_has[0], MetaId = Reverberating, },
+                        new GemmingTemplate() { Model = "DPSDK", Group = "Engineer", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_hit[0], MetaId = Reverberating, },
+                        new GemmingTemplate() { Model = "DPSDK", Group = "Engineer", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_mst[0], MetaId = Reverberating, },
+                        new GemmingTemplate() { Model = "DPSDK", Group = "Engineer", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_crt[0], MetaId = Reverberating, },
+                        new GemmingTemplate() { Model = "DPSDK", Group = "Engineer", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_has[0], MetaId = Reverberating, },
 
-                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_mst[0], MetaId = Reverberating, },
-                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_crt[0], MetaId = Reverberating, },
-                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_has[0], MetaId = Reverberating, },
+                        new GemmingTemplate() { Model = "DPSDK", Group = "Engineer", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_mst[0], MetaId = Reverberating, },
+                        new GemmingTemplate() { Model = "DPSDK", Group = "Engineer", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_crt[0], MetaId = Reverberating, },
+                        new GemmingTemplate() { Model = "DPSDK", Group = "Engineer", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_has[0], MetaId = Reverberating, },
 
-                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_crt[0], MetaId = Reverberating, },
-                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_has[0], MetaId = Reverberating, },
+                        new GemmingTemplate() { Model = "DPSDK", Group = "Engineer", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_crt[0], MetaId = Reverberating, },
+                        new GemmingTemplate() { Model = "DPSDK", Group = "Engineer", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_has[0], MetaId = Reverberating, },
 
-                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_crt[0], Cogwheel2Id = cog_has[0], MetaId = Reverberating, },
+                        new GemmingTemplate() { Model = "DPSDK", Group = "Engineer", Enabled = false, CogwheelId = cog_crt[0], Cogwheel2Id = cog_has[0], MetaId = Reverberating, },
                     };
 
                 #region Strength

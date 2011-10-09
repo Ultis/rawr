@@ -11,8 +11,8 @@ namespace Rawr.HealPriest
         #endregion
 
         #region Gemming Templates
-        protected string[] gemmingGroups = { "Common", "Rare", "Epic", "Jeweller" };
-        protected string gemmingEngineer = "Engineering";
+        protected string[] gemmingGroups = { "Common", "Rare", "Epic", "Jewelcrafter" };
+        protected string gemmingEngineer = "Engineer";
         protected string gemmingClass = "HealPriest";
 
         protected int GetRightGem(int[] gemList, int index)

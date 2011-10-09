@@ -97,11 +97,11 @@ namespace Rawr.Retribution
 
                 #region Cogs
                 templates.AddRange(new GemmingTemplate[] {
-                        new GemmingTemplate { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_crt[0], MetaId = 68779 },
-                        new GemmingTemplate { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_has[0], MetaId = 68779 },
-                        new GemmingTemplate { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_hit[0], MetaId = 68779 },
-                        new GemmingTemplate { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_exp[0], MetaId = 68779 },
-                        new GemmingTemplate { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_exp[0], MetaId = 68779 }
+                        new GemmingTemplate { Model = "Retribution", Group = "Engineer", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_crt[0], MetaId = 68779 },
+                        new GemmingTemplate { Model = "Retribution", Group = "Engineer", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_has[0], MetaId = 68779 },
+                        new GemmingTemplate { Model = "Retribution", Group = "Engineer", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_hit[0], MetaId = 68779 },
+                        new GemmingTemplate { Model = "Retribution", Group = "Engineer", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_exp[0], MetaId = 68779 },
+                        new GemmingTemplate { Model = "Retribution", Group = "Engineer", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_exp[0], MetaId = 68779 }
                     }
                 );
                 #endregion

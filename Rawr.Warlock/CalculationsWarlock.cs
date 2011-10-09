@@ -319,18 +319,18 @@ namespace Rawr.Warlock
                     #endregion
 
                     #region rare - cata
-				    new GemmingTemplate
-				    {
+                    new GemmingTemplate
+                    {
                         Enabled = true,
                         Model = "Warlock", Group = "Rare", //Max SP - Ember
-				        RedId = brilliant[CATARA], YellowId = brilliant[CATARA], BlueId = brilliant[CATARA],
+                        RedId = brilliant[CATARA], YellowId = brilliant[CATARA], BlueId = brilliant[CATARA],
                         PrismaticId = brilliant[CATARA], MetaId = burning[CATAMETA]
                     },
-				    new GemmingTemplate
-				    {
+                    new GemmingTemplate
+                    {
                         Enabled = true,
                         Model = "Warlock", Group = "Rare", //SP/Hit - Ember
-				        RedId = brilliant[CATARA], YellowId = reckless[CATARA], BlueId = veiled[CATARA],
+                        RedId = brilliant[CATARA], YellowId = reckless[CATARA], BlueId = veiled[CATARA],
                         PrismaticId = brilliant[CATARA], MetaId = burning[CATAMETA]
                     },
                     #endregion
@@ -338,25 +338,25 @@ namespace Rawr.Warlock
                     /*
                     #region epic - cata
                     new GemmingTemplate
-				    {
+                    {
                         Model = "Warlock", Group = "Epic", Enabled = true, //Max SP - Ember
-				        RedId = brilliant[CATAEP], YellowId = brilliant[CATAEP], BlueId = brilliant[CATAEP],
+                        RedId = brilliant[CATAEP], YellowId = brilliant[CATAEP], BlueId = brilliant[CATAEP],
                         PrismaticId = brilliant[CATAEP], MetaId = burning[CATAMETA]
                     },
-				    new GemmingTemplate
-				    {
+                    new GemmingTemplate
+                    {
                         Model = "Warlock", Group = "Epic", Enabled = true, //SP/Hit - Ember
-				        RedId = brilliant[CATAEP], YellowId = reckless[CATAEP], BlueId = veiled[CATAEP],
+                        RedId = brilliant[CATAEP], YellowId = reckless[CATAEP], BlueId = veiled[CATAEP],
                         PrismaticId = brilliant[CATAEP], MetaId = burning[CATAMETA]
                     },
                     #endregion
                     */
 
                     #region jeweler - cata
-				    new GemmingTemplate
-				    {
-                        Model = "Warlock", Group = "Jeweler", //Max SP - Ember
-				        RedId = brilliant[CATAJC], YellowId = brilliant[CATAJC], BlueId = brilliant[CATAJC],
+                    new GemmingTemplate
+                    {
+                        Model = "Warlock", Group = "Jewelcrafter", //Max SP - Ember
+                        RedId = brilliant[CATAJC], YellowId = brilliant[CATAJC], BlueId = brilliant[CATAJC],
                         PrismaticId = brilliant[CATAJC], MetaId = burning[CATAMETA]
                     },
                     #endregion

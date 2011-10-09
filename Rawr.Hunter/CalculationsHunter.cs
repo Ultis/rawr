@@ -70,14 +70,14 @@ namespace Rawr.Hunter {
                             CreateHunterGemmingTemplate(tier, delicate, deft, glinting, delicate, chaotic),
 
 
-                            new GemmingTemplate() { Model = "Hunter", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_mst[0], MetaId = agile, },
-                            new GemmingTemplate() { Model = "Hunter", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_crt[0], MetaId = agile, },
-                            new GemmingTemplate() { Model = "Hunter", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_has[0], MetaId = agile, },
+                            new GemmingTemplate() { Model = "Hunter", Group = "Engineer", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_mst[0], MetaId = agile, },
+                            new GemmingTemplate() { Model = "Hunter", Group = "Engineer", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_crt[0], MetaId = agile, },
+                            new GemmingTemplate() { Model = "Hunter", Group = "Engineer", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_has[0], MetaId = agile, },
 
-                            new GemmingTemplate() { Model = "Hunter", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_crt[0], MetaId = agile, },
-                            new GemmingTemplate() { Model = "Hunter", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_has[0], MetaId = agile, },
+                            new GemmingTemplate() { Model = "Hunter", Group = "Engineer", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_crt[0], MetaId = agile, },
+                            new GemmingTemplate() { Model = "Hunter", Group = "Engineer", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_has[0], MetaId = agile, },
 
-                            new GemmingTemplate() { Model = "Hunter", Group = "Cogwheels", Enabled = false, CogwheelId = cog_crt[0], Cogwheel2Id = cog_has[0], MetaId = agile, },
+                            new GemmingTemplate() { Model = "Hunter", Group = "Engineer", Enabled = false, CogwheelId = cog_crt[0], Cogwheel2Id = cog_has[0], MetaId = agile, },
                         });
                 }
 
@@ -98,7 +98,7 @@ namespace Rawr.Hunter {
             return new GemmingTemplate()
             {
                 Model = "Hunter",
-                Group = (new string[] { "Uncommon", "Rare", "Epic", "Jeweler" })[tier],
+                Group = (new string[] { "Uncommon", "Rare", "Epic", "Jewelcrafter" })[tier],
                 Enabled = (tier == DEFAULT_GEMMING_TIER),
                 RedId = red[tier],
                 YellowId = yellow[tier],

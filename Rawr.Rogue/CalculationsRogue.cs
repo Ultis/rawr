@@ -46,9 +46,9 @@ namespace Rawr.Rogue
                 {
                     list.AddRange(new GemmingTemplate[]
                         {
-                            CreateRogueGemmingTemplate(tier, delicate, delicate, delicate, delicate, agile), 
+                            CreateRogueGemmingTemplate(tier, delicate, delicate, delicate, delicate, agile),
                             CreateRogueGemmingTemplate(tier, delicate,    adept, glinting, delicate, agile),
-                            CreateRogueGemmingTemplate(tier, delicate,     deft, glinting, delicate, agile),    
+                            CreateRogueGemmingTemplate(tier, delicate,     deft, glinting, delicate, agile),
                         });
                 }
                 return list;
@@ -61,7 +61,7 @@ namespace Rawr.Rogue
             return new GemmingTemplate()
             {
                 Model = "Rogue",
-                Group = (new string[] { "Uncommon", "Rare", "Epic", "Jeweler" })[tier],
+                Group = (new string[] { "Uncommon", "Rare", "Epic", "Jewelcrafter" })[tier],
                 Enabled = (tier == DEFAULT_GEMMING_TIER),
                 RedId = red[tier],
                 YellowId = yellow[tier],

@@ -635,6 +635,17 @@ namespace Rawr
             // there could be conflicts for different specialties,
             // need to investigate first
             #endregion
+            for (int i = 0; i < character.CurrentGemmingTemplates.Count; i++)
+            {
+                if (character.CurrentGemmingTemplates[i].Group.Contains("Jewelcrafter"))
+                {
+                    character.CurrentGemmingTemplates[i].Enabled = character.HasProfession(Profession.Jewelcrafting);
+                }
+                else if (character.CurrentGemmingTemplates[i].Group.Contains("Engineer"))
+                {
+                    character.CurrentGemmingTemplates[i].Enabled = character.HasProfession(Profession.Engineering);
+                }
+            }
         }
 
         /// <summary>

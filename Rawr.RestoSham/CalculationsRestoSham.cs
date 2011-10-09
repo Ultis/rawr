@@ -233,42 +233,42 @@ namespace Rawr.RestoSham
                     #region Mana Regen Templates
                     new GemmingTemplate() { Model = "RestoSham", Group = "Uncommon", RedId = Sparkling[0], YellowId = Sparkling[0], BlueId = Sparkling[0], PrismaticId = Sparkling[0], MetaId = Revitalizing },
                     new GemmingTemplate() { Model = "RestoSham", Group = "Rare", Enabled = true, RedId = Sparkling[1], YellowId = Sparkling[1], BlueId = Sparkling[1], PrismaticId = Sparkling[1], MetaId = Revitalizing },
-                    new GemmingTemplate() { Model = "RestoSham", Group = "Jeweler", RedId = Sparkling[3], YellowId = Sparkling[3], BlueId = Sparkling[3], PrismaticId = Sparkling[3], MetaId = Revitalizing },
+                    new GemmingTemplate() { Model = "RestoSham", Group = "Jewelcrafter", RedId = Sparkling[3], YellowId = Sparkling[3], BlueId = Sparkling[3], PrismaticId = Sparkling[3], MetaId = Revitalizing },
                     new GemmingTemplate() { Model = "RestoSham", Group = "Uncommon", RedId = Purified[0], YellowId = Zen[0], BlueId = Sparkling[0], PrismaticId = Sparkling[0], MetaId = Revitalizing },
                     new GemmingTemplate() { Model = "RestoSham", Group = "Rare", Enabled = true, RedId = Purified[1], YellowId = Zen[1], BlueId = Sparkling[1], PrismaticId = Sparkling[1], MetaId = Revitalizing },
-                    new GemmingTemplate() { Model = "RestoSham", Group = "Jeweler", RedId = Purified[1], YellowId = Zen[1], BlueId = Sparkling[3], PrismaticId = Sparkling[3], MetaId = Revitalizing },
+                    new GemmingTemplate() { Model = "RestoSham", Group = "Jewelcrafter", RedId = Purified[1], YellowId = Zen[1], BlueId = Sparkling[3], PrismaticId = Sparkling[3], MetaId = Revitalizing },
                     #endregion
                     #region Intellect Templates
                     new GemmingTemplate() { Model = "RestoSham", Group = "Uncommon", RedId = Brilliant[0], YellowId = Brilliant[0], BlueId = Brilliant[0], PrismaticId = Brilliant[0], MetaId = Ember },
                     new GemmingTemplate() { Model = "RestoSham", Group = "Rare", Enabled = true, RedId = Brilliant[1], YellowId = Brilliant[1], BlueId = Brilliant[1], PrismaticId = Brilliant[1], MetaId = Ember },
-                    new GemmingTemplate() { Model = "RestoSham", Group = "Jeweler", RedId = Brilliant[3], YellowId = Brilliant[3], BlueId = Brilliant[3], PrismaticId = Brilliant[3], MetaId = Ember },
+                    new GemmingTemplate() { Model = "RestoSham", Group = "Jewelcrafter", RedId = Brilliant[3], YellowId = Brilliant[3], BlueId = Brilliant[3], PrismaticId = Brilliant[3], MetaId = Ember },
                     new GemmingTemplate() { Model = "RestoSham", Group = "Uncommon", RedId = Brilliant[0], YellowId = Reckless[0], BlueId = Timeless[0], PrismaticId = Brilliant[0], MetaId = Ember },
                     new GemmingTemplate() { Model = "RestoSham", Group = "Rare", Enabled = true, RedId = Brilliant[1], YellowId = Reckless[1], BlueId = Timeless[1], PrismaticId = Brilliant[1], MetaId = Ember },
-                    new GemmingTemplate() { Model = "RestoSham", Group = "Jeweler", RedId = Brilliant[3], YellowId = Reckless[1], BlueId = Timeless[1], PrismaticId = Brilliant[3], MetaId = Ember },
+                    new GemmingTemplate() { Model = "RestoSham", Group = "Jewelcrafter", RedId = Brilliant[3], YellowId = Reckless[1], BlueId = Timeless[1], PrismaticId = Brilliant[3], MetaId = Ember },
                     #endregion
                     #region Mastery Templates
                     new GemmingTemplate() { Model = "RestoSham", Group = "Uncommon", RedId = Fractured[0], YellowId = Fractured[0], BlueId = Fractured[0], PrismaticId = Fractured[0], MetaId = Fleet },
                     new GemmingTemplate() { Model = "RestoSham", Group = "Rare", Enabled = true, RedId = Fractured[1], YellowId = Fractured[1], BlueId = Fractured[1], PrismaticId = Fractured[1], MetaId = Fleet },
-                    new GemmingTemplate() { Model = "RestoSham", Group = "Jeweler", RedId = Fractured[3], YellowId = Fractured[3], BlueId = Fractured[3], PrismaticId = Fractured[3], MetaId = Fleet },
+                    new GemmingTemplate() { Model = "RestoSham", Group = "Jewelcrafter", RedId = Fractured[3], YellowId = Fractured[3], BlueId = Fractured[3], PrismaticId = Fractured[3], MetaId = Fleet },
                     new GemmingTemplate() { Model = "RestoSham", Group = "Uncommon", RedId = Artful[0], YellowId = Fractured[0], BlueId = Puissant[0], PrismaticId = Fractured[0], MetaId = Fleet },
                     new GemmingTemplate() { Model = "RestoSham", Group = "Rare", Enabled = true, RedId = Artful[1], YellowId = Fractured[1], BlueId = Puissant[1], PrismaticId = Fractured[1], MetaId = Fleet },
-                    new GemmingTemplate() { Model = "RestoSham", Group = "Jeweler", RedId = Artful[1], YellowId = Fractured[3], BlueId = Puissant[1], PrismaticId = Fractured[3], MetaId = Fleet },
+                    new GemmingTemplate() { Model = "RestoSham", Group = "Jewelcrafter", RedId = Artful[1], YellowId = Fractured[3], BlueId = Puissant[1], PrismaticId = Fractured[3], MetaId = Fleet },
                     #endregion
                     #region Crit Templates
                     new GemmingTemplate() { Model = "RestoSham", Group = "Uncommon", RedId = Smooth[0], YellowId = Smooth[0], BlueId = Smooth[0], PrismaticId = Smooth[0], MetaId = Revitalizing },
                     new GemmingTemplate() { Model = "RestoSham", Group = "Rare", Enabled = true, RedId = Smooth[1], YellowId = Smooth[1], BlueId = Smooth[1], PrismaticId = Smooth[1], MetaId = Revitalizing },
-                    new GemmingTemplate() { Model = "RestoSham", Group = "Jeweler", RedId = Smooth[3], YellowId = Smooth[3], BlueId = Smooth[3], PrismaticId = Smooth[3], MetaId = Revitalizing },
+                    new GemmingTemplate() { Model = "RestoSham", Group = "Jewelcrafter", RedId = Smooth[3], YellowId = Smooth[3], BlueId = Smooth[3], PrismaticId = Smooth[3], MetaId = Revitalizing },
                     new GemmingTemplate() { Model = "RestoSham", Group = "Uncommon", RedId = Potent[0], YellowId = Smooth[0], BlueId = Jagged[0], PrismaticId = Smooth[0], MetaId = Revitalizing },
                     new GemmingTemplate() { Model = "RestoSham", Group = "Rare", Enabled = true, RedId = Potent[1], YellowId = Smooth[1], BlueId = Jagged[1], PrismaticId = Smooth[1], MetaId = Revitalizing },
-                    new GemmingTemplate() { Model = "RestoSham", Group = "Jeweler", RedId = Potent[1], YellowId = Smooth[3], BlueId = Jagged[1], PrismaticId = Smooth[3], MetaId = Revitalizing },
+                    new GemmingTemplate() { Model = "RestoSham", Group = "Jewelcrafter", RedId = Potent[1], YellowId = Smooth[3], BlueId = Jagged[1], PrismaticId = Smooth[3], MetaId = Revitalizing },
                     #endregion
                     #region Haste Templates
                     new GemmingTemplate() { Model = "RestoSham", Group = "Uncommon", RedId = Quick[0], YellowId = Quick[0], BlueId = Quick[0], PrismaticId = Quick[0], MetaId = Ember },
                     new GemmingTemplate() { Model = "RestoSham", Group = "Rare", Enabled = true, RedId = Quick[1], YellowId = Quick[1], BlueId = Quick[1], PrismaticId = Quick[1], MetaId = Ember },
-                    new GemmingTemplate() { Model = "RestoSham", Group = "Jeweler", RedId = Quick[3], YellowId = Quick[3], BlueId = Quick[3], PrismaticId = Quick[3], MetaId = Ember },
+                    new GemmingTemplate() { Model = "RestoSham", Group = "Jewelcrafter", RedId = Quick[3], YellowId = Quick[3], BlueId = Quick[3], PrismaticId = Quick[3], MetaId = Ember },
                     new GemmingTemplate() { Model = "RestoSham", Group = "Uncommon", RedId = Reckless[0], YellowId = Quick[0], BlueId = Forceful[0], PrismaticId = Quick[0], MetaId = Ember },
                     new GemmingTemplate() { Model = "RestoSham", Group = "Rare", Enabled = true, RedId = Reckless[1], YellowId = Quick[1], BlueId = Forceful[1], PrismaticId = Quick[1], MetaId = Ember },
-                    new GemmingTemplate() { Model = "RestoSham", Group = "Jeweler", RedId = Reckless[1], YellowId = Quick[3], BlueId = Forceful[1], PrismaticId = Quick[3], MetaId = Ember },
+                    new GemmingTemplate() { Model = "RestoSham", Group = "Jewelcrafter", RedId = Reckless[1], YellowId = Quick[3], BlueId = Forceful[1], PrismaticId = Quick[3], MetaId = Ember },
                     #endregion
                 };
             }

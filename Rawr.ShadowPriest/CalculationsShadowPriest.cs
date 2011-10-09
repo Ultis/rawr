@@ -37,7 +37,7 @@ namespace Rawr.ShadowPriest
                     _defaultGemmingTemplates = new List<GemmingTemplate>();
                     
                     AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare", true, 52207, 52239, 52208, 52205, 52236, 68780);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Jewelcrafting)", false, 52257, 52239, 52208, 52205, 52236, 68780);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Jewelcrafter)", false, 52257, 52239, 52208, 52205, 52236, 68780);
                     
                     // cogwheels
                     int[] cog = new int[] { 59480, 59479, 59493, 59478 };
@@ -45,7 +45,7 @@ namespace Rawr.ShadowPriest
                     {
                         for (int j = i + 1; j < cog.Length; j++)
                         {
-                            _defaultGemmingTemplates.Add(new GemmingTemplate() { Model = MODEL_NAME, Group = "Cogwheel", CogwheelId = cog[i], Cogwheel2Id = cog[j], MetaId = 68780, Enabled = false });
+                            _defaultGemmingTemplates.Add(new GemmingTemplate() { Model = MODEL_NAME, Group = "Engineer", CogwheelId = cog[i], Cogwheel2Id = cog[j], MetaId = 68780, Enabled = false });
                         }
                     }
                 }

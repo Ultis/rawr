@@ -35,8 +35,11 @@ namespace Rawr
             get { return _enabled; }
             set 
             {
-                _enabled = value;
-                OnPropertyChanged("Enabled");
+                if (_enabled != value)
+                {
+                    _enabled = value;
+                    OnPropertyChanged("Enabled");
+                }
             }
         }
 
@@ -395,6 +398,12 @@ namespace Rawr
                     break;
             }
             return new ItemInstance(item, randomSuffixId, gem1, gem2, gem3, enchant, reforging, tinkering);
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0} # {1}: ({2}) R:{3} Y:{4} B:{5} C1:{6} C2:{7} H:{8} M:{9} P:{10}",
+                Group, Id, Enabled ? "On" : "Off", RedId, YellowId, BlueId, CogwheelId, Cogwheel2Id, HydraulicId, MetaId, PrismaticId);
         }
 
         private static Dictionary<string, List<GemmingTemplate>> _allTemplates = new Dictionary<string, List<GemmingTemplate>>();
