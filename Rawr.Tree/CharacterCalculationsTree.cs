@@ -101,7 +101,7 @@ namespace Rawr.Tree {
             PassivePeriodicHealBonus = (Restoration ? 1.25f : 1.0f) + opts.HarmonyPeriodicRate * Harmony + 0.02f * character.DruidTalents.Genesis;
             DirectHealMultiplier = (1 + stats.BonusHealingDoneMultiplier) * (1.0f + character.DruidTalents.MasterShapeshifter * 0.04f) * (1 + TreeOfLifeUptime * 0.15f);
             PeriodicHealMultiplier = DirectHealMultiplier * (1 + stats.BonusPeriodicHealingMultiplier);
-            SpellsManaCostMultiplier = 1.0f - character.DruidTalents.Moonglow * 0.03f;
+            SpellsManaCostMultiplier = 1 - stats.ManaCostReductionMultiplier;
 
             Healed = stats.Healed;
         }

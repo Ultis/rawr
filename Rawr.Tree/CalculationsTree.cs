@@ -57,6 +57,11 @@ namespace Rawr.Tree {
             this.BaseDurationMS = baseDurationMS;
             this.AvgHeal = (MinHeal + MaxHeal) * 0.5;
         }
+
+        public SpellData Clone()
+        {
+            return (SpellData)this.MemberwiseClone();
+        }
     }
 
 
@@ -131,6 +136,27 @@ namespace Rawr.Tree {
                 1000, 7000
                 )
         };
+
+        internal static TreeSpell[] T13Spells = new TreeSpell[] { TreeSpell.Rejuvenation, TreeSpell.Regrowth };
+
+        private static SpellData[] t13SpellData;
+
+        internal static SpellData[] T13SpellData
+        {
+            get
+            {
+                if (t13SpellData == null)
+                {
+                    t13SpellData = new SpellData[T13Spells.Length];
+                    for (int i = 0; i < T13Spells.Length; ++i)
+                    {
+                        t13SpellData[i] = SpellData[(int)T13Spells[i]].Clone();
+                        t13SpellData[i].BaseDurationMS *= 2;
+                    }
+                }
+                return t13SpellData;
+            }
+        }
 
         #region Variables and Properties
         #region Gemming Templates
@@ -516,7 +542,7 @@ namespace Rawr.Tree {
 
         public override bool IsBuffRelevant(Buff buff, Character character)
         {
-            if (buff.SetName == "Stormrider's Vestments" || buff.SetName == "Obsidian Arborweave Vestments")
+            if (buff.SetName == "Stormrider's Vestments" || buff.SetName == "Obsidian Arborweave Vestments" || buff.SetName == "Deep Earth Vestments")
                 return true;
 
             // for buffs that are non-exclusive, allow anything that could be useful even slightly
@@ -573,6 +599,7 @@ namespace Rawr.Tree {
                 ManaRestore = stats.ManaRestore,
                 SpellsManaCostReduction = stats.SpellsManaCostReduction,
                 NatureSpellsManaCostReduction = stats.NatureSpellsManaCostReduction,
+                ManaCostReductionMultiplier = stats.ManaCostReductionMultiplier,
                 Healed = stats.Healed,
 
                 // -- MultiplicativeStats --
@@ -642,6 +669,7 @@ namespace Rawr.Tree {
                 stats.ManaRestore != 0 ||
                 stats.SpellsManaCostReduction != 0 ||
                 stats.NatureSpellsManaCostReduction != 0 ||
+                stats.ManaCostReductionMultiplier != 0 ||
                 stats.Healed != 0 ||
 
                 // Spell Combat Ratings
@@ -852,6 +880,18 @@ namespace Rawr.Tree {
             }
         }
 
+        private static SpecialEffect t13innervateManaCostReduction = null;
+
+        public static SpecialEffect T13InnervateManaCostReduction
+        {
+            get
+            {
+                if (t13innervateManaCostReduction == null)
+                    t13innervateManaCostReduction = new SpecialEffect(Trigger.Use, new Stats() { ManaCostReductionMultiplier = 0.25f }, 15, 180);
+                return t13innervateManaCostReduction;
+            }
+        }
+
         public class InactiveStats : Stats
         {
             public override string ToString() { return "Inactive"; }
@@ -890,6 +930,7 @@ namespace Rawr.Tree {
             {
                 BonusIntellectMultiplier = (1 + 0.02f * character.DruidTalents.HeartOfTheWild) * (Character.ValidateArmorSpecialization(character, ItemType.Leather) ? 1.05f : 1f) - 1f,
                 BonusManaMultiplier = 0.05f * character.DruidTalents.Furor,
+                ManaCostReductionMultiplier = character.DruidTalents.Moonglow * 0.03f,
                 SpellCrit = 0.02f * character.DruidTalents.NaturesMajesty
             };
 
@@ -909,11 +950,17 @@ namespace Rawr.Tree {
             stats.Armor += stats.BonusArmor;
             stats.Armor = (float)Math.Round(stats.Armor);
 
+            int T13Count;
+            character.SetBonusCount.TryGetValue("Deep Earth Vestments", out T13Count);
+
             if (character.DruidTalents.NaturesGrace > 0)
                 stats.AddSpecialEffect(NaturesGrace[character.DruidTalents.NaturesGrace]);
 
             if (character.DruidTalents.TreeOfLife > 0)
                 stats.AddSpecialEffect(TreeOfLife[character.DruidTalents.NaturalShapeshifter]);
+
+            if (T13Count >= 2)
+                stats.AddSpecialEffect(T13InnervateManaCostReduction);
 
             return stats;
         }

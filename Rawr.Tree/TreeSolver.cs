@@ -32,6 +32,7 @@ namespace Rawr.Tree
         Stats MeanStats;
         int T11Count;
         int T12Count;
+        int T13Count;
         DruidTalents Talents;
         bool Restoration;
 
@@ -62,6 +63,7 @@ namespace Rawr.Tree
 
             character.SetBonusCount.TryGetValue("Stormrider's Vestments", out T11Count);
             character.SetBonusCount.TryGetValue("Obsidian Arborweave Vestments", out T12Count);
+            character.SetBonusCount.TryGetValue("Deep Earth Vestments", out T13Count);
             Talents = character.DruidTalents;
             Restoration = (opts != null) ? opts.Restoration : true;
         }
@@ -122,7 +124,7 @@ namespace Rawr.Tree
                     
                     if (effect.Trigger == Trigger.Use
                         && effect.MaxStack <= 1
-                        && (effect.Stats is CalculationsTree.TreeOfLifeStats || effect.Stats.HasteRating > 0 || effect.Stats.SpellHaste > 0 || effect.Stats.Intellect > 0 || effect.Stats.SpellPower > 0 || effect.Stats.CritRating > 0 || effect.Stats.SpellCrit > 0 || effect.Stats.MasteryRating > 0)
+                        && (effect.Stats is CalculationsTree.TreeOfLifeStats || effect.Stats.HasteRating > 0 || effect.Stats.SpellHaste > 0 || effect.Stats.Intellect > 0 || effect.Stats.SpellPower > 0 || effect.Stats.CritRating > 0 || effect.Stats.SpellCrit > 0 || effect.Stats.MasteryRating > 0 || effect.Stats.NatureSpellsManaCostReduction != 0 || effect.Stats.SpellsManaCostReduction != 0 || effect.Stats.ManaCostReductionMultiplier != 0)
                         )
                     {
                         dividingEffectsList.Add(effect);
@@ -597,6 +599,26 @@ namespace Rawr.Tree
             {
                 if (i != (int)TreeSpell.HealingTouch && i != (int)TreeSpell.WildGrowth)
                     spells[i].ComputeTiming();
+            }
+
+            if (T13Count >= 4)
+            {
+                // here we assume that the tick structure is computed as if the spell just had double duration
+                // this is NOT the same as doubling the amount of ticks, due to rounding
+
+                // also we assume that overhealing ratio doesn't depend on duration in our model
+                // if the model is changed to do that, then this averaging will need to be done much later
+
+                for (int i = 0; i < CalculationsTree.T13Spells.Length; ++i)
+                {
+                    ComputedSpell extspell = new ComputedSpell(CalculationsTree.T13SpellData[i], stats);
+                    extspell.ComputeTiming();
+
+                    ComputedSpell spell = spells[(int)CalculationsTree.T13Spells[i]];
+                    spell.Ticks = 0.9 * spell.Ticks + 0.1 * extspell.Ticks;
+                    spell.TPS = 0.9 * spell.TPS + 0.1 * extspell.TPS;
+                    spell.Duration = 0.9 * spell.Duration + 0.1 * extspell.Duration;
+                }
             }
 
             // optimization to avoid duplicating computations
