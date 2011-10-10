@@ -141,6 +141,7 @@ namespace Rawr.UI
                     theSet.Spec = RB_Hunter_BM.IsChecked.GetValueOrDefault(false) ? "BM" :
                                   RB_Hunter_MM.IsChecked.GetValueOrDefault(false) ? "MM" :
                                   RB_Hunter_SV.IsChecked.GetValueOrDefault(false) ? "SV" : "MM";
+                    theSet.BuffsToAdd.Add("Hunter's Mark", "Buff: Hunter's Mark");
                     // Spec Specific
                     if (theSet.Spec == "BM") {
                         theSet.BuffsToAdd.Add("Ferocious Inspiration", "Buff: Ferocious Inspiration (Damage)");
@@ -150,21 +151,34 @@ namespace Rawr.UI
                         theSet.BuffsToAdd.Add("Hunting Party", "Buff: Hunting Party (Haste)");
                     }
                     // Pet
-                    if ((string)CB_Hunter_Pet.SelectedItem != "None" && (string)CB_Hunter_Pet.SelectedItem != "Other") {
-                        theSet.BuffsToAdd.Add((string)CB_Hunter_Pet.SelectedItem, "Buff: " + (string)CB_Hunter_Pet.SelectedItem);
+                    if (theSet.Spec == "BM") {
+                        if ((string)CB_Hunter_Pet_BM.SelectedItem != "None" && (string)CB_Hunter_Pet_BM.SelectedItem != "Other") {
+                            string buffname = (string)CB_Hunter_Pet_BM.SelectedItem;
+                            int colon = buffname.IndexOf(": ") + 2;
+                            int perentheses = buffname.IndexOf(" (");
+                            theSet.BuffsToAdd.Add(buffname.Substring(colon, (perentheses - colon)), "Buff: " + buffname.Substring(colon));
+                        }
+                    }
+                    else {
+                        if ((string)CB_Hunter_Pet.SelectedItem != "None" && (string)CB_Hunter_Pet.SelectedItem != "Other") {
+                            string buffname = (string)CB_Hunter_Pet.SelectedItem;
+                            int colon = buffname.IndexOf(": ") + 2;
+                            int perentheses = buffname.IndexOf(" (");
+                            theSet.BuffsToAdd.Add(buffname.Substring(colon, (perentheses - colon)), "Buff: " + buffname.Substring(colon));
+                        }
                     }
                     // Sting
-                    if ((string)CB_Hunter_Sting.SelectedItem != "None" && (string)CB_Hunter_Sting.SelectedItem != "Other") {
-                        theSet.BuffsToAdd.Add((string)CB_Hunter_Sting.SelectedItem, "Debuff: " + (string)CB_Hunter_Sting.SelectedItem);
-                    }
+                    //if ((string)CB_Hunter_Sting.SelectedItem != "None" && (string)CB_Hunter_Sting.SelectedItem != "Other") {
+                    //    theSet.BuffsToAdd.Add((string)CB_Hunter_Sting.SelectedItem, "Debuff: " + (string)CB_Hunter_Sting.SelectedItem);
+                    //}
                     // Hunter's Mark
-                    if ((string)CB_Hunter_Mark.SelectedItem != "None") {
-                        theSet.BuffsToAdd.Add((string)CB_Hunter_Mark.SelectedItem, "Debuff: " + (string)CB_Hunter_Mark.SelectedItem
-                            + (theSet.Spec == "MM" && CK_Hunter_Mark.IsChecked.GetValueOrDefault(false) ? " (Imp)" : ""));
-                    }
+                    //if ((string)CB_Hunter_Mark.SelectedItem != "None") {
+                    //    theSet.BuffsToAdd.Add((string)CB_Hunter_Mark.SelectedItem, "Debuff: " + (string)CB_Hunter_Mark.SelectedItem
+                    //        + (theSet.Spec == "MM" && CK_Hunter_Mark.IsChecked.GetValueOrDefault(false) ? " (Imp)" : ""));
+                    //}
                     // Aspect
                     if ((string)CB_Hunter_Aspect.SelectedItem != "None" && (string)CB_Hunter_Aspect.SelectedItem != "Other") {
-                        theSet.BuffsToAdd.Add((string)CB_Hunter_Aspect.SelectedItem, "Debuff: " + (string)CB_Hunter_Aspect.SelectedItem);
+                        theSet.BuffsToAdd.Add((string)CB_Hunter_Aspect.SelectedItem, "Buff: " + (string)CB_Hunter_Aspect.SelectedItem);
                     }
                     break;
                 }
@@ -470,42 +484,45 @@ namespace Rawr.UI
             if (RB_Hunter_BM.IsChecked.GetValueOrDefault(false)) {
                 // Pet: Optional
                 LB_Hunter_Pet.Visibility = Visibility.Visible;
-                CB_Hunter_Pet.Visibility = Visibility.Visible;
+                CB_Hunter_Pet_BM.Visibility = Visibility.Visible;
+                CB_Hunter_Pet.Visibility = Visibility.Collapsed;
                 // Sting
-                LB_Hunter_Sting.Visibility = Visibility.Visible;
-                CB_Hunter_Sting.Visibility = Visibility.Visible;
+                //LB_Hunter_Sting.Visibility = Visibility.Visible;
+                //CB_Hunter_Sting.Visibility = Visibility.Visible;
                 // Hunter's Mark
-                LB_Hunter_Mark.Visibility = Visibility.Visible;
-                CB_Hunter_Mark.Visibility = Visibility.Visible;
-                CK_Hunter_Mark.Visibility = Visibility.Collapsed;
+                //LB_Hunter_Mark.Visibility = Visibility.Visible;
+                //CB_Hunter_Mark.Visibility = Visibility.Visible;
+                //CK_Hunter_Mark.Visibility = Visibility.Collapsed;
                 // Aspect
                 LB_Hunter_Aspect.Visibility = Visibility.Visible;
                 CB_Hunter_Aspect.Visibility = Visibility.Visible;
             } else if (RB_Hunter_MM.IsChecked.GetValueOrDefault(false)) {
                 // Pet: Optional
                 LB_Hunter_Pet.Visibility = Visibility.Visible;
+                CB_Hunter_Pet_BM.Visibility = Visibility.Collapsed;
                 CB_Hunter_Pet.Visibility = Visibility.Visible;
                 // Sting
-                LB_Hunter_Sting.Visibility = Visibility.Visible;
-                CB_Hunter_Sting.Visibility = Visibility.Visible;
+                //LB_Hunter_Sting.Visibility = Visibility.Visible;
+                //CB_Hunter_Sting.Visibility = Visibility.Visible;
                 // Hunter's Mark
-                LB_Hunter_Mark.Visibility = Visibility.Visible;
-                CB_Hunter_Mark.Visibility = Visibility.Visible;
-                CK_Hunter_Mark.Visibility = Visibility.Visible;
+                //LB_Hunter_Mark.Visibility = Visibility.Visible;
+                //CB_Hunter_Mark.Visibility = Visibility.Visible;
+                //CK_Hunter_Mark.Visibility = Visibility.Visible;
                 // Aspect
                 LB_Hunter_Aspect.Visibility = Visibility.Visible;
                 CB_Hunter_Aspect.Visibility = Visibility.Visible;
             } else if (RB_Hunter_SV.IsChecked.GetValueOrDefault(false)) {
                 // Pet: Optional
                 LB_Hunter_Pet.Visibility = Visibility.Visible;
+                CB_Hunter_Pet_BM.Visibility = Visibility.Collapsed;
                 CB_Hunter_Pet.Visibility = Visibility.Visible;
                 // Sting
-                LB_Hunter_Sting.Visibility = Visibility.Visible;
-                CB_Hunter_Sting.Visibility = Visibility.Visible;
+                //LB_Hunter_Sting.Visibility = Visibility.Visible;
+                //CB_Hunter_Sting.Visibility = Visibility.Visible;
                 // Hunter's Mark
-                LB_Hunter_Mark.Visibility = Visibility.Visible;
-                CB_Hunter_Mark.Visibility = Visibility.Visible;
-                CK_Hunter_Mark.Visibility = Visibility.Collapsed;
+                //LB_Hunter_Mark.Visibility = Visibility.Visible;
+                //CB_Hunter_Mark.Visibility = Visibility.Visible;
+                //CK_Hunter_Mark.Visibility = Visibility.Collapsed;
                 // Aspect
                 LB_Hunter_Aspect.Visibility = Visibility.Visible;
                 CB_Hunter_Aspect.Visibility = Visibility.Visible;

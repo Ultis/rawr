@@ -1095,7 +1095,7 @@ namespace Rawr
                 Group = "Temp Power Boost",
                 ConflictingBuffs = new List<string>() { "Tricks" },
                 Stats = new Stats(),
-                SpellId = 57934 * 100, // Glyphed is id*100
+                SpellId = 63256,
             });
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use,
                 new Stats() { BonusDamageMultiplier = 0.15f-0.05f, }, 6f, 30f));
