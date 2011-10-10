@@ -117,6 +117,10 @@
     <Compile Include="Buffs\DG_BuffsByRaidMembers.xaml.cs">
       <DependentUpon>DG_BuffsByRaidMembers.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Buffs\DG_ImportMMORaid.xaml.cs">
+      <DependentUpon>DG_ImportMMORaid.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Buffs\PlayerBuffSet.cs" />
     <Compile Include="Buffs\SaveBuffSetDialog.xaml.cs">
       <DependentUpon>SaveBuffSetDialog.xaml</DependentUpon>
     </Compile>
@@ -346,6 +350,10 @@
     <Page Include="Buffs\DG_BuffsByRaidMembers.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Buffs\DG_ImportMMORaid.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Buffs\SaveBuffSetDialog.xaml">
       <Generator>MSBuild:Compile</Generator>

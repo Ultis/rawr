@@ -1,0 +1,26 @@
+<basics2:ChildWindow x:Class="Rawr.UI.DG_ImportMMMORaid" Title="Import RaidComp from MMO-Chammp"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:System="clr-namespace:System;assembly=mscorlib"
+  xmlns:basics="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:basics2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+  xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+  xmlns:localUI="clr-namespace:Rawr.UI" 
+  mc:Ignorable="d"
+  Width="400" MaxWidth="400">
+
+  <Grid x:Name="LayoutRoot" Margin="2">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+    <TextBlock Text="Paste the &quot;Link to this composition&quot; in the box" Margin="4" />
+    <TextBox x:Name="TB_CompLink" Grid.Row="1" Margin="4" />
+
+    <Button x:Name="CancelButton" Content="Cancel" Click="CancelButton_Click" Width="75" Height="23" HorizontalAlignment="Right" Margin="0,12,0,0" Grid.Row="2" />
+    <Button x:Name="OKButton" Content="OK" Click="OKButton_Click" Width="75" Height="23" HorizontalAlignment="Right" Margin="0,12,79,0" Grid.Row="2" />
+  </Grid>
+</basics2:ChildWindow>

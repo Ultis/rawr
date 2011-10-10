@@ -14,27 +14,6 @@ using System.IO;
 
 namespace Rawr.UI
 {
-    public class PlayerBuffSet
-    {
-        public PlayerBuffSet() { }
-        //
-        public CharacterClass Class = CharacterClass.Warrior;
-        public String Spec = "Unset";
-        public Color Color = Colors.Brown;
-        public Dictionary<String, String> BuffsToAdd = new Dictionary<String, String>();
-        //
-        public override string ToString()
-        {
-            string retVal = string.Format("{0} ({1})", Class, Spec);
-            //
-            foreach (String key in BuffsToAdd.Keys)
-            {
-                retVal += string.Format("\r\n - {0}", BuffsToAdd[key]);
-            }
-            //
-            return retVal;
-        }
-    }
     public partial class DG_BuffsByRaidMembers : ChildWindow
     {
         public DG_BuffsByRaidMembers()
@@ -672,5 +651,38 @@ namespace Rawr.UI
             this.DialogResult = false;
         }
         #endregion
+
+        private void BT_Import_Click(object sender, RoutedEventArgs e)
+        {
+            DG_ImportMMMORaid DG_ImportMMMORaid = new DG_ImportMMMORaid();
+            DG_ImportMMMORaid.Closed += new EventHandler(DG_ImportMMMORaid_Closed);
+            DG_ImportMMMORaid.Show();
+        }
+
+        void DG_ImportMMMORaid_Closed(object sender, EventArgs e)
+        {
+            DG_ImportMMMORaid DG_ImportMMMORaid = sender as DG_ImportMMMORaid;
+            if (DG_ImportMMMORaid.DialogResult.GetValueOrDefault(false))
+            {
+                foreach (PlayerBuffSet theSet in DG_ImportMMMORaid.toAdds)
+                {
+                    if (theSet.BuffsToAdd.Keys.Count > 0)
+                    {
+                        ListBoxItem newAdd = new ListBoxItem();
+                        newAdd.Content = theSet.ToString();
+                        newAdd.Background = new SolidColorBrush(theSet.Color);
+                        newAdd.Background = new LinearGradientBrush(new GradientStopCollection() {
+                            new GradientStop() { Color = Colors.White, Offset = 0 },
+                            new GradientStop() { Color = theSet.Color, Offset = 1 }
+                        }, 0);
+                        List_Classes.Items.Add(newAdd);
+                        TheSets.Add(theSet);
+                    }
+                }
+                // Verify we can add more people after this
+                RaidSizeCheck();
+            }
+        }
     }
+
 }
