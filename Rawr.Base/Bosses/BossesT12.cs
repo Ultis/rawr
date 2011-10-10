@@ -3092,13 +3092,100 @@ namespace Rawr.Bosses
             #region Attacks
             for (int i = 0; i < 4; i++)
             {
-                Phase RageoftheFirelands = new Phase() { Name = "Behold the Rage of the Firelands!" };
-                Phase BlazeofGlory = new Phase() { Name = "Blaze of Glory!" };
+                Phase NEPhase = new Phase() { Name = "Night Elf Phase" };
+                Phase ShapeshiftingPhase1 = new Phase() { Name = "Shapeshifting Phase One" };
+                Phase ShapeshiftingPhase2 = new Phase() { Name = "Shapeshifting Phase Two" };
+                Phase ShapeshiftingPhase3 = new Phase() { Name = "Shapeshifting Phase Three" };
+                Phase ShapeshiftingPhase4 = new Phase() { Name = "Shapeshifting Phase Four" };
+                Phase ShapeshiftingPhase5 = new Phase() { Name = "Shapeshifting Phase Five" };
+                Phase ShapeshiftingPhase6 = new Phase() { Name = "Shapeshifting Phase Six" };
+                Phase ScorpionPhase1 = new Phase() { Name = "Scorpion Phase One" };
+                Phase CatPhase1 = new Phase() { Name = "Cat Phase One" };
+                Phase ScorpionPhase2 = new Phase() { Name = "Scorpion Phase Two" };
+                Phase CatPhase2 = new Phase() { Name = "Cat Phase Two" };
+                Phase ScorpionPhase3 = new Phase() { Name = "Scorpion Phase Three" };
+                Phase CatPhase3 = new Phase() { Name = "Cat Phase Three" };
+                Phase ScorpionPhase4 = new Phase() { Name = "Scorpion Phase Four" };
+                Phase CatPhase4 = new Phase() { Name = "Cat Phase Four" };
+                Phase ScorpionPhase5 = new Phase() { Name = "Scorpion Phase Five" };
+                Phase CatPhase5 = new Phase() { Name = "Cat Phase Five" };
+                Phase ScorpionPhase6 = new Phase() { Name = "Scorpion Phase Six" };
+                Phase CatPhase6 = new Phase() { Name = "Cat Phase Six" };
 
-                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+                float SevenStackLength = 17.3f + 13.4f + 11f + 8.6f + 7.4f + 7.4f + 6.1f + 6.1f;
+                float SevenStackAverageLength = SevenStackLength / 8f;
+                float FiveStackLength = 17.3f + 13.4f + 11f + 8.6f + 7.4f + 7.4f;
+                float FiveStackAverageLength = FiveStackLength / 6f;
+                float ThreeStackLength = 17.3f + 13.4f + 11f + 8.6f;
+                // Spread once the bar reaches 70%
+                float ZeroStackLength = 17.3f * 0.7f;
 
-                /* Concentration [Heroic Only]
-                 * Each player who engages Fandral on heroic difficulty is granted a Concentration power bar.
+                #region Main Tank Damage
+                Attack MTMelee0Stacks = GenAStandardMelee(Content[i]);
+                MTMelee0Stacks.Name = "Main Taink Melee - Zero Stacks";
+                MTMelee0Stacks.DamagePerHit *= 0.80f;
+                MTMelee0Stacks.AffectsRole[PLAYER_ROLES.OffTank] = false;
+                MTMelee0Stacks.AffectsRole[PLAYER_ROLES.MainTank] = true;
+                ScorpionPhase1.Attacks.Add(MTMelee0Stacks);
+
+                Attack MTMeleeTemp = MTMelee0Stacks.Clone();
+                MTMeleeTemp.Name = "Main Taink Melee - One Stack";
+                MTMeleeTemp.DamagePerHit *= 1.10f;
+                CatPhase1.Attacks.Add(MTMeleeTemp);
+
+                MTMeleeTemp = MTMelee0Stacks.Clone();
+                MTMeleeTemp.Name = "Main Taink Melee - Two Stacks";
+                MTMeleeTemp.DamagePerHit *= 1.20f;
+                ScorpionPhase2.Attacks.Add(MTMeleeTemp);
+
+                MTMeleeTemp = MTMelee0Stacks.Clone();
+                MTMeleeTemp.Name = "Main Taink Melee - Three Stacks";
+                MTMeleeTemp.DamagePerHit *= 1.30f;
+                CatPhase2.Attacks.Add(MTMeleeTemp);
+
+                MTMeleeTemp = MTMelee0Stacks.Clone();
+                MTMeleeTemp.Name = "Main Taink Melee - Four Stacks";
+                MTMeleeTemp.DamagePerHit *= 1.40f;
+                ScorpionPhase3.Attacks.Add(MTMeleeTemp);
+
+                MTMeleeTemp = MTMelee0Stacks.Clone();
+                MTMeleeTemp.Name = "Main Taink Melee - Five Stacks";
+                MTMeleeTemp.DamagePerHit *= 1.50f;
+                CatPhase3.Attacks.Add(MTMeleeTemp);
+
+                MTMeleeTemp = MTMelee0Stacks.Clone();
+                MTMeleeTemp.Name = "Main Taink Melee - Six Stacks";
+                MTMeleeTemp.DamagePerHit *= 1.60f;
+                ScorpionPhase4.Attacks.Add(MTMeleeTemp);
+
+                MTMeleeTemp = MTMelee0Stacks.Clone();
+                MTMeleeTemp.Name = "Main Taink Melee - Seven Stacks";
+                MTMeleeTemp.DamagePerHit *= 1.70f;
+                CatPhase4.Attacks.Add(MTMeleeTemp);
+
+                MTMeleeTemp = MTMelee0Stacks.Clone();
+                MTMeleeTemp.Name = "Main Taink Melee - Eight Stacks";
+                MTMeleeTemp.DamagePerHit *= 1.80f;
+                ScorpionPhase5.Attacks.Add(MTMeleeTemp);
+
+                MTMeleeTemp = MTMelee0Stacks.Clone();
+                MTMeleeTemp.Name = "Main Taink Melee - Nine Stacks";
+                MTMeleeTemp.DamagePerHit *= 1.90f;
+                CatPhase5.Attacks.Add(MTMeleeTemp);
+
+                MTMeleeTemp = MTMelee0Stacks.Clone();
+                MTMeleeTemp.Name = "Main Taink Melee - Ten Stacks";
+                MTMeleeTemp.DamagePerHit *= 2.00f;
+                ScorpionPhase6.Attacks.Add(MTMeleeTemp);
+
+                MTMeleeTemp = MTMelee0Stacks.Clone();
+                MTMeleeTemp.Name = "Main Taink Melee - Eleven Stacks";
+                MTMeleeTemp.DamagePerHit *= 2.10f;
+                CatPhase6.Attacks.Add(MTMeleeTemp);
+                #endregion
+
+                #region Concentration [Heroic Only]
+                /* Each player who engages Fandral on heroic difficulty is granted a Concentration power bar.
                  * This bar fills over time, increasing damage and healing done by 25% for every 25 Concentration
                  * up to 100. Players hit by a damaging attack or spell will lose all currently accumulated
                  * Concentration.*/
@@ -3107,6 +3194,31 @@ namespace Rawr.Bosses
                 // Rare (50%) - http://ptr.wowhead.com/spell=98254
                 // Epic (75%) - http://ptr.wowhead.com/spell=98252
                 // Legendary (100%) - http://ptr.wowhead.com/spell=98245
+                Stats ConcentrationStat = new Stats();
+                SpecialEffect ConcentrationSpecialEffect = new SpecialEffect ( Trigger.Use, new Stats() { BonusDamageMultiplier = 0.25f, BonusHealingDoneMultiplier = 0.25f }, BerserkTimer[i], 5f, 1, 4 );
+                ConcentrationStat.AddSpecialEffect(ConcentrationSpecialEffect);
+                if (i > 1)
+                {
+                    BuffState Concentration = new BuffState
+                    {
+                        Name = "Concentration",
+                        Frequency = 1f,
+                        Duration = BerserkTimer[i] * 1000f,
+                        Chance = 1f,
+                        Breakable = false,
+                        Stats = ConcentrationStat,
+                    };
+                    // Do to the fact that this only triggers when NOT getting hit, the tank will not be able to gain any stacks
+                    Concentration.SetAffectsRoles_DPS();
+                    Concentration.SetAffectsRoles_Healers();
+                    ShapeshiftingPhase1.BuffStates.Add(Concentration);
+                    ShapeshiftingPhase2.BuffStates.Add(Concentration);
+                    ShapeshiftingPhase3.BuffStates.Add(Concentration);
+                    ShapeshiftingPhase4.BuffStates.Add(Concentration);
+                    ShapeshiftingPhase5.BuffStates.Add(Concentration);
+                    ShapeshiftingPhase6.BuffStates.Add(Concentration);
+                }
+                #endregion
 
                 #region Behold the Rage of the Firelands!
                 /* Fandral transforms into a Cat when his enemies are not clustered together or into a Scorpion when
@@ -3116,52 +3228,191 @@ namespace Rawr.Bosses
                 // Fandral transforms into a Cat when his enemies are not clustered together.
                 // http://db.mmo-champion.com/c/53145/
 
-                /* Leaping Flames
-                 * Fandral leaps at an enemy, inflicting 36404 to 40846 Fire damage in a small area and
+                #region Leaping Flames
+                /* Fandral leaps at an enemy, inflicting 36404 to 40846 Fire damage in a small area and
                  * creating a Spirit of the Flame. This attack costs 100 energy.*/
                 // 10 man - http://ptr.wowhead.com/spell=98535
-                // 25 man - http://ptr.wowhead.com/spell=100207
-                // 10 man heroic - http://ptr.wowhead.com/spell=100206
+                // 25 man - http://ptr.wowhead.com/spell=100206
+                // 10 man heroic - http://ptr.wowhead.com/spell=100207
                 // 25 man heroic - http://ptr.wowhead.com/spell=100208
+                // Move but assume the person get hit with four ticks of the AOE
+                Impedance LeapingFlames_Move = new Impedance
+                {
+                    Name = "Leaping Flames Movement",
+                    Duration = 2f * 1000f,
+                    Frequency = SevenStackAverageLength,
+                    Chance = 1f / Max_Players[i],
+                    Breakable = false,
+                };
+                LeapingFlames_Move.SetAffectsRoles_Healers();
+                LeapingFlames_Move.AffectsRole[PLAYER_ROLES.RangedDPS] = true;
+                CatPhase1.Moves.Add(LeapingFlames_Move);
+                CatPhase2.Moves.Add(LeapingFlames_Move);
+                CatPhase3.Moves.Add(LeapingFlames_Move);
+                CatPhase4.Moves.Add(LeapingFlames_Move);
+                CatPhase5.Moves.Add(LeapingFlames_Move);
+                CatPhase6.Moves.Add(LeapingFlames_Move);
 
-                /* Spirit of the Flame
-                 * These small burning cats attack enemeis until defeated.*/
-                // http://db.mmo-champion.com/c/52593/
-                // On Heroic, Fandral summons 3 spirits after each leap.
+                Attack LeapingFlames = new Attack
+                {
+                    Name = "Leaping Flames",
+                    DamageType = ItemDamageType.Fire,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamagePerTick = new float[] { (17671f + 19828f), (17671f + 19828f), (26036f + 29213f), (26036f + 29213f), 0f }[i] / 2f,
+                    Duration = 2f,
+                    TickInterval = 0.5f,
+                    IsDoT = true,
+                    SpellID = new float[] { 98535, 100206, 100207, 100208, 0 }[i],
+                };
+                LeapingFlames.SetAffectsRoles_Healers();
+                LeapingFlames.AffectsRole[PLAYER_ROLES.RangedDPS] = true;
 
-                /* Adrenaline
-                 * Fandral gains a stack of Adrenaline each time he performs Leaping Flames. Adrenaline
+                Attack LeapingFlames_temp = LeapingFlames.Clone();
+                LeapingFlames_temp.DamagePerTick *= 1.10f;
+                CatPhase1.Attacks.Add(LeapingFlames_temp);
+
+                LeapingFlames_temp = LeapingFlames.Clone();
+                LeapingFlames_temp.DamagePerTick *= 1.30f;
+                CatPhase2.Attacks.Add(LeapingFlames_temp);
+
+                LeapingFlames_temp = LeapingFlames.Clone();
+                LeapingFlames_temp.DamagePerTick *= 1.50f;
+                CatPhase3.Attacks.Add(LeapingFlames_temp);
+
+                LeapingFlames_temp = LeapingFlames.Clone();
+                LeapingFlames_temp.DamagePerTick *= 1.70f;
+                CatPhase4.Attacks.Add(LeapingFlames_temp);
+
+                LeapingFlames_temp = LeapingFlames.Clone();
+                LeapingFlames_temp.DamagePerTick *= 1.90f;
+                CatPhase5.Attacks.Add(LeapingFlames_temp);
+
+                LeapingFlames_temp = LeapingFlames.Clone();
+                LeapingFlames_temp.DamagePerTick *= 2.10f;
+                CatPhase6.Attacks.Add(LeapingFlames_temp);
+                #endregion
+
+                #region Spirit of the Flame
+                // These small burning cats attack enemeis until defeated.
+                // http://ptr.wowhead.com/npc=52593
+                TargetGroup SpiritOfTheFlame = new TargetGroup
+                {
+                    Name = "Spirit of the Flame",
+                    LevelOfTargets = 85,
+                    Chance = 1f,
+                    NearBoss = true,
+                    NumTargs = 1f,
+                    TargetID = 52593,
+                    Duration = SevenStackAverageLength * 1000f,
+                    Frequency = SevenStackAverageLength,
+                };
+                SpiritOfTheFlame.SetAffectsRoles_All();
+                CatPhase1.Targets.Add(SpiritOfTheFlame);
+                CatPhase2.Targets.Add(SpiritOfTheFlame);
+                CatPhase3.Targets.Add(SpiritOfTheFlame);
+                CatPhase4.Targets.Add(SpiritOfTheFlame);
+                CatPhase5.Targets.Add(SpiritOfTheFlame);
+                CatPhase6.Targets.Add(SpiritOfTheFlame);
+
+                Attack SpiritOfTheFlameMelee = new Attack
+                {
+                    Name = "Spirit Of The Flame Melee",
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)Content[i]] * .666f,
+                    DamageType = ItemDamageType.Physical,
+                    IsFromAnAdd = true,
+                    MaxNumTargets = 1f,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    AttackSpeed = 1.8f,
+                    Blockable = true,
+                    Dodgable = true,
+                    Missable = true,
+                    Parryable = true,
+                };
+                SpiritOfTheFlameMelee.AffectsRole[PLAYER_ROLES.MainTank] = true;
+                CatPhase1.Attacks.Add(SpiritOfTheFlameMelee);
+                CatPhase2.Attacks.Add(SpiritOfTheFlameMelee);
+                CatPhase3.Attacks.Add(SpiritOfTheFlameMelee);
+                CatPhase4.Attacks.Add(SpiritOfTheFlameMelee);
+                CatPhase5.Attacks.Add(SpiritOfTheFlameMelee);
+                CatPhase6.Attacks.Add(SpiritOfTheFlameMelee);
+                #endregion
+
+                #region Adrenaline
+                /* Fandral gains a stack of Adrenaline each time he performs Leaping Flames. Adrenaline
                  * increases his energy regeneration rate by 1% per application. Fandral loses all stacks of
                  * Adrenaline when he switches form.*/
                 // http://ptr.wowhead.com/spell=97238
+                #endregion
 
-                /* Fury
-                 * Fandral gains a stack of Fury each time he transforms into a Cat or Scorpion,
+                #region Fury
+                /* Fandral gains a stack of Fury each time he transforms into a Cat or Scorpion,
                  * permanently increasing the Physical damage he deals by 10%.*/
                 // http://ptr.wowhead.com/spell=97235
+                #endregion
                 #endregion
 
                 #region Scorpion Form
                 // Fandral transforms into a Scorpion when 7 or more of his enemies are clustered together.
 
-                /* Flame Scythe
-                 * Parsing Error*/
+                #region Flame Scythe
+                // Fandral inflicts 562000 Fire damage to enemies in front of him. Damage is split equally
+                // among targets hit. This attack costs 100 energy. 
                 // Damage needs to be split between all players
                 // 10 man - http://ptr.wowhead.com/spell=98474
                 // 25 man - http://ptr.wowhead.com/spell=100212
                 // 10 man heroic - http://ptr.wowhead.com/spell=100213
                 // 25 man heroic - http://ptr.wowhead.com/spell=100214
+                Attack FlameSythe = new Attack
+                {
+                    Name = "Flame Sythe",
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    DamageType = ItemDamageType.Fire,
+                    DamagePerHit = new float[] { 562000, 1687000, 765000, 2295000, 0 }[i] / Max_Players[i],
+                    AttackSpeed = (i < 2 ? SevenStackAverageLength : FiveStackAverageLength),
+                    SpellID = new float[] { 98474, 100212, 100213, 100214, 0 }[i],
+                    MaxNumTargets = Max_Players[i],
+                };
+                FlameSythe.SetAffectsRoles_All();
+                ScorpionPhase1.Attacks.Add(FlameSythe);
 
-                /* Adrenaline
-                 * Fandral gains a stack of Adrenaline each time he performs Flame Scythe. Adrenaline
+                Attack FlameSythe_temp = FlameSythe.Clone();
+                FlameSythe_temp.DamagePerHit *= 1.2f;
+                if (i < 2)
+                    ScorpionPhase2.Attacks.Add(FlameSythe_temp);
+
+                FlameSythe_temp = FlameSythe.Clone();
+                FlameSythe_temp.DamagePerHit *= 1.4f;
+                if (i < 2)
+                    ScorpionPhase3.Attacks.Add(FlameSythe_temp);
+
+                FlameSythe_temp = FlameSythe.Clone();
+                FlameSythe_temp.DamagePerHit *= 1.6f;
+                if (i < 2)
+                    ScorpionPhase4.Attacks.Add(FlameSythe_temp);
+
+                FlameSythe_temp = FlameSythe.Clone();
+                FlameSythe_temp.DamagePerHit *= 1.8f;
+                if (i < 2)
+                    ScorpionPhase5.Attacks.Add(FlameSythe_temp);
+
+                FlameSythe_temp = FlameSythe.Clone();
+                FlameSythe_temp.DamagePerHit *= 2.0f;
+                if (i < 2)
+                    ScorpionPhase6.Attacks.Add(FlameSythe_temp);
+                #endregion
+
+                #region Adrenaline
+                /* Fandral gains a stack of Adrenaline each time he performs Flame Scythe. Adrenaline
                  * increases his energy regeneration rate by 1% per application. Fandral loses all stacks of
                  * Adrenaline when he switches form.*/
                 // http://ptr.wowhead.com/spell=97238
+                #endregion
 
-                /* Fury
-                 * Fandral gains a stack of Fury each time he transforms into a Cat or Scorpion,
+                #region Fury
+                /* Fandral gains a stack of Fury each time he transforms into a Cat or Scorpion,
                  * permanently increasing the Physical damage he deals by 10%.*/
                 // http://ptr.wowhead.com/spell=97235
+                #endregion
                 #endregion
                 #endregion
 
@@ -3173,25 +3424,175 @@ namespace Rawr.Bosses
                  * unleashes Searing Seeds. When he is switching from Scorpion form to Cat form, Fandral unleashes
                  * Burning Orbs.*/
 
-                /* Fiery Cyclone
-                 * On every third transform, Fandral pauses in human form to briefly envelop his enemies in a
+                #region Fiery Cyclone
+                /* On every third transform, Fandral pauses in human form to briefly envelop his enemies in a
                  * Fiery Cyclone.
                  * 
                  * The Fiery Cyclone tosses all enemy targets into the air, preventing all action but making them
                  * invulnerable for 3 sec.*/
+                Impedance FieryCyclone = new Impedance
+                {
+                    Name = "Fiery Cyclone",
+                    Frequency = 1f,
+                    Duration = 3f * 1000f,
+                    Chance = 1f,
+                    Breakable = false,
+                };
+                FieryCyclone.SetAffectsRoles_All();
+                NEPhase.Stuns.Add(FieryCyclone);
+                #endregion
 
-                /* Searing Seeds
-                 * When Fandral switches from Cat form to Scorpion form, he unleashes Searing Seeds.
+                #region Searing Seeds
+                /* When Fandral switches from Cat form to Scorpion form, he unleashes Searing Seeds.
                  * 
                  * Searing Seeds implants fiery seeds in Fandral's enemies. Each seed grows at a different rate.
                  * When fully grown, the seeds explode, inflicting 51499 to 51500 Fire damage to targets within
                  * 10 yards.*/
+                // 10-man - http://ptr.wowhead.com/spell=98620
+                // 25-man - http://ptr.wowhead.com/spell=100215
+                // 10-man Heroic - http://ptr.wowhead.com/spell=100216
+                // 25-man Heroic - http://ptr.wowhead.com/spell=100217
+                Attack SearingSeed = new Attack
+                {
+                    Name = "Searing Seed",
+                    DamagePerHit = new float[] { 45000, 45000, 63750, 63750, 0 }[i],
+                    AttackSpeed = (SevenStackLength * (i < 2 ? 2f : 1f))  - 1f,
+                    DamageType = ItemDamageType.Fire,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    MaxNumTargets = 1f,
+                    SpellID = new float[] { 98620, 100215, 100216, 100217, 0 }[i],
+                };
+                SearingSeed.SetAffectsRoles_All();
+                SearingSeed.AffectsRole[PLAYER_ROLES.MainTank] = false;
+                ShapeshiftingPhase2.Attacks.Add(SearingSeed);
+                ShapeshiftingPhase4.Attacks.Add(SearingSeed);
+                ShapeshiftingPhase6.Attacks.Add(SearingSeed);
+                #endregion
 
-                /* Burning Orbs
-                 * When Fandral switches from Scorpion form to Cat form, he unleashes Burning Orbs.
+                #region Burning Orbs
+                /* When Fandral switches from Scorpion form to Cat form, he unleashes Burning Orbs.
                  * 
                  * Fandral summons several orbs around the room. Each orb attacks the player nearest to it,
                  * burning them for 7276 to 8174 Fire damage every 2 sec. Stacks.*/
+                // No more than 4 stacks
+                // Meaning to get the average amount after 4 stacks, you multiply by 2.5
+                // 10-man - http://ptr.wowhead.com/spell=98584
+                // 25-man - http://ptr.wowhead.com/spell=100209
+                // 10-man Heroic - http://ptr.wowhead.com/spell=100210
+                // 25-man Heroic - http://ptr.wowhead.com/spell=100211
+                Attack BurningOrbs = new Attack
+                {
+                    Name = "Burning Orb",
+                    DamagePerHit = new float[] { 3750, 3750, 7650, 7650, 0 }[i] * 10f,
+                    DamagePerTick = new float[] { 3750, 3750, 7650, 7650, 0 }[i] * 2.5f,
+                    IsDoT = true,
+                    Duration = 6f,
+                    TickInterval = 2f,
+                    AttackSpeed = 14f,
+                    MaxNumTargets = new float[] { 2, 5, 2, 5, 0 }[i],
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamageType = ItemDamageType.Fire,
+                    SpellID = new float[] { 98584, 100209, 100210, 100211, 0 }[i],
+                };
+                BurningOrbs.SetAffectsRoles_All();
+                ShapeshiftingPhase3.Attacks.Add(BurningOrbs);
+                ShapeshiftingPhase5.Attacks.Add(BurningOrbs);
+ 
+
+                #endregion
+                #endregion
+
+                #region Apply Phases
+                float phasestart = 0;
+                float ShapshiftingStart = 0;
+                InnerPhase InnerPhaseShapeShifting;
+                // On Normal we are running a 7 stack each phase. That leaves only a 3 stack during the final Cat phase for Berserk
+                if (i < 2)
+                {
+                    InnerPhaseShapeShifting = new InnerPhase(ScorpionPhase1, i, 1, ShapshiftingStart, SevenStackLength, BerserkTimer[i]); ShapshiftingStart += SevenStackLength;
+                    ShapeshiftingPhase1.InnerPhases.Add(InnerPhaseShapeShifting);
+                    InnerPhaseShapeShifting = new InnerPhase(CatPhase1, i, 1, ShapshiftingStart, SevenStackLength, BerserkTimer[i]); ShapshiftingStart += SevenStackLength;
+                    ShapeshiftingPhase1.InnerPhases.Add(InnerPhaseShapeShifting);
+                    ApplyAPhasesValues(ShapeshiftingPhase1, i, 1, phasestart, ShapshiftingStart, BerserkTimer[i]); phasestart += ShapshiftingStart;
+                    ApplyAPhasesValues(NEPhase, i, 2, phasestart, 3f, BerserkTimer[i]); phasestart += 3f; ShapshiftingStart = 0f;
+                    AddAPhase(ShapeshiftingPhase1, i);
+
+                    InnerPhaseShapeShifting = new InnerPhase(ScorpionPhase2, i, 3, ShapshiftingStart, SevenStackLength, BerserkTimer[i]); ShapshiftingStart += SevenStackLength;
+                    ShapeshiftingPhase2.InnerPhases.Add(InnerPhaseShapeShifting);
+                    InnerPhaseShapeShifting = new InnerPhase(CatPhase2, i, 3, ShapshiftingStart, SevenStackLength, BerserkTimer[i]); ShapshiftingStart += SevenStackLength;
+                    ShapeshiftingPhase2.InnerPhases.Add(InnerPhaseShapeShifting);
+                    ApplyAPhasesValues(ShapeshiftingPhase2, i, 3, phasestart, ShapshiftingStart, BerserkTimer[i]); phasestart += ShapshiftingStart;
+                    ApplyAPhasesValues(NEPhase, i, 4, phasestart, 3f, BerserkTimer[i]); phasestart += 3f; ShapshiftingStart = 0f;
+                    AddAPhase(ShapeshiftingPhase2, i);
+
+                    InnerPhaseShapeShifting = new InnerPhase(ScorpionPhase3, i, 5, ShapshiftingStart, SevenStackLength, BerserkTimer[i]); ShapshiftingStart += SevenStackLength;
+                    ShapeshiftingPhase3.InnerPhases.Add(InnerPhaseShapeShifting);
+                    InnerPhaseShapeShifting = new InnerPhase(CatPhase3, i, 5, ShapshiftingStart, SevenStackLength, BerserkTimer[i]); ShapshiftingStart += SevenStackLength;
+                    ShapeshiftingPhase3.InnerPhases.Add(InnerPhaseShapeShifting);
+                    ApplyAPhasesValues(ShapeshiftingPhase3, i, 5, phasestart, ShapshiftingStart, BerserkTimer[i]); phasestart += ShapshiftingStart;
+                    ApplyAPhasesValues(NEPhase, i, 6, phasestart, 3f, BerserkTimer[i]); phasestart += 3f; ShapshiftingStart = 0f;
+                    AddAPhase(ShapeshiftingPhase3, i);
+                    AddAPhase(NEPhase, i);
+
+                    InnerPhaseShapeShifting = new InnerPhase(ScorpionPhase4, i, 7, ShapshiftingStart, SevenStackLength, BerserkTimer[i]); ShapshiftingStart += SevenStackLength;
+                    ShapeshiftingPhase4.InnerPhases.Add(InnerPhaseShapeShifting);
+                    InnerPhaseShapeShifting = new InnerPhase(CatPhase4, i, 7, ShapshiftingStart, ThreeStackLength, BerserkTimer[i]); ShapshiftingStart += ThreeStackLength;
+                    ShapeshiftingPhase4.InnerPhases.Add(InnerPhaseShapeShifting);
+                    ApplyAPhasesValues(ShapeshiftingPhase4, i, 7, phasestart, ShapshiftingStart, BerserkTimer[i]);
+                    AddAPhase(ShapeshiftingPhase4, i);
+                }
+                // On Heroic We are running a 5 Stack on the first Scorpion
+                // Then a 7 Stack on Cat and 0 stack [70% before the first stack goes off] on the Scorpion phase
+                else
+                {
+                    InnerPhaseShapeShifting = new InnerPhase(ScorpionPhase1, i, 1, ShapshiftingStart, FiveStackLength, BerserkTimer[i]); ShapshiftingStart += FiveStackLength;
+                    ShapeshiftingPhase1.InnerPhases.Add(InnerPhaseShapeShifting);
+                    InnerPhaseShapeShifting = new InnerPhase(CatPhase1, i, 1, ShapshiftingStart, SevenStackLength, BerserkTimer[i]); ShapshiftingStart += SevenStackLength;
+                    ShapeshiftingPhase1.InnerPhases.Add(InnerPhaseShapeShifting);
+                    ApplyAPhasesValues(ShapeshiftingPhase1, i, 1, phasestart, ShapshiftingStart, BerserkTimer[i]); phasestart += ShapshiftingStart;
+                    ApplyAPhasesValues(NEPhase, i, 2, phasestart, 3f, BerserkTimer[i]); phasestart += 3f; ShapshiftingStart = 0f;
+                    AddAPhase(ShapeshiftingPhase1, i);
+
+                    InnerPhaseShapeShifting = new InnerPhase(ScorpionPhase2, i, 3, ShapshiftingStart, ZeroStackLength, BerserkTimer[i]); ShapshiftingStart += ZeroStackLength;
+                    ShapeshiftingPhase2.InnerPhases.Add(InnerPhaseShapeShifting);
+                    InnerPhaseShapeShifting = new InnerPhase(CatPhase2, i, 3, ShapshiftingStart, SevenStackLength, BerserkTimer[i]); ShapshiftingStart += SevenStackLength;
+                    ShapeshiftingPhase2.InnerPhases.Add(InnerPhaseShapeShifting);
+                    ApplyAPhasesValues(ShapeshiftingPhase2, i, 3, phasestart, ShapshiftingStart, BerserkTimer[i]); phasestart += ShapshiftingStart;
+                    ApplyAPhasesValues(NEPhase, i, 4, phasestart, 3f, BerserkTimer[i]); phasestart += 3f; ShapshiftingStart = 0f;
+                    AddAPhase(ShapeshiftingPhase2, i);
+
+                    InnerPhaseShapeShifting = new InnerPhase(ScorpionPhase3, i, 5, ShapshiftingStart, ZeroStackLength, BerserkTimer[i]); ShapshiftingStart += ZeroStackLength;
+                    ShapeshiftingPhase3.InnerPhases.Add(InnerPhaseShapeShifting);
+                    InnerPhaseShapeShifting = new InnerPhase(CatPhase3, i, 5, ShapshiftingStart, SevenStackLength, BerserkTimer[i]); ShapshiftingStart += SevenStackLength;
+                    ShapeshiftingPhase3.InnerPhases.Add(InnerPhaseShapeShifting);
+                    ApplyAPhasesValues(ShapeshiftingPhase3, i, 5, phasestart, ShapshiftingStart, BerserkTimer[i]); phasestart += ShapshiftingStart;
+                    ApplyAPhasesValues(NEPhase, i, 6, phasestart, 3f, BerserkTimer[i]); phasestart += 3f; ShapshiftingStart = 0f;
+                    AddAPhase(ShapeshiftingPhase3, i);
+
+                    InnerPhaseShapeShifting = new InnerPhase(ScorpionPhase4, i, 7, ShapshiftingStart, ZeroStackLength, BerserkTimer[i]); ShapshiftingStart += ZeroStackLength;
+                    ShapeshiftingPhase4.InnerPhases.Add(InnerPhaseShapeShifting);
+                    InnerPhaseShapeShifting = new InnerPhase(CatPhase4, i, 7, ShapshiftingStart, SevenStackLength, BerserkTimer[i]); ShapshiftingStart += SevenStackLength;
+                    ShapeshiftingPhase4.InnerPhases.Add(InnerPhaseShapeShifting);
+                    ApplyAPhasesValues(ShapeshiftingPhase4, i, 7, phasestart, ShapshiftingStart, BerserkTimer[i]); phasestart += ShapshiftingStart;
+                    ApplyAPhasesValues(NEPhase, i, 8, phasestart, 3f, BerserkTimer[i]); phasestart += 3f; ShapshiftingStart = 0f;
+                    AddAPhase(ShapeshiftingPhase3, i);
+
+                    InnerPhaseShapeShifting = new InnerPhase(ScorpionPhase5, i, 9, ShapshiftingStart, ZeroStackLength, BerserkTimer[i]); ShapshiftingStart += ZeroStackLength;
+                    ShapeshiftingPhase5.InnerPhases.Add(InnerPhaseShapeShifting);
+                    InnerPhaseShapeShifting = new InnerPhase(CatPhase5, i, 9, ShapshiftingStart, SevenStackLength, BerserkTimer[i]); ShapshiftingStart += SevenStackLength;
+                    ShapeshiftingPhase5.InnerPhases.Add(InnerPhaseShapeShifting);
+                    ApplyAPhasesValues(ShapeshiftingPhase5, i, 9, phasestart, ShapshiftingStart, BerserkTimer[i]); phasestart += ShapshiftingStart;
+                    ApplyAPhasesValues(NEPhase, i, 10, phasestart, 3f, BerserkTimer[i]); phasestart += 3f; ShapshiftingStart = 0f;
+                    AddAPhase(ShapeshiftingPhase3, i);
+                    AddAPhase(NEPhase, i);
+
+                    InnerPhaseShapeShifting = new InnerPhase(ScorpionPhase6, i, 11, ShapshiftingStart, ZeroStackLength, BerserkTimer[i]); ShapshiftingStart += ZeroStackLength;
+                    ShapeshiftingPhase6.InnerPhases.Add(InnerPhaseShapeShifting);
+                    InnerPhaseShapeShifting = new InnerPhase(CatPhase6, i, 11, ShapshiftingStart, SevenStackLength - 4.45f, BerserkTimer[i]); ShapshiftingStart += (SevenStackLength - 4.45f);
+                    ShapeshiftingPhase6.InnerPhases.Add(InnerPhaseShapeShifting);
+                    ApplyAPhasesValues(ShapeshiftingPhase6, i, 11, phasestart, ShapshiftingStart, BerserkTimer[i]);
+                    AddAPhase(ShapeshiftingPhase3, i);
+                }
                 #endregion
             }
             #endregion
