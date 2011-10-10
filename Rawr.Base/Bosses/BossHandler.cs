@@ -1750,7 +1750,7 @@ namespace Rawr {
             Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_10, BossHandler.TierLevels.T11_25, BossHandler.TierLevels.T11_10H, BossHandler.TierLevels.T11_25H, BossHandler.TierLevels.T11_LFR };
             // Fight Requirements
             Min_Tanks = new int[] { 2, 2, 2, 2, 2 };
-            Min_Healers = new int[] { 2, 5, 2, 5, 5 };
+            Min_Healers = new int[] { 2, 5, 2, 5, 6 };
         }
         #region Variable Convenience Overrides
 

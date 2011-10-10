@@ -430,7 +430,12 @@ namespace Rawr {
         bool useGoodBoyAvg = true;
         private bool IsContent25Man(BossHandler.TierLevels tier) {
             if (tier == BossHandler.TierLevels.T11_25
-                || tier == BossHandler.TierLevels.T11_25H)
+                || tier == BossHandler.TierLevels.T11_25H
+                || tier == BossHandler.TierLevels.T12_25
+                || tier == BossHandler.TierLevels.T12_25H
+                || tier == BossHandler.TierLevels.T13_LFR
+                || tier == BossHandler.TierLevels.T13_25
+                || tier == BossHandler.TierLevels.T13_25H)
             {
                 return true;
             }
