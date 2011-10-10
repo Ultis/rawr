@@ -43,6 +43,22 @@ namespace Rawr.Tree
             set { restoration = value; OnPropertyChanged("Restoration"); }
         }
 
+        private bool wildGrowthNerf = false;
+        [DefaultValue(false)]
+        public bool WildGrowthNerf
+        {
+            get { return wildGrowthNerf; }
+            set { wildGrowthNerf = value; OnPropertyChanged("WildGrowthNerf"); }
+        }
+
+        private bool glyphOfWildGrowthCDIncrease = false;
+        [DefaultValue(false)]
+        public bool GlyphOfWildGrowthCDIncrease
+        {
+            get { return glyphOfWildGrowthCDIncrease; }
+            set { glyphOfWildGrowthCDIncrease = value; OnPropertyChanged("GlyphOfWildGrowthCDIncrease"); }
+        }
+
         private bool timedInnervates = true;
         [DefaultValue(true)]
         public bool TimedInnervates

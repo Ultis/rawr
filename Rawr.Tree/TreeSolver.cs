@@ -552,7 +552,12 @@ namespace Rawr.Tree
         {
             ComputedSpell[] spells = new ComputedSpell[(int)TreeSpell.Count];
             for (int i = 0; i < (int)TreeSpell.Count; ++i)
-                spells[i] = new ComputedSpell(CalculationsTree.SpellData[i], stats);
+            {
+                SpellData spdata = CalculationsTree.SpellData[i];
+                if(i == (int)TreeSpell.WildGrowth && opts.WildGrowthNerf)
+                    spdata = CalculationsTree.NerfedWildGrowthSpellData;
+                spells[i] = new ComputedSpell(spdata, stats);
+            }
 
             spells[(int)TreeSpell.Tranquility].DirectMultiplier *= 4 * 5;
             spells[(int)TreeSpell.Tranquility].TickMultiplier *= 4 * 5;
@@ -641,6 +646,9 @@ namespace Rawr.Tree
             spells[(int)TreeSpell.WildGrowth].Action.Cooldown = 8 + opts.WildGrowthCastDelay;
             spells[(int)TreeSpell.Tranquility].Action.Cooldown = 8 * 60 - (150 * Talents.MalfurionsGift) + opts.TranquilityCastDelay;
             spells[(int)TreeSpell.Swiftmend].Action.Cooldown = 15 + opts.SwiftmendCastDelay;
+
+            if (opts.GlyphOfWildGrowthCDIncrease && character.DruidTalents.GlyphOfWildGrowth)
+                spells[(int)TreeSpell.WildGrowth].Action.Cooldown += 2;
             #endregion
 
             return spells;

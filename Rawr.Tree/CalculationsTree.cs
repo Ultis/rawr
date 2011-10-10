@@ -137,6 +137,14 @@ namespace Rawr.Tree {
                 )
         };
 
+        internal static SpellData NerfedWildGrowthSpellData = new SpellData("Wild Growth", 48438,
+                27,
+                1500,
+                0, 0, 0,
+                425, 437, // TODO: how did they round it?
+                1000, 7000
+                );
+
         internal static TreeSpell[] T13Spells = new TreeSpell[] { TreeSpell.Rejuvenation, TreeSpell.Regrowth };
 
         private static SpellData[] t13SpellData;
