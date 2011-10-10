@@ -220,7 +220,7 @@ namespace Rawr.Bosses
 
                 #region Apply Phases
                 int phaseStartTime = 0;
-                ApplyAPhasesValues( EntireFight, i, 1, phaseStartTime, this[i].BerserkTimer, this[i].BerserkTimer); phaseStartTime += this[i].BerserkTimer;
+                ApplyAPhasesValues( EntireFight, i, 1, phaseStartTime, BerserkTimer[i], BerserkTimer[i]); phaseStartTime += BerserkTimer[i];
                 AddAPhase(EntireFight, i);
                 #endregion
             }
@@ -1124,7 +1124,7 @@ namespace Rawr.Bosses
                     AttackType = ATTACK_TYPES.AT_AOE,
                     DamageType = ItemDamageType.Fire,
                     TickInterval = 1,
-                    Duration = this[i].BerserkTimer * .25f * 1000f, // for the duration of this phase.
+                    Duration = BerserkTimer[i] * .25f * 1000f, // for the duration of this phase.
                     SpellID = 99845f,
                 };
                 Immolation.SetUnavoidable();
@@ -1167,12 +1167,12 @@ namespace Rawr.Bosses
 
                 #region Add Phases
                 int phaseStartTime = 0;
-                int phaseDuration = (int)((float)this[i].BerserkTimer * (1 - .25f));  // Phase change at 25% health when the armor is gone.
-                ApplyAPhasesValues( ObsidianForm, i, 1, phaseStartTime, phaseDuration, this[i].BerserkTimer);
+                int phaseDuration = (int)((float)BerserkTimer[i] * (1 - .25f));  // Phase change at 25% health when the armor is gone.
+                ApplyAPhasesValues( ObsidianForm, i, 1, phaseStartTime, phaseDuration, BerserkTimer[i]);
                 AddAPhase(ObsidianForm, i);
                 phaseStartTime = phaseStartTime + phaseDuration;
-                phaseDuration = this[i].BerserkTimer - phaseDuration;
-                ApplyAPhasesValues( LiquidForm, i, 1, phaseStartTime, phaseDuration, this[i].BerserkTimer);
+                phaseDuration = BerserkTimer[i] - phaseDuration;
+                ApplyAPhasesValues( LiquidForm, i, 1, phaseStartTime, phaseDuration, BerserkTimer[i]);
                 AddAPhase(LiquidForm, i);
                 #endregion
             }
@@ -1233,6 +1233,7 @@ namespace Rawr.Bosses
             {
                 Phase InitialPull = new Phase() { Name = "Initial Pull" };
                 Phase FlightofFlames = new Phase() { Name = "Flight of Flames" };
+                Phase FlightofFlamesPart2 = new Phase() { Name = "Flight of Flames" };
                 Phase UltimateFirepower = new Phase() { Name = "Ultimate Firepower" };
                 Phase Burnout = new Phase() { Name = "Burnout" };
                 Phase ReIgnition = new Phase() { Name = "Re-Ignition" };
@@ -1370,6 +1371,7 @@ namespace Rawr.Bosses
                 };
                 MoltenFeatherGroundGroup.SetAffectsRoles_All();
                 FlightofFlames.BuffStates.Add(MoltenFeatherGroundGroup);
+                FlightofFlamesPart2.BuffStates.Add(MoltenFeatherGroundGroup);
                 // Since people are getting feathers, casters can cast while moving, thus eliminating most movement impedances
                 #endregion
                 
@@ -1378,6 +1380,7 @@ namespace Rawr.Bosses
                 // http://ptr.wowhead.com/spell=98630
                 MoltenFeatherAirGroup.Stats.MovementSpeed = 2.25f;
                 FlightofFlames.BuffStates.Add(MoltenFeatherAirGroup);
+                FlightofFlamesPart2.BuffStates.Add(MoltenFeatherAirGroup);
                 #endregion
                 #endregion
 
@@ -1405,6 +1408,7 @@ namespace Rawr.Bosses
                 };
                 BlazingPower.AffectsRole[PLAYER_ROLES.AlysrazorAirGroup] = true;
                 FlightofFlames.BuffStates.Add(BlazingPower);
+                FlightofFlamesPart2.BuffStates.Add(BlazingPower);
                 #endregion
 
                 #region Alysra's Razor
@@ -1425,6 +1429,7 @@ namespace Rawr.Bosses
                 };
                 AlysrasRazor.AffectsRole[PLAYER_ROLES.AlysrazorAirGroup] = true;
                 FlightofFlames.BuffStates.Add(AlysrasRazor);
+                FlightofFlamesPart2.BuffStates.Add(AlysrasRazor);
                 #endregion
 
                 #region Incendiary Cloud
@@ -1456,6 +1461,7 @@ namespace Rawr.Bosses
                 };
                 IncendiaryCloud.AffectsRole[PLAYER_ROLES.AlysrazorAirGroup] = true;
                 FlightofFlames.Attacks.Add(IncendiaryCloud);
+                FlightofFlamesPart2.Attacks.Add(IncendiaryCloud);
                 #endregion
 
                 #endregion
@@ -1487,6 +1493,7 @@ namespace Rawr.Bosses
                 BlazingTalonInitiateWest.SetAffectsRoles_DPS();
                 HatchlingPhase.Targets.Add(BlazingTalonInitiateWest);
                 FlightofFlames.Targets.Add(BlazingTalonInitiateWest);
+                FlightofFlamesPart2.Targets.Add(BlazingTalonInitiateWest);
 
                 TargetGroup BlazingTalonInitiateEast = new TargetGroup
                 {
@@ -1502,6 +1509,7 @@ namespace Rawr.Bosses
                 BlazingTalonInitiateEast.SetAffectsRoles_DPS();
                 HatchlingPhase.Targets.Add(BlazingTalonInitiateEast);
                 FlightofFlames.Targets.Add(BlazingTalonInitiateEast);
+                FlightofFlamesPart2.Targets.Add(BlazingTalonInitiateEast);
 
                 #region Brushfire
                 /* The Blazing Talon Initiate conjures a fiery ball that moves across the arena, dealing
@@ -1527,6 +1535,7 @@ namespace Rawr.Bosses
                 };
                 Brushfire.SetAffectsRoles_All();
                 FlightofFlames.Attacks.Add(Brushfire);
+                FlightofFlamesPart2.Attacks.Add(Brushfire);
                 #endregion
 
                 #region Fieroblast
@@ -1557,6 +1566,7 @@ namespace Rawr.Bosses
                     Fieroblast.SetAffectsRoles_All();
                     Fieroblast.AffectsRole[PLAYER_ROLES.AlysrazorAirGroup] = true;
                     FlightofFlames.Attacks.Add(Fieroblast);
+                    FlightofFlamesPart2.Attacks.Add(Fieroblast);
                 }
                 #endregion
                 #endregion
@@ -1580,7 +1590,10 @@ namespace Rawr.Bosses
                 };
                 WestVoraciousHatchling.AffectsRole[PLAYER_ROLES.MainTank] = true;
                 if (i < 2)
+                {
                     FlightofFlames.Targets.Add(WestVoraciousHatchling);
+                    FlightofFlamesPart2.Targets.Add(WestVoraciousHatchling);
+                }
                 else
                     FireStormPhase.Targets.Add(WestVoraciousHatchling);
 
@@ -1590,7 +1603,10 @@ namespace Rawr.Bosses
                 EastVoraciousHatchling.AffectsRole[PLAYER_ROLES.MainTank] = false;
                 EastVoraciousHatchling.AffectsRole[PLAYER_ROLES.OffTank] = true;
                 if (i < 2)
+                {
                     FlightofFlames.Targets.Add(EastVoraciousHatchling);
+                    FlightofFlamesPart2.Targets.Add(EastVoraciousHatchling);
+                }
                 else
                     FireStormPhase.Targets.Add(EastVoraciousHatchling);
 
@@ -1611,7 +1627,10 @@ namespace Rawr.Bosses
                 };
                 VoraciousHatchlingMelee.SetAffectsRoles_Tanks();
                 if (i < 2)
+                {
                     FlightofFlames.Attacks.Add(VoraciousHatchlingMelee);
+                    FlightofFlamesPart2.Attacks.Add(VoraciousHatchlingMelee);
+                }
                 else
                     FireStormPhase.Attacks.Add(VoraciousHatchlingMelee);
 
@@ -1633,7 +1652,10 @@ namespace Rawr.Bosses
                 };
                 Imprint.SetAffectsRoles_Tanks();
                 if (i < 2)
+                {
                     FlightofFlames.BuffStates.Add(Imprint);
+                    FlightofFlamesPart2.BuffStates.Add(Imprint);
+                }
                 else
                     FireStormPhase.BuffStates.Add(Imprint);
                 #endregion
@@ -1674,7 +1696,10 @@ namespace Rawr.Bosses
                 };
                 Tantrum.SetAffectsRoles_Tanks();
                 if (i < 2)
+                {
                     FlightofFlames.BuffStates.Add(Tantrum);
+                    FlightofFlamesPart2.BuffStates.Add(Tantrum);
+                }
                 else
                     FireStormPhase.BuffStates.Add(Tantrum);
                 #endregion
@@ -1702,7 +1727,10 @@ namespace Rawr.Bosses
                 };
                 GushingWound.SetAffectsRoles_Tanks();
                 if (i < 2)
+                {
                     FlightofFlames.Attacks.Add(GushingWound);
+                    FlightofFlamesPart2.Attacks.Add(GushingWound);
+                }
                 else
                     FireStormPhase.Attacks.Add(GushingWound);
                 #endregion
@@ -1731,7 +1759,10 @@ namespace Rawr.Bosses
                 };
                 PlumpLavaWorm.SetAffectsRoles_Tanks();
                 if (i < 2)
+                {
                     FlightofFlames.Targets.Add(PlumpLavaWorm);
+                    FlightofFlamesPart2.Targets.Add(PlumpLavaWorm);
+                }
                 else
                     FireStormPhase.Targets.Add(PlumpLavaWorm);
 
@@ -1756,7 +1787,10 @@ namespace Rawr.Bosses
                 };
                 LavaSpew.SetAffectsRoles_All();
                 if (i < 2)
+                {
                     FlightofFlames.Attacks.Add(LavaSpew);
+                    FlightofFlamesPart2.Attacks.Add(LavaSpew);
+                }
                 else
                     FireStormPhase.Attacks.Add(LavaSpew);
                 #endregion
@@ -2138,16 +2172,16 @@ namespace Rawr.Bosses
 
                     HeroicFofStart = phasestart;
                     InnerPhaseHatchling = new InnerPhase(HatchlingPhase, i, 6, phasestart, FirestormCD, BerserkTimer[i]); phasestart += FirestormCD; HeroicFoFLength += FirestormCD;
-                    FlightofFlames.InnerPhases.Add(InnerPhaseHatchling);
+                    FlightofFlamesPart2.InnerPhases.Add(InnerPhaseHatchling);
                     InnerPhaseFirestorm = new InnerPhase(FireStormPhase, i, 6, phasestart, 10f, BerserkTimer[i]); phasestart += 10f; HeroicFoFLength += 10f;
-                    FlightofFlames.InnerPhases.Add(InnerPhaseFirestorm);
+                    FlightofFlamesPart2.InnerPhases.Add(InnerPhaseFirestorm);
                     InnerPhaseHatchling = new InnerPhase(HatchlingPhase, i, 6, phasestart, FirestormCD, BerserkTimer[i]); phasestart += FirestormCD; HeroicFoFLength += FirestormCD;
-                    FlightofFlames.InnerPhases.Add(InnerPhaseHatchling);
+                    FlightofFlamesPart2.InnerPhases.Add(InnerPhaseHatchling);
                     InnerPhaseFirestorm = new InnerPhase(FireStormPhase, i, 6, phasestart, 10f, BerserkTimer[i]); phasestart += 10f; HeroicFoFLength += 10f;
-                    FlightofFlames.InnerPhases.Add(InnerPhaseFirestorm);
+                    FlightofFlamesPart2.InnerPhases.Add(InnerPhaseFirestorm);
                     InnerPhaseHatchling = new InnerPhase(HatchlingPhase, i, 6, phasestart, FlightofFlamesPhaseTime - HeroicFoFLength, BerserkTimer[i]); phasestart += (FlightofFlamesPhaseTime - HeroicFoFLength); HeroicFoFLength = 0;
-                    FlightofFlames.InnerPhases.Add(InnerPhaseHatchling);
-                    ApplyAPhasesValues(FlightofFlames, i, 6, HeroicFofStart, FlightofFlamesPhaseTime, BerserkTimer[i]); phasestart += FlightofFlamesPhaseTime;
+                    FlightofFlamesPart2.InnerPhases.Add(InnerPhaseHatchling);
+                    ApplyAPhasesValues(FlightofFlamesPart2, i, 6, HeroicFofStart, FlightofFlamesPhaseTime, BerserkTimer[i]); phasestart += FlightofFlamesPhaseTime;
                     ApplyAPhasesValues(UltimateFirepower, i, 7, phasestart, FieryTornadoDuration, BerserkTimer[i]); phasestart += FieryTornadoDuration;
                     ApplyAPhasesValues(Burnout, i, 8, phasestart, BurnoutDuration, BerserkTimer[i]); phasestart += BurnoutDuration;
                     ApplyAPhasesValues(ReIgnition, i, 9, phasestart, BerserkTimer[i] - phasestart, BerserkTimer[i]); // She will stay in this phase until the raid wipes;
@@ -2191,7 +2225,9 @@ namespace Rawr.Bosses
     {
         public Shannox()
         {
-            // If not listed here use values from defaults
+            /* Shannox can be done with 1 tank on Normal with the main tank tanking Riplimb at the same time as
+             * Shannox. However for consistency between Normal and Heroic, the Boss Handler will assume the use
+             * of the two tank strat.*/
             #region Info
             Name = "Shannox";
             Instance = "Firelands";
@@ -2214,24 +2250,49 @@ namespace Rawr.Bosses
             #region Attacks
             for (int i = 0; i < 4; i++)
             {
+                Phase EntireFight = new Phase() { Name = "Entire Fight" };
+                Phase TwoDogsUp = new Phase() { Name = "Two Dogs Up" };
+                Phase OneDogUp = new Phase() { Name = "One Dog Up" };
                 Phase Before30Pct = new Phase() { Name = "Before Shannox reaches 30% Health" };
                 Phase After30Pct = new Phase() { Name = "After Shannox reaches 30% Health" };
 
+                #region Shannox
                 Attack BasicMeleeMT = new Attack
                 {
                     Name = "Melee Shannox",
-                    AttackSpeed = 2.5f,
+                    AttackSpeed = 1.4f,
                     AttackType = ATTACK_TYPES.AT_MELEE,
-                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)Content[i]] * 1.37f, // Heroic values are unkonwn at this point.
-                    Missable=true,
-                    Dodgable=true,
-                    Parryable=true,
-                    Blockable=true,
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)Content[i]] * (i < 2 ? .5f : 1f),
+                    Missable = true,
+                    Dodgable = true,
+                    Parryable = true,
+                    Blockable = true,
                     IsTheDefaultMelee=true,
                 };
                 BasicMeleeMT.AffectsRole[PLAYER_ROLES.MainTank] = true;
-                Before30Pct.Attacks.Add(BasicMeleeMT);
-                After30Pct.Attacks.Add(BasicMeleeMT);
+                TwoDogsUp.Attacks.Add(BasicMeleeMT);
+                
+                // With just one dog up, his attack damage goes up by 15%
+                Attack BasicMeleeMT1DU = BasicMeleeMT.Clone();
+                BasicMeleeMT1DU.DamagePerHit *= 1.15f;
+                OneDogUp.Attacks.Add(BasicMeleeMT1DU);
+
+                #region Frenzy
+                /* When both of Shannox's hounds are defeated, he goes into a frenzy, increasing physical damage
+                 * and attack speed by 30. Shannox no longer uses Hurl Spear after this point and instead drives his
+                 * spear directly into the ground to trigger the same cascade of molten eruptions around the impact
+                 * point, which deal 61156 to 67594 Fire damage to enemies that are stand in them.*/
+                // http://ptr.wowhead.com/spell=100522
+
+                // If both of his dogs die, his damage goes up by 30%
+                // Does not happen on Heroic
+                Attack BasicMeleeMT0DU = BasicMeleeMT.Clone();
+                BasicMeleeMT0DU.DamagePerHit *= 1.30f;
+                if (i < 2)
+                    After30Pct.Attacks.Add(BasicMeleeMT0DU);
+                else
+                    After30Pct.Attacks.Add(BasicMeleeMT);
+                #endregion
 
                 #region Arcing Slash
                 /* Shannox causes 125% of normal melee damage in a wide arc up to 1 yards in front of him, and
@@ -2245,19 +2306,28 @@ namespace Rawr.Bosses
                     DamagePerHit = BasicMeleeMT.DamagePerHit * 1.25f,
                     SpellID = 99931,
                 };
-                ArcingSlash.AffectsRole[PLAYER_ROLES.MeleeDPS] = true;
                 ArcingSlash.AffectsRole[PLAYER_ROLES.MainTank] = true;
-                Before30Pct.Attacks.Add(ArcingSlash);
-                After30Pct.Attacks.Add(ArcingSlash);
+                TwoDogsUp.Attacks.Add(ArcingSlash);
 
-                /* Jagged Tear
-                 * Shannox's Arcing Slash leaves a Jagged Tear that deals 3000 physical damage every 3 sec for 30
+                Attack ArcingSlash1DU = ArcingSlash.Clone();
+                ArcingSlash1DU.DamagePerHit = BasicMeleeMT1DU.DamagePerHit * 1.25f;
+                OneDogUp.Attacks.Add(ArcingSlash1DU);
+
+                Attack ArcingSlash0DU = ArcingSlash.Clone();
+                ArcingSlash0DU.DamagePerHit = BasicMeleeMT0DU.DamagePerHit * 1.25f;
+                if (i < 2)
+                    After30Pct.Attacks.Add(ArcingSlash0DU);
+                else
+                    After30Pct.Attacks.Add(ArcingSlash);
+
+                #region Jagged Tear
+                /* Shannox's Arcing Slash leaves a Jagged Tear that deals 3000 physical damage every 3 sec for 30
                  * sec. Stacks.*/
                 // http://ptr.wowhead.com/spell=99937
                 Attack JaggedTear = new Attack
                 {
                     Name = "Jagged Tear MT",
-                    AttackSpeed = 12.5f,
+                    AttackSpeed = 10f,
                     AttackType = ATTACK_TYPES.AT_DOT,
                     IsDoT = true,
                     SpellID = 99937,
@@ -2270,51 +2340,88 @@ namespace Rawr.Bosses
                 Before30Pct.Attacks.Add(JaggedTear);
                 After30Pct.Attacks.Add(JaggedTear);
                 #endregion
+                #endregion
 
-                /* Hurl Spear
-                 * Shannox hurls his spear in the direction of his hound, Riplimb. The spear deals 117000 to
+                #region Hurl Spear
+                /* Shannox hurls his spear in the direction of his hound, Riplimb. The spear deals 117000 to
                  * 123000 physical damage to anyone it strikes directly as well as 59546 to 69204 Fire damage to
                  * all enemies within 50 yards. The spear strike also triggers a cascade of molten eruptions around the
                  * impact point which deal 61156 to 67594 Fire damage to enemies that are caught in them.
                  * 
                  * Riplimb will then break off from combat, fetch the spear, and return it to Shannox.*/
                 // http://ptr.wowhead.com/spell=100002
-                Attack HurlSpear = new Attack
+                // Should NEVER get hit by this, one should move away from the landing spot
+                /*Attack HurlSpear = new Attack
                 {
                     Name = "Hurl Spear",
                     AttackSpeed = 25f, // Timing is a rough estimate currently.
                     AttackType = ATTACK_TYPES.AT_AOE,
-                    DamagePerHit = new float[] { 50000, 50000, 
-                        50000*1.5f, 50000*1.5f, }[i], // Heroic values are unkonwn at this point.
+                    DamagePerHit = (99450f + 104550f) / 2f,
+                    MaxNumTargets = Max_Players[i],
+                    DamageType = ItemDamageType.Physical,
+                    SpellID = 100002,
+                };*/
+                Impedance HurlSpear_Move = new Impedance
+                {
+                    Name = "Hurl Spear Move",
+                    Breakable = false,
+                    Chance = 1f,
+                    Frequency = 20f,
+                    Duration = 2f * 1000f,
                 };
-                HurlSpear.SetUnavoidable();
-                HurlSpear.SetAffectsRoles_All();
-                Before30Pct.Attacks.Add(HurlSpear);
+                HurlSpear_Move.AffectsRole[PLAYER_ROLES.RangedDPS] = true;
+                HurlSpear_Move.SetAffectsRoles_Healers();
+                HurlSpear_Move.AffectsRole[PLAYER_ROLES.OffTank] = true;
+                Before30Pct.Moves.Add(HurlSpear_Move);
 
-                Attack MagmaRapture = new Attack
+                #region Magma Flare
+                // The Initial 40% increase to fire damage, as well as the initial damage should never be aplied, but the residual damage should
+                // 10-man - http://ptr.wowhead.com/spell=99842
+                // 25-man - http://ptr.wowhead.com/spell=101205
+                // 10-man Heroic - http://ptr.wowhead.com/spell=101206
+                // 25-man heroic - http://ptr.wowhead.com/spell=101207
+                /*Attack MagmaRapture = new Attack
                 {
                     Name = "Magma Rapture",
                     AttackSpeed = 15f,
-                    AttackType = ATTACK_TYPES.AT_AOE,
-                    DamagePerHit = new float[] { 50000, 50000, 
-                        50000*1.5f, 50000*1.5f, }[i], // Heroic values are unkonwn at this point.
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    DamagePerHit = new float[] { (64600f + 71400f), (64600f + 71400f), (100937f + 111562f), (100937f + 111562f), 0f }[i],
+                    DamageType = ItemDamageType.Fire,
+                    MaxNumTargets = 1f,
+                    SpellID = new float[] { 99842, 101205, 101206, 101207, 0 }[i],
                 };
-                MagmaRapture.SetUnavoidable();
-                MagmaRapture.SetAffectsRoles_All();
-                After30Pct.Attacks.Add(MagmaRapture);
-
-                /* Frenzy
-                 * When both of Shannox's hounds are defeated, he goes into a frenzy, increasing physical damage
-                 * and attack speed by 30. Shannox no longer uses Hurl Spear after this point and instead drives his
-                 * spear directly into the ground to trigger the same cascade of molten eruptions around the impact
-                 * point, which deal 61156 to 67594 Fire damage to enemies that are stand in them.*/
-                // http://ptr.wowhead.com/spell=100522
+                 */
+                // http://ptr.wowhead.com/spell=100495
+                Attack MagmaFlare = new Attack
+                {
+                    Name = "Magma Flare",
+                    AttackSpeed = 45f,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamagePerHit = (39312f + 45687f) / 2f,
+                    DamageType = ItemDamageType.Fire,
+                    MaxNumTargets = Max_Players[i],
+                    SpellID = 100495,
+                };
+                MagmaFlare.SetUnavoidable();
+                MagmaFlare.SetAffectsRoles_All();
+                Before30Pct.Attacks.Add(MagmaFlare);
+                After30Pct.Attacks.Add(MagmaFlare);
+                #endregion
+                #endregion
+                #endregion
 
                 #region Riplimb
+                /* Shannox has two hounds. Riplimb will attack the target with the most threat.
+                 * *Warning* In Heroic Difficulty, Riplimb cannot be permanently slain while his master lives. When
+                 * his health reaches zero, he will collapse for up to 30 seconds, and then reanimate at full health to
+                 * resume fighting.*/
+                // http://db.mmo-champion.com/c/53694/
                 TargetGroup Riplimb = new TargetGroup 
                 { 
-                    Name="Riplimb",
-                    Duration = this[i].BerserkTimer * 1000f,
+                    Name= "Riplimb",
+                    // On normal, Riplimb should be the second dog to die, not the first
+                    // Heroic, Riplimb stays alive the entire fight
+                    Duration = BerserkTimer[i] * (i < 2 ? 0.7f : 1f) * 1000f,
                     Frequency = 1,
                     LevelOfTargets = 88,
                     NearBoss = false,
@@ -2323,14 +2430,16 @@ namespace Rawr.Bosses
                 };
                 Riplimb.AffectsRole[PLAYER_ROLES.OffTank] = true;
                 Before30Pct.Targets.Add(Riplimb);
+                if (i > 1)
+                    After30Pct.Targets.Add(Riplimb);
 
+                #region Melee
                 Attack BasicMeleeOT = new Attack
                 {
                     Name = "Melee Riplimb",
-                    AttackSpeed = 2.5f,
+                    AttackSpeed = 1.4f,
                     AttackType = ATTACK_TYPES.AT_MELEE,
-                    DamagePerHit = new float[] { 40000, 74000, 
-                        40000*1.5f, 74000*1.5f, }[i], // Heroic values are unkonwn at this point.
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)Content[i]] * 0.30f,
                     Missable = true,
                     Dodgable = true,
                     Parryable = true,
@@ -2339,17 +2448,12 @@ namespace Rawr.Bosses
                 BasicMeleeOT.AffectsRole[PLAYER_ROLES.MainTank] = false;
                 BasicMeleeOT.AffectsRole[PLAYER_ROLES.OffTank] = true;
                 Before30Pct.Attacks.Add(BasicMeleeOT);
+                if (i > 1)
+                    After30Pct.Attacks.Add(BasicMeleeOT);
+                #endregion
 
-                /* Shannox has two hounds. Riplimb will attack the target with the most threat.
-                 * 
-                 * *Warning* In Heroic Difficulty, Riplimb cannot be permanently slain while his master lives. When
-                 * his healthe reaches zero, he will collapse for up to 30 seconds, and the reanimate at full health to
-                 * resume fighting.*/
-                // http://db.mmo-champion.com/c/53694/
-                if (i > 2) After30Pct.Attacks.Add(BasicMeleeOT);
-
-                /* Limb Rip
-                 * Riplimb bites savagely, dealing 175% of normal melee damage to an enemy and inflicting
+                #region Limb Rip
+                /* Riplimb bites savagely, dealing 175% of normal melee damage to an enemy and inflicting
                  * Jagged Tear on those he strikes.*/
                 // http://ptr.wowhead.com/spell=99832
                 Attack LimbRipOT = new Attack
@@ -2366,9 +2470,12 @@ namespace Rawr.Bosses
                 LimbRipOT.AffectsRole[PLAYER_ROLES.MainTank] = false;
                 LimbRipOT.AffectsRole[PLAYER_ROLES.OffTank] = true;
                 Before30Pct.Attacks.Add(LimbRipOT);
+                if (i > 1)
+                    After30Pct.Attacks.Add(LimbRipOT);
+                #endregion
 
-                /* Jagged Tear
-                 * Riplimb's Limb Rip leaves a Jagged Tear that deals 3000 physical damage every 3 sec for 30
+                #region Jagged Tear
+                /* Riplimb's Limb Rip leaves a Jagged Tear that deals 3000 physical damage every 3 sec for 30
                  * sec. Stacks.*/
                 // http://ptr.wowhead.com/spell=99937
                 Attack JaggedTearRL = JaggedTear.Clone();
@@ -2377,29 +2484,45 @@ namespace Rawr.Bosses
                 JaggedTearRL.AffectsRole[PLAYER_ROLES.MainTank] = false;
                 JaggedTearRL.AffectsRole[PLAYER_ROLES.OffTank] = true;
                 Before30Pct.Attacks.Add(JaggedTearRL);
+                if (i > 1)
+                    After30Pct.Attacks.Add(JaggedTearRL);
+                #endregion
 
-                /* Frenzied Devotion
-                 * Riplimb goes into an unstoppable rage if he is alive to sitness Shannox's health reach 30%.
+                #region Frenzied Devotion
+                /* Riplimb goes into an unstoppable rage if he is alive to sitness Shannox's health reach 30%.
                  * This effect increases damage dealth by 200% and attack and movement speed by 100%.*/
                 // http://ptr.wowhead.com/spell=100064
+                // Only happens on Normal
+                // Never should happen
+                #endregion
 
-                /* Feeding Frenzy [Heroic Only]
-                 * Riplimb's successful melee attacks grant a stacking 10% bonus to physical damage dealt
+                #region Feeding Frenzy [Heroic Only]
+                /* Riplimb's successful melee attacks grant a stacking 10% bonus to physical damage dealt
                  * for 20sec.*/
                 // http://ptr.wowhead.com/spell=100656
-                if (i > 2) // Heroic only
+                // Never should last more than 1 minute stacks
+                Stats FeedingFrenzyStats = new Stats();
+                SpecialEffect FeedingFrenzySpecialEffect = new SpecialEffect(Trigger.Use, new Stats() { PhysicalDamageTakenReductionMultiplier = -0.1f }, 20f, 1.2f, 1, 200);
+                FeedingFrenzyStats.AddSpecialEffect(FeedingFrenzySpecialEffect);
+                FeedingFrenzySpecialEffect = new SpecialEffect(Trigger.Use, FeedingFrenzyStats, 60f, 60f);
+                FeedingFrenzyStats = new Stats();
+                FeedingFrenzyStats.AddSpecialEffect(FeedingFrenzySpecialEffect);
+                if (i > 1) // Heroic only
                 {
-                    BuffState FeedingFrenzy = new BuffState
+                    BuffState FeedingFrenzyRiplimb = new BuffState
                     {
-                        Name = "Feeding Frenzy",
+                        Name = "Feeding Frenzy Riplimb",
                         Breakable = false,
                         Chance = 1,
                         Duration = 20 * 1000,
                         Frequency = BasicMeleeOT.AttackSpeed,
-                        Stats = new Stats { BonusPhysicalDamageMultiplier = .1f },
+                        Stats = FeedingFrenzyStats,
                     };
-                    FeedingFrenzy.AffectsRole[PLAYER_ROLES.OffTank] = true;
+                    FeedingFrenzyRiplimb.AffectsRole[PLAYER_ROLES.OffTank] = true;
+                    Before30Pct.BuffStates.Add(FeedingFrenzyRiplimb);
+                    After30Pct.BuffStates.Add(FeedingFrenzyRiplimb);
                 }
+                #endregion
                 #endregion
 
                 #region Rageface
@@ -2410,7 +2533,9 @@ namespace Rawr.Bosses
                 TargetGroup Rageface = new TargetGroup
                 {
                     Name = "Rageface",
-                    Duration = this[i].BerserkTimer * 1000f / 2,
+                    // One normal, Rageface should be the first dog to die
+                    // Heroic Rageface stays alive the entire fight
+                    Duration = BerserkTimer[i] * (i < 2 ? .35f : 1f) * 1000f,
                     Frequency = 1,
                     LevelOfTargets = 88,
                     NearBoss = false,
@@ -2419,36 +2544,135 @@ namespace Rawr.Bosses
                 };
                 Rageface.SetAffectsRoles_DPS();
                 Rageface.SetAffectsRoles_Healers();
-                Before30Pct.Targets.Add(Rageface);
+                if (i < 2)
+                    TwoDogsUp.Targets.Add(Rageface);
+                else
+                {
+                    Before30Pct.Targets.Add(Rageface);
+                    After30Pct.Targets.Add(Rageface);
+                }
 
-                /* Face Rage
-                 * Rageface leaps at a random target, stunning and knockign them to the ground, and bgins to
+                #region Melee
+                Attack RagefaceMelee = new Attack
+                {
+                    Name = "Rageface Melee",
+                    AttackSpeed = 1.2f,
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)Content[i]] * 0.1f,
+                    DamageType = ItemDamageType.Physical,
+                    MaxNumTargets = 1f,
+                    IsFromAnAdd = true,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                };
+                RagefaceMelee.SetAffectsRoles_DPS();
+                RagefaceMelee.SetAffectsRoles_Healers();
+                if (i < 2)
+                    TwoDogsUp.Attacks.Add(RagefaceMelee);
+                else
+                {
+                    Before30Pct.Attacks.Add(RagefaceMelee);
+                    After30Pct.Attacks.Add(RagefaceMelee);
+                }
+                #endregion
+
+                #region Face Rage
+                /* Rageface leaps at a random target, stunning and knockign them to the ground, and bgins to
                  * viciously claw at them. This mauling initially deals 8000 physical damage every 0.50 sec, but
-                 * the damage dealt increases over time. While so occupied, Rageface is 50% more susceptible to
+                 * the damage dealt increases over time. While so occupied, Rageface is 1000% more susceptible to
                  * critical strikes.
                  * Rageface will continue until his target is dead, or he receives a single attack that deals at least
                  * 40000 damage.*/
                 // Attack - http://ptr.wowhead.com/spell=99947
                 // Get off me - http://ptr.wowhead.com/spell=100129
+                Attack FaceRage = new Attack
+                {
+                    Name = "Face Rage",
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    DamageType = ItemDamageType.Physical,
+                    AttackSpeed = 15f,
+                    DamagePerHit = 30000f,
+                    DamagePerTick = 8000f,
+                    IsDoT = true,
+                    TickInterval = 0.5f,
+                    Duration = 30f,
+                    Interruptable = true,
+                };
+                FaceRage.SetAffectsRoles_DPS();
+                FaceRage.SetAffectsRoles_Healers();
+                if (i < 2)
+                    TwoDogsUp.Attacks.Add(FaceRage);
+                else
+                {
+                    Before30Pct.Attacks.Add(FaceRage);
+                    After30Pct.Attacks.Add(FaceRage);
+                }
 
-                /* Feeding Frenzy [Heroic Only]
-                 * Rageface's successful melee attacks grant a stacking 10% bonus to physical damage dealt
+                BuffState FaceRageBuff = new BuffState
+                {
+                    Name = "Face Rage Crit Buff",
+                    Frequency = 15f,
+                    Duration = 30f * 1000f,
+                    Chance = 1f,
+                    Breakable = true,
+                    Stats = new Stats() { SpellCrit = 10f, PhysicalCrit = 10f },
+                };
+                FaceRageBuff.SetAffectsRoles_DPS();
+                if (i < 2)
+                    TwoDogsUp.BuffStates.Add(FaceRageBuff);
+                else
+                {
+                    Before30Pct.BuffStates.Add(FaceRageBuff);
+                    After30Pct.BuffStates.Add(FaceRageBuff);
+                }
+                #endregion
+
+                #region Feeding Frenzy [Heroic Only]
+                /* Rageface's successful melee attacks grant a stacking 10% bonus to physical damage dealt
                  * for 20sec.*/
                 // http://ptr.wowhead.com/spell=100656
+                if (i > 1)
+                {
+                    BuffState FeedingFrenzyRageface = new BuffState
+                    {
+                        Name = "Feeding Frenzy Rageface",
+                        Breakable = false,
+                        Chance = 1,
+                        Duration = 20 * 1000,
+                        Frequency = RagefaceMelee.AttackSpeed,
+                        Stats = FeedingFrenzyStats,
+                    };
+                    FeedingFrenzyRageface.SetAffectsRoles_DPS();
+                    FeedingFrenzyRageface.SetAffectsRoles_Healers();
+                    Before30Pct.BuffStates.Add(FeedingFrenzyRageface);
+                    After30Pct.BuffStates.Add(FeedingFrenzyRageface);
+                }
+                #endregion
 
-                /* Frenzied Devotion
-                 * Rageface goes into an unstoppable rage if he is alive to sitness Shannox's health reach 30%.
+                #region Frenzied Devotion
+                /* Rageface goes into an unstoppable rage if he is alive to sitness Shannox's health reach 30%.
                  * This effect increases damage dealth by 200% and attack and movement speed by 100%.*/
                 // http://ptr.wowhead.com/spell=100064
+                // Only happens on normal
+                // Should NEVER happen
+                #endregion
                 #endregion
 
                 #region Apply Phases
-                int phaseStartTime = 0;
-                int phaseDuration = (int)((float)this[i].BerserkTimer * (1 - .3f));
-                ApplyAPhasesValues( Before30Pct, i, 1, phaseStartTime, phaseDuration, this[i].BerserkTimer);
-                phaseStartTime = phaseStartTime + phaseDuration;
-                phaseDuration = this[i].BerserkTimer - phaseDuration;
-                ApplyAPhasesValues( After30Pct, i, 1, phaseStartTime, phaseDuration, this[i].BerserkTimer);
+                float phaseStartTime = 0;
+                float NormalPhaseOneStartTime = 0;
+                float phaseDuration = BerserkTimer[i] * (1 - .3f);
+                NormalPhaseOneStartTime = phaseDuration / 2f;
+                InnerPhase DogsUp;
+                if (i < 2)
+                {
+                    DogsUp = new InnerPhase(TwoDogsUp, i, 1, 0, NormalPhaseOneStartTime, BerserkTimer[i]);
+                    Before30Pct.InnerPhases.Add(DogsUp);
+                    DogsUp = new InnerPhase(OneDogUp, i, 1, NormalPhaseOneStartTime, NormalPhaseOneStartTime, BerserkTimer[i]);
+                    Before30Pct.InnerPhases.Add( DogsUp );
+                }
+                ApplyAPhasesValues( Before30Pct, i, 1, phaseStartTime, phaseDuration, BerserkTimer[i] );
+                phaseStartTime += phaseDuration;
+                phaseDuration = BerserkTimer[i] - phaseDuration;
+                ApplyAPhasesValues( After30Pct, i, 1, phaseStartTime, phaseDuration, BerserkTimer[i] );
                 AddAPhase(Before30Pct, i);
                 AddAPhase(After30Pct, i);
                 #endregion
@@ -2776,37 +3000,37 @@ namespace Rawr.Bosses
                 int EBdur = 15;
                 int NormalDur = 30;
                 InnerPhase InnerPhaseNormal, InnerPhaseEmpoweredBlade;
-                InnerPhaseNormal = new InnerPhase(Normal, i, 1, phasestart, NormalDur, this[i].BerserkTimer); phasestart += NormalDur; // 30 seconds;  OT builds stacks
+                InnerPhaseNormal = new InnerPhase(Normal, i, 1, phasestart, NormalDur, BerserkTimer[i]); phasestart += NormalDur; // 30 seconds;  OT builds stacks
                 BothPhases.InnerPhases.Add(InnerPhaseNormal);
-                InnerPhaseEmpoweredBlade = new InnerPhase(InfernoBlade, i, 1, phasestart, EBdur, this[i].BerserkTimer); phasestart += EBdur; // 45 seconds
+                InnerPhaseEmpoweredBlade = new InnerPhase(InfernoBlade, i, 1, phasestart, EBdur, BerserkTimer[i]); phasestart += EBdur; // 45 seconds
                 BothPhases.InnerPhases.Add(InnerPhaseEmpoweredBlade);
-                InnerPhaseNormal = new InnerPhase(Normal, i, 1, phasestart, NormalDur, this[i].BerserkTimer); phasestart += NormalDur; // 1 minute 15 seconds
+                InnerPhaseNormal = new InnerPhase(Normal, i, 1, phasestart, NormalDur, BerserkTimer[i]); phasestart += NormalDur; // 1 minute 15 seconds
                 BothPhases.InnerPhases.Add(InnerPhaseNormal);
-                InnerPhaseEmpoweredBlade = new InnerPhase(DecimationBlade, i, 1, phasestart, EBdur, this[i].BerserkTimer); phasestart += EBdur; // 1 minute 30 seconds
+                InnerPhaseEmpoweredBlade = new InnerPhase(DecimationBlade, i, 1, phasestart, EBdur, BerserkTimer[i]); phasestart += EBdur; // 1 minute 30 seconds
                 BothPhases.InnerPhases.Add(InnerPhaseEmpoweredBlade);
-                InnerPhaseNormal = new InnerPhase(Normal, i, 1, phasestart, NormalDur, this[i].BerserkTimer); phasestart += NormalDur; // 2 minutes 0 seconds
+                InnerPhaseNormal = new InnerPhase(Normal, i, 1, phasestart, NormalDur, BerserkTimer[i]); phasestart += NormalDur; // 2 minutes 0 seconds
                 BothPhases.InnerPhases.Add(InnerPhaseNormal);
-                InnerPhaseEmpoweredBlade = new InnerPhase(InfernoBlade, i, 1, phasestart, EBdur, this[i].BerserkTimer); phasestart += EBdur; // 2 minutes 15 seconds
+                InnerPhaseEmpoweredBlade = new InnerPhase(InfernoBlade, i, 1, phasestart, EBdur, BerserkTimer[i]); phasestart += EBdur; // 2 minutes 15 seconds
                 BothPhases.InnerPhases.Add(InnerPhaseEmpoweredBlade);
-                InnerPhaseNormal = new InnerPhase(Normal, i, 1, phasestart, NormalDur, this[i].BerserkTimer); phasestart += NormalDur; // 2 minute 45 seconds
+                InnerPhaseNormal = new InnerPhase(Normal, i, 1, phasestart, NormalDur, BerserkTimer[i]); phasestart += NormalDur; // 2 minute 45 seconds
                 BothPhases.InnerPhases.Add(InnerPhaseNormal);
-                InnerPhaseEmpoweredBlade = new InnerPhase(DecimationBlade, i, 1, phasestart, EBdur, this[i].BerserkTimer); phasestart += EBdur; // 3 minute 0 seconds
+                InnerPhaseEmpoweredBlade = new InnerPhase(DecimationBlade, i, 1, phasestart, EBdur, BerserkTimer[i]); phasestart += EBdur; // 3 minute 0 seconds
                 BothPhases.InnerPhases.Add(InnerPhaseEmpoweredBlade);
-                InnerPhaseNormal = new InnerPhase(Normal, i, 1, phasestart, NormalDur, this[i].BerserkTimer); phasestart += NormalDur; // 3 minutes 30 seconds
+                InnerPhaseNormal = new InnerPhase(Normal, i, 1, phasestart, NormalDur, BerserkTimer[i]); phasestart += NormalDur; // 3 minutes 30 seconds
                 BothPhases.InnerPhases.Add(InnerPhaseNormal);
-                InnerPhaseEmpoweredBlade = new InnerPhase(InfernoBlade, i, 1, phasestart, EBdur, this[i].BerserkTimer); phasestart += EBdur; // 3 minutes 45 seconds
+                InnerPhaseEmpoweredBlade = new InnerPhase(InfernoBlade, i, 1, phasestart, EBdur, BerserkTimer[i]); phasestart += EBdur; // 3 minutes 45 seconds
                 BothPhases.InnerPhases.Add(InnerPhaseEmpoweredBlade);
-                InnerPhaseNormal = new InnerPhase(Normal, i, 1, phasestart, NormalDur, this[i].BerserkTimer); phasestart += NormalDur; // 4 minute 15 seconds
+                InnerPhaseNormal = new InnerPhase(Normal, i, 1, phasestart, NormalDur, BerserkTimer[i]); phasestart += NormalDur; // 4 minute 15 seconds
                 BothPhases.InnerPhases.Add(InnerPhaseNormal);
-                InnerPhaseEmpoweredBlade = new InnerPhase(DecimationBlade, i, 1, phasestart, EBdur, this[i].BerserkTimer); phasestart += EBdur; // 4 minute 30 seconds
+                InnerPhaseEmpoweredBlade = new InnerPhase(DecimationBlade, i, 1, phasestart, EBdur, BerserkTimer[i]); phasestart += EBdur; // 4 minute 30 seconds
                 BothPhases.InnerPhases.Add(InnerPhaseEmpoweredBlade);
-                InnerPhaseNormal = new InnerPhase(Normal, i, 1, phasestart, NormalDur, this[i].BerserkTimer); phasestart += NormalDur; // 5 minutes 0 seconds
+                InnerPhaseNormal = new InnerPhase(Normal, i, 1, phasestart, NormalDur, BerserkTimer[i]); phasestart += NormalDur; // 5 minutes 0 seconds
                 BothPhases.InnerPhases.Add(InnerPhaseNormal);
-                InnerPhaseEmpoweredBlade = new InnerPhase(InfernoBlade, i, 1, phasestart, EBdur, this[i].BerserkTimer); phasestart += EBdur; // 5 minutes 15 seconds
+                InnerPhaseEmpoweredBlade = new InnerPhase(InfernoBlade, i, 1, phasestart, EBdur, BerserkTimer[i]); phasestart += EBdur; // 5 minutes 15 seconds
                 BothPhases.InnerPhases.Add(InnerPhaseEmpoweredBlade);
-                InnerPhaseNormal = new InnerPhase(Normal, i, 1, phasestart, NormalDur, this[i].BerserkTimer); phasestart += NormalDur; // 5 minute 45 seconds
+                InnerPhaseNormal = new InnerPhase(Normal, i, 1, phasestart, NormalDur, BerserkTimer[i]); phasestart += NormalDur; // 5 minute 45 seconds
                 BothPhases.InnerPhases.Add(InnerPhaseNormal);
-                InnerPhaseEmpoweredBlade = new InnerPhase(DecimationBlade, i, 1, phasestart, EBdur, this[i].BerserkTimer); phasestart += EBdur; // 6 minute 0 seconds
+                InnerPhaseEmpoweredBlade = new InnerPhase(DecimationBlade, i, 1, phasestart, EBdur, BerserkTimer[i]); phasestart += EBdur; // 6 minute 0 seconds
                 BothPhases.InnerPhases.Add(InnerPhaseEmpoweredBlade);
                 ApplyAPhasesValues(BothPhases, i, 1, 0, BerserkTimer[i], BerserkTimer[i]);
                 AddAPhase(BothPhases, i);
