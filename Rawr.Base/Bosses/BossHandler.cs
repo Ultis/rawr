@@ -410,16 +410,14 @@ namespace Rawr {
             "Tier 12 25N",
             "Tier 12 10H",
             "Tier 12 25H",
-            /* "Tier 11 LFR",
-             * "Tier 12 LFR",
-             * "Tier 13 LFR",
+            /* "Tier 13 LFR",
              * "Tier 13 10N",
              * "Tier 13 25N",
              * "Tier 13 10H",
              * "Tier 13 25H",
              */
         };
-        public enum TierLevels : int { T11_10 = 0, T11_25, T11_10H, T11_25H, T12_10, T12_25, T12_10H, T12_25H, T11_LFR, T12_LFR, T13_LFR, T13_10, T13_25, T13_10H, T13_25H }
+        public enum TierLevels : int { T11_10 = 0, T11_25, T11_10H, T11_25H, T12_10, T12_25, T12_10H, T12_25H, T13_LFR, T13_10, T13_25, T13_10H, T13_25H, T11_LFR, T12_LFR }
         public static readonly float[] StandardMeleePerHit = new float[] {
              95192.308f, // T11_10   // 4.2 lowered the base damage on all T11 Normal mode damage by 20%
             118990.385f, // T11_25   // 4.2 lowered the base damage on all T11 Normal mode damage by 20%
@@ -429,13 +427,13 @@ namespace Rawr {
             146250f, // T12_25,      // Not Tested and verified, initial numbers
             208250f, // T12_10H,     // Not Tested and verified, initial numbers
             232050f, // T12_25H,     // Not Tested and verified, initial numbers
-             90000f, // T11_LFR      // At this time, this is just a placeholder and not likely going to be used
-            120000f, // T12_LFR      // At this time, this is just a placeholder and not likely going to be used
             220000f, // T13_LFR,     // Not Tested and verified, initial numbers
             245000f, // T13_10,      // Not Tested and verified, initial numbers
             273000f, // T13_25,      // Not Tested and verified, initial numbers
             343000f, // T13_10H,     // Not Tested and verified, initial numbers
             382200f, // T13_25H,     // Not Tested and verified, initial numbers
+                 0f, // T11_LFR      // This is just a placeholder and only being used so that the T11 boss handler can compile with the increase in boss difficulty level introduced by the Looking For Raid Feature
+                 0f, // T12_LFR      // This is just a placeholder and only being used so that the T12 boss handler can compile with the increase in boss difficulty level introduced by the Looking For Raid Feature
         };
         #endregion
         #region ==== Info ====
@@ -1756,7 +1754,7 @@ namespace Rawr {
         }
         #region Variable Convenience Overrides
 
-        protected void ClearPhase1Values(ref Phase phase) {
+        protected void ClearPhase1Values( Phase phase) {
             for (int i = 0; i < phase.Attacks.Count; i++) { phase.Attacks[i].RemovePhase1Values(); }
             for (int i = 0; i < phase.Targets.Count; i++) { phase.Targets[i].RemovePhase1Values(); }
             for (int i = 0; i < phase.BuffStates.Count; i++) { phase.BuffStates[i].RemovePhase1Values(); }
@@ -1766,9 +1764,10 @@ namespace Rawr {
             for (int i = 0; i < phase.Moves.Count; i++) { phase.Moves[i].RemovePhase1Values(); }
             for (int i = 0; i < phase.Silences.Count; i++) { phase.Silences[i].RemovePhase1Values(); }
             for (int i = 0; i < phase.Disarms.Count; i++) { phase.Disarms[i].RemovePhase1Values(); }
+            for (int i = 0; i < phase.InnerPhases.Count; i++) { ClearPhase1Values(phase.InnerPhases[i].Phase); }
         }
 
-        protected void ApplyAPhasesValues(ref Phase phase, int version, int phaseNumber, float phaseStartTime, float phaseDuration, float fightDuration)
+        protected void ApplyAPhasesValues(Phase phase, int version, int phaseNumber, float phaseStartTime, float phaseDuration, float fightDuration)
         {
             for (int i = 0; i < phase.Attacks.Count; i++) { phase.Attacks[i].SetPhaseValue(phaseNumber, phaseStartTime, phaseDuration, fightDuration); }
             for (int i = 0; i < phase.Targets.Count; i++) { phase.Targets[i].SetPhaseValue(phaseNumber, phaseStartTime, phaseDuration, fightDuration); }
@@ -1779,6 +1778,7 @@ namespace Rawr {
             for (int i = 0; i < phase.Moves.Count; i++) { phase.Moves[i].SetPhaseValue(phaseNumber, phaseStartTime, phaseDuration, fightDuration); }
             for (int i = 0; i < phase.Silences.Count; i++) { phase.Silences[i].SetPhaseValue(phaseNumber, phaseStartTime, phaseDuration, fightDuration); }
             for (int i = 0; i < phase.Disarms.Count; i++) { phase.Disarms[i].SetPhaseValue(phaseNumber, phaseStartTime, phaseDuration, fightDuration); }
+            for (int i = 0; i < phase.InnerPhases.Count; i++) { ApplyAPhasesValues(phase.InnerPhases[i].Phase, phase.InnerPhases[i].Version, phase.InnerPhases[i].PhaseNumber, phase.InnerPhases[i].PhaseStartTime, phase.InnerPhases[i].PhaseDuration, phase.InnerPhases[i].FightDuration); }
         }
 
         protected void AddAPhase(Phase phase, int version)
@@ -1794,6 +1794,7 @@ namespace Rawr {
             for (int i = 0; i < phase.Moves.Count; i++) { if (!phase.Moves[i].Name.Contains(string.Format(format, phase.Name))) { phase.Moves[i].Name += string.Format(format, phase.Name); } }
             for (int i = 0; i < phase.Silences.Count; i++) { if (!phase.Silences[i].Name.Contains(string.Format(format, phase.Name))) { phase.Silences[i].Name += string.Format(format, phase.Name); } }
             for (int i = 0; i < phase.Disarms.Count; i++) { if (!phase.Disarms[i].Name.Contains(string.Format(format, phase.Name))) { phase.Disarms[i].Name += string.Format(format, phase.Name); } }
+            for (int i = 0; i < phase.InnerPhases.Count; i++) { AddAPhase(phase.InnerPhases[i].Phase, phase.InnerPhases[i].Version); }
             //
             this[version].Attacks.AddRange(phase.Attacks);
             this[version].Targets.AddRange(phase.Targets);

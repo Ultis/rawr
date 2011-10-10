@@ -188,12 +188,12 @@ namespace Rawr.Bosses
                 // 5 minute Berserk Timer with Firestorm only last 18 seconds twice.
                 // Pushing distro of normal fighting to more in the first two to account for executes
                 int phaseStartTime = 0;
-                ClearPhase1Values(ref FelFirestorm);
-                ApplyAPhasesValues(ref EntireFight,  i, 1, phaseStartTime, 92, this[i].BerserkTimer); phaseStartTime += 92;
-                ApplyAPhasesValues(ref FelFirestorm, i, 2, phaseStartTime, 18, this[i].BerserkTimer); phaseStartTime += 18;
-                ApplyAPhasesValues(ref EntireFight,  i, 3, phaseStartTime, 92, this[i].BerserkTimer); phaseStartTime += 92;
-                ApplyAPhasesValues(ref FelFirestorm, i, 4, phaseStartTime, 18, this[i].BerserkTimer); phaseStartTime += 18;
-                ApplyAPhasesValues(ref EntireFight,  i, 5, phaseStartTime, 80, this[i].BerserkTimer);
+                ClearPhase1Values( FelFirestorm);
+                ApplyAPhasesValues( EntireFight,  i, 1, phaseStartTime, 92, this[i].BerserkTimer); phaseStartTime += 92;
+                ApplyAPhasesValues( FelFirestorm, i, 2, phaseStartTime, 18, this[i].BerserkTimer); phaseStartTime += 18;
+                ApplyAPhasesValues( EntireFight,  i, 3, phaseStartTime, 92, this[i].BerserkTimer); phaseStartTime += 92;
+                ApplyAPhasesValues( FelFirestorm, i, 4, phaseStartTime, 18, this[i].BerserkTimer); phaseStartTime += 18;
+                ApplyAPhasesValues( EntireFight,  i, 5, phaseStartTime, 80, this[i].BerserkTimer);
                 AddAPhase(EntireFight, i);
                 AddAPhase(FelFirestorm, i);
                 #endregion
@@ -522,37 +522,37 @@ namespace Rawr.Bosses
                 #region Apply Phases
                 // Burn Phases should last about 30 seconds
                 int phaseStartTime = 0;
-                ClearPhase1Values(ref BurnExposedHead);
+                ClearPhase1Values( BurnExposedHead);
                 if (i == 0 || i == 1) {
                     // 10 minute Berserk Timer 95+30=125 600/125=4.8. At most 10 phases (5 each)
-                    ApplyAPhasesValues(ref NotBurnExposedHeadNormal, i, 1, phaseStartTime, 90, this[i].BerserkTimer); phaseStartTime += 90;
-                    ApplyAPhasesValues(ref BurnExposedHead,          i, 2, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30;
-                    ApplyAPhasesValues(ref NotBurnExposedHeadNormal, i, 3, phaseStartTime, 90, this[i].BerserkTimer); phaseStartTime += 90;
-                    ApplyAPhasesValues(ref BurnExposedHead,          i, 4, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30;
-                    ApplyAPhasesValues(ref NotBurnExposedHeadNormal, i, 5, phaseStartTime, 90, this[i].BerserkTimer); phaseStartTime += 90;
-                    ApplyAPhasesValues(ref BurnExposedHead,          i, 6, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30;
-                    ApplyAPhasesValues(ref NotBurnExposedHeadNormal, i, 7, phaseStartTime, 90, this[i].BerserkTimer); phaseStartTime += 90;
-                    ApplyAPhasesValues(ref BurnExposedHead,          i, 8, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30;
-                    ApplyAPhasesValues(ref NotBurnExposedHeadNormal, i, 9, phaseStartTime, 90, this[i].BerserkTimer); phaseStartTime += 90;
-                    ApplyAPhasesValues(ref BurnExposedHead,          i,10, phaseStartTime, 30, this[i].BerserkTimer);
+                    ApplyAPhasesValues( NotBurnExposedHeadNormal, i, 1, phaseStartTime, 90, this[i].BerserkTimer); phaseStartTime += 90;
+                    ApplyAPhasesValues( BurnExposedHead,          i, 2, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30;
+                    ApplyAPhasesValues( NotBurnExposedHeadNormal, i, 3, phaseStartTime, 90, this[i].BerserkTimer); phaseStartTime += 90;
+                    ApplyAPhasesValues( BurnExposedHead,          i, 4, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30;
+                    ApplyAPhasesValues( NotBurnExposedHeadNormal, i, 5, phaseStartTime, 90, this[i].BerserkTimer); phaseStartTime += 90;
+                    ApplyAPhasesValues( BurnExposedHead,          i, 6, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30;
+                    ApplyAPhasesValues( NotBurnExposedHeadNormal, i, 7, phaseStartTime, 90, this[i].BerserkTimer); phaseStartTime += 90;
+                    ApplyAPhasesValues( BurnExposedHead,          i, 8, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30;
+                    ApplyAPhasesValues( NotBurnExposedHeadNormal, i, 9, phaseStartTime, 90, this[i].BerserkTimer); phaseStartTime += 90;
+                    ApplyAPhasesValues( BurnExposedHead,          i,10, phaseStartTime, 30, this[i].BerserkTimer);
                     AddAPhase(NotBurnExposedHeadNormal, i);
                 } else if (i == 2 || i == 3) {
                     // Heroic has a Phase 3 which replace the normal phase 1 at 30% HP, start it at 600-180=420
                     // Kavan: exposed head starts about 100-115 seconds into the fight, then it comes about every 90-100 seconds
                     // 10 minute Berserk Timer 500/95=5.3. At most 12 phases (6 each), swap last two Ph1 with a Ph3
-                    ClearPhase1Values(ref NotBurnExposedHeadHeroicUnder30);
-                    ApplyAPhasesValues(ref NotBurnExposedHeadHeroicAbove30, i, 1, phaseStartTime, 100, this[i].BerserkTimer); phaseStartTime += 100; // 100
-                    ApplyAPhasesValues(ref BurnExposedHead,                 i, 2, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30; //130
-                    ApplyAPhasesValues(ref NotBurnExposedHeadHeroicAbove30, i, 3, phaseStartTime, 65, this[i].BerserkTimer); phaseStartTime += 65; //195
-                    ApplyAPhasesValues(ref BurnExposedHead,                 i, 4, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30; //225
-                    ApplyAPhasesValues(ref NotBurnExposedHeadHeroicAbove30, i, 5, phaseStartTime, 65, this[i].BerserkTimer); phaseStartTime += 65; //290
-                    ApplyAPhasesValues(ref BurnExposedHead,                 i, 6, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30; //320
-                    ApplyAPhasesValues(ref NotBurnExposedHeadHeroicAbove30, i, 7, phaseStartTime, 65, this[i].BerserkTimer); phaseStartTime += 65; //385
-                    ApplyAPhasesValues(ref BurnExposedHead,                 i, 8, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30; //415
-                    ApplyAPhasesValues(ref NotBurnExposedHeadHeroicUnder30, i, 9, phaseStartTime, 65, this[i].BerserkTimer); phaseStartTime += 65; //480
-                    ApplyAPhasesValues(ref BurnExposedHead,                 i, 10, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30; //510
-                    ApplyAPhasesValues(ref NotBurnExposedHeadHeroicUnder30, i, 11, phaseStartTime, 65, this[i].BerserkTimer); phaseStartTime += 65; //575
-                    ApplyAPhasesValues(ref BurnExposedHead,                 i, 12, phaseStartTime, 25, this[i].BerserkTimer); phaseStartTime += 25; //600
+                    ClearPhase1Values( NotBurnExposedHeadHeroicUnder30);
+                    ApplyAPhasesValues( NotBurnExposedHeadHeroicAbove30, i, 1, phaseStartTime, 100, this[i].BerserkTimer); phaseStartTime += 100; // 100
+                    ApplyAPhasesValues( BurnExposedHead,                 i, 2, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30; //130
+                    ApplyAPhasesValues( NotBurnExposedHeadHeroicAbove30, i, 3, phaseStartTime, 65, this[i].BerserkTimer); phaseStartTime += 65; //195
+                    ApplyAPhasesValues( BurnExposedHead,                 i, 4, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30; //225
+                    ApplyAPhasesValues( NotBurnExposedHeadHeroicAbove30, i, 5, phaseStartTime, 65, this[i].BerserkTimer); phaseStartTime += 65; //290
+                    ApplyAPhasesValues( BurnExposedHead,                 i, 6, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30; //320
+                    ApplyAPhasesValues( NotBurnExposedHeadHeroicAbove30, i, 7, phaseStartTime, 65, this[i].BerserkTimer); phaseStartTime += 65; //385
+                    ApplyAPhasesValues( BurnExposedHead,                 i, 8, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30; //415
+                    ApplyAPhasesValues( NotBurnExposedHeadHeroicUnder30, i, 9, phaseStartTime, 65, this[i].BerserkTimer); phaseStartTime += 65; //480
+                    ApplyAPhasesValues( BurnExposedHead,                 i, 10, phaseStartTime, 30, this[i].BerserkTimer); phaseStartTime += 30; //510
+                    ApplyAPhasesValues( NotBurnExposedHeadHeroicUnder30, i, 11, phaseStartTime, 65, this[i].BerserkTimer); phaseStartTime += 65; //575
+                    ApplyAPhasesValues( BurnExposedHead,                 i, 12, phaseStartTime, 25, this[i].BerserkTimer); phaseStartTime += 25; //600
                     AddAPhase(NotBurnExposedHeadHeroicAbove30, i);
                     AddAPhase(NotBurnExposedHeadHeroicUnder30, i);
                 }
@@ -736,8 +736,8 @@ namespace Rawr.Bosses
                 #region Apply Phases
                 // For now just doing Magmatron
                 int phaseStartTime = 0;
-                //ClearPhase1Values(ref FelFirestorm);
-                ApplyAPhasesValues(ref Magtron,  i, 1, phaseStartTime, this[i].BerserkTimer, this[i].BerserkTimer);
+                //ClearPhase1Values( FelFirestorm);
+                ApplyAPhasesValues( Magtron,  i, 1, phaseStartTime, this[i].BerserkTimer, this[i].BerserkTimer);
                 AddAPhase(Magtron, i);
                 //AddAPhase(FelFirestorm, i);
                 #endregion
@@ -1139,36 +1139,36 @@ namespace Rawr.Bosses
                 // 5 minute Berserk Timer with Firestorm only last 18 seconds twice.
                 // Pushing distro of normal fighting to more in the first two to account for executes
                 int phaseStartTime = 0;
-                ClearPhase1Values(ref BlueVial);
-                ClearPhase1Values(ref GreenVial);
-                ClearPhase1Values(ref Under25);
+                ClearPhase1Values( BlueVial);
+                ClearPhase1Values( GreenVial);
+                ClearPhase1Values( Under25);
                 // DBM is reporting a 49 second phase length for Red, Blue, and Green phases as of April 23rd, 2011; release version 5621
                 // BigWigs is reporting a 47 second phase length for Red, Blue, and Green phases as of April 23rd, 2011; release version 8327. Using a medium of the two
                 // DBM and BigWigs is reporting a 100 second Black phase as of April 23rd, 2011; release version 5621 and 8327 respectively
                 // Under 25% needs to hit after the second Green Vial phase, especially on heroic or raids will hit the enrage timer
                 if (i == 0 || i == 1) {
-                    ApplyAPhasesValues(ref RedVial,   i, 1, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
-                    ApplyAPhasesValues(ref BlueVial,  i, 2, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
-                    ApplyAPhasesValues(ref GreenVial, i, 3, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
-                    ApplyAPhasesValues(ref RedVial,   i, 4, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
-                    ApplyAPhasesValues(ref BlueVial,  i, 5, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
-                    ApplyAPhasesValues(ref GreenVial, i, 6, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
-                    ApplyAPhasesValues(ref Under25,   i, 7, phaseStartTime, 132, this[i].BerserkTimer);
+                    ApplyAPhasesValues( RedVial,   i, 1, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
+                    ApplyAPhasesValues( BlueVial,  i, 2, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
+                    ApplyAPhasesValues( GreenVial, i, 3, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
+                    ApplyAPhasesValues( RedVial,   i, 4, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
+                    ApplyAPhasesValues( BlueVial,  i, 5, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
+                    ApplyAPhasesValues( GreenVial, i, 6, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
+                    ApplyAPhasesValues( Under25,   i, 7, phaseStartTime, 132, this[i].BerserkTimer);
                 }
                 else if (i == 2 || i == 3)
                 {
-                    ApplyAPhasesValues(ref DarkVial,  i, 1, phaseStartTime, 100, this[i].BerserkTimer); phaseStartTime += 100;
-                    ApplyAPhasesValues(ref RedVial,   i, 2, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
-                    ApplyAPhasesValues(ref BlueVial,  i, 3, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
-                    ApplyAPhasesValues(ref GreenVial, i, 4, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
-                    ApplyAPhasesValues(ref DarkVial,  i, 5, phaseStartTime, 100, this[i].BerserkTimer); phaseStartTime += 100;
-                    ApplyAPhasesValues(ref RedVial,   i, 6, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
-                    ApplyAPhasesValues(ref BlueVial,  i, 7, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
-                    ApplyAPhasesValues(ref GreenVial, i, 8, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
-//                    ApplyAPhasesValues(ref DarkVial,  i, 9, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
-//                    ApplyAPhasesValues(ref RedVial,   i,10, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
-//                    ApplyAPhasesValues(ref BlueVial,  i,11, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
-                    ApplyAPhasesValues(ref Under25,   i,9, phaseStartTime, 232, this[i].BerserkTimer);
+                    ApplyAPhasesValues( DarkVial,  i, 1, phaseStartTime, 100, this[i].BerserkTimer); phaseStartTime += 100;
+                    ApplyAPhasesValues( RedVial,   i, 2, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
+                    ApplyAPhasesValues( BlueVial,  i, 3, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
+                    ApplyAPhasesValues( GreenVial, i, 4, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
+                    ApplyAPhasesValues( DarkVial,  i, 5, phaseStartTime, 100, this[i].BerserkTimer); phaseStartTime += 100;
+                    ApplyAPhasesValues( RedVial,   i, 6, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
+                    ApplyAPhasesValues( BlueVial,  i, 7, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
+                    ApplyAPhasesValues( GreenVial, i, 8, phaseStartTime, 48, this[i].BerserkTimer); phaseStartTime += 48;
+//                    ApplyAPhasesValues( DarkVial,  i, 9, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
+//                    ApplyAPhasesValues( RedVial,   i,10, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
+//                    ApplyAPhasesValues( BlueVial,  i,11, phaseStartTime, 60, this[i].BerserkTimer); phaseStartTime += 60;
+                    ApplyAPhasesValues( Under25,   i,9, phaseStartTime, 232, this[i].BerserkTimer);
 
                     AddAPhase(DarkVial, i);
                 }
@@ -1356,17 +1356,17 @@ namespace Rawr.Bosses
                 #region Apply Phases
                 // 10 minute Berserk Timer 80+40=120 600/120=5. At most 10 phases (5 each)
                 int phaseStartTime = 0;
-                ClearPhase1Values(ref AirPhase);
-                ApplyAPhasesValues(ref GroundPhase,  i, 1, phaseStartTime, 80, this[i].BerserkTimer); phaseStartTime += 80;
-                ApplyAPhasesValues(ref AirPhase,     i, 2, phaseStartTime, 40, this[i].BerserkTimer); phaseStartTime += 40;
-                ApplyAPhasesValues(ref GroundPhase,  i, 3, phaseStartTime, 80, this[i].BerserkTimer); phaseStartTime += 80;
-                ApplyAPhasesValues(ref AirPhase,     i, 4, phaseStartTime, 40, this[i].BerserkTimer); phaseStartTime += 40;
-                ApplyAPhasesValues(ref GroundPhase,  i, 5, phaseStartTime, 80, this[i].BerserkTimer); phaseStartTime += 80;
-                ApplyAPhasesValues(ref AirPhase,     i, 6, phaseStartTime, 40, this[i].BerserkTimer); phaseStartTime += 40;
-                ApplyAPhasesValues(ref GroundPhase,  i, 7, phaseStartTime, 80, this[i].BerserkTimer); phaseStartTime += 80;
-                ApplyAPhasesValues(ref AirPhase,     i, 8, phaseStartTime, 40, this[i].BerserkTimer); phaseStartTime += 40;
-                ApplyAPhasesValues(ref GroundPhase,  i, 9, phaseStartTime, 80, this[i].BerserkTimer); phaseStartTime += 80;
-                ApplyAPhasesValues(ref AirPhase,     i,10, phaseStartTime, 40, this[i].BerserkTimer);
+                ClearPhase1Values( AirPhase);
+                ApplyAPhasesValues( GroundPhase,  i, 1, phaseStartTime, 80, this[i].BerserkTimer); phaseStartTime += 80;
+                ApplyAPhasesValues( AirPhase,     i, 2, phaseStartTime, 40, this[i].BerserkTimer); phaseStartTime += 40;
+                ApplyAPhasesValues( GroundPhase,  i, 3, phaseStartTime, 80, this[i].BerserkTimer); phaseStartTime += 80;
+                ApplyAPhasesValues( AirPhase,     i, 4, phaseStartTime, 40, this[i].BerserkTimer); phaseStartTime += 40;
+                ApplyAPhasesValues( GroundPhase,  i, 5, phaseStartTime, 80, this[i].BerserkTimer); phaseStartTime += 80;
+                ApplyAPhasesValues( AirPhase,     i, 6, phaseStartTime, 40, this[i].BerserkTimer); phaseStartTime += 40;
+                ApplyAPhasesValues( GroundPhase,  i, 7, phaseStartTime, 80, this[i].BerserkTimer); phaseStartTime += 80;
+                ApplyAPhasesValues( AirPhase,     i, 8, phaseStartTime, 40, this[i].BerserkTimer); phaseStartTime += 40;
+                ApplyAPhasesValues( GroundPhase,  i, 9, phaseStartTime, 80, this[i].BerserkTimer); phaseStartTime += 80;
+                ApplyAPhasesValues( AirPhase,     i,10, phaseStartTime, 40, this[i].BerserkTimer);
                 AddAPhase(GroundPhase, i);
                 AddAPhase(AirPhase, i);
                 #endregion

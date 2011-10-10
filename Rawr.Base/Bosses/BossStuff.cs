@@ -10,7 +10,7 @@ using Rawr.Bosses;
 
 namespace Rawr {
     /// <summary>The role of the player, will allow certain lists to return filtered to things that affect said role</summary>
-    public enum PLAYER_ROLES { MainTank = 0, OffTank, TertiaryTank, MeleeDPS, RangedDPS, MainTankHealer, OffAndTertTankHealer, RaidHealer }
+    public enum PLAYER_ROLES { MainTank = 0, OffTank, TertiaryTank, MeleeDPS, RangedDPS, MainTankHealer, OffAndTertTankHealer, RaidHealer, AlysrazorAirGroup }
     /// <summary>Enumerator for creating a list of possible values for the Level box</summary>
     public enum POSSIBLE_LEVELS { LVLP0 = 85, LVLP1 = 86, LVLP2 = 87, LVLP3 = 88, }
     /// <summary>Enumerator for creating a list of possible values for the Mob Type box</summary>
@@ -214,6 +214,7 @@ namespace Rawr {
                     // DPS
                     { PLAYER_ROLES.MeleeDPS,             false },
                     { PLAYER_ROLES.RangedDPS,            false },
+                    { PLAYER_ROLES.AlysrazorAirGroup,    false },
                     // Heals
                     { PLAYER_ROLES.MainTankHealer,       false },
                     { PLAYER_ROLES.OffAndTertTankHealer, false },
@@ -480,6 +481,7 @@ namespace Rawr {
                     // DPS
                     { PLAYER_ROLES.MeleeDPS,             false },
                     { PLAYER_ROLES.RangedDPS,            false },
+                    { PLAYER_ROLES.AlysrazorAirGroup,    false },
                     // Heals
                     { PLAYER_ROLES.MainTankHealer,       false },
                     { PLAYER_ROLES.OffAndTertTankHealer, false },
@@ -931,6 +933,7 @@ namespace Rawr {
                     // DPS
                     { PLAYER_ROLES.MeleeDPS,             false },
                     { PLAYER_ROLES.RangedDPS,            false },
+                    { PLAYER_ROLES.AlysrazorAirGroup,    false },
                     // Heals
                     { PLAYER_ROLES.MainTankHealer,       false },
                     { PLAYER_ROLES.OffAndTertTankHealer, false },
@@ -1021,6 +1024,39 @@ namespace Rawr {
         #endregion
     }
 
+    public class InnerPhase
+    {
+        public InnerPhase(Phase phase, int version, int phaseNumber, float phaseStartTime, float phaseDuration, float fightDuration)
+        {
+            Phase = phase;
+            Version = version;
+            PhaseNumber = phaseNumber;
+            PhaseStartTime = phaseStartTime;
+            PhaseDuration = phaseDuration;
+            FightDuration = fightDuration;
+        }
+        public InnerPhase Clone()
+        {
+            InnerPhase clone = (InnerPhase)this.MemberwiseClone();
+
+            clone.Phase = Phase;
+            clone.Version = Version;
+            clone.PhaseNumber = PhaseNumber;
+            clone.PhaseStartTime = PhaseStartTime;
+            clone.PhaseDuration = PhaseDuration;
+            clone.FightDuration = FightDuration;
+
+            return clone;
+        }
+
+        public Phase Phase { get; set; }
+        public int Version { get; set; }
+        public int PhaseNumber { get; set; }
+        public float PhaseStartTime { get; set; }
+        public float PhaseDuration { get; set; }
+        public float FightDuration { get; set; }
+    }
+
     public class Phase
     {
         public string Name = "Phase";
@@ -1050,6 +1086,7 @@ namespace Rawr {
         public List<Impedance> Moves = new List<Impedance>();
         public List<Impedance> Silences = new List<Impedance>();
         public List<Impedance> Disarms = new List<Impedance>();
+        public List<InnerPhase> InnerPhases = new List<InnerPhase>();
         //
         public Attack LastAttack { get { return Attacks[Attacks.Count - 1]; } }
         public TargetGroup LastTarget { get { return Targets[Targets.Count - 1]; } }
@@ -1060,5 +1097,6 @@ namespace Rawr {
         public Impedance LastMove { get { return Moves[Moves.Count - 1]; } }
         public Impedance LastSilence { get { return Silences[Silences.Count - 1]; } }
         public Impedance LastDisarm { get { return Disarms[Disarms.Count - 1]; } }
+        public InnerPhase LastInnerPhase { get { return InnerPhases[InnerPhases.Count - 1]; } }
     };
 }

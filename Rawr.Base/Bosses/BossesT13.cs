@@ -21,7 +21,7 @@ namespace Rawr.Bosses
             Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T13_10, BossHandler.TierLevels.T13_25, BossHandler.TierLevels.T13_10H, BossHandler.TierLevels.T13_25H, BossHandler.TierLevels.T13_LFR };
             #endregion
             #region Basics
-            Health = new float[] { 53946000f, 80900000f, 0, 0, 0 };
+            Health = new float[] { 25166000f, 80900000f, 0, 0, 0 };
             MobType = (int)MOB_TYPES.DEMON;
             // 5 minute Berserk timer
             BerserkTimer = new int[] { 5 * 60, 5 * 60, 0, 0, 0 };
@@ -79,7 +79,7 @@ namespace Rawr.Bosses
                     AttackType = ATTACK_TYPES.AT_MELEE,
                     DamagePerTick = (18000f + 22000f) / 2f,
                     IsDoT = true,
-                    Duration = 8f * 1000f,
+                    Duration = 8f,
                     TickInterval = 1f,
                     MaxNumTargets = 1f,
                     // Based on early videos, it appears that the boss applies this every 20 second per tank
@@ -107,7 +107,7 @@ namespace Rawr.Bosses
                 {
                     Name = "Skewer Increased Damage Taken",
                     Chance = 1f,
-                    Duration = SkewerMainTank.Duration,
+                    Duration = SkewerMainTank.Duration * 1000f,
                     Frequency = SkewerMainTank.AttackSpeed,
                     Breakable = false,
                     Stats = new Stats() { DamageTakenReductionMultiplier = -1f },
@@ -120,20 +120,21 @@ namespace Rawr.Bosses
                 #region Seething Hate
                 // Alizabal incites Seething Hate on a random target causing 100,000 damage to all players within
                 // 6 yards, splitting the damage between everyone hit.
-                // http://ptr.wowhead.com/spell=105069
                 // Attack is a dot that hits for every 3 seconds lasting 9 seconds.
                 // Raid stacks up to spread the damage
+                // 10-man - http://ptr.wowhead.com/spell=105069
+                // 25-man - http://ptr.wowhead.com/spell=108094
                 Attack SeethingHate = new Attack
                 {
                     Name = "Seething Hate",
-                    SpellID = 105069,
+                    SpellID = new float[] { 105069, 108094, 0, 0, 0 }[i],
                     IsDoT = true,
                     // From videos watched, it only appeares to affect range dps and healers.
                     AttackType = ATTACK_TYPES.AT_AOE,
                     DamageType = ItemDamageType.Shadow,
                     Duration = 9f,
                     TickInterval = 3f,
-                    DamagePerTick = ((97500f + 102500f) / 2f) / Max_Players[i],
+                    DamagePerTick = (new float[] { (195000f + 205000f), (585000f + 615000f), 0, 0, 0 }[i] / 2f) / Max_Players[i],
                     // Need verification on how many are hit.
                     MaxNumTargets = Max_Players[i],
                     // Need verification on timing, but there is a dummy effect with an 8 second cooldown
@@ -168,12 +169,24 @@ namespace Rawr.Bosses
                 BladeDance.SetAffectsRoles_All();
                 Phase2.Attacks.Add(BladeDance);
 
+                BuffState BladeDance_Hit_Reduction = new BuffState
+                {
+                    Name = "Blade Dance Hit Reduction",
+                    Duration = 15f * 1000,
+                    Frequency = 15f,
+                    Chance = 1f,
+                    Breakable = false,
+                    Stats = new Stats() { SpellHit = -1f, PhysicalHit = -1f },
+                };
+                BladeDance_Hit_Reduction.SetAffectsRoles_All();
+                Phase2.BuffStates.Add(BladeDance_Hit_Reduction);
+
                 // Everyone needs to move out
                 Impedance BladeDanceImpedance = new Impedance
                 {
                     Name = "Blade Dance Move",
                     Chance = BladeDance.MaxNumTargets / Max_Players[i],
-                    Duration = 2f * 1000f,
+                    Duration = 2f * 3f * 1000f,
                     Frequency = BladeDance.Duration / 1000f,
                 };
                 BladeDanceImpedance.SetAffectsRoles_All();
@@ -185,19 +198,21 @@ namespace Rawr.Bosses
                 float phase1length = 45f;
                 float phase2length = 15f;
 
-                ClearPhase1Values(ref Phase1);
-                ClearPhase1Values(ref Phase2);
+                ClearPhase1Values( Phase1);
+                ClearPhase1Values( Phase2);
 
-                ApplyAPhasesValues(ref Phase1, i, 1, phaseStartTime, phase1length, this[i].BerserkTimer); phaseStartTime += phase1length; 
-                ApplyAPhasesValues(ref Phase2, i, 2, phaseStartTime, phase2length, this[i].BerserkTimer); phaseStartTime += phase2length;
-                ApplyAPhasesValues(ref Phase1, i, 3, phaseStartTime, phase1length, this[i].BerserkTimer); phaseStartTime += phase1length;
-                ApplyAPhasesValues(ref Phase2, i, 4, phaseStartTime, phase2length, this[i].BerserkTimer); phaseStartTime += phase2length;
-                ApplyAPhasesValues(ref Phase1, i, 5, phaseStartTime, phase1length, this[i].BerserkTimer); phaseStartTime += phase1length;
-                ApplyAPhasesValues(ref Phase2, i, 6, phaseStartTime, phase2length, this[i].BerserkTimer); phaseStartTime += phase2length;
-                ApplyAPhasesValues(ref Phase1, i, 7, phaseStartTime, phase1length, this[i].BerserkTimer); phaseStartTime += phase1length;
-                ApplyAPhasesValues(ref Phase2, i, 8, phaseStartTime, phase2length, this[i].BerserkTimer); phaseStartTime += phase2length;
-                ApplyAPhasesValues(ref Phase1, i, 9, phaseStartTime, phase1length, this[i].BerserkTimer); phaseStartTime += phase1length;
-                ApplyAPhasesValues(ref Phase2, i, 10, phaseStartTime, phase2length, this[i].BerserkTimer);
+                // First Blade dance starts after 35 second
+                ApplyAPhasesValues( Phase1, i, 1, phaseStartTime, 35f, this[i].BerserkTimer); phaseStartTime += 35f; 
+                ApplyAPhasesValues( Phase2, i, 2, phaseStartTime, phase2length, this[i].BerserkTimer); phaseStartTime += phase2length; // 50 seconds
+                ApplyAPhasesValues( Phase1, i, 3, phaseStartTime, phase1length, this[i].BerserkTimer); phaseStartTime += phase1length; // 95 seconds
+                ApplyAPhasesValues( Phase2, i, 4, phaseStartTime, phase2length, this[i].BerserkTimer); phaseStartTime += phase2length; // 110 seconds
+                ApplyAPhasesValues( Phase1, i, 5, phaseStartTime, phase1length, this[i].BerserkTimer); phaseStartTime += phase1length; // 155 seconds
+                ApplyAPhasesValues( Phase2, i, 6, phaseStartTime, phase2length, this[i].BerserkTimer); phaseStartTime += phase2length; // 170 seconds
+                ApplyAPhasesValues( Phase1, i, 7, phaseStartTime, phase1length, this[i].BerserkTimer); phaseStartTime += phase1length; // 215 seconds
+                ApplyAPhasesValues( Phase2, i, 8, phaseStartTime, phase2length, this[i].BerserkTimer); phaseStartTime += phase2length; // 230 seconds
+                ApplyAPhasesValues( Phase1, i, 9, phaseStartTime, phase1length, this[i].BerserkTimer); phaseStartTime += phase1length; // 275 seconds
+                ApplyAPhasesValues( Phase2, i, 10, phaseStartTime, phase2length, this[i].BerserkTimer); phaseStartTime += phase1length; // 275 seconds
+                ApplyAPhasesValues( Phase1, i, 11, phaseStartTime, 10f, this[i].BerserkTimer); // 300 seconds
 
                 AddAPhase(Phase1, i);
                 AddAPhase(Phase2, i);
@@ -238,7 +253,7 @@ namespace Rawr.Bosses
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f, 0.00f };
             Max_Players = new int[] { 25, 10, 25, 10, 25 };
             Min_Tanks = new int[] { 2, 2, 2, 2, 2 };
-            Min_Healers = new int[] { 5, 3, 5, 3, 5 };
+            Min_Healers = new int[] { 6, 3, 5, 3, 5 };
             #endregion
             #region Offensive
             for (int i = 0; i < 5; i++)
@@ -270,7 +285,7 @@ namespace Rawr.Bosses
 
                 #region Apply Phases
                 float p1duration = 0f;
-                ApplyAPhasesValues(ref EntirePhase, i, 0, 0, this[i].BerserkTimer, this[i].BerserkTimer);
+                ApplyAPhasesValues( EntirePhase, i, 0, 0, this[i].BerserkTimer, this[i].BerserkTimer);
                 AddAPhase(EntirePhase, i);
                 #endregion
             }
@@ -306,7 +321,7 @@ namespace Rawr.Bosses
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f, 0.00f };
             Max_Players = new int[] { 25, 10, 25, 10, 25 };
             Min_Tanks = new int[] { 2, 2, 2, 2, 2 };
-            Min_Healers = new int[] { 5, 3, 5, 3, 5 };
+            Min_Healers = new int[] { 6, 3, 5, 3, 5 };
             #endregion
             #region Offensive
             #region Attacks
@@ -331,7 +346,7 @@ namespace Rawr.Bosses
 
                 #region Add Phases
                 int phaseStartTime = 0;
-                ApplyAPhasesValues(ref EntirePhase, i, 1, phaseStartTime, this[i].BerserkTimer, this[i].BerserkTimer);
+                ApplyAPhasesValues( EntirePhase, i, 1, phaseStartTime, this[i].BerserkTimer, this[i].BerserkTimer);
                 AddAPhase(EntirePhase, i);
                 #endregion
             }
@@ -379,7 +394,7 @@ namespace Rawr.Bosses
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f, 0.00f };
             Max_Players = new int[] { 25, 10, 25, 10, 25 };
             Min_Tanks = new int[] { 2, 2, 2, 2, 2 };
-            Min_Healers = new int[] { 5, 3, 5, 3, 5 };
+            Min_Healers = new int[] { 6, 3, 5, 3, 5 };
             #endregion
             #region Offensive
             #region Attacks
@@ -410,7 +425,7 @@ namespace Rawr.Bosses
 
                 #region Add Phases
                 int phaseStartTime = 0;
-                ApplyAPhasesValues(ref EntireFight, i, 1, phaseStartTime, this[i].BerserkTimer, this[i].BerserkTimer);
+                ApplyAPhasesValues( EntireFight, i, 1, phaseStartTime, this[i].BerserkTimer, this[i].BerserkTimer);
                 AddAPhase(EntireFight, i);
                 #endregion
             }
@@ -461,7 +476,7 @@ namespace Rawr.Bosses
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f, 0.00f };
             Max_Players = new int[] { 25, 10, 25, 10, 25 };
             Min_Tanks = new int[] { 2, 2, 2, 2, 2 };
-            Min_Healers = new int[] { 5, 3, 5, 3, 5 };
+            Min_Healers = new int[] { 6, 3, 5, 3, 5 };
             #endregion
             #region Offensive
             #region Attacks
@@ -496,7 +511,7 @@ namespace Rawr.Bosses
 
                 #region Add Phases
                 int phaseStartTime = 0;
-                ApplyAPhasesValues(ref EntireFight, i, 1, phaseStartTime, this[i].BerserkTimer, this[i].BerserkTimer);
+                ApplyAPhasesValues( EntireFight, i, 1, phaseStartTime, this[i].BerserkTimer, this[i].BerserkTimer);
                 AddAPhase(EntireFight, i);
                 #endregion
 
@@ -547,7 +562,7 @@ namespace Rawr.Bosses
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f, 0.00f };
             Max_Players = new int[] { 25, 10, 25, 10, 25 };
             Min_Tanks = new int[] { 2, 2, 2, 2, 2 };
-            Min_Healers = new int[] { 5, 3, 5, 3, 5 };
+            Min_Healers = new int[] { 6, 3, 5, 3, 5 };
             #endregion
             #region Offensive
             #region Attacks
@@ -562,7 +577,7 @@ namespace Rawr.Bosses
 
                 #region Add Phases
                 int phaseStartTime = 0;
-                ApplyAPhasesValues(ref EntireFight, i, 1, phaseStartTime, this[i].BerserkTimer, this[i].BerserkTimer);
+                ApplyAPhasesValues( EntireFight, i, 1, phaseStartTime, this[i].BerserkTimer, this[i].BerserkTimer);
                 AddAPhase(EntireFight, i);
                 #endregion
 
@@ -613,24 +628,103 @@ namespace Rawr.Bosses
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f, 0.95f };
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f, 0.00f };
             Max_Players = new int[] { 25, 10, 25, 10, 25 };
-            Min_Tanks = new int[] { 1, 1, 1, 1, 1 };
-            Min_Healers = new int[] { 5, 3, 5, 3, 5 };
+            Min_Tanks = new int[] { 2, 2, 2, 2, 2 };
+            Min_Healers = new int[] { 6, 3, 5, 3, 5 };
             #endregion
             #region Offensive
             #region Attacks
             for (int i = 0; i < 5; i++)
             {
-                Phase EntireFight = new Phase() { Name = "Entire Fire" };
+                Phase PhaseOne = new Phase() { Name = "Stage One: Dragonriders, Attack!" };
+                Phase PhaseTwo = new Phase() { Name = "Stage Two: Looks Like I'm Doing This Myself" };
 
                 this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
 
-                #region Entire Fight
+                #region Stage One: Dragonriders, Attack!
+                /* Flying alongside the Skyfire and surveying the scene while his massive twilight drake lobs balls of destruction at the gunship, Warmaster Blackhorn gives the order for his elite dragonriders to swoop into battle.
+                 */
+                #region Goriona
+                /* The massive twilight drake that is the mount of Warmaster Blackhorn himself.
+                 * 
+                 * Twilight Onslaught: [Important]
+                 * Goriona unleashes a massive blast of dark energy at the Skyfire. Twilight Onslaught deals 800000 Shadow damage, divided evenly among all victims within its 10 yard radius, as well as the Skyfire itself. If the attack strikes the deck of the Skyfire without hitting any player, the gunship itself suffers the full damage.
+                 */
+                #endregion
+                  
+                #region Twilight Assault Drake
+                /* These drakes will strafe across the deck of the ship, depositing their fierce riders, and then retreat to a safe distance to bombard the gunship.
+                 * 
+                 * Twilight Barrage:
+                 * The twilight drakes launch bursts of dark energy at the Skyfire. Twilight Barrage deals 200000 Shadow damage, divided evenly among all victims within its 5 yard radius. If the attack strikes the deck of the Skyfire without hitting any player, the gunship itself suffers the full 200000 damage instead.
+                 */
+                #endregion
+                  
+                #region Twilight Elite Dreadblade
+                /* Blade Rush:
+                 * The Dreadblade charges at the location of a random distant foe, dealing 10000 Physical damage to all enemies in its path.
+                 * 
+                 * Degeneration: [Tank Note]
+                 * The Dreadblade carves a swath of destruction with its dark sword, dealing 40000 Shadow damage to enemies in a frontal cone, and afflicting them with a lingering effect that deals 4000 Shadow damage every 2 sec for 24 sec. Stacks.
+                 */
+                #endregion
+
+                #region Twilight Elite Slayer
+                /* Blade Rush:
+                 * The Dreadblade charges at the location of a random distant foe, dealing 10000 Physical damage to all enemies in its path.
+                 * 
+                 * Brutal Strike: [Tank Note]
+                 * The Slayer deals a vicious blow with its jagged sword, causing 150 Physical damage, and afflicting the target with a lingering effect that deals 3000 Physical damage every 2 sec for 24 sec. Stacks.
+                 */
+                #endregion
+
+                #region Twilight Sapper [Important][DPS Note]
+                /* Sleek infiltrator drakes will airdrop goblins, strapped with powerful explosives, onto the deck of the ship. These Sappers will rush to breach the gunship bridge, where they can detonate their destructive payload for maximum effect.
+                 * 
+                 * Detonate: [Important]
+                 * Upon reaching the Skyfire's bridge, the Sapper detonates his explosives, dealing 250000 Fire damage to enemies within 8 yards, and damaging the Skyfire itself for $s2% of its total durability. This explosion is also fatal to the Sapper himself.
+                 */
+                #endregion
+
+                #region The Skyfire
+                /* This massive gunship, with Sky Captain Swayze at the helm, is equipped with numerous cannons and a pair of harpoon guns for its defense. While sturdy, the gunship is not indestructible, and it cannot be allowed to sustain too much damage, or the pursuit of Deathwing will come to an untimely end.
+                 * 
+                 * Harpoon Guns [DPS Note]
+                 * The Skyfire is equipped with two repurposed harpoon guns, seized during its prior service in Northrend. During the battle, gunners will spear the Assault Drakes and reel them in, bringing them within reach for ranged attackers on the deck of the gunship. The drakes will strain against the line, eventually breaking free and returning to a safe distance. After a pause to reload, the harpoon gunners will then spear their target anew.
+                 */
+                #endregion
+                #endregion
+
+                #region Stage Two: Looks Like I'm Doing This Myself
+                /* Once the Skyfire's defenders defeat three waves of dragonriders, Warmaster Blackhorn himself will leap down onto the deck of the gunship.
+                 */
+                #region Warmaster Blackhorn
+                /* Devastate:
+                 * Blackhorn sunders the target's armor, dealing 150% weapon damage and applying the Sunder Armor effect, reducing armor by -20% for 30 sec. Stacks.
+                 * 
+                 * Disrupting Roar:
+                 * Warmaster Blackhorn screams fiercely, dealing 50000 Physical damage to all enemies, also interrupting the spellcasting of enemies within 10 yards for 8 sec.
+                 * 
+                 * Shockwave:
+                 * Blackhorn strikes the ground, unleashing a wave of force that deals 100000 Physical damage to enemies in a 80 yard frontal cone, stunning them for 4 sec.
+                 * 
+                 * Vengeance:
+                 * As Warmaster Blackhorn takes damage, he becomes increasingly deadly, dealing an additional percent damage for each percent of health he is missing.
+                 */
+                #endregion
+
+                #region Goriona
+                /* After depositing her master on the deck of the Skyfire, Goriona hovers alongside the Skyfire, raining destruction down on the adventurers.
+                 * 
+                 * Twilight Flames:
+                 * Goriona fires a blast of dark energy at a random player, dealing Shadow damage to enemies in a 7 yard radius. Twilight Flames lingers on the deck of the Skyfire, dealing 12000 Shadow damage to enemies within 7 yards every 1 sec for until cancelled.
+                 */
+                #endregion
                 #endregion
 
                 #region Add Phases
                 int phaseStartTime = 0;
-                ApplyAPhasesValues(ref EntireFight, i, 1, phaseStartTime, this[i].BerserkTimer, this[i].BerserkTimer);
-                AddAPhase(EntireFight, i);
+                ApplyAPhasesValues( PhaseOne, i, 1, phaseStartTime, this[i].BerserkTimer, this[i].BerserkTimer);
+                AddAPhase(PhaseOne, i);
                 #endregion
 
             }
@@ -680,8 +774,8 @@ namespace Rawr.Bosses
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f, 0.95f };
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f, 0.00f };
             Max_Players = new int[] { 25, 10, 25, 10, 25 };
-            Min_Tanks = new int[] { 1, 1, 1, 1, 1 };
-            Min_Healers = new int[] { 5, 3, 5, 3, 5 };
+            Min_Tanks = new int[] { 2, 2, 2, 2, 2 };
+            Min_Healers = new int[] { 6, 3, 5, 3, 5 };
             #endregion
             #region Offensive
             #region Attacks
@@ -725,7 +819,7 @@ namespace Rawr.Bosses
 
                 #region Add Phases
                 int phaseStartTime = 0;
-                ApplyAPhasesValues(ref EntireFight, i, 1, phaseStartTime, this[i].BerserkTimer, this[i].BerserkTimer);
+                ApplyAPhasesValues( EntireFight, i, 1, phaseStartTime, this[i].BerserkTimer, this[i].BerserkTimer);
                 AddAPhase(EntireFight, i);
                 #endregion
 
@@ -776,8 +870,8 @@ namespace Rawr.Bosses
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f, 0.95f };
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f, 0.00f };
             Max_Players = new int[] { 25, 10, 25, 10, 25 };
-            Min_Tanks = new int[] { 1, 1, 1, 1, 1 };
-            Min_Healers = new int[] { 5, 3, 5, 3, 5 };
+            Min_Tanks = new int[] { 2, 2, 2, 2, 2 };
+            Min_Healers = new int[] { 6, 3, 5, 3, 5 };
             #endregion
             #region Offensive
             #region Attacks
@@ -843,9 +937,9 @@ namespace Rawr.Bosses
                 #region Add Phases
                 int phaseStartTime = 0;
                 float phase1length = this[i].BerserkTimer * 0.8f;
-                ApplyAPhasesValues(ref Stage1, i, 1, phaseStartTime, phase1length, this[i].BerserkTimer);
+                ApplyAPhasesValues( Stage1, i, 1, phaseStartTime, phase1length, this[i].BerserkTimer);
                 AddAPhase(Stage1, i);
-                ApplyAPhasesValues(ref Stage2, i, 1, phaseStartTime, this[i].BerserkTimer - phase1length, this[i].BerserkTimer);
+                ApplyAPhasesValues( Stage2, i, 1, phaseStartTime, this[i].BerserkTimer - phase1length, this[i].BerserkTimer);
                 AddAPhase(Stage2, i);
                 #endregion
 

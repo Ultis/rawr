@@ -220,7 +220,7 @@ namespace Rawr.Bosses
 
                 #region Apply Phases
                 int phaseStartTime = 0;
-                ApplyAPhasesValues(ref EntireFight, i, 1, phaseStartTime, this[i].BerserkTimer, this[i].BerserkTimer); phaseStartTime += this[i].BerserkTimer;
+                ApplyAPhasesValues( EntireFight, i, 1, phaseStartTime, this[i].BerserkTimer, this[i].BerserkTimer); phaseStartTime += this[i].BerserkTimer;
                 AddAPhase(EntireFight, i);
                 #endregion
             }
@@ -262,12 +262,14 @@ namespace Rawr.Bosses
             Max_Players = new int[] { 10, 25, 10, 25, 0 };
             Min_Tanks = new int[] { 2, 2, 2, 2, 0 };
             Min_Healers = new int[] { 3, 5, 3, 5, 0 };
+            TimeBossIsInvuln = new float[] { 8f * 3f, 8f * 3f, 8f * 3f, 8f * 3f, 0 };
             #endregion
             #region Offensive
             for (int i = 0; i < 4; i++)
             {
                 Phase TheCinderweb = new Phase() { Name = "The Cinderweb" };
                 Phase TheFrenzy = new Phase() { Name = "The Frenzy!" };
+                Phase Devastation = new Phase() { Name = "Devastation" };
 
                 Attack Melee = new Attack
                 {
@@ -277,7 +279,7 @@ namespace Rawr.Bosses
                     AttackSpeed = 2.5f,
                 };
                 Melee.AffectsRole[PLAYER_ROLES.MainTank] = true;
-                TheCinderweb.Attacks.Add(Melee);
+                Devastation.Attacks.Add(Melee);
                 Attack MeleeP2 = Melee.Clone();
                 MeleeP2.AttackSpeed = 5f;
                 Melee.AffectsRole[PLAYER_ROLES.OffTank] = true;
@@ -311,7 +313,7 @@ namespace Rawr.Bosses
                 EmberFlare.AffectsRole[PLAYER_ROLES.MainTank] = true;
                 EmberFlare.AffectsRole[PLAYER_ROLES.MainTankHealer] = true;
                 EmberFlare.AffectsRole[PLAYER_ROLES.MeleeDPS] = true;
-                TheCinderweb.Attacks.Add(EmberFlare);
+                Devastation.Attacks.Add(EmberFlare);
                 #endregion
 
                 #region Meteor Burn
@@ -324,13 +326,14 @@ namespace Rawr.Bosses
                 {
                     Chance = new float[]{ 3f, 5f, 3f, 5f, 0f }[i] / Max_Players[i],
                     Name = "Meteor Burn",
-                    Duration = 4f * 1000f,
-                    Frequency = 10, // Guess
+                    Duration = 2f * 1000f,
+                    Frequency = 15, // Guess
+                    Breakable = false,
                 };
                 Move_MeteorBurn.AffectsRole[PLAYER_ROLES.MainTank] = true;
                 Move_MeteorBurn.AffectsRole[PLAYER_ROLES.MainTankHealer] = true;
                 Move_MeteorBurn.AffectsRole[PLAYER_ROLES.MeleeDPS] = true;
-                TheCinderweb.Moves.Add(Move_MeteorBurn);
+                Devastation.Moves.Add(Move_MeteorBurn);
                 #endregion
 
                 #region Consume
@@ -348,15 +351,16 @@ namespace Rawr.Bosses
                 // http://ptr.wowhead.com/spell=99052
                 Impedance Move_SmolderingDevastion = new Impedance
                 {
-                    Chance = 1,
+                    Chance = Move_MeteorBurn.Chance,
                     Name = "Smoldering Devastation",
-                    Duration = 12f * 1000f, // 8 sec cast + a few secs to get a new line to climb.
-                    Frequency = 90, // Max freq. is once every 82 secs.
+                    Duration = 8f * 1000f, // 5 seconds to jump down, and 3 second to get back up (about 7 seconds to taunt)
+                    Frequency = 90,
+                    Breakable = false,
                 };
                 Move_SmolderingDevastion.AffectsRole[PLAYER_ROLES.MainTank] = true;
                 Move_SmolderingDevastion.AffectsRole[PLAYER_ROLES.MainTankHealer] = true;
                 Move_SmolderingDevastion.AffectsRole[PLAYER_ROLES.MeleeDPS] = true;
-                TheCinderweb.Moves.Add(Move_SmolderingDevastion);
+                Devastation.Moves.Add(Move_SmolderingDevastion);
                 #endregion
                 #endregion
 
@@ -377,7 +381,7 @@ namespace Rawr.Bosses
                     LevelOfTargets = 85,
                 };
                 CinderwebSpinner.SetAffectsRoles_All();
-                TheCinderweb.Targets.Add(CinderwebSpinner);
+                Devastation.Targets.Add(CinderwebSpinner);
 
                 #region Cinderweb Spinner Burning Acid
                 /* Burning Acid
@@ -403,7 +407,7 @@ namespace Rawr.Bosses
                     Missable = false,
                 };
                 BurningAcid.SetAffectsRoles_All();
-                TheCinderweb.Attacks.Add(BurningAcid);
+                Devastation.Attacks.Add(BurningAcid);
                 #endregion
 
                 #region Fiery Web Spin
@@ -695,6 +699,7 @@ namespace Rawr.Bosses
                 Attack EmberFlarep2 = EmberFlare.Clone();
                 EmberFlarep2.Name = "Ember Flare Phase 2";
                 EmberFlarep2.DamagePerHit = new float[] { (15660f + 20340f), (17400f + 22600f), (23809f + 27670f), (30421f + 35355f), 0f }[i] / 2f;
+                EmberFlarep2.MaxNumTargets = Max_Players[i];
                 EmberFlarep2.SetAffectsRoles_All();
                 TheFrenzy.Attacks.Add(EmberFlarep2);
                 #endregion
@@ -710,10 +715,18 @@ namespace Rawr.Bosses
                 #endregion
 
                 #region Apply Phases
-                float p1duration = (Move_SmolderingDevastion.Frequency * 3);
-                ApplyAPhasesValues(ref TheCinderweb, i, 1, 0, p1duration, this[i].BerserkTimer);
+                float p1duration = Move_SmolderingDevastion.Frequency;
+                float phaseStart = 0f;
+                InnerPhase InnerPhaseDevasation;
+                for (int j = 0; j < 3; j++)
+                {
+                    InnerPhaseDevasation = new InnerPhase(Devastation, i, 1, phaseStart, p1duration, BerserkTimer[i]);
+                    phaseStart += p1duration;
+                    TheCinderweb.InnerPhases.Add(InnerPhaseDevasation);
+                }
+                ApplyAPhasesValues(TheCinderweb, i, 1, 0, p1duration * 3f, BerserkTimer[i]);
                 AddAPhase(TheCinderweb, i);
-                ApplyAPhasesValues(ref TheFrenzy, i, 2, p1duration, this[i].BerserkTimer - p1duration, this[i].BerserkTimer);
+                ApplyAPhasesValues(TheFrenzy, i, 2, (p1duration * 3f), (BerserkTimer[i] - (p1duration * 3f)), BerserkTimer[i]);
                 AddAPhase(TheFrenzy, i);
                 #endregion
             }
@@ -727,7 +740,6 @@ namespace Rawr.Bosses
             Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0, 0 };
             Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0, 0 };
             #endregion
-            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0, 0 };
         }
     }
 
@@ -924,14 +936,14 @@ namespace Rawr.Bosses
 
                 #region Magma Flow
                 // You need to move way from the lines that come from the craters
-                // 3 volcanoes spawn appoximately every 25 seconds
-                // Assume 2/3rds get stomped causing craters
+                // 2 on 10-man, 3 on 25-man, volcanoes spawn appoximately every 25 seconds
+                // Assume half on 10-man, 2/3rds on 25-man get stomped causing craters
                 Impedance Move_MagmaFlow = new Impedance
                 {
                     Chance = 0.50f,
                     Name = "Meteor Burn",
                     Duration = 2f * 1000f,
-                    Frequency = 25f / (2f / 3f),
+                    Frequency = 25f / ((i < 2) ? (1f / 2f) : (2f / 3f)),
                 };
                 Move_MagmaFlow.SetAffectsRoles_All();
                 ObsidianForm.Moves.Add(Move_MagmaFlow);
@@ -1156,11 +1168,11 @@ namespace Rawr.Bosses
                 #region Add Phases
                 int phaseStartTime = 0;
                 int phaseDuration = (int)((float)this[i].BerserkTimer * (1 - .25f));  // Phase change at 25% health when the armor is gone.
-                ApplyAPhasesValues(ref ObsidianForm, i, 1, phaseStartTime, phaseDuration, this[i].BerserkTimer);
+                ApplyAPhasesValues( ObsidianForm, i, 1, phaseStartTime, phaseDuration, this[i].BerserkTimer);
                 AddAPhase(ObsidianForm, i);
                 phaseStartTime = phaseStartTime + phaseDuration;
                 phaseDuration = this[i].BerserkTimer - phaseDuration;
-                ApplyAPhasesValues(ref LiquidForm, i, 1, phaseStartTime, phaseDuration, this[i].BerserkTimer);
+                ApplyAPhasesValues( LiquidForm, i, 1, phaseStartTime, phaseDuration, this[i].BerserkTimer);
                 AddAPhase(LiquidForm, i);
                 #endregion
             }
@@ -1204,9 +1216,9 @@ namespace Rawr.Bosses
             Comment = "Not modeled in detail yet.";
             #endregion
             #region Basics
-            Health = new float[] { 38651400f, 115954200f, 71892800f, 197122144f, 0 }; // TODO: double check 25-man normal health pool
+            Health = new float[] { 38651400f, 115954200f, 71892800f, 197122144f, 0 }; // TODO: double check 25-man normal and 10-man heroic health pool
             MobType = (int)MOB_TYPES.ELEMENTAL;
-            // 3 full phases or 15 minute enrage timer.
+            // 3 full phases on Normal; 2 full phases on Heroic; or 15 minute enrage timer.
             BerserkTimer = new int[] { 15 * 60, 15 * 60, 15 * 60, 15 * 60, 0 };
             SpeedKillTimer = new int[] { 8 * 60, 8 * 60, 8 * 60, 8 * 60, 0 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f, 0 };
@@ -1219,69 +1231,204 @@ namespace Rawr.Bosses
             #region Attacks
             for (int i = 0; i < 4; i++)
             {
+                Phase InitialPull = new Phase() { Name = "Initial Pull" };
                 Phase FlightofFlames = new Phase() { Name = "Flight of Flames" };
                 Phase UltimateFirepower = new Phase() { Name = "Ultimate Firepower" };
                 Phase Burnout = new Phase() { Name = "Burnout" };
                 Phase ReIgnition = new Phase() { Name = "Re-Ignition" };
-                
-                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
 
+                //Mini-Phase variables
+                Phase HatchlingPhase = new Phase() { Name = "Hatchlings" };
+                Phase FireStormPhase = new Phase() { Name = "Firestorm Phase" };
+                InnerPhase InnerPhaseHatchling, InnerPhaseFirestorm;
+
+                float FlightofFlamesPhaseTime = new float[] { 190f, 190f, 250f, 250f, 0f }[i];
+                float FirestormCD = new float[] { 0, 0, 83f, 83f, 0 }[i];
+                float MeteorCD = new float[] { 0, 0, 37, 37, 0 }[i];
+                float FieryTornadoDuration = 35f;
+                float BurnoutDuration = 33f;
+                float ReIgniteDuration = 50f / 3f;
+
+                #region Initial Pull
+                #region Initial Pull Firestorm
                 /* Firestorm
                  * At the beginning of the battle, Alysrazor ascends into the sky dealing 30000 Fire damage to all
                  * enemies and knocking them back. In addition, Alysrazor will continue to deal 10000 Fire damage
                  * to all enemies every 1 seconds for 10 sec.*/
-                // Initial damage - http://ptr.wowhead.com/spell=99605
+                // Initial damage
+                // 10-man - http://ptr.wowhead.com/spell=99605
+                // 25-man - http://ptr.wowhead.com/spell=101658
+                // 10-man Heroic - http://ptr.wowhead.com/spell=101659
+                // 25-man Heroic - http://ptr.wowhead.com/spell=101660
                 // Addition damage - http://ptr.wowhead.com/spell=99606
+                Attack InitialFirestorm = new Attack
+                {
+                    Name = "Initial Pull Firestorm",
+                    AttackSpeed = BerserkTimer[i] - 1f,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamageType = ItemDamageType.Fire,
+                    Interruptable = false,
+                    MaxNumTargets = Max_Players[i],
+                    DamagePerHit = new float[] { 20000f, 20000f, 25000f, 25000f, 0 }[i],
+                    DamagePerTick = 8000f,
+                    IsDoT = true,
+                    Duration = 10f * 1000f,
+                    TickInterval = 1f,
+                    SpellID = new float[] { 99605, 101658, 101659, 101660, 0 }[i],
+                };
+                InitialFirestorm.SetAffectsRoles_All();
+                InitialPull.Attacks.Add(InitialFirestorm);
+                #endregion
 
+                #region Volcanic Fire
                 /* Volcanic Fire
                  * A massive eruption creates patches of Fire which block escape from Alysrazor's domain. Volcanic
                  * Fire patches deal 92500 to 107500 Fire damage to enemies within 6 yards every 1 seconds.*/
                 // http://ptr.wowhead.com/spell=98463
+                // This should never be hit
+                #endregion
+                #endregion
 
                 #region Flight of Flames
                 /* Alysrazor flies around the area, allowing her minions to corner her foes far below. She will
                  * periodically fly through the center of the arena to claw at floes as well.*/
 
-                /* Firestorm [Heroic Only]
-                 * Alysrazor faces the center of the arena and kicks up a powerful, fiery wind. After 5 seconds,
+                #region Firestorm [Heroic Only]
+                /* Alysrazor faces the center of the arena and kicks up a powerful, fiery wind. After 5 seconds,
                  * the arena is bathed in flames, dealing 100000 Fire damage every 1 seconds to all enemies within
-                 * line of sight for 10 sec.*/
-                // http://ptr.wowhead.com/spell=100745
+                 * line of sight for 5 sec.*/
+                // Initicial cast - http://ptr.wowhead.com/spell=100744
+                // Actual Damage - http://ptr.wowhead.com/spell=100745
                 // Personal Note - Stopping a Molten Meteor which is summoned by a Herald of the Burning End allows
-                // people to Line of Sight the Firestorm damage.
+                // people to Line of Sight the Firestorm damage, thus negating the damage (aka interuptable).
+                // This should never be hit, but people should move on the cast part
+                if (i > 1)
+                {
+                    /*Attack Firestorm = new Attack
+                    {
+                        Name = "Firestorm",
+                        DamagePerTick = 50000f,
+                        IsDoT = true,
+                        TickInterval = 1f,
+                        Duration = 5f,
+                        DamageType = ItemDamageType.Fire,
+                        AttackSpeed = FirestormCD,
+                    };
+                    Firestorm.SetAffectsRoles_All();
+                    Firestorm.AffectsRole[PLAYER_ROLES.AlysrazorAirGroup] = true;
+                     */
+
+                    Impedance Firestorm_move = new Impedance
+                    {
+                        Name = "Move to Hide from Firestorm",
+                        Chance = 1f,
+                        Breakable = false,
+                        Duration = 5f * 1000f,
+                        Frequency = 10f,
+                    };
+                    Firestorm_move.SetAffectsRoles_All();
+                    Firestorm_move.AffectsRole[PLAYER_ROLES.AlysrazorAirGroup] = true;
+                    FireStormPhase.Moves.Add(Firestorm_move);
+                }
+                #endregion
 
                 #region Molting
                 // Alysrazor begins to mold, creating Molten Feathers nearby.
+                // She channels this for 9 seconds.
+                // 10-man/Heroic - http://ptr.wowhead.com/spell=99464, she drops every second
+                // 25-man/Heroic - http://ptr.wowhead.com/spell=100698, every 400 milliseconds
+                float feathers = 9f / new float[] { 1f, 0.4f, 1f, 0.4f, 0f }[i];
 
-                /* Molten Feather [DPS Note]
-                 * Molten Feathers can be picked up by players, up to a maximum of three. While holding a
-                 * Molten Feather, all spells can be cast while moving and movement speed is increased by 190%
+                #region Molten Feather [DPS Note]
+                /* Molten Feathers can be picked up by players, up to a maximum of three. While holding a
+                 * Molten Feather, all spells can be cast while moving and movement speed is increased by 30%
                  * per feather. Once three feathers have been obtained, the player gains Wings of Flame.*/
                 // http://ptr.wowhead.com/spell=97128
+                float AirGroupSize = new float[] { 1f, 3f, 1f, 3f, 0f }[i];
+                BuffState MoltenFeatherAirGroup = new BuffState
+                {
+                    Name = "Molten Feather Air Group",
+                    Chance = AirGroupSize / (Max_Players[i] - Min_Tanks[i] - Min_Healers[i]),
+                    // Assume that it does not fall off until the end of Burnout
+                    Duration = FlightofFlamesPhaseTime * 1000f,
+                    Frequency = FlightofFlamesPhaseTime,
+                    Breakable = false,
+                    Stats = new Stats() { MovementSpeed = (0.30f * 3f) },
+                };
+                MoltenFeatherAirGroup.AffectsRole[PLAYER_ROLES.AlysrazorAirGroup] = true;
 
-                /* Wings of Flame
-                 * Allows the player to fly for 20 sec.*/
+                // On heroic air group needs to grab 1 feather each after each Firestorm to keep their flying buff up.
+                float remainingfeathers = (feathers - (AirGroupSize * 3f)) + (feathers - ((i > 1) ? AirGroupSize : 0f)) * 2f;
+                BuffState MoltenFeatherGroundGroup = new BuffState
+                {
+                    Name = "Molten Feather Ground Group",
+                    Chance = (Max_Players[i] - AirGroupSize) / Max_Players[i],
+                    Duration = MoltenFeatherAirGroup.Duration,
+                    Frequency = MoltenFeatherAirGroup.Frequency,
+                    Breakable = false,
+                    Stats = new Stats() { MovementSpeed = (0.30f * (3f * (remainingfeathers / (feathers * 3f)))) },
+                };
+                MoltenFeatherGroundGroup.SetAffectsRoles_All();
+                FlightofFlames.BuffStates.Add(MoltenFeatherGroundGroup);
+                // Since people are getting feathers, casters can cast while moving, thus eliminating most movement impedances
+                #endregion
+                
+                #region Wings of Flame
+                // Allows the player to fly for 20 sec.*/
                 // http://ptr.wowhead.com/spell=98630
+                MoltenFeatherAirGroup.Stats.MovementSpeed = 2.25f;
+                FlightofFlames.BuffStates.Add(MoltenFeatherAirGroup);
+                #endregion
                 #endregion
 
                 #region Flying
                 // Players in flight using Wings of Flame contend with additional elements of the battle.
 
-                /* Blazing Power
-                 * While flying, Alysrazor periodically gives off rings of fire, which last for 3 seconds.
+                #region Blazing Power
+                /* While flying, Alysrazor periodically gives off rings of fire, which last for 3 seconds.
                  * Enemies that pass through the ring gain Blazing Power, wich increases haste by 4% and
                  * stacks up to 25 times. In addition, each stack of Blazing Power restores mana, rage,
                  * energy, runic power, and holy power, and refreshes the duration of Wings of Flame.*/
                 // http://ptr.wowhead.com/spell=99461
                 // Restores 5% of mana, rage, energy, runic power, and holy power.
+                Stats BlazingPowerStats = new Stats();
+                SpecialEffect BlazingPowerSpecialEffect = new SpecialEffect(Trigger.Use, new Stats() { ManaorEquivRestore = 0.05f, PhysicalHaste = 0.08f, SpellHaste = 0.08f }, 40f, 5f, 1f, 25);
+                BlazingPowerStats.AddSpecialEffect(BlazingPowerSpecialEffect);
+                BuffState BlazingPower = new BuffState
+                {
+                    Name = "Blazing Power",
+                    Frequency = MoltenFeatherAirGroup.Frequency,
+                    Duration = MoltenFeatherAirGroup.Duration,
+                    Chance = 1f,
+                    Breakable = false,
+                    Stats = BlazingPowerStats,
+                };
+                BlazingPower.AffectsRole[PLAYER_ROLES.AlysrazorAirGroup] = true;
+                FlightofFlames.BuffStates.Add(BlazingPower);
+                #endregion
 
-                /* Alysra's Razor
-                 * If a player gains 25 stacks of Blazing Power, they gain Alysra's Razor, which increases
+                #region Alysra's Razor
+                /* If a player gains 25 stacks of Blazing Power, they gain Alysra's Razor, which increases
                  * critical strike chance by 50% for 30 sec.*/
                 // http://ptr.wowhead.com/spell=100029
+                // Normal there is no break in the timing on normal,
+                // Flyer should have 25 stacks during the second Firestorm, so only 10 seconds while not refreshing the stack
+                float AlysrasRazorStartTime = (i < 2 ? 125f : 135f);
+                BuffState AlysrasRazor = new BuffState
+                {
+                    Name = "Alysra's Razor",
+                    Frequency = MoltenFeatherAirGroup.Frequency,
+                    Duration = MoltenFeatherAirGroup.Duration - (AlysrasRazorStartTime * 1000f),
+                    Chance = 1f,
+                    Breakable = false,
+                    Stats = new Stats() { SpellCrit = 0.75f, PhysicalCrit = 0.75f },
+                };
+                AlysrasRazor.AffectsRole[PLAYER_ROLES.AlysrazorAirGroup] = true;
+                FlightofFlames.BuffStates.Add(AlysrasRazor);
+                #endregion
 
-                /* Incendiary Cloud
-                 * While flying, Alysrazor periodically gives off between one and three Incendiary Clouds,
+                #region Incendiary Cloud
+                /* While flying, Alysrazor periodically gives off between one and three Incendiary Clouds,
                  * which last for 3 seconds. Enemies that pass through the cloud suffer 27750 to 32250 Fire
                  * damage every 1.50 sec.
                  * 
@@ -1290,61 +1437,275 @@ namespace Rawr.Bosses
                 // 25 man - http://ptr.wowhead.com/spell=100729
                 // 10 man heroic - http://ptr.wowhead.com/spell=100730
                 // 25 man heroic - http://ptr.wowhead.com/spell=100731
+                // These should NEVER be hit by the Air group
+                Attack IncendiaryCloud = new Attack
+                {
+                    Name = "Incendiary Cloud",
+                    DamagePerTick = new float[] { (27750f + 32250f), (27750f + 32250f), (55500f + 64500f), (55500f + 64500f), 0 }[i] / 2f,
+                    IsDoT = true,
+                    TickInterval = 1.5f,
+                    Duration = 3f,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    AttackSpeed = 5f,
+                    DamageType = ItemDamageType.Fire,
+                    SpellID = new float[] { 99427, 100729, 100730, 100731, 0 }[i],
+                    // Normal has 2 clouds, Heroic has 3 clouds
+                    MaxNumTargets = new float[] { 2, 2, 3, 3, 0 }[i],
+                    // By flying around the clouds, you can "interrupt" the attacks
+                    Interruptable = true,
+                };
+                IncendiaryCloud.AffectsRole[PLAYER_ROLES.AlysrazorAirGroup] = true;
+                FlightofFlames.Attacks.Add(IncendiaryCloud);
+                #endregion
+
                 #endregion
 
                 #region Blazing Talon Initiate
                 /* Blazing Talon Initiates will periodically fly in from the Firelands to assist Alysrazor
                  * in defeating enemy forces on the ground.*/
-                // http://db.mmo-champion.com/c/53897/blazing-talon-initiate/
+                // West-side - http://ptr.wowhead.com/npc=53896
+                // East-side - http://ptr.wowhead.com/npc=53369
+                // Timer - Both - Normal - 17; Heroic - 17
+                //         Both - Normal - 31; heroic - 22
+                //         East - Normal - 21; Heroic - 53
+                //         West - Normal - 21; Heroic - 21
+                //         East - Normal - 21; Heroic - 21
+                //         West - Normal - 21; Heroic - 40
+                float WestBlazingTalonInitiateFrequence = (i > 1 ? (17f + 22f + (63f + 21f) + (21f + 40f)) : (17f + 31f + (31f + 21f) + (21f + 21f))) / 4f;
+                float EastBlazingTalonInitiateFrequence = (i > 1 ? (17f + 22f + 63f + (21f + 21f)) : (17f + 31f + 31f + (21f + 21f))) / 4f;
+                TargetGroup BlazingTalonInitiateWest = new TargetGroup
+                {
+                    Name = "Blazing Talon Initiate West",
+                    Chance = 1f,
+                    Frequency = WestBlazingTalonInitiateFrequence,
+                    Duration = WestBlazingTalonInitiateFrequence * 1000f,
+                    LevelOfTargets = 87,
+                    NearBoss = false,
+                    NumTargs = 1f,
+                    TargetID = 53896,
+                };
+                BlazingTalonInitiateWest.SetAffectsRoles_DPS();
+                HatchlingPhase.Targets.Add(BlazingTalonInitiateWest);
+                FlightofFlames.Targets.Add(BlazingTalonInitiateWest);
 
-                /* Brushfire
-                 * The Blazing Talon Initiate conjures a fiery ball that moves across the arena, dealing
+                TargetGroup BlazingTalonInitiateEast = new TargetGroup
+                {
+                    Name = "Blazing Talon Initiate East",
+                    Chance = 1f,
+                    Frequency = EastBlazingTalonInitiateFrequence,
+                    Duration = EastBlazingTalonInitiateFrequence * 1000f,
+                    LevelOfTargets = 87,
+                    NearBoss = false,
+                    NumTargs = 1f,
+                    TargetID = 53369,
+                };
+                BlazingTalonInitiateEast.SetAffectsRoles_DPS();
+                HatchlingPhase.Targets.Add(BlazingTalonInitiateEast);
+                FlightofFlames.Targets.Add(BlazingTalonInitiateEast);
+
+                #region Brushfire
+                /* The Blazing Talon Initiate conjures a fiery ball that moves across the arena, dealing
                  * 27750 to 32250 damage every 1 sec to enemies within 0 yards.*/
+                // Initiates are now stunnable so these can be "interupted" now
                 // Original cast - http://ptr.wowhead.com/spell=98868
-                // Summons - http://db.mmo-champion.com/c/53372
+                // Summons - http://ptr.wowhead.com/npc=53372
                 // 10 man - http://ptr.wowhead.com/spell=98885
                 // 25 man - http://ptr.wowhead.com/spell=100715
                 // 10 man heroic - http://ptr.wowhead.com/spell=100716
                 // 25 man heroic - http://ptr.wowhead.com/spell=100717
+                Attack Brushfire = new Attack
+                {
+                    Name = "Brushfire",
+                    DamagePerHit = new float[] { (27750f + 32250f), (27750f + 32250f), (55500f + 64500f), (55500f + 64500f), 0f }[i],
+                    DamageType = ItemDamageType.Fire,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    MaxNumTargets = 1f,
+                    Interruptable = true,
+                    IsFromAnAdd = true,
+                    SpellID = new float[] { 98885, 100715, 100716, 100717, 0 }[i],
+                    AttackSpeed = new float[] { 4f, 4f, 8f, 8f, 0f }[i],
+                };
+                Brushfire.SetAffectsRoles_All();
+                FlightofFlames.Attacks.Add(Brushfire);
+                #endregion
+
+                #region Fieroblast
+                /* The Blazing Talon Initiate hurls a fiery boulder at an enemy, inflicting 27750 to 32250 Fire
+                 * damage and 10000 Fire damage every 3 seconds for 12 sec.*/
+                // After the September 20, 2011 nerf to Firelands in general, this is only cast on heroic
+                // Cast after every Brushfire (Brushfire/Fieroblast/Burshfire/Fieroblast/etc)
+                // These are interuptable
+                // 10 man Heroic - http://ptr.wowhead.com/spell=101295
+                // 25 man Heroic - http://ptr.wowhead.com/spell=101296
+                if (i > 1 )
+                {
+                    Attack Fieroblast = new Attack
+                    {
+                        Name = "Fieroblast",
+                        DamagePerHit = new float[] { 0, 0, (37000f + 43000f), (37000f + 43000f), 0f }[i],
+                        DamagePerTick = new float[] { 0, 0, 20000, 20000, 0 }[i],
+                        IsDoT = true,
+                        TickInterval = 3f,
+                        Duration = 12f,
+                        AttackSpeed = new float[] { 0, 0, 8f, 8f, 0f }[i],
+                        AttackType = ATTACK_TYPES.AT_DOT,
+                        DamageType = ItemDamageType.Fire,
+                        Interruptable = true,
+                        IsFromAnAdd = true,
+                        MaxNumTargets = 1f,
+                    };
+                    Fieroblast.SetAffectsRoles_All();
+                    Fieroblast.AffectsRole[PLAYER_ROLES.AlysrazorAirGroup] = true;
+                    FlightofFlames.Attacks.Add(Fieroblast);
+                }
+                #endregion
                 #endregion
 
                 #region Voracious Hatchling [Tank Note]
                 /* Early in Stage 1, two Blazing Broodmothers drop off two Molten Eggs. After several seconds,
                  * the eggs hatch into Voracious Hatchlings. Voracious Hatchlings are indeed voracious and will
                  * throw a Tantrum if not fed Plump Lava Worms.*/
-                // http://db.mmo-champion.com/c/53898/voracious-hatchling/
+                // East Hatchling - http://ptr.wowhead.com/npc=53898
+                // West hatchling - http://ptr.wowhead.com/npc=53509
+                TargetGroup WestVoraciousHatchling = new TargetGroup
+                {
+                    Name = "West Voracious Hatchling",
+                    Chance = 1f,
+                    Frequency = (i > 1 ? FirestormCD : FlightofFlamesPhaseTime) - 1f,
+                    Duration = ((i > 1 ? FirestormCD : FlightofFlamesPhaseTime) - 12f) * 1000f,
+                    NearBoss = false,
+                    NumTargs = 1f,
+                    TargetID = 53509,
+                    LevelOfTargets = 87,
+                };
+                WestVoraciousHatchling.AffectsRole[PLAYER_ROLES.MainTank] = true;
+                if (i < 2)
+                    FlightofFlames.Targets.Add(WestVoraciousHatchling);
+                else
+                    FireStormPhase.Targets.Add(WestVoraciousHatchling);
 
-                /* Imprinted
-                 * Upon hatchling, Voracious Hatchlings become imprinted on the nearest enemy. The hatchling
+                TargetGroup EastVoraciousHatchling = WestVoraciousHatchling.Clone();
+                EastVoraciousHatchling.Name = "East Voracious Hatchling";
+                EastVoraciousHatchling.TargetID = 53509;
+                EastVoraciousHatchling.AffectsRole[PLAYER_ROLES.MainTank] = false;
+                EastVoraciousHatchling.AffectsRole[PLAYER_ROLES.OffTank] = true;
+                if (i < 2)
+                    FlightofFlames.Targets.Add(EastVoraciousHatchling);
+                else
+                    FireStormPhase.Targets.Add(EastVoraciousHatchling);
+
+                Attack VoraciousHatchlingMelee = new Attack
+                {
+                    Name = "Voracious hatchling Melee",
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)Content[i]],
+                    AttackSpeed = 1f,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    DamageType = ItemDamageType.Physical,
+                    IsFromAnAdd = true,
+                    MaxNumTargets = 1f,
+                    Missable = true,
+                    Parryable = true,
+                    Dodgable = true,
+                    Blockable = true,
+                    IsTheDefaultMelee = true,
+                };
+                VoraciousHatchlingMelee.SetAffectsRoles_Tanks();
+                if (i < 2)
+                    FlightofFlames.Attacks.Add(VoraciousHatchlingMelee);
+                else
+                    FireStormPhase.Attacks.Add(VoraciousHatchlingMelee);
+
+                #region Imprinted
+                /* Upon hatchling, Voracious Hatchlings become imprinted on the nearest enemy. The hatchling
                  * will only attack that target, but the target gains 1000% additional damage against the
                  * hatchling.*/
                 // http://ptr.wowhead.com/spell=99389; alt - http://ptr.wowhead.com/spell=100359
+                WestVoraciousHatchling.AffectsRole[PLAYER_ROLES.MainTank] = true;
+                EastVoraciousHatchling.AffectsRole[PLAYER_ROLES.OffTank] = true;
+                BuffState Imprint = new BuffState
+                {
+                    Name = "Imprint",
+                    Frequency = WestVoraciousHatchling.Frequency,
+                    Duration = WestVoraciousHatchling.Duration,
+                    Chance = 1f,
+                    Breakable = false,
+                    Stats = new Stats() { BonusDamageMultiplier = 10f },
+                };
+                Imprint.SetAffectsRoles_Tanks();
+                if (i < 2)
+                    FlightofFlames.BuffStates.Add(Imprint);
+                else
+                    FireStormPhase.BuffStates.Add(Imprint);
+                #endregion
 
-
-                /* Satiated
-                 * The Voracious Hatchling will not throw a Tantrum when Satiated, which lasts for 15 sec.
+                #region Satiated
+                /* The Voracious Hatchling will not throw a Tantrum when Satiated, which lasts for 15 sec.
                  * Voracious Hatchlings hatch fully Satiated, and can become Satiated again if they are fed
                  * Lava Worms.*/
-                // 15 seconds - http://ptr.wowhead.com/spell=99359; alt - http://ptr.wowhead.com/spell=100850
-                // 20 seconds - http://ptr.wowhead.com/spell=100852; alt - http://ptr.wowhead.com/spell=100851
+                // 15 seconds
+                // 10-man - http://ptr.wowhead.com/spell=99359
+                // 25-man - http://ptr.wowhead.com/spell=100850
+                // 10 seconds
+                // 10-man heroic - http://ptr.wowhead.com/spell=100851
+                // 25-man heroic - http://ptr.wowhead.com/spell=100852
+                #endregion
 
-                /* Hungry
-                 * A Voracious Hatchling that is no longer Satiated becomes Hungry. When Hungry, hatchling
+                #region Hungry
+                /* A Voracious Hatchling that is no longer Satiated becomes Hungry. When Hungry, hatchling
                  * have a 20% chance on hit to throw a Tantrum.*/
                 // http://ptr.wowhead.com/spell=99361
+                #endregion
 
-                /* Tantrum
-                 * The Voracious Hatchling throws a Tantrum, increasing damage by 50% and haste by 50%.*/
+                #region Tantrum
+                // The Voracious Hatchling throws a Tantrum, increasing damage by 50% and haste by 50%.
                 // http://ptr.wowhead.com/spell=99362
+                // This should never happen on heroic
+                Stats TantrumStats = new Stats();
+                SpecialEffect TantrumSpecialEffect = new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenReductionMultiplier = -0.50f }, 10f, (i < 2 ? 35 : 25 ), 0.20f);
+                TantrumStats.AddSpecialEffect(TantrumSpecialEffect);
+                BuffState Tantrum = new BuffState
+                {
+                    Name = "Tantrum",
+                    Chance = 1f,
+                    Breakable = true,
+                    Frequency = (i < 2 ? 30 : 20 ),
+                    Duration = 10f * 1000f,
+                    Stats = TantrumStats,
+                };
+                Tantrum.SetAffectsRoles_Tanks();
+                if (i < 2)
+                    FlightofFlames.BuffStates.Add(Tantrum);
+                else
+                    FireStormPhase.BuffStates.Add(Tantrum);
+                #endregion
 
-                /* Gushing Wound [Healer Note]
-                 * The Voracious Hatchling strikes all targets within a 6-yard cone, causing them to bleed for
+                #region Gushing Wound [Healer Note]
+                /* The Voracious Hatchling strikes all targets within a 6-yard cone, causing them to bleed for
                  * 3000 Physical damage every 0.20 seconds or until the target's health falls below 50% of
                  * their maximum health.*/
                 // 10 man - http://ptr.wowhead.com/spell=100024; alt - http://ptr.wowhead.com/spell=99308
                 // 25 man - http://ptr.wowhead.com/spell=100721; alt - http://ptr.wowhead.com/spell=100718
                 // 10 man heroic - http://ptr.wowhead.com/spell=100719; alt - http://ptr.wowhead.com/spell=100722
                 // 25 man heroic - http://ptr.wowhead.com/spell=100723; alt - http://ptr.wowhead.com/spell=100720
+                Attack GushingWound = new Attack
+                {
+                    Name = "Gushing Wound",
+                    DamagePerTick = new float[] { 3000, 4000, 5000, 6000, 0 }[i],
+                    TickInterval = 0.20f,
+                    DamageType = ItemDamageType.Physical,
+                    Duration = 60f,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    AttackSpeed = 60f,
+                    IsDoT = true,
+                    IsFromAnAdd = true,
+                    MaxNumTargets = 1f,
+                };
+                GushingWound.SetAffectsRoles_Tanks();
+                if (i < 2)
+                    FlightofFlames.Attacks.Add(GushingWound);
+                else
+                    FireStormPhase.Attacks.Add(GushingWound);
+                #endregion
                 #endregion
 
                 #region Plump Lava Worm [Tank Note]
@@ -1353,43 +1714,117 @@ namespace Rawr.Bosses
                  * to devour it, becoming temporarily Satiated.*/
                 // this means the tank tanking the Hatchlings need to move to position the hatchlings near the worms
                 // when they need to be satiated.
+                // http://ptr.wowhead.com/npc=53520
+                TargetGroup PlumpLavaWorm = new TargetGroup
+                {
+                    Name = "Plump Lava Worm",
+                    NumTargs = (i < 2f ? 8f : 4f),
+                    // four worms spawn at any given time
+                    // two worm will last for the full duration, while the first two will last half that
+                    // so an average of 75% of the full duration for all of the worms.
+                    Duration = WestVoraciousHatchling.Duration * 0.75f,
+                    Frequency = WestVoraciousHatchling.Frequency,
+                    Chance = 1f,
+                    LevelOfTargets = 85,
+                    NearBoss = false,
+                    TargetID = 53520,
+                };
+                PlumpLavaWorm.SetAffectsRoles_Tanks();
+                if (i < 2)
+                    FlightofFlames.Targets.Add(PlumpLavaWorm);
+                else
+                    FireStormPhase.Targets.Add(PlumpLavaWorm);
 
-                /* Lava Spew
-                 * Plump Lava Worms spew a molten cone of fire dealing 27750 to 32250 damage every 1 sec
+                #region Lava Spew
+                /* Plump Lava Worms spew a molten cone of fire dealing 27750 to 32250 damage every 1 sec
                  * to all enemies within a 14-yard cone.*/
                 // 10 man - http://ptr.wowhead.com/spell=99336
                 // 25 man - http://ptr.wowhead.com/spell=100725
                 // 10 man heroic - http://ptr.wowhead.com/spell=100726
                 // 25 man heroic - http://ptr.wowhead.com/spell=100727
+                Attack LavaSpew = new Attack
+                {
+                    Name = "Lava Spew",
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamageType = ItemDamageType.Fire,
+                    DamagePerHit = new float[] { (27750f + 32250f), (27750f + 32250f), (55500f + 64500f), (55500f + 64500f), 0f }[i] / 2f,
+                    AttackSpeed = 1f,
+                    Interruptable = true,
+                    IsFromAnAdd = true,
+                    MaxNumTargets = Max_Players[i],
+                    SpellID = new float[] { 99336, 100725, 100726, 100727, 0 }[i],
+                };
+                LavaSpew.SetAffectsRoles_All();
+                if (i < 2)
+                    FlightofFlames.Attacks.Add(LavaSpew);
+                else
+                    FireStormPhase.Attacks.Add(LavaSpew);
+                #endregion
                 #endregion
 
                 #region Herald of the Burning End [Heroic Only]
-                /* During Stage 1, a Herald of the Burning End will periodically appear and begin casting
-                 * Cataclysm. The Herald is immune to all damage, but will die once Cataclysm is cast.*/
+                if (i > 1)
+                {
+                    /* During Stage 1, a Herald of the Burning End will periodically appear and begin casting
+                     * Cataclysm. The Herald is immune to all damage, but will die once Cataclysm is cast.*/
 
-                #region Cataclysm [Heroic Only]
-                /* The Herald of the Burning End summons a powerful Molten Meteor, dealing 462500 to
-                 * 537500 Flamestrike damage to enemies within 0 yards.*/
-                // NPC - http://db.mmo-champion.com/c/53489
+                    #region Cataclysm [Heroic Only]
+                    /* The Herald of the Burning End summons a powerful Molten Meteor, dealing 462500 to
+                     * 537500 Flamestrike damage to enemies within 0 yards.*/
+                    // NPC - http://ptr.wowhead.com/npc=53375
+                    // You cannot target this harm this npc since this npc will deal a 50,000 AOE damage to anyone
+                    // near him and is immune to all attacks. He disappears after casting Cataclysm.
 
-                /* Molten Meteor [Heroic Only]
-                 * After being summoned by the Herald of the Burning End, a Molten Meteor will roll in one
-                 * of 8 random directions, dealing 462500 to 537500 Flamestrike damage to enemies within
-                 * 0 yards every 1.50 sec.
-                 * 
-                 * If the meteor reaches a wall, it will break apart into three Molten Boulders, which
-                 * ricochet back to the opposite direction. If it is destroyed before it reaches a wall, 
-                 * the Molten Meteor becomes temporarily stationary and block line of sight.*/
-                // Explosion - http://ptr.wowhead.com/spell=99274
-                // Personal note, this is what is used to negate the damage from the 100,000 damage every second
-                // from Firestorm.
+                    #region Molten Meteor [Heroic Only]
+                    /* After being summoned by the Herald of the Burning End, a Molten Meteor will roll in one
+                     * of 8 random directions, dealing 462500 to 537500 Flamestrike damage to enemies within
+                     * 0 yards every 1.50 sec.
+                     * 10-man heroic - http://ptr.wowhead.com/npc=53489
+                     * 25-man heroic - http://ptr.wowhead.com/npc=54563
+                     * This should NEVER happen*/
+                    TargetGroup MoltenMeteor = new TargetGroup
+                    {
+                        Name = "Molten Meteor",
+                        // meteors lasts at most 9 seconds before they explode, at least one of theses needs to
+                        // survive before a firestorm
+                        Duration = 9f * 1000f,
+                        Chance = 1f,
+                        LevelOfTargets = 87,
+                        TargetID = new float[] { 0, 0, 53489, 54563, 0 }[i],
+                        NumTargs = 1f,
+                        NearBoss = false,
+                        Frequency = FirestormCD / 2f,
+                    };
+                    MoltenMeteor.AffectsRole[PLAYER_ROLES.RangedDPS] = true;
+                    FireStormPhase.Targets.Add(MoltenMeteor);
 
-                /* Molten Boulder [Heroic Only]
-                 * Three Molten Boulders form when a Molten Meteor hits a wall and breaks apart. Molten Boulder
-                 * deals 29600 to 34400 Flamestrike damage to enemies within 2 yards every 1.50 sec and knock
-                 * them back.*/
-                // NPC - http://db.mmo-champion.com/c/53496/
-                // Damage - http://ptr.wowhead.com/spell=99275
+                    /* If the meteor reaches a wall, it will break apart into three Molten Boulders, which
+                     * ricochet back to the opposite direction. If it is destroyed before it reaches a wall, 
+                     * the Molten Meteor becomes temporarily stationary and block line of sight.*/
+                    // Explosion - http://ptr.wowhead.com/spell=99274
+                    // Personal note, this is what is used to negate the damage from the 100,000 damage every second
+                    // from Firestorm.
+                    // Players should NEVER get hit by this.
+                    #endregion
+
+                    #region Molten Boulder [Heroic Only]
+                    /* Three Molten Boulders form when a Molten Meteor hits a wall and breaks apart. Molten Boulder
+                     * deals 29600 to 34400 Flamestrike damage to enemies within 2 yards every 1.50 sec and knock
+                     * them back.*/
+                    // NPC - http://db.mmo-champion.com/c/53496/
+                    // Damage - http://ptr.wowhead.com/spell=99275
+                    Impedance MoltenBoulder_Move = new Impedance
+                    {
+                        Name = "Molten Boulder",
+                        Duration = 2f * 1000f,
+                        Chance = 1f,
+                        Frequency = MoltenMeteor.Frequency,
+                        Breakable = false,
+                    };
+                    MoltenBoulder_Move.SetAffectsRoles_All();
+                    FireStormPhase.Moves.Add(MoltenBoulder_Move);
+                    #endregion
+                }
                 #endregion
                 #endregion
                 #endregion
@@ -1398,52 +1833,159 @@ namespace Rawr.Bosses
                 /* Alysrazor flies in a tight circle, removing Wings of Flame from all players after 5 seconds,
                  * and begins her ultimate attack.*/
 
-                /* Fiery Vortex
-                 * A Fiery Vortex appears in the middle of the arena, dealing 100000 Fire damage every 0.50
+                // This lasts for 35 seconds
+
+                #region Fiery Vortex
+                /* A Fiery Vortex appears in the middle of the arena, dealing 100000 Fire damage every 0.50
                  * seconds to enemies within 0 yards.*/
                 // http://ptr.wowhead.com/spell=99794
+                // This should NEVER be hit
+                #endregion
 
-                /* Fiery Tornado
-                 * Fiery Tornadoes erupt from the Fiery Vortex and begin moving rapidly around Alysrazor's arena,
+                #region Fiery Tornado
+                /* Fiery Tornadoes erupt from the Fiery Vortex and begin moving rapidly around Alysrazor's arena,
                  * dealing 25000 Fire damage every 1 sec to enemies within 0 yards.*/
                 // 10 man - http://ptr.wowhead.com/spell=99816
                 // 25 man - http://ptr.wowhead.com/spell=100733
                 // 10 man heroic - http://ptr.wowhead.com/spell=100734
                 // 25 man heroic - http://ptr.wowhead.com/spell=100735
+                // These should never be hit
+                /*Attack FieryTornado = new Attack
+                {
+                    Name = "Fiery Tornado",
+                    DamagePerHit = new float[] { 20000, 25000, 60000, 70000, 0 }[i],
+                    DamageType = ItemDamageType.Fire,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    AttackSpeed = 1f,
+                    MaxNumTargets = 1f,
+                    Interruptable = true,
+                    SpellID = new float[] { 99816, 100733, 100734, 100735, 0 }[i],
+                };
+                FieryTornado.SetAffectsRoles_All();
+                FieryTornado.AffectsRole[PLAYER_ROLES.AlysrazorAirGroup] = true;
+                 */
+                #endregion
 
-                /* Blazing Power
-                 * Alysrazor continues to give off rings of fire, which appear on the ground of the arena and
+                #region Blazing Power
+                /* Alysrazor continues to give off rings of fire, which appear on the ground of the arena and
                  * lasts for 3 seconds. Players who pass through the ring gain Blazing Power, which increase haste
-                 * by  4% and stacks up to 25 times. In addition, each stack of Blazing Power restores mana, rage,
+                 * by 8% and stacks up to 25 times. In addition, each stack of Blazing Power restores mana, rage,
                  * energy, runic power, and holy power.*/
                 // http://ptr.wowhead.com/spell=99461
                 // Restores 5% of mana, rage, energy, runic power, and holy power.
+                BuffState BlazingPowerPhase2 = new BuffState
+                {
+                    Name = "Blazing Power Phase 2",
+                    Frequency = FieryTornadoDuration,
+                    Duration = FieryTornadoDuration * 1000f,
+                    Chance = 1f,
+                    Breakable = false,
+                    Stats = BlazingPowerStats,
+                };
+                BlazingPowerPhase2.SetAffectsRoles_All();
+                UltimateFirepower.BuffStates.Add(BlazingPowerPhase2);
+                
+                // Assume the air group has 25 stacks at this point and still refreshing during Tornadoes
+                BuffState BlazingPowerPhase2AirGroup = new BuffState
+                {
+                    Name = "Blazing Power Phase 2 Air Group",
+                    Frequency = FieryTornadoDuration,
+                    Duration = FieryTornadoDuration * 1000f,
+                    Chance = 1f,
+                    Breakable = false,
+                    Stats = new Stats() { SpellHaste = 2f, PhysicalHaste = 2f, CritRating = 0.75f },
+                };
+                BlazingPowerPhase2.AffectsRole[PLAYER_ROLES.AlysrazorAirGroup] = true;
+                UltimateFirepower.BuffStates.Add(BlazingPowerPhase2AirGroup);
+                #endregion
                 #endregion
 
                 #region Burnout [DPS Note]
                 /* Alysrazor crashes to the ground and becomes vulnerable, with 0 Molten Power. This stage lasts
                  * until Alyrazor's energy bar reaches 50 Molten Power.*/
+                #region Blazing Power
+                BuffState BlazingPowerPhase3 = new BuffState
+                {
+                    Name = "Blazing Power Phase 3",
+                    Frequency = BurnoutDuration,
+                    Duration = BurnoutDuration * 1000f,
+                    Chance = 1f,
+                    Breakable = false,
+                    Stats = new Stats() { SpellHaste = 0.08f * 7f, PhysicalHaste = 0.08f * 7f },
+                };
+                BlazingPowerPhase3.SetAffectsRoles_All();
+                Burnout.BuffStates.Add(BlazingPowerPhase3);
+                
+                BuffState BlazingPowerPhase3AirGroup = BlazingPowerPhase2AirGroup.Clone();
+                BlazingPowerPhase3AirGroup.Name = "Blazing Power Phase 3 Air Group";
+                BlazingPowerPhase3AirGroup.Frequency = BurnoutDuration;
+                BlazingPowerPhase3AirGroup.Duration = BurnoutDuration * 1000f;
+                Burnout.BuffStates.Add(BlazingPowerPhase3AirGroup);
+                #endregion
 
                 #region Burnout
                 /* Alysrazor's fire burns out, causing her to become immobile and increasing damage taken by 100%.
                  * In addition, when struck with a harmful spell, Alysrazor emits Essence of the Green.*/
                 // http://ptr.wowhead.com/spell=99432
-
-                /* Essence of the Green [Healer Note]
-                 * During Burnout, if Alysrazor is struck by a harmful spell, she emits Essence of the Green
-                 * restoring 10% of maximum mana to players.*/
-                // http://ptr.wowhead.com/spell=99433
+                BuffState BurnoutBuffState = new BuffState
+                {
+                    Name = "Burnout DeBuff",
+                    Breakable = false,
+                    Chance = 1f,
+                    Duration = BurnoutDuration * 1000f,
+                    Frequency = BurnoutDuration,
+                    Stats = new Stats() { BonusDamageMultiplier = 1f },
+                };
+                BurnoutBuffState.SetAffectsRoles_DPS();
+                BurnoutBuffState.SetAffectsRoles_Healers();
+                Burnout.BuffStates.Add(BurnoutBuffState);
                 #endregion
 
-                /* Spark
-                 * A bright spark continues to burn within the heart of Alyrazor, restoring 3 Molten Power
+                #region Essence of the Green [Healer Note]
+                /* During Burnout, if Alysrazor is struck by a harmful spell, she emits Essence of the Green
+                 * restoring 10% of maximum mana to players.*/
+                // http://ptr.wowhead.com/spell=99433
+                Stats EssenceoftheGreenStats = new Stats();
+                SpecialEffect EssenceoftheGreenSpecialEffect = new SpecialEffect(Trigger.DamageSpellHit, new Stats() { ManaRestoreFromMaxManaPerSecond = 0.10f }, 0, 0, 1f);
+                EssenceoftheGreenStats.AddSpecialEffect(EssenceoftheGreenSpecialEffect);
+                BuffState EssenceoftheGreen = new BuffState
+                {
+                    Name = "Essence of the Green",
+                    Breakable = false,
+                    Chance = 1f,
+                    Duration = BurnoutDuration * 1000f,
+                    Frequency = BurnoutDuration,
+                    Stats = EssenceoftheGreenStats,
+                };
+                EssenceoftheGreen.SetAffectsRoles_DPS();
+                EssenceoftheGreen.SetAffectsRoles_Healers();
+                Burnout.BuffStates.Add(EssenceoftheGreen);
+                #endregion
+
+                #region Spark
+                /* A bright spark continues to burn within the heart of Alyrazor, restoring 3 Molten Power
                  * every 2 seconds.*/
                 // http://ptr.wowhead.com/spell=99921
+                #endregion
 
                 #region Blazing Talon Clawshaper
                 /* At the start of stage 2, two Blazing Talon Clawshapers will fly in and begin to re-energize
                  * Alysrazor.*/
-                // http://db.mmo-champion.com/c/53735/
+                // http://ptr.wowhead.com/npc=53734
+                TargetGroup BlazingTalonClawshaper = new TargetGroup
+                {
+                    Name = "Blazing Talon Clawshaper",
+                    Chance = 1f,
+                    Duration = BurnoutDuration * 1000f,
+                    Frequency = BurnoutDuration,
+                    // Originally they are not near the boss but they can be pulled/kited to next to the boss,
+                    NearBoss = true,
+                    NumTargs = 2f,
+                    TargetID = 53734,
+                    LevelOfTargets = 86,
+                };
+                BlazingTalonClawshaper.SetAffectsRoles_Tanks();
+                Burnout.Targets.Add(BlazingTalonClawshaper);
 
                 /* Ignition
                  * Blazing Talon Clawshapers channel molten energy into Alysrazor, restoring 1 Molten Power
@@ -1458,37 +2000,164 @@ namespace Rawr.Bosses
                 /* Alysrazor's fire becomes re-ignited at 50 Molten Power. This stage lasts until Alysrazor
                  * reaches 100 Molten Power.*/
 
-                /* Ignited
-                 * Alysrazor's fiery core begins to combust once again, rapidly restoring Molten Power. Restores
+                #region Ignited
+                /* Alysrazor's fiery core begins to combust once again, rapidly restoring Molten Power. Restores
                  * 3 Molten Power every 1 seconds.*/
                 // http://ptr.wowhead.com/spell=99922
                 // Personal Note - This means that the phase will last 17 seconds
+                #endregion
 
-                /* Blazing Buffet
-                 * Alysrazor's Fiery core emits powerful bursts of flame, dealing 9250 to 10750 Fire damage to all
+                #region Blazing Claw [Tank Note]
+                /* Alysrazor claws her enemies, dealing 92500 to 107500 Physical damage to enemies in a 25-yard cone
+                 * every 1.50 seconds. In addition, each swipe increases the Fire and Physical damage taken by the
+                 * target by 10% for 15 sec.*/
+                // 10-man - http://ptr.wowhead.com/spell=99844
+                // 25-man - http://ptr.wowhead.com/spell=101729
+                // 10-man Heroic - http://ptr.wowhead.com/spell=101730
+                // 25-man Heroic - http://ptr.wowhead.com/spell=101731
+                // Personal Note, this means that there needs to be a tank swap at the 5-6 stack mark
+                Attack BlazingClaw = new Attack
+                {
+                    Name = "Blazing Claw",
+                    DamagePerHit = new float[] { (69375f + 80625f), (83250f + 96750f), (92500f + 107500f), (115625f + 134375f), 0 }[i] / 2f,
+                    AttackSpeed = 1.5f * 2,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    DamageType = ItemDamageType.Physical,
+                    MaxNumTargets = 1f,
+                    SpellID = new float[] { 99844, 101729, 101730, 101731, 0 }[i],
+                };
+                BlazingClaw.SetUnavoidable();
+                BlazingClaw.SetAffectsRoles_Tanks();
+                ReIgnition.Attacks.Add(BlazingClaw);
+
+                Stats BlazingClawStats = new Stats();
+                SpecialEffect BlazingClawSpecialEffect = new SpecialEffect(Trigger.Use, new Stats() { BossPhysicalDamageDealtReductionMultiplier = -0.10f, FireDamageTakenMultiplier = 0.10f }, 15, 1.5f, 0.5f, 11);
+                BlazingClawStats.AddSpecialEffect(BlazingClawSpecialEffect);
+                BuffState BlazingClawBuffState = new BuffState
+                {
+                    Name = "Blazing Claw Debuff",
+                    Frequency = ReIgniteDuration,
+                    Duration = ReIgniteDuration * 1000f,
+                    Chance = 1f,
+                    Breakable = false,
+                    Stats = BlazingClawStats,
+                };
+                BlazingClawBuffState.SetAffectsRoles_Tanks();
+                ReIgnition.BuffStates.Add(BlazingClawBuffState);
+                #endregion
+
+                #region Blazing Buffet
+                /* Alysrazor's Fiery core emits powerful bursts of flame, dealing 9250 to 10750 Fire damage to all
                  * enemies every 1 seconds for as long as Alysrazor remains ignited.*/
                 // 10 man - http://ptr.wowhead.com/spell=99757
                 // 25 man - http://ptr.wowhead.com/spell=100739
                 // 10 man heroic - http://ptr.wowhead.com/spell=100740
                 // 25 man heroic - http://ptr.wowhead.com/spell=100741
+                Attack BlazingBuffet = new Attack
+                {
+                    Name = "Blazing Buffet",
+                    DamagePerHit = new float[] { (6937f + 8062f), (10406f + 12093f), (11793f + 13706f), (11793f + 13706f), 0 }[i] / 2f,
+                    AttackSpeed = 1f,
+                    DamageType = ItemDamageType.Fire,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    MaxNumTargets = Max_Players[i],
+                    SpellID = new float[] { 99757, 100739, 100740, 100741, 0 }[i],
+                };
+                BlazingBuffet.SetAffectsRoles_All();
+                ReIgnition.Attacks.Add(BlazingBuffet);
+                #endregion
 
-                /* Blazing Claw [Tank Note]
-                 * Alysrazor claws her enemies, dealing 92500 to 107500 Physical damage to enemies in a 25-yard cone
-                 * every 1.50 seconds. In addition, each swipe increases the Fire and Physical damage taken by the
-                 * target by 10% for 15 sec.*/
-                // http://ptr.wowhead.com/spell=99844
-                // Personal Note, this means that there needs to be a tank swap at the 5-6 stack mark
-
-                /* Full Power [Healer Note]
-                 * When Alysrazor reaches 100 Molten Power, she is at Full Power, which deals 50000 Fire damage
+                #region Full Power [Healer Note]
+                /* When Alysrazor reaches 100 Molten Power, she is at Full Power, which deals 50000 Fire damage
                  * to all enemies and knocks them back. Once she reaches Full Power, Alysrazor will begin her
                  * Stage 1 activities once again.*/
                 // 10 man - http://ptr.wowhead.com/spell=99925
                 // 25 man - http://ptr.wowhead.com/spell=100736
                 // 10 man heroic - http://ptr.wowhead.com/spell=100737
                 // 25 man heroic - http://ptr.wowhead.com/spell=100738
+                Attack FullPower = new Attack
+                {
+                    Name = "Full Power",
+                    DamagePerHit = new float[] { 37500, 45000, 60000, 70000, 0 }[i],
+                    AttackSpeed = ReIgniteDuration - 1,
+                    DamageType = ItemDamageType.Fire,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    MaxNumTargets = Max_Players[i],
+                    SpellID = new float[] { 99925, 100736, 100737, 100738, 0 }[i],
+                };
+                FullPower.SetAffectsRoles_All();
+                ReIgnition.Attacks.Add(FullPower);
+                #endregion
                 #endregion
 
+                #region Apply Phases
+                // Pull then at 30 Sec, Empower Blade w/ 50/50 chance for which blade type.
+                // 15 secs of empowered blade
+                // Return to normal mode.
+                float phasestart = 0;
+                float HeroicFofStart = 0;
+                float HeroicFoFLength = 0;
+                if (i < 2)
+                {
+                    ApplyAPhasesValues(InitialPull, i, 1, 0, 10f, BerserkTimer[i]); phasestart += 10f;
+
+                    ApplyAPhasesValues(FlightofFlames, i, 2, phasestart, FlightofFlamesPhaseTime, BerserkTimer[i]); phasestart += FlightofFlamesPhaseTime;
+                    ApplyAPhasesValues(UltimateFirepower, i, 3, phasestart, FieryTornadoDuration, BerserkTimer[i]); phasestart += FieryTornadoDuration;
+                    ApplyAPhasesValues(Burnout, i, 4, phasestart, BurnoutDuration, BerserkTimer[i]); phasestart += BurnoutDuration;
+                    ApplyAPhasesValues(ReIgnition, i, 5, phasestart, ReIgniteDuration, BerserkTimer[i]); phasestart += ReIgniteDuration;
+
+                    ApplyAPhasesValues(FlightofFlames, i, 6, phasestart, FlightofFlamesPhaseTime, BerserkTimer[i]);
+                    ApplyAPhasesValues(UltimateFirepower, i, 7, phasestart, FieryTornadoDuration, BerserkTimer[i]); phasestart += FieryTornadoDuration;
+                    ApplyAPhasesValues(Burnout, i, 8, phasestart, BurnoutDuration, BerserkTimer[i]); phasestart += BurnoutDuration;
+                    ApplyAPhasesValues(ReIgnition, i, 9, phasestart, ReIgniteDuration, BerserkTimer[i]); phasestart += ReIgniteDuration;
+
+                    ApplyAPhasesValues(FlightofFlames, i, 10, phasestart, FlightofFlamesPhaseTime, BerserkTimer[i]); phasestart += FlightofFlamesPhaseTime;
+                    ApplyAPhasesValues(UltimateFirepower, i, 11, phasestart, FieryTornadoDuration, BerserkTimer[i]); phasestart += FieryTornadoDuration;
+                    ApplyAPhasesValues(Burnout, i, 12, phasestart, BurnoutDuration, BerserkTimer[i]); phasestart += BurnoutDuration;
+                    ApplyAPhasesValues(ReIgnition, i, 13, phasestart, ReIgniteDuration, BerserkTimer[i]); // She will stay in this phase until the raid wipes;
+                }
+                else
+                {
+                    ApplyAPhasesValues(InitialPull, i, 1, 0, 10f, BerserkTimer[i]); phasestart += 10f;
+
+                    HeroicFofStart = phasestart;
+                    InnerPhaseHatchling = new InnerPhase(HatchlingPhase, i, 1, phasestart, FirestormCD, BerserkTimer[i]); phasestart += FirestormCD; HeroicFoFLength += FirestormCD;
+                    FlightofFlames.InnerPhases.Add(InnerPhaseHatchling);
+                    InnerPhaseFirestorm = new InnerPhase(FireStormPhase, i, 1, phasestart, 10f, BerserkTimer[i]); phasestart += 10f; HeroicFoFLength += 10f;
+                    FlightofFlames.InnerPhases.Add(InnerPhaseFirestorm);
+                    InnerPhaseHatchling = new InnerPhase(HatchlingPhase, i, 1, phasestart, FirestormCD, BerserkTimer[i]); phasestart += FirestormCD; HeroicFoFLength += FirestormCD;
+                    FlightofFlames.InnerPhases.Add(InnerPhaseHatchling);
+                    InnerPhaseFirestorm = new InnerPhase(FireStormPhase, i, 1, phasestart, 10f, BerserkTimer[i]); phasestart += 10f; HeroicFoFLength += 10f;
+                    FlightofFlames.InnerPhases.Add(InnerPhaseFirestorm);
+                    InnerPhaseHatchling = new InnerPhase(HatchlingPhase, i, 1, phasestart, FlightofFlamesPhaseTime - HeroicFoFLength, BerserkTimer[i]); phasestart += (FlightofFlamesPhaseTime - HeroicFoFLength); HeroicFoFLength = 0;
+                    FlightofFlames.InnerPhases.Add(InnerPhaseHatchling);
+                    ApplyAPhasesValues(FlightofFlames, i, 2, HeroicFofStart, FlightofFlamesPhaseTime, BerserkTimer[i]); phasestart += FlightofFlamesPhaseTime;
+                    ApplyAPhasesValues(UltimateFirepower, i, 3, phasestart, FieryTornadoDuration, BerserkTimer[i]); phasestart += FieryTornadoDuration;
+                    ApplyAPhasesValues(Burnout, i, 4, phasestart, BurnoutDuration, BerserkTimer[i]); phasestart += BurnoutDuration;
+                    ApplyAPhasesValues(ReIgnition, i, 5, phasestart, ReIgniteDuration, BerserkTimer[i]); phasestart += ReIgniteDuration;
+
+                    HeroicFofStart = phasestart;
+                    InnerPhaseHatchling = new InnerPhase(HatchlingPhase, i, 6, phasestart, FirestormCD, BerserkTimer[i]); phasestart += FirestormCD; HeroicFoFLength += FirestormCD;
+                    FlightofFlames.InnerPhases.Add(InnerPhaseHatchling);
+                    InnerPhaseFirestorm = new InnerPhase(FireStormPhase, i, 6, phasestart, 10f, BerserkTimer[i]); phasestart += 10f; HeroicFoFLength += 10f;
+                    FlightofFlames.InnerPhases.Add(InnerPhaseFirestorm);
+                    InnerPhaseHatchling = new InnerPhase(HatchlingPhase, i, 6, phasestart, FirestormCD, BerserkTimer[i]); phasestart += FirestormCD; HeroicFoFLength += FirestormCD;
+                    FlightofFlames.InnerPhases.Add(InnerPhaseHatchling);
+                    InnerPhaseFirestorm = new InnerPhase(FireStormPhase, i, 6, phasestart, 10f, BerserkTimer[i]); phasestart += 10f; HeroicFoFLength += 10f;
+                    FlightofFlames.InnerPhases.Add(InnerPhaseFirestorm);
+                    InnerPhaseHatchling = new InnerPhase(HatchlingPhase, i, 6, phasestart, FlightofFlamesPhaseTime - HeroicFoFLength, BerserkTimer[i]); phasestart += (FlightofFlamesPhaseTime - HeroicFoFLength); HeroicFoFLength = 0;
+                    FlightofFlames.InnerPhases.Add(InnerPhaseHatchling);
+                    ApplyAPhasesValues(FlightofFlames, i, 6, HeroicFofStart, FlightofFlamesPhaseTime, BerserkTimer[i]); phasestart += FlightofFlamesPhaseTime;
+                    ApplyAPhasesValues(UltimateFirepower, i, 7, phasestart, FieryTornadoDuration, BerserkTimer[i]); phasestart += FieryTornadoDuration;
+                    ApplyAPhasesValues(Burnout, i, 8, phasestart, BurnoutDuration, BerserkTimer[i]); phasestart += BurnoutDuration;
+                    ApplyAPhasesValues(ReIgnition, i, 9, phasestart, BerserkTimer[i] - phasestart, BerserkTimer[i]); // She will stay in this phase until the raid wipes;
+                }
+                AddAPhase(InitialPull, i);
+                AddAPhase(FlightofFlames, i);
+                AddAPhase(UltimateFirepower, i);
+                AddAPhase(Burnout, i);
+                AddAPhase(ReIgnition, i);
+                #endregion
             }
             #endregion
             #endregion
@@ -1776,10 +2445,10 @@ namespace Rawr.Bosses
                 #region Apply Phases
                 int phaseStartTime = 0;
                 int phaseDuration = (int)((float)this[i].BerserkTimer * (1 - .3f));
-                ApplyAPhasesValues(ref Before30Pct, i, 1, phaseStartTime, phaseDuration, this[i].BerserkTimer);
+                ApplyAPhasesValues( Before30Pct, i, 1, phaseStartTime, phaseDuration, this[i].BerserkTimer);
                 phaseStartTime = phaseStartTime + phaseDuration;
                 phaseDuration = this[i].BerserkTimer - phaseDuration;
-                ApplyAPhasesValues(ref After30Pct, i, 1, phaseStartTime, phaseDuration, this[i].BerserkTimer);
+                ApplyAPhasesValues( After30Pct, i, 1, phaseStartTime, phaseDuration, this[i].BerserkTimer);
                 AddAPhase(Before30Pct, i);
                 AddAPhase(After30Pct, i);
                 #endregion
@@ -1853,87 +2522,170 @@ namespace Rawr.Bosses
             for (int i = 0; i < 4; i++)
             {
                 Phase Normal = new Phase() { Name = "Normal Phase" };
-                Phase EmpoweredBlade = new Phase() { Name = "Empowered Blade" };
+                Phase DecimationBlade = new Phase() { Name = "Decimation Blade" };
+                Phase InfernoBlade = new Phase() { Name = "Inferno Blade" };
+                Phase BothPhases = new Phase() { Name = "Both Phases" };
 
                 Attack Melee = GenAStandardMelee(this[i].Content);
                 Melee.IsDualWielding = true;
+                Melee.AffectsRole[PLAYER_ROLES.MainTank] = true;
                 Normal.Attacks.Add(Melee);
 
-                /* Blaze of Glory
-                 * Baleroc's assault periodically awakens a burning spark within his primary target, increasing the
+                #region Blaze of Glory
+                /* Baleroc's assault periodically awakens a burning spark within his primary target, increasing the
                  * target's physical damage taken by 20%, but also raising their maximum health by 20%.
                  * 
                  * Every time Baleroc applies Blaze of Glory, he gains an application of Incendiary Soul, increasing Fire
                  * damage done by 20%.*/
                 // http://ptr.wowhead.com/spell=99252
-
-                BuffState BlazeGlory = new BuffState
+                // He averages out to applying this once every 12 seconds
+                Stats BlazeofGloryStats = new Stats();
+                SpecialEffect BlazeofGlorySpecialEffect = new SpecialEffect(Trigger.Use, new Stats() { BonusHealthMultiplier = 0.2f, DamageTakenReductionMultiplier = -0.20f }, BerserkTimer[i], 12f, 1f, 99);
+                BlazeofGloryStats.AddSpecialEffect(BlazeofGlorySpecialEffect);
+                BuffState BlazeofGlory = new BuffState
                 {
                     Name = "Blaze of Glory",
                     Chance = 1,
-                    Frequency = 10,
-                    Stats = new Stats { BonusHealthMultiplier = .2f, DamageTakenReductionMultiplier = -.2f, },
+                    Frequency = BerserkTimer[i],
+                    Stats = BlazeofGloryStats,
                     Breakable = false,
-                    Duration = this[i].BerserkTimer,
+                    Duration = BerserkTimer[i] * 1000f,
                 };
-                BlazeGlory.SetAffectsRoles_Tanks();
+                BlazeofGlory.SetAffectsRoles_Tanks();
+                BothPhases.BuffStates.Add(BlazeofGlory);
 
                 /* Incendiary Soul
                  * Every time Baleroc applies Blaze of Glory, he gains an application of Incendiary Soul, increasing Fire
                  * damage done by 20%.*/
                 // http://ptr.wowhead.com/spell=99369
+                Stats IncendiarySoulStat = new Stats();
+                SpecialEffect IncendiarySoulSpecialEffect = new SpecialEffect(Trigger.Use, new Stats() { FireDamageTakenMultiplier = 0.20f }, BerserkTimer[i], 12f, 1f, 99);
+                IncendiarySoulStat.AddSpecialEffect(IncendiarySoulSpecialEffect);
                 BuffState IncendiarySoul = new BuffState
                 {
                     Name = "Incendiary Soul",
                     Chance = 1,
-                    Frequency = 10,
-                    Stats = new Stats { BonusFireDamageMultiplier = .2f },
+                    Frequency = BerserkTimer[i],
+                    Stats = IncendiarySoulStat,
                     Breakable = false,
-                    Duration = this[i].BerserkTimer,
+                    Duration = BerserkTimer[i] * 1000f,
                 };
-                // IncendiarySoul.AffectsRole[Boss];
-
+                IncendiarySoul.SetAffectsRoles_Tanks();
+                BothPhases.BuffStates.Add(IncendiarySoul);
+                #endregion
 
                 #region Shards of Torment
                 /* Baleroc summons *warning* two chrystals *end warning* amonst his foes, which continually channel
                  * a shadowy beam on the player that is nearest to them.*/
                 // Summon - http://ptr.wowhead.com/spell=99260
                 // NPC - http://db.mmo-champion.com/c/53495/
+                float ShardofTormentDebuff = new float[] { 40, 60, 40, 60 }[i];
 
-                /* Torment
-                 * Deals 3500 Shadow damage per application to the nearest player, stacking once per second.*/
+                #region Torment
+                // Deals 3500 Shadow damage per application to the nearest player, stacking once per second.
                 // 10 man - http://ptr.wowhead.com/spell=99256
                 // 25 man - http://ptr.wowhead.com/spell=100230
                 // 10 man heroic - http://ptr.wowhead.com/spell=100231
                 // 25 man heroic - http://ptr.wowhead.com/spell=100232
+                // At most people should be taking 12 stacks of Torment
+                float TormentDamageMultiplier = (1 + 1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 + 10 + 11) / 12f;
+                float Affected = ((i == 0) || (i == 2 ) ? 1f : 2f );
+                Attack Torment = new Attack
+                {
+                    Name = "Torment",
+                    AttackSpeed = 34f,
+                    DamagePerTick = new float[] { 3000, 3000, 4250, 4250, 0 }[i] * TormentDamageMultiplier,
+                    IsDoT = true,
+                    Duration = 12f,
+                    TickInterval = 1f,
+                    MaxNumTargets = Affected * 2f,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamageType = ItemDamageType.Shadow,
+                    SpellID = new float[] { 99256, 100230, 100231, 100232, 0 }[i],
+                };
+                Torment.SetAffectsRoles_DPS();
+                BothPhases.Attacks.Add(Torment);
+                #endregion
 
-                /* Tormented
-                 * When Torment fades from a player, they are afflicted by the Tormented effect, which increases
+                #region Tormented
+                /* When Torment fades from a player, they are afflicted by the Tormented effect, which increases
                  * Shadow damage taken by 250% and reduces healing done by 75%, for 40 sec.
                  * *Warning* Direct melee contact with any other player will apply a fresh copy of the Tormented effect
-                 * to that player.*/
+                 * to that player. [Heroic ONLY]*/
                 // 10 man - http://ptr.wowhead.com/spell=99257
                 // 25 man - http://ptr.wowhead.com/spell=99402
                 // 10 man heroic - http://ptr.wowhead.com/spell=99403
                 // 25 man heroic - http://ptr.wowhead.com/spell=99404
+                // This should NEVER get placed on a Healer
+                float TormentedDamageIncrease = new float[] { 2.5f, 2.5f, 5f, 5f, 0f }[i];
+                BuffState Tormented = new BuffState
+                {
+                    Name = "Tormented",
+                    Chance = Affected / (Max_Players[i] - Min_Healers[i] - Min_Tanks[i]),
+                    Breakable = false,
+                    Duration = ShardofTormentDebuff * 1000f,
+                    Frequency = 34f,
+                    Stats = new Stats() { SpellDamageTakenReductionMultiplier = -TormentedDamageIncrease, BonusHealingDoneMultiplier = -0.50f },
+                };
+                Tormented.SetAffectsRoles_DPS();
+                BothPhases.BuffStates.Add(Tormented);
+                #endregion
 
-                /* Wave of Torment
-                 * If there are no players within 15 yards of a Shard of Torment, the Shard pulses this effect, dealing
+                #region Wave of Torment
+                /* If there are no players within 15 yards of a Shard of Torment, the Shard pulses this effect, dealing
                  * 14250 to 15750 Shadow damage each second to all players.*/
-                // http://ptr.wowhead.com/spell=99261
+                // 10 man - http://ptr.wowhead.com/spell=99261
+                // 25 man - http://www.wowhead.com/spell=101636
+                // 10 man heroic - http://www.wowhead.com/spell=101637
+                // 25 man heroic - http://www.wowhead.com/spell=101638
+                // This should NEVER happen
+                #endregion
 
-                /* Vital Spark
-                 * If a player casts a direct heal on someone who is being damaged by Torment, the healer gains an
-                 * application of Vital Spark for each stack of Torment on the target. Casting a single-target
-                 * direct heal on a target affected by Blaze of Glory will trigger Vital Flame, increasing healing
-                 * done on such targets by 2% per stack of vital Spark, lasting for 15 sec.*/
+                #region Vital Spark
+                /* If a player casts a direct heal on someone who is being damaged by Torment, the healer gains an
+                 * application of Vital Spark for each (three/five [Normal/Heroic]) stacks of Torment on the target.
+                 * Casting a single-target direct heal on a target affected by Blaze of Glory will trigger Vital Flame,
+                 * increasing healing done on such targets by 5% per stack of vital Spark, lasting for 15 sec.*/
                 // http://ptr.wowhead.com/spell=99262
+                float VitalSparkBaseCD = new float[] { 3, 3, 5, 5, 0 }[i];
+                float VitalSparkCD = BerserkTimer[i] / ((BerserkTimer[i] * ((Torment.Duration * 2f) / Torment.AttackSpeed)) / VitalSparkBaseCD);
+                Stats VitalSparkStats = new Stats();
+                // Assume half the healers get the buff at any given time
+                SpecialEffect VitalSparkSpecialEffect = new SpecialEffect(Trigger.HealingSpellHit, new Stats() { BonusHealingDoneMultiplier = 0.05f }, 60f, VitalSparkCD, 0.5f, 999);
+                VitalSparkStats.AddSpecialEffect(VitalSparkSpecialEffect);
+                BuffState VitalSpark = new BuffState
+                {
+                    Name = "Vital Spark",
+                    Breakable = false,
+                    Chance = 1f,
+                    Duration = BerserkTimer[i] * 1000f,
+                    Frequency = BerserkTimer[i] - 1f,
+                    Stats = VitalSparkStats,
+                };
+                VitalSpark.SetAffectsRoles_Healers();
+                BothPhases.BuffStates.Add(VitalSpark);
+                #endregion
 
-                /* Vital Flame
-                 * Increasing healing done to targets affected by Blaze of Glory by 2% per stack of Vital Spark
+                #region Vital Flame
+                /* Increasing healing done to targets affected by Blaze of Glory by 5% per stack of Vital Spark
                  * consumed to create this effect, lasting for 15 sec. When Vital Flame expires, it restores the
                  * Vital Spark stacks that were consumed to create the effect.*/
                 // http://ptr.wowhead.com/spell=99263
+                Stats VitalFlameStats = new Stats();
+                SpecialEffect VitalFlameSpecialEffect = new SpecialEffect(Trigger.Use, new Stats() { HealingReceivedMultiplier = 0.05f }, 60f, VitalSparkCD, 1f, 999);
+                VitalFlameStats.AddSpecialEffect(VitalFlameSpecialEffect);
+                BuffState VitalFlame = new BuffState
+                {
+                    Name = "Vital Flame",
+                    Breakable = false,
+                    Chance = 1f,
+                    Duration = BerserkTimer[i] * 1000f,
+                    Frequency = BerserkTimer[i] - 1f,
+                    Stats = VitalFlameStats,
+                };
+                VitalFlame.SetAffectsRoles_Tanks();
+                BothPhases.BuffStates.Add(VitalFlame);
+                #endregion
                 #endregion
 
                 #region Blades of Baleroc
@@ -1948,8 +2700,9 @@ namespace Rawr.Bosses
                 // http://ptr.wowhead.com/spell=99353
                 Attack DecimatingStrike = new Attack
                 {
+                    // Decimation Blades' Attack speed was reduced for 5 second per swing to 6.25 on Sep 19, 2011
                     Name = "Decimating Strike",
-                    AttackSpeed = 5f,
+                    AttackSpeed = 6.25f,
                     DamagePerHit = .9f,
                     DamageType = ItemDamageType.Shadow,
                     DamageIsPerc = true,
@@ -1962,22 +2715,25 @@ namespace Rawr.Bosses
                     IsDualWielding = false,
                 };
                 DecimatingStrike.AffectsRole[PLAYER_ROLES.OffTank] = true;
-                EmpoweredBlade.Attacks.Add(DecimatingStrike);
+                DecimationBlade.Attacks.Add(DecimatingStrike);
 
                 /* Inferno Blade
                  * Baleroc's melee strikes deal 102999 to 103000 Fire damage to the target, instead of their
                  * normal physical damage, while this effect is active.*/
-                // http://ptr.wowhead.com/spell=99350
-                // http://ptr.wowhead.com/spell=99351
+                // Initial Cast - http://ptr.wowhead.com/spell=99350
+                // 10 man - http://ptr.wowhead.com/spell=99351
+                // 25 man - http://ptr.wowhead.com/spell=101000
+                // 10 man heroic - http://ptr.wowhead.com/spell=101001
+                // 25 man heroic - http://ptr.wowhead.com/spell=101002
                 Attack InfernoStrike = new Attack
                 {
                     Name = "Inferno Strike",
                     AttackSpeed = 4f,
-                    DamagePerHit = 103000,
+                    DamagePerHit = new float[] { (73125f + 76875f), (124312f + 130687f), (116025f + 121975f), (197242f + 207357f), 0f }[i] / 2f,
                     DamageType = ItemDamageType.Fire,
                     DamageIsPerc = false,
                     AttackType = ATTACK_TYPES.AT_MELEE,
-                    SpellID = 99351,
+                    SpellID = new float[] { 99351, 10100, 101001, 101002, 0 }[i],
                     Blockable = true,
                     Dodgable = true,
                     Parryable = true,
@@ -1985,36 +2741,75 @@ namespace Rawr.Bosses
                     IsDualWielding = false,
                 };
                 InfernoStrike.AffectsRole[PLAYER_ROLES.MainTank] = true;
-                EmpoweredBlade.Attacks.Add(InfernoStrike);
+                InfernoBlade.Attacks.Add(InfernoStrike);
 
                 #endregion
 
-                /* Countdown [Heroic Only]
-                 * Baleroc links two players to each other for 8 sec. If the chosen players move within 3 yards of each
+                #region Countdown [Heroic Only]
+                /* Baleroc links two players to each other for 8 sec. If the chosen players move within 3 yards of each
                  * other, the effect will dissipate harmlessly, but if the effect runs its full course, both players will
-                 * explode, dealing 128749 to 128750 Fire damage to all allies within 45 yards.*/
+                 * explode, dealing 125000 Fire damage to all allies within 45 yards.*/
                 // http://ptr.wowhead.com/spell=99516
                 // possible explosion id: http://ptr.wowhead.com/spell=99518
+                // This should NEVER go off, so one has to move at most 7 of the 8 seconds
+                if (i > 1)
+                {
+                    Impedance Countdown_Move = new Impedance
+                    {
+                        Name = "Countdown Move",
+                        Duration = 7f * 1000f,
+                        Chance = 2f / (Max_Players[i] - Min_Tanks[i]),
+                        Breakable = false,
+                        Frequency = 45f,
+                    };
+                    Countdown_Move.SetAffectsRoles_DPS();
+                    Countdown_Move.SetAffectsRoles_Healers();
+                    BothPhases.Moves.Add(Countdown_Move);
+               }
+                #endregion
 
                 #region Apply Phases
-                // Pull then at 35 Sec, Empower Blade w/ 50/50 chance for which blade type.
+                // Pull then at 30 Sec, Empower Blade w/ 50/50 chance for which blade type.
                 // 15 secs of empowered blade
                 // Return to normal mode.
                 int phasestart = 0;
                 int EBdur = 15;
-                int NormalDur = 60;
-                int phasenum = 0;
-                ApplyAPhasesValues(ref Normal, i, phasenum, phasestart, 35, this[i].BerserkTimer); // OT builds stacks
-                phasestart += 35;
-                do
-                {
-                    ApplyAPhasesValues(ref EmpoweredBlade, i, ++phasenum, phasestart, EBdur, this[i].BerserkTimer);
-                    phasestart += EBdur;
-                    ApplyAPhasesValues(ref Normal, i, ++phasenum, phasestart, NormalDur, this[i].BerserkTimer);
-                    phasestart += NormalDur;
-                } while (phasestart < this[i].BerserkTimer);
-                AddAPhase(Normal, i);
-                AddAPhase(EmpoweredBlade, i);
+                int NormalDur = 30;
+                InnerPhase InnerPhaseNormal, InnerPhaseEmpoweredBlade;
+                InnerPhaseNormal = new InnerPhase(Normal, i, 1, phasestart, NormalDur, this[i].BerserkTimer); phasestart += NormalDur; // 30 seconds;  OT builds stacks
+                BothPhases.InnerPhases.Add(InnerPhaseNormal);
+                InnerPhaseEmpoweredBlade = new InnerPhase(InfernoBlade, i, 1, phasestart, EBdur, this[i].BerserkTimer); phasestart += EBdur; // 45 seconds
+                BothPhases.InnerPhases.Add(InnerPhaseEmpoweredBlade);
+                InnerPhaseNormal = new InnerPhase(Normal, i, 1, phasestart, NormalDur, this[i].BerserkTimer); phasestart += NormalDur; // 1 minute 15 seconds
+                BothPhases.InnerPhases.Add(InnerPhaseNormal);
+                InnerPhaseEmpoweredBlade = new InnerPhase(DecimationBlade, i, 1, phasestart, EBdur, this[i].BerserkTimer); phasestart += EBdur; // 1 minute 30 seconds
+                BothPhases.InnerPhases.Add(InnerPhaseEmpoweredBlade);
+                InnerPhaseNormal = new InnerPhase(Normal, i, 1, phasestart, NormalDur, this[i].BerserkTimer); phasestart += NormalDur; // 2 minutes 0 seconds
+                BothPhases.InnerPhases.Add(InnerPhaseNormal);
+                InnerPhaseEmpoweredBlade = new InnerPhase(InfernoBlade, i, 1, phasestart, EBdur, this[i].BerserkTimer); phasestart += EBdur; // 2 minutes 15 seconds
+                BothPhases.InnerPhases.Add(InnerPhaseEmpoweredBlade);
+                InnerPhaseNormal = new InnerPhase(Normal, i, 1, phasestart, NormalDur, this[i].BerserkTimer); phasestart += NormalDur; // 2 minute 45 seconds
+                BothPhases.InnerPhases.Add(InnerPhaseNormal);
+                InnerPhaseEmpoweredBlade = new InnerPhase(DecimationBlade, i, 1, phasestart, EBdur, this[i].BerserkTimer); phasestart += EBdur; // 3 minute 0 seconds
+                BothPhases.InnerPhases.Add(InnerPhaseEmpoweredBlade);
+                InnerPhaseNormal = new InnerPhase(Normal, i, 1, phasestart, NormalDur, this[i].BerserkTimer); phasestart += NormalDur; // 3 minutes 30 seconds
+                BothPhases.InnerPhases.Add(InnerPhaseNormal);
+                InnerPhaseEmpoweredBlade = new InnerPhase(InfernoBlade, i, 1, phasestart, EBdur, this[i].BerserkTimer); phasestart += EBdur; // 3 minutes 45 seconds
+                BothPhases.InnerPhases.Add(InnerPhaseEmpoweredBlade);
+                InnerPhaseNormal = new InnerPhase(Normal, i, 1, phasestart, NormalDur, this[i].BerserkTimer); phasestart += NormalDur; // 4 minute 15 seconds
+                BothPhases.InnerPhases.Add(InnerPhaseNormal);
+                InnerPhaseEmpoweredBlade = new InnerPhase(DecimationBlade, i, 1, phasestart, EBdur, this[i].BerserkTimer); phasestart += EBdur; // 4 minute 30 seconds
+                BothPhases.InnerPhases.Add(InnerPhaseEmpoweredBlade);
+                InnerPhaseNormal = new InnerPhase(Normal, i, 1, phasestart, NormalDur, this[i].BerserkTimer); phasestart += NormalDur; // 5 minutes 0 seconds
+                BothPhases.InnerPhases.Add(InnerPhaseNormal);
+                InnerPhaseEmpoweredBlade = new InnerPhase(InfernoBlade, i, 1, phasestart, EBdur, this[i].BerserkTimer); phasestart += EBdur; // 5 minutes 15 seconds
+                BothPhases.InnerPhases.Add(InnerPhaseEmpoweredBlade);
+                InnerPhaseNormal = new InnerPhase(Normal, i, 1, phasestart, NormalDur, this[i].BerserkTimer); phasestart += NormalDur; // 5 minute 45 seconds
+                BothPhases.InnerPhases.Add(InnerPhaseNormal);
+                InnerPhaseEmpoweredBlade = new InnerPhase(DecimationBlade, i, 1, phasestart, EBdur, this[i].BerserkTimer); phasestart += EBdur; // 6 minute 0 seconds
+                BothPhases.InnerPhases.Add(InnerPhaseEmpoweredBlade);
+                ApplyAPhasesValues(BothPhases, i, 1, 0, BerserkTimer[i], BerserkTimer[i]);
+                AddAPhase(BothPhases, i);
                 #endregion
             }
             #endregion
