@@ -3647,7 +3647,7 @@ namespace Rawr.Bosses
             Max_Players = new int[] { 10, 25, 10, 25, 0 };
             Min_Tanks = new int[] { 2, 2, 2, 2, 0 };
             Min_Healers = new int[] { 2, 5, 2, 3, 0 };
-            TimeBossIsInvuln = new float[] { 45f * 2f, 45f * 2f, (45 * 2f) + 30f, (45 * 2f) + 30f, 0 }; // Assume 45 seconds during each phase transition, and 30 seconds going into phase 4
+            TimeBossIsInvuln = new float[] { 45f * 2f, 45f * 2f, (45 * 2f) + 14f, (45 * 2f) + 14f, 0 }; // Assume 45 seconds during each phase transition, and 14 seconds going into phase 4
             Under35Perc = new double[] { 0.166666667, 0.166666667, 0.214285714, 0.214285714, 0 };
             Under20Perc = new double[] { 0.122222222, 0.122222222, 0.221428571, 0.221428571, 0 };
             #endregion
@@ -3657,16 +3657,25 @@ namespace Rawr.Bosses
             #region Attacks
             for (int i = 0; i < 4; i++)
             {
-                Phase ByFirebePurged = new Phase() { Name = "By Fire be Purged!" };
-                Phase Intermission1 = new Phase() { Name = "Intermission: Minions of Fire!" };
-                Phase SulfuaswillbeYourEnd = new Phase() { Name = "Sulfuras will be Your End!" };
-                Phase Intermission2 = new Phase() { Name = "Intermission: Denizens of Flame!" };
-                Phase BegoneFrommyRealm = new Phase() { Name = "Begone From my Realm!" };
+                Phase ByFirebePurged = new Phase() { Name = "By Fire be Purged!" }; // Phase 1
+                Phase Intermission1 = new Phase() { Name = "Intermission: Minions of Fire!" }; // Intermission 1
+                Phase SulfuaswillbeYourEnd = new Phase() { Name = "Sulfuras will be Your End!" }; // Phase 2
+                Phase Intermission2 = new Phase() { Name = "Intermission: Denizens of Flame!" }; // Intermission 2
+                Phase BegoneFrommyRealm = new Phase() { Name = "Begone From my Realm!" }; // Phase 3
+                Phase Intermission3 = new Phase() { Name = "Ah! Outsiders! This is not your Realm!" }; // Intermission 3
                 Phase TheTruePoweroftheFireLord = new Phase() { Name = "The True Power of the Fire Lord!" }; // Heroic Only
+
+                float IntermissionLength = 45f;
+                float Intermission3Length = 14f;
+                float phase1to3Length = (BerserkTimer[i] - (45f * 2) - (i > 1 ? Intermission3Length : 0f)) * (i < 2 ? (1f / 3f) : (3f / 14f));
+                float phase4Length = (BerserkTimer[i] - (45f * 2) - Intermission3Length) * (5f / 14f);
 
                 Attack melee = GenAStandardMelee(this[i].Content);
                 melee.DamagePerHit *= 1.22f;
-                this[i].Attacks.Add(melee);
+                ByFirebePurged.Attacks.Add(melee);
+                SulfuaswillbeYourEnd.Attacks.Add(melee);
+                BegoneFrommyRealm.Attacks.Add(melee);
+                TheTruePoweroftheFireLord.Attacks.Add(melee);
 
                 #region By Fire be Purged!
                 #region Sulfuras Smash
@@ -3677,34 +3686,83 @@ namespace Rawr.Bosses
                 // 25 man - http://ptr.wowhead.com/spell=100256
                 // 10 man heroic - http://ptr.wowhead.com/spell=100257
                 // 25 man heroic - http://ptr.wowhead.com/spell=100258
+                // Melee should need to worry about this since they are positioned behind the attack zone thus missing the attack
+                // This should never be hit by the player
 
-                /* Lava Wave
-                 * A Lava Wave inflicts 87871 to 92379 Fire damage and knocks back all players it passes
+                #region Lava Wave
+                /* A Lava Wave inflicts 87871 to 92379 Fire damage and knocks back all players it passes
                  * through. Targets who are knocked back suffer an additional 25106 to 26394 Fire damage
                  * every 1 sec for 5 sec.*/
                 // 10 man - http://ptr.wowhead.com/spell=98928
                 // 25 man - http://ptr.wowhead.com/spell=100292
                 // 10 man heroic - http://ptr.wowhead.com/spell=100293
                 // 25 man heroic - http://ptr.wowhead.com/spell=100294
+                // This SHOULD NEVER happen
+                // Iv anything it should be a movement to move around the attack
+                Impedance LavaWave_Move = new Impedance
+                {
+                    Name = "Lava Wave Move",
+                    Duration = 2f * 1000f,
+                    Chance = 0.20f, // Five possible spots it can hit, thus 20% chance it will hit in your area thus having to move
+                    Frequency = 30f,
+                    Breakable = false,
+                };
+                LavaWave_Move.SetAffectsRoles_Healers();
+                LavaWave_Move.AffectsRole[PLAYER_ROLES.RangedDPS] = true;
+                ByFirebePurged.Moves.Add(LavaWave_Move);
+                
+                
+                #endregion
                 #endregion
 
-                /* Wrath of Ragnaros
-                 * Ragnaros targets a player, inflicting 75318 to 79182 Fire damage to all players within 6 yards
+                #region Wrath of Ragnaros
+                /* Ragnaros targets a player, inflicting 75318 to 79182 Fire damage to all players within 6 yards
                  * and knocking them back.
                  * 
                  * *Warning* In 25 player raids, Ragnaros targets three players.*/
                 // 10 man - http://ptr.wowhead.com/spell=98263
-                // 25 man - http://ptr.wowhead.com/spell=100114
-                // 10 man heroic - http://ptr.wowhead.com/spell=100113
+                // 25 man - http://ptr.wowhead.com/spell=100113
+                // 10 man heroic - http://ptr.wowhead.com/spell=100114
                 // 25 man heroic - http://ptr.wowhead.com/spell=100115
+                Attack WrathofRagnaros = new Attack
+                {
+                    Name = "Wrath of Ragnaros",
+                    AttackSpeed = 30f,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamageType = ItemDamageType.Fire,
+                    DamagePerHit = new float[] { (43875f + 46125f), (43875f + 46125f), (62156f + 65343f), (62156f + 65343f), 0f }[i] / 2f,
+                    MaxNumTargets = new float[] { 1f, 3f, 1f, 3f, 0f }[i],
+                    SpellID = new float[] { 98263, 100113, 100114, 100115, 0 }[i],
+                };
+                WrathofRagnaros.SetAffectsRoles_Healers();
+                WrathofRagnaros.AffectsRole[PLAYER_ROLES.RangedDPS] = true;
+                ByFirebePurged.Attacks.Add(WrathofRagnaros);
+                #endregion
 
-                /* Hand of Ragnaros
-                 * Ragnaros inflicts 37659 to 39591 Fire damage to all enemies within 50 yards, knocking them
+                #region Hand of Ragnaros
+                /* Ragnaros inflicts 37659 to 39591 Fire damage to all enemies within 55 yards, knocking them
                  * back.*/
                 // 10 man - http://ptr.wowhead.com/spell=98237
                 // 25 man - http://ptr.wowhead.com/spell=100383
                 // 10 man heroic - http://ptr.wowhead.com/spell=100384
                 // 25 man heroic - http://ptr.wowhead.com/spell=100387
+                // Only affects Melee and Tanks
+                Attack HandofRagnaros = new Attack
+                {
+                    Name = "Hand of Ragnaros",
+                    AttackSpeed = 25f,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamageType = ItemDamageType.Fire,
+                    DamagePerHit = new float[] { (21937f + 23062f), (21937f + 23062f), (33150f + 34850f), (33150f + 34850f), 0f }[i] / 2f,
+                    MaxNumTargets = Max_Players[i],
+                    SpellID = new float[] { 98237, 100383, 100384, 100387, 0 }[i],
+                };
+                HandofRagnaros.AffectsRole[PLAYER_ROLES.MeleeDPS] = true;
+                HandofRagnaros.SetAffectsRoles_Tanks();
+                ByFirebePurged.Attacks.Add(HandofRagnaros);
+                SulfuaswillbeYourEnd.Attacks.Add(HandofRagnaros);
+                BegoneFrommyRealm.Attacks.Add(HandofRagnaros);
+                #endregion
 
                 #region Magma Trap
                 /*Ragnaros periodically forms a Magmaw Trap at a random player's location. The Magma Trap
@@ -3712,22 +3770,109 @@ namespace Rawr.Bosses
                  * Eruption.*/
                 // http://ptr.wowhead.com/spell=98164
                 // damage - http://ptr.wowhead.com/spell=98170
-                // summons after damage - http://db.mmo-champion.com/c/53086/
-
-                /* Magma Trap Eruption
-                 * When triggered, a Magma Trap erupts for 75318 to 79182 Fire damage to all enemies
+                // summons after damage - http://ptr.wowhead.com/npc=53086
+                // Normal we are popping them immediatly on spawn
+                // On Heroic we need to wait 45 seconds before popping the next trap.
+                // That means on the bear minimum, we need to pop 4 traps in Phase 1 and 3 traps in phase 2
+                
+                #region Magma Trap Eruption
+                /* When triggered, a Magma Trap erupts for 75318 to 79182 Fire damage to all enemies
                  * within the Firelands, and violently knocking the player who tripped the Magma Trap into the air.
                  * 
-                 * *Warning* An enemy that triggers a Magma Trap will take 50 additional damage from the Magma
-                 * Trap Eruption for 30 sec. Stacks.*/
+                 * *Heroic* An enemy that triggers a Magma Trap will take 50% additional fire damage from the Magma
+                 * Trap Eruption for 45 sec. Stacks.*/
+                // This means we cannot pop the next trap until the debuf wears off or 45 second cooldown
+                // This debuff ONLY increases the damage of your next Magma Trap damage, not overall fire damage
                 /* Eruption
                  * 10 man - http://ptr.wowhead.com/spell=98175
                  * 25 man - http://ptr.wowhead.com/spell=100106
                  * 10 man heroic - http://ptr.wowhead.com/spell=100107
-                 * 25 man heroic - http://ptr.wowhead.com/spell=100108*/
+                 * 25 man heroic - http://ptr.wowhead.com/spell=100108 */
+                // Timers are adjusted by 16 seconds
+                Attack MagmaTrapEruption = new Attack
+                {
+                    Name = "Magma Trap Eruption",
+                    AttackSpeed = (phase1to3Length/ (phase1to3Length - 16f)) * (i < 2 ? 25f : 45f),
+                    DamagePerHit = new float[] { (58500f + 61500f), (58500f + 61500f), (82875f + 87125f), (97500f + 102500f), 0f }[i] / 2f,
+                    MaxNumTargets = Max_Players[i],
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamageType = ItemDamageType.Fire,
+                    SpellID = new float[] { 98175, 100106, 100107, 100108, 0 }[i],
+                };
+                MagmaTrapEruption.SetAffectsRoles_All();
+                ByFirebePurged.Attacks.Add(MagmaTrapEruption);
+
+                Attack MagmaTrapEruptionPhase2 = MagmaTrapEruption.Clone();
+                // At most 3 traps should be up during phase 2 on Heroic
+                MagmaTrapEruptionPhase2.AttackSpeed = phase1to3Length / 3f;
+                if (i > 1) { SulfuaswillbeYourEnd.Attacks.Add(MagmaTrapEruptionPhase2); }
                 /* Vulnerability
-                 * normal - http://ptr.wowhead.com/spell=100238
-                 * heroic - http://ptr.wowhead.com/spell=100239*/
+                 * 10-man Heroic - http://ptr.wowhead.com/spell=100238
+                 * 25-man heroic - http://ptr.wowhead.com/spell=100239 */
+                // Not going to model this part since I'm factoring in the 45 second debuff into my attack speed
+                #endregion
+                #endregion
+
+                #region Magma Blast
+                /* Ragnaros blasts magma at his current target if he cannot reach and melee them, 
+                 * inflicting 73125 to 76875 Fire damage and increasing Fire damage taken by 50% for 6 sec. */
+                // http://ptr.wowhead.com/spell=98313
+                // This should NEVER happen
+                #endregion
+
+                #region Burning Wound
+                /* The attacks from Ragnaros open a Burning Wound, inflicting 3656 to 3843 Fire damage every 2 sec
+                 * for 20 sec.  The wound causes the target's attacks to become infused with fire, causing a
+                 * Burning Blast.*/
+                // 10-man - http://ptr.wowhead.com/spell=99399
+                // 25-man - http://ptr.wowhead.com/spell=101238
+                // 10-man Heroic - http://ptr.wowhead.com/spell=101239
+                // 25-man Heroic - http://ptr.wowhead.com/spell=101240
+                // 5 second cooldown on application
+                // Only allow 4 stacks to be applied
+                float BurningWoundDamage = new float[] { (3656f + 3843f), (3656f + 3843f), (5386f + 5663f), (5386f + 5663f), 0f }[i] / 2f;
+                Attack BurningWound = new Attack
+                {
+                    Name = "Burning Wound",
+                    AttackSpeed = 40f,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    DamageType = ItemDamageType.Fire,
+                    // Average damage after the stacking equates to ABOUT 1.3 times the base damage
+                    DamagePerTick = BurningWoundDamage * 1.3f,
+                    TickInterval = 2f,
+                    Duration = 20f + 20f, // 20 seconds to stack the debuff, 20 seconds to let it drop
+                    IsDoT = true,
+                    SpellID = new float[] { 99399, 101238, 101239, 101240, 0 }[i],
+                };
+                BurningWound.SetAffectsRoles_Tanks();
+                ByFirebePurged.Attacks.Add(BurningWound);
+
+                #region Burning Blast
+                /* Inflicts 1950 to 2050 Fire damage, each stack of Burning Wound increases the damage of
+                 * Burning Blast.*/
+                // 10-man - http://ptr.wowhead.com/spell=99400
+                // 25-man - http://ptr.wowhead.com/spell=101241
+                // 10-man Heroic - http://ptr.wowhead.com/spell=101242
+                // 25-man Heroic - http://ptr.wowhead.com/spell=101243
+                float BurningBlastDamaage = (1950f + 2050f) / 2f;
+                Stats BurningBlastStat = new Stats();
+                SpecialEffect BurningBlastSpecialEffect = new SpecialEffect(Trigger.PhysicalAttack, new Stats() { FireDamage = BurningBlastDamaage }, 20f, 5f, 1f, 4);
+                BurningBlastStat.AddSpecialEffect(BurningBlastSpecialEffect);
+                BurningBlastSpecialEffect = new SpecialEffect(Trigger.Use, BurningBlastStat, 40f, 40f, 1f);
+                BurningBlastStat = new Stats();
+                BurningBlastStat.AddSpecialEffect(BurningBlastSpecialEffect);
+                BuffState BurningBlast = new BuffState
+                {
+                    Name = "Burning Blast",
+                    Frequency = 40f,
+                    Duration = 40f * 1000f,
+                    Chance = 1f,
+                    Breakable = false,
+                    Stats = BurningBlastStat,
+                };
+                BurningBlast.SetAffectsRoles_Tanks();
+                ByFirebePurged.BuffStates.Add(BurningBlast);
+                #endregion
                 #endregion
                 #endregion
 
@@ -3736,8 +3881,8 @@ namespace Rawr.Bosses
                  * Sons of Flame across the platform. Ragnaros will stay submerged for 45 seconds or until all of the
                  * Sons of Flame are destroyed.*/
 
-                /* Splitting Blow
-                 * Ragnaros buries Sulfuras within the platform, creating Sons of Flame that attempt to reach the
+                #region Splitting Blow
+                /* Ragnaros buries Sulfuras within the platform, creating Sons of Flame that attempt to reach the
                  * mighty hammer.*/
                 /* 12 different ids all with the same descriptions:
                  * http://ptr.wowhead.com/spell=98951; http://ptr.wowhead.com/spell=98952; http://ptr.wowhead.com/spell=98953
@@ -3748,27 +3893,69 @@ namespace Rawr.Bosses
                 // Summon Cast - http://ptr.wowhead.com/spell=99056
                 // Number of summons - http://ptr.wowhead.com/spell=99054
                 // This means that 10 Sons are summoned that need to be slowed and killed within 45 seconds.
+                // The damage from Splitting Blow should NEVER hit a player
+                #endregion
 
                 #region Son of Flame
                 /*Sons of Flame will cross the platform and attempt to reform with Sulfuras, causing a
                  * Supernova if they are able to reach the mighty weapon.*/
-                // http://db.mmo-champion.com/c/53140/
+                // http://ptr.wowhead.com/npc=53140
+                TargetGroup SonsofFlame = new TargetGroup
+                {
+                    Name = "Sons of Flame",
+                    Chance = 1f,
+                    Frequency = 1f,
+                    Duration = IntermissionLength * 1000f,
+                    LevelOfTargets = 87,
+                    NearBoss = false,
+                    NumTargs = 10f,
+                    TargetID = 53140f,
+                };
+                SonsofFlame.SetAffectsRoles_All();
+                Intermission1.Targets.Add(SonsofFlame);
 
-                /* Burning Speed
-                 * Sons of Flame move faster as their blaze burns hotter. Their movement speed is
+                #region Burning Speed
+                /* Sons of Flame move faster as their blaze burns hotter. Their movement speed is
                  * increased by an amount equal to every 1% health they have above 50% health.*/
                 // 10 man - http://ptr.wowhead.com/spell=99414
                 // 25 man - http://ptr.wowhead.com/spell=100306
                 // 10 man heroic - http://ptr.wowhead.com/spell=100307
                 // 25 man heroic - http://ptr.wowhead.com/spell=100308
+                // Don't Need to model
+                #endregion
 
-                /* Supernova
-                 * If a Son of Flame reaches Sulfuras, the elemental will explode in a Supernova,
+                #region Supernova
+                /* If a Son of Flame reaches Sulfuras, the elemental will explode in a Supernova,
                  * inflicting 112978 to 118772 Fire damage to all players within the Firelands.*/
                 // 10 man - http://ptr.wowhead.com/spell=99112
                 // 25 man - http://ptr.wowhead.com/spell=100259
                 // 10 man heroic - http://ptr.wowhead.com/spell=100260
                 // 25 man heroic - http://ptr.wowhead.com/spell=100261
+                // Since if this happens at ANY time, it's a wipe, so assuming that this does not take place
+                #endregion
+                #endregion
+
+                #region Lava Bolt
+                /* While Ragnaros lies submerged underneath the lava, bolts of hot magma fall on four random players every 4 seconds.
+                 * A Lava Bolt inflicts 43875 to 46125 Fire Damage.
+                 * 
+                 * In 25 player raids, bolts of hot magma fall on ten players.*/
+                // 10-man - http://ptr.wowhead.com/spell=98981
+                // 25-man - http://ptr.wowhead.com/spell=100289
+                // 10-man Heroic - http://ptr.wowhead.com/spell=100290
+                // 25-man Heroic - http://ptr.wowhead.com/spell=100291
+                Attack LavaBolt = new Attack
+                {
+                    Name = "Lava Bolt",
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamageType = ItemDamageType.Fire,
+                    AttackSpeed = 4f,
+                    DamagePerHit = new float[] { (43875f + 46125f), (43875f + 46125f), (68250f + 71750f), (68250f + 71750f), 0 }[i] / 2f,
+                    MaxNumTargets = new float[] { 4, 10, 4, 10, 0 }[i],
+                    SpellID = new float[] { 98981, 100289, 100290, 100291, 0 }[i],
+                };
+                LavaBolt.SetAffectsRoles_All();
+                Intermission1.Attacks.Add(LavaBolt);
                 #endregion
                 #endregion
 
@@ -3782,21 +3969,24 @@ namespace Rawr.Bosses
                 // 10 man heroic - http://ptr.wowhead.com/spell=100257
                 // 25 man heroic - http://ptr.wowhead.com/spell=100258
 
-                /* Lava Wave
-                 * A Lava Wave inflicts 87871 to 92379 Fire damage and knocks back all players it passes
+                #region Lava Wave
+                /* A Lava Wave inflicts 87871 to 92379 Fire damage and knocks back all players it passes
                  * through. Targets who are knocked back suffer an additional 25106 to 26394 Fire damage
                  * every 1 sec for 5 sec.*/
                 // 10 man - http://ptr.wowhead.com/spell=98928
                 // 25 man - http://ptr.wowhead.com/spell=100292
                 // 10 man heroic - http://ptr.wowhead.com/spell=100293
                 // 25 man heroic - http://ptr.wowhead.com/spell=100294
+                SulfuaswillbeYourEnd.Moves.Add(LavaWave_Move);
+                #endregion
                 #endregion
 
-                /* World of Flames [Heroic Only]
-                 * Ragnaros periodically engulfs one third of the platform in flame every 2.60 sec for 13 sec.
+                #region World of Flames [Heroic Only]
+                /* Ragnaros periodically engulfs one third of the platform in flame every 2.60 sec for 13 sec.
                  * Inflicting 87871 to 92379 Fire damage to players caught in the conflagration.*/
                 // cast - http://ptr.wowhead.com/spell=100171
                 // spell - http://ptr.wowhead.com/spell=99171
+                #endregion
 
                 #region Molten Seed
                 /*Ragnaros forms a Molten Seed at the location of 10 random players, inflicing 69042 to 72583
@@ -3831,6 +4021,36 @@ namespace Rawr.Bosses
                 // 25 man heroic - http://ptr.wowhead.com/spell=100302
                 #endregion
                 #endregion
+
+                #region Magma Blast
+                /* Ragnaros blasts magma at his current target if he cannot reach and melee them, 
+                 * inflicting 73125 to 76875 Fire damage and increasing Fire damage taken by 50% for 6 sec. */
+                // http://ptr.wowhead.com/spell=98313
+                // This should NEVER happen
+                #endregion
+
+                #region Burning Wound
+                /* The attacks from Ragnaros open a Burning Wound, inflicting 3656 to 3843 Fire damage every 2 sec
+                 * for 20 sec.  The wound causes the target's attacks to become infused with fire, causing a
+                 * Burning Blast.*/
+                // 10-man - http://ptr.wowhead.com/spell=99399
+                // 25-man - http://ptr.wowhead.com/spell=101238
+                // 10-man Heroic - http://ptr.wowhead.com/spell=101239
+                // 25-man Heroic - http://ptr.wowhead.com/spell=101240
+                // 5 second cooldown on application
+                // Only allow 4 stacks to be applied
+                SulfuaswillbeYourEnd.Attacks.Add(BurningWound);
+
+                #region Burning Blast
+                /* Inflicts 1950 to 2050 Fire damage, each stack of Burning Wound increases the damage of
+                 * Burning Blast.*/
+                // 10-man - http://ptr.wowhead.com/spell=99400
+                // 25-man - http://ptr.wowhead.com/spell=101241
+                // 10-man Heroic - http://ptr.wowhead.com/spell=101242
+                // 25-man Heroic - http://ptr.wowhead.com/spell=101243
+                SulfuaswillbeYourEnd.BuffStates.Add(BurningBlast);
+                #endregion
+                #endregion
                 #endregion
 
                 #region Intermission: Denizens of Flame!
@@ -3838,8 +4058,8 @@ namespace Rawr.Bosses
                  * Sons of Flame. Ragnaros will stay submerged for 45 seconds or until all of the Sons of Flame are
                  * destroyed.*/
 
-                /* Splitting Blow
-                 * Ragnaros buries Sulfuras within the platform, creating Sons of Flame that attempt to reach the
+                #region Splitting Blow
+                /* Ragnaros buries Sulfuras within the platform, creating Sons of Flame that attempt to reach the
                  * mighty hammer.*/
                 /* 12 different ids all with the same descriptions:
                  * http://ptr.wowhead.com/spell=98951; http://ptr.wowhead.com/spell=98952; http://ptr.wowhead.com/spell=98953
@@ -3850,35 +4070,55 @@ namespace Rawr.Bosses
                 // Summon Cast - http://ptr.wowhead.com/spell=99056
                 // Number of summons - http://ptr.wowhead.com/spell=99054
                 // This means that 10 Sons are summoned that need to be slowed and killed within 45 seconds.
+                // The damage from Splitting Blow should NEVER hit a player
+                #endregion
 
                 #region Son of Flame
                 /*Sons of Flame will cross the platform and attempt to reform with Sulfuras, causing a
                  * Supernova if they are able to reach the mighty weapon.*/
-                // http://db.mmo-champion.com/c/53140/
+                // http://ptr.wowhead.com/npc=53140
+                Intermission2.Targets.Add(SonsofFlame);
 
-                /* Burning Speed
-                 * Sons of Flame move faster as their blaze burns hotter. Their movement speed is
+                #region Burning Speed
+                /* Sons of Flame move faster as their blaze burns hotter. Their movement speed is
                  * increased by an amount equal to every 1% health they have above 50% health.*/
                 // 10 man - http://ptr.wowhead.com/spell=99414
                 // 25 man - http://ptr.wowhead.com/spell=100306
                 // 10 man heroic - http://ptr.wowhead.com/spell=100307
                 // 25 man heroic - http://ptr.wowhead.com/spell=100308
+                // Don't need to model
+                #endregion
 
-                /* Supernova
-                 * If a Son of Flame reaches Sulfuras, the elemental will explode in a Supernova,
+                #region Supernova
+                /* If a Son of Flame reaches Sulfuras, the elemental will explode in a Supernova,
                  * inflicting 112978 to 118772 Fire damage to all players within the Firelands.*/
                 // 10 man - http://ptr.wowhead.com/spell=99112
                 // 25 man - http://ptr.wowhead.com/spell=100259
                 // 10 man heroic - http://ptr.wowhead.com/spell=100260
                 // 25 man heroic - http://ptr.wowhead.com/spell=100261
+                // Since if this happens at ANY time, it's a wipe, so assuming that this does not take place
+                #endregion
                 #endregion
 
                 #region Lava Scion
                 // One Lava Scion will form on each side of the platform.
-                // http://db.mmo-champion.com/c/53231/
+                // http://ptr.wowhead.com/npc=53231
+                TargetGroup LavaScion = new TargetGroup
+                {
+                    Name = "Lava Scion",
+                    Chance = 1f,
+                    Duration = 60f * 1000f,
+                    Frequency = 1f,
+                    LevelOfTargets = 87,
+                    NearBoss = true,
+                    NumTargs = 2f,
+                    TargetID = 53231,
+                };
+                LavaScion.SetAffectsRoles_All();
+                Intermission2.Targets.Add(LavaScion);
 
-                /* Blazing Heat
-                 * The Lava Scion inflicts a random target with Blazing Heat, causing them to create a trail of
+                #region Blazing Heat
+                /* The Lava Scion inflicts a random target with Blazing Heat, causing them to create a trail of
                  * Blazing Heat in their wake. Blazing Heat inflicts 62765 to 65985 Fire damage every 1
                  * sec, and heals Sons of Flame and Lava Scions for 10% every 1 sec.*/
                 /* Damaging Part
@@ -3887,6 +4127,21 @@ namespace Rawr.Bosses
                  * 10 man heroic - http://ptr.wowhead.com/spell=100304
                  * 25 man heroic - http://ptr.wowhead.com/spell=100305*/
                 // Healing Part - http://ptr.wowhead.com/spell=99145
+                // Just assume 2 people get chosen with the debuff and have to move for the entire duration
+                // Blazing heat has a 3 second cast and a 9 second duration. So, 12 seconds movement
+                // Not going to model the damaing part or the Healing Part
+                Impedance BlazingHeat_Move = new Impedance
+                {
+                    Name = "Blazing Heat Move",
+                    Breakable = false,
+                    Chance = 2f / (Max_Players[i] - Min_Tanks[i]),
+                    Duration = 12f * 1000f,
+                    Frequency = IntermissionLength - 12f,
+                };
+                BlazingHeat_Move.SetAffectsRoles_DPS();
+                BlazingHeat_Move.SetAffectsRoles_Healers();
+                Intermission2.Moves.Add(BlazingHeat_Move);
+                #endregion
                 #endregion
                 #endregion
 
@@ -3900,21 +4155,24 @@ namespace Rawr.Bosses
                 // 10 man heroic - http://ptr.wowhead.com/spell=100257
                 // 25 man heroic - http://ptr.wowhead.com/spell=100258
 
-                /* Lava Wave
-                 * A Lava Wave inflicts 87871 to 92379 Fire damage and knocks back all players it passes
+                #region Lava Wave
+                /* A Lava Wave inflicts 87871 to 92379 Fire damage and knocks back all players it passes
                  * through. Targets who are knocked back suffer an additional 25106 to 26394 Fire damage
                  * every 1 sec for 5 sec.*/
                 // 10 man - http://ptr.wowhead.com/spell=98928
                 // 25 man - http://ptr.wowhead.com/spell=100292
                 // 10 man heroic - http://ptr.wowhead.com/spell=100293
                 // 25 man heroic - http://ptr.wowhead.com/spell=100294
+                BegoneFrommyRealm.Moves.Add(LavaWave_Move);
+                #endregion
                 #endregion
 
-                /* World of Flames [Heroic Only]
-                 * Ragnaros periodically engulfs one third of the platform in flame every 2.60 sec for 13 sec.
+                #region World of Flames [Heroic Only]
+                /* Ragnaros periodically engulfs one third of the platform in flame every 2.60 sec for 13 sec.
                  * Inflicting 87871 to 92379 Fire damage to players caught in the conflagration.*/
                 // cast - http://ptr.wowhead.com/spell=100171
                 // spell - http://ptr.wowhead.com/spell=99171
+                #endregion
 
                 #region Summon Living Meteor
                 /* Ragnaros calls down an increasing number of Living Meteors over time, inclicting 81595 to
@@ -3925,32 +4183,48 @@ namespace Rawr.Bosses
                 /* The Living Meteor will fixate on a random target and chase them. A player that gets
                  * within 4 yards of the Living Meteor will trigger a Metoer Impact, inflicting 627656 to
                  * 659844 Fire damage to enemies within 8 yards.*/
-                // http://db.mmo-champion.com/c/53500/
+                // http://ptr.wowhead.com/npc=53500
                 // 10 man - http://ptr.wowhead.com/spell=99317
                 // 25 man - http://ptr.wowhead.com/spell=100989
                 // 10 man heroic - http://ptr.wowhead.com/spell=100990
                 // 25 man heroic - http://ptr.wowhead.com/spell=100991
+                TargetGroup LivingMeteor = new TargetGroup
+                {
+                    Name = "Living Meteor",
+                    Chance = 1f,
+                    Duration = phase1to3Length * 1000f,
+                    Frequency = 45f,
+                    LevelOfTargets = 87,
+                    NearBoss = false,
+                    NumTargs = 1f,
+                    TargetID = 53500,
+                };
+                LivingMeteor.SetAffectsRoles_All();
+                BegoneFrommyRealm.Targets.Add(LivingMeteor);
 
-                /* Meteor Impact
-                 * A player that gets within 4 yards of the Living Meteor will trigger a Metoer Impact,
+                #region Meteor Impact
+                /* A player that gets within 4 yards of the Living Meteor will trigger a Metoer Impact,
                  * inflicting 627656 to 659844 Fire damage to enemies within 8 yards.*/
                 // 10 man - http://ptr.wowhead.com/spell=99287
                 // 25 man - http://ptr.wowhead.com/spell=100299
                 // 10 man heroic - http://ptr.wowhead.com/spell=100300
                 // 25 man heroic - http://ptr.wowhead.com/spell=100301
+                // THIS SHOULD NEVER HAPPEN!!!!
+                #endregion
 
                 #region Combustible
                 /* The Living Meteor is highly Combustible. When attacked, it will cause Combustion,
                  * knocking it back several yards away from the enemy that hit it. Combustible is
                  * removed for several seconds after Combustion is triggered.*/
 
-                /* Combustion
-                 * While combustible is active, the Living Metoer is knocked back several yards
+                #region Combustion
+                /* While combustible is active, the Living Meteor is knocked back several yards
                  * from the enemy that hit it.*/
                 // 10 man - http://ptr.wowhead.com/spell=99296
                 // 25 man - http://ptr.wowhead.com/spell=100282
                 // 10 man heroic - http://ptr.wowhead.com/spell=100283
                 // 25 man heroic - http://ptr.wowhead.com/spell=100284
+                #endregion
 
                 // Personal note, Living Meteors can be knocked into the target by way of combustion
                 // http://ptr.wowhead.com/spell=100911
@@ -3966,17 +4240,48 @@ namespace Rawr.Bosses
  
                 #endregion
                 #endregion
+
+                #region Magma Blast
+                /* Ragnaros blasts magma at his current target if he cannot reach and melee them, 
+                 * inflicting 73125 to 76875 Fire damage and increasing Fire damage taken by 50% for 6 sec. */
+                // http://ptr.wowhead.com/spell=98313
+                // This should NEVER happen
+                #endregion
+
+                #region Burning Wound
+                /* The attacks from Ragnaros open a Burning Wound, inflicting 3656 to 3843 Fire damage every 2 sec
+                 * for 20 sec.  The wound causes the target's attacks to become infused with fire, causing a
+                 * Burning Blast.*/
+                // 10-man - http://ptr.wowhead.com/spell=99399
+                // 25-man - http://ptr.wowhead.com/spell=101238
+                // 10-man Heroic - http://ptr.wowhead.com/spell=101239
+                // 25-man Heroic - http://ptr.wowhead.com/spell=101240
+                // 5 second cooldown on application
+                // Only allow 4 stacks to be applied
+                BegoneFrommyRealm.Attacks.Add(BurningWound);
+
+                #region Burning Blast
+                /* Inflicts 1950 to 2050 Fire damage, each stack of Burning Wound increases the damage of
+                 * Burning Blast.*/
+                // 10-man - http://ptr.wowhead.com/spell=99400
+                // 25-man - http://ptr.wowhead.com/spell=101241
+                // 10-man Heroic - http://ptr.wowhead.com/spell=101242
+                // 25-man Heroic - http://ptr.wowhead.com/spell=101243
+                BegoneFrommyRealm.BuffStates.Add(BurningBlast);
+                #endregion
+                #endregion
                 #endregion
 
                 #region The True Power of the Fire Lord [Heroic Only]
                 /* The Fire lord unleashes his full power and is able to move freely around the platform. Players have
                  * the aid of powerful heroes of Azeroth to support them.*/
 
-                /* Superheated [Heroic Only]
-                 * Ragnaros is at his full power and is now Superheated, inflicting 2510 to 2640 Fire
+                #region Superheated [Heroic Only]
+                /* Ragnaros is at his full power and is now Superheated, inflicting 2510 to 2640 Fire
                  * damage every 1, increasing damage taken from Superheated by 10%. Stacks.*/
                 // 10 man heroic - http://ptr.wowhead.com/spell=100594
                 // 25 man heroic - http://ptr.wowhead.com/spell=100915
+                #endregion
 
                 #region Empower Sulfuras [Heroic Only]
                 /*Ragnaros begins to empower Sulfuras. After 5 sec, Sulfuras becomes Empowered and attacks
@@ -3987,44 +4292,48 @@ namespace Rawr.Bosses
                  * 25 man heroic - http://ptr.wowhead.com/spell=100997 */
                 // Damage - http://ptr.wowhead.com/spell=100628
                 
-                /* Flames of Sulfuras [Heroic Only]
-                 * When Sulfuras is Empowered, attacks made by Ragnaros cause Flames of Sulfuras,
+                #region Flames of Sulfuras [Heroic Only]
+                /* When Sulfuras is Empowered, attacks made by Ragnaros cause Flames of Sulfuras,
                  * inflicting 627656 to 659844 Fire damage to all enemies within the Firelands.*/
                 // http://ptr.wowhead.com/spell=100630
                 #endregion
+                #endregion
 
-                /* Dreadflame [Heroic Only]
-                 * Sulfuras creates a Dreadflame at two nearby locations. The Dreadflame multiplies rapidly
+                #region Dreadflame [Heroic Only]
+                /* Sulfuras creates a Dreadflame at two nearby locations. The Dreadflame multiplies rapidly
                  * and spreads across the platform. Dreadflame inflicts 43935 to 46190 Fire damage and an
                  * additional 4506 to 4507 Fire damage every 1 sec for 30 sec.
                  * 
                  * *Warning* In 25 player raids, Dreadflame will strike five locations at once.*/
                 // 10 man heroic - http://ptr.wowhead.com/spell=100941
                 // 25 man heroic - http://ptr.wowhead.com/spell=100998
+                #endregion
 
-                /* Magma Geyser [Heroic Only]
-                 * Ragnaros will target a Magma Geyser whenever he notices four players in a cluster together. The
+                #region Magma Geyser [Heroic Only]
+                /* Ragnaros will target a Magma Geyser whenever he notices four players in a cluster together. The
                  * Magma Geyser inflicts 69042 to 72583 Fire damage every 1 sec and destroy any nearby
                  * Breadth of Frost.
                  * 
                  * *Warning* In 25 player raids, Ragnaros will use Magma Geyser on clusters of 10 players.*/
                 // 10 man heroic - http://ptr.wowhead.com/spell=100861
                 // 25 man heroic - http://ptr.wowhead.com/spell=100999
+                #endregion
 
                 #region Cenarius [Heroic Only]
                 /* Cenarius is a demigod, the son of Malorne and Elune, and the patron of all of Azeroth's druids.
                  * 
                  * Cenarius will support the raid by freezing Living Meteors and reducing the damage caused by
                  * Superheated.*/
-                // http://db.mmo-champion.com/c/53872/
+                // http://ptr.wowhead.com/npc=53872
 
-                /* Breadth of Frost [Heroic Only]
-                 * Cenarius forms a Breadth of Frost at a nearby location. Any Living Meteors that enter the
+                #region Breadth of Frost [Heroic Only]
+                /* Cenarius forms a Breadth of Frost at a nearby location. Any Living Meteors that enter the
                  * Breadth of Frost are Frozen and take 15000% additional damage. Additionally, players who
                  * stand within the Breadth of Frost are immune to Superheated damage and have the
                  * Superheaded debuff removed from them.*/
                 // Living Meteor - http://ptr.wowhead.com/spell=100567
                 // Shield from Superheated - http://ptr.wowhead.com/spell=100503
+                #endregion
                 #endregion
 
                 #region Arch Druid Hamuul Runetotem [Heroic Only]
@@ -4032,14 +4341,15 @@ namespace Rawr.Bosses
                  * assists Ysera in protecting Nordrassil from Ragnaros.
                  * 
                  * The arch druid will support the raid by entrapping Ragnaros.*/
-                // http://db.mmo-champion.com/c/53913/
+                // http://ptr.wowhead.com/npc=53913
 
-                /* Entrapping Roots [Heroic Only]
-                 * Arch Druid Humuul Runetotem forms Entrapping Roots at a nearby location. If
+                #region Entrapping Roots [Heroic Only]
+                /* Arch Druid Humuul Runetotem forms Entrapping Roots at a nearby location. If
                  * Ragnaros enters the area of the Entrapping Roots, he will become stunned for 10 sec and
                  * take 50% additional damage while stunned.*/
                 // Cast - http://ptr.wowhead.com/spell=100646
                 // Stun - http://ptr.wowhead.com/spell=100653
+                #endregion
                 #endregion
 
                 #region Malfurion Stormrage [Heroic Only]
@@ -4047,7 +4357,7 @@ namespace Rawr.Bosses
                  * the Defense of Mount Hyjal against the forces of Ragnaros.
                  * 
                  * Malfurion will support the raid by protecting players from Dreadflame.*/
-                // http://db.mmo-champion.com/c/52135/
+                // http://ptr.wowhead.com/npc=52135
 
                 #region Cloudburst [Heroic Only]
                 /* Malfurion forms a Cloudburst. The players who interact with the Cloudburst will be
@@ -4058,8 +4368,8 @@ namespace Rawr.Bosses
                 // 10 man heroic - http://ptr.wowhead.com/spell=100758
                 // 25 man heroic - http://ptr.wowhead.com/spell=100766
 
-                /* Deluge [Heroic Only]
-                 * Makes the player immune to Dreadflame damage, and also allows the player to
+                #region Deluge [Heroic Only]
+                /* Makes the player immune to Dreadflame damage, and also allows the player to
                  * extinguish any nearby Dreadflame.*/
                 // 10 man heroic - http://ptr.wowhead.com/spell=100713
                 // 25 man heroic - http://ptr.wowhead.com/spell=101015
@@ -4067,6 +4377,35 @@ namespace Rawr.Bosses
                 #endregion
                 #endregion
                 #endregion
+                #endregion
+
+                #region Apply Phases
+                // Pull then at 30 Sec, Empower Blade w/ 50/50 chance for which blade type.
+                // 15 secs of empowered blade
+                // Return to normal mode.
+                float phasestart = 0;
+                ApplyAPhasesValues(ByFirebePurged, i, 1, phasestart, phase1to3Length, BerserkTimer[i]); phasestart += phase1to3Length;
+                ApplyAPhasesValues(Intermission1, i, 2, phasestart, IntermissionLength, BerserkTimer[i]); phasestart += IntermissionLength;
+                ApplyAPhasesValues(SulfuaswillbeYourEnd, i, 3, phasestart, phase1to3Length, BerserkTimer[i]); phasestart += phase1to3Length;
+                ApplyAPhasesValues(Intermission2, i, 4, phasestart, IntermissionLength, BerserkTimer[i]); phasestart += IntermissionLength;
+                ApplyAPhasesValues(BegoneFrommyRealm, i, 5, phasestart, phase1to3Length, BerserkTimer[i]); phasestart += phase1to3Length;
+                if (i > 1)
+                {
+                    ApplyAPhasesValues(Intermission3, i, 6, phasestart, Intermission3Length, BerserkTimer[i]); phasestart += Intermission3Length;
+                    ApplyAPhasesValues(TheTruePoweroftheFireLord, i, 7, phasestart, phase4Length, BerserkTimer[i]);
+                }
+                AddAPhase(ByFirebePurged, i);
+                AddAPhase(Intermission1, i);
+                AddAPhase(SulfuaswillbeYourEnd, i);
+                AddAPhase(Intermission2, i);
+                AddAPhase(BegoneFrommyRealm, i);
+                if (i > 1)
+                {
+                    AddAPhase(Intermission3, i);
+                    AddAPhase(TheTruePoweroftheFireLord, i);
+                }
+                #endregion
+
             }
             #endregion
             #endregion
