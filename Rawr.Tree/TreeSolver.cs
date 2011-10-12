@@ -730,7 +730,7 @@ namespace Rawr.Tree
                 lifebloomManaPerTick += CalculationsTree.BaseMana * 0.01 * 0.4;
 
             if (T12Count >= 4)
-                swiftmendExtraTargets += opts.SwiftmendEH;
+                swiftmendExtraTargets += opts.SwiftmendExtraHealEH;
 
             if (Talents.GlyphOfSwiftmend)
                 swiftmendEatsRejuvenation = false;
@@ -763,6 +763,7 @@ namespace Rawr.Tree
             #endregion
 
             #region Targets
+            double defaultCritMultiplier = getCritMultiplier(stats, 0, 0);
             double wgTargets = (Talents.GlyphOfWildGrowth ? 6 : 5) + stats.TreeOfLifeUptime * 2;
 
             actions[(int)TreeAction.TankWildGrowth].Periodic += (wgTargets - 1) * actions[(int)TreeAction.RaidWildGrowth].Periodic * opts.TankRaidHealingWeight;
@@ -770,9 +771,9 @@ namespace Rawr.Tree
 
             actions[(int)TreeAction.TankWildGrowth].Ticks *= wgTargets;
             actions[(int)TreeAction.RaidWildGrowth].Ticks *= wgTargets;
-            
-            actions[(int)TreeAction.TankSwiftmend].Direct *= (1 + swiftmendExtraTargets * stats.DirectHealMultiplier * opts.TankRaidHealingWeight);
-            actions[(int)TreeAction.RaidSwiftmend].Direct *= (1 + swiftmendExtraTargets * stats.DirectHealMultiplier);
+
+            actions[(int)TreeAction.TankSwiftmend].Direct *= (1 + swiftmendExtraTargets * defaultCritMultiplier * stats.DirectHealMultiplier * opts.TankRaidHealingWeight);
+            actions[(int)TreeAction.RaidSwiftmend].Direct *= (1 + swiftmendExtraTargets * defaultCritMultiplier * stats.DirectHealMultiplier);
 
             actions[(int)TreeAction.TankSwiftmend].Casts *= (1 + swiftmendExtraTargets);
             actions[(int)TreeAction.RaidSwiftmend].Casts *= (1 + swiftmendExtraTargets);
