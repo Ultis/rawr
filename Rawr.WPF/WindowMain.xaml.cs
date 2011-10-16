@@ -30,11 +30,21 @@ namespace Rawr.WPF
 
             InitializeComponent();
 
+            if (Rawr.WPF.Properties.Settings.Default.UpgradeRequired)
+            {
+                Rawr.WPF.Properties.Settings.Default.Upgrade();
+                Rawr.WPF.Properties.Settings.Default.UpgradeRequired = false;
+                Rawr.WPF.Properties.Settings.Default.Save();
+            }
+
             Height = Rawr.WPF.Properties.Settings.Default.WindowHeight;
             Width = Rawr.WPF.Properties.Settings.Default.WindowWidth;
             Top = Rawr.WPF.Properties.Settings.Default.WindowTop;
             Left = Rawr.WPF.Properties.Settings.Default.WindowLeft;
-            WindowState = Rawr.WPF.Properties.Settings.Default.WindowState;
+            if (Rawr.WPF.Properties.Settings.Default.WindowState == System.Windows.WindowState.Maximized)
+            {
+                WindowState = Rawr.WPF.Properties.Settings.Default.WindowState;
+            }
 
             LoadScreen.StartLoading(new EventHandler(LoadFinished));
         }
@@ -43,13 +53,25 @@ namespace Rawr.WPF
         {
             if (WindowState != System.Windows.WindowState.Minimized)
             {
-                Rawr.WPF.Properties.Settings.Default.WindowHeight = Height;
-                Rawr.WPF.Properties.Settings.Default.WindowWidth = Width;
-                Rawr.WPF.Properties.Settings.Default.WindowTop = Top;
-                Rawr.WPF.Properties.Settings.Default.WindowLeft = Left;
-                Rawr.WPF.Properties.Settings.Default.WindowState = WindowState;
-                Rawr.WPF.Properties.Settings.Default.Save();
+                if (WindowState == System.Windows.WindowState.Maximized)
+                {
+                    Rawr.WPF.Properties.Settings.Default.WindowHeight = RestoreBounds.Height;
+                    Rawr.WPF.Properties.Settings.Default.WindowWidth = RestoreBounds.Width;
+                    Rawr.WPF.Properties.Settings.Default.WindowTop = RestoreBounds.Top;
+                    Rawr.WPF.Properties.Settings.Default.WindowLeft = RestoreBounds.Left;
+                    Rawr.WPF.Properties.Settings.Default.WindowState = WindowState;
+                }
+                else
+                {
+                    Rawr.WPF.Properties.Settings.Default.WindowHeight = Height;
+                    Rawr.WPF.Properties.Settings.Default.WindowWidth = Width;
+                    Rawr.WPF.Properties.Settings.Default.WindowTop = Top;
+                    Rawr.WPF.Properties.Settings.Default.WindowLeft = Left;
+                    Rawr.WPF.Properties.Settings.Default.WindowState = WindowState;
+                }                
             }
+            Rawr.WPF.Properties.Settings.Default.ConfigModel = MainPage.Instance.Character.CurrentModel;
+            Rawr.WPF.Properties.Settings.Default.Save();
         }
 
         void WindowMain_Activated(object sender, EventArgs e)
@@ -85,7 +107,7 @@ You will now be taken to this window to become familiar with it.",
         private void LoadFinished(object sender, EventArgs e)
         {
             LoadScreen.Visibility = System.Windows.Visibility.Collapsed;
-            RootVisual.Children.Add(new MainPage());
+            RootVisual.Children.Add(new MainPage(Rawr.WPF.Properties.Settings.Default.ConfigModel));
         }
     }
 }

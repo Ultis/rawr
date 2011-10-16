@@ -17,5 +17,11 @@
     <Setting Name="WindowState" Type="System.Windows.WindowState" Scope="User">
       <Value Profile="(Default)">Maximized</Value>
     </Setting>
+    <Setting Name="ConfigModel" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Bear</Value>
+    </Setting>
+    <Setting Name="UpgradeRequired" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -23,7 +23,9 @@ namespace Rawr.UI
 {
     public partial class MainPage : UserControl
     {
-        public MainPage()
+        public MainPage() : this("Bear") { }
+
+        public MainPage(string configModel)
         {
             Instance = this;
             InitializeComponent();
@@ -68,7 +70,7 @@ namespace Rawr.UI
             Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
 
             Character c = new Character() { IsLoading = false };
-            c.CurrentModel = ConfigModel;
+            c.CurrentModel = configModel;
             c.Class = Calculations.ModelClasses[c.CurrentModel];
             c.RecalculateSetBonuses(); // otherwise you'll get null ref exception
             Character = c;
@@ -94,8 +96,6 @@ namespace Rawr.UI
         #region Variables
         public static ItemTooltip Tooltip { get; private set; }
         public static MainPage Instance { get; private set; }
-
-        private string ConfigModel { get { return "Bear"; } }
 
         private bool _unsavedChanges = false;
 
