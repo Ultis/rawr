@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-16"?>
-<ArrayOfSavedBuffSet xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ArrayOfSavedBuffSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <SavedBuffSet>
     <Name>UnBuffed</Name>
     <SetAsString />
@@ -203,6 +203,34 @@
       <string>Critical Mass</string>
       <string>Master Poisoner</string>
       <string>Flask of the Draconic Mind</string>
+      <string>Intellect Food</string>
+    </SetAsString>
+  </SavedBuffSet>
+  <SavedBuffSet>
+    <Name>Fully Buffed Moonkin</Name>
+    <SetAsString>
+      <string>Battle Shout</string>
+      <string>Devotion Aura</string>
+      <string>Arcane Tactics</string>
+      <string>Power Word: Fortitude</string>
+      <string>Arcane Brilliance (Mana)</string>
+      <string>Blessing of Might (Mp5)</string>
+      <string>Demonic Pact</string>
+      <string>Leader of the Pack</string>
+      <string>Communion</string>
+      <string>Hymn of Hope</string>
+      <string>Focus Magic</string>
+      <string>Dark Intent</string>
+      <string>Moonkin Form</string>
+      <string>Mark of the Wild</string>
+      <string>Heroism/Bloodlust</string>
+      <string>Power Infusion</string>
+      <string>Sunder Armor</string>
+      <string>Savage Combat</string>
+      <string>Critical Mass</string>
+      <string>Earth and Moon</string>
+      <string>Flask of the Draconic Mind</string>
+      <string>Volcanic Potion</string>
       <string>Intellect Food</string>
     </SetAsString>
   </SavedBuffSet>
