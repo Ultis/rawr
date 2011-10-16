@@ -486,7 +486,7 @@
             </Grid.ColumnDefinitions>
             <TextBlock x:Name="StatusText" Grid.Column="0" Margin="4" Text="Status"/>
             <TextBlock x:Name="LB_Models" Grid.Column="1" Margin="4" Text="Check the Model Status Page for information on the Development Status" />
-            <TextBlock x:Name="VersionText" Grid.Column="2" Margin="4" Text="Rawr 4.2.5.00" Foreground="#99393939" />
+            <TextBlock x:Name="VersionText" Grid.Column="2" Margin="4" Text="Rawr X.X.X.X" Foreground="#99393939" />
         </Grid>
     </Grid>
 </UserControl>
