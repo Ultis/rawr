@@ -1054,7 +1054,7 @@ namespace Rawr.Cat
             character.DruidTalents.GlyphOfBerserk = true;
             character.DruidTalents.GlyphOfShred = true;
             character.DruidTalents.GlyphOfRip = true;
-            character.DruidTalents.GlyphOfTigersFury = true;
+            // character.DruidTalents.GlyphOfTigersFury = true;
             character.DruidTalents.GlyphOfFeralCharge = true;
         }
 
