@@ -508,144 +508,119 @@ namespace Rawr
                     }
                     break;
                 case AsyncOperation.BuildProgressiveUpgradeList:
-                    if (e.Cancelled || e.Error != null)
                     {
-                        currentOperation = AsyncOperation.None;
-                        UpdateStatusLabel();
-                        if (OperationCompleted != null)
+                        if (e.Cancelled || e.Error != null)
                         {
-                            OperationCompleted(this, EventArgs.Empty);
-                        }
-                        break;
-                    }
-                    bool foundUpgrade = false;
-                    foreach (KeyValuePair<CharacterSlot, List<ComparisonCalculationUpgrades>> kvp in e.Upgrades)
-                    {
-                        Dictionary<string, UpgradeEntry> map;
-                        if (!upgradeList.TryGetValue(kvp.Key, out map))
-                        {
-                            map = new Dictionary<string, UpgradeEntry>();
-                            upgradeList[kvp.Key] = map;
-                        }
-                        if (kvp.Value.Count > 0 && kvp.Value[0].OverallPoints > 0)
-                        {
-                            ComparisonCalculationUpgrades comp = kvp.Value[0];
-                            upgradeListPhase = 1; // item was used, from now on we do evaluate upgrade on specific item instance only
-                            optimizedItemInstance = comp.ItemInstance;
-                            // make item restrictions based on best character
-                            itemGenerator.AddItemRestrictions(comp.CharacterItems, workingCharacter.CurrentCalculations.IncludeOffHandInCalculations(workingCharacter));
-                            foundUpgrade = true;
-                            string key = comp.ItemInstance.SuffixId;
-                            UpgradeEntry upgradeEntry;
-                            if (!map.TryGetValue(key, out upgradeEntry))
+                            currentOperation = AsyncOperation.None;
+                            UpdateStatusLabel();
+                            if (OperationCompleted != null)
                             {
-                                upgradeEntry = new UpgradeEntry();
-                                map[key] = upgradeEntry;
+                                OperationCompleted(this, EventArgs.Empty);
                             }
-                            upgradeEntry.Item = comp.ItemInstance;
-                            upgradeEntry.Value += comp.OverallPoints * CurrentBatchCharacter.Weight;
-                            upgradeEntry.ValueList.Add(comp.OverallPoints);
                             break;
                         }
-                    }
-                    if (!foundUpgrade)
-                    {
-                        // make item restrictions based on best character without using the item
-                        itemGenerator.AddItemRestrictions(workingCharacter);
-                        // if we're evaluating an item that was already marked available then we must restrict to that version
-                        // if it was used in this character
-                        // with the addition of support for multiples of the same item the semantics of this changes
-                        // we now treat the upgrade as completely separate item, so no need to restrict to it if it is used
-                        // as that one is a separate instance
+                        ComparisonCalculationUpgrades bestComp = null;
+                        foreach (KeyValuePair<CharacterSlot, List<ComparisonCalculationUpgrades>> kvp in e.Upgrades)
+                        {
+                            if (kvp.Value.Count > 0 && kvp.Value[0].OverallPoints > (bestComp != null ? bestComp.OverallPoints : 0))
+                            {
+                                bestComp = kvp.Value[0];
+                            }
+                        }
                         SuffixItem item = itemList[itemIndex];
                         CharacterSlot slot = Character.GetCharacterSlotByItemSlot(item.Item.Slot);
-                        /*if (upgradeListPhase == 0)
-                        {
-                            foreach (CharacterSlot s in Character.CharacterSlots)
-                            {
-                                ItemInstance itemInstance = workingCharacter[s];
-                                if ((object)itemInstance != null && itemInstance.Id == item.Item.Id && itemInstance.RandomSuffixId == item.RandomSuffixId)
-                                {
-                                    upgradeListPhase = 1;
-                                    optimizedItemInstance = itemInstance;
-                                    break;
-                                }
-                            }
-                        }*/
                         Dictionary<string, UpgradeEntry> map;
                         if (!upgradeList.TryGetValue(slot, out map))
                         {
                             map = new Dictionary<string, UpgradeEntry>();
                             upgradeList[slot] = map;
                         }
-                        string key = itemList[itemIndex].SuffixId;
+                        string key = item.SuffixId;
                         UpgradeEntry upgradeEntry;
                         if (!map.TryGetValue(key, out upgradeEntry))
                         {
                             upgradeEntry = new UpgradeEntry();
                             map[key] = upgradeEntry;
                         }
-                        if (upgradeListPhase == 1)
+                        if (bestComp != null)
                         {
-                            upgradeEntry.Item = optimizedItemInstance;
-                        }
-                        upgradeEntry.ValueList.Add(0.0f);
-                    }
-                    // move to next character
-                    do
-                    {
-                        batchIndex++;
-                    } while (batchIndex < BatchCharacterList.Count && CurrentBatchCharacter.Character == null);
-                    if (batchIndex < BatchCharacterList.Count)
-                    {
-                        if (upgradeListPhase == 0)
-                        {
-                            // so far we haven't made any changes yet
-                            // we're working under assumption that the starting batch is valid i.e. an item will have the same gemming in all characters
-                            int _thoroughness = Thoroughness;
-                            workingCharacter = CurrentBatchCharacter.Character;
-                            optimizer.InitializeItemCache(workingCharacter, CurrentBatchCharacter.Model, itemGenerator);
-                            optimizer.ComputeUpgradesAsync(workingCharacter, _thoroughness, itemList[itemIndex]);
+                            upgradeListPhase = 1; // item was used, from now on we do evaluate upgrade on specific item instance only
+                            optimizedItemInstance = bestComp.ItemInstance;
+                            // make item restrictions based on best character
+                            itemGenerator.AddItemRestrictions(bestComp.CharacterItems, workingCharacter.CurrentCalculations.IncludeOffHandInCalculations(workingCharacter));
+                            upgradeEntry.Item = bestComp.ItemInstance;
+                            upgradeEntry.Value += bestComp.OverallPoints * CurrentBatchCharacter.Weight;
+                            upgradeEntry.ValueList.Add(bestComp.OverallPoints);
                         }
                         else
                         {
-                            // we made item restrictions, first we have to optimize character without the item
-                            int _thoroughness = Thoroughness;
-                            workingCharacter = CurrentBatchCharacter.Character.Clone();
-                            // regularize character with current item restrictions
-                            itemGenerator.RegularizeCharacter(workingCharacter);
-                            optimizer.InitializeItemCache(workingCharacter, CurrentBatchCharacter.Model, itemGenerator);
-                            if (ConsiderMultipleNewItems)
+                            // make item restrictions based on best character without using the item
+                            itemGenerator.AddItemRestrictions(workingCharacter);
+                            // with the addition of support for multiples of the same item the semantics of this changes
+                            // we now treat the upgrade as completely separate item, so no need to restrict to it if it is used
+                            // as that one is a separate instance
+                            if (upgradeListPhase == 1)
                             {
+                                upgradeEntry.Item = optimizedItemInstance;
+                            }
+                            upgradeEntry.ValueList.Add(0.0f);
+                        }
+                        // move to next character
+                        do
+                        {
+                            batchIndex++;
+                        } while (batchIndex < BatchCharacterList.Count && CurrentBatchCharacter.Character == null);
+                        if (batchIndex < BatchCharacterList.Count)
+                        {
+                            if (upgradeListPhase == 0)
+                            {
+                                // so far we haven't made any changes yet
+                                // we're working under assumption that the starting batch is valid i.e. an item will have the same gemming in all characters
+                                int _thoroughness = Thoroughness;
+                                workingCharacter = CurrentBatchCharacter.Character;
+                                optimizer.InitializeItemCache(workingCharacter, CurrentBatchCharacter.Model, itemGenerator);
                                 optimizer.ComputeUpgradesAsync(workingCharacter, _thoroughness, itemList[itemIndex]);
                             }
                             else
                             {
-                                optimizer.OptimizeCharacterAsync(workingCharacter, _thoroughness, true);
+                                // we made item restrictions, first we have to optimize character without the item
+                                int _thoroughness = Thoroughness;
+                                workingCharacter = CurrentBatchCharacter.Character.Clone();
+                                // regularize character with current item restrictions
+                                itemGenerator.RegularizeCharacter(workingCharacter);
+                                optimizer.InitializeItemCache(workingCharacter, CurrentBatchCharacter.Model, itemGenerator);
+                                if (ConsiderMultipleNewItems)
+                                {
+                                    optimizer.ComputeUpgradesAsync(workingCharacter, _thoroughness, itemList[itemIndex]);
+                                }
+                                else
+                                {
+                                    optimizer.OptimizeCharacterAsync(workingCharacter, _thoroughness, true);
+                                }
                             }
-                        }
-                    }
-                    else
-                    {
-                        // we finished all characters for this item
-                        // move to next item
-                        itemIndex++;
-                        if (itemIndex < itemList.Length)
-                        {
-                            batchIndex = 0;
-                            upgradeListPhase = 0;
-                            int _thoroughness = Thoroughness;
-                            // we have to reinitialize item generator because of the restrictions we made
-                            //CreateBatchItemGenerator();
-                            itemGenerator.RestoreAvailabilityInformation();
-                            optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Model, itemGenerator);
-                            workingCharacter = CurrentBatchCharacter.Character;
-                            optimizer.ComputeUpgradesAsync(CurrentBatchCharacter.Character, _thoroughness, itemList[itemIndex]);
                         }
                         else
                         {
-                            // we're done
-                            WrapUpProgressiveUpgradeList();
+                            // we finished all characters for this item
+                            // move to next item
+                            itemIndex++;
+                            if (itemIndex < itemList.Length)
+                            {
+                                batchIndex = 0;
+                                upgradeListPhase = 0;
+                                int _thoroughness = Thoroughness;
+                                // we have to reinitialize item generator because of the restrictions we made
+                                //CreateBatchItemGenerator();
+                                itemGenerator.RestoreAvailabilityInformation();
+                                optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Model, itemGenerator);
+                                workingCharacter = CurrentBatchCharacter.Character;
+                                optimizer.ComputeUpgradesAsync(CurrentBatchCharacter.Character, _thoroughness, itemList[itemIndex]);
+                            }
+                            else
+                            {
+                                // we're done
+                                WrapUpProgressiveUpgradeList();
+                            }
                         }
                     }
                     break;
