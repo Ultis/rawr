@@ -880,7 +880,10 @@ namespace Rawr.Bosses
                 Phase Stage1 = new Phase() { Name = "Stage One: The Final Assault" };
                 Phase Stage2 = new Phase() { Name = "Stage Two: The Last Stand" };
 
-                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+                Attack melee = new Attacks(GenAStandardMelee(this[i].Content));
+                melee.DamagePerHit *= 1.25f;
+                Stage1.Attack.add(melee);
+                Stage2.Attack.add(melee);
 
                 #region Stage One: The Final Assault
                 /* Deathwing assaults his enemies as long as he is attached to the platforms by his twisted limbs.
