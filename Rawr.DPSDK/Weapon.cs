@@ -38,27 +38,27 @@ namespace Rawr.DK {
 
             #region Dodge
             {
-                chanceDodged = StatConversion.WHITE_DODGE_CHANCE_CAP[bossOpts.Level - 85];
-                chanceDodged -= StatConversion.GetDodgeParryReducFromExpertise(effectiveExpertise);
-                chanceDodged = Math.Max(chanceDodged, 0f);
+                float baseDodged = StatConversion.WHITE_DODGE_CHANCE_CAP[bossOpts.Level - 85];
+                chanceDodged = baseDodged - StatConversion.GetDodgeParryReducFromExpertise(effectiveExpertise);
+                chanceDodged = Math.Min(Math.Max(chanceDodged, 0f), baseDodged);
             }
             #endregion
 
             #region Parry
             {
-                chanceParried = StatConversion.WHITE_PARRY_CHANCE_CAP[bossOpts.Level - 85];
-                chanceParried -= StatConversion.GetDodgeParryReducFromExpertise(effectiveExpertise);
-                chanceParried = Math.Max(chanceParried, 0f);
+                float baseParried = StatConversion.WHITE_PARRY_CHANCE_CAP[bossOpts.Level - 85];
+                chanceParried = baseParried - StatConversion.GetDodgeParryReducFromExpertise(effectiveExpertise);
+                chanceParried = Math.Min(Math.Max(chanceParried, 0f), baseParried);
             }
             #endregion
 
             #region Miss
             {
-                chanceMissed = StatConversion.WHITE_MISS_CHANCE_CAP[bossOpts.Level - 85];
+                float baseMissed = StatConversion.WHITE_MISS_CHANCE_CAP[bossOpts.Level - 85];
                 if (!twohander)
-                    chanceMissed = StatConversion.WHITE_MISS_CHANCE_CAP_DW[bossOpts.Level - 85];
-                chanceMissed -= stats.PhysicalHit;
-                chanceMissed = Math.Max(chanceMissed, 0f);
+                    baseMissed = StatConversion.WHITE_MISS_CHANCE_CAP_DW[bossOpts.Level - 85];
+                chanceMissed = baseMissed - stats.PhysicalHit;
+                chanceMissed = Math.Min(Math.Max(chanceMissed, 0f), baseMissed);
             }
             #endregion
 

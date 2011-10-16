@@ -135,6 +135,14 @@ namespace Rawr.DK
             }
         }
 
+        public override float MissChance
+        {
+            get
+            {
+                return wMH.chanceMissed;
+            }
+        }
+
         private float combinedSwingTime
         {
             get

@@ -340,7 +340,7 @@ namespace Rawr.DK
                     if (CState != null && CState.m_Stats != null)
                         crit += CState.m_Stats.PhysicalCrit;
                     crit += StatConversion.NPC_LEVEL_CRIT_MOD[3];
-                    crit *= HitChance;
+                    crit -= (1 - HitChance);
                     return Math.Max(0, Math.Min(1, crit));
                 }
                 else
@@ -362,14 +362,13 @@ namespace Rawr.DK
                 if (this.bWeaponRequired)
                 {
                     // Determine Miss Chance
-                    float fMissChance = Math.Max(0, (StatConversion.YELLOW_MISS_CHANCE_CAP[3] - CState.m_Stats.PhysicalHit));
-                    float ChanceToHit = 1 - fMissChance; // Ensure that crit is no lower than 0.
+                    float ChanceToHit = 1 - MissChance; // Ensure that crit is no lower than 0.
                     // Determine Dodge chance
-                    float fDodgeChanceForTarget = 0;
-                    if (wMH != null) fDodgeChanceForTarget = Math.Max(wMH.chanceDodged, 0);
+                    float fDodgeChanceForTarget = StatConversion.WHITE_DODGE_CHANCE_CAP[3];
+                    if (wMH != null) fDodgeChanceForTarget = Math.Max(Math.Min(wMH.chanceDodged, fDodgeChanceForTarget), 0);
                     // Determine Parry Chance  (Only for Tank... Since only they should be in front of the target.)
-                    float fParryChanceForTarget = 0;
-                    if (wMH != null) fParryChanceForTarget = Math.Max(wMH.chanceParried,0);
+                    float fParryChanceForTarget = StatConversion.WHITE_PARRY_CHANCE_CAP[3];
+                    if (wMH != null) fParryChanceForTarget = Math.Max(Math.Min(wMH.chanceParried, fParryChanceForTarget), 0);
                     ChanceToHit -= fDodgeChanceForTarget;
                     if (CState != null && !CState.m_bAttackingFromBehind)
                         ChanceToHit -= fParryChanceForTarget;
@@ -381,11 +380,33 @@ namespace Rawr.DK
 #endif
                     return Math.Max(0, Math.Min(1, ChanceToHit));
                 }
+                else
+                    return 1 - MissChance;
+            }
+        }
+
+        /// <summary>
+        /// Chance for the ability to Miss the target.  
+        /// Hit only
+        /// </summary>
+        [Percentage]
+        virtual public float MissChance
+        {
+            get
+            {
+                float fMissChance;
+                if (this.bWeaponRequired)
+                {
+                    // Determine Miss Chance
+                    fMissChance = Math.Max(0, (StatConversion.YELLOW_MISS_CHANCE_CAP[3] - CState.m_Stats.PhysicalHit));
+                }
                 else if (CState != null && CState.m_Stats != null)
-                    return Math.Max(1f, 1f - (StatConversion.GetSpellMiss(3, false) - CState.m_Stats.SpellHit));
+                    fMissChance = Math.Max(0, (StatConversion.GetSpellMiss(3, false) - CState.m_Stats.SpellHit));
                 else if (this.uRange == 0)
-                    return 1;
-                return 1 - StatConversion.GetSpellMiss(3, false);
+                    fMissChance = 0;
+                else
+                    fMissChance = StatConversion.GetSpellMiss(3, false);
+                return fMissChance;
             }
         }
 

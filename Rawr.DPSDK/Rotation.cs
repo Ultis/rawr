@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Rawr.Base.Algorithms;
 
 namespace Rawr.DK
 {
@@ -358,129 +359,7 @@ namespace Rawr.DK
 
         public void Solver()
         {
-            return; // Short circuit this for now.
-            ResetRotation();
-            // Let's do some basic rune tracking internal to the function before doing the heavy cost building.
-            int[] ResourcesAvailable = new int[EnumHelper.GetCount(typeof(DKCostTypes))];
-
-            AbilityDK_IcyTouch IT = new AbilityDK_IcyTouch(m_CT.m_CState);
-            AbilityDK_PlagueStrike PS = new AbilityDK_PlagueStrike(m_CT.m_CState);
-            // RP:  Unlikely to start w/ RP abilities to open.
-            AbilityDK_RuneStrike RS = new AbilityDK_RuneStrike(m_CT.m_CState);
-            AbilityDK_DeathCoil DC = new AbilityDK_DeathCoil(m_CT.m_CState);
-            AbilityDK_FrostStrike FS = new AbilityDK_FrostStrike(m_CT.m_CState);
-            // Unique Abilities for a given Spec:
-            AbilityDK_DancingRuneWeapon DRW = new AbilityDK_DancingRuneWeapon(m_CT.m_CState);
-            DarkTranformation Dark = new DarkTranformation(m_CT.m_CState);
-
-            // Setup our working lists:
-            List<AbilityDK_Base> l_Openning = new List<AbilityDK_Base>();
-
-            if (m_bThreat)
-            {
-                l_Openning.Sort(AbilityDK_Base.CompareThreatByRunes);
-            }
-            else
-            {
-                l_Openning.Sort(AbilityDK_Base.CompareDamageByRunes);
-            }
-
-            // Sorted by DPS or TPS per rune.  So if any single rune ability will do
-            // More for that single rune than a multi-rune ability, we'll use that.
-            // Let's actually open w/ IT & PS
-            // then move on to 2ndary abilities.
-
-            ml_Rot.Add(IT); // F
-            ml_Rot.Add(IT.ml_TriggeredAbility[0]);
-            ml_Rot.Add(PS); // U
-            ml_Rot.Add(PS.ml_TriggeredAbility[0]);
-
-            if (m_CT.m_CState.m_Spec == Type.Frost)
-            {
-                ResourcesAvailable[(int)DKCostTypes.Death] = 2;
-                ResourcesAvailable[(int)DKCostTypes.Blood] = 0;
-            }
-            else
-            {
-                ResourcesAvailable[(int)DKCostTypes.Blood] = 2;
-                ResourcesAvailable[(int)DKCostTypes.Death] = 0;
-            }
-            ResourcesAvailable[(int)DKCostTypes.Frost] = 1;
-            ResourcesAvailable[(int)DKCostTypes.UnHoly] = 1;
-            ResourcesAvailable[(int)DKCostTypes.RunicPower] = 0;
-
-            List<AbilityDK_Base> RPList = new List<AbilityDK_Base>();
-            int MaxIterations = 2;
-            for (int i = 0; i < MaxIterations; i++)
-            {
-                // Do this until we're out of runes.
-                while (ResourcesAvailable[(int)DKCostTypes.Blood] != 0
-                    || ResourcesAvailable[(int)DKCostTypes.Frost] != 0
-                    || ResourcesAvailable[(int)DKCostTypes.UnHoly] != 0
-                    || ResourcesAvailable[(int)DKCostTypes.Death] != 0)
-                {
-                    // TODO: Integrate Ability CD & durations.
-                    RPList = GetFilteredListOfAbilities(ResourcesAvailable, m_CT.m_CState);
-                    foreach (AbilityDK_Base ab in RPList)
-                    {
-                        ab.UpdateCombatState(m_CT.m_CState);
-                    }
-                    if (m_bThreat)
-                        RPList.Sort(AbilityDK_Base.CompareTPSByRunes);
-                    else
-                        RPList.Sort(AbilityDK_Base.CompareDPSByRunes);
-                    ml_Rot.Add(RPList[0]);
-                    ProcessRunningRunes(ResourcesAvailable, RPList[0].AbilityCost);
-                }
-                // reset runes for multiple passes:
-                if (m_CT.m_CState.m_Spec == Type.Frost)
-                {
-                    ResourcesAvailable[(int)DKCostTypes.Death] = 2;
-                    ResourcesAvailable[(int)DKCostTypes.Blood] = 0;
-                }
-                else
-                {
-                    ResourcesAvailable[(int)DKCostTypes.Blood] = 2;
-                    ResourcesAvailable[(int)DKCostTypes.Death] = 0;
-                }
-                ResourcesAvailable[(int)DKCostTypes.Frost] = 2;
-                ResourcesAvailable[(int)DKCostTypes.UnHoly] = 2;
-            }
-
-            #region Runic Power
-            // How much RP do we have at this point?
-            foreach (AbilityDK_Base ab in ml_Rot)
-                m_RunicPower += ab.RunicPower;
-            m_RunicPower = (int)((float)m_RunicPower);
-            if (m_CT.m_CState.m_Talents.Butchery > 0)
-                m_RunicPower -= (int)((CurRotationDuration / 5) * m_CT.m_CState.m_Stats.RPp5);
-
-            // Which RP ability should we use?
-            RPList = new List<AbilityDK_Base>();
-            if (GetRotationType(m_CT.m_CState.m_Talents) == Type.Blood && m_CT.m_CState.m_Presence == Presence.Blood)
-                // We can only RS at will when in blood presence & we'll say for the blood spec as well.
-                RPList.Add(RS);
-            RPList.Add(DC);
-            RPList.Add(FS);
-
-            if (m_bThreat)
-                RPList.Sort(AbilityDK_Base.CompareThreatByRP);
-            else
-                RPList.Sort(AbilityDK_Base.CompareDamageByRP);
-            // we need to add DRW if DRW is being factored in
-            ml_Rot.Add(DRW);
-            m_RunicPower += DRW.RunicPower;
-            // Burn the remainder.
-            for (int RPAbCount = Math.Abs(m_RunicPower / RPList[0].RunicPower); RPAbCount > 0; RPAbCount--)
-            {
-                ml_Rot.Add(RPList[0]);
-                m_RunicPower += RPList[0].RunicPower;
-            }
-            #endregion
-
-            BuildCosts();
-
-            ReportRotation(l_Openning, "Rotation by Solver.");
+            //ReportRotation("Rotation by Solver.");
         }
 
         #region Preset Rotation
@@ -1482,6 +1361,17 @@ namespace Rawr.DK
             }
             else
                 abCost[(int)DKCostTypes.Death] = m_DeathRunes;
+#if false
+            // Blood Tap
+            // Free Death Rune every 60 Sec.
+            float BT_DeathRunes = 0;
+            BT_DeathRunes = CurRotationDuration / (60f - ((float)m_CT.m_CState.m_Talents.ImprovedBloodTap * 15f));
+            // TODO: Start handling partial runes
+            m_DeathRunes -= (int)BT_DeathRunes;
+            abCost[(int)DKCostTypes.Death] = m_DeathRunes;
+            
+#endif
+
             int hiRuneIndex = DKCombatTable.GetHighestRuneCountIndex(abCost);
             int DeathRunesSpent = 0;
             DeathRunesSpent = DKCombatTable.SpendDeathRunes(abCost, DeathRunesSpent);
@@ -1492,10 +1382,10 @@ namespace Rawr.DK
             int BRCD = m_BloodRunes * m_SingleRuneCD;
             int FRCD = m_FrostRunes * m_SingleRuneCD;
             int URCD = m_UnholyRunes * m_SingleRuneCD;
-            int DRCD = m_DeathRunes * m_SingleRuneCD;
+//            int DRCD = (m_DeathRunes - (int)BT_DeathRunes) * m_SingleRuneCD; // Blood Tap runes are free.
+            int DRCD = m_DeathRunes * m_SingleRuneCD; // Blood Tap runes are free.
             if (curRotationType == Type.Unholy) DRCD /= 2;
             //What about multi-rune abilities?
-//            m_TotalRuneCD = Math.Max(Math.Max(BRCD, FRCD), Math.Max(URCD, DRCD)); // Max CD of the runes.
             m_TotalRuneCD = (BRCD + FRCD + URCD + DRCD)/3; // Max CD of the runes.
             // Assume that we can't get a full CD renewed from Runic Empowerment.
             // So we'll distribute the RE procs over all Rune types and bleed some time off as well.
