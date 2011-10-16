@@ -412,17 +412,22 @@ namespace Rawr
             get { return _allTemplates; }
         }
 
+        public static List<GemmingTemplate> GetModelTemplates(CalculationsBase model)
+        {
+            List<GemmingTemplate> list;
+            if (!AllTemplates.TryGetValue(model.Name, out list))
+            {
+                list = new List<GemmingTemplate>(model.DefaultGemmingTemplates);
+                AllTemplates[model.Name] = list;
+            }
+            return list;
+        }
+
         public static List<GemmingTemplate> CurrentTemplates
         {
             get
             {
-                List<GemmingTemplate> list;
-                if (!AllTemplates.TryGetValue(Calculations.Instance.Name, out list))
-                {
-                    list = new List<GemmingTemplate>(Calculations.Instance.DefaultGemmingTemplates);
-                    AllTemplates[Calculations.Instance.Name] = list;
-                }
-                return list;
+                return GetModelTemplates(Calculations.Instance);
             }
         }
 

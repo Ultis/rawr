@@ -241,8 +241,13 @@ namespace Rawr
                 if (_primaryProfession != value)
                 {
                     _primaryProfession = value;
-                    Calculations.UpdateProfessions(this);
-                    ValidateActiveBuffs();
+                    // this can be called while loading the xml, at that point the calculations is not set yet
+                    // also we're not exactly changing value, just restoring to stored values
+                    if (!IsLoading)
+                    {
+                        Calculations.UpdateProfessions(this);
+                        ValidateActiveBuffs();
+                    }
                 }
             }
         }
@@ -264,8 +269,11 @@ namespace Rawr
                 if (_secondaryProfession != value)
                 {
                     _secondaryProfession = value;
-                    Calculations.UpdateProfessions(this);
-                    ValidateActiveBuffs();
+                    if (!IsLoading)
+                    {
+                        Calculations.UpdateProfessions(this);
+                        ValidateActiveBuffs();
+                    }
                 }
             }
         }
