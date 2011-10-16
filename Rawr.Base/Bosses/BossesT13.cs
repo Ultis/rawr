@@ -245,9 +245,9 @@ namespace Rawr.Bosses
             Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T13_LFR, BossHandler.TierLevels.T13_10, BossHandler.TierLevels.T13_25, BossHandler.TierLevels.T13_10H, BossHandler.TierLevels.T13_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 53167148f, 17693752f, 53167148f, 27829008f, 83658808f };
+            Health = new float[] { 53167148f, 30062200f, 53167148f, 27829008f, 83658808f };
             MobType = (int)MOB_TYPES.ELEMENTAL;
-            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
+            BerserkTimer = new int[] { 6 * 60, 6 * 60, 6 * 60, 6 * 60, 6 * 60 };
             SpeedKillTimer = new int[] { 7 * 60, 7 * 60, 7 * 60, 7 * 60, 7 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f, 0.95f };
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f, 0.00f };
@@ -313,7 +313,7 @@ namespace Rawr.Bosses
             Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T13_LFR, BossHandler.TierLevels.T13_10, BossHandler.TierLevels.T13_25, BossHandler.TierLevels.T13_10H, BossHandler.TierLevels.T13_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 40000000f, 13100001f, 40000000f, 20000000f, 60000004f };
+            Health = new float[] { 40000000f, 47240601f, 40000000f, 20000000f, 60000004f };
             MobType = (int)MOB_TYPES.UNCATEGORIZED;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 7 * 60, 7 * 60, 7 * 60, 7 * 60, 7 * 60 };
@@ -386,7 +386,7 @@ namespace Rawr.Bosses
             Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T13_LFR, BossHandler.TierLevels.T13_10, BossHandler.TierLevels.T13_25, BossHandler.TierLevels.T13_10H, BossHandler.TierLevels.T13_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 115954200f, 38651400f, 115954200f, 71892800f, 197122144f }; // TODO: double check 25-man normal health pool
+            Health = new float[] { 115954200f, 47240601f, 115954200f, 71892800f, 197122144f }; // TODO: double check 25-man normal health pool
             MobType = (int)MOB_TYPES.UNCATEGORIZED;
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 8 * 60, 8 * 60, 8 * 60, 8 * 60, 8 * 60 };

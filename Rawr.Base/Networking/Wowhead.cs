@@ -127,7 +127,546 @@ namespace Rawr
                     _pvpTokenMap["392"] = "Honor Points";
                     _pvpTokenMap["391"] = "Tol Barad Commendation";
                     _pvpTokenMap["62898"] = "Tol Barad Commendation";
-
+                    #region Season 9
+                    #region Death Knight
+                    _pvpTokenMap["60408"] = "Vicious Gladiator's Dreadplate Chestpiece";
+                    _pvpTokenMap["60409"] = "Vicious Gladiator's Dreadplate Gauntlets";
+                    _pvpTokenMap["60410"] = "Vicious Gladiator's Dreadplate Helm";
+                    _pvpTokenMap["60411"] = "Vicious Gladiator's Dreadplate Legguards";
+                    _pvpTokenMap["60412"] = "Vicious Gladiator's Dreadplate Shoulders";
+                    #endregion
+                    #region Druid
+                    #region Refuge
+                    _pvpTokenMap["60448"] = "Vicious Gladiator's Kodohide Gloves";
+                    _pvpTokenMap["60449"] = "Vicious Gladiator's Kodohide Helm";
+                    _pvpTokenMap["60450"] = "Vicious Gladiator's Kodohide Legguards";
+                    _pvpTokenMap["60451"] = "Vicious Gladiator's Kodohide Robes";
+                    _pvpTokenMap["60452"] = "Vicious Gladiator's Kodohide Spaulders";
+                    #endregion
+                    #region Sanctuary
+                    _pvpTokenMap["60443"] = "Vicious Gladiator's Dragonhide Gloves";
+                    _pvpTokenMap["60444"] = "Vicious Gladiator's Dragonhide Helm";
+                    _pvpTokenMap["60445"] = "Vicious Gladiator's Dragonhide Legguards";
+                    _pvpTokenMap["60446"] = "Vicious Gladiator's Dragonhide Robes";
+                    _pvpTokenMap["60447"] = "Vicious Gladiator's Dragonhide Spaulders";
+                    #endregion
+                    #region Wildhide
+                    _pvpTokenMap["60453"] = "Vicious Gladiator's Wyrmhide Gloves";
+                    _pvpTokenMap["60454"] = "Vicious Gladiator's Wyrmhide Helm";
+                    _pvpTokenMap["60455"] = "Vicious Gladiator's Wyrmhide Legguards";
+                    _pvpTokenMap["60456"] = "Vicious Gladiator's Wyrmhide Robes";
+                    _pvpTokenMap["60457"] = "Vicious Gladiator's Wyrmhide Spaulders";
+                    #endregion
+                    #endregion
+                    #region Hunter
+                    _pvpTokenMap["60423"] = "Vicious Gladiator's Chain Armor";
+                    _pvpTokenMap["60424"] = "Vicious Gladiator's Chain Gauntlets";
+                    _pvpTokenMap["60425"] = "Vicious Gladiator's Chain Helm";
+                    _pvpTokenMap["60426"] = "Vicious Gladiator's Chain Leggings";
+                    _pvpTokenMap["60427"] = "Vicious Gladiator's Chain Spaulders";
+                   #endregion
+                    #region Mage
+                    _pvpTokenMap["60463"] = "Vicious Gladiator's Silk Handguards";
+                    _pvpTokenMap["60464"] = "Vicious Gladiator's Silk Cowl";
+                    _pvpTokenMap["60465"] = "Vicious Gladiator's Silk Trousers";
+                    _pvpTokenMap["60466"] = "Vicious Gladiator's Silk Robe";
+                    _pvpTokenMap["60467"] = "Vicious Gladiator's Silk Amice";
+                    #endregion
+                    #region Paladin
+                    #region Redemption
+                    _pvpTokenMap["60601"] = "Vicious Gladiator's Ornamented Chestguard";
+                    _pvpTokenMap["60602"] = "Vicious Gladiator's Ornamented Gloves";
+                    _pvpTokenMap["60603"] = "Vicious Gladiator's Ornamented Headcover";
+                    _pvpTokenMap["60604"] = "Vicious Gladiator's Ornamented Legplates";
+                    _pvpTokenMap["60605"] = "Vicious Gladiator's Ornamented Spaulders";
+                    #endregion
+                    #region Vindication
+                    _pvpTokenMap["60413"] = "Vicious Gladiator's Scaled Chestpiece";
+                    _pvpTokenMap["60414"] = "Vicious Gladiator's Scaled Gauntlets";
+                    _pvpTokenMap["60415"] = "Vicious Gladiator's Scaled Helm";
+                    _pvpTokenMap["60416"] = "Vicious Gladiator's Scaled Legguards";
+                    _pvpTokenMap["60417"] = "Vicious Gladiator's Scaled Shoulders";
+                    #endregion
+                    #endregion
+                    #region Priest
+                    #region Investiture
+                    _pvpTokenMap["60468"] = "Vicious Gladiator's Mooncloth Gloves";
+                    _pvpTokenMap["60469"] = "Vicious Gladiator's Mooncloth Helm";
+                    _pvpTokenMap["60470"] = "Vicious Gladiator's Mooncloth Leggings";
+                    _pvpTokenMap["60471"] = "Vicious Gladiator's Mooncloth Robe";
+                    _pvpTokenMap["60472"] = "Vicious Gladiator's Mooncloth Mantle";
+                    #endregion
+                    #region Raiment
+                    _pvpTokenMap["60473"] = "Vicious Gladiator's Satin Gloves";
+                    _pvpTokenMap["60474"] = "Vicious Gladiator's Satin Hood";
+                    _pvpTokenMap["60475"] = "Vicious Gladiator's Satin Leggings";
+                    _pvpTokenMap["60476"] = "Vicious Gladiator's Satin Robe";
+                    _pvpTokenMap["60477"] = "Vicious Gladiator's Satin Mantle";
+                    #endregion
+                    #endregion
+                    #region Rogue
+                    _pvpTokenMap["60458"] = "Vicious Gladiator's Leather Tunic";
+                    _pvpTokenMap["60459"] = "Vicious Gladiator's Leather Gloves";
+                    _pvpTokenMap["60460"] = "Vicious Gladiator's Leather Helm";
+                    _pvpTokenMap["60461"] = "Vicious Gladiator's Leather Legguards";
+                    _pvpTokenMap["60462"] = "Vicious Gladiator's Leather Spaulders";
+                    #endregion
+                    #region Shaman
+                    #region Earthshaker
+                    _pvpTokenMap["60433"] = "Vicious Gladiator's Linked Armor";
+                    _pvpTokenMap["60434"] = "Vicious Gladiator's Linked Gauntlets";
+                    _pvpTokenMap["60435"] = "Vicious Gladiator's Linked Helm";
+                    _pvpTokenMap["60436"] = "Vicious Gladiator's Linked Leggings";
+                    _pvpTokenMap["60437"] = "Vicious Gladiator's Linked Spaulders";
+                    #endregion
+                    #region Thunderfist
+                    _pvpTokenMap["60438"] = "Vicious Gladiator's Mail Armor";
+                    _pvpTokenMap["60439"] = "Vicious Gladiator's Mail Gauntlets";
+                    _pvpTokenMap["60440"] = "Vicious Gladiator's Mail Helm";
+                    _pvpTokenMap["60441"] = "Vicious Gladiator's Mail Leggings";
+                    _pvpTokenMap["60442"] = "Vicious Gladiator's Mail Spaulders";
+                    #endregion
+                    #region Wartide
+                    _pvpTokenMap["60428"] = "Vicious Gladiator's Ringmail Armor";
+                    _pvpTokenMap["60429"] = "Vicious Gladiator's Ringmail Gauntlets";
+                    _pvpTokenMap["60430"] = "Vicious Gladiator's Ringmail Helm";
+                    _pvpTokenMap["60431"] = "Vicious Gladiator's Ringmail Leggings";
+                    _pvpTokenMap["60432"] = "Vicious Gladiator's Ringmail Spaulders";
+                    #endregion
+                    #endregion
+                    #region Warlock
+                    _pvpTokenMap["60478"] = "Vicious Gladiator's Felweave Handguards";
+                    _pvpTokenMap["60479"] = "Vicious Gladiator's Felweave Cowl";
+                    _pvpTokenMap["60480"] = "Vicious Gladiator's Felweave Trousers";
+                    _pvpTokenMap["60481"] = "Vicious Gladiator's Felweave Raiment";
+                    _pvpTokenMap["60482"] = "Vicious Gladiator's Felweave Amice";
+                    #endregion
+                    #region Warrior
+                    _pvpTokenMap["60418"] = "Vicious Gladiator's Plate Chestpiece";
+                    _pvpTokenMap["60419"] = "Vicious Gladiator's Plate Gauntlets";
+                    _pvpTokenMap["60420"] = "Vicious Gladiator's Plate Helm";
+                    _pvpTokenMap["60421"] = "Vicious Gladiator's Plate Legguards";
+                    _pvpTokenMap["60422"] = "Vicious Gladiator's Plate Shoulders";
+                    #endregion
+                    #region Non-Class Armor Tokens
+                    #region Feet
+                    _pvpTokenMap["60593"] = "Vicious Gladiator's Boots of Alacrity";
+                    _pvpTokenMap["60587"] = "Vicious Gladiator's Boots of Cruelty";
+                    _pvpTokenMap["60607"] = "Vicious Gladiator's Footguards of Alacrity";
+                    _pvpTokenMap["60581"] = "Vicious Gladiator's Footguards of Meditation";
+                    _pvpTokenMap["60516"] = "Vicious Gladiator's Greaves of Alacrity";
+                    _pvpTokenMap["60540"] = "Vicious Gladiator's Greaves of Meditation";
+                    _pvpTokenMap["60557"] = "Vicious Gladiator's Sabatons of Alacrity";
+                    _pvpTokenMap["60567"] = "Vicious Gladiator's Sabatons of Alacrity";
+                    _pvpTokenMap["60554"] = "Vicious Gladiator's Sabatons of Cruelty";
+                    _pvpTokenMap["60534"] = "Vicious Gladiator's Sabatons of Meditation";
+                    _pvpTokenMap["60630"] = "Vicious Gladiator's Treads of Alacrity";
+                    _pvpTokenMap["60613"] = "Vicious Gladiator's Treads of Cruelty";
+                    _pvpTokenMap["60636"] = "Vicious Gladiator's Treads of Meditation";
+                    _pvpTokenMap["60513"] = "Vicious Gladiator's Warboots of Alacrity";
+                    _pvpTokenMap["60509"] = "Vicious Gladiator's Warboots of Cruelty";
+                    #endregion
+                    #region Off-Hand
+                    _pvpTokenMap["61357"] = "Vicious Gladiator's Endgame";
+                    _pvpTokenMap["61358"] = "Vicious Gladiator's Reprieve";
+                    #endregion
+                    #region Shields
+                    _pvpTokenMap["61360"] = "Vicious Gladiator's Barrier";
+                    _pvpTokenMap["61361"] = "Vicious Gladiator's Redoubt";
+                    _pvpTokenMap["61359"] = "Vicious Gladiator's Shield Wall";
+                    #endregion
+                    #endregion
+                    #region Weapon Tokens
+                    _pvpTokenMap["61351"] = "Vicious Gladiator's Baton of Light";
+                    _pvpTokenMap["61341"] = "Vicious Gladiator's Battle Staff";
+                    _pvpTokenMap["61336"] = "Vicious Gladiator's Bonecracker";
+                    _pvpTokenMap["61339"] = "Vicious Gladiator's Bonegrinder";
+                    _pvpTokenMap["61324"] = "Vicious Gladiator's Cleaver";
+                    _pvpTokenMap["61326"] = "Vicious Gladiator's Decapitator";
+                    _pvpTokenMap["61342"] = "Vicious Gladiator's Energy Staff";
+                    _pvpTokenMap["61338"] = "Vicious Gladiator's Gavel";
+                    _pvpTokenMap["61346"] = "Vicious Gladiator's Greatsword";
+                    _pvpTokenMap["61325"] = "Vicious Gladiator's Hacker";
+                    _pvpTokenMap["61348"] = "Vicious Gladiator's Hatchet";
+                    _pvpTokenMap["61355"] = "Vicious Gladiator's Heavy Crossbow";
+                    _pvpTokenMap["61332"] = "Vicious Gladiator's Left Render";
+                    _pvpTokenMap["61331"] = "Vicious Gladiator's Left Ripper";
+                    _pvpTokenMap["61353"] = "Vicious Gladiator's Longbow";
+                    _pvpTokenMap["61340"] = "Vicious Gladiator's Pike";
+                    _pvpTokenMap["61335"] = "Vicious Gladiator's Pummeler";
+                    _pvpTokenMap["61345"] = "Vicious Gladiator's Quickblade";
+                    _pvpTokenMap["61354"] = "Vicious Gladiator's Rifle";
+                    _pvpTokenMap["61333"] = "Vicious Gladiator's Right Render";
+                    _pvpTokenMap["61330"] = "Vicious Gladiator's Right Ripper";
+                    _pvpTokenMap["61327"] = "Vicious Gladiator's Shanker";
+                    _pvpTokenMap["61328"] = "Vicious Gladiator's Shiv";
+                    _pvpTokenMap["61344"] = "Vicious Gladiator's Slicer";
+                    _pvpTokenMap["61329"] = "Vicious Gladiator's Spellblade";
+                    _pvpTokenMap["61343"] = "Vicious Gladiator's Staff";
+                    _pvpTokenMap["61350"] = "Vicious Gladiator's Touch of Defeat";
+                    _pvpTokenMap["61347"] = "Vicious Gladiator's War Edge";
+                    #endregion
+                    #endregion
+                    #region Season 10
+                    #region Death Knight
+                    _pvpTokenMap["70244"] = "Ruthless Gladiator's Dreadplate Chestpiece";
+                    _pvpTokenMap["70245"] = "Ruthless Gladiator's Dreadplate Gauntlets";
+                    _pvpTokenMap["70246"] = "Ruthless Gladiator's Dreadplate Helm";
+                    _pvpTokenMap["70247"] = "Ruthless Gladiator's Dreadplate Legguards";
+                    _pvpTokenMap["70248"] = "Ruthless Gladiator's Dreadplate Shoulders";
+                    #endregion
+                    #region Druid
+                    #region Refuge
+                    _pvpTokenMap["70284"] = "Ruthless Gladiator's Kodohide Gloves";
+                    _pvpTokenMap["70285"] = "Ruthless Gladiator's Kodohide Helm";
+                    _pvpTokenMap["70286"] = "Ruthless Gladiator's Kodohide Legguards";
+                    _pvpTokenMap["70287"] = "Ruthless Gladiator's Kodohide Robes";
+                    _pvpTokenMap["70288"] = "Ruthless Gladiator's Kodohide Spaulders";
+                    #endregion
+                    #region Sanctuary
+                    _pvpTokenMap["70279"] = "Ruthless Gladiator's Dragonhide Gloves";
+                    _pvpTokenMap["70280"] = "Ruthless Gladiator's Dragonhide Helm";
+                    _pvpTokenMap["70281"] = "Ruthless Gladiator's Dragonhide Legguards";
+                    _pvpTokenMap["70282"] = "Ruthless Gladiator's Dragonhide Robes";
+                    _pvpTokenMap["70283"] = "Ruthless Gladiator's Dragonhide Spaulders";
+                    #endregion
+                    #region Wildhide
+                    _pvpTokenMap["70289"] = "Ruthless Gladiator's Wyrmhide Gloves";
+                    _pvpTokenMap["70290"] = "Ruthless Gladiator's Wyrmhide Helm";
+                    _pvpTokenMap["70291"] = "Ruthless Gladiator's Wyrmhide Legguards";
+                    _pvpTokenMap["70292"] = "Ruthless Gladiator's Wyrmhide Robes";
+                    _pvpTokenMap["70293"] = "Ruthless Gladiator's Wyrmhide Spaulders";
+                    #endregion
+                    #endregion
+                    #region Hunter
+                    _pvpTokenMap["70259"] = "Ruthless Gladiator's Chain Armor";
+                    _pvpTokenMap["70260"] = "Ruthless Gladiator's Chain Gauntlets";
+                    _pvpTokenMap["70261"] = "Ruthless Gladiator's Chain Helm";
+                    _pvpTokenMap["70262"] = "Ruthless Gladiator's Chain Leggings";
+                    _pvpTokenMap["70263"] = "Ruthless Gladiator's Chain Spaulders";
+                   #endregion
+                    #region Mage
+                    _pvpTokenMap["70299"] = "Ruthless Gladiator's Silk Handguards";
+                    _pvpTokenMap["70300"] = "Ruthless Gladiator's Silk Cowl";
+                    _pvpTokenMap["70301"] = "Ruthless Gladiator's Silk Trousers";
+                    _pvpTokenMap["70302"] = "Ruthless Gladiator's Silk Robe";
+                    _pvpTokenMap["70303"] = "Ruthless Gladiator's Silk Amice";
+                    #endregion
+                    #region Paladin
+                    #region Redemption
+                    _pvpTokenMap["70353"] = "Ruthless Gladiator's Ornamented Chestguard";
+                    _pvpTokenMap["70354"] = "Ruthless Gladiator's Ornamented Gloves";
+                    _pvpTokenMap["70355"] = "Ruthless Gladiator's Ornamented Headcover";
+                    _pvpTokenMap["70356"] = "Ruthless Gladiator's Ornamented Legplates";
+                    _pvpTokenMap["70357"] = "Ruthless Gladiator's Ornamented Spaulders";
+                    #endregion
+                    #region Vindication
+                    _pvpTokenMap["70249"] = "Ruthless Gladiator's Scaled Chestpiece";
+                    _pvpTokenMap["70250"] = "Ruthless Gladiator's Scaled Gauntlets";
+                    _pvpTokenMap["70251"] = "Ruthless Gladiator's Scaled Helm";
+                    _pvpTokenMap["70252"] = "Ruthless Gladiator's Scaled Legguards";
+                    _pvpTokenMap["70253"] = "Ruthless Gladiator's Scaled Shoulders";
+                    #endregion
+                    #endregion
+                    #region Priest
+                    #region Investiture
+                    _pvpTokenMap["70304"] = "Ruthless Gladiator's Mooncloth Gloves";
+                    _pvpTokenMap["70305"] = "Ruthless Gladiator's Mooncloth Helm";
+                    _pvpTokenMap["70306"] = "Ruthless Gladiator's Mooncloth Leggings";
+                    _pvpTokenMap["70307"] = "Ruthless Gladiator's Mooncloth Robe";
+                    _pvpTokenMap["70308"] = "Ruthless Gladiator's Mooncloth Mantle";
+                    #endregion
+                    #region Raiment
+                    _pvpTokenMap["70309"] = "Ruthless Gladiator's Satin Gloves";
+                    _pvpTokenMap["70310"] = "Ruthless Gladiator's Satin Hood";
+                    _pvpTokenMap["70311"] = "Ruthless Gladiator's Satin Leggings";
+                    _pvpTokenMap["70312"] = "Ruthless Gladiator's Satin Robe";
+                    _pvpTokenMap["70313"] = "Ruthless Gladiator's Satin Mantle";
+                    #endregion
+                    #endregion
+                    #region Rogue
+                    _pvpTokenMap["70294"] = "Ruthless Gladiator's Leather Tunic";
+                    _pvpTokenMap["70295"] = "Ruthless Gladiator's Leather Gloves";
+                    _pvpTokenMap["70296"] = "Ruthless Gladiator's Leather Helm";
+                    _pvpTokenMap["70297"] = "Ruthless Gladiator's Leather Legguards";
+                    _pvpTokenMap["70298"] = "Ruthless Gladiator's Leather Spaulders";
+                    #endregion
+                    #region Shaman
+                    #region Earthshaker
+                    _pvpTokenMap["70269"] = "Ruthless Gladiator's Linked Armor";
+                    _pvpTokenMap["70270"] = "Ruthless Gladiator's Linked Gauntlets";
+                    _pvpTokenMap["70271"] = "Ruthless Gladiator's Linked Helm";
+                    _pvpTokenMap["70272"] = "Ruthless Gladiator's Linked Leggings";
+                    _pvpTokenMap["70273"] = "Ruthless Gladiator's Linked Spaulders";
+                    #endregion
+                    #region Thunderfist
+                    _pvpTokenMap["70274"] = "Ruthless Gladiator's Mail Armor";
+                    _pvpTokenMap["70275"] = "Ruthless Gladiator's Mail Gauntlets";
+                    _pvpTokenMap["70276"] = "Ruthless Gladiator's Mail Helm";
+                    _pvpTokenMap["70277"] = "Ruthless Gladiator's Mail Leggings";
+                    _pvpTokenMap["70278"] = "Ruthless Gladiator's Mail Spaulders";
+                    #endregion
+                    #region Wartide
+                    _pvpTokenMap["70264"] = "Ruthless Gladiator's Ringmail Armor";
+                    _pvpTokenMap["70265"] = "Ruthless Gladiator's Ringmail Gauntlets";
+                    _pvpTokenMap["70266"] = "Ruthless Gladiator's Ringmail Helm";
+                    _pvpTokenMap["70267"] = "Ruthless Gladiator's Ringmail Leggings";
+                    _pvpTokenMap["70268"] = "Ruthless Gladiator's Ringmail Spaulders";
+                    #endregion
+                    #endregion
+                    #region Warlock
+                    _pvpTokenMap["70314"] = "Ruthless Gladiator's Felweave Handguards";
+                    _pvpTokenMap["70315"] = "Ruthless Gladiator's Felweave Cowl";
+                    _pvpTokenMap["70316"] = "Ruthless Gladiator's Felweave Trousers";
+                    _pvpTokenMap["70317"] = "Ruthless Gladiator's Felweave Raiment";
+                    _pvpTokenMap["70318"] = "Ruthless Gladiator's Felweave Amice";
+                    #endregion
+                    #region Warrior
+                    _pvpTokenMap["70254"] = "Ruthless Gladiator's Plate Chestpiece";
+                    _pvpTokenMap["70255"] = "Ruthless Gladiator's Plate Gauntlets";
+                    _pvpTokenMap["70256"] = "Ruthless Gladiator's Plate Helm";
+                    _pvpTokenMap["70257"] = "Ruthless Gladiator's Plate Legguards";
+                    _pvpTokenMap["70258"] = "Ruthless Gladiator's Plate Shoulders";
+                    #endregion
+                    #region Non-Class Armor Tokens
+                    #region Feet
+                    _pvpTokenMap["70351"] = "Ruthless Gladiator's Boots of Alacrity";
+                    _pvpTokenMap["70348"] = "Ruthless Gladiator's Boots of Cruelty";
+                    _pvpTokenMap["70358"] = "Ruthless Gladiator's Footguards of Alacrity";
+                    _pvpTokenMap["70344"] = "Ruthless Gladiator's Footguards of Meditation";
+                    _pvpTokenMap["70324"] = "Ruthless Gladiator's Greaves of Alacrity";
+                    _pvpTokenMap["70333"] = "Ruthless Gladiator's Greaves of Meditation";
+                    _pvpTokenMap["70337"] = "Ruthless Gladiator's Sabatons of Alacrity";
+                    _pvpTokenMap["70341"] = "Ruthless Gladiator's Sabatons of Alacrity";
+                    _pvpTokenMap["70335"] = "Ruthless Gladiator's Sabatons of Cruelty";
+                    _pvpTokenMap["70329"] = "Ruthless Gladiator's Sabatons of Meditation";
+                    _pvpTokenMap["70364"] = "Ruthless Gladiator's Treads of Alacrity";
+                    _pvpTokenMap["70361"] = "Ruthless Gladiator's Treads of Cruelty";
+                    _pvpTokenMap["70367"] = "Ruthless Gladiator's Treads of Meditation";
+                    _pvpTokenMap["70323"] = "Ruthless Gladiator's Warboots of Alacrity";
+                    _pvpTokenMap["70321"] = "Ruthless Gladiator's Warboots of Cruelty";
+                    #endregion
+                    #region Off-Hand
+                    _pvpTokenMap["70239"] = "Ruthless Gladiator's Endgame";
+                    _pvpTokenMap["70240"] = "Ruthless Gladiator's Reprieve";
+                    #endregion
+                    #region Shields
+                    _pvpTokenMap["70242"] = "Ruthless Gladiator's Barrier";
+                    _pvpTokenMap["70243"] = "Ruthless Gladiator's Redoubt";
+                    _pvpTokenMap["70241"] = "Ruthless Gladiator's Shield Wall";
+                    #endregion
+                    #endregion
+                    #region Weapon Tokens
+                    _pvpTokenMap["70235"] = "Ruthless Gladiator's Baton of Light";
+                    _pvpTokenMap["70226"] = "Ruthless Gladiator's Battle Staff";
+                    _pvpTokenMap["70222"] = "Ruthless Gladiator's Bonecracker";
+                    _pvpTokenMap["70224"] = "Ruthless Gladiator's Bonegrinder";
+                    _pvpTokenMap["70211"] = "Ruthless Gladiator's Cleaver";
+                    _pvpTokenMap["70213"] = "Ruthless Gladiator's Decapitator";
+                    _pvpTokenMap["70227"] = "Ruthless Gladiator's Energy Staff";
+                    _pvpTokenMap["70223"] = "Ruthless Gladiator's Gavel";
+                    _pvpTokenMap["70231"] = "Ruthless Gladiator's Greatsword";
+                    _pvpTokenMap["70212"] = "Ruthless Gladiator's Hacker";
+                    _pvpTokenMap["70233"] = "Ruthless Gladiator's Hatchet";
+                    _pvpTokenMap["70238"] = "Ruthless Gladiator's Heavy Crossbow";
+                    _pvpTokenMap["70219"] = "Ruthless Gladiator's Left Render";
+                    _pvpTokenMap["70218"] = "Ruthless Gladiator's Left Ripper";
+                    _pvpTokenMap["70236"] = "Ruthless Gladiator's Longbow";
+                    _pvpTokenMap["70225"] = "Ruthless Gladiator's Pike";
+                    _pvpTokenMap["70221"] = "Ruthless Gladiator's Pummeler";
+                    _pvpTokenMap["70230"] = "Ruthless Gladiator's Quickblade";
+                    _pvpTokenMap["70237"] = "Ruthless Gladiator's Rifle";
+                    _pvpTokenMap["70220"] = "Ruthless Gladiator's Right Render";
+                    _pvpTokenMap["70217"] = "Ruthless Gladiator's Right Ripper";
+                    _pvpTokenMap["70214"] = "Ruthless Gladiator's Shanker";
+                    _pvpTokenMap["70215"] = "Ruthless Gladiator's Shiv";
+                    _pvpTokenMap["70229"] = "Ruthless Gladiator's Slicer";
+                    _pvpTokenMap["70216"] = "Ruthless Gladiator's Spellblade";
+                    _pvpTokenMap["70228"] = "Ruthless Gladiator's Staff";
+                    _pvpTokenMap["70234"] = "Ruthless Gladiator's Touch of Defeat";
+                    _pvpTokenMap["70232"] = "Ruthless Gladiator's War Edge";
+                    #endregion
+                    #endregion
+                    #region Season 11
+                    #region Death Knight
+                    _pvpTokenMap["73620"] = "Cataclysmic Gladiator's Dreadplate Chestpiece";
+                    _pvpTokenMap["73619"] = "Cataclysmic Gladiator's Dreadplate Gauntlets";
+                    _pvpTokenMap["73618"] = "Cataclysmic Gladiator's Dreadplate Helm";
+                    _pvpTokenMap["73617"] = "Cataclysmic Gladiator's Dreadplate Legguards";
+                    _pvpTokenMap["73616"] = "Cataclysmic Gladiator's Dreadplate Shoulders";
+                    #endregion
+                    #region Druid
+                    #region Refuge
+                    _pvpTokenMap["73607"] = "Cataclysmic Gladiator's Kodohide Gloves";
+                    _pvpTokenMap["73606"] = "Cataclysmic Gladiator's Kodohide Helm";
+                    _pvpTokenMap["73605"] = "Cataclysmic Gladiator's Kodohide Legguards";
+                    _pvpTokenMap["73604"] = "Cataclysmic Gladiator's Kodohide Robes";
+                    _pvpTokenMap["73603"] = "Cataclysmic Gladiator's Kodohide Spaulders";
+                    #endregion
+                    #region Sanctuary
+                    _pvpTokenMap["73615"] = "Cataclysmic Gladiator's Dragonhide Gloves";
+                    _pvpTokenMap["73614"] = "Cataclysmic Gladiator's Dragonhide Helm";
+                    _pvpTokenMap["73613"] = "Cataclysmic Gladiator's Dragonhide Legguards";
+                    _pvpTokenMap["73612"] = "Cataclysmic Gladiator's Dragonhide Robes";
+                    _pvpTokenMap["73611"] = "Cataclysmic Gladiator's Dragonhide Spaulders";
+                    #endregion
+                    #region Wildhide
+                    _pvpTokenMap["73599"] = "Cataclysmic Gladiator's Wyrmhide Gloves";
+                    _pvpTokenMap["73598"] = "Cataclysmic Gladiator's Wyrmhide Helm";
+                    _pvpTokenMap["73597"] = "Cataclysmic Gladiator's Wyrmhide Legguards";
+                    _pvpTokenMap["73596"] = "Cataclysmic Gladiator's Wyrmhide Robes";
+                    _pvpTokenMap["73595"] = "Cataclysmic Gladiator's Wyrmhide Spaulders";
+                    #endregion
+                    #endregion
+                    #region Hunter
+                    _pvpTokenMap["73584"] = "Cataclysmic Gladiator's Chain Armor";
+                    _pvpTokenMap["73583"] = "Cataclysmic Gladiator's Chain Gauntlets";
+                    _pvpTokenMap["73582"] = "Cataclysmic Gladiator's Chain Helm";
+                    _pvpTokenMap["73581"] = "Cataclysmic Gladiator's Chain Leggings";
+                    _pvpTokenMap["73580"] = "Cataclysmic Gladiator's Chain Spaulders";
+                   #endregion
+                    #region Mage
+                    _pvpTokenMap["73576"] = "Cataclysmic Gladiator's Silk Handguards";
+                    _pvpTokenMap["73575"] = "Cataclysmic Gladiator's Silk Cowl";
+                    _pvpTokenMap["73574"] = "Cataclysmic Gladiator's Silk Trousers";
+                    _pvpTokenMap["73573"] = "Cataclysmic Gladiator's Silk Robe";
+                    _pvpTokenMap["73572"] = "Cataclysmic Gladiator's Silk Amice";
+                    #endregion
+                    #region Paladin
+                    #region Redemption
+                    _pvpTokenMap["73560"] = "Cataclysmic Gladiator's Ornamented Chestguard";
+                    _pvpTokenMap["73559"] = "Cataclysmic Gladiator's Ornamented Gloves";
+                    _pvpTokenMap["73558"] = "Cataclysmic Gladiator's Ornamented Headcover";
+                    _pvpTokenMap["73557"] = "Cataclysmic Gladiator's Ornamented Legplates";
+                    _pvpTokenMap["73556"] = "Cataclysmic Gladiator's Ornamented Spaulders";
+                    #endregion
+                    #region Vindication
+                    _pvpTokenMap["73571"] = "Cataclysmic Gladiator's Scaled Chestpiece";
+                    _pvpTokenMap["73570"] = "Cataclysmic Gladiator's Scaled Gauntlets";
+                    _pvpTokenMap["73569"] = "Cataclysmic Gladiator's Scaled Helm";
+                    _pvpTokenMap["73568"] = "Cataclysmic Gladiator's Scaled Legguards";
+                    _pvpTokenMap["73567"] = "Cataclysmic Gladiator's Scaled Shoulders";
+                    #endregion
+                    #endregion
+                    #region Priest
+                    #region Investiture
+                    _pvpTokenMap["73549"] = "Cataclysmic Gladiator's Mooncloth Gloves";
+                    _pvpTokenMap["73548"] = "Cataclysmic Gladiator's Mooncloth Helm";
+                    _pvpTokenMap["73547"] = "Cataclysmic Gladiator's Mooncloth Leggings";
+                    _pvpTokenMap["73546"] = "Cataclysmic Gladiator's Mooncloth Robe";
+                    _pvpTokenMap["73545"] = "Cataclysmic Gladiator's Mooncloth Mantle";
+                    #endregion
+                    #region Raiment
+                    _pvpTokenMap["73544"] = "Cataclysmic Gladiator's Satin Gloves";
+                    _pvpTokenMap["73543"] = "Cataclysmic Gladiator's Satin Hood";
+                    _pvpTokenMap["73542"] = "Cataclysmic Gladiator's Satin Leggings";
+                    _pvpTokenMap["73541"] = "Cataclysmic Gladiator's Satin Robe";
+                    _pvpTokenMap["73540"] = "Cataclysmic Gladiator's Satin Mantle";
+                    #endregion
+                    #endregion
+                    #region Rogue
+                    _pvpTokenMap["73527"] = "Cataclysmic Gladiator's Leather Tunic";
+                    _pvpTokenMap["73526"] = "Cataclysmic Gladiator's Leather Gloves";
+                    _pvpTokenMap["73525"] = "Cataclysmic Gladiator's Leather Helm";
+                    _pvpTokenMap["73524"] = "Cataclysmic Gladiator's Leather Legguards";
+                    _pvpTokenMap["73523"] = "Cataclysmic Gladiator's Leather Spaulders";
+                    #endregion
+                    #region Shaman
+                    #region Earthshaker
+                    _pvpTokenMap["73512"] = "Cataclysmic Gladiator's Linked Armor";
+                    _pvpTokenMap["73511"] = "Cataclysmic Gladiator's Linked Gauntlets";
+                    _pvpTokenMap["73510"] = "Cataclysmic Gladiator's Linked Helm";
+                    _pvpTokenMap["73509"] = "Cataclysmic Gladiator's Linked Leggings";
+                    _pvpTokenMap["73508"] = "Cataclysmic Gladiator's Linked Spaulders";
+                    #endregion
+                    #region Thunderfist
+                    _pvpTokenMap["73506"] = "Cataclysmic Gladiator's Mail Armor";
+                    _pvpTokenMap["73505"] = "Cataclysmic Gladiator's Mail Gauntlets";
+                    _pvpTokenMap["73504"] = "Cataclysmic Gladiator's Mail Helm";
+                    _pvpTokenMap["73503"] = "Cataclysmic Gladiator's Mail Leggings";
+                    _pvpTokenMap["73502"] = "Cataclysmic Gladiator's Mail Spaulders";
+                    #endregion
+                    #region Wartide
+                    _pvpTokenMap["73517"] = "Cataclysmic Gladiator's Ringmail Armor";
+                    _pvpTokenMap["73516"] = "Cataclysmic Gladiator's Ringmail Gauntlets";
+                    _pvpTokenMap["73515"] = "Cataclysmic Gladiator's Ringmail Helm";
+                    _pvpTokenMap["73514"] = "Cataclysmic Gladiator's Ringmail Leggings";
+                    _pvpTokenMap["73513"] = "Cataclysmic Gladiator's Ringmail Spaulders";
+                    #endregion
+                    #endregion
+                    #region Warlock
+                    _pvpTokenMap["73487"] = "Cataclysmic Gladiator's Felweave Handguards";
+                    _pvpTokenMap["73486"] = "Cataclysmic Gladiator's Felweave Cowl";
+                    _pvpTokenMap["73485"] = "Cataclysmic Gladiator's Felweave Trousers";
+                    _pvpTokenMap["73484"] = "Cataclysmic Gladiator's Felweave Raiment";
+                    _pvpTokenMap["73483"] = "Cataclysmic Gladiator's Felweave Amice";
+                    #endregion
+                    #region Warrior
+                    _pvpTokenMap["73482"] = "Cataclysmic Gladiator's Plate Chestpiece";
+                    _pvpTokenMap["73481"] = "Cataclysmic Gladiator's Plate Gauntlets";
+                    _pvpTokenMap["73480"] = "Cataclysmic Gladiator's Plate Helm";
+                    _pvpTokenMap["73479"] = "Cataclysmic Gladiator's Plate Legguards";
+                    _pvpTokenMap["73478"] = "Cataclysmic Gladiator's Plate Shoulders";
+                    #endregion
+                    #region Non-Class Armor Tokens
+                    #region Feet
+                    _pvpTokenMap["73530"] = "Cataclysmic Gladiator's Boots of Alacrity";
+                    _pvpTokenMap["73531"] = "Cataclysmic Gladiator's Boots of Cruelty";
+                    _pvpTokenMap["73601"] = "Cataclysmic Gladiator's Footguards of Alacrity";
+                    _pvpTokenMap["73609"] = "Cataclysmic Gladiator's Footguards of Meditation";
+                    _pvpTokenMap["73564"] = "Cataclysmic Gladiator's Greaves of Alacrity";
+                    _pvpTokenMap["73563"] = "Cataclysmic Gladiator's Greaves of Meditation";
+                    _pvpTokenMap["73587"] = "Cataclysmic Gladiator's Sabatons of Alacrity";
+                    _pvpTokenMap["73521"] = "Cataclysmic Gladiator's Sabatons of Alacrity";
+                    _pvpTokenMap["73588"] = "Cataclysmic Gladiator's Sabatons of Cruelty";
+                    _pvpTokenMap["73520"] = "Cataclysmic Gladiator's Sabatons of Meditation";
+                    _pvpTokenMap["73635"] = "Cataclysmic Gladiator's Treads of Alacrity";
+                    _pvpTokenMap["73636"] = "Cataclysmic Gladiator's Treads of Cruelty";
+                    _pvpTokenMap["73634"] = "Cataclysmic Gladiator's Treads of Meditation";
+                    _pvpTokenMap["73552"] = "Cataclysmic Gladiator's Warboots of Alacrity";
+                    _pvpTokenMap["73553"] = "Cataclysmic Gladiator's Warboots of Cruelty";
+                    #endregion
+                    #region Off-Hand
+                    _pvpTokenMap["73469"] = "Cataclysmic Gladiator's Endgame";
+                    _pvpTokenMap["73465"] = "Cataclysmic Gladiator's Reprieve";
+                    #endregion
+                    #region Shields
+                    _pvpTokenMap["73468"] = "Cataclysmic Gladiator's Barrier";
+                    _pvpTokenMap["73458"] = "Cataclysmic Gladiator's Redoubt";
+                    _pvpTokenMap["73446"] = "Cataclysmic Gladiator's Shield Wall";
+                    #endregion
+                    #endregion
+                    #region Weapon Tokens
+                    _pvpTokenMap["73450"] = "Cataclysmic Gladiator's Baton of Light";
+                    _pvpTokenMap["73466"] = "Cataclysmic Gladiator's Battle Staff";
+                    _pvpTokenMap["73448"] = "Cataclysmic Gladiator's Bonecracker";
+                    _pvpTokenMap["73476"] = "Cataclysmic Gladiator's Bonegrinder";
+                    _pvpTokenMap["73474"] = "Cataclysmic Gladiator's Cleaver";
+                    _pvpTokenMap["73477"] = "Cataclysmic Gladiator's Decapitator";
+                    _pvpTokenMap["73457"] = "Cataclysmic Gladiator's Energy Staff";
+                    _pvpTokenMap["73459"] = "Cataclysmic Gladiator's Gavel";
+                    _pvpTokenMap["73475"] = "Cataclysmic Gladiator's Greatsword";
+                    _pvpTokenMap["73449"] = "Cataclysmic Gladiator's Hacker";
+                    _pvpTokenMap["73471"] = "Cataclysmic Gladiator's Hatchet";
+                    _pvpTokenMap["73463"] = "Cataclysmic Gladiator's Heavy Crossbow";
+                    _pvpTokenMap["73451"] = "Cataclysmic Gladiator's Left Render";
+                    _pvpTokenMap["73453"] = "Cataclysmic Gladiator's Left Ripper";
+                    _pvpTokenMap["73470"] = "Cataclysmic Gladiator's Longbow";
+                    _pvpTokenMap["73456"] = "Cataclysmic Gladiator's Pike";
+                    _pvpTokenMap["73473"] = "Cataclysmic Gladiator's Pummeler";
+                    _pvpTokenMap["73472"] = "Cataclysmic Gladiator's Quickblade";
+                    _pvpTokenMap["73460"] = "Cataclysmic Gladiator's Rifle";
+                    _pvpTokenMap["73452"] = "Cataclysmic Gladiator's Right Render";
+                    _pvpTokenMap["73454"] = "Cataclysmic Gladiator's Right Ripper";
+                    _pvpTokenMap["73455"] = "Cataclysmic Gladiator's Shanker";
+                    _pvpTokenMap["73461"] = "Cataclysmic Gladiator's Shiv";
+                    _pvpTokenMap["73447"] = "Cataclysmic Gladiator's Slicer";
+                    _pvpTokenMap["73467"] = "Cataclysmic Gladiator's Spellblade";
+                    _pvpTokenMap["73462"] = "Cataclysmic Gladiator's Staff";
+                    _pvpTokenMap["73464"] = "Cataclysmic Gladiator's Touch of Defeat";
+                    _pvpTokenMap["73445"] = "Cataclysmic Gladiator's War Edge";
+                    #endregion
+                    #endregion
 
                     //_vendorTokenMap["44990"] = "Champion's Seal";
                     //_vendorTokenMap["40752"] = "Emblem of Heroism";//This item is no longer available within the game.
@@ -195,19 +734,19 @@ namespace Rawr
                     _tokenDropMap["71682"] = new TokenDropInfo() { Name = "Helm of the Fiery Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Container = true, Boss = "Cache of the Fire Lord" };
                     _tokenDropMap["71688"] = new TokenDropInfo() { Name = "Mantle of the Fiery Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Majordomo Staghelm" };
                     // T12.5: Paladin, Priest, Warlock
-                    _tokenDropMap["71677"] = new TokenDropInfo() { Name = "Crown of the Fiery Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Container = true, Boss = "Cache of the Fire Lord", Heroic = true };
+                    _tokenDropMap["71677"] = new TokenDropInfo() { Name = "Crown of the Fiery Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Ragnaros", Heroic = true };
                     _tokenDropMap["71680"] = new TokenDropInfo() { Name = "Shoulders of the Fiery Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Majordomo Staghelm", Heroic = true };
                     _tokenDropMap["71679"] = new TokenDropInfo() { Name = "Chest of the Fiery Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Alysrazor", Heroic = true };
                     _tokenDropMap["71676"] = new TokenDropInfo() { Name = "Gauntlets of the Fiery Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Baleroc", Heroic = true };
                     _tokenDropMap["71678"] = new TokenDropInfo() { Name = "Leggings of the Fiery Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Shannox", Heroic = true };
                     // T12.5: Rogue, Death Knight, Mage, Druid
-                    _tokenDropMap["71670"] = new TokenDropInfo() { Name = "Crown of the Fiery Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Container = true, Boss = "Cache of the Fire Lord", Heroic = true };
+                    _tokenDropMap["71670"] = new TokenDropInfo() { Name = "Crown of the Fiery Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Ragnaros", Heroic = true };
                     _tokenDropMap["71673"] = new TokenDropInfo() { Name = "Shoulders of the Fiery Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Majordomo Staghelm", Heroic = true };
                     _tokenDropMap["71672"] = new TokenDropInfo() { Name = "Chest of the Fiery Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Alysrazor", Heroic = true };
                     _tokenDropMap["71669"] = new TokenDropInfo() { Name = "Gauntlets of the Fiery Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Baleroc", Heroic = true };
                     _tokenDropMap["71671"] = new TokenDropInfo() { Name = "Leggings of the Fiery Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Shannox", Heroic = true };
                     // T12.5: Warrior, Hunter, Shaman
-                    _tokenDropMap["71684"] = new TokenDropInfo() { Name = "Crown of the Fiery Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Container = true, Boss = "Cache of the Fire Lord", Heroic = true };
+                    _tokenDropMap["71684"] = new TokenDropInfo() { Name = "Crown of the Fiery Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Ragnaros", Heroic = true };
                     _tokenDropMap["71687"] = new TokenDropInfo() { Name = "Shoulders of the Fiery Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Majordomo Staghelm", Heroic = true };
                     _tokenDropMap["71686"] = new TokenDropInfo() { Name = "Chest of the Fiery Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Alysrazor", Heroic = true };
                     _tokenDropMap["71683"] = new TokenDropInfo() { Name = "Gauntlets of the Fiery Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Baleroc", Heroic = true };
@@ -215,7 +754,66 @@ namespace Rawr
                     // T12.5: Non-Tier Items - these drop from all heroic bosses and are used to upgrade non-tier items to their heroic version (similar to Sunwell's Sunmotes)
                     _tokenDropMap["71617"] = new TokenDropInfo() { Name = "Crystallized Firestone", Vendor = "Lurah Wrathvine", VendorArea = "Mount Hyjal", Area = "Firelands", Boss = "Beth'tilac", Heroic = true };
                     #endregion
-
+                    #region Tier 13 Tokens
+                    // T13.LFR: Paladin, Priest, Warlock
+                    /* _tokenDropMap[""] = new TokenDropInfo() { Name = "Crown of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warmaster Blackhorn", LFR = true };
+                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Shoulders of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Hagara the Stormbinder", LFR = true };
+                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Chest of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Ultraxion", LFR = true };
+                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Gauntlets of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warlord Zon'ozz", LFR = true };
+                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Leggings of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Yor'sahj the Unsleeping", LFR = true };
+                    // T13.LFR: Warrior, Hunter, Shaman
+                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Crown of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warmaster Blackhorn", LFR = true };
+                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Shoulders of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Hagara the Stormbinder", LFR = true };
+                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Chest of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Ultraxion", LFR = true };
+                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Gauntlets of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warlord Zon'ozz", LFR = true };
+                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Leggings of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Yor'sahj the Unsleeping", LFR = true };
+                    // T13.LFR: Rogue, Death Knight, Mage, Druid
+                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Crown of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warmaster Blackhorn", LFR = true };
+                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Shoulders of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Hagara the Stormbinder", LFR = true };
+                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Chest of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Ultraxion", LFR = true };
+                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Gauntlets of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warlord Zon'ozz", LFR = true };
+                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Leggings of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Yor'sahj the Unsleeping", LFR = true };
+                     */
+                    // T13: Paladin, Priest, Warlock
+                    _tokenDropMap["78182"] = new TokenDropInfo() { Name = "Crown of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warmaster Blackhorn" };
+                    _tokenDropMap["78180"] = new TokenDropInfo() { Name = "Shoulders of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Hagara the Stormbinder" };
+                    _tokenDropMap["78184"] = new TokenDropInfo() { Name = "Chest of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Ultraxion" };
+                    _tokenDropMap["78183"] = new TokenDropInfo() { Name = "Gauntlets of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warlord Zon'ozz" };
+                    _tokenDropMap["78181"] = new TokenDropInfo() { Name = "Leggings of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Yor'sahj the Unsleeping" };
+                    // T13: Warrior, Hunter, Shaman
+                    _tokenDropMap["78177"] = new TokenDropInfo() { Name = "Crown of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warmaster Blackhorn" };
+                    _tokenDropMap["78175"] = new TokenDropInfo() { Name = "Shoulders of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Hagara the Stormbinder" };
+                    _tokenDropMap["78179"] = new TokenDropInfo() { Name = "Chest of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Ultraxion" };
+                    _tokenDropMap["78178"] = new TokenDropInfo() { Name = "Gauntlets of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warlord Zon'ozz" };
+                    _tokenDropMap["78176"] = new TokenDropInfo() { Name = "Leggings of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Yor'sahj the Unsleeping" };
+                    // T13: Rogue, Death Knight, Mage, Druid
+                    _tokenDropMap["78172"] = new TokenDropInfo() { Name = "Crown of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warmaster Blackhorn" };
+                    _tokenDropMap["78170"] = new TokenDropInfo() { Name = "Shoulders of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Hagara the Stormbinder" };
+                    _tokenDropMap["78174"] = new TokenDropInfo() { Name = "Chest of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Ultraxion" };
+                    _tokenDropMap["78173"] = new TokenDropInfo() { Name = "Gauntlets of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warlord Zon'ozz" };
+                    _tokenDropMap["78171"] = new TokenDropInfo() { Name = "Leggings of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Yor'sahj the Unsleeping" };
+                    // T13.5: Paladin, Priest, Warlock
+                    /* _tokenDropMap[""] = new TokenDropInfo() { Name = "Crown of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warmaster Blackhorn", Heroic = true };
+                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Shoulders of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Hagara the Stormbinder", Heroic = true };
+                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Chest of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Ultraxion", Heroic = true };
+                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Gauntlets of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warlord Zon'ozz", Heroic = true };
+                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Leggings of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Yor'sahj the Unsleeping", Heroic = true };
+                    // T13.5: Warrior, Hunter, Shaman
+                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Crown of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warmaster Blackhorn", Heroic = true };
+                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Shoulders of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Hagara the Stormbinder", Heroic = true };
+                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Chest of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Ultraxion", Heroic = true };
+                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Gauntlets of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warlord Zon'ozz", Heroic = true };
+                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Leggings of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Yor'sahj the Unsleeping", Heroic = true };
+                    // T13.5: Rogue, Death Knight, Mage, Druid
+                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Crown of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warmaster Blackhorn", Heroic = true };
+                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Shoulders of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Hagara the Stormbinder", Heroic = true };
+                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Chest of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Ultraxion", Heroic = true };
+                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Gauntlets of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warlord Zon'ozz", Heroic = true };
+                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Leggings of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Yor'sahj the Unsleeping", Heroic = true };
+                    // T13.5: Non-Tier Items - these drop from all heroic bosses and are used to upgrade non-tier items to their heroic version (similar to Sunwell's Sunmotes)
+                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Crystallized Firestone", Vendor = "Lurah Wrathvine", VendorArea = "Mount Hyjal", Area = "Firelands", Boss = "Beth'tilac", Heroic = true };
+                     */
+                    #endregion
 
                     // Holiday Satchels are going to be treated as quest rewards
                     // Valentines Day -  Reward is a Heart-Shaped Box http://www.wowhead.com/item=54537
@@ -702,6 +1300,16 @@ namespace Rawr
                 // Once the item gets added to the database (if tis valid) then we will call
                 // source data separately that will do the full source stuff
                 // In some cases, we may not need to make the extra call, so added a flag to tell it to NOT do it
+                int[] pvpCosts = new int[] {
+                    700, // Relic, Wand, Throw
+                    950, // Off-hand
+                    1250, // Neck, Cloak, Wrist, Ring
+                    1650, // Shoulder, Hands, Waist, Feet, Trinket
+                    2200, // Head, Chest, Legs
+                    2450, // Main-Hand, One-Hand
+                    3400, // Polearm, Staff, Two-Hand, Gun, Bow, Crossbow
+                };
+                string currentArenaSeasonLabel = "Ruthless" /*"Cataclysmic"*/; // "Such-in-such" Gladiator
                 if (json.TryGetValue("source", out tmp)) {
                     object[] sourceArr = (object[])tmp;
                     object[] sourcemoreArr = null;
@@ -740,6 +1348,51 @@ namespace Rawr
                         item.LocationInfo = new ItemLocationList() { WorldDrop.Construct() };
                         // We dont need more source info
                         needsNewSourceData = false;
+                    } else if (source == 5 && sourcemore == null && json.TryGetValue("reqarenartng", out tmp)) {
+                        // It's an "Elite" Arena PvP item
+                        item.LocationInfo = new ItemLocationList() { PvpItem.Construct() };
+                        // Arena items use the same name for the token they need to upgrade
+                        (item.LocationInfo[0] as PvpItem).TokenType = item.Name;
+                        (item.LocationInfo[0] as PvpItem).TokenCount = 1;
+                        switch (item.Type)
+                        {
+                            case ItemType.Wand:
+                            case ItemType.Thrown:
+                            case ItemType.Relic:
+                                (item.LocationInfo[0] as PvpItem).Points = pvpCosts[0];
+                                break;
+                            case ItemType.Shield:
+                            case ItemType.None:
+                                if (item.Slot == ItemSlot.OffHand)
+                                    (item.LocationInfo[0] as PvpItem).Points = pvpCosts[1];
+                                break;
+                            case ItemType.Dagger:
+                            case ItemType.OneHandAxe:
+                            case ItemType.OneHandMace:
+                            case ItemType.OneHandSword:
+                            case ItemType.FistWeapon:
+                                if (item.Slot == ItemSlot.OffHand)
+                                    (item.LocationInfo[0] as PvpItem).Points = pvpCosts[1];
+                                else
+                                    (item.LocationInfo[0] as PvpItem).Points = pvpCosts[5];
+                                break;
+                            case ItemType.Polearm:
+                            case ItemType.Staff:
+                            case ItemType.TwoHandAxe:
+                            case ItemType.TwoHandMace:
+                            case ItemType.TwoHandSword:
+                            case ItemType.Gun:
+                            case ItemType.Crossbow:
+                            case ItemType.Bow:
+                                (item.LocationInfo[0] as PvpItem).Points = pvpCosts[6];
+                                break;
+                            default:
+                                (item.LocationInfo[0] as PvpItem).Points = 0;
+                                break;
+                        }
+                        (item.LocationInfo[0] as PvpItem).PointType = "Conquest";
+                        (item.LocationInfo[0] as PvpItem).ArenaRating = (int)Convert.ToSingle(tmp);
+                        // We need to call for more source info
                     } else if (source == 5 && sourcemore == null) {
                         // Its a Vendor Purchase
                         item.LocationInfo = new ItemLocationList() { VendorItem.Construct() };
@@ -782,7 +1435,19 @@ namespace Rawr
                                 {
                                     string value = tmp.ToString();
                                     staticDrop.Heroic = (value == "-2" || value == "3" || value == "4"); // Normal version is "-1"
-                                    staticDrop.Area += (value == "1" || value == "3") ? " (10)" : ((value == "2" || value == "4") ? " (25)" : string.Empty);
+                                    if (!json.TryGetValue("heroic", out tmp))
+                                        staticDrop.Area += (value == "1" || value == "3") ? " (10)" : ((value == "2" || value == "4") ? " (25)" : string.Empty);
+                                }
+                                if (json.TryGetValue("heroic", out tmp))
+                                {
+                                    string value = tmp.ToString();
+                                    staticDrop.Heroic = (value == "1");
+                                }
+                                // TODO: Double check that this is the variable that is going to be used
+                                if (json.TryGetValue("lfr", out tmp))
+                                {
+                                    string value = tmp.ToString();
+                                    staticDrop.LFR = (value == "1");
                                 }
                                 item.LocationInfo = new ItemLocationList() { staticDrop };
                                 // Since we have everything we need here, we shouldn't call new source data from the non-xml
@@ -805,7 +1470,20 @@ namespace Rawr
                                 {
                                     string value = tmp.ToString();
                                     containerItem.Heroic = (value == "-2" || value == "3" || value == "4"); // Normal version is "-1"
-                                    containerItem.Area += (value == "1" || value == "3") ? " (10)" : ((value == "2" || value == "4") ? " (25)" : string.Empty);
+                                    // Heroic tag was added in cata since 10 and 25 drop the same items, meaning only show this for items prior to cata
+                                    if (!json.TryGetValue("heroic", out tmp)) 
+                                        containerItem.Area += (value == "1" || value == "3") ? " (10)" : ((value == "2" || value == "4") ? " (25)" : string.Empty);
+                                }
+                                if (json.TryGetValue("heroic", out tmp))
+                                {
+                                    string value = tmp.ToString();
+                                    containerItem.Heroic = (value == "1");
+                                }
+                                // TODO: Double check that this is the variable that is going to be used
+                                if (json.TryGetValue("lfr", out tmp))
+                                {
+                                    string value = tmp.ToString();
+                                    containerItem.LFR = (value == "1");
                                 }
                                 item.LocationInfo = new ItemLocationList() { containerItem };
                                 // Since we have everything we need here, we shouldn't call new source data from the non-xml
@@ -875,6 +1553,10 @@ namespace Rawr
                                 {
                                     questName.Area = GetZoneName(tmp.ToString());
                                 }
+                                if (json.TryGetValue("reqlevel", out tmp))
+                                {
+                                    questName.MinLevel = (int)tmp;
+                                }
                                 item.LocationInfo = new ItemLocationList() { questName };
                                 // I'm going ahead and telling it false here because...
                                 // who cares about dungeon type, group size or min level for quest
@@ -924,13 +1606,88 @@ namespace Rawr
                         // It's a PvP item
                         item.LocationInfo = new ItemLocationList() { PvpItem.Construct() };
                         (item.LocationInfo[0] as PvpItem).Points = 0;
-                        (item.LocationInfo[0] as PvpItem).PointType = "PvP";
+                        if (item.Name.Contains(currentArenaSeasonLabel))
+                            (item.LocationInfo[0] as PvpItem).PointType = "Conquest";
+                        else
+                            (item.LocationInfo[0] as PvpItem).PointType = "Honor";
+                        switch (item.Type)
+                        {
+                            case ItemType.Wand:
+                            case ItemType.Thrown:
+                            case ItemType.Relic:
+                                (item.LocationInfo[0] as PvpItem).Points = pvpCosts[0];
+                                break;
+                            case ItemType.Shield:
+                            case ItemType.None:
+                                switch (item.Slot)
+                                {
+                                    case ItemSlot.OffHand:
+                                        (item.LocationInfo[0] as PvpItem).Points = pvpCosts[1];
+                                        break;
+                                    case ItemSlot.Back:
+                                    case ItemSlot.Finger:
+                                    case ItemSlot.Neck:
+                                        (item.LocationInfo[0] as PvpItem).Points = pvpCosts[2];
+                                        break;
+                                    case ItemSlot.Trinket:
+                                        (item.LocationInfo[0] as PvpItem).Points = pvpCosts[3];
+                                        break;
+                                }
+                                break;
+                            case ItemType.Cloth:
+                            case ItemType.Leather:
+                            case ItemType.Mail:
+                            case ItemType.Plate:
+                                switch (item.Slot)
+                                {
+                                    case ItemSlot.Wrist:
+                                        (item.LocationInfo[0] as PvpItem).Points = pvpCosts[2];
+                                        break;
+                                    case ItemSlot.Feet:
+                                    case ItemSlot.Hands:
+                                    case ItemSlot.Shoulders:
+                                    case ItemSlot.Waist:
+                                        (item.LocationInfo[0] as PvpItem).Points = pvpCosts[3];
+                                        break;
+                                    case ItemSlot.Chest:
+                                    case ItemSlot.Head:
+                                    case ItemSlot.Legs:
+                                        (item.LocationInfo[0] as PvpItem).Points = pvpCosts[4];
+                                        break;
+                                }
+                                break;
+                            case ItemType.Dagger:
+                            case ItemType.OneHandAxe:
+                            case ItemType.OneHandMace:
+                            case ItemType.OneHandSword:
+                            case ItemType.FistWeapon:
+                                if (item.Slot == ItemSlot.OffHand)
+                                    (item.LocationInfo[0] as PvpItem).Points = pvpCosts[1];
+                                else
+                                    (item.LocationInfo[0] as PvpItem).Points = pvpCosts[5];
+                                break;
+                            case ItemType.Polearm:
+                            case ItemType.Staff:
+                            case ItemType.TwoHandAxe:
+                            case ItemType.TwoHandMace:
+                            case ItemType.TwoHandSword:
+                            case ItemType.Gun:
+                            case ItemType.Crossbow:
+                            case ItemType.Bow:
+                                (item.LocationInfo[0] as PvpItem).Points = pvpCosts[6];
+                                break;
+                            default:
+                                (item.LocationInfo[0] as PvpItem).Points = 0;
+                                break;
+                        }
                         // We need to call for more source info
                     }
                     #endregion
                 } else if (item.Stats.Resilience > 0) {
                     // We DON'T have Source Data, BUT the item has resilience on it, so it's a pvp item
                     item.LocationInfo = new ItemLocationList() { PvpItem.Construct() };
+                    (item.LocationInfo[0] as PvpItem).Points = 0;
+                    (item.LocationInfo[0] as PvpItem).PointType = "Honor";
                     // We need to call for more source info
                 } else {
                     // We DON'T have Source Data
@@ -1156,7 +1913,7 @@ namespace Rawr
                         // we are looking for something like cost:[0,0,0,[[40633,1]]]
 
                         // cost:[gold,[[currencyId1,currencyQu1],[currencyId2,currencyQu2]],[objectId,objectQu]]
-                        Regex costRegex = new Regex(@"cost:\[(?<gold>\d+),\[(?:\[(?<currencyId1>\d+),(?<currencyQu1>\d+)\])?,?(?:\[(?<currencyId2>\d+),(?<currencyQu2>\d+)\])?\],\[(?:\[?(?<tokenId1>\d+),(?<tokenQu1>\d+)\]?)?,?(?:\[?(?<tokenId2>\d+),(?<tokenQu2>\d+)\]?)?\]\]");
+                        Regex costRegex = new Regex(@"cost:\[(?<gold>\d+)\[(?:\[(?<currencyId1>\d+),(?<currencyQu1>\d+)\])?,?(?:\[(?<currencyId2>\d+),(?<currencyQu2>\d+)\])?\],\[(?:\[?(?<tokenId1>\d+),(?<tokenQu1>\d+)\]?)?,?(?:\[?(?<tokenId2>\d+),(?<tokenQu2>\d+)\]?)?\]\]");
                         Regex costRegexGoldOnly = new Regex(@"cost:\[(?<gold>\d+)\]");
                         Match costMatch;
 
@@ -1229,7 +1986,12 @@ namespace Rawr
                         if (tokenIds.Count < i + 1) { break; } // stop processing if we don't have any more
                         // Check to see if it's a PvP token/Currency
                         if (!String.IsNullOrEmpty(tokenIds[i]) && _pvpTokenMap.TryGetValue(tokenIds[i], out tokenName)) {
-                            item.LocationInfo = new ItemLocationList() { new PvpItem() { TokenCount = tokenCounts[i], TokenType = tokenName } };
+                            if (tokenName == "Honor Points" || tokenIds[i] == "392")
+                                item.LocationInfo = new ItemLocationList() { new PvpItem() { Points = tokenCounts[i], PointType = "Honor" } };
+                            else if (tokenName == "Conquest Points" || tokenIds[i] == "390")
+                                item.LocationInfo = new ItemLocationList() { new PvpItem() { Points = tokenCounts[i], PointType = "Conquest" } };
+                            else
+                                item.LocationInfo = new ItemLocationList() { new PvpItem() { TokenCount = tokenCounts[i], TokenType = tokenName } };
                             vendorItem = null; // invalidate the vendor item so it doesn't get added in later
                             break;
                         } else if (tokenIds[i] != null && _vendorTokenMap.TryGetValue(tokenIds[i], out tokenName)) {
@@ -1243,6 +2005,7 @@ namespace Rawr
                             string boss = null; string vendor = null;
                             string area = null; string vendorarea = null;
                             bool heroic = false;
+                            bool lfr = false;
                             bool container = false;
                             if (!_tokenDropMap.ContainsKey(tokenIds[i])) {
                                 // Not doing this =^( hopefully we won't actually need to cuz I mapped all the currencies listed in wowhead
@@ -1331,6 +2094,7 @@ namespace Rawr
                                 boss = info.Boss; vendor = info.Vendor;
                                 area = info.Area; vendorarea = info.VendorArea;
                                 heroic = info.Heroic;
+                                lfr = info.LFR;
                                 tokenName = info.Name;
                                 container = info.Container;
                                 #endregion
@@ -1343,7 +2107,7 @@ namespace Rawr
                                     vendorItem.VendorArea = vendorarea;
                                     vendorItem.VendorName = vendor;
                                     vendorItem.TokenMap[tokenName] = tokenCounts[i];
-                                    ItemLocation droppoint = new StaticDrop() { Area = area, Boss = boss, Heroic = heroic, };
+                                    ItemLocation droppoint = new StaticDrop() { Area = area, Boss = boss, Heroic = heroic, LFR = lfr };
                                     item.LocationInfo = new ItemLocationList() { vendorItem, droppoint }; 
                                     vendorItem = null;
                                     break;
@@ -1359,7 +2123,8 @@ namespace Rawr
                                     {
                                         Area = area,
                                         Container = boss,
-                                        Heroic = heroic
+                                        Heroic = heroic,
+                                        LFR = lfr,
                                     };
                                     item.LocationInfo = new ItemLocationList() { locInfo };
                                     vendorItem = null;
@@ -1369,7 +2134,8 @@ namespace Rawr
                                     {
                                         Area = area,
                                         Boss = boss,
-                                        Heroic = heroic
+                                        Heroic = heroic,
+                                        LFR = lfr,
                                     };
                                     item.LocationInfo = new ItemLocationList() { locInfo };
                                     vendorItem = null;
@@ -1529,7 +2295,12 @@ namespace Rawr
                         if (tokenIds.Count < i + 1) { break; } // stop processing if we don't have any more
                         // Check to see if it's a PvP token/Currency
                         if (!String.IsNullOrEmpty(tokenIds[i]) && _pvpTokenMap.TryGetValue(tokenIds[i], out tokenName)) {
-                            item.LocationInfo = new ItemLocationList() { new PvpItem() { TokenCount = tokenCounts[i], TokenType = tokenName } };
+                            if (tokenName == "Honor Points" || tokenIds[i] == "392")
+                                item.LocationInfo = new ItemLocationList() { new PvpItem() { Points = tokenCounts[i], PointType = "Honor" } };
+                            else if (tokenName == "Conquest Points" || tokenIds[i] == "390")
+                                item.LocationInfo = new ItemLocationList() { new PvpItem() { Points = tokenCounts[i], PointType = "Conquest" } };
+                            else
+                                item.LocationInfo = new ItemLocationList() { new PvpItem() { TokenCount = tokenCounts[i], TokenType = tokenName } };
                             pvpItem = null; // invalidate the vendor item so it doesn't get added in later
                             break;
                         } else if (tokenIds[i] != null && _vendorTokenMap.TryGetValue(tokenIds[i], out tokenName)) {
@@ -1543,6 +2314,7 @@ namespace Rawr
                             string boss = null; string vendor = null;
                             string area = null; string vendorarea = null;
                             bool heroic = false;
+                            bool lfr = false;
                             bool container = false;
                             if (!_tokenDropMap.ContainsKey(tokenIds[i])) {
                                 // Not doing this =^( hopefully we won't actually need to cuz I mapped all the currencies listed in wowhead
@@ -1631,6 +2403,7 @@ namespace Rawr
                                 boss = info.Boss; vendor = info.Vendor;
                                 area = info.Area; vendorarea = info.VendorArea;
                                 heroic = info.Heroic;
+                                lfr = info.LFR;
                                 tokenName = info.Name;
                                 container = info.Container;
                                 #endregion
@@ -1643,7 +2416,7 @@ namespace Rawr
                                     //pvpItem.VendorArea = vendorarea;
                                     //pvpItem.VendorName = vendor;
                                     //pvpItem.TokenMap[tokenName] = tokenCounts[i];
-                                    ItemLocation droppoint = new StaticDrop() { Area = area, Boss = boss, Heroic = heroic, };
+                                    ItemLocation droppoint = new StaticDrop() { Area = area, Boss = boss, Heroic = heroic, LFR = lfr, };
                                     item.LocationInfo = new ItemLocationList() { pvpItem, droppoint }; 
                                     pvpItem = null;
                                     break;
@@ -1659,7 +2432,8 @@ namespace Rawr
                                     {
                                         Area = area,
                                         Container = boss,
-                                        Heroic = heroic
+                                        Heroic = heroic,
+                                        LFR = lfr,
                                     };
                                     item.LocationInfo = new ItemLocationList() { locInfo };
                                     pvpItem = null;
@@ -1669,7 +2443,8 @@ namespace Rawr
                                     {
                                         Area = area,
                                         Boss = boss,
-                                        Heroic = heroic
+                                        Heroic = heroic,
+                                        LFR = lfr,
                                     };
                                     item.LocationInfo = new ItemLocationList() { locInfo };
                                     pvpItem = null;
@@ -1763,6 +2538,7 @@ namespace Rawr
             public string Boss = "Unknown Boss";
             public string Area = "Unknown Area";
             public bool Heroic = false;
+            public bool LFR = false;
             public bool Container = false;
             public string Name = "Unknown Token";
         }
@@ -2338,7 +3114,7 @@ namespace Rawr
                 case "p": //PvP
                     item.LocationInfo = new ItemLocationList() { PvpItem.Construct() };
                     (item.LocationInfo[0] as PvpItem).Points = 0;
-                    (item.LocationInfo[0] as PvpItem).PointType = "PvP";
+                    (item.LocationInfo[0] as PvpItem).PointType = "Honor";
                     break;
                 #endregion
 

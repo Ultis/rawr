@@ -419,19 +419,19 @@ namespace Rawr {
         };
         public enum TierLevels : int { T11_10 = 0, T11_25, T11_10H, T11_25H, T12_10, T12_25, T12_10H, T12_25H, T13_LFR, T13_10, T13_25, T13_10H, T13_25H, T11_LFR, T12_LFR }
         public static readonly float[] StandardMeleePerHit = new float[] {
-             95192.308f, // T11_10   // 4.2 lowered the base damage on all T11 Normal mode damage by 20%
-            118990.385f, // T11_25   // 4.2 lowered the base damage on all T11 Normal mode damage by 20%
-            163186.923f, // T11_10H  // Not tested and verified, assumed based on other values
-            183585.385f, // T11_25H  //     Tested and verified, Used a Magmaw Kill from April, 2011
+             93750f, // T11_10       // 4.2 lowered the base damage on all T11 Normal mode damage by 20%
+            104000f, // T11_25       // 4.2 lowered the base damage on all T11 Normal mode damage by 20%
+            163333.333f, // T11_10H  // Not tested and verified, assumed based on other values
+            182000f, // T11_25H      //     Tested and verified, Used a Magmaw Kill from April, 2011
             131250f, // T12_10,      // Not Tested and verified, initial numbers
             146250f, // T12_25,      // Not Tested and verified, initial numbers
             208250f, // T12_10H,     // Not Tested and verified, initial numbers
             232050f, // T12_25H,     // Not Tested and verified, initial numbers
-            220000f, // T13_LFR,     // Not Tested and verified, initial numbers
-            245000f, // T13_10,      // Not Tested and verified, initial numbers
-            273000f, // T13_25,      // Not Tested and verified, initial numbers
-            343000f, // T13_10H,     // Not Tested and verified, initial numbers
-            382200f, // T13_25H,     // Not Tested and verified, initial numbers
+            231000f, // T13_LFR,     // Not Tested and verified, initial numbers
+            262500f, // T13_10,      // Not Tested and verified, initial numbers
+            292500f, // T13_25,      // Not Tested and verified, initial numbers
+            367500f, // T13_10H,     // Not Tested and verified, initial numbers
+            409500f, // T13_25H,     // Not Tested and verified, initial numbers
                  0f, // T11_LFR      // This is just a placeholder and only being used so that the T11 boss handler can compile with the increase in boss difficulty level introduced by the Looking For Raid Feature
                  0f, // T12_LFR      // This is just a placeholder and only being used so that the T12 boss handler can compile with the increase in boss difficulty level introduced by the Looking For Raid Feature
         };

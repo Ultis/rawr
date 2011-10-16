@@ -1948,7 +1948,7 @@
             <ItemFilterRegex>
               <Name>Ragnaros</Name>
               <Enabled>true</Enabled>
-              <Pattern>Ragnaros|Cache of the Fire Lord</Pattern>
+              <Pattern>Cache of the Fire Lord</Pattern>
               <BoA>true</BoA>
               <BoE>true</BoE>
               <BoP>true</BoP>
@@ -2133,7 +2133,7 @@
             <ItemFilterRegex>
               <Name>Ragnaros</Name>
               <Enabled>true</Enabled>
-              <Pattern>Ragnaros|Cache of the Fire Lord</Pattern>
+              <Pattern>Ragnaros</Pattern>
               <BoA>true</BoA>
               <BoE>true</BoE>
               <BoP>true</BoP>
@@ -2183,6 +2183,7 @@
         <ItemFilterRegex>
           <Name>Looking For Raid</Name>
           <Enabled>true</Enabled>
+          <Pattern>LFR Dragon Soul</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -2390,7 +2391,7 @@
         <ItemFilterRegex>
           <Name>Normal</Name>
           <Enabled>true</Enabled>
-          <Pattern>(?&lt;! Heroic )Dragon Soul</Pattern>
+          <Pattern>(?&lt;!(Heroic |LFR ))Dragon Soul</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -2969,7 +2970,7 @@
         <ItemFilterRegex>
           <Name>Armor Tokens</Name>
           <Enabled>true</Enabled>
-          <Pattern>Regalia|Forgotten|Lost|Wayward|Fallen|Vanquished|Desecrated|Trophy|Dubin Clay| 1 \[Mark of Sanctification|Sanctified|Champion Isimode|Trophy of the Crusade|Valiant Laradia|Valiant Bressia|Vanquisher|Conqueror|Protector|Forlorn|Fiery</Pattern>
+          <Pattern>Regalia|Forgotten|Lost|Wayward|Fallen|Vanquished|Desecrated|Trophy|Dubin Clay| 1 \[Mark of Sanctification|Sanctified|Champion Isimode|Trophy of the Crusade|Valiant Laradia|Valiant Bressia|Vanquisher|Conqueror|Protector|Forlorn|Fiery|Corrupted</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -3084,7 +3085,7 @@
         </ItemFilterRegex>
         <ItemFilterRegex>
           <Name>Crystalized Firestone</Name>
-          <Enabled>true</Enabled>
+          <Enabled>false</Enabled>
           <Pattern>Crystalized Firestone|Lurah Wrathvine</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>

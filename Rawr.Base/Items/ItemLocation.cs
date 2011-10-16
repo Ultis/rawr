@@ -536,6 +536,7 @@ namespace Rawr
     {
         public string Area { get; set; }
         public bool Heroic { get; set; }
+        public bool LFR { get; set; }
         public string Boss { get; set; }
         public int Count { get; set; }
         public int OutOf { get; set; }
@@ -546,7 +547,7 @@ namespace Rawr
             get {
                 return string.Format("Drops from {0} in {1}{2}{3}",
                     Boss,
-                    Heroic ? "Heroic " : "",
+                    Heroic ? "Heroic " : (LFR ? "LFR " : ""),
                     Area,
                     (DropPerc > 0f ? string.Format(" ({0:0.0%})", DropPerc) : ""));
             }
@@ -561,6 +562,7 @@ namespace Rawr
             XElement subNode = xdoc.SelectSingleNode("itemData/page/itemTooltips/itemTooltip/itemSource");
             Area = subNode.Attribute("areaName").Value;
             Heroic = ("h" == subNode.Attribute("difficulty").Value);
+            LFR = false; // TODO get subNode for LFR toggle
             Boss = subNode.Attribute("creatureName").Value;
             Count = OutOf = 0;
             return this;
@@ -833,11 +835,12 @@ namespace Rawr
         {
             get
             {
-                return string.Format("Found in {0} in {1}{2}", Container, Heroic ? "Heroic " : "", Area);
+                return string.Format("Found in {0} in {1}{2}", Container, Heroic ? "Heroic " : (LFR ? "LFR " : ""), Area);
             }
         }
 
         public bool Heroic { get; set; }
+        public bool LFR { get; set; }
         public String Area { get; set; }
         public String Container { get; set; }
         public int MinLevel { get; set; }
@@ -849,6 +852,7 @@ namespace Rawr
 
             Area = subNode.Attribute("area").Value;
             Heroic = subNode.Attribute("is_heroic").Value == "1";
+            LFR = false; // TODO get subNode for LFR toggle
             Container = subNode.Attribute("name").Value;
             return this;
         }

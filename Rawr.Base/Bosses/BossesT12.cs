@@ -3671,7 +3671,7 @@ namespace Rawr.Bosses
                 float phase4Length = (BerserkTimer[i] - (45f * 2) - Intermission3Length) * (5f / 14f);
 
                 Attack melee = GenAStandardMelee(this[i].Content);
-                melee.DamagePerHit *= 1.22f;
+                melee.DamagePerHit *= 1.25f;
                 ByFirebePurged.Attacks.Add(melee);
                 SulfuaswillbeYourEnd.Attacks.Add(melee);
                 BegoneFrommyRealm.Attacks.Add(melee);

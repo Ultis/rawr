@@ -248,10 +248,130 @@ namespace Rawr.UI
             int copper = (int)TB_Vendor_Money_3.Value; total += copper;
             // Tokens
             SerializableDictionary<string, int> tokenMap = new SerializableDictionary<string, int>();
-            // The way that these two add in, even if Token one is bad and Token 2 is ok, we'll get the result we want in the item source
-            if (!String.IsNullOrEmpty(TB_Vendor_Token_1.SelectedItem as String)) {
-                tokenMap.Add(TB_Vendor_Token_1.SelectedItem as String, (int)TB_Vendor_TokenCount_1.Value);
-            }
+            switch (TB_Vendor_Token_Level.SelectedIndex)
+                {
+                case 2:
+                    TB_Vendor_Token_1.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_11N.Visibility = Visibility.Visible;
+                    TB_Vendor_Token_11H.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_12N.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_12H.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_13LFR.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_13N.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_13H.Visibility = Visibility.Collapsed;
+                    // The way that these two add in, even if Token one is bad and Token 2 is ok, we'll get the result we want in the item source
+                    if (!String.IsNullOrEmpty(TB_Vendor_Token_11N.SelectedItem as String))
+                    {
+                        tokenMap.Add(TB_Vendor_Token_11N.SelectedItem as String, (int)TB_Vendor_TokenCount_1.Value);
+                    }
+                    break;
+                case 3:
+                    TB_Vendor_Token_1.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_11N.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_11H.Visibility = Visibility.Visible;
+                    TB_Vendor_Token_12N.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_12H.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_13LFR.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_13N.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_13H.Visibility = Visibility.Collapsed;
+                    // The way that these two add in, even if Token one is bad and Token 2 is ok, we'll get the result we want in the item source
+                    if (!String.IsNullOrEmpty(TB_Vendor_Token_11H.SelectedItem as String))
+                    {
+                        tokenMap.Add(TB_Vendor_Token_11H.SelectedItem as String, (int)TB_Vendor_TokenCount_1.Value);
+                    }
+                    break;
+                case 4:
+                    TB_Vendor_Token_1.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_11N.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_11H.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_12N.Visibility = Visibility.Visible;
+                    TB_Vendor_Token_12H.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_13LFR.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_13N.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_13H.Visibility = Visibility.Collapsed;
+                    // The way that these two add in, even if Token one is bad and Token 2 is ok, we'll get the result we want in the item source
+                    if (!String.IsNullOrEmpty(TB_Vendor_Token_12N.SelectedItem as String))
+                    {
+                        tokenMap.Add(TB_Vendor_Token_12N.SelectedItem as String, (int)TB_Vendor_TokenCount_1.Value);
+                    }
+                    break;
+                case 5:
+                    TB_Vendor_Token_1.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_11N.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_11H.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_12N.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_12H.Visibility = Visibility.Visible;
+                    TB_Vendor_Token_13LFR.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_13N.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_13H.Visibility = Visibility.Collapsed;
+                    // The way that these two add in, even if Token one is bad and Token 2 is ok, we'll get the result we want in the item source
+                    if (!String.IsNullOrEmpty(TB_Vendor_Token_12H.SelectedItem as String))
+                    {
+                        tokenMap.Add(TB_Vendor_Token_12H.SelectedItem as String, (int)TB_Vendor_TokenCount_1.Value);
+                    }
+                    break;
+                case 6:
+                    TB_Vendor_Token_1.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_11N.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_11H.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_12N.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_12H.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_13LFR.Visibility = Visibility.Visible;
+                    TB_Vendor_Token_13N.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_13H.Visibility = Visibility.Collapsed;
+                    // The way that these two add in, even if Token one is bad and Token 2 is ok, we'll get the result we want in the item source
+                    if (!String.IsNullOrEmpty(TB_Vendor_Token_13LFR.SelectedItem as String))
+                    {
+                        tokenMap.Add(TB_Vendor_Token_13LFR.SelectedItem as String, (int)TB_Vendor_TokenCount_1.Value);
+                    }
+                    break;
+                case 7:
+                    TB_Vendor_Token_1.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_11N.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_11H.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_12N.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_12H.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_13LFR.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_13N.Visibility = Visibility.Visible;
+                    TB_Vendor_Token_13H.Visibility = Visibility.Collapsed;
+                    // The way that these two add in, even if Token one is bad and Token 2 is ok, we'll get the result we want in the item source
+                    if (!String.IsNullOrEmpty(TB_Vendor_Token_13N.SelectedItem as String))
+                    {
+                        tokenMap.Add(TB_Vendor_Token_13N.SelectedItem as String, (int)TB_Vendor_TokenCount_1.Value);
+                    }
+                    break;
+                case 8:
+                    TB_Vendor_Token_1.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_11N.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_11H.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_12N.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_12H.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_13LFR.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_13N.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_13H.Visibility = Visibility.Visible;
+                    // The way that these two add in, even if Token one is bad and Token 2 is ok, we'll get the result we want in the item source
+                    if (!String.IsNullOrEmpty(TB_Vendor_Token_13H.SelectedItem as String))
+                    {
+                        tokenMap.Add(TB_Vendor_Token_13H.SelectedItem as String, (int)TB_Vendor_TokenCount_1.Value);
+                    }
+                    break;
+                default:
+                    TB_Vendor_Token_Level.SelectedIndex = 1;
+                    TB_Vendor_Token_1.Visibility = Visibility.Visible;
+                    TB_Vendor_Token_11N.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_11H.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_12N.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_12H.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_13LFR.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_13N.Visibility = Visibility.Collapsed;
+                    TB_Vendor_Token_13H.Visibility = Visibility.Collapsed;
+                    // The way that these two add in, even if Token one is bad and Token 2 is ok, we'll get the result we want in the item source
+                    if (!String.IsNullOrEmpty(TB_Vendor_Token_1.SelectedItem as String))
+                    {
+                        tokenMap.Add(TB_Vendor_Token_1.SelectedItem as String, (int)TB_Vendor_TokenCount_1.Value);
+                    }
+                    break;
+                }
             if (TB_Vendor_Token_2.Text != "") {
                 tokenMap.Add(TB_Vendor_Token_2.Text, (int)TB_Vendor_TokenCount_2.Value);
             }
@@ -292,7 +412,50 @@ namespace Rawr.UI
                 // There's only one token and it is in the Token 1 List
                 if (topop.TokenMap.Keys.Count == 1 && TB_Vendor_Token_1.Items.Contains(topop.TokenMap.Keys.ToList()[0]))
                 {
+                    TB_Vendor_Token_Level.SelectedIndex = 1;
                     TB_Vendor_Token_1.SelectedItem = topop.TokenMap.Keys.ToList()[0];
+                    TB_Vendor_TokenCount_1.Value = topop.TokenMap.Values.ToList()[0];
+                }
+                else if (topop.TokenMap.Keys.Count == 1 && TB_Vendor_Token_11N.Items.Contains(topop.TokenMap.Keys.ToList()[0]))
+                {
+                    TB_Vendor_Token_Level.SelectedIndex = 2;
+                    TB_Vendor_Token_11N.SelectedItem = topop.TokenMap.Keys.ToList()[0];
+                    TB_Vendor_TokenCount_1.Value = topop.TokenMap.Values.ToList()[0];
+                }
+                else if (topop.TokenMap.Keys.Count == 1 && TB_Vendor_Token_11H.Items.Contains(topop.TokenMap.Keys.ToList()[0]))
+                {
+                    TB_Vendor_Token_Level.SelectedIndex = 3;
+                    TB_Vendor_Token_11H.SelectedItem = topop.TokenMap.Keys.ToList()[0];
+                    TB_Vendor_TokenCount_1.Value = topop.TokenMap.Values.ToList()[0];
+                }
+                else if (topop.TokenMap.Keys.Count == 1 && TB_Vendor_Token_12N.Items.Contains(topop.TokenMap.Keys.ToList()[0]))
+                {
+                    TB_Vendor_Token_Level.SelectedIndex = 4;
+                    TB_Vendor_Token_12N.SelectedItem = topop.TokenMap.Keys.ToList()[0];
+                    TB_Vendor_TokenCount_1.Value = topop.TokenMap.Values.ToList()[0];
+                }
+                else if (topop.TokenMap.Keys.Count == 1 && TB_Vendor_Token_12H.Items.Contains(topop.TokenMap.Keys.ToList()[0]))
+                {
+                    TB_Vendor_Token_Level.SelectedIndex = 5;
+                    TB_Vendor_Token_12H.SelectedItem = topop.TokenMap.Keys.ToList()[0];
+                    TB_Vendor_TokenCount_1.Value = topop.TokenMap.Values.ToList()[0];
+                }
+                else if (topop.TokenMap.Keys.Count == 1 && TB_Vendor_Token_13LFR.Items.Contains(topop.TokenMap.Keys.ToList()[0]))
+                {
+                    TB_Vendor_Token_Level.SelectedIndex = 6;
+                    TB_Vendor_Token_13LFR.SelectedItem = topop.TokenMap.Keys.ToList()[0];
+                    TB_Vendor_TokenCount_1.Value = topop.TokenMap.Values.ToList()[0];
+                }
+                else if (topop.TokenMap.Keys.Count == 1 && TB_Vendor_Token_13N.Items.Contains(topop.TokenMap.Keys.ToList()[0]))
+                {
+                    TB_Vendor_Token_Level.SelectedIndex = 7;
+                    TB_Vendor_Token_13N.SelectedItem = topop.TokenMap.Keys.ToList()[0];
+                    TB_Vendor_TokenCount_1.Value = topop.TokenMap.Values.ToList()[0];
+                }
+                else if (topop.TokenMap.Keys.Count == 1 && TB_Vendor_Token_13H.Items.Contains(topop.TokenMap.Keys.ToList()[0]))
+                {
+                    TB_Vendor_Token_Level.SelectedIndex = 8;
+                    TB_Vendor_Token_13H.SelectedItem = topop.TokenMap.Keys.ToList()[0];
                     TB_Vendor_TokenCount_1.Value = topop.TokenMap.Values.ToList()[0];
                 }
                 // There's only one token and it is NOT in the Token 1 List, so we put it in Token 2's box
@@ -529,10 +692,15 @@ namespace Rawr.UI
             if ((CB_Type.SelectedItem as String) != "Static Drop") { return; }
             //
             isChanging = true;
+            if (CB_StaticDrop_Heroic.IsChecked.Value.Equals(true))
+                CB_StaticDrop_LFR.IsChecked = false;
+            else if (CB_StaticDrop_LFR.IsChecked.Value.Equals(true))
+                CB_StaticDrop_Heroic.IsChecked = false;
             //
             NewSource = new StaticDrop()
             {
-                Heroic = TB_StaticDrop_Money_1.IsChecked.GetValueOrDefault(false),
+                Heroic = CB_StaticDrop_Heroic.IsChecked.GetValueOrDefault(false),
+                LFR = CB_StaticDrop_LFR.IsChecked.GetValueOrDefault(false),
                 Area = TB_StaticDrop_Name.Text,
                 Boss = TB_StaticDrop_Token_1.Text,
                 Count = (int)NUD_StaticDrop_Count.Value,
@@ -554,7 +722,8 @@ namespace Rawr.UI
             //if (topop.Count == null) { topop.Count = 0; }
             //if (topop.OutOf == null) { topop.OutOf = 0; }
             TB_StaticDrop_Name.Text = topop.Area;
-            TB_StaticDrop_Money_1.IsChecked = topop.Heroic;
+            CB_StaticDrop_Heroic.IsChecked = topop.Heroic;
+            CB_StaticDrop_LFR.IsChecked = topop.LFR;
             TB_StaticDrop_Token_1.Text = topop.Boss;
             NUD_StaticDrop_Count.Value = topop.Count;
             NUD_StaticDrop_OutOf.Value = topop.OutOf;
@@ -615,14 +784,20 @@ namespace Rawr.UI
             if (isChanging) { return; }
             if (CB_Type == null || CB_Type.SelectedItem == null) { return; }
             if ((CB_Type.SelectedItem as String) != "Container") { return; }
-            //
+            
             isChanging = true;
-            //
+
+            if (CB_Container_Heroic.IsChecked.Value.Equals(true))
+                CB_Container_LFR.IsChecked = false;
+            else if (CB_Container_LFR.IsChecked.Value.Equals(true))
+                CB_Container_Heroic.IsChecked = false;
+
             NewSource = new ContainerItem()
             {
                 Area = TB_Container_Name.Text,
                 Container = TB_Container_Money_1.Text,
-                Heroic = TB_Container_Token_1.IsChecked.GetValueOrDefault(false),
+                Heroic = CB_Container_Heroic.IsChecked.GetValueOrDefault(false),
+                LFR = CB_Container_LFR.IsChecked.GetValueOrDefault(false),
                 MinLevel = (int)TB_Container_Money_2.Value,
                 Party = (int)TB_Container_Money_3.Value,
             };
@@ -639,7 +814,8 @@ namespace Rawr.UI
             // Points Type and Cost
             TB_Container_Name.Text = topop.Area;
             TB_Container_Money_1.Text = topop.Container;
-            TB_Container_Token_1.IsChecked = topop.Heroic;
+            CB_Container_Heroic.IsChecked = topop.Heroic;
+            CB_Container_LFR.IsChecked = topop.LFR;
             TB_Container_Money_2.Value = topop.MinLevel;
             TB_Container_Money_3.Value = topop.Party;
             //
