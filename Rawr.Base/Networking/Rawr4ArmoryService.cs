@@ -144,7 +144,9 @@ namespace Rawr
                     Progress = "Parsing Character Data...";
                     Character character = Character.LoadFromXml(xdoc.Document.ToString());
                     //character.Realm = character.Realm.Replace("-", " "); // why would you do this???
-                    Calculations.GetModel(character.CurrentModel).SetDefaults(character);
+                    var calc = character.CurrentCalculations;
+                    calc.UpdateProfessions(character);
+                    calc.SetDefaults(character);
                     Progress = "Complete!";
                     if (this.GetCharacterCompleted != null)
                         this.GetCharacterCompleted(this, new EventArgs<Character>(character));

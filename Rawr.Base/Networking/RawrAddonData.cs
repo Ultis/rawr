@@ -162,7 +162,9 @@ namespace Rawr
                 #endregion
 
                 #region Set defaults for character loaded
-                Calculations.GetModel(character.CurrentModel).SetDefaults(character);
+                var calc = character.CurrentCalculations;
+                calc.UpdateProfessions(character);
+                calc.SetDefaults(character);
                 #endregion
 
                 #region Send the result as ready for the Main Form

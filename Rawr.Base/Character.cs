@@ -1475,7 +1475,7 @@ namespace Rawr
 
         private void GenerateGemmingTemplates()
         {
-            List<GemmingTemplate> defaults = GemmingTemplate.CurrentTemplates;
+            List<GemmingTemplate> defaults = GemmingTemplate.GetModelTemplates(CurrentCalculations); // this can be called while character is loading and current instance might still be set to a different model (i.e. bear)
             currentGemmingTemplates = new List<GemmingTemplate>();
             foreach (GemmingTemplate template in defaults)
             {

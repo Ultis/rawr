@@ -337,7 +337,9 @@ namespace Rawr
                     }
                 }
 
-                Calculations.GetModel(character.CurrentModel).SetDefaults(character);
+                var calc = character.CurrentCalculations;
+                calc.UpdateProfessions(character);
+                calc.SetDefaults(character);
 
                 e.Result = new KeyValuePair<Character, Dictionary<CharacterSlot, ItemInstance>>(character, items);
             }
