@@ -32,6 +32,7 @@
           <menu:MenuItem x:Name="ContextRefreshArmory" Click="RefreshItemFromArmory" Header="Refresh Item from Armory" Visibility="Collapsed" />
           <menu:MenuItem x:Name="ContextRefreshWowhead" Click="RefreshItemFromWowhead" Header="Refresh Item from Wowhead" />
           <menu:MenuItem x:Name="ContextEquip" Click="EquipItem" Header="Equip" />
+          <menu:MenuItem x:Name="ContextEquipUpgradeSet" Click="EquipUpgradeSet" Header="Equip Upgrade Set" Visibility="Collapsed" />
           <menu:MenuItem x:Name="ContextAddCustom" Click="AddCustomGemming" Header="Add Custom Gemming..." Visibility="Collapsed" />
           <menu:MenuItem x:Name="ContextDeleteCustom" Click="DeleteCustomGemming" Header="Delete Custom Gemming" Visibility="Collapsed" />
           <menu:MenuItem x:Name="ContextEvaluateUpgrade" Click="EvaluateUpgrade" Header="Evaluate Upgrade..." />

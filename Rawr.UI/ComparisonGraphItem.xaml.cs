@@ -326,6 +326,18 @@ namespace Rawr.UI
             }
         }
 
+        private void EquipUpgradeSet(object sender, RoutedEventArgs e)
+        {
+            var c = NameGrid.Tag as ComparisonCalculationBase;
+            if (c != null && c.CharacterItems != null)
+            {
+                Character.IsLoading = true;
+                Character.SetItems(c.CharacterItems, false);
+                Character.IsLoading = false;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
         private void AddCustomGemming(object sender, RoutedEventArgs e)
         {
             CustomItemInstance custom = new CustomItemInstance(Character, ItemInstance);
@@ -369,6 +381,15 @@ namespace Rawr.UI
         {
             if (ItemInstance == null)
                 ContextMenuItem.IsOpen = false;
+            var c = NameGrid.Tag as ComparisonCalculationBase;
+            if (c != null && c.CharacterItems != null)
+            {
+                ContextEquipUpgradeSet.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                ContextEquipUpgradeSet.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void ContextRemoveItemFromUpgradeList_Click(object sender, RoutedEventArgs e)
@@ -399,7 +420,7 @@ namespace Rawr.UI
         {
             //TODO: *Usually* this is enough, but sometimes the positioning gets off, and it stays where the last context menu was.
             //Not really sure why, but I guess we should set the context menu location here too?
-            ContextMenuService.GetContextMenu(NameGrid).IsOpen = true;
+            ContextMenuService.GetContextMenu(NameGrid).IsOpen = true;            
             if (MainPage.Instance.UpgradeListOpen) {
                 ContextRemoveItemFromUpgradeList.Visibility = Visibility.Visible;
             } else {
