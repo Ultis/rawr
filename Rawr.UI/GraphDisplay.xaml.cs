@@ -160,6 +160,7 @@ namespace Rawr.UI
             CK_iLvl_10.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("ilvlF_10") { Mode = BindingMode.TwoWay });
             CK_iLvl_11.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("ilvlF_11") { Mode = BindingMode.TwoWay });
             CK_iLvl_12.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("ilvlF_12") { Mode = BindingMode.TwoWay });
+            CK_iLvl_13.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("ilvlF_13") { Mode = BindingMode.TwoWay });
             RS_iLvl.SetBinding(RangeSlider.LowerValueProperty, new System.Windows.Data.Binding("ilvlF_SLMin") { Mode = BindingMode.TwoWay });
             RS_iLvl.SetBinding(RangeSlider.UpperValueProperty, new System.Windows.Data.Binding("ilvlF_SLMax") { Mode = BindingMode.TwoWay });
             #endregion
