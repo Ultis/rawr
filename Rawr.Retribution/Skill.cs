@@ -129,7 +129,7 @@ namespace Rawr.Retribution
             CT.AbilityCritCorr = Talents.RuleOfLaw * PaladinConstants.RULE_OF_LAW +
                                  (Talents.GlyphOfCrusaderStrike ? PaladinConstants.GLYPH_OF_CRUSADER_STRIKE : 0);
             AbilityDamageMulitplier[Multiplier.Talents] = (1f + PaladinConstants.CRUSADE * Talents.Crusade);
-            AbilityDamageMulitplier[Multiplier.Sets] = 1f;
+            AbilityDamageMulitplier[Multiplier.Sets] = (1f + Stats.BonusDamageMultiplierCrusaderStrike);
             Cooldown = PaladinConstants.CS_COOLDOWN / (Talents.SanctityOfBattle > 0 ? (1f + _stats.SpellHaste) : 1f);
             AbilityDamage = AbilityHelper.WeaponDamage(_character, _stats.AttackPower, true) * PaladinConstants.CS_DMG_BONUS;
 

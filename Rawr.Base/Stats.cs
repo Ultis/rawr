@@ -214,6 +214,9 @@ namespace Rawr
         // Elemental
         BonusDamageMultiplierLavaBurst,
         #endregion      
+        #region Added by Paladins      [Added by Caromina 2011-10-17]
+        BonusDamageMultiplierCrusaderStrike,
+        #endregion
     }
     public enum InverseMultiplicativeStat : int {
         #region Stats Used by Almost Everyone [Verified Jothay 2011-03-29]
@@ -1806,6 +1809,17 @@ namespace Rawr
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusDamageMultiplierLavaBurst]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusDamageMultiplierLavaBurst] = value; }
+        }
+        #endregion
+        #region Added by Paladins
+        [DefaultValueAttribute(0f)]
+        [DisplayName("% Bonus Damage Multiplier Crusader Strike")]
+        [Percentage]
+        [Category("Retribution")]
+        public float BonusDamageMultiplierCrusaderStrike
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusDamageMultiplierCrusaderStrike]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusDamageMultiplierCrusaderStrike] = value; }
         }
         #endregion
         #endregion

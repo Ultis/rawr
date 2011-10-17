@@ -315,6 +315,10 @@ namespace Rawr {
             #region Added by Warrior: DPSWarr
             #endregion
             #region Added by Paladin: Retadin
+            else if ((match = new Regex(@"Increases the damage dealt by your Crusader Strike ability by (?<amount>\d+)%").Match(line)).Success)
+            {   // Gladiator's Libram of Fortitude
+                stats.BonusDamageMultiplierCrusaderStrike = int.Parse(match.Groups["amount"].Value) / 100;
+            }    
             else if ((match = new Regex(@"Your Crusader Strike ability also grants you (?<amount>\d+) attack power for (?<dur>\d+) sec").Match(line)).Success)
             {   // Gladiator's Libram of Fortitude
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.CrusaderStrikeHit,
