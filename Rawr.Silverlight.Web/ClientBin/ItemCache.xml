@@ -53146,6 +53146,7 @@
       <HitRating>159</HitRating>
       <Resilience>179</Resilience>
       <Armor>2179</Armor>
+      <BonusDamageMultiplierCrusaderStrike>0.05</BonusDamageMultiplierCrusaderStrike>
     </Stats>
     <Quality>Epic</Quality>
     <SetName>Gladiator's Vindication</SetName>
@@ -71274,7 +71275,7 @@
       <HitRating>138</HitRating>
       <Resilience>158</Resilience>
       <Armor>2098</Armor>
-      <ArcaneDamage>0.05</ArcaneDamage>
+      <BonusDamageMultiplierCrusaderStrike>0.05</BonusDamageMultiplierCrusaderStrike>
     </Stats>
     <Quality>Rare</Quality>
     <SetName>Gladiator's Vindication</SetName>
@@ -120875,6 +120876,7 @@
       <HitRating>194</HitRating>
       <Resilience>214</Resilience>
       <Armor>2304</Armor>
+      <BonusDamageMultiplierCrusaderStrike>0.05</BonusDamageMultiplierCrusaderStrike>
     </Stats>
     <Quality>Epic</Quality>
     <SetName>Gladiator's Vindication</SetName>
@@ -120918,6 +120920,7 @@
       <HitRating>194</HitRating>
       <Resilience>214</Resilience>
       <Armor>2304</Armor>
+      <BonusDamageMultiplierCrusaderStrike>0.05</BonusDamageMultiplierCrusaderStrike>
     </Stats>
     <Quality>Epic</Quality>
     <SetName>Gladiator's Vindication</SetName>
@@ -128889,6 +128892,7 @@
       <ItemLocation xsi:type="UnknownItem" />
       <ItemLocation xsi:type="UnknownItem" />
       <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
     <Name>[Downloading from Wowhead]</Name>
     <Id>0</Id>
@@ -133844,6 +133848,7 @@
       <HitRating>169</HitRating>
       <Resilience>189</Resilience>
       <Armor>2218</Armor>
+      <BonusDamageMultiplierCrusaderStrike>0.05</BonusDamageMultiplierCrusaderStrike>
     </Stats>
     <Quality>Epic</Quality>
     <SetName>Gladiator's Vindication</SetName>

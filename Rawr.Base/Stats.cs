@@ -1630,8 +1630,8 @@ namespace Rawr
         [Category("Buffs / Debuffs")]
         public float DefensiveCooldownDurationMultiplier
         {
-            get { return _rawInverseMultiplicativeData[(int)MultiplicativeStat.DefensiveCooldownDurationMultiplier]; }
-            set { _rawInverseMultiplicativeData[(int)MultiplicativeStat.DefensiveCooldownDurationMultiplier] = value; }
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.DefensiveCooldownDurationMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.DefensiveCooldownDurationMultiplier] = value; }
         }
         [DefaultValueAttribute(0f)]
         [DisplayName("% Damage Taken Reduction")]
