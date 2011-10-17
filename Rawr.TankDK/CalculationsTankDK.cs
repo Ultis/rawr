@@ -1192,19 +1192,17 @@ Points individually may be important.",
             calcs.Mitigation = basecalcs.Mitigation;
 
             #region **** Burst: DS & Blood Shield ****
-            float DSDam = calcs.DTPS * 5f;
             float minDSHeal = stats.Health * .07f;
-            // 4.1 PTR: DS Heals for 20% of Damage Taken.
-            float DamDSHeal = (DSDam * .20f) * (1 + .15f * TDK.Char.DeathKnightTalents.ImprovedDeathStrike); // DS heals for avg damage over the last 5 secs.
+            // 4.1 PTR: DS Heals for 20% of Damage Taken over the last 5 secs.
+            float DamDSHeal = (calcs.DTPS * 5f * .20f) * (1 + .15f * TDK.Char.DeathKnightTalents.ImprovedDeathStrike); // IDS increases heals by .15 * level
             float DSHeal = Math.Max(minDSHeal, DamDSHeal);
             calcs.DSHeal = DSHeal;
             calcs.DSOverHeal = DSHeal * TDK.calcOpts.pOverHealing;
             calcs.DSCount = TDK.bo.BerserkTimer * rot.m_DSperSec;
             float BloodShield = (DSHeal * .5f) * (1 + (stats.Mastery * .0625f));
             calcs.BShield = BloodShield;
-            // Get HitChance value from the DS in the rotation.
-            AbilityDK_Base DS = rot.GetAbilityOfType(DKability.DeathStrike) as AbilityDK_Base;
-            float DSHealsPSec = (DSHeal * rot.m_DSperSec * (1f - TDK.calcOpts.pOverHealing) * (DS.HitChance));
+            // 4.3 Removing Hitchance for healing
+            float DSHealsPSec = (DSHeal * rot.m_DSperSec * (1f - TDK.calcOpts.pOverHealing));
             calcs.TotalDShealed = DSHealsPSec * TDK.bo.BerserkTimer;
             float BShieldPSec = BloodShield * rot.m_DSperSec; // A new shield w/ each DS.
             calcs.TotalBShield = BShieldPSec * TDK.bo.BerserkTimer;
