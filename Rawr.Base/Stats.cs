@@ -182,6 +182,7 @@ namespace Rawr
         BaseArmorMultiplier,
         BonusArmorMultiplier,
         BonusBlockValueMultiplier,
+        DefensiveCooldownDurationMultiplier,
         #endregion
         #region ===== Item Proc Stats =====
         #endregion
@@ -230,6 +231,7 @@ namespace Rawr
         PhysicalDamageTakenReductionMultiplier,
         BossAttackSpeedReductionMultiplier,
         BossPhysicalDamageDealtMultiplier,
+        DefensiveCooldownReductionMultiplier,
         #endregion
         #region Added by Death Knights        [Verified Jothay 2011-03-29]
         AntiMagicShellDamageReduction,
@@ -1623,6 +1625,15 @@ namespace Rawr
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusBlockValueMultiplier] = value; }
         }
         [DefaultValueAttribute(0f)]
+        [DisplayName("% Defensive Cooldown Duration Multiplier")]
+        [Percentage]
+        [Category("Buffs / Debuffs")]
+        public float DefensiveCooldownDurationMultiplier
+        {
+            get { return _rawInverseMultiplicativeData[(int)MultiplicativeStat.DefensiveCooldownDurationMultiplier]; }
+            set { _rawInverseMultiplicativeData[(int)MultiplicativeStat.DefensiveCooldownDurationMultiplier] = value; }
+        }
+        [DefaultValueAttribute(0f)]
         [DisplayName("% Damage Taken Reduction")]
         [Percentage]
         [Category("Buffs / Debuffs")]
@@ -1648,6 +1659,15 @@ namespace Rawr
         {
             get { return _rawInverseMultiplicativeData[(int)InverseMultiplicativeStat.PhysicalDamageTakenReductionMultiplier]; }
             set { _rawInverseMultiplicativeData[(int)InverseMultiplicativeStat.PhysicalDamageTakenReductionMultiplier] = value; }
+        }
+        [DefaultValueAttribute(0f)]
+        [DisplayName("% Defensive Cooldown Reduction")]
+        [Percentage]
+        [Category("Buffs / Debuffs")]
+        public float DefensiveCooldownReductionMultiplier
+        {
+            get { return _rawInverseMultiplicativeData[(int)InverseMultiplicativeStat.DefensiveCooldownReductionMultiplier]; }
+            set { _rawInverseMultiplicativeData[(int)InverseMultiplicativeStat.DefensiveCooldownReductionMultiplier] = value; }
         }
         #endregion
         #region ===== Target Stats =====
