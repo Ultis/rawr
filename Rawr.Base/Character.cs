@@ -893,10 +893,11 @@ namespace Rawr
             true, // 6 359-364 (Tier 11.0)
             true, // 7 365-371 (Molten Front)
             true, // 8 372 - 377 (Tier 11.5)
-            true, // 9 378 - 390 (Tier 12.0)
-            true, // 10 391 - 396 (Tier 12.5)
-            true, // 11 397 - 409 (Tier 13.0)
-            true, // 12 410 - 416 (Tier 13.5)
+            true, // 9 378 - 383 (Tier 12.0)
+            true, // 10 384 - 390 (Tier 13.LFR)
+            true, // 11 391 - 396 (Tier 12.5)
+            true, // 12 397 - 409 (Tier 13.0)
+            true, // 13 410 - 416 (Tier 13.5)
         };
         [XmlIgnore]
         public bool[] iLvl {
@@ -912,10 +913,11 @@ namespace Rawr
                         true, // 6 359-364 (Tier 11.0)
                         true, // 7 365-371 (Molten Front)
                         true, // 8 372 - 377 (Tier 11.5)
-                        true, // 9 378 - 390 (Tier 12.0)
-                        true, // 10 391 - 396 (Tier 12.5)
-                        true, // 11 397 - 409 (Tier 13.0)
-                        true, // 12 410 - 416 (Tier 13.5)
+                        true, // 9 378 - 383 (Tier 12.0)
+                        true, // 10 384 - 390 (Tier 13.LFR)
+                        true, // 11 391 - 396 (Tier 12.5)
+                        true, // 12 397 - 409 (Tier 13.0)
+                        true, // 13 410 - 416 (Tier 13.5)
                     };
                 }
                 return _iLvl;
@@ -932,10 +934,11 @@ namespace Rawr
                         true, // 6 359-364 (Tier 11.0)
                         true, // 7 365-371 (Molten Front)
                         true, // 8 372 - 377 (Tier 11.5)
-                        true, // 9 378 - 390 (Tier 12.0)
-                        true, // 10 391 - 396 (Tier 12.5)
-                        true, // 11 397 - 409 (Tier 13.0)
-                        true, // 12 410 - 416 (Tier 13.5)
+                        true, // 9 378 - 383 (Tier 12.0)
+                        true, // 10 384 - 390 (Tier 13.LFR)
+                        true, // 11 391 - 396 (Tier 12.5)
+                        true, // 12 397 - 409 (Tier 13.0)
+                        true, // 13 410 - 416 (Tier 13.5)
                     };
                 } else {
                     _iLvl = value;
@@ -969,6 +972,8 @@ namespace Rawr
         public bool ilvlF_11 { get { return _iLvl[11]; } set { _iLvl[11] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersSettings_12")][DefaultValue(true)]
         public bool ilvlF_12 { get { return _iLvl[12]; } set { _iLvl[12] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersSettings_13")][DefaultValue(true)]
+        public bool ilvlF_13 { get { return _iLvl[13]; } set { _iLvl[13] = value; OnFiltersChanged(); } }
 
         [XmlIgnore]
         private double _ilvlF_SLMin = 285;

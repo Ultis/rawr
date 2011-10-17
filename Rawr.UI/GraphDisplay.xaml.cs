@@ -2117,8 +2117,10 @@ namespace Rawr.UI
             CK_iLvl_9.IsChecked = true;
             CK_iLvl_10.IsChecked = true;
             CK_iLvl_11.IsChecked = true;
+            CK_iLvl_12.IsChecked = true;
+            CK_iLvl_13.IsChecked = true;
             RS_iLvl.LowerValue = 285;
-            RS_iLvl.UpperValue = 404;
+            RS_iLvl.UpperValue = 416;
             Character.IsLoading = true;
             ItemCache.Instance.OnItemsChanged();
         }
@@ -2138,6 +2140,8 @@ namespace Rawr.UI
             CK_iLvl_9.IsChecked = false;
             CK_iLvl_10.IsChecked = false;
             CK_iLvl_11.IsChecked = false;
+            CK_iLvl_12.IsChecked = false;
+            CK_iLvl_13.IsChecked = false;
             Character.IsLoading = false;
             ItemCache.Instance.OnItemsChanged();
         }

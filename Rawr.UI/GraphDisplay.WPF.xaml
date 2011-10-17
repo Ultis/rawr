@@ -477,10 +477,11 @@
                                 <CheckBox x:Name="CK_iLvl_6" Margin="4,0" Content="359-364 (Tier 11.0)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
                                 <CheckBox x:Name="CK_iLvl_7" Margin="4,0" Content="365-371 (Molten Front)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
                                 <CheckBox x:Name="CK_iLvl_8" Margin="4,0" Content="372-377 (Tier 11.5)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
-                                <CheckBox x:Name="CK_iLvl_9" Margin="4,0" Content="378-390 (Tier 12.0)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
-                                <CheckBox x:Name="CK_iLvl_10" Margin="4,0" Content="391-396 (Tier 12.5)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
-                                <CheckBox x:Name="CK_iLvl_11" Margin="4,0" Content="397-409 (Tier 13.0)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
-                                <CheckBox x:Name="CK_iLvl_12" Margin="4,0" Content="410-416 (Tier 13.5)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_iLvl_9" Margin="4,0" Content="378-383 (Tier 12.0/Hour of Twilight)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_iLvl_10" Margin="4,0" Content="384-390 (Tier 13.LFR)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_iLvl_11" Margin="4,0" Content="391-396 (Tier 12.5)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_iLvl_12" Margin="4,0" Content="397-409 (Tier 13.0)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_iLvl_13" Margin="4,0" Content="410-416 (Tier 13.5)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
                             </StackPanel>
 
                             <RadioButton Grid.ColumnSpan="3" x:Name="RB_iLvl_Sliders" Margin="4,0" Grid.Row="4" Content="By Custom Slider" IsChecked="True" GroupName="Filters_iLvL"/>
