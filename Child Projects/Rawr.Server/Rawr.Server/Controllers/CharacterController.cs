@@ -556,8 +556,14 @@ namespace Rawr.Server.Controllers
   <ItemFiltersSettings_5>true</ItemFiltersSettings_5>
   <ItemFiltersSettings_6>true</ItemFiltersSettings_6>
   <ItemFiltersSettings_7>true</ItemFiltersSettings_7>
+  <ItemFiltersSettings_8>true</ItemFiltersSettings_8>
+  <ItemFiltersSettings_9>true</ItemFiltersSettings_9>
+  <ItemFiltersSettings_10>true</ItemFiltersSettings_10>
+  <ItemFiltersSettings_11>true</ItemFiltersSettings_11>
+  <ItemFiltersSettings_12>true</ItemFiltersSettings_12>
+  <ItemFiltersSettings_13>true</ItemFiltersSettings_13>
   <ItemFiltersSettings_SLMin>285</ItemFiltersSettings_SLMin>
-  <ItemFiltersSettings_SLMax>377</ItemFiltersSettings_SLMax>
+  <ItemFiltersSettings_SLMax>416</ItemFiltersSettings_SLMax>
   <ItemFiltersDropSettings_UseChecks>true</ItemFiltersDropSettings_UseChecks>
   <ItemFiltersDropSettings_01>true</ItemFiltersDropSettings_01>
   <ItemFiltersDropSettings_03>true</ItemFiltersDropSettings_03>
