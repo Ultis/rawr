@@ -160,6 +160,141 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes()
         {
+#region Rawr 4.2.6 (October 16, 2011) [r63473]
+VNStuff.Add("Rawr 4.2.6 (October 16, 2011) [r63473]",
+@"Cataclysm Release
+Rawr.Base:
+- Disable nonoperational batch tools options in SL.
+- Warn about tinkering availability.
+- Show file name in window title for WPF.
+- Don't replace dots in save to repo dialog.
+- Fix for optimizer crash.
+- Fix button size.
+- Fix for export from upgrade list.
+- High dpi support; wrapping character slots and cut off search boxes
+- Fix for Issue 21084: [Charts] Top Graph Values Texts are Clipped
+- Fix for Issue 21257: Add buffs by raid member adds incorrect buff
+- Adding note to the Error Window's Copy to Clipboard for which Application has the issue SL vs WPF
+- Modified Error Window's Copy to Clipboard to ask the user for the steps they have tried in a window and then putting that information into the clipboard text.
+- Mark JC gemming template if JC
+- Remember last model used when starting, persist settings between versions for WPF
+- Context menu option to load upgrade set from upgrade list.
+
+Rawr.Items:
+- Added most T13 Set names to the buff tab
+- Updated Wowhead patch 4.3 zone info
+- Updated Item cache filtering for T13 normal and heroic ilvls
+- Several Brimstone Rings and Fireland rep trinkets were added, but not implemented (updated uniqueness for all)
+- Updated with a few zone names
+- Added Season 11 PvP to the Item Set filtering
+- Updated Filtering to include 4.3 Dungeons and T13 Dragon Soul Raid
+- Updated iLvl filtering to include T13 ilvls
+- Updated the Special Effects introduced in 4.3
+- Implement new Bow/Gun Enchant Flintlocke's Woodchucker
+- Corrected Skullpiercer Pauldrons socket bonus
+- Refreshed Feral Druid T12 tier
+- Double checked Flickering Cowl's Suffix Enchants
+
+Rawr.Buffs:
+- Fixed pet buffs from not applying
+- Removed Improved and Glyphed Hunter Pets from the Buff By Raid Module
+- All Hunters provide the Hunter's Mark from the Buff by Raid Module
+- Hunters stings no longer provide a Raid buff, removed from Buff by Raid Module
+- If a user selects Beast Mastery Hunter, show BM only pets as possible pets, else don't
+- The Apply Buffs by Raid Members dialog now has a sub-dialog that allows you to import the Link to Composition from http://raidcomp.mmo-champion.com/
+- Slight pet list naming change in the last release.
+
+Rawr.BossHandler:
+- Updated Basic Damage and health values for Fireland bosses. (25% nerf on normal, 15% nerf on heroic)
+- Small update to T11 Bosses
+- Did a first pass on adding in the Tier 13 Bosses to the Boss handler
+- Guesswork on the damage numbers for Tier 13 white attacks
+- Alizabal, Mistress of Hate the new Baradin Hold boss is initially implemented; the timing of abilities are guesses at this point
+- Added support for a 5th type of Raid level in preparation for the upcoming Looking For Raid raid difficulty
+- Updated timing of the new Baradin Hold Raid boss based on early videos (still a work in progress; but it should be close)
+- Started going back and re-working/cleaning up T12 boss abilities starting with Beth'tilac and Lord Rhyo'lith. Will get T11 and T13 afterwards.
+- Massive update to Alysrazor and Baleroc modules 
+- Slight adjustments to the new Baradin Hold Boss in 4.3
+- Shannox has been double checked and cleaned up
+- Majordomo Staghelm has been implemented
+- Fixed an issue where selecting average damage from a 25 man raid was not selecting the correct Raid size
+- Most Ragnaros Normal Abilites are in place. 
+- Just missing World of Flame, Seeds, Lava Scion melee attacks, and all of Phase 4
+- Slightly adjusted Tier 13 damage numbers As well as Ragnaros' damage numbers
+- Updated the first three boss's 10-man Health pools
+- Deathwing needs to hit harder than the rest of his minions
+
+Rawr.Bear:
+- Implemented T13 set bonuses.
+
+Rawr.Mage:
+- Fix for solver stall.
+- Take mana adept into account for by spell breakdown.
+
+Rawr.DPSWarr:
+- Recklessness modelling and tooltips updated
+- Inner Rage modelling and tooltips updated
+- Berserker Rage tooltip typo fixed
+- Removed the change that made it state Fury Isn't Cata Ready on the pane and put it into the tooltip
+
+Rawr.DPSDK:
+- Trying to fix the odd pet numbers.
+- Gut the solver to make room for the possibility of using a Markov process for priorities.
+- Tweak the hit/crit code to see if yet another simple change may fix some of the odd values.
+- Disable the BloodTap code because it was screwing with haste.
+
+Rawr.TankDK:
+- Fix for 21596: I forgot to update STR - parry conversion to 27%
+- Fix for Issue: 21602: Mastery Rating was being added in twice. Once from the AccumulateTalents and once in AccumulateRatings.
+- Fix for some inflated White Hit values due to hit rating providing benefits past cap.
+
+Rawr.Cat:
+- Added T13 2 and 4 piece bonuses
+- updated Tier 13 4-piece to the latest PTR build (TF causes next Ravage to cost no energy, not stealthed)
+- 4 Prime glyphs were marked as default, removed glyph of Tiger's Fury as a default glyph (though that could change in 4.3 with the T13 4-piece set bonus)
+
+Rawr.Moonkin:
+- New 4T13 set bonus.
+- Fix bug where Starsurge cooldown was being decreased by Starsurge cast time in the simulator.
+- Apparently, I never correctly buffed the spell coefficients for Starfire and Wrath. Fixed.
+- Change solver to count only casts executed during a rotation. This corrects the issue with under-weighting Starfire.
+- Shooting Stars procs do need to decrement the Starsurge cooldown by the global cooldown, because the CD starts when the nuke is launched.
+- Shooting Stars procs were being based off partial ticks of dots.
+- Fix a bug in the simulator where the dot tick calculator used the wrong tick rate for Insect Swarm.
+- The Moonfire/Sunfire transition should not be clipped.
+- When Starsurge is below the GCD, part of the cooldown should be used up during the transition.
+- Fix an issue with not correctly determining whether Moonfire needs to be recast.
+- Fixed double-counting of Starsurge damage in the rotation data, which was causing the 4T13 set bonus over-valuation.
+- Display the actual average cast time of Starsurge, including Shooting Stars procs.
+- Fix the DPET chart due to the fix to Starsurge cast time.
+- Spell power multiplier multiplies actual reported spell power, not spell damage.
+- Moonfury is additive with glyphs, Blessing of the Grove
+- Fix a mistake that caused Int trinkets to be severely undervalued.
+- Fix the rotation duration to match WrathCalcs. It excludes the duration of time spent on cooldown spells, but oh well.
+- Re-implement Dragonwrath procs reducing rotation duration.
+- Apply BonusSpellPowerMultiplier to the Heart of Ignacious.
+- Intellect procs benefit from BonusIntellectMultiplier.
+- Remove spell crit depression.
+- Modify Eclipse uptimes by Starfall usage.
+- Replace the None rotation on the options tab.
+- Starfall damage benefits from the boosted Lunar uptime when cast on cooldown.
+- Moonkin Form grants 10% spell damage increase, not 1%.
+- Put the duration lengthening from Starfall and Treants back in. This brings the DPS value in line with WC and SimC.
+- Add default glyphs.
+- Add a buff set.
+
+Rawr.Hunter:
+- Big check in. Hacked up a bunch of stuff to start getting some numbers out that look kinda reasonable. Currently I am only modeling MM and there's still a bunch of stuff not properly hooked up.
+- Have the Aimed Shot proc working, but I think Careful Aim is still broken. 
+- Focus cost/deficit and rotation adjustments for that has not been implemented.
+
+Rawr.Tree:
+- Add T13 2P and 4P set bonuses
+- Add support for PTR changes to Wild Growth and Glyph of Wild Growth
+- Make the T12 4P heal respect effective healing settings properly
+- Allow the T12 4P heal to crit
+");
+#endregion
 #region Rawr 4.2.5 (September 25, 2011) [r63191]
             VNStuff.Add("Rawr 4.2.5 (September 25, 2011) [r63191]",
             @"Cataclysm Release
