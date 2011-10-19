@@ -1600,6 +1600,7 @@ namespace Rawr
                 Reforging = this.Reforging == null ? null : this.Reforging.Clone(),
                 Tinkering = this.Tinkering,
                 RandomSuffixId = this.RandomSuffixId,
+                ItemAvailabilityInformation = this.ItemAvailabilityInformation // batch tools relies on this
             };
         }
 
