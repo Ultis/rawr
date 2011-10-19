@@ -84,7 +84,7 @@ namespace Rawr.DK
         {
             get
             {
-                return Math.Min(1, base.CritChance + CState.m_Stats.BonusCritChanceObliterate + _BonusCritChance);
+                return Math.Min(1, base.CritChance * (1 + CState.m_Stats.BonusCritChanceObliterate) * (1 + _BonusCritChance));
             }
         }
         public void SetKMCritChance(float value)

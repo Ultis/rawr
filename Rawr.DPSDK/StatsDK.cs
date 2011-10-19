@@ -50,6 +50,11 @@ namespace Rawr.DK
         public bool b2T12_DPS { get; set; }
         public bool b4T12_DPS { get; set; }
 
+        public bool b2T13_Tank { get; set; }
+        public bool b4T13_Tank { get; set; }
+        public bool b2T13_DPS { get; set; }
+        public bool b4T13_DPS { get; set; }
+
         public bool bDW { get; set; }
     }
 }

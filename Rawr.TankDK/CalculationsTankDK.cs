@@ -975,11 +975,11 @@ Points individually may be important.",
             // Talent: MagicSuppression increases AMS by 8/16/25% per point.
             // Glyph: GlyphofAntiMagicShell increases AMS by 2 sec.
             // AMS has a 45 sec CD.
-            float amsDuration = (5f + (TDK.Char.DeathKnightTalents.GlyphofAntiMagicShell == true ? 2f : 0f));
+            float amsDuration = (5f + (TDK.Char.DeathKnightTalents.GlyphofAntiMagicShell == true ? 2f : 0f)) * (1 + stats.DefensiveCooldownDurationMultiplier);
             float amsUptimePct = amsDuration / 45f;
             // AMS reduces damage taken by 75% up to a max of 50% health.
             float amsReduction = 0.75f * (1f + (TDK.Char.DeathKnightTalents.MagicSuppression * .25f / 3));
-            float amsReductionMax = stats.Health * 0.5f;
+            float amsReductionMax = stats.Health * 0.5f * (1 + stats.DefensiveCooldownReductionMultiplier);
             // up to 50% of health means that the amdDRvalue equates to the raw damage points removed.  
             // This means that toon health and INC damage values from the options pane are going to affect this quite a bit.
             float amsDRvalue = (Math.Min(amsReductionMax, (fMagicDamageDPS * amsDuration) * amsReduction) * amsUptimePct);
@@ -1075,7 +1075,7 @@ Points individually may be important.",
             fTotalMitigation[(int)MitigationSub.Impedences] += ImpedenceMitigation;
             #endregion
 
-            #region ** Heals **
+            #region ** Heals not from DS **
             fSegmentMitigation = StatConversion.ApplyMultiplier(stats.Healed, stats.HealingReceivedMultiplier);
             fSegmentMitigation += (StatConversion.ApplyMultiplier(stats.Hp5, stats.HealingReceivedMultiplier) / 5);
             fSegmentMitigation += StatConversion.ApplyMultiplier(stats.HealthRestore, stats.HealingReceivedMultiplier);
@@ -1184,6 +1184,7 @@ Points individually may be important.",
             calcs.Burst = calcs.Survivability - basecalcs.Survivability;
             if (calcs.Burst < 0) { calcs.Burst = 0; } // This should never happen but just in case
             calcs.Burst += calcs.Mitigation - basecalcs.Mitigation;
+            if (calcs.Burst < 0) { calcs.Burst = 0; } // This should never happen but just in case
             // Survival
             calcs.PhysicalSurvival = basecalcs.PhysicalSurvival;
             calcs.MagicSurvival = basecalcs.MagicSurvival;
@@ -1517,6 +1518,24 @@ Points individually may be important.",
             {
                 // Your when your Dancing Rune Weapon expires, it grants 15% additional parry chance for 12 sec.
                 // Implemented in DRW talent Static Special Effect.
+            }
+            #endregion
+            #region T13
+            if (character.SetBonusCount.TryGetValue("Necrotic Boneplate Armor", out tierCount))
+            {
+                if (tierCount >= 2) { statsTotal.b2T13_Tank = true; }
+                if (tierCount >= 4) { statsTotal.b4T13_Tank = true; }
+            }
+            if (statsTotal.b2T13_Tank)
+            {
+                // When an attack drops your health below 35%, one of your Blood Runes 
+                // will immediately activate and convert into a Death Rune for the next 
+                // 20 sec. This effect cannot occur more than once every 45 sec.
+            }
+            if (statsTotal.b4T13_Tank)
+            {
+                // Your Vampiric Blood ability also affects all party and raid members 
+                // for 50% of the effect it has on you.
             }
             #endregion
             #endregion

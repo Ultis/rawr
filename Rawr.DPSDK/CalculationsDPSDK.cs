@@ -707,6 +707,24 @@ namespace Rawr.DPSDK
                 // Implemented in DRW talent Static Special Effect.
             }
             #endregion
+            #region T13
+            if (character.SetBonusCount.TryGetValue("Necrotic Boneplate Armor", out tierCount))
+            {
+                if (tierCount >= 2) { statsTotal.b2T13_Tank = true; }
+                if (tierCount >= 4) { statsTotal.b4T13_Tank = true; }
+            }
+            if (statsTotal.b2T13_Tank)
+            {
+                // When an attack drops your health below 35%, one of your Blood Runes 
+                // will immediately activate and convert into a Death Rune for the next 
+                // 20 sec. This effect cannot occur more than once every 45 sec.
+            }
+            if (statsTotal.b4T13_Tank)
+            {
+                // Your Vampiric Blood ability also affects all party and raid members 
+                // for 50% of the effect it has on you.
+            }
+            #endregion
             #endregion
             #region DPS
             #region T11
@@ -758,6 +776,23 @@ namespace Rawr.DPSDK
             {
                 // Your Obliterate and Scourge Strike abilities instantly deal 6% additional damage as Fire damage.
                 // Implemented in Oblit and SS classes.
+            }
+            #endregion
+            #region T13
+            if (character.SetBonusCount.TryGetValue("Necrotic Boneplate Battlegear", out tierCount))
+            {
+                if (tierCount >= 2) { statsTotal.b2T13_DPS = true; }
+                if (tierCount >= 4) { statsTotal.b4T13_DPS = true; }
+            }
+            if (statsTotal.b2T13_DPS)
+            {
+                // Sudden Doom has a 30% chance and Rime has a 60% chance 
+                // to grant 2 charges when triggered instead of 1.
+            }
+            if (statsTotal.b4T13_DPS)
+            {
+                // Runic Empowerment has a 25% chance and Runic Corruption 
+                // has a 40% chance to also grant 710 mastery rating for 12 sec when activated.
             }
             #endregion
             #endregion
