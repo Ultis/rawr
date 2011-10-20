@@ -496,21 +496,48 @@ namespace Rawr.DK
             }
 
 
+            #region Runic Power Pass 1.
             // How much RP do we have at this point?
-
             foreach (AbilityDK_Base ab in ml_Rot)
                 m_RunicPower += ab.RunicPower;
             m_RunicPower = (int)((float)m_RunicPower);
-            if (m_CT.m_CState.m_Talents.Butchery > 0)
+            if (m_CT.m_CState.m_Stats.RPp5 > 0)
                 m_RunicPower -= (int)((CurRotationDuration / 5) * m_CT.m_CState.m_Stats.RPp5);
 
             // Burn what we can.
-            for (int RSCount = Math.Abs(m_RunicPower / RS.RunicPower); RSCount > 0; RSCount--)
+            float RSCount = 0;
+            for (RSCount = Math.Abs(m_RunicPower / RS.RunicPower); RSCount > 0; RSCount--)
             {
                 ml_Rot.Add(RS);
                 m_RunicPower += RS.RunicPower;
             }
+            #endregion
+            BuildCosts();
+            #region RunicPower Pass 2.
+            // How much RP do we have at this point?
+            if (m_CT.m_CState.m_Stats.RPp5 > 0)
+                m_RunicPower -= (int)((CurRotationDuration / 5) * m_CT.m_CState.m_Stats.RPp5);
 
+            // Burn what we can.
+            for (RSCount = Math.Abs((float)m_RunicPower / (float)RS.RunicPower); RSCount > 0; RSCount--)
+            {
+                if (RSCount >= 1)
+                {
+                    ml_Rot.Add(RS);
+                    m_RunicPower += RS.RunicPower;
+                }
+                else
+                {
+                    AbilityDK_RuneStrike RSPartial = new AbilityDK_RuneStrike(m_CT.m_CState);
+                    RSPartial.fPartialValue = RSCount;
+                    RSPartial.bPartial = true;
+                    RSPartial.szName = "RS (partial)";
+                    RSPartial.RunicPower = (int)((float)RS.AbilityCost[(int)DKCostTypes.RunicPower] * RSCount);
+                    m_RunicPower += RSPartial.RunicPower;
+                    ml_Rot.Add(RSPartial);
+                }
+            }
+            #endregion
             BuildCosts();
         }
 
@@ -589,21 +616,48 @@ namespace Rawr.DK
             }
 
 
+            #region Runic Power Pass 1.
             // How much RP do we have at this point?
-
             foreach (AbilityDK_Base ab in ml_Rot)
                 m_RunicPower += ab.RunicPower;
             m_RunicPower = (int)((float)m_RunicPower);
-            if (m_CT.m_CState.m_Talents.Butchery > 0)
+            if (m_CT.m_CState.m_Stats.RPp5 > 0)
                 m_RunicPower -= (int)((CurRotationDuration / 5) * m_CT.m_CState.m_Stats.RPp5);
 
             // Burn what we can.
-            for (int RSCount = Math.Abs(m_RunicPower / RS.RunicPower); RSCount > 0; RSCount--)
+            float RSCount = 0;
+            for (RSCount = Math.Abs(m_RunicPower / RS.RunicPower); RSCount > 0; RSCount--)
             {
                 ml_Rot.Add(RS);
                 m_RunicPower += RS.RunicPower;
             }
+            #endregion
+            BuildCosts();
+            #region RunicPower Pass 2.
+            // How much RP do we have at this point?
+            if (m_CT.m_CState.m_Stats.RPp5 > 0)
+                m_RunicPower -= (int)((CurRotationDuration / 5) * m_CT.m_CState.m_Stats.RPp5);
 
+            // Burn what we can.
+            for (RSCount = Math.Abs((float)m_RunicPower / (float)RS.RunicPower); RSCount > 0; RSCount--)
+            {
+                if (RSCount >= 1)
+                {
+                    ml_Rot.Add(RS);
+                    m_RunicPower += RS.RunicPower;
+                }
+                else
+                {
+                    AbilityDK_RuneStrike RSPartial = new AbilityDK_RuneStrike(m_CT.m_CState);
+                    RSPartial.fPartialValue = RSCount;
+                    RSPartial.bPartial = true;
+                    RSPartial.szName = "RS (partial)";
+                    RSPartial.RunicPower = (int)((float)RS.AbilityCost[(int)DKCostTypes.RunicPower] * RSCount);
+                    m_RunicPower += RSPartial.RunicPower;
+                    ml_Rot.Add(RSPartial);
+                }
+            }
+            #endregion
             BuildCosts();
         }
 
@@ -670,15 +724,104 @@ namespace Rawr.DK
             ml_Rot.Add(OB);
             ml_Rot.Add(OB);
 
-
+            #region RunicPower Pass 1.
             // How much RP do we have at this point?
             foreach (AbilityDK_Base ab in ml_Rot)
                 m_RunicPower += ab.RunicPower;
             if (m_CT.m_CState.m_Stats.RPp5 > 0)
                 m_RunicPower -= (int)((CurRotationDuration / 5) * m_CT.m_CState.m_Stats.RPp5);
 
+            float RSCount = 0;
             // Burn what we can.
-            for (float RSCount = Math.Abs((float)m_RunicPower / (float)FS.RunicPower); RSCount > 0; RSCount--)
+            for (RSCount = Math.Abs((float)m_RunicPower / (float)FS.RunicPower); RSCount > 0; RSCount--)
+            {
+                if (RSCount >= 1)
+                {
+                    ml_Rot.Add(FS);
+                    m_RunicPower += FS.RunicPower;
+                }
+                // Partials at the end.
+
+            }
+            #endregion
+
+            #region Talent: Rime
+            if (m_CT.m_CState.m_Talents.Rime > 0)
+            {
+                AbilityDK_Base ability;
+                // we want 1 full use, and then any sub values.
+                if (HB.DPS > IT.DPS)
+                {
+                    ability = new AbilityDK_HowlingBlast(m_CT.m_CState);
+                    ability.szName = "HB";
+                }
+                else
+                {
+                    ability = new AbilityDK_IcyTouch(m_CT.m_CState);
+                    ability.szName = "IT";
+                }
+                ability.szName += " (Rime)";
+                // These are free ITs/HBs.
+                ability.AbilityCost[(int)DKCostTypes.Blood] = 0;
+                ability.AbilityCost[(int)DKCostTypes.Frost] = 0;
+                ability.AbilityCost[(int)DKCostTypes.UnHoly] = 0;
+                ability.AbilityCost[(int)DKCostTypes.Death] = 0;
+                ability.AbilityCost[(int)DKCostTypes.RunicPower] = 0;
+
+                float fRimeMod = this.Count(DKability.Obliterate) * .15f * m_CT.m_CState.m_Talents.Rime;
+                // 60% chance to proc 2 Rimes rather than 1.
+                if (m_CT.m_CState.m_Stats.b2T13_DPS)
+                    fRimeMod *= 1.6f;
+                if (fRimeMod >= 1f)
+                {
+                    for (; fRimeMod >= 1; fRimeMod--)
+                    {
+                        ml_Rot.Add(ability);
+                    }
+                }
+                if (fRimeMod > 0f && fRimeMod < 1f)
+                {
+                    if (HB.DPS > IT.DPS)
+                    {
+                        ability = new AbilityDK_HowlingBlast(m_CT.m_CState);
+                        ability.szName = "HB";
+                    }
+                    else
+                    {
+                        ability = new AbilityDK_IcyTouch(m_CT.m_CState);
+                        ability.szName = "IT";
+                    }
+                    ability.szName += " (Rime_partial)";
+                    // These are free ITs/HBs.
+                    ability.AbilityCost[(int)DKCostTypes.Blood] = 0;
+                    ability.AbilityCost[(int)DKCostTypes.Frost] = 0;
+                    ability.AbilityCost[(int)DKCostTypes.UnHoly] = 0;
+                    ability.AbilityCost[(int)DKCostTypes.Death] = 0;
+                    ability.AbilityCost[(int)DKCostTypes.RunicPower] = 0;
+                    ability.bPartial = true;
+                    ability.fPartialValue = fRimeMod;
+                    ml_Rot.Add(ability);
+                }
+            }
+            #endregion
+            BuildCosts();
+            #region Talent: Killing Machine
+            float fRotInMins = CurRotationDuration / 60;
+            float fKMPPM = 5 * (m_CT.m_CState.m_Talents.KillingMachine / 3);
+            float KMProcCount = fKMPPM * fRotInMins;
+            float fOBFSCount = Count(DKability.FrostStrike) + Count(DKability.Obliterate);
+            float fPctOBFSCrit = KMProcCount / fOBFSCount;
+            OB.SetKMCritChance(fPctOBFSCrit);
+            FS.SetKMCritChance(fPctOBFSCrit);
+            #endregion
+            BuildCosts();
+            #region RunicPower Pass 2.
+            // How much RP do we have at this point?
+            if (m_CT.m_CState.m_Stats.RPp5 > 0)
+                m_RunicPower -= (int)((CurRotationDuration / 5) * m_CT.m_CState.m_Stats.RPp5);
+
+            // Burn what we can.
+            for (RSCount = Math.Abs((float)m_RunicPower / (float)FS.RunicPower); RSCount > 0; RSCount--)
             {
                 if (RSCount >= 1)
                 {
@@ -696,72 +839,6 @@ namespace Rawr.DK
                     ml_Rot.Add(FSPartial);
                 }
             }
-
-            #region Talent: Rime
-            if (m_CT.m_CState.m_Talents.Rime > 0)
-            {
-                AbilityDK_Base ability;
-                float fRimeMod = this.Count(DKability.Obliterate) * .15f * m_CT.m_CState.m_Talents.Rime;
-                if (fRimeMod > 1)
-                {
-                    for (; fRimeMod > 1; fRimeMod--)
-                    {
-                        // we want 1 full use, and then any sub values.
-                        if (HB.DPS > IT.DPS)
-                        {
-                            ability = new AbilityDK_HowlingBlast(m_CT.m_CState);
-                            ability.szName = "HB";
-                        }
-                        else
-                        {
-                            ability = new AbilityDK_IcyTouch(m_CT.m_CState);
-                            ability.szName = "IT";
-                        }
-                        // These are free ITs/HBs.
-                        ability.AbilityCost[(int)DKCostTypes.Blood] = 0;
-                        ability.AbilityCost[(int)DKCostTypes.Frost] = 0;
-                        ability.AbilityCost[(int)DKCostTypes.UnHoly] = 0;
-                        ability.AbilityCost[(int)DKCostTypes.Death] = 0;
-                        ability.AbilityCost[(int)DKCostTypes.RunicPower] = 0;
-                        ability.szName += " (Rime)";
-                        ml_Rot.Add(ability);
-                    }
-                }
-                if (fRimeMod > 0 && fRimeMod < 1)
-                {
-                    // we want 1 full use, and then any sub values.
-                    if (HB.DPS > IT.DPS)
-                    {
-                        ability = new AbilityDK_HowlingBlast(m_CT.m_CState);
-                        ability.szName = "HB";
-                    }
-                    else
-                    {
-                        ability = new AbilityDK_IcyTouch(m_CT.m_CState);
-                        ability.szName = "IT";
-                    }
-                    // These are free ITs/HBs.
-                    ability.AbilityCost[(int)DKCostTypes.Blood] = 0;
-                    ability.AbilityCost[(int)DKCostTypes.Frost] = 0;
-                    ability.AbilityCost[(int)DKCostTypes.UnHoly] = 0;
-                    ability.AbilityCost[(int)DKCostTypes.Death] = 0;
-                    ability.AbilityCost[(int)DKCostTypes.RunicPower] = 0;
-                    ability.bPartial = true;
-                    ability.fPartialValue = fRimeMod;
-                    ability.szName += " (Rime_partial)";
-                    ml_Rot.Add(ability);
-                }
-            }
-            #endregion
-            BuildCosts();
-            #region Talent: Killing Machine
-            float fRotInMins = CurRotationDuration / 60;
-            float fKMPPM = 5 * (m_CT.m_CState.m_Talents.KillingMachine / 3);
-            float KMProcCount = fKMPPM * fRotInMins;
-            float fOBFSCount = Count(DKability.FrostStrike) + Count(DKability.Obliterate);
-            float fPctOBFSCrit = KMProcCount / fOBFSCount;
-            OB.SetKMCritChance(fPctOBFSCrit);
-            FS.SetKMCritChance(fPctOBFSCrit);
             #endregion
             BuildCosts();
 
@@ -1028,6 +1105,9 @@ namespace Rawr.DK
             {
                 AbilityDK_Base ability;
                 float fRimeMod = this.Count(DKability.White) * (.05f * (float)m_CT.m_CState.m_Talents.SuddenDoom);
+                // 30% chance to proc 2 SDs rather than 1.
+                if (m_CT.m_CState.m_Stats.b2T13_DPS)
+                    fRimeMod *= 1.3f;
                 if (fRimeMod > 1)
                 {
                     for (; fRimeMod > 1; fRimeMod--)
@@ -1361,7 +1441,7 @@ namespace Rawr.DK
             }
             else
                 abCost[(int)DKCostTypes.Death] = m_DeathRunes;
-#if false
+#if false // rune tap
             // Blood Tap
             // Free Death Rune every 60 Sec.
             float BT_DeathRunes = 0;
