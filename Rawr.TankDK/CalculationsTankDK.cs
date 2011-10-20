@@ -197,8 +197,12 @@ by MitigationWeight (seconds).  Note: Subvalues do NOT represent
 all mitigation sources, just common ones.",
                         @"Summary:Burst Points*Burst is a new idea that represents the 
 mitigation of Burst damage that can be taken during a given 
+encounter.  Specifically, this is focused around all On-Use 
+Cooldowns & trinkets.",
+                        @"Summary:Recovery Points*Recovery is a new idea that represents the 
+Recovery of Burst damage that can be taken during a given 
 encounter.  Specifically, this is focused around Death Strike
-heals, Blood Shield and all On-Use Cooldowns.",
+heals, and Blood Shield.",
                         @"Summary:Threat Points*Threat Points represent how much threat is capable for the current 
 gear/talent/rotation setup.  Threat points are represented in Threat per second and assume Vengeance is at maximum.",
                         @"Summary:Overall Points*Overall Points are a sum of Mitigation, Survival and Threat Points. 
@@ -287,6 +291,7 @@ Points individually may be important.",
                     _subPointNameColors.Add("Mitigation", Colors.Red);
                     _subPointNameColors.Add("Survivability", Colors.Blue);
                     _subPointNameColors.Add("Burst", Colors.Purple);
+                    _subPointNameColors.Add("Recovery", Colors.PaleVioletRed);
                     _subPointNameColors.Add("Threat", Colors.Green);
                 }
                 return _subPointNameColors;
@@ -837,9 +842,16 @@ Points individually may be important.",
 
         private float SoftCapSurvival(TankDKChar TDK, float attackValue, float origValue)
         {
+            return SoftCapSurvival(TDK, attackValue, origValue, false);
+        }
+
+        private float SoftCapSurvival(TankDKChar TDK, float attackValue, float origValue,  bool bIgnoreSoftCap)
+        {
             float cappedValue = origValue;
             //
             double survivalCap = ((double)attackValue * (double)TDK.calcOpts.HitsToSurvive) / 1000d;
+            if (bIgnoreSoftCap)
+                survivalCap = ((double)attackValue * ((double)TDK.calcOpts.HitsToSurvive * 1.077)) / 1000d;
             double survivalRaw = origValue / 1000f;
 
             //Implement Survival Soft Cap
@@ -859,7 +871,6 @@ Points individually may be important.",
                 double y = (cap * fraction + cap);
                 cappedValue = 1000f * (float)y;
             }
-            //
             return cappedValue;
         }
 
@@ -901,6 +912,11 @@ Points individually may be important.",
         }
 
         private float[] GetMitigation(ref TankDKChar TDK, StatsDK stats, Rotation rot, float fPercentCritMitigation, float ArmorDamageReduction, float[] fCurrentDTPS, float fMagicDR)
+        {
+            return GetMitigation(ref TDK, stats, rot, fPercentCritMitigation, ArmorDamageReduction, fCurrentDTPS, fMagicDR, true);
+        }
+
+        private float[] GetMitigation(ref TankDKChar TDK, StatsDK stats, Rotation rot, float fPercentCritMitigation, float ArmorDamageReduction, float[] fCurrentDTPS, float fMagicDR, bool bFactorInAvoidance)
         {
             float[] fTotalMitigation = new float[EnumHelper.GetCount(typeof(MitigationSub))];
             // Ensure the CurrentDTPS structure is the right size.
@@ -959,12 +975,14 @@ Points individually may be important.",
             #region ** Avoidance Mitigation **
             // Let's see how much damage was avoided.
             // Raise the total mitgation by that amount.
-
-            fSegmentDPS = fNewIncPhysDPS;
-            fNewIncPhysDPS = TDK.bo.GetDPSByType(ATTACK_TYPES.AT_MELEE, 0, 0, 0, fBossAttackSpeedReduction, stats.Miss, stats.Dodge, stats.EffectiveParry, 0, 0, 0, 0, 0, 0, 0);
-            fSegmentMitigation = fSegmentDPS - fNewIncPhysDPS;
-            fTotalMitigation[(int)MitigationSub.Avoidance] += fSegmentMitigation;
-            fCurrentDTPS[(int)SurvivalSub.Physical] -= fSegmentMitigation;
+            if (bFactorInAvoidance)
+            {
+                fSegmentDPS = fNewIncPhysDPS;
+                fNewIncPhysDPS = TDK.bo.GetDPSByType(ATTACK_TYPES.AT_MELEE, 0, 0, 0, fBossAttackSpeedReduction, stats.Miss, stats.Dodge, stats.EffectiveParry, 0, 0, 0, 0, 0, 0, 0);
+                fSegmentMitigation = fSegmentDPS - fNewIncPhysDPS;
+                fTotalMitigation[(int)MitigationSub.Avoidance] += fSegmentMitigation;
+                fCurrentDTPS[(int)SurvivalSub.Physical] -= fSegmentMitigation;
+            }
             #endregion
             #endregion
 
@@ -1010,6 +1028,14 @@ Points individually may be important.",
             fCurrentDTPS[(int)SurvivalSub.Magic]    *= (1f - stats.DamageTakenReductionMultiplier) * (1f - stats.SpellDamageTakenReductionMultiplier   );
             fCurrentDTPS[(int)SurvivalSub.Bleed]    *= (1f - stats.DamageTakenReductionMultiplier) * (1f - stats.PhysicalDamageTakenReductionMultiplier);
             fCurrentDTPS[(int)SurvivalSub.Physical] *= (1f - stats.DamageTakenReductionMultiplier) * (1f - stats.PhysicalDamageTakenReductionMultiplier);
+            #endregion
+            #region ** Damage Absorbed ** 
+            fTotalMitigation[(int)MitigationSub.DamageReduction] += stats.DamageAbsorbed;
+
+//            fCurrentDTPS[(int)SurvivalSub.Magic] *= (1f - stats.DamageTakenReductionMultiplier) * (1f - stats.SpellDamageTakenReductionMultiplier);
+//            fCurrentDTPS[(int)SurvivalSub.Bleed] *= (1f - stats.DamageTakenReductionMultiplier) * (1f - stats.PhysicalDamageTakenReductionMultiplier);
+//            fCurrentDTPS[(int)SurvivalSub.Physical] *= (1f - stats.DamageTakenReductionMultiplier) * (1f - stats.PhysicalDamageTakenReductionMultiplier);
+
             #endregion
             #endregion
 
@@ -1181,21 +1207,28 @@ Points individually may be important.",
             calcs = GetCharacterCalculations(TDK, stats, rot, true, needsDisplayCalculations);
 
             // Burst as On-Use Abilties.
-            calcs.Burst = calcs.Survivability - basecalcs.Survivability;
-            if (calcs.Burst < 0) { calcs.Burst = 0; } // This should never happen but just in case
+            calcs.Burst = 0;
+            calcs.Burst += calcs.Survivability - basecalcs.Survivability;
+            if (calcs.Burst < 0 || float.IsNaN(calcs.Burst)) { calcs.Burst = 0; } // This should never happen but just in case
             calcs.Burst += calcs.Mitigation - basecalcs.Mitigation;
-            if (calcs.Burst < 0) { calcs.Burst = 0; } // This should never happen but just in case
+            if (calcs.Burst < 0 || float.IsNaN(calcs.Burst)) { calcs.Burst = 0; } // This should never happen but just in case
             // Survival
             calcs.PhysicalSurvival = basecalcs.PhysicalSurvival;
             calcs.MagicSurvival = basecalcs.MagicSurvival;
             calcs.BleedSurvival = basecalcs.BleedSurvival;
             // Mitigation
             calcs.Mitigation = basecalcs.Mitigation;
+            calcs.BurstWeight = TDK.calcOpts.BurstWeight;
 
-            #region **** Burst: DS & Blood Shield ****
+            #region **** Recovery: DS & Blood Shield ****
             float minDSHeal = stats.Health * .07f;
-            // 4.1 PTR: DS Heals for 20% of Damage Taken over the last 5 secs.
-            float DamDSHeal = (calcs.DTPS * 5f * .20f) * (1 + .15f * TDK.Char.DeathKnightTalents.ImprovedDeathStrike); // IDS increases heals by .15 * level
+            // 4.1: DS Heals for 20% of Damage Taken over the last 5 secs.
+            float DTPSFactor = calcs.DTPS * 5f;
+            if (TDK.calcOpts.b_RecoveryInclAvoidance == false) 
+            {
+                DTPSFactor = calcs.DTPSNoAvoidance * 5f;
+            }
+            float DamDSHeal = (DTPSFactor * .20f) * (1 + .15f * TDK.Char.DeathKnightTalents.ImprovedDeathStrike); // IDS increases heals by .15 * level
             float DSHeal = Math.Max(minDSHeal, DamDSHeal);
             calcs.DSHeal = DSHeal;
             calcs.DSOverHeal = DSHeal * TDK.calcOpts.pOverHealing;
@@ -1207,10 +1240,10 @@ Points individually may be important.",
             calcs.TotalDShealed = DSHealsPSec * TDK.bo.BerserkTimer;
             float BShieldPSec = BloodShield * rot.m_DSperSec; // A new shield w/ each DS.
             calcs.TotalBShield = BShieldPSec * TDK.bo.BerserkTimer;
-            calcs.Burst += BloodShield + (DSHeal * (1f - TDK.calcOpts.pOverHealing));
+            calcs.Recovery = BloodShield + (DSHeal * (1f - TDK.calcOpts.pOverHealing));
             calcs.HPS += DSHealsPSec;
             calcs.DTPS -= BShieldPSec;
-            calcs.BurstWeight = TDK.calcOpts.BurstWeight;
+            calcs.RecoveryWeight = TDK.calcOpts.RecoveryWeight;
             #endregion
 
             #endregion
@@ -1219,6 +1252,7 @@ Points individually may be important.",
             if (float.IsNaN(calcs.Threat) ||
                 float.IsNaN(calcs.Survivability) ||
                 float.IsNaN(calcs.Burst) ||
+                float.IsNaN(calcs.Recovery) ||
                 float.IsNaN(calcs.Mitigation) ||
                 float.IsNaN(calcs.OverallPoints))
             {
@@ -1384,9 +1418,9 @@ Points individually may be important.",
             SurvivalResults = GetSurvival(ref TDK, stats, fCurrentDTPSPerc, ArmorDamageReduction, fMagicDR);
 
             calcs.ArmorDamageReduction   = ArmorDamageReduction;
-            calcs.PhysicalSurvival       = SoftCapSurvival(TDK, fCurrentDmgBiggestHit[(int)SurvivalSub.Physical], SurvivalResults[(int)SurvivalSub.Physical]);
-            calcs.BleedSurvival          = SoftCapSurvival(TDK, fCurrentDmgBiggestHit[(int)SurvivalSub.Bleed],    SurvivalResults[(int)SurvivalSub.Bleed]);
-            calcs.MagicSurvival          = SoftCapSurvival(TDK, fCurrentDmgBiggestHit[(int)SurvivalSub.Magic],    SurvivalResults[(int)SurvivalSub.Magic]);
+            calcs.PhysicalSurvival       = SoftCapSurvival(TDK, fCurrentDmgBiggestHit[(int)SurvivalSub.Physical], SurvivalResults[(int)SurvivalSub.Physical], isBurstCalc);
+            calcs.BleedSurvival          = SoftCapSurvival(TDK, fCurrentDmgBiggestHit[(int)SurvivalSub.Bleed],    SurvivalResults[(int)SurvivalSub.Bleed], isBurstCalc);
+            calcs.MagicSurvival          = SoftCapSurvival(TDK, fCurrentDmgBiggestHit[(int)SurvivalSub.Magic],    SurvivalResults[(int)SurvivalSub.Magic], isBurstCalc);
             calcs.HitsToSurvive          = TDK.calcOpts.HitsToSurvive;
             #endregion
 
@@ -1409,6 +1443,8 @@ Points individually may be important.",
             #endregion
 
             #region ***** Mitigation Rating *****
+            float[] fCurrentDTPSNoAvoid = new float[3];
+            fCurrentDTPSNoAvoid = fCurrentDTPS.Clone() as float[];
             float[] fCurrentMitigation = GetMitigation(ref TDK, stats, rot, (stats.CritChanceReduction / .06f), ArmorDamageReduction, fCurrentDTPS, fMagicDR);
             calcs.ArmorMitigation        = fCurrentMitigation[(int)MitigationSub.Armor];
             calcs.AvoidanceMitigation    = fCurrentMitigation[(int)MitigationSub.Avoidance];
@@ -1422,11 +1458,22 @@ Points individually may be important.",
 
             calcs.Crit = (.06f - stats.CritChanceReduction);
             calcs.DTPS = 0;
+            calcs.DTPSNoAvoidance = 0;
             foreach (float f in fCurrentDTPS)
             {
                 // These are sometimes coming back as negative.
                 // Assuming we are just 100% absorbing the attack, no damage
                 if (f > 0) { calcs.DTPS += f; }
+            }
+            if (TDK.calcOpts.b_RecoveryInclAvoidance == false)
+            {
+                GetMitigation(ref TDK, stats, rot, (stats.CritChanceReduction / .06f), ArmorDamageReduction, fCurrentDTPSNoAvoid, fMagicDR, false);
+                foreach (float f in fCurrentDTPSNoAvoid)
+                {
+                    // These are sometimes coming back as negative.
+                    // Assuming we are just 100% absorbing the attack, no damage
+                    if (f > 0) { calcs.DTPSNoAvoidance += f; }
+                }
             }
             // Have to ensure we don't divide by 0
             calcs.Mitigation = StatConversion.MitigationScaler / (Math.Max(1f, calcs.DTPS) / fTotalDTPS);
@@ -1616,8 +1663,8 @@ Points individually may be important.",
                 {
                     if (HasRelevantStats(effect.Stats))
                     {
-                        statSE = se.getSpecialEffects(effect);
-                        statsTotal.Accumulate(statSE);
+                        statSE.Accumulate(se.getSpecialEffects(effect));
+//                        statsTotal.Accumulate(se.getSpecialEffects(effect)); // This is done further down.
                     }
                 }
 

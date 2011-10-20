@@ -10,6 +10,7 @@ namespace Rawr.TankDK {
                 return Mitigation
                      + Survivability
                      + Burst * BurstWeight
+                     + Recovery * RecoveryWeight
                      + Threat * ThreatWeight;
             }
             set { }
@@ -23,24 +24,38 @@ namespace Rawr.TankDK {
         public float Miss { get; set; }
         public float Parry { get; set; }
 
+        #region Survivability
         public float PhysicalSurvival { get; set; }
         public float BleedSurvival { get; set; }
         public float MagicSurvival { get; set; }
-        public float Survivability { get { return PhysicalSurvival + BleedSurvival + MagicSurvival; } }
-        public float Burst { get; set; }
+        public float Survivability { get { return PhysicalSurvival + BleedSurvival + MagicSurvival; } } 
+        #endregion
 
+        #region Mitigation
         public float CritMitigation { get; set; }
         public float AvoidanceMitigation { get; set; }
         public float ArmorMitigation { get; set; }
         public float DamageTakenMitigation { get; set; }
         public float HealsMitigation { get; set; }
         public float ImpedenceMitigation { get; set; }
+        public float Mitigation { get; set; } 
+        #endregion
 
-        public float Mitigation { get; set; }
+        /// <summary>
+        /// On-Use Trinkets
+        /// </summary>
+        public float Burst { get; set; }
+
+        /// <summary>
+        /// DS Heals & Blood Shield.
+        /// </summary>
+        public float Recovery { get; set; }
+
         public float Threat { get; set; }
 
         public float HitsToSurvive { get; set; }
         public float BurstWeight { get; set; }
+        public float RecoveryWeight { get; set; }
         public float ThreatWeight { get; set; }
 
         public float MagicDamageReduction { get; set; }
@@ -54,17 +69,17 @@ namespace Rawr.TankDK {
         public float TargetMiss { get; set; }
         public float TargetDodge { get; set; }
         public float TargetParry { get; set; }
-
         public float Expertise { get; set; }
 
         #region Subpoints
-        private float[] _subPoints = new float[] { 0f, 0f, 0f, 0f };
+        private float[] _subPoints = new float[] { 0f, 0f, 0f, 0f, 0f };
         public override float[] SubPoints {
             get {
                 return new float[] {
                     Mitigation,
                     Survivability,
                     Burst * BurstWeight,
+                    Recovery * RecoveryWeight,
                     Threat * ThreatWeight
                 };
             }
@@ -90,6 +105,7 @@ namespace Rawr.TankDK {
 
         #region Combat Data
         public float DTPS { get; set; }
+        public float DTPSNoAvoidance { get; set; }
         public float HPS { get; set; }
         public float TotalBShield { get; set; }
         public float TotalDShealed { get; set; }
@@ -157,6 +173,7 @@ namespace Rawr.TankDK {
                 + "\r\n{3:000000.0} Magic Survival",
                 Survivability, PhysicalSurvival, BleedSurvival, MagicSurvival);
             dict["Burst Points"] = String.Format("{0:0.0}", Burst * BurstWeight); // Modified Burst
+            dict["Recovery Points"] = String.Format("{0:0.0}", Recovery * RecoveryWeight); // Modified Burst
             dict["Threat Points"] = String.Format("{0:0.0}", Threat * ThreatWeight); // Modified Threat
 
             dict["Target Miss"] = (TargetMiss).ToString("P1");

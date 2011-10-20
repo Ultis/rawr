@@ -25,6 +25,12 @@ namespace Rawr.TankDK
         [DefaultValue(3.0f)]
         public float BurstWeight { get { return _BurstWeight; } set { _BurstWeight = value; OnPropertyChanged("BurstWeight"); } }
         private float _BurstWeight = 3.0f;
+        [DefaultValue(3.0f)]
+        public float RecoveryWeight { get { return _RecoveryWeight; } set { _RecoveryWeight = value; OnPropertyChanged("RecoveryWeight"); } }
+        private float _RecoveryWeight = 3.0f;
+        [DefaultValue(false)]
+        public bool b_RecoveryInclAvoidance { get { return _RecoveryInclAvoidance; } set { _RecoveryInclAvoidance = value; OnPropertyChanged("CB_Recovery"); } }
+        private bool _RecoveryInclAvoidance = false;
         [DefaultValue(1.0f)]
         public float ThreatWeight { get { return _ThreatWeight; } set { _ThreatWeight = value; OnPropertyChanged("ThreatWeight"); } }
         private float _ThreatWeight = 1.0f;

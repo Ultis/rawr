@@ -79,6 +79,7 @@ namespace Rawr.TankDK
         }
         private void BT_HitsToSurvive_Click(object sender, RoutedEventArgs e) { calcOpts.HitsToSurvive = 3.5f; }
         private void BT_BurstScale_Click(object sender, RoutedEventArgs e) { calcOpts.BurstWeight = 3.0f; }
+        private void BT_RecoveryScale_Click(object sender, RoutedEventArgs e) { calcOpts.RecoveryWeight = 3.0f; }
         private void BT_ThreatScale_Click(object sender, RoutedEventArgs e) { calcOpts.ThreatWeight = 1.0f; }
         private void BT_VengeanceScale_Click(object sender, RoutedEventArgs e) { calcOpts.VengeanceWeight = 1.0f; }
         private void BT_Overhealing_Click(object sender, RoutedEventArgs e) { calcOpts.pOverHealing = 0.25f; }

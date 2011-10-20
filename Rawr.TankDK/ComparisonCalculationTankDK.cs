@@ -21,19 +21,25 @@ namespace Rawr.TankDK {
         public float Mitigation
         {
             get { return _subPoints[(int)SMTSubPoints.Mitigation]; }
-            set { _subPoints[(int)SMTSubPoints.Mitigation] = value; _overallPoints = Mitigation + Survivability + Burst + Threat; }
+            set { _subPoints[(int)SMTSubPoints.Mitigation] = value; _overallPoints = Mitigation + Survivability + Burst + Recovery + Threat; }
         }
 
         public float Survivability
         {
             get { return _subPoints[(int)SMTSubPoints.Survivability]; }
-            set { _subPoints[(int)SMTSubPoints.Survivability] = value; _overallPoints = Mitigation + Survivability + Burst + Threat; }
+            set { _subPoints[(int)SMTSubPoints.Survivability] = value; _overallPoints = Mitigation + Survivability + Burst + Recovery + Threat; }
         }
 
         public float Burst
         {
             get { return _subPoints[(int)SMTSubPoints.Burst]; }
-            set { _subPoints[(int)SMTSubPoints.Burst] = value; _overallPoints = Mitigation + Survivability + Burst + Threat; }
+            set { _subPoints[(int)SMTSubPoints.Burst] = value; _overallPoints = Mitigation + Survivability + Burst + Recovery + Threat; }
+        }
+
+        public float Recovery
+        {
+            get { return _subPoints[(int)SMTSubPoints.Recovery]; }
+            set { _subPoints[(int)SMTSubPoints.Recovery] = value; _overallPoints = Mitigation + Survivability + Burst + Recovery + Threat; }
         }
 
         public float Threat
@@ -58,16 +64,16 @@ namespace Rawr.TankDK {
         public override float OverallPoints {
             // Reminder: this is for an individual item.  Do not apply weighting to this class.  
             get {
-                if (_overallPoints == 0f) { _overallPoints = Mitigation + Survivability + Burst + Threat; }
+                if (_overallPoints == 0f) { _overallPoints = Mitigation + Survivability + Burst + Recovery + Threat; }
                 return _overallPoints;
             }
             set { _overallPoints = value; }
         }
 
-        private float[] _subPoints = new float[] {0f, 0f, 0f, 0f};
+        private float[] _subPoints = new float[] {0f, 0f, 0f, 0f, 0f};
         public override float[] SubPoints {
             get { return _subPoints; }
-            set { _subPoints = value; _overallPoints = Mitigation + Survivability + Burst + Threat; }
+            set { _subPoints = value; _overallPoints = Mitigation + Survivability + Burst + Recovery + Threat; }
         }
 
         private Item _item = null;

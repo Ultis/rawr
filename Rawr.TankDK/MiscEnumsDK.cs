@@ -37,6 +37,7 @@ namespace Rawr.TankDK
         Mitigation,
         Survivability,
         Burst,
+        Recovery,
         Threat
     }
 }

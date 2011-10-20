@@ -43,6 +43,8 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -80,43 +82,54 @@
                     <Slider Grid.Column="1" Grid.Row="4" Margin="4,2" Value="{Binding Path=BurstWeight, Mode=TwoWay}" Minimum="{Binding ElementName=NUD_Burst, Path=Minimum}" Maximum="{Binding ElementName=NUD_Burst, Path=Maximum}" LargeChange="{Binding ElementName=NUD_Burst, Path=Increment}" />
                     <Button Content="Reset" Grid.Column="3" Grid.Row="4" Margin="2" Name="BT_BurstScale" Click="BT_BurstScale_Click" />
 
+                    <!-- Recovery Weight -->
+                    <TextBlock Text="Recovery:" Grid.Row="5" Margin="4,2" VerticalAlignment="Center"/>
+                    <inputToolkit:NumericUpDown Name="NUD_Recovery" Value="{Binding Path=RecoveryWeight, Mode=TwoWay}" Margin="2" Grid.Column="2" Grid.Row="5" DecimalPlaces="1" MinWidth="50" Maximum="10" Increment="0.1" />
+                    <Slider Grid.Column="1" Grid.Row="5" Margin="4,2" Value="{Binding Path=RecoveryWeight, Mode=TwoWay}" Minimum="{Binding ElementName=NUD_Recovery, Path=Minimum}" Maximum="{Binding ElementName=NUD_Recovery, Path=Maximum}" LargeChange="{Binding ElementName=NUD_Recovery, Path=Increment}" />
+                    <Button Content="Reset" Grid.Column="3" Grid.Row="5" Margin="2" Name="BT_RecoveryScale" Click="BT_RecoveryScale_Click" />
+                    <CheckBox Content="Include Avoidance Effects in Recovery value" Grid.Row="6" Grid.ColumnSpan="4" IsChecked="{Binding b_RecoveryInclAvoidance, Mode=TwoWay}" VerticalAlignment="Center"
+                              Margin="5,5,5,5"
+                              ToolTip="Check this if you are concerned with the average Damage Taken over Time. 
+                              Leave this UNCHECKED if you want to see the effects of DSHeals and Blood Shield during chains of no avoidance (dodge/parry)." />
+
+
                     <!-- Threat Weight -->
-                    <TextBlock Text="Threat:" Grid.Row="5" VerticalAlignment="Center" Margin="4,2"/>
-                    <inputToolkit:NumericUpDown Name="NUD_Threat" Value="{Binding Path=ThreatWeight, Mode=TwoWay}" Margin="2" Grid.Column="2" Grid.Row="5" DecimalPlaces="1" MinWidth="50" Maximum="50" Increment="0.1" />
-                    <ComboBox Margin="2" Grid.Column="1" Grid.Row="5" SelectedItem="{Binding Path=ThreatWeight, Converter={StaticResource ThreatValueConverter}, Mode=TwoWay}">
+                    <TextBlock Text="Threat:" Grid.Row="7" VerticalAlignment="Center" Margin="4,2"/>
+                    <inputToolkit:NumericUpDown Name="NUD_Threat" Value="{Binding Path=ThreatWeight, Mode=TwoWay}" Margin="2" Grid.Column="2" Grid.Row="7" DecimalPlaces="1" MinWidth="50" Maximum="50" Increment="0.1" />
+                    <ComboBox Margin="2" Grid.Column="1" Grid.Row="7" SelectedItem="{Binding Path=ThreatWeight, Converter={StaticResource ThreatValueConverter}, Mode=TwoWay}">
                         <System:String>Almost None</System:String>
                         <System:String>MT</System:String>
                         <System:String>OT</System:String>
                         <System:String>Crazy About Threat</System:String>
                         <System:String>Custom...</System:String>
                     </ComboBox>
-                    <Button Content="Reset" Grid.Column="3" Grid.Row="5" Margin="2" Name="BT_ThreatScale" Click="BT_ThreatScale_Click" />
+                    <Button Content="Reset" Grid.Column="3" Grid.Row="7" Margin="2" Name="BT_ThreatScale" Click="BT_ThreatScale_Click" />
 
                     <!-- Vengeance Weight -->
-                    <TextBlock Text="Vengeance:" Grid.Row="6" VerticalAlignment="Center" Margin="4,2"/>
-                    <inputToolkit:NumericUpDown Name="NUD_Vengeance" Value="{Binding Path=VengeanceWeight, Mode=TwoWay}" Margin="2" Grid.Column="2" Grid.Row="6" DecimalPlaces="1" MinWidth="50" Maximum="10" Increment="0.1" />
-                    <Slider Grid.Column="1" Grid.Row="6" Margin="4,2" Value="{Binding Path=VengeanceWeight, Mode=TwoWay}" Minimum="{Binding ElementName=NUD_Vengeance, Path=Minimum}" Maximum="{Binding ElementName=NUD_Vengeance, Path=Maximum}" LargeChange="{Binding ElementName=NUD_Vengeance, Path=Increment}" />
-                    <Button Content="Reset" Grid.Column="3" Grid.Row="6" Margin="2" Name="BT_VengeanceScale" Click="BT_VengeanceScale_Click" />
+                    <TextBlock Text="Vengeance:" Grid.Row="8" VerticalAlignment="Center" Margin="4,2"/>
+                    <inputToolkit:NumericUpDown Name="NUD_Vengeance" Value="{Binding Path=VengeanceWeight, Mode=TwoWay}" Margin="2" Grid.Column="2" Grid.Row="8" DecimalPlaces="1" MinWidth="50" Maximum="10" Increment="0.1" />
+                    <Slider Grid.Column="1" Grid.Row="8" Margin="4,2" Value="{Binding Path=VengeanceWeight, Mode=TwoWay}" Minimum="{Binding ElementName=NUD_Vengeance, Path=Minimum}" Maximum="{Binding ElementName=NUD_Vengeance, Path=Maximum}" LargeChange="{Binding ElementName=NUD_Vengeance, Path=Increment}" />
+                    <Button Content="Reset" Grid.Column="3" Grid.Row="8" Margin="2" Name="BT_VengeanceScale" Click="BT_VengeanceScale_Click" />
 
-                    <Border Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="4" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
+                    <Border Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="4" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
                         <TextBlock Margin="4" FontWeight="Bold" Text="Other Stats" VerticalAlignment="Center" />
                     </Border>
 
-                    <TextBlock Text="Overhealing %:" Grid.Row="8" Margin="4,2" VerticalAlignment="Center" />
-                    <inputToolkit:NumericUpDown Name="NUD_OverHealing" Value="{Binding Path=pOverHealing, Mode=TwoWay, Converter={StaticResource PercentConverter}}" Margin="2" Grid.Column="2" Grid.Row="8" MinWidth="50" DecimalPlaces="1" />
-                    <Slider Grid.Column="1" Grid.Row="8" Margin="4,2" Value="{Binding Path=pOverHealing, Mode=TwoWay, Converter={StaticResource PercentConverter}}" Minimum="{Binding ElementName=NUD_OverHealing, Path=Minimum}" Maximum="{Binding ElementName=NUD_OverHealing, Path=Maximum}" LargeChange="{Binding ElementName=NUD_OverHealing, Path=Increment}" />
-                    <Button Content="Reset" Grid.Column="3" Grid.Row="8" Margin="2" Name="BT_Overhealing" Click="BT_Overhealing_Click" />
-
-                    <Border Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="4" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
-                        <TextBlock Margin="4" FontWeight="Bold" Text="Notices" VerticalAlignment="Center" />
-                    </Border>
-                    <TextBlock TextWrapping="Wrap" Grid.Row="10" Margin="2" Grid.ColumnSpan="4" FontSize="10"
-                               Text="Note that many of TankDK's stats are based on Boss Content. Please see the Boss Handler (next to Options in the Tabs above) for additional Fight Related settings you can adjust.&#x0a;&#x0a;A Fresh 85 should use An Easy Boss to start and once some gear has been gathered to appropriately defend against that, move on to The Average Boss. More details on this can be found on the Boss Handler Pane and in the Documentation of Rawr's website."/>
+                    <TextBlock Text="Overhealing %:" Grid.Row="10" Margin="4,2" VerticalAlignment="Center" />
+                    <inputToolkit:NumericUpDown Name="NUD_OverHealing" Value="{Binding Path=pOverHealing, Mode=TwoWay, Converter={StaticResource PercentConverter}}" Margin="2" Grid.Column="2" Grid.Row="10" MinWidth="50" DecimalPlaces="1" />
+                    <Slider Grid.Column="1" Grid.Row="10" Margin="4,2" Value="{Binding Path=pOverHealing, Mode=TwoWay, Converter={StaticResource PercentConverter}}" Minimum="{Binding ElementName=NUD_OverHealing, Path=Minimum}" Maximum="{Binding ElementName=NUD_OverHealing, Path=Maximum}" LargeChange="{Binding ElementName=NUD_OverHealing, Path=Increment}" />
+                    <Button Content="Reset" Grid.Column="3" Grid.Row="10" Margin="2" Name="BT_Overhealing" Click="BT_Overhealing_Click" />
 
                     <Border Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="4" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
+                        <TextBlock Margin="4" FontWeight="Bold" Text="Notices" VerticalAlignment="Center" />
+                    </Border>
+                    <TextBlock TextWrapping="Wrap" Grid.Row="12" Margin="2" Grid.ColumnSpan="4" FontSize="10"
+                               Text="Note that many of TankDK's stats are based on Boss Content. Please see the Boss Handler (next to Options in the Tabs above) for additional Fight Related settings you can adjust.&#x0a;&#x0a;A Fresh 85 should use An Easy Boss to start and once some gear has been gathered to appropriately defend against that, move on to The Average Boss. More details on this can be found on the Boss Handler Pane and in the Documentation of Rawr's website."/>
+
+                    <Border Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="4" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
                         <TextBlock Margin="4" FontWeight="Bold" Text="Stat Graph" VerticalAlignment="Center" />
                     </Border>
-                    <Grid Grid.Row="12" Grid.ColumnSpan="4">
+                    <Grid Grid.Row="14" Grid.ColumnSpan="4">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
@@ -155,6 +168,7 @@
                             <System:String>Survivability Rating</System:String>
                             <System:String>Mitigation Rating</System:String>
                             <System:String>Burst Rating</System:String>
+                            <System:String>Recovery Rating</System:String>
                             <System:String>Threat Rating</System:String>
                         </ComboBox>
                         <TextBlock Grid.Row="8" Grid.Column="0" Margin="4,2" Text="Increment:" />
