@@ -980,8 +980,8 @@ namespace Rawr.DPSDK
                         // Whenever you hit with Blood strike, pestilence, or Festering strike, the runes spent will 
                         // become death runes when they activate.
                         // Unholy Might
-                        // Str +20%
-                        FullCharacterStats.BonusStrengthMultiplier += .2f;
+                        // Str +25%
+                        FullCharacterStats.BonusStrengthMultiplier += .25f;
                         // Mastery: Blightcaller.
                         // Increases shadow damage by 20% + 
                         // Each point of mastery increases shadow damage by an additional 2.5%
@@ -1042,7 +1042,7 @@ namespace Rawr.DPSDK
                 // Implmented in WhiteDamage ability file.
                 
                 // Bone Shield
-                // 3 Bones 
+                // 6 Bones 
                 // Takes 20% less damage from all sources
                 // Does 2% more damage to target
                 // Each damaging attack consumes a bone.
@@ -1145,10 +1145,8 @@ namespace Rawr.DPSDK
                 if (character.DeathKnightTalents.DancingRuneWeapon > 0)
                 {
                     uint u4T12 = FullCharacterStats.b4T12_Tank ? 1u : 0u;
-                    if (character.DeathKnightTalents.GlyphofDancingRuneWeapon)
-                        FullCharacterStats.AddSpecialEffect(_SE_DRW[u4T12][1]);
-                    else
-                        FullCharacterStats.AddSpecialEffect(_SE_DRW[u4T12][0]);
+                    uint uGDRW = character.DeathKnightTalents.GlyphofDancingRuneWeapon ? 1u : 0u;
+                    FullCharacterStats.AddSpecialEffect(_SE_DRW[u4T12][uGDRW]);
                 }
             }
             #endregion

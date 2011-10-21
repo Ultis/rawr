@@ -1425,6 +1425,8 @@ Points individually may be important.",
             #endregion
 
             #region ***** Threat Rating *****
+            rot.TotalDamage += (int)(stats.FireDamage * (1 + stats.BonusFireDamageMultiplier) * rot.CurRotationDuration);
+            rot.TotalThreat += (int)(stats.FireDamage * (1 + stats.BonusFireDamageMultiplier) * rot.CurRotationDuration) * 2;
             calcs.RotationTime = rot.CurRotationDuration; // Display the rot in secs.
             calcs.Threat = rot.m_TPS;
             calcs.DPS = rot.m_DPS;
@@ -1621,7 +1623,7 @@ Points individually may be important.",
                 #region Talent: Bone Shield
                 if (character.DeathKnightTalents.BoneShield > 0)
                 {
-                    int BSStacks = 4;  // The number of bones by default.  
+                    int BSStacks = 6;  // The number of bones by default.  
                     float BoneLossRate = Math.Max(2f, TDK.bo.DynamicCompiler_Attacks.AttackSpeed / fChanceToGetHit);  // 2 sec internal cooldown on loosing bones so the DK can't get spammed to death.  
                     float moveVal = character.DeathKnightTalents.GlyphofBoneShield ? 0.15f : 0f;
                     SpecialEffect primary = new SpecialEffect(Trigger.Use,
@@ -1707,6 +1709,9 @@ Points individually may be important.",
                 statsTotal.BonusArmor = StatConversion.ApplyMultiplier(statsTotal.BonusArmor, statSE.BonusArmorMultiplier);
 
                 statsTotal.Accumulate(statSE);
+                PreRatingsBase.Miss += statSE.Miss;
+                PreRatingsBase.Dodge += statSE.Dodge;
+                PreRatingsBase.Parry += statSE.Parry;
 #if DEBUG
                 if (float.IsNaN(statsTotal.Stamina))
                     throw new Exception("Something very wrong in stats.");
@@ -1716,7 +1721,10 @@ Points individually may be important.",
             // Apply the Multipliers
             ProcessStatModifiers(statsTotal, character.DeathKnightTalents.BladedArmor, character);
             ProcessAvoidance(statsTotal, TDK.bo.Level, TDK.Char, PreRatingsBase);
-
+            if (character.MainHand != null)
+            {
+                statsTotal.EffectiveParry = statsTotal.Parry;
+            }
             return (statsTotal);
         }
 
