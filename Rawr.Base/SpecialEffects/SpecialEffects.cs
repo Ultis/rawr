@@ -353,6 +353,12 @@ namespace Rawr {
             #endregion
             #region General
             #region Agility
+            else if ((match = new Regex(@"Your melee and ranged attacks have a chance to trigger Fury of the Beast, granting (?<amount>\d+) Agility and 10% increased size every (?<minidur>\d+) sec.*\ This effect stacks to a maximum of (?<stack>\d+) and lasts (?<dur>\d+) sec").Match(line)).Success)
+            { // Madness of Deathwing Agility Polearm
+                Stats tempStats = new Stats();
+                tempStats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalAttack, new Stats() { Agility = (float)int.Parse(match.Groups["amount"].Value) }, int.Parse(match.Groups["minidur"].Value), int.Parse(match.Groups["dur"].Value), 1f, int.Parse(match.Groups["stack"].Value)));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalAttack, tempStats, int.Parse(match.Groups["dur"].Value), int.Parse(match.Groups["dur"].Value) * 5f, 0.15f));
+            }
             else if ((match = new Regex(@"When you deal damage you have a chance to gain (?<amount>\d+) Agility for (?<dur>\d+) sec").Match(line)).Success)
             { // Gladiator's Insignia of Conquest
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageDone,
@@ -529,6 +535,37 @@ namespace Rawr {
             }
             #endregion
             #region Damaging Procs
+            else if ((match = new Regex(@"Your ranged attacks have a chance to deal (?<amount>\d+) damage over (?<length>\d+) sec").Match(line)).Success)
+            {   // Madness of Deathwing Agi Ranged Gun
+                float SpeakingofRage = float.Parse(match.Groups["amount"].Value);
+                float procLength = float.Parse(match.Groups["length"].Value);
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.RangedHit, new Stats() { ShadowDamage = SpeakingofRage / procLength }, procLength, procLength * 5, 0.15f));
+            }
+            else if ((match = new Regex(@"Your melee attacks have a chance to blast your enemy with Fire, Shadow, or Frost, dealing (?<min>\d+) to (?<max>\d+) damage").Match(line)).Success)
+            {   // Madness of Deathwing Agility 1-Hand Axe
+                int min = int.Parse(match.Groups["min"].Value);
+                int max = int.Parse(match.Groups["max"].Value);
+                float damage = ((min + max) / 2f) / 3f; // 1/3 chance that it procs Fire, shadow, or frost, so average out the damage evenly by diving all by 3
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.CurrentHandHit, new Stats() { FireDamage = damage, ShadowDamage = damage, FrostDamage = damage }, 0f, 45f, 0.15f)); 
+            }
+            else if ((match = new Regex(@"Your melee attacks have a chance to cause you to summon a Tentacle of the Old Ones to fight by your side for (?<length>\d+) sec").Match(line)).Success)
+            {   // Madness of Deathwing Strength 2H-Sword
+                float TentacleoftheOldOnes = 0f;
+                switch (id)
+                {
+                    case 77191:
+                        TentacleoftheOldOnes = 4125f;
+                        break;
+                }
+                float procLength = float.Parse(match.Groups["length"].Value);
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeAttack, new Stats() { PhysicalDamage = TentacleoftheOldOnes / procLength }, procLength, procLength * 5, 0.15f));
+            }
+            else if ((match = new Regex(@"Your harmful spellcasts have a chance to poison all enemies near your target for (?<amount>\d+) nature damage over (?<length>\d+) sec").Match(line)).Success)
+            {   // Madness of Deathwing Spellcasting Knife
+                float BlastofCorruption = float.Parse(match.Groups["amount"].Value);
+                float procLength = float.Parse(match.Groups["length"].Value);
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { NatureDamage = BlastofCorruption / procLength }, procLength, procLength * 5, 0.15f));
+            }
             else if ((match = new Regex(@"Your attacks may occasionally attract small celestial objects").Match(line)).Success)
             {   // Ricket's Magnetic Fireball
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalAttack,
@@ -647,6 +684,10 @@ namespace Rawr {
             }
             #endregion
             #region Haste Rating
+            else if ((match = new Regex(@"Your spells have a chance to grant you (?<amount>\d+) haste rating for (?<dur>\d+) sec and (?<groupamount>\d+) haste rating to up to (?<groupsize>\d+) allies within (?<reach>\d+) yards").Match(line)).Success)
+            {   // Madness of Deathwing Versitile Int Staff
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageOrHealingDone, new Stats() { HasteRating = (float)int.Parse(match.Groups["amount"].Value) }, (float)int.Parse(match.Groups["dur"].Value), (float)int.Parse(match.Groups["dur"].Value) * 5f, 0.15f));
+            }
             else if ((match = new Regex(@"Your harmful spells have a chance to increase your haste rating by (?<amount>\d+) for (?<dur>\d+) sec").Match(line)).Success)
             {   // Elemental Focus Stone
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast,
@@ -755,16 +796,22 @@ namespace Rawr {
             
             #endregion
             #region Healed
+            else if ((match = new Regex(@"Your healing spells have a chance to trigger Cleansing Fire, healing all nearby friendly targets in front of you for (?<min>\d+) to (?<max>\d+)").Match(line)).Success)
+            {   // Madness of Deathwing Healing Mace
+                float healamount = ((int.Parse(match.Groups["min"].Value) + int.Parse(match.Groups["max"].Value)) / 2f) * 3f; // assume right now that it hits 3 people
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellCast,
+                    new Stats() { Healed = healamount, }, 0f, 45f, 0.15f));
+            }
             else if ((match = new Regex(@"Your healing spells have a chance to instantly heal the most injured nearby party member for (?<min>\d+) to (?<max>\d+)").Match(line)).Success)
             {   // Eye of Blazing Power
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellCast,
-                    new Stats() { Healed = (int.Parse(match.Groups["min"].Value) + int.Parse(match.Groups["min"].Value)) / 2f, },
+                    new Stats() { Healed = (int.Parse(match.Groups["min"].Value) + int.Parse(match.Groups["max"].Value)) / 2f, },
                     0f, 45f, 0.10f));
             }
             else if ((match = new Regex(@"Your critical heals have a chance to instantly heal the most injured nearby party member for (?<min>\d+) to (?<max>\d+)").Match(line)).Success)
             {   // Nick of Time
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellCrit,
-                    new Stats() { Healed = (int.Parse(match.Groups["min"].Value) + int.Parse(match.Groups["min"].Value)) / 2f, },
+                    new Stats() { Healed = (int.Parse(match.Groups["min"].Value) + int.Parse(match.Groups["max"].Value)) / 2f, },
                     0f, 45f, 0.10f));
             }
             #endregion
@@ -1022,6 +1069,12 @@ namespace Rawr {
             }
             #endregion
             #region Specialty Stat Procs
+            // damaging the target for an amount equal to (?<amount>\d+)% of your maximum health and healing you for twice that amount
+            else if ((match = new Regex(@"damaging the target for an amount equal to (?<amount>\d+(\.\d+)?)% of your maximum health and healing you for twice that amount").Match(line)).Success)
+            {   // Madness of Deathwing Tanking Weapon proc
+                float damageFromMaxHealth = (float)double.Parse(match.Groups["amount"].Value) * 0.01f;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeAttack, new Stats() { MaxHealthDamageProc = damageFromMaxHealth, HealthRestoreFromMaxHealth = (damageFromMaxHealth * 2f) }, 0f, 45f, .15f));
+            }
             else if ((match = new Regex(@"Your melee and ranged attacks have a chance to grant (?<amount>\d+) critical strike rating, haste rating, or mastery rating, whichever is currently highest").Match(line)).Success)
             {   // Matrix Restabilizer
                 // appears to have 105 second ICD and lasts for 30 seconds

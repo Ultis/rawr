@@ -185,6 +185,7 @@ namespace Rawr
         DefensiveCooldownDurationMultiplier,
         #endregion
         #region ===== Item Proc Stats =====
+        MaxHealthDamageProc,
         #endregion
         #region ===== Other Stats =====
         BonusArcaneDamageMultiplier,
@@ -1691,6 +1692,15 @@ namespace Rawr
         }
         #endregion
         #region ===== Item Proc Stats =====
+        [DefaultValueAttribute(0f)]
+        [DisplayName("% of Max Health Damage proc")]
+        [Percentage]
+        [Category("Equipment Effects")]
+        public float MaxHealthDamageProc
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.MaxHealthDamageProc]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.MaxHealthDamageProc] = value; }
+        }
         #endregion
         #region ===== Other Stats =====
         [DefaultValueAttribute(0f)]

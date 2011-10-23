@@ -2302,6 +2302,7 @@ namespace Rawr
             // The new feasts are 90 Stam + 90 [Other Useful Stat]. No reason to keep this like that and just make them do the other appropriate food instead
             //defaultBuffs.Add(new Buff() { Group = "Food", Name = "Fish Feast", Stats = { AttackPower = 80, SpellPower = 46, Stamina = 40 } });
             #endregion
+
             #region Pet Food
             /*defaultBuffs.Add(new Buff()
             {
