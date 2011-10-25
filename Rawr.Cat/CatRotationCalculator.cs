@@ -81,7 +81,7 @@ namespace Rawr.Cat
 			float tfUptime = ((((FightDuration - 10f) / TigersFuryStats.Cooldown) * TigersFuryStats.Duration) / FightDuration);
             float berserkUptime = 0f;
             if (Abilities.Stats.Tier_12_4pc)
-                berserkUptime = (((FightDuration - 10f) / BerserkStats.Cooldown) * BerserkStats.Duration + derive4t12BerserkExt()) / FightDuration;
+                berserkUptime = (((FightDuration - 10f) / BerserkStats.Cooldown) * BerserkStats.Duration + derive4t12BerserkExt(roarCP)) / FightDuration;
             else
                 berserkUptime = (((FightDuration - 10f) / BerserkStats.Cooldown) * BerserkStats.Duration) / FightDuration;
 			float energyCostMultiplier = 1f - (1f - BerserkStats.EnergyCostMultiplier) * berserkUptime; //Average energy cost reduction due to Berserk
@@ -328,16 +328,32 @@ namespace Rawr.Cat
 
         /**
          * Calculate approximate berserk extention due to 4T12.
+         * Based on code from Toskk's Cat Calculator
         */
-        private float derive4t12BerserkExt()
+
+        private float getEnergyRegenRate()
+        {
+            float BaseTimeToEnergyCap = 10f;
+            float energy = 100 / ((BaseTimeToEnergyCap) / StatConversion.GetHasteFromRating(Abilities.Stats.HasteRating, CharacterClass.Druid));
+            return 10 * energy;
+        }
+
+        private float derive4t12BerserkExt(int RoarCP)
         {
             float tier_12_4pc_procRate = 0.20f;
             float tier_12_4pc_extDuration = 2f;
-            float roarCP = 5f;
-            float cycles = FightDuration / 6f;
+
+            float numberRips = 1 / (1 - Abilities.ChanceAvoided);
+            float ripSegmentTime = (1 / (1 - Abilities.ChanceAvoided) * RipStats.EnergyCost * ((1 - Abilities.ChanceAvoided) + 0.2f * Abilities.ChanceAvoided) - RipStats.EnergyCost) / getEnergyRegenRate() + RipStats.Duration; // Total time between Rips, if Energy is limiting
+            float ripGcdTime = 1 / (1 - Abilities.ChanceAvoided) - 1 + RipStats.Duration; // Total time between Rips, if GCDs are limiting
+            ripSegmentTime = Math.Max(ripSegmentTime, ripGcdTime);
+
+            float ripDowntime = (1 / MeleeStats.ClearcastChance) * 0.5f;
+
+            float cycles = ripSegmentTime + ripDowntime;
 
             float nr5ptFinishers = RipCount + BiteCount;
-            float srExt = tier_12_4pc_procRate * roarCP * RoarCount;
+            float srExt = tier_12_4pc_procRate * RoarCP * RoarCount;
             float totalExtend = (srExt + nr5ptFinishers) / cycles * (BerserkStats.Cooldown / BerserkStats.Duration) * tier_12_4pc_extDuration;
 
             return totalExtend;

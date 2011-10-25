@@ -66,20 +66,23 @@ namespace Rawr.Cat
 				
 				string tipMiss = string.Empty;
 				if (BasicStats.HitRating > capMiss)
-					tipMiss = string.Format("*Over the cap by {0} Hit Rating", BasicStats.HitRating - capMiss);
+                    tipMiss = string.Format("*Hit Rating %: {0}%\nOver the cap by {1} Hit Rating", StatConversion.GetPhysicalHitFromRating(BasicStats.HitRating) * 100, BasicStats.HitRating - capMiss);
 				else if (BasicStats.HitRating < capMiss)
-					tipMiss = string.Format("*Under the cap by {0} Hit Rating", capMiss - BasicStats.HitRating);
+                    tipMiss = string.Format("*Hit Rating %: {0}%\nUnder the cap by {1} Hit Rating", StatConversion.GetPhysicalHitFromRating(BasicStats.HitRating) * 100, capMiss - BasicStats.HitRating);
 				else
-					tipMiss = "*Exactly at the cap";
+                    tipMiss = string.Format("*Hit Rating %: {0}%\nExactly at the cap", StatConversion.GetPhysicalHitFromRating(BasicStats.HitRating) * 100);
 
 				string tipDodge = string.Empty;
 				if (BasicStats.ExpertiseRating > capDodge)
-					tipDodge = string.Format("*Over the cap by {0} Expertise Rating", BasicStats.ExpertiseRating - capDodge);
+                    tipDodge = string.Format("*Expertise Rating %: {0}%\nOver the cap by {1} Expertise Rating", StatConversion.GetExpertiseFromRating(BasicStats.ExpertiseRating) * 0.25f, BasicStats.ExpertiseRating - capDodge);
 				else if (BasicStats.ExpertiseRating < capDodge)
-					tipDodge = string.Format("*Under the cap by {0} Expertise Rating", capDodge - BasicStats.ExpertiseRating);
+                    tipDodge = string.Format("*Expertise Rating %: {0}%\nUnder the cap by {1} Expertise Rating", StatConversion.GetExpertiseFromRating(BasicStats.ExpertiseRating) * 0.25f, capDodge - BasicStats.ExpertiseRating);
 				else
-					tipDodge = "*Exactly at the cap";
+                    tipDodge = string.Format("*Expertise Rating %: {0}%\nExactly at the cap", StatConversion.GetExpertiseFromRating(BasicStats.ExpertiseRating) * 0.25f);
 
+                string tipHaste = string.Format("*Haste Rating %: {0}%", StatConversion.GetPhysicalHasteFromRating(BasicStats.HasteRating, CharacterClass.Druid) * 100f);
+
+                string tipMastery = string.Format("*Increases the damage done by your bleed abilities by {0}%", ((StatConversion.GetMasteryFromRating(BasicStats.MasteryRating, CharacterClass.Druid) + 8f) * 0.031f) * 100f);
 
 				dictValues.Add("Health", BasicStats.Health.ToString());
 				dictValues.Add("Attack Power", BasicStats.AttackPower.ToString());
@@ -88,8 +91,8 @@ namespace Rawr.Cat
 				dictValues.Add("Crit Rating", BasicStats.CritRating.ToString());
 				dictValues.Add("Hit Rating", BasicStats.HitRating.ToString() + tipMiss);
 				dictValues.Add("Expertise Rating", BasicStats.ExpertiseRating.ToString() + tipDodge);
-				dictValues.Add("Mastery Rating", BasicStats.MasteryRating.ToString());
-				dictValues.Add("Haste Rating", BasicStats.HasteRating.ToString());
+				dictValues.Add("Mastery Rating", BasicStats.MasteryRating.ToString() + tipMastery);
+                dictValues.Add("Haste Rating", BasicStats.HasteRating.ToString() + tipHaste);
 				
 				dictValues.Add("Avoided Attacks", string.Format("{0}%*{1}% Dodged, {2}% Missed", AvoidedAttacks, DodgedAttacks, MissedAttacks));
 				dictValues.Add("Crit Chance", CritChance.ToString() + "%");
@@ -176,7 +179,11 @@ namespace Rawr.Cat
 			{
 				case "Health": return BasicStats.Health;
 				case "Avoided Attacks %": return AvoidedAttacks;
-				case "Avoided Interrupts %": return MissedAttacks;
+                case "Hit Rating": return BasicStats.HitRating;
+                case "Hit Rating %": return StatConversion.GetPhysicalHitFromRating(BasicStats.HitRating) * 100;
+                case "Expertise Rating": return BasicStats.ExpertiseRating;
+                case "Expertise": return StatConversion.GetExpertiseFromRating(BasicStats.ExpertiseRating);
+                case "Expertise Rating %": return StatConversion.GetExpertiseFromRating(BasicStats.ExpertiseRating) * 0.25f;
 				case "Nature Resist": return BasicStats.NatureResistance;
 				case "Fire Resist": return BasicStats.FireResistance;
 				case "Frost Resist": return BasicStats.FrostResistance;

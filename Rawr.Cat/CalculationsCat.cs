@@ -219,12 +219,11 @@ namespace Rawr.Cat
                     //"Custom Rotation DPS",
                     "Health",
                     "Avoided Attacks %",
-                    "Avoided Interrupts %",
-                    "Nature Resist",
-                    "Fire Resist",
-                    "Frost Resist",
-                    "Shadow Resist",
-                    "Arcane Resist",
+                    "Hit Rating",
+                    "Hit Rating %",
+                    "Expertise Rating",
+                    "Expertise",
+                    "Expertise Rating %",
                     };
                 return _optimizableCalculationLabels;
             }
@@ -545,7 +544,7 @@ namespace Rawr.Cat
             float magicDPS = (stats.ShadowDamage + stats.ArcaneDamage + stats.NatureDamage + stats.FireDamage + stats.FrostDamage) * (1f + chanceCritYellow);
             float abomDPS = (stats.MoteOfAnger * abilities.MeleeStats.DamageAverage);
             calculatedStats.DPSPoints = calculatedStats.HighestDPSRotation.DPS + magicDPS + abomDPS;
-            calculatedStats.SurvivabilityPoints = stats.Health / 100f;
+            calculatedStats.SurvivabilityPoints = stats.Health / 1000f;
             calculatedStats.OverallPoints = calculatedStats.DPSPoints + calculatedStats.SurvivabilityPoints;
             return calculatedStats;
         }
