@@ -107,6 +107,8 @@ namespace Rawr.RestoSham
             "Average Cast Times:Healing Surge",
             "Average Cast Times:Chain Heal",
             "Average Cast Times:Lightning Bolt*Telluric Currents mana restoration in Basic stats area.",
+            "Test Area: Damage Test",
+            "Test Area: Damage Test 2",
         };
 
         /// <summary>

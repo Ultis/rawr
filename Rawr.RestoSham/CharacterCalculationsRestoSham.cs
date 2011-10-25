@@ -63,6 +63,8 @@ namespace Rawr.RestoSham
         public float MUPS { get; set; }
         public float Survival { get; set; }
         public float MailSpecialization { get; set; }
+        public float RSTankHit { get; set; }
+        public float RSTankTick { get; set; }
 
         #endregion
 
@@ -102,14 +104,14 @@ namespace Rawr.RestoSham
             values.Add("GHW Spam HPS", Math.Round(GHWSpamHPS, 0).ToString());
             values.Add("HS Spam HPS", Math.Round(HSrgSpamHPS, 0).ToString());
             values.Add("CH Spam HPS", Math.Round(CHSpamHPS, 0).ToString());
-			values.Add("Global Cooldown", string.Format("{0:0.00}s", Math.Max(1.5f / (1f + SpellHaste), 1f)));
+            values.Add("Global Cooldown", string.Format("{0:0.00}s", Math.Max(1.5f / (1f + SpellHaste), 1f)));
 
             // These all use string.Format() so they always have 2 digits after the decimal
             values.Add("Healing Wave", string.Format("{0:0.00}s / {1:0.00}s", RealHWCast, RealHWCast * 0.7));
             values.Add("Greater Healing Wave", string.Format("{0:0.00}s / {1:0.00}s", RealGHWCast, RealGHWCast * 0.7));
             values.Add("Healing Surge", string.Format("{0:0.00}s",RealHSrgCast));
-            values.Add("Chain Heal", string.Format("{0:0.00}s", RealCHCast));
-            values.Add("Lightning Bolt", string.Format("{0:0.00}s", LBCast));
+            values.Add("Chain Heal", string.Format("{0:0.00}s", RSTankTick));
+            values.Add("Lightning Bolt", string.Format("{0:0.00}s", RSTankHit));
 
             return values;
         }

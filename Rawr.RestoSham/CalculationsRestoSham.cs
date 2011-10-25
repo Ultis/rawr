@@ -506,12 +506,23 @@ namespace Rawr.RestoSham
             float TWChance = character.ShamanTalents.TidalWaves * 0.1f; // Calcuation for Tidal Waves
             #endregion
             #region Create incoming damage from boss handler
+            
             // Here is where the damage from the boss handler will be aggregated in a format to be used by the model.
+            foreach (Attack a in character.BossOptions.Attacks)
+            {
+                // Any Tank means it should be affected by anything that affects a tanking role
+                if (a.AffectsRole[PLAYER_ROLES.MainTank])
+                {
+                    calc.RSTankHit = a.DamagePerHit + 1;
+                    calc.RSTankTick = a.DamagePerTick + 1;
+                }
+            }
             // Will need to have a temporary panel setup on stats panel to verify numbers are correct.
             #endregion
             #region Responsability  
             // In this model, over-healing is no longer going to be measured.
             //Main Tank healer (75% of tank damage, 25% Raid Damage)
+
             //Off-tank Healer (60% Tank damage, 40% raid damage)
             //Raid Healer Light (75% Raid Damage, 25% Tank Damage)
             //Raid Healer Heavy (100% raid Damage)
@@ -589,7 +600,7 @@ namespace Rawr.RestoSham
             //Mastery
             //Mastery conversion for per-target
             //Create mastery based on 140k health values for raid
-            //Create mastery based on 180k health values for tanks
+            //Create mastery based on 200k health values for tanks
             //Healing and Damage
             //Riptide Healing
             //Unleash Elements Healing
