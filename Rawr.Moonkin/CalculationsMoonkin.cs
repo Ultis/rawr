@@ -702,12 +702,6 @@ namespace Rawr.Moonkin
             character.ActiveBuffsAdd(("Power Infusion"));
             character.ActiveBuffsAdd(("Flask of the Draconic Mind"));
             character.ActiveBuffsAdd(("Intellect Food"));
-
-            character.DruidTalents.GlyphOfWrath = true;
-            character.DruidTalents.GlyphOfInsectSwarm = true;
-            character.DruidTalents.GlyphOfMoonfire = true;
-            character.DruidTalents.GlyphOfFocus = true;
-            character.DruidTalents.GlyphOfStarfall = true;
         }
 
         #endregion
