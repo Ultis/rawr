@@ -870,7 +870,7 @@ namespace Rawr.Cat
         {
             if (item.Slot == ItemSlot.OffHand ||
                 (item.Slot == ItemSlot.Ranged && item.Type != ItemType.Idol && item.Type != ItemType.Relic) ||
-                item.Stats.SpellPower > 0) 
+                item.Stats.SpellPower > 0 || item.Stats.Intellect > 0) 
                 return false;
             foreach (var effect in item.Stats.SpecialEffects(s => s.Stats.SpellPower > 0))
                 return false;
@@ -878,14 +878,17 @@ namespace Rawr.Cat
         }
 
         public override bool IsBuffRelevant(Buff buff, Character character) {
-            if (buff != null
-                && !string.IsNullOrEmpty(buff.SetName)
-                && buff.SetName == "Gladiator's Sanctuary"
-                && buff.SetName == "Stormrider's Battlegarb"	
-                && buff.SetName == "Obsidian Arborweave Battlegarb"
-                && buff.SetName == "Deep Earth Battlegarb")
-            { return true; }
-            return base.IsBuffRelevant(buff, character);
+            if (buff != null && buff.Group == "Set Bonuses") {
+                if (buff.SetName == "Gladiator's Sanctuary"
+                || buff.SetName == "Stormrider's Battlegarb"
+                || buff.SetName == "Obsidian Arborweave Battlegarb"
+                || buff.SetName == "Deep Earth Battlegarb")
+                { return true; }
+                else
+                { return false; }
+            }
+            else
+                return base.IsBuffRelevant(buff, character);
         }
 
         public override Stats GetRelevantStats(Stats stats)
@@ -1042,20 +1045,28 @@ namespace Rawr.Cat
         {
             character.ActiveBuffsAdd("Horn of Winter");
             character.ActiveBuffsAdd("Unleashed Rage");
-            character.ActiveBuffsAdd("Leader of the Pack");
-            character.ActiveBuffsAdd("Improved Icy Talons");
+            character.ActiveBuffsAdd("Sanctified Retribution");
             character.ActiveBuffsAdd("Power Word: Fortitude");
-            character.ActiveBuffsAdd("Mark of the Wild");
-            character.ActiveBuffsAdd("Faerie Fire");
-            character.ActiveBuffsAdd("Flask of the Winds");
-            character.ActiveBuffsAdd("Agility Food");
+            character.ActiveBuffsAdd("Leader of the Pack");
+            character.ActiveBuffsAdd("Windfury Totem");
+            character.ActiveBuffsAdd("Blessing of Kings");
+            character.ActiveBuffsAdd("Shadow Protection");
+            character.ActiveBuffsAdd("Elemental Resistance Totem");
             character.ActiveBuffsAdd("Heroism/Bloodlust");
+            character.ActiveBuffsAdd("Faerie Fire");
+            character.ActiveBuffsAdd("Mangle");
+            character.ActiveBuffsAdd("Savage Combat");
+            character.ActiveBuffsAdd("Potion of the Tol'vir");
+            character.ActiveBuffsAdd("Flask of the Winds");
+            if (character.PrimaryProfession == Profession.Alchemy || character.SecondaryProfession == Profession.Alchemy)
+                character.ActiveBuffsAdd("Flask of the Winds (Mixology)");
+            character.ActiveBuffsAdd("Agility Food");
 
-            character.DruidTalents.GlyphOfBerserk = true;
+            /*character.DruidTalents.GlyphOfBerserk = false;
             character.DruidTalents.GlyphOfShred = true;
             character.DruidTalents.GlyphOfRip = true;
-            // character.DruidTalents.GlyphOfTigersFury = true;
-            character.DruidTalents.GlyphOfFeralCharge = true;
+            character.DruidTalents.GlyphOfTigersFury = false;
+            character.DruidTalents.GlyphOfFeralCharge = false;*/
         }
 
         private static List<string> _relevantGlyphs;
