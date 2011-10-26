@@ -1624,35 +1624,46 @@ the Threat Scale defined on the Options tab.",
         }
         public override void SetDefaults(Character character)
         {
-            character.ActiveBuffsAdd("Battle Shout");
+            character.ActiveBuffsAdd("Strength of Earth Totem");
             character.ActiveBuffsAdd("Devotion Aura");
-            character.ActiveBuffsAdd("Blessing of Might (AP%)");
+            character.ActiveBuffsAdd("Ancestral Healing");
+            character.ActiveBuffsAdd("Trueshot Aura");
+            character.ActiveBuffsAdd("Ferocious Inspiration");
             character.ActiveBuffsAdd("Power Word: Fortitude");
             character.ActiveBuffsAdd("Leader of the Pack");
             character.ActiveBuffsAdd("Windfury Totem");
-            character.ActiveBuffsAdd("Mark of the Wild");
+            character.ActiveBuffsAdd("Blessing of Kings");
+            character.ActiveBuffsAdd("Shadow Protection");
+            character.ActiveBuffsAdd("Elemental Resistance Totem");
+            character.ActiveBuffsAdd("Heroism/Bloodlust");
             character.ActiveBuffsAdd("Faerie Fire");
-            character.ActiveBuffsAdd("Curse of the Elements");
-            character.ActiveBuffsAdd("Infected Wounds");
+            character.ActiveBuffsAdd("Demoralizing Roar");
+            character.ActiveBuffsAdd("Critical Mass");
+            character.ActiveBuffsAdd("Master Poisoner");
+            character.ActiveBuffsAdd("Savage Combat");
+            character.ActiveBuffsAdd("Judgements of the Just");
             character.ActiveBuffsAdd("Flask of Steelskin");
+            if (character.PrimaryProfession == Profession.Alchemy || character.SecondaryProfession == Profession.Alchemy)
+                character.ActiveBuffsAdd("Flask of Steelskin (Mixology)");
+            character.ActiveBuffsAdd("Indestructible Potion");
             character.ActiveBuffsAdd("Agility Food");
 
             //Prime
-            character.DruidTalents.GlyphOfBerserk = true;
-            character.DruidTalents.GlyphOfLacerate = true;
-            character.DruidTalents.GlyphOfMangle = true;
+            //character.DruidTalents.GlyphOfBerserk = true;
+            //character.DruidTalents.GlyphOfLacerate = true;
+            //character.DruidTalents.GlyphOfMangle = true;
             
             //Major
             //character.DruidTalents.GlyphOfFaerieFire = true;
-            character.DruidTalents.GlyphOfFeralCharge = true;
-            character.DruidTalents.GlyphOfFrenziedRegeneration = true;
-            character.DruidTalents.GlyphOfMaul = true;
+            //character.DruidTalents.GlyphOfFeralCharge = true;
+            //character.DruidTalents.GlyphOfFrenziedRegeneration = true;
+            //character.DruidTalents.GlyphOfMaul = true;
             //character.DruidTalents.GlyphOfThorns = true;
             
             //Minor
-            character.DruidTalents.GlyphOfChallengingRoar = true;
-            character.DruidTalents.GlyphOfUnburdenedRebirth = true;
-            character.DruidTalents.GlyphOfDash = true;
+            //character.DruidTalents.GlyphOfChallengingRoar = true;
+            //character.DruidTalents.GlyphOfUnburdenedRebirth = true;
+            //character.DruidTalents.GlyphOfDash = true;
 
             #region Boss Options
             // Never in back of the Boss
