@@ -1357,20 +1357,24 @@ the Threat Scale defined on the Options tab.",
         {
             if (item.Slot == ItemSlot.OffHand ||
                 (item.Slot == ItemSlot.Ranged && item.Type != ItemType.Idol && item.Type != ItemType.Relic) ||
-                item.Stats.SpellPower > 0) 
+                item.Stats.SpellPower > 0 || item.Stats.Intellect > 0) 
                 return false;
             return base.IsItemRelevant(item);
         }
 
         public override bool IsBuffRelevant(Buff buff, Character character) {
-            if (buff != null
-                && !string.IsNullOrEmpty(buff.SetName)
-                && buff.SetName == "Gladiator's Sanctuary"
-                && buff.SetName == "Stormrider's Battlegarb"
-                && buff.SetName == "Obsidian Arborweave Battlegarb"
-                && buff.SetName == "Deep Earth Battlegarb")
-            { return true; }
-            return base.IsBuffRelevant(buff, character);
+            if (buff != null && buff.Group == "Set Bonuses")
+            {
+                if (buff.SetName == "Gladiator's Sanctuary"
+                || buff.SetName == "Stormrider's Battlegarb"
+                || buff.SetName == "Obsidian Arborweave Battlegarb"
+                || buff.SetName == "Deep Earth Battlegarb")
+                { return true; }
+                else
+                { return false; }
+            }
+            else
+                return base.IsBuffRelevant(buff, character);
         }
 
         public override Stats GetRelevantStats(Stats stats)
