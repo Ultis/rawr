@@ -943,6 +943,38 @@ namespace Rawr.Rogue
             Stats statsItems = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character, calcOpts);
 
+            SpecialEffect LegendarySpecialEffect = new SpecialEffect(Trigger.MeleeHit, new Stats() { Agility = 2f }, 20f, 0f, 1f, 50);
+            Stats statsSetBonus = new Stats();
+            int LegendaryPartA;
+            character.SetBonusCount.TryGetValue("Jaws of Retribution", out LegendaryPartA);
+            if (LegendaryPartA >= 2)
+            {
+                statsSetBonus.AddSpecialEffect(LegendarySpecialEffect);
+            }
+
+            LegendarySpecialEffect = new SpecialEffect(Trigger.MeleeHit, new Stats() { Agility = 5f }, 20f, 0f, 1f, 50);
+            int LegendaryPartB;
+            character.SetBonusCount.TryGetValue("Maw of Oblivion", out LegendaryPartB);
+            if (LegendaryPartB >= 2)
+            {
+                statsSetBonus.AddSpecialEffect(LegendarySpecialEffect);
+            }
+
+            // Needs work....
+            LegendarySpecialEffect = new SpecialEffect(Trigger.MeleeHit, new Stats() { Agility = 17f }, 20f, 0f, 1f, 50);
+            Stats LegendaryStats = new Stats();
+            LegendaryStats.AddSpecialEffect(LegendarySpecialEffect);
+            // Assume it resets every 45 seconds
+            LegendarySpecialEffect = new SpecialEffect(Trigger.MeleeHit, LegendaryStats, 45f, 45f);
+            int LegendaryPartC;
+            character.SetBonusCount.TryGetValue("Fangs of the Father", out LegendaryPartC);
+            if (LegendaryPartC >= 2)
+            {
+                statsSetBonus.AddSpecialEffect(LegendarySpecialEffect);
+                LegendarySpecialEffect = new SpecialEffect(Trigger.MeleeHit, new Stats() { FangsoftheFather = 1f }, 6f, 45f);
+                statsSetBonus.AddSpecialEffect(LegendarySpecialEffect);
+            }
+
             Stats statsTalents = new Stats()
             {
                 BonusAgilityMultiplier = (1f + (spec == 2 ? RV.Mastery.SinisterCallingMult : 0f)) * (1f + RV.LeatherSpecialization) - 1f,
