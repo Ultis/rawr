@@ -990,7 +990,7 @@ namespace Rawr.Rogue
                 SpellHit = RV.Talents.PrecisionMult * talents.Precision,
             };
 
-            Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
+            Stats statsGearEnchantsBuffs = statsItems + statsBuffs + statsSetBonus;
             Stats statsTotal = statsRace + statsItems;
             statsTotal.Accumulate(statsBuffs);
             statsTotal.Accumulate(statsTalents);
