@@ -857,6 +857,12 @@ namespace Rawr.Moonkin
             Wrath.AllDamageModifier *= 1 + stats.BonusNukeDamageModifier;
             Starsurge.AllDamageModifier *= 1 + stats.BonusNukeDamageModifier;
 
+            // PTR changes go here
+            if (((CalculationOptionsMoonkin)character.CalculationOptions).PTRMode)
+            {
+                MoonkinSolver.DRAGONWRATH_PROC_RATE = 0.055f;
+            }
+
             // Dragonwrath, Tarecgosa's Rest: X% chance on damaging spell cast to proc a duplicate version of the spell.
             // If it duplicates a DoT tick, it fires Wrath of Tarecgosa for an equivalent amount of damage.
             // Wrath, Starfire, and Starsurge will duplicate the Eclipse energy gained.
@@ -868,11 +874,6 @@ namespace Rawr.Moonkin
                 Moonfire.AllDamageModifier += MoonkinSolver.DRAGONWRATH_PROC_RATE;
                 Moonfire.DotEffect.AllDamageModifier += MoonkinSolver.DRAGONWRATH_PROC_RATE;
                 InsectSwarm.DotEffect.AllDamageModifier += MoonkinSolver.DRAGONWRATH_PROC_RATE;
-            }
-
-            // PTR changes go here
-            if (((CalculationOptionsMoonkin)character.CalculationOptions).PTRMode)
-            {
             }
         }
     }
