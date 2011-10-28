@@ -862,6 +862,10 @@ namespace Rawr.Moonkin
             {
                 MoonkinSolver.DRAGONWRATH_PROC_RATE = 0.055f;
             }
+            else
+            {
+                MoonkinSolver.DRAGONWRATH_PROC_RATE = 0.11f;
+            }
 
             // Dragonwrath, Tarecgosa's Rest: X% chance on damaging spell cast to proc a duplicate version of the spell.
             // If it duplicates a DoT tick, it fires Wrath of Tarecgosa for an equivalent amount of damage.
