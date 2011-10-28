@@ -65,7 +65,7 @@ namespace Rawr.DK
         /// 
         /// </summary>
         /// <param name="ct">Combat Table</param>
-        /// <param name="bThreat">True if you want the results/sorting by Threat (rather Damage)</param>
+        /// <param name="bThreat">True if you want the results/sorting by Threat (rather Dam)</param>
         public Rotation(DKCombatTable ct, bool bThreat = false)
         {
             m_CT = ct;
@@ -431,7 +431,7 @@ namespace Rawr.DK
             //m_CT.m_Opts.presence = Presence.Blood;
             // Setup an instance of each ability.
             // No runes:
-            //            AbilityDK_Outbreak OutB = new AbilityDK_Outbreak(m_CT.m_CState);
+            AbilityDK_Outbreak OutB = new AbilityDK_Outbreak(m_CT.m_CState);
             // Single Runes:
             AbilityDK_IcyTouch IT = new AbilityDK_IcyTouch(m_CT.m_CState);
             AbilityDK_FrostFever FF = new AbilityDK_FrostFever(m_CT.m_CState);
@@ -467,9 +467,17 @@ namespace Rawr.DK
             for (int count = (int)(DRW.Cooldown / subrotDuration); count > 0; count--)
             {
                 // Simple ITx1, PSx1, DSx1, HSx2 or BBx2, RS w/ RP (x3ish).
-                ml_Rot.Add(IT);
+                if (Rawr.Properties.GeneralSettings.Default.PTRMode)
+                {
+                    ml_Rot.Add(OutB);
+                    ml_Rot.Add(DS);
+                }
+                else
+                {
+                    ml_Rot.Add(IT);
+                    ml_Rot.Add(PS);
+                }
                 ml_Rot.Add(FF);
-                ml_Rot.Add(PS);
                 ml_Rot.Add(BP); // Scarlet Fever is tied to this for 4.0.6
 
                 if (HS.TotalThreat > BB.TotalThreat)
@@ -1522,7 +1530,7 @@ namespace Rawr.DK
             string szFormat = "{0,-15}|{1,7}|{2,7:0.0}|{3,7:0}|{4,7:0.0}\n";
             int GCDs = 0;
 
-            szReport += string.Format(szFormat, "Name", "Damage", "DPS", "Threat", "TPS");
+            szReport += string.Format(szFormat, "Name", "Dam", "DPS", "Threat", "TPS");
             foreach (AbilityDK_Base ability in l_Openning)
             {
                 DurationDuration += (float)ability.uDuration;
@@ -1541,7 +1549,7 @@ namespace Rawr.DK
             string szReport = m_szRotationName + "\n";
             string szFormat = "{0,-15}|{1,7:0}|{2,7:0.0}|{3,7:0}|{4,7:0.0}\n";
 
-            szReport += string.Format(szFormat, "Name", "Damage", "DPS", "Threat", "TPS");
+            szReport += string.Format(szFormat, "Name", "Dam", "DPS", "Threat", "TPS");
             if (null != ml_Rot)
             {
                 foreach (AbilityDK_Base ability in ml_Rot)

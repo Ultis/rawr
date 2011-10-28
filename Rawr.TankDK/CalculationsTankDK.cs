@@ -890,7 +890,7 @@ Points individually may be important.",
             // Bleed damage:
             fBleedSurvival    = GetEffectiveHealth(stats.Health, 0, DamagePercentages[(int)SurvivalSub.Bleed]);
             
-            // Magic Damage:
+            // Magic Dam:
             fMagicalSurvival  = GetEffectiveHealth(stats.Health, fMagicDR, DamagePercentages[(int)SurvivalSub.Magic]);
 
             // Since Armor plays a role in Survival, so shall the other damage taken adjusters.
@@ -930,7 +930,7 @@ Points individually may be important.",
             float fPhyDamageDPS = fCurrentDTPS[(int)SurvivalSub.Physical];
             float fMagicDamageDPS = fCurrentDTPS[(int)SurvivalSub.Magic];
             float fBleedDamageDPS = fCurrentDTPS[(int)SurvivalSub.Bleed];
-            #region *** Damage Avoided (Crit, Haste, Avoidance) ***
+            #region *** Dam Avoided (Crit, Haste, Avoidance) ***
             #region ** Crit Mitigation **
             // Crit mitigation:
             // Crit mitigation work for Physical damage only.
@@ -986,7 +986,7 @@ Points individually may be important.",
             #endregion
             #endregion
 
-            #region *** Damage Reduced (AMS, Armor, Magic Resist, DamageTaken Modifiers) ***
+            #region *** Dam Reduced (AMS, Armor, Magic Resist, DamageTaken Modifiers) ***
             #region ** Anti-Magic Shell **
             // TODO: This is a CD, so would only be in BURST.
             // Anti-Magic Shell. ////////////////////////////////////////////////////////
@@ -1005,22 +1005,22 @@ Points individually may be important.",
             fCurrentDTPS[(int)SurvivalSub.Magic] -= amsDRvalue;
             fTotalMitigation[(int)MitigationSub.AMS] += amsDRvalue;
             #endregion
-            #region ** Armor Damage Mitigation **
+            #region ** Armor Dam Mitigation **
             // For any physical only damage reductions. 
-            // Factor in armor Damage Reduction
+            // Factor in armor Dam Reduction
             fSegmentMitigation = fPhyDamageDPS * ArmorDamageReduction;
 //            calcs.ArmorMitigation = fSegmentMitigation;
             fTotalMitigation[(int)MitigationSub.Armor] += fSegmentMitigation;
             fCurrentDTPS[(int)SurvivalSub.Physical] *= 1f - ArmorDamageReduction;
             #endregion
-            #region ** Resistance Damage Mitigation **
+            #region ** Resistance Dam Mitigation **
             // For any physical only damage reductions. 
-            // Factor in armor Damage Reduction
+            // Factor in armor Dam Reduction
             fSegmentMitigation = fMagicDamageDPS * fMagicDR;
             fTotalMitigation[(int)MitigationSub.Magic] += fSegmentMitigation;
             fCurrentDTPS[(int)SurvivalSub.Magic] -= fCurrentDTPS[(int)SurvivalSub.Magic] * fMagicDR;
             #endregion
-            #region ** Damage Taken Mitigation **
+            #region ** Dam Taken Mitigation **
             fTotalMitigation[(int)MitigationSub.DamageReduction] += fMagicDamageDPS * (1f - stats.DamageTakenReductionMultiplier) * (1f - stats.SpellDamageTakenReductionMultiplier   );
             fTotalMitigation[(int)MitigationSub.DamageReduction] += fBleedDamageDPS * (1f - stats.DamageTakenReductionMultiplier) * (1f - stats.PhysicalDamageTakenReductionMultiplier);
             fTotalMitigation[(int)MitigationSub.DamageReduction] += fPhyDamageDPS   * (1f - stats.DamageTakenReductionMultiplier) * (1f - stats.PhysicalDamageTakenReductionMultiplier);
@@ -1029,7 +1029,7 @@ Points individually may be important.",
             fCurrentDTPS[(int)SurvivalSub.Bleed]    *= (1f - stats.DamageTakenReductionMultiplier) * (1f - stats.PhysicalDamageTakenReductionMultiplier);
             fCurrentDTPS[(int)SurvivalSub.Physical] *= (1f - stats.DamageTakenReductionMultiplier) * (1f - stats.PhysicalDamageTakenReductionMultiplier);
             #endregion
-            #region ** Damage Absorbed ** 
+            #region ** Dam Absorbed ** 
             fTotalMitigation[(int)MitigationSub.DamageReduction] += stats.DamageAbsorbed;
 
 //            fCurrentDTPS[(int)SurvivalSub.Magic] *= (1f - stats.DamageTakenReductionMultiplier) * (1f - stats.SpellDamageTakenReductionMultiplier);
@@ -1116,7 +1116,7 @@ Points individually may be important.",
 
         /// <summary>Get the value for a sub-component of Survival</summary>
         /// <param name="fHealth">Current HP</param>
-        /// <param name="fDR">Damage Reduction rate</param>
+        /// <param name="fDR">Dam Reduction rate</param>
         /// <param name="PercValue">% value of the survival rank. valid range 0-1</param>
         /// <returns></returns>
         private float GetEffectiveHealth(float fHealth, float fDR, float PercValue)
@@ -1130,10 +1130,10 @@ Points individually may be important.",
         }
 
         /// <summary>
-        /// Get Damage Per Second
+        /// Get Dam Per Second
         /// </summary>
-        /// <param name="fPerUnitDamage">Damage per incident</param>
-        /// <param name="fDamFrequency">Damage Frequency in Seconds</param>
+        /// <param name="fPerUnitDamage">Dam per incident</param>
+        /// <param name="fDamFrequency">Dam Frequency in Seconds</param>
         /// <returns></returns>
         private float GetDPS(float fPerUnitDamage, float fDamFrequency)
         {
@@ -1206,23 +1206,28 @@ Points individually may be important.",
 
             calcs = GetCharacterCalculations(TDK, stats, rot, true, needsDisplayCalculations);
 
+            #region Burst
             // Burst as On-Use Abilties.
             calcs.Burst = 0;
-            calcs.Burst += calcs.Survivability - basecalcs.Survivability;
-            if (calcs.Burst < 0 || float.IsNaN(calcs.Burst)) { calcs.Burst = 0; } // This should never happen but just in case
-            calcs.Burst += calcs.Mitigation - basecalcs.Mitigation;
-            if (calcs.Burst < 0 || float.IsNaN(calcs.Burst)) { calcs.Burst = 0; } // This should never happen but just in case
-            // Survival
-            calcs.PhysicalSurvival = basecalcs.PhysicalSurvival;
-            calcs.MagicSurvival = basecalcs.MagicSurvival;
-            calcs.BleedSurvival = basecalcs.BleedSurvival;
-            // Mitigation
-            calcs.Mitigation = basecalcs.Mitigation;
             calcs.BurstWeight = TDK.calcOpts.BurstWeight;
+            if (calcs.BurstWeight > 0)
+            {
+                calcs.Burst += calcs.Survivability - basecalcs.Survivability;
+                if (calcs.Burst < 0 || float.IsNaN(calcs.Burst)) { calcs.Burst = 0; } // This should never happen but just in case
+                calcs.Burst += calcs.Mitigation - basecalcs.Mitigation;
+                if (calcs.Burst < 0 || float.IsNaN(calcs.Burst)) { calcs.Burst = 0; } // This should never happen but just in case
+                // Survival
+                calcs.PhysicalSurvival = basecalcs.PhysicalSurvival;
+                calcs.MagicSurvival = basecalcs.MagicSurvival;
+                calcs.BleedSurvival = basecalcs.BleedSurvival;
+                // Mitigation
+                calcs.Mitigation = basecalcs.Mitigation;
+            }
+            #endregion
 
             #region **** Recovery: DS & Blood Shield ****
             float minDSHeal = stats.Health * .07f;
-            // 4.1: DS Heals for 20% of Damage Taken over the last 5 secs.
+            // 4.1: DS Heals for 20% of Dam Taken over the last 5 secs.
             float DTPSFactor = calcs.DTPS * 5f;
             if (TDK.calcOpts.b_RecoveryInclAvoidance == false) 
             {
@@ -1318,7 +1323,7 @@ Points individually may be important.",
             // We want to start getting the Boss Handler stuff going on.
             // Setup initial Boss data.
             // How much of what kind of damage does this boss deal with?
-            #region ** Incoming Boss Damage **
+            #region ** Incoming Boss Dam **
             // Let's make sure this is even valid
             float DPHit = 0;
             float DPTick = 0;
@@ -1589,7 +1594,7 @@ Points individually may be important.",
             #endregion
             #endregion
 
-            Rawr.DPSDK.CalculationsDPSDK.RemoveDuplicateRunes(statsTotal, character, statsTotal.bDW);
+            Rawr.DPSDK.CalculationsDPSDK.RemoveDuplicateRunes(statsTotal, character, true/*statsTotal.bDW*/);
             Rawr.DPSDK.CalculationsDPSDK.AccumulateTalents(statsTotal, character);
             Rawr.DPSDK.CalculationsDPSDK.AccumulatePresenceStats(statsTotal, Presence.Blood, character.DeathKnightTalents);
 
@@ -1623,7 +1628,9 @@ Points individually may be important.",
                 #region Talent: Bone Shield
                 if (character.DeathKnightTalents.BoneShield > 0)
                 {
-                    int BSStacks = 6;  // The number of bones by default.  
+                    int BSStacks = 4;  // The number of bones by default.  
+                    if (Rawr.Properties.GeneralSettings.Default.PTRMode)
+                        BSStacks = 6;  // The number of bones by default.  
                     float BoneLossRate = Math.Max(2f, TDK.bo.DynamicCompiler_Attacks.AttackSpeed / fChanceToGetHit);  // 2 sec internal cooldown on loosing bones so the DK can't get spammed to death.  
                     float moveVal = character.DeathKnightTalents.GlyphofBoneShield ? 0.15f : 0f;
                     SpecialEffect primary = new SpecialEffect(Trigger.Use,

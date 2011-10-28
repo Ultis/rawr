@@ -54,6 +54,9 @@ namespace Rawr.DK
         OtherShadow,
     }
 
+    /// <summary>
+    /// This Class has gone off the rails.
+    /// </summary>
     public class DKCombatTable
     {
         #region Member Vars

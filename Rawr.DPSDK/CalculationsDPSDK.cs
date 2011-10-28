@@ -520,7 +520,7 @@ namespace Rawr.DPSDK
             if (stats.HolyDamage > 1) calc.dpsSub[(int)DKability.OtherHoly] += stats.HolyDamage;
             if (stats.NatureDamage > 1) calc.dpsSub[(int)DKability.OtherNature] += stats.NatureDamage;
             if (stats.ShadowDamage > 1) calc.dpsSub[(int)DKability.OtherShadow] += stats.ShadowDamage;
-            // Fire Damage Multiplier.
+            // Fire Dam Multiplier.
 
             calc.RotationTime = rot.CurRotationDuration;
             calc.Blood = rot.m_BloodRunes;
@@ -599,7 +599,11 @@ namespace Rawr.DPSDK
                     else if (t.ImprovedUnholyPresence == 2)
                         PresenceStats.MovementSpeed += .15f;
                     PresenceStats.BonusStaminaMultiplier += .08125f; 
-                    PresenceStats.BaseArmorMultiplier += 0.3f;
+                    if (Rawr.Properties.GeneralSettings.Default.PTRMode)
+                        PresenceStats.BaseArmorMultiplier += 0.55f;
+                    else
+                        PresenceStats.BaseArmorMultiplier += 0.3f;
+
                     PresenceStats.DamageTakenReductionMultiplier = 1f - (1f - PresenceStats.DamageTakenReductionMultiplier) * (1f - 0.08f);
                     // Threat bonus.
                     PresenceStats.ThreatIncreaseMultiplier += 1f; 
@@ -982,10 +986,10 @@ namespace Rawr.DPSDK
                         // Unholy Might
                         // Str +25%
                         FullCharacterStats.BonusStrengthMultiplier += .25f;
-                        // Mastery: Blightcaller.
+                        // Mastery: Dreadblade.
                         // Increases shadow damage by 20% + 
                         // Each point of mastery increases shadow damage by an additional 2.5%
-                        FullCharacterStats.BonusShadowDamageMultiplier += .2f + .025f * FullCharacterStats.Mastery;
+                        FullCharacterStats.BonusShadowDamageMultiplier += .2f + (.025f * FullCharacterStats.Mastery);
                         break;
                     }
             }
@@ -1071,7 +1075,7 @@ namespace Rawr.DPSDK
 
                 // Sanguine Fortitude
                 // Buff's IBF:
-                // While Active, your IBF reduces Damage taken by 15/30% and costs 50/100% less RP to activate.
+                // While Active, your IBF reduces Dam taken by 15/30% and costs 50/100% less RP to activate.
                 // CD duration? 3min suggested on pwnwear.
                 // Cost?  This is a CD stacker.
                 // TODO: look into CD stacking code./max v average values.
@@ -1097,11 +1101,11 @@ namespace Rawr.DPSDK
 
                 // Improved Blood Presence
                 // Reduces chance to be critically hit while in blood presence by 3/6%
-                // In addition while in Frost or Unholy, retain the 2/4% Damage reduction. 
+                // In addition while in Frost or Unholy, retain the 2/4% Dam reduction. 
                 // Implemented in AccumulatePresenceStats()
 
                 // Will of the Necropolis
-                // Damage that takes you below 35% health or while at less than 35% is reduced by 5% per point.  
+                // Dam that takes you below 35% health or while at less than 35% is reduced by 5% per point.  
                 if (character.DeathKnightTalents.WillOfTheNecropolis > 0)
                 {
                     // Need to factor in the damage taken aspect of the trigger.
@@ -1607,7 +1611,7 @@ namespace Rawr.DPSDK
                 SpellHit = stats.SpellHit,
                 SpellPenetration = stats.SpellPenetration,
 
-                // Damage stats
+                // Dam stats
                 WeaponDamage = stats.WeaponDamage,
                 PhysicalDamage = stats.PhysicalDamage,
                 ShadowDamage = stats.ShadowDamage,
@@ -1625,15 +1629,15 @@ namespace Rawr.DPSDK
                 BonusCritDamageMultiplier = stats.BonusCritDamageMultiplier,
                 BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
 
-                // Bonus to Damage
-                // *Damage
+                // Bonus to Dam
+                // *Dam
                 BonusWhiteDamageMultiplier = stats.BonusWhiteDamageMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
                 BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
                 BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
                 BonusDiseaseDamageMultiplier = stats.BonusDiseaseDamageMultiplier,
-                // +Damage
+                // +Dam
                 BonusFrostWeaponDamage = stats.BonusFrostWeaponDamage,
                 BonusDamageScourgeStrike = stats.BonusDamageScourgeStrike,
                 BonusDamageBloodStrike = stats.BonusDamageBloodStrike,
@@ -1787,7 +1791,7 @@ namespace Rawr.DPSDK
             bResults |= (stats.SpellHaste != 0);
             bResults |= (stats.SpellPenetration != 0);
 
-            // Damage stats
+            // Dam stats
             bResults |= (stats.WeaponDamage != 0);
             bResults |= (stats.PhysicalDamage != 0);
             bResults |= (stats.ShadowDamage != 0);
@@ -1805,15 +1809,15 @@ namespace Rawr.DPSDK
             bResults |= ( stats.BonusCritDamageMultiplier != 0);
             bResults |= (stats.BonusAttackPowerMultiplier != 0);
 
-            // Bonus to Damage
-            // *Damage
+            // Bonus to Dam
+            // *Dam
             bResults |= (stats.BonusWhiteDamageMultiplier != 0);
             bResults |= (stats.BonusDamageMultiplier != 0);
             bResults |= (stats.BonusPhysicalDamageMultiplier != 0);
             bResults |= ( stats.BonusShadowDamageMultiplier != 0);
             bResults |= ( stats.BonusFrostDamageMultiplier != 0);
             bResults |= ( stats.BonusDiseaseDamageMultiplier  != 0);
-            // +Damage
+            // +Dam
             bResults |= (stats.BonusFrostWeaponDamage != 0);
             bResults |= (stats.BonusDamageScourgeStrike != 0);
             bResults |= (stats.BonusDamageBloodStrike != 0);
