@@ -860,7 +860,7 @@ namespace Rawr.Moonkin
             // PTR changes go here
             if (((CalculationOptionsMoonkin)character.CalculationOptions).PTRMode)
             {
-                MoonkinSolver.DRAGONWRATH_PROC_RATE = 0.055f;
+                MoonkinSolver.DRAGONWRATH_PROC_RATE = 0.0675f;
             }
             else
             {
