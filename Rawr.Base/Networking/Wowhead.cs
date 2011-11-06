@@ -693,126 +693,136 @@ namespace Rawr
                     _tokenDropMap["385"] = new TokenDropInfo() { Name = "Troll Archaeology Fragment" };
                     _tokenDropMap["399"] = new TokenDropInfo() { Name = "Vrykul Archaeology Fragment" };
                     #region Tier 11 Tokens
+                    #region Normal
                     // T11: Paladin, Priest, Warlock
-                    _tokenDropMap["63683"] = new TokenDropInfo() { Name = "Helm of the Forlorn Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Nefarian" };
-                    _tokenDropMap["64315"] = new TokenDropInfo() { Name = "Mantle of the Forlorn Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Boss = "Cho'gall" };
+                    _tokenDropMap["63683"] = new TokenDropInfo() { Name = "Helm of the Forlorn Conqueror", Vendor = "Toren Landow", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Nefarian" };
+                    _tokenDropMap["64315"] = new TokenDropInfo() { Name = "Mantle of the Forlorn Conqueror", Vendor = "Toren Landow", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Boss = "Cho'gall" };
                     // T11: Rogue, Death Knight, Mage, Druid
-                    _tokenDropMap["63682"] = new TokenDropInfo() { Name = "Helm of the Forlorn Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Nefarian" };
-                    _tokenDropMap["64314"] = new TokenDropInfo() { Name = "Mantle of the Forlorn Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Boss = "Cho'gall" };
+                    _tokenDropMap["63682"] = new TokenDropInfo() { Name = "Helm of the Forlorn Vanquisher", Vendor = "Toren Landow", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Nefarian" };
+                    _tokenDropMap["64314"] = new TokenDropInfo() { Name = "Mantle of the Forlorn Vanquisher", Vendor = "Toren Landow", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Boss = "Cho'gall" };
                     // T11: Warrior, Hunter, Shaman
-                    _tokenDropMap["63684"] = new TokenDropInfo() { Name = "Helm of the Forlorn Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Nefarian" };
-                    _tokenDropMap["64316"] = new TokenDropInfo() { Name = "Mantle of the Forlorn Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Boss = "Cho'gall" };
+                    _tokenDropMap["63684"] = new TokenDropInfo() { Name = "Helm of the Forlorn Protector", Vendor = "Toren Landow", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Nefarian" };
+                    _tokenDropMap["64316"] = new TokenDropInfo() { Name = "Mantle of the Forlorn Protector", Vendor = "Toren Landow", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Boss = "Cho'gall" };
+                    #endregion
+                    #region Heroic
                     // T11.5
-                    _tokenDropMap["66998"] = new TokenDropInfo() { Name = "Essence of the Forlorn", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Container = true, Boss = "Cache of the Broodmother", Heroic = true };
+                    _tokenDropMap["66998"] = new TokenDropInfo() { Name = "Essence of the Forlorn", Vendor = "Toren Landow", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Container = true, Boss = "Cache of the Broodmother", Heroic = true };
                     // T11.5: Paladin, Priest, Warlock
-                    _tokenDropMap["65001"] = new TokenDropInfo() { Name = "Crown of the Forlorn Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Nefarian", Heroic = true };
-                    _tokenDropMap["65088"] = new TokenDropInfo() { Name = "Shoulders of the Forlorn Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Boss = "Cho'gall", Heroic = true };
-                    _tokenDropMap["67423"] = new TokenDropInfo() { Name = "Chest of the Forlorn Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Boss = "Halfus Wyrmbreaker", Heroic = true };
-                    _tokenDropMap["67429"] = new TokenDropInfo() { Name = "Gauntlets of the Forlorn Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Magmaw", Heroic = true };
-                    _tokenDropMap["67428"] = new TokenDropInfo() { Name = "Leggings of the Forlorn Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Maloriak", Heroic = true };
+                    _tokenDropMap["65001"] = new TokenDropInfo() { Name = "Crown of the Forlorn Conqueror", Vendor = "Toren Landow", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Nefarian", Heroic = true };
+                    _tokenDropMap["65088"] = new TokenDropInfo() { Name = "Shoulders of the Forlorn Conqueror", Vendor = "Toren Landow", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Boss = "Cho'gall", Heroic = true };
+                    _tokenDropMap["67423"] = new TokenDropInfo() { Name = "Chest of the Forlorn Conqueror", Vendor = "Toren Landow", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Boss = "Halfus Wyrmbreaker", Heroic = true };
+                    _tokenDropMap["67429"] = new TokenDropInfo() { Name = "Gauntlets of the Forlorn Conqueror", Vendor = "Toren Landow", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Magmaw", Heroic = true };
+                    _tokenDropMap["67428"] = new TokenDropInfo() { Name = "Leggings of the Forlorn Conqueror", Vendor = "Toren Landow", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Maloriak", Heroic = true };
                     // T11.5: Rogue, Death Knight, Mage, Druid
-                    _tokenDropMap["65002"] = new TokenDropInfo() { Name = "Crown of the Forlorn Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Nefarian", Heroic = true };
-                    _tokenDropMap["65089"] = new TokenDropInfo() { Name = "Shoulders of the Forlorn Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Boss = "Cho'gall", Heroic = true };
-                    _tokenDropMap["67425"] = new TokenDropInfo() { Name = "Chest of the Forlorn Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Boss = "Halfus Wyrmbreaker", Heroic = true };
-                    _tokenDropMap["67431"] = new TokenDropInfo() { Name = "Gauntlets of the Forlorn Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Magmaw", Heroic = true };
-                    _tokenDropMap["67426"] = new TokenDropInfo() { Name = "Leggings of the Forlorn Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Maloriak", Heroic = true };
+                    _tokenDropMap["65002"] = new TokenDropInfo() { Name = "Crown of the Forlorn Vanquisher", Vendor = "Toren Landow", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Nefarian", Heroic = true };
+                    _tokenDropMap["65089"] = new TokenDropInfo() { Name = "Shoulders of the Forlorn Vanquisher", Vendor = "Toren Landow", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Boss = "Cho'gall", Heroic = true };
+                    _tokenDropMap["67425"] = new TokenDropInfo() { Name = "Chest of the Forlorn Vanquisher", Vendor = "Toren Landow", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Boss = "Halfus Wyrmbreaker", Heroic = true };
+                    _tokenDropMap["67431"] = new TokenDropInfo() { Name = "Gauntlets of the Forlorn Vanquisher", Vendor = "Toren Landow", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Magmaw", Heroic = true };
+                    _tokenDropMap["67426"] = new TokenDropInfo() { Name = "Leggings of the Forlorn Vanquisher", Vendor = "Toren Landow", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Maloriak", Heroic = true };
                     // T11.5: Warrior, Hunter, Shaman
-                    _tokenDropMap["65000"] = new TokenDropInfo() { Name = "Crown of the Forlorn Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Nefarian", Heroic = true };
-                    _tokenDropMap["65087"] = new TokenDropInfo() { Name = "Shoulders of the Forlorn Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Boss = "Cho'gall", Heroic = true };
-                    _tokenDropMap["67424"] = new TokenDropInfo() { Name = "Chest of the Forlorn Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Boss = "Halfus Wyrmbreaker", Heroic = true };
-                    _tokenDropMap["67430"] = new TokenDropInfo() { Name = "Gauntlets of the Forlorn Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Magmaw", Heroic = true };
-                    _tokenDropMap["67427"] = new TokenDropInfo() { Name = "Leggings of the Forlorn Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Maloriak", Heroic = true };
+                    _tokenDropMap["65000"] = new TokenDropInfo() { Name = "Crown of the Forlorn Protector", Vendor = "Toren Landow", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Nefarian", Heroic = true };
+                    _tokenDropMap["65087"] = new TokenDropInfo() { Name = "Shoulders of the Forlorn Protector", Vendor = "Toren Landow", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Boss = "Cho'gall", Heroic = true };
+                    _tokenDropMap["67424"] = new TokenDropInfo() { Name = "Chest of the Forlorn Protector", Vendor = "Toren Landow", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Boss = "Halfus Wyrmbreaker", Heroic = true };
+                    _tokenDropMap["67430"] = new TokenDropInfo() { Name = "Gauntlets of the Forlorn Protector", Vendor = "Toren Landow", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Magmaw", Heroic = true };
+                    _tokenDropMap["67427"] = new TokenDropInfo() { Name = "Leggings of the Forlorn Protector", Vendor = "Toren Landow", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Maloriak", Heroic = true };
+                    #endregion
                     #endregion
                     #region Tier 12 Tokens
+                    #region Normal
                     // T12: Paladin, Priest, Warlock
-                    _tokenDropMap["71675"] = new TokenDropInfo() { Name = "Helm of the Fiery Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Container = true, Boss = "Cache of the Fire Lord" };
-                    _tokenDropMap["71681"] = new TokenDropInfo() { Name = "Mantle of the Fiery Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Majordomo Staghelm" };
+                    _tokenDropMap["71675"] = new TokenDropInfo() { Name = "Helm of the Fiery Conqueror", Vendor = "Magatha Silverton", VendorArea = "Stormwind City", Area = "Firelands", Container = true, Boss = "Cache of the Fire Lord" };
+                    _tokenDropMap["71681"] = new TokenDropInfo() { Name = "Mantle of the Fiery Conqueror", Vendor = "Magatha Silverton", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Majordomo Staghelm" };
                     // T12: Rogue, Death Knight, Mage, Druid
-                    _tokenDropMap["71668"] = new TokenDropInfo() { Name = "Helm of the Fiery Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Container = true, Boss = "Cache of the Fire Lord" };
-                    _tokenDropMap["71674"] = new TokenDropInfo() { Name = "Mantle of the Fiery Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Majordomo Staghelm" };
+                    _tokenDropMap["71668"] = new TokenDropInfo() { Name = "Helm of the Fiery Vanquisher", Vendor = "Magatha Silverton", VendorArea = "Stormwind City", Area = "Firelands", Container = true, Boss = "Cache of the Fire Lord" };
+                    _tokenDropMap["71674"] = new TokenDropInfo() { Name = "Mantle of the Fiery Vanquisher", Vendor = "Magatha Silverton", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Majordomo Staghelm" };
                     // T12: Warrior, Hunter, Shaman
-                    _tokenDropMap["71682"] = new TokenDropInfo() { Name = "Helm of the Fiery Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Container = true, Boss = "Cache of the Fire Lord" };
-                    _tokenDropMap["71688"] = new TokenDropInfo() { Name = "Mantle of the Fiery Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Majordomo Staghelm" };
+                    _tokenDropMap["71682"] = new TokenDropInfo() { Name = "Helm of the Fiery Protector", Vendor = "Magatha Silverton", VendorArea = "Stormwind City", Area = "Firelands", Container = true, Boss = "Cache of the Fire Lord" };
+                    _tokenDropMap["71688"] = new TokenDropInfo() { Name = "Mantle of the Fiery Protector", Vendor = "Magatha Silverton", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Majordomo Staghelm" };
+                    #endregion
+                    #region Heroic
                     // T12.5: Paladin, Priest, Warlock
-                    _tokenDropMap["71677"] = new TokenDropInfo() { Name = "Crown of the Fiery Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Ragnaros", Heroic = true };
-                    _tokenDropMap["71680"] = new TokenDropInfo() { Name = "Shoulders of the Fiery Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Majordomo Staghelm", Heroic = true };
-                    _tokenDropMap["71679"] = new TokenDropInfo() { Name = "Chest of the Fiery Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Alysrazor", Heroic = true };
-                    _tokenDropMap["71676"] = new TokenDropInfo() { Name = "Gauntlets of the Fiery Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Baleroc", Heroic = true };
-                    _tokenDropMap["71678"] = new TokenDropInfo() { Name = "Leggings of the Fiery Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Shannox", Heroic = true };
+                    _tokenDropMap["71677"] = new TokenDropInfo() { Name = "Crown of the Fiery Conqueror", Vendor = "Magatha Silverton", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Ragnaros", Heroic = true };
+                    _tokenDropMap["71680"] = new TokenDropInfo() { Name = "Shoulders of the Fiery Conqueror", Vendor = "Magatha Silverton", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Majordomo Staghelm", Heroic = true };
+                    _tokenDropMap["71679"] = new TokenDropInfo() { Name = "Chest of the Fiery Conqueror", Vendor = "Magatha Silverton", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Alysrazor", Heroic = true };
+                    _tokenDropMap["71676"] = new TokenDropInfo() { Name = "Gauntlets of the Fiery Conqueror", Vendor = "Magatha Silverton", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Baleroc", Heroic = true };
+                    _tokenDropMap["71678"] = new TokenDropInfo() { Name = "Leggings of the Fiery Conqueror", Vendor = "Magatha Silverton", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Shannox", Heroic = true };
                     // T12.5: Rogue, Death Knight, Mage, Druid
-                    _tokenDropMap["71670"] = new TokenDropInfo() { Name = "Crown of the Fiery Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Ragnaros", Heroic = true };
-                    _tokenDropMap["71673"] = new TokenDropInfo() { Name = "Shoulders of the Fiery Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Majordomo Staghelm", Heroic = true };
-                    _tokenDropMap["71672"] = new TokenDropInfo() { Name = "Chest of the Fiery Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Alysrazor", Heroic = true };
-                    _tokenDropMap["71669"] = new TokenDropInfo() { Name = "Gauntlets of the Fiery Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Baleroc", Heroic = true };
-                    _tokenDropMap["71671"] = new TokenDropInfo() { Name = "Leggings of the Fiery Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Shannox", Heroic = true };
+                    _tokenDropMap["71670"] = new TokenDropInfo() { Name = "Crown of the Fiery Vanquisher", Vendor = "Magatha Silverton", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Ragnaros", Heroic = true };
+                    _tokenDropMap["71673"] = new TokenDropInfo() { Name = "Shoulders of the Fiery Vanquisher", Vendor = "Magatha Silverton", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Majordomo Staghelm", Heroic = true };
+                    _tokenDropMap["71672"] = new TokenDropInfo() { Name = "Chest of the Fiery Vanquisher", Vendor = "Magatha Silverton", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Alysrazor", Heroic = true };
+                    _tokenDropMap["71669"] = new TokenDropInfo() { Name = "Gauntlets of the Fiery Vanquisher", Vendor = "Magatha Silverton", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Baleroc", Heroic = true };
+                    _tokenDropMap["71671"] = new TokenDropInfo() { Name = "Leggings of the Fiery Vanquisher", Vendor = "Magatha Silverton", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Shannox", Heroic = true };
                     // T12.5: Warrior, Hunter, Shaman
-                    _tokenDropMap["71684"] = new TokenDropInfo() { Name = "Crown of the Fiery Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Ragnaros", Heroic = true };
-                    _tokenDropMap["71687"] = new TokenDropInfo() { Name = "Shoulders of the Fiery Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Majordomo Staghelm", Heroic = true };
-                    _tokenDropMap["71686"] = new TokenDropInfo() { Name = "Chest of the Fiery Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Alysrazor", Heroic = true };
-                    _tokenDropMap["71683"] = new TokenDropInfo() { Name = "Gauntlets of the Fiery Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Baleroc", Heroic = true };
-                    _tokenDropMap["71685"] = new TokenDropInfo() { Name = "Leggings of the Fiery Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Shannox", Heroic = true };
+                    _tokenDropMap["71684"] = new TokenDropInfo() { Name = "Crown of the Fiery Protector", Vendor = "Magatha Silverton", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Ragnaros", Heroic = true };
+                    _tokenDropMap["71687"] = new TokenDropInfo() { Name = "Shoulders of the Fiery Protector", Vendor = "Magatha Silverton", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Majordomo Staghelm", Heroic = true };
+                    _tokenDropMap["71686"] = new TokenDropInfo() { Name = "Chest of the Fiery Protector", Vendor = "Magatha Silverton", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Alysrazor", Heroic = true };
+                    _tokenDropMap["71683"] = new TokenDropInfo() { Name = "Gauntlets of the Fiery Protector", Vendor = "Magatha Silverton", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Baleroc", Heroic = true };
+                    _tokenDropMap["71685"] = new TokenDropInfo() { Name = "Leggings of the Fiery Protector", Vendor = "Magatha Silverton", VendorArea = "Stormwind City", Area = "Firelands", Boss = "Shannox", Heroic = true };
+                    #endregion
                     // T12.5: Non-Tier Items - these drop from all heroic bosses and are used to upgrade non-tier items to their heroic version (similar to Sunwell's Sunmotes)
                     _tokenDropMap["71617"] = new TokenDropInfo() { Name = "Crystallized Firestone", Vendor = "Lurah Wrathvine", VendorArea = "Mount Hyjal", Area = "Firelands", Boss = "Beth'tilac", Heroic = true };
                     #endregion
                     #region Tier 13 Tokens
+                    #region Looking For Raid
                     // T13.LFR: Paladin, Priest, Warlock
-                    /* _tokenDropMap[""] = new TokenDropInfo() { Name = "Crown of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warmaster Blackhorn", LFR = true };
-                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Shoulders of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Hagara the Stormbinder", LFR = true };
-                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Chest of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Ultraxion", LFR = true };
-                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Gauntlets of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warlord Zon'ozz", LFR = true };
-                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Leggings of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Yor'sahj the Unsleeping", LFR = true };
+                     _tokenDropMap["78869"] = new TokenDropInfo() { Name = "Crown of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warmaster Blackhorn", LFR = true };
+                    _tokenDropMap["78863"] = new TokenDropInfo() { Name = "Shoulders of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Hagara the Stormbinder", LFR = true };
+                    _tokenDropMap["78875"] = new TokenDropInfo() { Name = "Chest of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Lesser Cache of the Aspects", Container = true, LFR = true };
+                    _tokenDropMap["78866"] = new TokenDropInfo() { Name = "Gauntlets of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warlord Zon'ozz", LFR = true };
+                    _tokenDropMap["78872"] = new TokenDropInfo() { Name = "Leggings of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Yor'sahj the Unsleeping", LFR = true };
                     // T13.LFR: Warrior, Hunter, Shaman
-                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Crown of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warmaster Blackhorn", LFR = true };
-                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Shoulders of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Hagara the Stormbinder", LFR = true };
-                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Chest of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Ultraxion", LFR = true };
-                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Gauntlets of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warlord Zon'ozz", LFR = true };
-                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Leggings of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Yor'sahj the Unsleeping", LFR = true };
+                    _tokenDropMap["78870"] = new TokenDropInfo() { Name = "Crown of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warmaster Blackhorn", LFR = true };
+                    _tokenDropMap["78876"] = new TokenDropInfo() { Name = "Shoulders of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Hagara the Stormbinder", LFR = true };
+                    _tokenDropMap["78864"] = new TokenDropInfo() { Name = "Chest of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Lesser Cache of the Aspects", Container = true, LFR = true };
+                    _tokenDropMap["78867"] = new TokenDropInfo() { Name = "Gauntlets of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warlord Zon'ozz", LFR = true };
+                    _tokenDropMap["78873"] = new TokenDropInfo() { Name = "Leggings of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Yor'sahj the Unsleeping", LFR = true };
                     // T13.LFR: Rogue, Death Knight, Mage, Druid
-                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Crown of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warmaster Blackhorn", LFR = true };
-                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Shoulders of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Hagara the Stormbinder", LFR = true };
-                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Chest of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Ultraxion", LFR = true };
-                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Gauntlets of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warlord Zon'ozz", LFR = true };
-                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Leggings of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Yor'sahj the Unsleeping", LFR = true };
-                     */
+                    _tokenDropMap["78868"] = new TokenDropInfo() { Name = "Crown of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warmaster Blackhorn", LFR = true };
+                    _tokenDropMap["78874"] = new TokenDropInfo() { Name = "Shoulders of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Hagara the Stormbinder", LFR = true };
+                    _tokenDropMap["78862"] = new TokenDropInfo() { Name = "Chest of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Lesser Cache of the Aspects", Container = true, LFR = true };
+                    _tokenDropMap["78865"] = new TokenDropInfo() { Name = "Gauntlets of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warlord Zon'ozz", LFR = true };
+                    _tokenDropMap["78871"] = new TokenDropInfo() { Name = "Leggings of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Yor'sahj the Unsleeping", LFR = true };
+                    #endregion
+                    #region Normal
                     // T13: Paladin, Priest, Warlock
                     _tokenDropMap["78182"] = new TokenDropInfo() { Name = "Crown of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warmaster Blackhorn" };
                     _tokenDropMap["78180"] = new TokenDropInfo() { Name = "Shoulders of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Hagara the Stormbinder" };
-                    _tokenDropMap["78184"] = new TokenDropInfo() { Name = "Chest of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Ultraxion" };
+                    _tokenDropMap["78184"] = new TokenDropInfo() { Name = "Chest of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Lesser Cache of the Aspects", Container = true };
                     _tokenDropMap["78183"] = new TokenDropInfo() { Name = "Gauntlets of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warlord Zon'ozz" };
                     _tokenDropMap["78181"] = new TokenDropInfo() { Name = "Leggings of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Yor'sahj the Unsleeping" };
                     // T13: Warrior, Hunter, Shaman
                     _tokenDropMap["78177"] = new TokenDropInfo() { Name = "Crown of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warmaster Blackhorn" };
                     _tokenDropMap["78175"] = new TokenDropInfo() { Name = "Shoulders of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Hagara the Stormbinder" };
-                    _tokenDropMap["78179"] = new TokenDropInfo() { Name = "Chest of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Ultraxion" };
+                    _tokenDropMap["78179"] = new TokenDropInfo() { Name = "Chest of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Lesser Cache of the Aspects", Container = true };
                     _tokenDropMap["78178"] = new TokenDropInfo() { Name = "Gauntlets of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warlord Zon'ozz" };
                     _tokenDropMap["78176"] = new TokenDropInfo() { Name = "Leggings of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Yor'sahj the Unsleeping" };
                     // T13: Rogue, Death Knight, Mage, Druid
                     _tokenDropMap["78172"] = new TokenDropInfo() { Name = "Crown of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warmaster Blackhorn" };
                     _tokenDropMap["78170"] = new TokenDropInfo() { Name = "Shoulders of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Hagara the Stormbinder" };
-                    _tokenDropMap["78174"] = new TokenDropInfo() { Name = "Chest of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Ultraxion" };
+                    _tokenDropMap["78174"] = new TokenDropInfo() { Name = "Chest of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Lesser Cache of the Aspects", Container = true };
                     _tokenDropMap["78173"] = new TokenDropInfo() { Name = "Gauntlets of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warlord Zon'ozz" };
                     _tokenDropMap["78171"] = new TokenDropInfo() { Name = "Leggings of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Yor'sahj the Unsleeping" };
+                    #endregion
+                    #region Heroic
                     // T13.5: Paladin, Priest, Warlock
-                    /* _tokenDropMap[""] = new TokenDropInfo() { Name = "Crown of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warmaster Blackhorn", Heroic = true };
-                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Shoulders of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Hagara the Stormbinder", Heroic = true };
-                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Chest of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Ultraxion", Heroic = true };
-                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Gauntlets of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warlord Zon'ozz", Heroic = true };
-                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Leggings of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Yor'sahj the Unsleeping", Heroic = true };
+                    _tokenDropMap["78850"] = new TokenDropInfo() { Name = "Crown of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warmaster Blackhorn", Heroic = true };
+                    _tokenDropMap["78859"] = new TokenDropInfo() { Name = "Shoulders of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Hagara the Stormbinder", Heroic = true };
+                    _tokenDropMap["78847"] = new TokenDropInfo() { Name = "Chest of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Lesser Cache of the Aspects", Container = true, Heroic = true };
+                    _tokenDropMap["78853"] = new TokenDropInfo() { Name = "Gauntlets of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warlord Zon'ozz", Heroic = true };
+                    _tokenDropMap["78856"] = new TokenDropInfo() { Name = "Leggings of the Corrupted Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Yor'sahj the Unsleeping", Heroic = true };
                     // T13.5: Warrior, Hunter, Shaman
-                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Crown of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warmaster Blackhorn", Heroic = true };
-                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Shoulders of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Hagara the Stormbinder", Heroic = true };
-                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Chest of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Ultraxion", Heroic = true };
-                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Gauntlets of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warlord Zon'ozz", Heroic = true };
-                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Leggings of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Yor'sahj the Unsleeping", Heroic = true };
+                    _tokenDropMap["78851"] = new TokenDropInfo() { Name = "Crown of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warmaster Blackhorn", Heroic = true };
+                    _tokenDropMap["78860"] = new TokenDropInfo() { Name = "Shoulders of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Hagara the Stormbinder", Heroic = true };
+                    _tokenDropMap["78848"] = new TokenDropInfo() { Name = "Chest of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Lesser Cache of the Aspects", Container = true, Heroic = true };
+                    _tokenDropMap["78854"] = new TokenDropInfo() { Name = "Gauntlets of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warlord Zon'ozz", Heroic = true };
+                    _tokenDropMap["78857"] = new TokenDropInfo() { Name = "Leggings of the Corrupted Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Yor'sahj the Unsleeping", Heroic = true };
                     // T13.5: Rogue, Death Knight, Mage, Druid
-                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Crown of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warmaster Blackhorn", Heroic = true };
-                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Shoulders of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Hagara the Stormbinder", Heroic = true };
-                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Chest of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Ultraxion", Heroic = true };
-                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Gauntlets of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warlord Zon'ozz", Heroic = true };
-                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Leggings of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Yor'sahj the Unsleeping", Heroic = true };
-                    // T13.5: Non-Tier Items - these drop from all heroic bosses and are used to upgrade non-tier items to their heroic version (similar to Sunwell's Sunmotes)
-                    _tokenDropMap[""] = new TokenDropInfo() { Name = "Crystallized Firestone", Vendor = "Lurah Wrathvine", VendorArea = "Mount Hyjal", Area = "Firelands", Boss = "Beth'tilac", Heroic = true };
-                     */
+                    _tokenDropMap["78852"] = new TokenDropInfo() { Name = "Crown of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warmaster Blackhorn", Heroic = true };
+                    _tokenDropMap["78861"] = new TokenDropInfo() { Name = "Shoulders of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Hagara the Stormbinder", Heroic = true };
+                    _tokenDropMap["78849"] = new TokenDropInfo() { Name = "Chest of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Lesser Cache of the Aspects", Container = true, Heroic = true };
+                    _tokenDropMap["78855"] = new TokenDropInfo() { Name = "Gauntlets of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Warlord Zon'ozz", Heroic = true };
+                    _tokenDropMap["78858"] = new TokenDropInfo() { Name = "Leggings of the Corrupted Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Dragon Soul", Boss = "Yor'sahj the Unsleeping", Heroic = true };
+                    #endregion
                     #endregion
 
                     // Holiday Satchels are going to be treated as quest rewards
@@ -1444,10 +1454,14 @@ namespace Rawr
                                     staticDrop.Heroic = (value == "1");
                                 }
                                 // TODO: Double check that this is the variable that is going to be used
-                                if (json.TryGetValue("lfr", out tmp))
+                                /*if (json.TryGetValue("lfr", out tmp))
                                 {
                                     string value = tmp.ToString();
                                     staticDrop.LFR = (value == "1");
+                                }*/
+                                if (htmlTooltip.Contains("Raid Finder"))
+                                {
+                                    staticDrop.LFR = true;
                                 }
                                 item.LocationInfo = new ItemLocationList() { staticDrop };
                                 // Since we have everything we need here, we shouldn't call new source data from the non-xml
@@ -1480,10 +1494,14 @@ namespace Rawr
                                     containerItem.Heroic = (value == "1");
                                 }
                                 // TODO: Double check that this is the variable that is going to be used
-                                if (json.TryGetValue("lfr", out tmp))
+                                /*if (json.TryGetValue("lfr", out tmp))
                                 {
                                     string value = tmp.ToString();
                                     containerItem.LFR = (value == "1");
+                                }*/
+                                if (htmlTooltip.Contains("Raid Finder"))
+                                {
+                                    containerItem.LFR = true;
                                 }
                                 item.LocationInfo = new ItemLocationList() { containerItem };
                                 // Since we have everything we need here, we shouldn't call new source data from the non-xml

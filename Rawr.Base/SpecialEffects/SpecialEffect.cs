@@ -93,8 +93,10 @@ namespace Rawr
         DamageTakenMagical,
         /// <summary>Damage taken via physical/melee means.</summary>
         DamageTakenPhysical,
-        /// <summary>Damage taken via any means which puts you below 25% Health</summary>
+        /// <summary>Damage taken via any means which puts you below 35% Health</summary>
         DamageTakenPutsMeBelow35PercHealth,
+        /// <summary>Damage taken via any means which puts you below 50% Health</summary>
+        DamageTakenPutsMeBelow50PercHealth,
         #endregion
 
         /// <summary>The player deals any form of damage, regardless of where it comes from or performs a heal (on self or other).</summary>

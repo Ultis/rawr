@@ -76,6 +76,7 @@ namespace Rawr
         DodgeRating,
         // Percentages
         DamageAbsorbed,
+        DamageAbsorbedFromDamageTaken,
         Miss,
         Block,
         Dodge,
@@ -264,6 +265,7 @@ namespace Rawr
         ShieldFromHealed,
         BattlemasterHealthProc,
         DragonwrathProc,
+        FangsoftheFather,
         #endregion
         #region Added by Paladins [Verified Jothay 2011-03-29]
         // Retribution
@@ -912,7 +914,6 @@ namespace Rawr
             get { return _rawAdditiveData[(int)AdditiveStat.DodgeRating]; }
             set { _rawAdditiveData[(int)AdditiveStat.DodgeRating] = value; }
         }
-        // Percentages
         [DefaultValueAttribute(0f)]
         [DisplayName("Damage Absorbed")]
         [Category("Equipment Effects")]
@@ -922,6 +923,17 @@ namespace Rawr
             get { return _rawAdditiveData[(int)AdditiveStat.DamageAbsorbed]; }
             set { _rawAdditiveData[(int)AdditiveStat.DamageAbsorbed] = value; }
         }
+        [DefaultValueAttribute(0f)]
+        [DisplayName("% Damage Absorbed From Damage Taken")]
+        [Category("Equipment Effects")]
+        [Percentage]
+        [CommonStat]
+        public float DamageAbsorbedFromDamageTaken
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.DamageAbsorbedFromDamageTaken]; }
+            set { _rawAdditiveData[(int)AdditiveStat.DamageAbsorbedFromDamageTaken] = value; }
+        }
+        // Percentages
         [DefaultValueAttribute(0f)]
         [DisplayName("% Miss")]
         [Percentage]
@@ -2074,6 +2086,14 @@ namespace Rawr
         {
             get { return _rawNoStackData[(int)NonStackingStat.DragonwrathProc]; }
             set { _rawNoStackData[(int)NonStackingStat.DragonwrathProc] = value; }
+        }
+        [DefaultValueAttribute(0f)]
+        [DisplayName("Fangs of the Father Proc")]
+        [Category("Equipment Effects")]
+        public float FangsoftheFather
+        {
+            get { return _rawNoStackData[(int)NonStackingStat.FangsoftheFather]; }
+            set { _rawNoStackData[(int)NonStackingStat.FangsoftheFather] = value; }
         }
         #endregion
         #region Added by Paladins

@@ -2296,7 +2296,7 @@
             <ItemFilterRegex>
               <Name>Ultraxion</Name>
               <Enabled>true</Enabled>
-              <Pattern>Ultraxion</Pattern>
+              <Pattern>Ultraxion|Lesser Cache of the Aspects</Pattern>
               <BoA>true</BoA>
               <BoE>true</BoE>
               <BoP>true</BoP>
@@ -2342,7 +2342,7 @@
             <ItemFilterRegex>
               <Name>Spine of Deathwing</Name>
               <Enabled>true</Enabled>
-              <Pattern>Spine of Deathwing</Pattern>
+              <Pattern>Spine of Deathwing|Greater Cache of the Aspects</Pattern>
               <BoA>true</BoA>
               <BoE>true</BoE>
               <BoP>true</BoP>
@@ -2365,7 +2365,7 @@
             <ItemFilterRegex>
               <Name>Madness of Deathwing</Name>
               <Enabled>true</Enabled>
-              <Pattern>Madness of Deathwing</Pattern>
+              <Pattern>Madness of Deathwing|Elementium Fragment</Pattern>
               <BoA>true</BoA>
               <BoE>true</BoE>
               <BoP>true</BoP>
@@ -2504,7 +2504,7 @@
             <ItemFilterRegex>
               <Name>Ultraxion</Name>
               <Enabled>true</Enabled>
-              <Pattern>Ultraxion</Pattern>
+              <Pattern>Ultraxion|Lesser Cache of the Aspects</Pattern>
               <BoA>true</BoA>
               <BoE>true</BoE>
               <BoP>true</BoP>
@@ -2550,7 +2550,7 @@
             <ItemFilterRegex>
               <Name>Spine of Deathwing</Name>
               <Enabled>true</Enabled>
-              <Pattern>Spine of Deathwing</Pattern>
+              <Pattern>Spine of Deathwing|Greater Cache of the Aspects</Pattern>
               <BoA>true</BoA>
               <BoE>true</BoE>
               <BoP>true</BoP>
@@ -2573,7 +2573,7 @@
             <ItemFilterRegex>
               <Name>Madness of Deathwing</Name>
               <Enabled>true</Enabled>
-              <Pattern>Madness of Deathwing</Pattern>
+              <Pattern>Madness of Deathwing|Elementium Fragment</Pattern>
               <BoA>true</BoA>
               <BoE>true</BoE>
               <BoP>true</BoP>
@@ -2712,7 +2712,7 @@
             <ItemFilterRegex>
               <Name>Ultraxion</Name>
               <Enabled>true</Enabled>
-              <Pattern>Ultraxion</Pattern>
+              <Pattern>Ultraxion|Lesser Cache of the Aspects</Pattern>
               <BoA>true</BoA>
               <BoE>true</BoE>
               <BoP>true</BoP>
@@ -2758,7 +2758,7 @@
             <ItemFilterRegex>
               <Name>Spine of Deathwing</Name>
               <Enabled>true</Enabled>
-              <Pattern>Spine of Deathwing</Pattern>
+              <Pattern>Spine of Deathwing|Greater Cache of the Aspects</Pattern>
               <BoA>true</BoA>
               <BoE>true</BoE>
               <BoP>true</BoP>
@@ -2781,7 +2781,7 @@
             <ItemFilterRegex>
               <Name>Madness of Deathwing</Name>
               <Enabled>true</Enabled>
-              <Pattern>Madness of Deathwing</Pattern>
+              <Pattern>Madness of Deathwing|Elementium Fragment</Pattern>
               <BoA>true</BoA>
               <BoE>true</BoE>
               <BoP>true</BoP>
@@ -2876,7 +2876,7 @@
         </ItemFilterRegex>
         <ItemFilterRegex>
           <Name>Occuthar</Name>
-          <Enabled>true</Enabled>
+          <Enabled>false</Enabled>
           <Pattern>Occuthar</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
@@ -2970,7 +2970,7 @@
         <ItemFilterRegex>
           <Name>Armor Tokens</Name>
           <Enabled>true</Enabled>
-          <Pattern>Regalia|Forgotten|Lost|Wayward|Fallen|Vanquished|Desecrated|Trophy|Dubin Clay| 1 \[Mark of Sanctification|Sanctified|Champion Isimode|Trophy of the Crusade|Valiant Laradia|Valiant Bressia|Vanquisher|Conqueror|Protector|Forlorn|Fiery|Corrupted</Pattern>
+          <Pattern>Vanquisher|Conqueror|Protector|Forlorn|Fiery|Corrupted</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -2991,7 +2991,7 @@
             <ItemFilterRegex>
               <Name>Tier 13</Name>
               <Enabled>true</Enabled>
-              <Pattern>Necrotic Boneplate|Deep Earth|Wyrmstalker|Timelord's|of Radiant Glory|of Dying Light|Blackfang|Spiritwalker's|of the Faceless Shroud|Colossal Dragonplate</Pattern>
+              <Pattern>Necrotic Boneplate|Deep Earth|Wyrmstalker|Timelord's|of Radiant Glory|of Dying Light|Blackfang|Spiritwalker's|of the Faceless Shroud|Colossal Dragonplate|Faldren Tillsdale</Pattern>
               <BoA>true</BoA>
               <BoE>true</BoE>
               <BoP>true</BoP>
@@ -3014,7 +3014,7 @@
             <ItemFilterRegex>
               <Name>Tier 12</Name>
               <Enabled>true</Enabled>
-              <Pattern>Elementium Deathplate|Obsidian Arborweave|Flamewaker's|Firehawk|Immolation|of the Cleansing Flame|Dark Phoenix|Erupting Volcanic|Balespider's|Molten Giant</Pattern>
+              <Pattern>Elementium Deathplate|Obsidian Arborweave|Flamewaker's|Firehawk|Immolation|of the Cleansing Flame|Dark Phoenix|Erupting Volcanic|Balespider's|Molten Giant|Magatha Silverton|</Pattern>
               <BoA>true</BoA>
               <BoE>true</BoE>
               <BoP>true</BoP>
@@ -3037,7 +3037,7 @@
             <ItemFilterRegex>
               <Name>Tier 11</Name>
               <Enabled>true</Enabled>
-              <Pattern>Magma Plated|Stormrider's|Lightning-Charged|Firelord's|Reinforced Sapphirium|Mercurial|Wind Dancer's|of the Raging Elements|Shadowflame|Earthen|Gunra|Magatha Silverton</Pattern>
+              <Pattern>Magma Plated|Stormrider's|Lightning-Charged|Firelord's|Reinforced Sapphirium|Mercurial|Wind Dancer's|of the Raging Elements|Shadowflame|Earthen|Toren Landow</Pattern>
               <BoA>true</BoA>
               <BoE>true</BoE>
               <BoP>true</BoP>
@@ -3056,29 +3056,6 @@
               <AppliesToGems>false</AppliesToGems>
               <RegexList />
               <OtherRegexEnabled>true</OtherRegexEnabled>
-            </ItemFilterRegex>
-            <ItemFilterRegex>
-              <Name>Tier 10</Name>
-              <Enabled>true</Enabled>
-              <Pattern>Regalia|Forgotten|Lost|Wayward|Fallen|Vanquished|Desecrated|Trophy|Dubin Clay| 1 \[Mark of Sanctification|Sanctified|Champion Isimode|Trophy of the Crusade|Valiant Laradia|Valiant Bressia|Witch's|Lasherweave</Pattern>
-              <BoA>true</BoA>
-              <BoE>true</BoE>
-              <BoP>true</BoP>
-              <BoU>true</BoU>
-              <BoN>true</BoN>
-              <MinItemLevel>0</MinItemLevel>
-              <MaxItemLevel>1000</MaxItemLevel>
-              <MinDropRatePerc>0</MinDropRatePerc>
-              <MaxDropRatePerc>100</MaxDropRatePerc>
-              <MinItemQuality>Temp</MinItemQuality>
-              <MinItemQualityIndex>0</MinItemQualityIndex>
-              <MaxItemQuality>Heirloom</MaxItemQuality>
-              <MaxItemQualityIndex>8</MaxItemQualityIndex>
-              <AdditiveFilter>true</AdditiveFilter>
-              <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>false</AppliesToGems>
-              <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
             </ItemFilterRegex>
           </RegexList>
           <OtherRegexEnabled>true</OtherRegexEnabled>
