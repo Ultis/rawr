@@ -547,13 +547,13 @@ the Threat Scale defined on the Options tab.",
             #region Defensive Part B
             float targetAttackSpeedDebuffed = bossAttack.AttackSpeed / (1f - stats.BossAttackSpeedReductionMultiplier);
             float targetHitChance = 1f - calculatedStats.AvoidancePostDR;
-            float autoSpecialAttacksPerSecond = 1f / 1.5f + 1f / playerAttackSpeed + 1f / 3f + (stats.Tier_13_2_piece ? (1f / calculatedStats.Abilities.MangleStats.Cooldown) : 0);
+            float autoSpecialAttacksPerSecond = 1f / 1.5f + 1f / playerAttackSpeed + 1f / 3f /*+ (stats.Tier_13_2_piece ? (1f / calculatedStats.Abilities.MangleStats.Cooldown) : 0)*/;
 
             float masteryMultiplier = 1f + (8f + StatConversion.GetMasteryFromRating(stats.MasteryRating)) * 0.04f;
             float totalAttacksPerSecond = autoSpecialAttacksPerSecond;
             float averageSDAttackCritChance = 0.5f * (playerChanceToCrit * (autoSpecialAttacksPerSecond / totalAttacksPerSecond)); //Include the 50% chance to proc per crit here.
-            float T13_2PSDAttackCritChance = (playerChanceToCrit * (autoSpecialAttacksPerSecond / totalAttacksPerSecond));
-            averageSDAttackCritChance = (1 + averageSDAttackCritChance) * (1 + (stats.Tier_13_2_piece ? T13_2PSDAttackCritChance : 0)) - 1f;
+            //float T13_2PSDAttackCritChance = (playerChanceToCrit * (autoSpecialAttacksPerSecond / totalAttacksPerSecond));
+            //averageSDAttackCritChance = (1 + averageSDAttackCritChance) * (1 + (stats.Tier_13_2_piece ? T13_2PSDAttackCritChance : 0)) - 1f;
             float playerAttacksInterval = 1f / totalAttacksPerSecond;
             float blockChance = 1f - targetHitChance * ((float)Math.Pow(1f - averageSDAttackCritChance, targetAttackSpeedDebuffed / playerAttacksInterval)) *
                 1f / (1f - (1f - targetHitChance) * (float)Math.Pow(1f - averageSDAttackCritChance, targetAttackSpeedDebuffed / playerAttacksInterval));
@@ -688,7 +688,7 @@ the Threat Scale defined on the Options tab.",
             var optimalRotations = BearRotationCalculator.GetOptimalRotations(abilities);
             calculatedStats.Abilities = abilities;
             calculatedStats.HighestDPSRotation = optimalRotations.Item1;
-            float bonusdamage = stats.ArcaneDamage + stats.FireDamage + stats.FrostDamage + stats.NatureDamage + stats.ShadowDamage + stats.HolyDamage;
+            float bonusdamage = stats.ArcaneDamage + stats.FireDamage + stats.FrostDamage + stats.NatureDamage + stats.ShadowDamage + stats.HolyDamage + stats.PhysicalDamage;
             calculatedStats.HighestDPSRotation.DPS += bonusdamage;
             calculatedStats.HighestDPSRotation.DPS *= 1 - movementdowntime;
             calculatedStats.HighestTPSRotation = optimalRotations.Item2;
@@ -943,7 +943,10 @@ the Threat Scale defined on the Options tab.",
                         effect.AccumulateAverageStats(statsProcs, 3f, 1f, 2.5f, fightDuration);
                         break;
                     case Trigger.DamageTakenPutsMeBelow35PercHealth:
-                        effect.AccumulateAverageStats(statsProcs, TargAttackSpeed * 0.8f, (1f - 0.8f * (dodgeTotal + missTotal)) * 0.35f, fightDuration); //Assume you get hit by other things, like dots, aoes, etc, making you get targeted with damage 25% more often than the boss, and half the hits you take are unavoidable.
+                        effect.AccumulateAverageStats(statsProcs, TargAttackSpeed * 0.8f, (1f - 0.8f * (dodgeTotal + missTotal)) * 0.35f, fightDuration); //Assume you get hit by other things, like dots, aoes, etc, making you get targeted with damage 35% more often than the boss, and half the hits you take are unavoidable.
+                        break;
+                    case Trigger.DamageTakenPutsMeBelow50PercHealth:
+                        effect.AccumulateAverageStats(statsProcs, TargAttackSpeed * 0.8f, (1f - 0.8f * (dodgeTotal + missTotal)) * 0.50f, fightDuration); //Assume you get hit by other things, like dots, aoes, etc, making you get targeted with damage 50% more often than the boss, and half the hits you take are unavoidable.
                         break;
                     case Trigger.DamageTaken:
                         effect.AccumulateAverageStats(statsProcs, TargAttackSpeed * 0.8f, 1f - 0.8f * (dodgeTotal + missTotal), fightDuration); //Assume you get hit by other things, like dots, aoes, etc, making you get targeted with damage 25% more often than the boss, and half the hits you take are unavoidable.
@@ -1446,6 +1449,7 @@ the Threat Scale defined on the Options tab.",
                 BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier,
                 ShadowDamage = stats.ShadowDamage,
                 BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
+                PhysicalDamage = stats.PhysicalDamage,
                 BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
                 SpellHit = stats.SpellHit,
                 ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
@@ -1467,7 +1471,7 @@ the Threat Scale defined on the Options tab.",
                 || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.MangleBearHit || effect.Trigger == Trigger.LacerateTick
                 || effect.Trigger == Trigger.SwipeBearOrLacerateHit || effect.Trigger == Trigger.DamageTaken || effect.Trigger == Trigger.DamageTakenPhysical
                 || effect.Trigger == Trigger.MangleCatOrShredOrInfectedWoundsHit || effect.Trigger == Trigger.DamageOrHealingDone
-                || effect.Trigger == Trigger.DamageTakenPutsMeBelow35PercHealth)
+                || effect.Trigger == Trigger.DamageTakenPutsMeBelow35PercHealth || effect.Trigger == Trigger.DamageTakenPutsMeBelow50PercHealth)
                 {
                     if (HasRelevantStats(effect.Stats))
                     {
@@ -1499,7 +1503,7 @@ the Threat Scale defined on the Options tab.",
                 stats.BonusFireDamageMultiplier + stats.BonusFrostDamageMultiplier + 
                 stats.BonusNatureDamageMultiplier + stats.BonusShadowDamageMultiplier + 
                 stats.ArcaneDamage + stats.FireDamage + stats.FrostDamage +
-                stats.NatureDamage + stats.ShadowDamage +
+                stats.NatureDamage + stats.ShadowDamage + stats.PhysicalDamage +
                 stats.BonusPhysicalDamageMultiplier + 
                 stats.MasteryRating +
                 stats.ThreatIncreaseMultiplier + 
