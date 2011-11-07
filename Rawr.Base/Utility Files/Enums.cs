@@ -102,6 +102,19 @@ namespace Rawr
         Arcane
     }
 
+    [Flags]
+    public enum ItemDamageFlags
+    {
+        None = 0,
+        Physical = 1 << ItemDamageType.Physical,
+        Holy = 1 << ItemDamageType.Holy,
+        Fire = 1 << ItemDamageType.Fire,
+        Nature = 1 << ItemDamageType.Nature,
+        Frost = 1 << ItemDamageType.Frost,
+        Shadow = 1 << ItemDamageType.Shadow,
+        Arcane = 1 << ItemDamageType.Arcane
+    }
+
     public enum ItemQuality
     {
         Temp = -1,
