@@ -53,6 +53,7 @@ namespace Rawr.Mage
         // not initialized, but never changed
         public float DotTickInterval;
         public float NukeProcs;
+        public float NukeProcs2;
 
         public bool Dirty = true;
 
@@ -487,6 +488,42 @@ namespace Rawr.Mage
 
             if (!calculationOptions.AdvancedHasteProcs)
             {
+                if (castingState.Solver.Mage2T13)
+                {
+                    // very rough and very ugly
+                    SpecialEffect effect = Solver.SpecialEffect2T13;
+                    float chance = (castingState.Solver.Specialization == Specialization.Arcane) ? 1.0f : 0.5f;
+                    float triggers = 0f;
+                    int resets = 1;
+                    switch (castingState.Solver.Specialization) // guesstimates
+                    {
+                        case Specialization.Arcane:
+                            triggers = 0.47f;
+                            resets = 1 + (int)(castingState.CalculationOptions.FightDuration / castingState.Solver.ArcanePowerCooldown);
+                            break;
+                        case Specialization.Fire:
+                            triggers = 0.45f;
+                            resets = 1 + (int)(castingState.CalculationOptions.FightDuration / castingState.Solver.CombustionCooldown);
+                            break;
+                        case Specialization.Frost:
+                            triggers = 0.52f;
+                            resets = 1 + (int)(castingState.CalculationOptions.FightDuration / castingState.Solver.IcyVeinsCooldown);
+                            break;
+                    }
+
+                    spellHasteRating += 50 * effect.GetAverageStackSize(1 / triggers, chance, 3.0f, calculationOptions.FightDuration, resets);
+                    castingSpeed = rootCastingSpeed * (1 + spellHasteRating * hasteFactor);
+
+                    globalCooldown = Math.Max(Spell.GlobalCooldownLimit, GlobalCooldown / castingSpeed);
+                    castTime = baseCastTime / castingSpeed;
+                    if (InterruptFactor > 0)
+                    {
+                        castTime = castTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f) * maxPushback * InterruptFactor;
+                    }
+                    castTime += latency;
+                    gcdcap = globalCooldown + calculationOptions.LatencyGCD;
+                    if (castTime < gcdcap) castTime = gcdcap;
+                }
                 for (int i = 0; i < castingState.Solver.HasteRatingEffectsCount; i++)
                 {
                     SpecialEffect effect = castingState.Solver.HasteRatingEffects[i];
@@ -640,6 +677,9 @@ namespace Rawr.Mage
                                         break;
                                     case Trigger.MageNukeCast:
                                         procs = NukeProcs;
+                                        break;
+                                    case Trigger.MageNukeCast2:
+                                        procs = NukeProcs2;
                                         break;
                                 }
                                 if (procs == 0.0f) continue;

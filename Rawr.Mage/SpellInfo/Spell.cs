@@ -142,6 +142,7 @@ namespace Rawr.Mage
         public bool Channeled { get { return template.Channeled; } }
         public float CastProcs2 { get { return template.CastProcs2; } }
         public float NukeProcs { get { return template.NukeProcs; } }
+        public float NukeProcs2 { get { return template.NukeProcs2; } }
         public bool Instant { get { return template.Instant; } }
         public int BaseCost { get { return template.BaseCost; } }
         public float BaseCooldown { get { return template.BaseCooldown; } }

@@ -438,7 +438,7 @@ namespace Rawr.Mage
             {
                 BaseCastTime *= 0.9f;
             }
-            InitializeScaledDamage(solver, false, 35, MagicSchool.Frost, 0.13f, 0.8844000220298771f, 0.241999998688698f, 0, 0.942699992656708f, 0, 1, 1, 0);
+            InitializeScaledDamage(solver, false, 35, MagicSchool.Frost, 0.13f, 0.8844000220298771f, 0.241999998688698f, 0, 0.9430000186f, 0, 1, 1, 0);
             if (solver.MageTalents.GlyphOfFrostbolt)
             {
                 BaseCritRate += 0.05f;
@@ -449,6 +449,7 @@ namespace Rawr.Mage
             }
             //BaseCritRate += 0.05f * solver.BaseStats.Mage4T9;
             NukeProcs = 1;
+            NukeProcs2 = 1;
             if (solver.Mage4PVP)
             {
                 BaseSpellModifier *= 1.05f;
@@ -525,7 +526,14 @@ namespace Rawr.Mage
             {
                 BaseCastTime *= 0.9f;
             }
-            InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0.09f, 1.09099996089935f, 0.241999998688698f, 0, 1.12399995326996f, 0, 1, 1, 0);
+            if (solver.CalculationOptions.ModePTR)
+            {
+                InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0.09f, 1.2799999714f, 0.2419999987f, 0, 1.3179999590f, 0, 1, 1, 0);
+            }
+            else
+            {
+                InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0.09f, 1.09099996089935f, 0.241999998688698f, 0, 1.12399995326996f, 0, 1, 1, 0);
+            }
             if (solver.MageTalents.GlyphOfFireball)
             {
                 BaseCritRate += 0.05f;
@@ -534,6 +542,7 @@ namespace Rawr.Mage
             //BaseCritRate += 0.05f * solver.BaseStats.Mage4T9;
             //BaseSpellModifier *= (1 + solver.BaseStats.BonusMageNukeMultiplier);
             NukeProcs = 1;
+            NukeProcs2 = 1;
             if (solver.Mage4PVP)
             {
                 BaseSpellModifier *= 1.05f;
@@ -580,6 +589,7 @@ namespace Rawr.Mage
             }
             //BaseCritRate += 0.05f * solver.BaseStats.Mage4T9;
             NukeProcs = 1;
+            NukeProcs2 = 1;
             if (solver.Mage4PVP)
             {
                 BaseSpellModifier *= 1.05f;
@@ -615,9 +625,17 @@ namespace Rawr.Mage
         {
             Name = "Pyroblast!";
             InitializeCastTime(false, false, /*3.5f*/0, 0);
-            InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0f, 1.57500004768372f, 0.238000005483627f, 4 * 0.234999999403954f, 1.30499994754791f /*1.25f*/, 4 * 0.0869999974966049f, 1, 1, 12);
+            if (solver.CalculationOptions.ModePTR)
+            {
+                InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0f, 1.6000000238f, 0.2380000055f, 4 * 0.1749999970f, 1.6480000019f /*1.25f*/, 4 * 0.1800000072f, 1, 1, 12);
+            }
+            else
+            {
+                InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0f, 1.57500004768372f, 0.238000005483627f, 4 * 0.234999999403954f, 1.30499994754791f /*1.25f*/, 4 * 0.0869999974966049f, 1, 1, 12);
+            }
             DotDuration = 12;
             DotTickInterval = 3;
+            NukeProcs2 = 1;
             if (solver.MageTalents.GlyphOfPyroblast)
             {
                 BaseCritRate += 0.05f;
@@ -656,9 +674,17 @@ namespace Rawr.Mage
         {
             Name = "Pyroblast";
             InitializeCastTime(false, false, 3.5f, 0);
-            InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0.17f, 1.57500004768372f, 0.238000005483627f, 4 * 0.234999999403954f, 1.30499994754791f /*1.25f*/, 4 * 0.0869999974966049f, 1, 1, 12);
+            if (solver.CalculationOptions.ModePTR)
+            {
+                InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0f, 1.6000000238f, 0.2380000055f, 4 * 0.1749999970f, 1.6480000019f /*1.25f*/, 4 * 0.1800000072f, 1, 1, 12);
+            }
+            else
+            {
+                InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0.17f, 1.57500004768372f, 0.238000005483627f, 4 * 0.234999999403954f, 1.30499994754791f /*1.25f*/, 4 * 0.0869999974966049f, 1, 1, 12);
+            }
             DotDuration = 12;
             DotTickInterval = 3;
+            NukeProcs2 = 1;
             if (solver.MageTalents.GlyphOfPyroblast)
             {
                 BaseCritRate += 0.05f;
@@ -709,7 +735,14 @@ namespace Rawr.Mage
         {
             Name = "Living Bomb";
             InitializeCastTime(false, true, 0f, 0f);
-            InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0.17f, 0.430000007152557f, 0, 4 * 0.430000007152557f, 0.232999995350838f, 4 * 0.232999995350838f, 1, 1, 0);
+            if (solver.CalculationOptions.ModePTR)
+            {
+                InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0.17f, 0.5000000000f, 0, 4 * 0.2500000000f, 0.5149999857f, 4 * 0.2579999864f, 1, 1, 0);
+            }
+            else
+            {
+                InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0.17f, 0.430000007152557f, 0, 4 * 0.430000007152557f, 0.232999995350838f, 4 * 0.232999995350838f, 1, 1, 0);
+            }
             MaximumAOETargets = 3;
             DotDuration = 12;
             DotTickInterval = 3;
@@ -1064,6 +1097,7 @@ namespace Rawr.Mage
             cycle.CastProcs += weight * rawSpell.CastProcs;
             cycle.CastProcs2 += weight * rawSpell.CastProcs2;
             cycle.NukeProcs += weight * rawSpell.NukeProcs;
+            cycle.NukeProcs2 += weight * rawSpell.NukeProcs2;
             cycle.Ticks += weight * rawSpell.Ticks;
             cycle.HitProcs += weight * rawSpell.HitProcs;
             cycle.CritProcs += weight * rawSpell.CritProcs;
@@ -1105,6 +1139,7 @@ namespace Rawr.Mage
             cycle.CastProcs += weight * rawSpell.CastProcs;
             cycle.CastProcs2 += weight * rawSpell.CastProcs2;
             cycle.NukeProcs += weight * rawSpell.NukeProcs;
+            cycle.NukeProcs2 += weight * rawSpell.NukeProcs2;
             cycle.Ticks += weight * rawSpell.Ticks;
             cycle.HitProcs += weight * rawSpell.HitProcs;
             cycle.CritProcs += weight * rawSpell.CritProcs;
@@ -1151,6 +1186,7 @@ namespace Rawr.Mage
             arcaneBlastDamageMultiplier = mageTalents.GlyphOfArcaneBlast ? 0.13f : 0.1f;
             arcaneBlastManaMultiplier = 1.5f;
             NukeProcs = 1;
+            NukeProcs2 = 1;
             if (solver.Mage4PVP)
             {
                 BaseSpellModifier *= 1.05f;
@@ -1215,6 +1251,7 @@ namespace Rawr.Mage
             cycle.CastProcs += weight * rawSpell.CastProcs;
             cycle.CastProcs2 += weight * rawSpell.CastProcs2;
             cycle.NukeProcs += weight * rawSpell.NukeProcs;
+            cycle.NukeProcs2 += weight * rawSpell.NukeProcs2;
             cycle.Ticks += weight * rawSpell.Ticks;
             cycle.HitProcs += weight * rawSpell.HitProcs;
             cycle.CritProcs += weight * rawSpell.CritProcs;
@@ -1365,7 +1402,7 @@ namespace Rawr.Mage
         {
             Name = "Blizzard";
             InitializeCastTime(true, false, 8, 0);
-            InitializeScaledDamage(solver, true, 30, MagicSchool.Frost, 0.74f, 8 * 0.5423000097274782f, 0, 0, 8 * 0.16149999797344207f, 0, 8, 1, 0);
+            InitializeScaledDamage(solver, true, 30, MagicSchool.Frost, 0.74f, 8 * 0.5419999957f, 0, 0, 8 * 0.1620000005f, 0, 8, 1, 0);
             if (solver.BaseStats.DragonwrathProc > 0)
             {
                 BaseSpellModifier *= 1.1f;

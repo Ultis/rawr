@@ -202,6 +202,7 @@ namespace Rawr.Mage
             CastProcs += weight * cycle.CastProcs;
             CastProcs2 += weight * cycle.CastProcs2;
             NukeProcs += weight * cycle.NukeProcs;
+            NukeProcs2 += weight * cycle.NukeProcs2;
             Ticks += weight * cycle.Ticks;
             HitProcs += weight * cycle.HitProcs;
             CritProcs += weight * cycle.CritProcs;
@@ -236,6 +237,7 @@ namespace Rawr.Mage
             CastProcs += weight * spell.CastProcs;
             CastProcs2 += weight * spell.CastProcs2;
             NukeProcs += weight * spell.NukeProcs;
+            NukeProcs2 += weight * spell.NukeProcs2;
             Ticks += weight * spell.Ticks;
             HitProcs += weight * spell.HitProcs;
             CritProcs += weight * spell.CritProcs;
@@ -262,6 +264,7 @@ namespace Rawr.Mage
             CastProcs += weight * spell.CastProcs;
             CastProcs2 += weight * spell.CastProcs2;
             NukeProcs += weight * spell.NukeProcs;
+            NukeProcs2 += weight * spell.NukeProcs2;
             Ticks += weight * spell.Ticks;
             HitProcs += weight * spell.HitProcs;
             CritProcs += weight * spell.CritProcs;
@@ -347,6 +350,7 @@ namespace Rawr.Mage
             CastProcs = 0;
             CastProcs2 = 0;
             NukeProcs = 0;
+            NukeProcs2 = 0;
             CritProcs = 0;
             IgniteProcs = 0;
             DotProcs = 0;
@@ -469,7 +473,8 @@ namespace Rawr.Mage
         public double Ticks;
         public double CastProcs;
         public double CastProcs2; // variant with only one proc from AM
-        public double NukeProcs;
+        public double NukeProcs;  // Fireball, Frostfire Bolt, Frostbolt, Arcane Blast
+        public double NukeProcs2; // Fireball, Pyroblast, Frostfire Bolt, Frostbolt, Arcane Blast
         public double CritProcs;
         public double DotProcs;
         public double IgniteProcs;
@@ -693,6 +698,14 @@ namespace Rawr.Mage
                     if (NukeProcs > 0)
                     {
                         triggerInterval = (float)(CastTime / NukeProcs);
+                        triggerChance = 1;
+                        return true;
+                    }
+                    break;
+                case Trigger.MageNukeCast2:
+                    if (NukeProcs2 > 0)
+                    {
+                        triggerInterval = (float)(CastTime / NukeProcs2);
                         triggerChance = 1;
                         return true;
                     }

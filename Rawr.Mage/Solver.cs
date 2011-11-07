@@ -152,9 +152,12 @@ namespace Rawr.Mage
         public bool Mage4T12 { get; set; }
         public bool Mage2PVP { get; set; }
         public bool Mage4PVP { get; set; }
+        public bool Mage2T13 { get; set; }
+        public bool Mage4T13 { get; set; }
 
         public static readonly SpecialEffect SpecialEffect2T12 = new SpecialEffect(Trigger.MageNukeCast, new Stats() { FireSummonedDamage = 4 * 7016.5f / 15f }, 15f, 45f, 0.2f, 1);
         public static readonly SpecialEffect SpecialEffectCombustion = new SpecialEffect(Trigger.DamageSpellCrit, new Stats() { }, 10f, 120f, 1f);
+        public static readonly SpecialEffect SpecialEffect2T13 = new SpecialEffect(Trigger.MageNukeCast2, new Stats() { HasteRating = 50f }, 30f, 0f, 1f, 10);
 
         public int MaxTalents { get; set; }
         public Specialization Specialization { get; set; }
@@ -196,7 +199,6 @@ namespace Rawr.Mage
         private int availableCooldownMask;
 
         public const float CombustionDuration = 10.0f;
-        public const float CombustionCooldown = 120.0f;
         public const float PowerInfusionDuration = 15.0f;
         public const float PowerInfusionCooldown = 120.0f;
         public const float MirrorImageDuration = 30.0f;
@@ -209,6 +211,7 @@ namespace Rawr.Mage
         public float ColdsnapCooldown;
         public float ArcanePowerCooldown;
         public float ArcanePowerDuration;
+        public float CombustionCooldown;
         //public float WaterElementalCooldown;
         //public float WaterElementalDuration;
         public float EvocationCooldown;
@@ -2075,6 +2078,7 @@ namespace Rawr.Mage
             int[] P = new int[ItemBasedEffectCooldownsCount];
             int[] Q = new int[P.Length];
             int evo = CooldownList.FindIndex(c => c.StandardEffect == StandardEffect.Evocation);
+            double[] lastActivation = new double[CooldownList.Count];
             for (int i = 0; i < P.Length; i++)
             {
                 P[i] = i;
@@ -2110,6 +2114,7 @@ namespace Rawr.Mage
                         {
                             combList.Add(new CombItem() { Cooldown = i, Activation = true, MinTime = t });
                             combList.Add(new CombItem() { Cooldown = i, Activation = false, MinTime = t + CooldownList[i].Duration });
+                            lastActivation[i] = t;
                         }
                     }
                     double tt = 0;
@@ -2119,6 +2124,7 @@ namespace Rawr.Mage
                         combList.Add(new CombItem() { Cooldown = Q[P[i]], Activation = true, MinTime = t + tt});
                         combList.Add(new CombItem() { Cooldown = Q[P[i]], Activation = false, MinTime = t + tt + CooldownList[Q[P[i]]].Duration });
                         tt += CooldownList[Q[P[i]]].Duration;
+                        lastActivation[Q[P[i]]] = t + tt;
                     }
                     // throw out anything above fight length
                     combList.RemoveAll(ci => ci.MinTime > CalculationOptions.FightDuration);
@@ -2135,6 +2141,35 @@ namespace Rawr.Mage
                     // pop evocation
                     combList.Add(new CombItem() { Cooldown = evo, Activation = true });
                     combList.Add(new CombItem() { Cooldown = evo, Activation = false });
+                    // do cooldowns that can be popped during neutral phase
+                    count = combList.Count;
+                    for (int i = 0; i < CooldownList.Count; i++)
+                    {
+                        if (CooldownList[i].StandardEffect != StandardEffect.Evocation && !float.IsPositiveInfinity(CooldownList[i].Cooldown))
+                        {
+                            if (CooldownList[i].Cooldown <= 60)
+                            {
+                                int num = (int)(120 / CooldownList[i].Cooldown);
+                                for (int j = 1; j < num; j++)
+                                {
+                                    combList.Add(new CombItem() { Cooldown = i, Activation = true, MinTime = lastActivation[i] + j * CooldownList[i].Cooldown });
+                                    combList.Add(new CombItem() { Cooldown = i, Activation = false, MinTime = lastActivation[i] + j * CooldownList[i].Cooldown + CooldownList[i].Duration });
+                                }
+                            }
+                        }
+                    }
+                    // throw out anything above fight length
+                    combList.RemoveAll(ci => ci.MinTime > CalculationOptions.FightDuration);
+                    // sort by time
+                    combList.Sort(count, combList.Count - count, sorter);
+                    // everything that has same time stamp should be considered simultaneous and zero duration in between
+                    for (int i = count; i < combList.Count - 1; i++)
+                    {
+                        if (combList[i].MinTime == combList[i + 1].MinTime)
+                        {
+                            combList[i].ZeroDuration = true;
+                        }
+                    }
                     // move to next burn
                     t += EvocationCooldown;
                 }
@@ -2912,6 +2947,9 @@ namespace Rawr.Mage
             Character.SetBonusCount.TryGetValue("Gladiator's Regalia", out setCount);
             Mage2PVP = (setCount >= 2);
             Mage4PVP = (setCount >= 4);
+            Character.SetBonusCount.TryGetValue("Time Lord's Regalia", out setCount);
+            Mage2T13 = (setCount >= 2);
+            Mage4T13 = (setCount >= 4);
 
             if (Mage2PVP)
             {
@@ -3256,7 +3294,6 @@ namespace Rawr.Mage
         };
         EffectCooldown cachedEffectCombustion = new EffectCooldown()
         {
-            Cooldown = CombustionCooldown,
             Duration = CombustionDuration,
             AutomaticConstraints = true,
             AutomaticStackingConstraints = true,
@@ -3383,17 +3420,27 @@ namespace Rawr.Mage
             switch (MageTalents.ArcaneFlows)
             {
                 case 0:
-                    ArcanePowerCooldown = 120.0f;
+                    ArcanePowerCooldown = 120f;
                     break;
                 case 1:
-                    ArcanePowerCooldown = 120.0f * (1 - 0.12f);
+                    ArcanePowerCooldown = 120f * (1 - 0.12f);
                     break;
                 case 2:
-                    ArcanePowerCooldown = 120.0f * (1 - 0.25f);
+                    ArcanePowerCooldown = 120f * (1 - 0.25f);
+                    if (Mage4T13)
+                    {
+                        ArcanePowerCooldown = 40f;
+                    }
                     break;
             }
             ArcanePowerDuration = 15.0f;
             IcyVeinsCooldown = 180.0f * (1 - 0.07f * MageTalents.IceFloes + (MageTalents.IceFloes == 3 ? 0.01f : 0.00f));
+            CombustionCooldown = 120f;
+            if (Mage4T13)
+            {
+                IcyVeinsCooldown = 80.0f * (1 - 0.07f * MageTalents.IceFloes + (MageTalents.IceFloes == 3 ? 0.01f : 0.00f));
+                CombustionCooldown = 70f;
+            }
             /*WaterElementalCooldown = (180.0f - (MageTalents.GlyphOfWaterElemental ? 30.0f : 0.0f));
             if (MageTalents.GlyphOfEternalWater)
             {
@@ -3435,6 +3482,7 @@ namespace Rawr.Mage
             if (combustionAvailable)
             {
                 EffectCooldown cooldown = NewStandardEffectCooldown(cachedEffectCombustion);
+                cooldown.Cooldown = CombustionCooldown;
                 CooldownList.Add(cooldown);
             }
             if (berserkingAvailable)

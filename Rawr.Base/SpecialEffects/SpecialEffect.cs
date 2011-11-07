@@ -156,6 +156,7 @@ namespace Rawr
         #region Added by Mage
         ManaGem,
         MageNukeCast,
+        MageNukeCast2,
         #endregion
         #region Added by Paladin
         JudgementHit,

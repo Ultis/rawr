@@ -3704,21 +3704,21 @@ namespace Rawr
             #region Tier 13 | Timelord's Regalia
             defaultBuffs.Add(new Buff()
             {
-                Name = "Timelord's Regalia (T13) 2 Piece Bonus",
+                Name = "Time Lord's Regalia (T13) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { },
-                SetName = "Timelord Regalia",
+                SetName = "Time Lord's Regalia",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Mage, },
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Timelord's Regalia (T13) 4 Piece Bonus",
+                Name = "Time Lord's Regalia (T13) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { },
-                SetName = "Timelord Regalia",
+                SetName = "Time Lord's Regalia",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Mage, },
             });
