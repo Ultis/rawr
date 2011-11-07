@@ -542,8 +542,9 @@ namespace Rawr.Cat
 
 
             float magicDPS = (stats.ShadowDamage + stats.ArcaneDamage + stats.NatureDamage + stats.FireDamage + stats.FrostDamage) * (1f + chanceCritYellow);
+            float physicalDPS = stats.PhysicalDamage;
             float abomDPS = (stats.MoteOfAnger * abilities.MeleeStats.DamageAverage);
-            calculatedStats.DPSPoints = calculatedStats.HighestDPSRotation.DPS + magicDPS + abomDPS;
+            calculatedStats.DPSPoints = calculatedStats.HighestDPSRotation.DPS + magicDPS + physicalDPS + abomDPS;
             calculatedStats.SurvivabilityPoints = stats.Health / 1000f;
             calculatedStats.OverallPoints = calculatedStats.DPSPoints + calculatedStats.SurvivabilityPoints;
             return calculatedStats;
