@@ -1042,6 +1042,7 @@ namespace Rawr.DK
             AbilityDK_UnholyBlight UB = null;
             if (DC.ml_TriggeredAbility != null && DC.ml_TriggeredAbility.Length > 0) UB = DC.ml_TriggeredAbility[0] as AbilityDK_UnholyBlight;
             DarkTranformation Dark = new DarkTranformation(m_CT.m_CState);
+            AbilityDK_DeathNDecay DnD = new AbilityDK_DeathNDecay(m_CT.m_CState);
 
             // Simple outbreak, Festx2 SSx6 & Fill w/ DCs
             int[] AvailableResources = new int[EnumHelper.GetCount(typeof(DKCostTypes))];
@@ -1074,7 +1075,16 @@ namespace Rawr.DK
                 // Fill the disease.
                 for (uint i = 3; i > 0; i--)
                 {
-                    ml_Rot.Add(SS); diseaseGCDs--;
+                    if (i == 3)
+                    {
+                        ml_Rot.Add(DnD); diseaseGCDs--;
+                        AvailableResources[(int)DKCostTypes.RunicPower] += DnD.RunicPower;
+                    }
+                    else
+                    {
+                        ml_Rot.Add(SS); diseaseGCDs--;
+                        AvailableResources[(int)DKCostTypes.RunicPower] += SS.RunicPower;
+                    }
                     ml_Rot.Add(SS); diseaseGCDs--;
                     ml_Rot.Add(Fest); diseaseGCDs--;
                     ml_Rot.Add(Fest); diseaseGCDs--;
@@ -1082,7 +1092,7 @@ namespace Rawr.DK
                     ml_Rot.Add(SS); diseaseGCDs--;
                     ml_Rot.Add(SS); diseaseGCDs--;
                     ml_Rot.Add(SS); diseaseGCDs--;
-                    AvailableResources[(int)DKCostTypes.RunicPower] += SS.RunicPower * 6;
+                    AvailableResources[(int)DKCostTypes.RunicPower] += SS.RunicPower * 5;
                     AvailableResources[(int)DKCostTypes.RunicPower] += Fest.RunicPower * 2;
                 }
             }
@@ -1191,8 +1201,9 @@ namespace Rawr.DK
             AbilityDK_DeathCoil DC = new AbilityDK_DeathCoil(m_CT.m_CState);
             AbilityDK_UnholyBlight UB = null;
             if (DC.ml_TriggeredAbility != null && DC.ml_TriggeredAbility.Length > 0) UB = DC.ml_TriggeredAbility[0] as AbilityDK_UnholyBlight;
+            AbilityDK_DeathNDecay DnD = new AbilityDK_DeathNDecay(m_CT.m_CState);
 
-            // Simple outbreak, Festx2 SSx6 & Fill w/ DCs
+            // Simple outbreak, Festx2 DnD, SSx5 & Fill w/ DCs
             int[] AvailableResources = new int[EnumHelper.GetCount(typeof(DKCostTypes))];
             uint subrotDuration = 0;
             uint GCDdur = MIN_GCD_MS;
@@ -1215,8 +1226,8 @@ namespace Rawr.DK
             // Fill the disease.
             for (uint i = 3; i > 0; i--)
             {
-                ml_Rot.Add(SS); diseaseGCDs--;
-                ProcessRunningRunes(AvailableResources, SS.AbilityCost);
+                ml_Rot.Add(DnD); diseaseGCDs--;
+                ProcessRunningRunes(AvailableResources, DnD.AbilityCost);
                 ml_Rot.Add(SS); diseaseGCDs--;
                 ProcessRunningRunes(AvailableResources, SS.AbilityCost);
                 ml_Rot.Add(Fest); diseaseGCDs--;
