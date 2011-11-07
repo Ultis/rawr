@@ -112,7 +112,6 @@
     <Compile Include="CalculationsDPSDK.cs" />
     <Compile Include="CharacterCalculationsDPSDK.cs" />
     <Compile Include="ComparisonCalculationDPSDK.cs" />
-    <Compile Include="Damage.cs" />
     <Compile Include="DKAbilities\AbilityDK.Base.cs" />
     <Compile Include="DKAbilities\AbilityDK.BloodBoil.cs" />
     <Compile Include="DKAbilities\AbilityDK.BloodPlague.cs" />

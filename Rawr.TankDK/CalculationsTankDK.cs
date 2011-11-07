@@ -291,7 +291,7 @@ Points individually may be important.",
                     _subPointNameColors.Add("Mitigation", Colors.Red);
                     _subPointNameColors.Add("Survivability", Colors.Blue);
                     _subPointNameColors.Add("Burst", Colors.Purple);
-                    _subPointNameColors.Add("Recovery", Colors.PaleVioletRed);
+                    _subPointNameColors.Add("Recovery", /*Colors.PaleVioletRed*/ Color.FromArgb(0xFF, 0xDB, 0x70, 0x93));
                     _subPointNameColors.Add("Threat", Colors.Green);
                 }
                 return _subPointNameColors;

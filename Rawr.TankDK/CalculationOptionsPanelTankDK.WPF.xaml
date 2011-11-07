@@ -88,10 +88,8 @@
                     <Slider Grid.Column="1" Grid.Row="5" Margin="4,2" Value="{Binding Path=RecoveryWeight, Mode=TwoWay}" Minimum="{Binding ElementName=NUD_Recovery, Path=Minimum}" Maximum="{Binding ElementName=NUD_Recovery, Path=Maximum}" LargeChange="{Binding ElementName=NUD_Recovery, Path=Increment}" />
                     <Button Content="Reset" Grid.Column="3" Grid.Row="5" Margin="2" Name="BT_RecoveryScale" Click="BT_RecoveryScale_Click" />
                     <CheckBox Content="Include Avoidance Effects in Recovery value" Grid.Row="6" Grid.ColumnSpan="4" IsChecked="{Binding b_RecoveryInclAvoidance, Mode=TwoWay}" VerticalAlignment="Center"
-                              Margin="5,5,5,5"
-                              ToolTip="Check this if you are concerned with the average Damage Taken over Time. 
+                              Margin="5,5,5,5" ToolTipService.ToolTip="Check this if you are concerned with the average Damage Taken over Time. 
                               Leave this UNCHECKED if you want to see the effects of DSHeals and Blood Shield during chains of no avoidance (dodge/parry)." />
-
 
                     <!-- Threat Weight -->
                     <TextBlock Text="Threat:" Grid.Row="7" VerticalAlignment="Center" Margin="4,2"/>
