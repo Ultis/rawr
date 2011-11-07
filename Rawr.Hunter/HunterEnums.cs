@@ -25,6 +25,42 @@ namespace Rawr.Hunter
         ThreeToTwo
     }
 
+    public enum CDStates_Enum
+    {
+        FOCUS_GT50 = 0,
+        KILLSHOT_CD = 1,
+        RAPIDFIRE = 2,
+        KILLCOMMAND = 3,
+        FOCUSFIRE = 4,
+        BM_UNKNOWN = 5,
+        IMP_STEADYSHOT = 6,
+        MASTER_MM = 7,
+        CHIMERASHOT = 8,
+        READINESS = 9,
+        EXPLOSIVESHOT = 10,
+        LOCKNLOAD = 11,
+        BLACKARROW = 12,
+    }
+
+    [Flags]
+    public enum CDStates_Flags
+    {
+        NONE = 0,
+        FOCUS_GT50 = 1 << 0,
+        KILLSHOT_CD = 1 << 1,
+        RAPIDFIRE = 1 << 2,
+        KILLCOMMAND = 1 << 3,
+        FOCUSFIRE = 1 << 4,
+        BM_UNKNOWN = 1 << 5,
+        IMP_STEADYSHOT = 1 << 6,
+        MASTER_MM = 1 << 7,
+        CHIMERASHOT = 1 << 8,
+        READINESS = 1 << 9,
+        EXPLOSIVESHOT = 1 << 10,
+        LOCKNLOAD = 1 << 11,
+        BLACKARROW = 1 << 12,
+    }
+
     // Updated 4.2 from Wowhead talents, Shots & Abilities.
     public enum Shots
     {

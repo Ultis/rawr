@@ -35,4 +35,43 @@ namespace Rawr.Hunter.Skills
             Initialize();
         }
     }
+
+    public class MMMAimedShot : Ability
+    {
+        public MMMAimedShot(Character c, StatsHunter s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
+        {
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
+            //
+            Name = "MMM Aimed Shot";
+            ReqTalent = true; // Reqiures MM spec.
+            Talent2ChksValue = Talents.MasterMarksman;
+            ReqRangedWeap = true;
+            ReqSkillsRange = true;
+            CastTime = 0;
+            FocusCost = 0;
+            DamageBase = (combatFactors.AvgRwWeaponDmgUnhasted + (StatS.RangedAttackPower * 0.724f) + 776) * 1.60f + 100;
+            Consumes_Tier12_4pc = true;
+            Initialize();
+        }
+    }
+
+    public class CAAimedShot : Ability
+    {
+        public CAAimedShot(Character c, StatsHunter s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
+        {
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
+            //
+            Name = "CA Aimed Shot";
+            ReqTalent = true; // Reqiures MM spec.
+            Talent2ChksValue = Talents.CarefulAim;
+            ReqRangedWeap = true;
+            ReqSkillsRange = true;
+            CastTime = 2.9f;
+            FocusCost = 50f;
+            DamageBase = (combatFactors.AvgRwWeaponDmgUnhasted + (StatS.RangedAttackPower * 0.724f) + 776) * 1.60f + 100;
+            Consumes_Tier12_4pc = true;
+            BonusCritChance = 1.6f;
+            Initialize();
+        }
+    }
 }

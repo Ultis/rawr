@@ -123,6 +123,7 @@
     <Compile Include="Abilites\Skills.Shots.cs" />
     <Compile Include="Abilites\SteadyShot.cs" />
     <Compile Include="HunterBase.cs" />
+    <Compile Include="HunterStateSpaceGenerator.cs" />
     <Compile Include="PetBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Pet\PetCalculations.cs" />

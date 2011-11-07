@@ -8,10 +8,6 @@ namespace Rawr.Hunter
 {
     public class CharacterCalculationsHunter : CharacterCalculationsBase
     {
-//        public StatsHunter UnbuffedStats { get; set; }
-//        public StatsHunter BuffStats { get; set; }
-//        public StatsHunter MaximumStats { get; set; }
-
         public Character character = null;
         public CalculationOptionsHunter CalcOpts = null;
 
@@ -26,29 +22,6 @@ namespace Rawr.Hunter
         public PetBase Pet { get; set; }
 
         public PetCalculations PetCalc { get; set; }
-
-/*      This is from the original Shot Code
- * 
- *      public ShotData aimedShot = new ShotData(Shots.AimedShot, false, true, true);
-        public ShotData arcaneShot = new ShotData(Shots.ArcaneShot, false, true, true);
-        public ShotData multiShot = new ShotData(Shots.MultiShot, false, true, true);
-        public ShotData serpentSting = new ShotData(Shots.SerpentSting, false, true, true);
-        public ShotData cobraShot = new ShotData(Shots.CobraShot, false, true, true);
-        public ShotData steadyShot = new ShotData(Shots.SteadyShot, false, true, true);
-        public ShotData killShot = new ShotData(Shots.KillShot, false, true, true);
-        public ShotData explosiveShot = new ShotData(Shots.ExplosiveShot, false, true, true);
-        public ShotData blackArrow = new ShotData(Shots.BlackArrow, false, false, true);
-        public ShotData immolationTrap = new ShotData(Shots.ImmolationTrap, false, false, true);
-        public ShotData explosiveTrap = new ShotData(Shots.ExplosiveTrap, false, false, true);
-        public ShotData freezingTrap = new ShotData(Shots.FreezingTrap, true, false, true);
-        public ShotData frostTrap = new ShotData(Shots.IceTrap, true, false, true);
-        public ShotData chimeraShot = new ShotData(Shots.ChimeraShot, false, true, true);
-        public ShotData rapidFire = new ShotData(Shots.RapidFire, true, false, false);
-        public ShotData readiness = new ShotData(Shots.Readiness, true, false, true);
-        public ShotData bestialWrath = new ShotData(Shots.BestialWrath, true, false, false);
-
-//        public ShotPriority priorityRotation = null;
-        */
 
         private float _overallPoints = 0f;
         private float[] _subPoints = new float[] { 0f, 0f, 0f, 0f };
@@ -97,12 +70,14 @@ namespace Rawr.Hunter
         public AbilWrapper Steady { get; set; }
         public AbilWrapper Cobra { get; set; }
         public AbilWrapper Aimed { get; set; }
+        public AbilWrapper MMMAimed { get; set; }
+        public AbilWrapper CAAimed { get; set; }
         public AbilWrapper Multi { get; set; }
         public AbilWrapper Arcane { get; set; }
         public AbilWrapper Kill { get; set; }
-        public Skills.BlackArrow BlackArrowD { get; set; }
+        public AbilWrapper BlackArrowD { get; set; }
         //        public Skills.BlackArrowBuff BlackArrowB { get; set; }
-        public Skills.PiercingShots Piercing { get; set; }
+        public AbilWrapper Piercing { get; set; }
         public AbilWrapper Serpent { get; set; }
         public AbilWrapper Chimera { get; set; }
         public Skills.ImmolationTrap Immolation { get; set; }
@@ -114,9 +89,6 @@ namespace Rawr.Hunter
         public Skills.RapidFire Rapid { get; set; }
         #endregion
 
-//        private Stats _basicStats;
-        private float _baseAttackSpeed;
-        private float _autoshotDPS;
         private float _BonusAttackProcsDPS;
         private float _wildQuiverDPS;
         public float SpecProcDPS;
@@ -127,15 +99,14 @@ namespace Rawr.Hunter
         public float critRateOverall { get; set; }
         public float critFromAgi { get; set; }
 
-        private double _piercingShotsDPS;
-        private double _piercingShotsDPSSteadyShot;
-        private double _piercingShotsDPSAimedShot;
-        private double _piercingShotsDPSChimeraShot;
+        private float _piercingShotsDPSSteadyShot;
+        private float _piercingShotsDPSAimedShot;
+        private float _piercingShotsDPSChimeraShot;
 
         public float BaseHealth { get; set; }
         public float Agility { get; set; }
 
-
+        #region Pets
         #region Pet Stats
         public float petBaseHealth { get; set; }
         public float petHealthfromStamina { get; set; }
@@ -181,62 +152,13 @@ namespace Rawr.Hunter
         public float petAPFromAnimalHandler { get; set; }
         public float petAPFromAspectOfTheBeast { get; set; }
         #endregion
+        #endregion
 
         #region Debuffs
         public float targetDebuffsCrit { get; set; }
         public float targetDebuffsArmor { get; set; }
         public float targetDebuffsNature { get; set; }
         public float targetDebuffsPetDamage { get; set; }
-        #endregion
-
-        #region Haste Stats
-        public float hasteFromTalentsStatic { get; set; }
-        public float hasteFromRapidFire { get; set; }
-        public float hasteFromProcs { get; set; }
-        public float hasteFromBase { get; set; }
-        public float hasteFromRating { get; set; }
-        public float hasteFromRangedBuffs { get; set; }
-        public float hasteFromRacial { get; set; }
-        public float hasteStaticTotal { get; set; }
-        public float hasteDynamicTotal { get; set; }
-        public float hasteEffectsTotal { get; set; }
-        #endregion   		
-        
-        #region RAP Stats
-        public float apTotal { get; set; }
-        public float apSelfBuffed { get; set; }
-        public float apFromBase { get; set; }
-        public float apFromAGI { get; set; }
-        public float apFromGear { get; set; }
-        #endregion
-        
-        #region Hit Stats
-        public float hitOverall {get; set;}
-        public float hitFromBase { get; set; }
-        public float hitFromRating { get; set; }
-        public float hitFromTalents {get; set;}
-        public float hitFromBuffs {get; set;}
-        public float hitFromTargetDebuffs { get; set; }
-        public float hitFromLevelAdjustment { get; set; }
-        #endregion        
-        
-        #region Crit Stats
-        public float critBase { get; set; }
-        public float critFromRacial { get; set; }
-        public float critFromRating { get; set; }
-        public float critFromProcRating { get; set; }
-        public float critFromLethalShots { get; set; }
-        public float critFromKillerInstincts { get; set; }
-        public float critFromMasterMarksman { get; set; }
-        public float critFromMasterTactician { get; set; }
-        public float critFromBuffs { get; set; }
-        public float critFromDepression { get; set; }
-        #endregion
-
-        #region Mastery
-        public float masteryoverall { get; set; }
-        public float masteryfrombase { get; set; }
-        public float masteryfromincrement { get; set; }
         #endregion
 
         #region Shots Per Second
@@ -287,29 +209,30 @@ namespace Rawr.Hunter
             set { _wildQuiverDPS = value; }
         }
 
-        public double PiercingShotsDPS
+        #region Piercing Shots
+        public float PiercingShotsDPS
         {
-            get { return _piercingShotsDPS; }
-            set { _piercingShotsDPS = value; }
+            get { return (PiercingShotsDPSSteadyShot + PiercingShotsDPSAimedShot + PiercingShotsDPSChimeraShot); }
         }
 
-        public double PiercingShotsDPSSteadyShot
+        public float PiercingShotsDPSSteadyShot
         {
             get { return _piercingShotsDPSSteadyShot; }
             set { _piercingShotsDPSSteadyShot = value; }
         }
-        
-        public double PiercingShotsDPSAimedShot
+
+        public float PiercingShotsDPSAimedShot
         {
             get { return _piercingShotsDPSAimedShot; }
             set { _piercingShotsDPSAimedShot = value; }
         }
 
-        public double PiercingShotsDPSChimeraShot
+        public float PiercingShotsDPSChimeraShot
         {
             get { return _piercingShotsDPSChimeraShot; }
             set { _piercingShotsDPSChimeraShot = value; }
         }
+        #endregion
 
         public float CustomDPS
         {
@@ -417,22 +340,30 @@ namespace Rawr.Hunter
                             pet.priorityRotation.getSkillFrequency(PetAttacks.Bite), pet.priorityRotation.dps - petWhiteDPS));
 */
             // Shot Stats
-            dictValues.Add("Aimed Shot", this.Aimed.GenTooltip(this.CustomDPS));
-            dictValues.Add("Arcane Shot", this.Arcane.GenTooltip(this.CustomDPS));
-//            dictValues.Add("Multi Shot", multiShot.GenTooltip());
+//            dictValues.Add("Aimed Shot", Aimed.GenTooltip(CustomDPS));
+            dictValues.Add("Aimed Shot", Aimed.DPS.ToString("F2"));
+            dictValues.Add("MMM Aimed Shot", MMMAimed.DPS.ToString("F2"));
+            dictValues.Add("CA Aimed Shot", CAAimed.DPS.ToString("F2"));
+            //            dictValues.Add("Arcane Shot", Arcane.GenTooltip(CustomDPS));
+            dictValues.Add("Arcane Shot", Arcane.DPS.ToString("F2"));
+            //            dictValues.Add("Multi Shot", multiShot.GenTooltip());
 //            dictValues.Add("Cobra Shot", cobraShot.GenTooltip());
-            dictValues.Add("Steady Shot", this.Steady.GenTooltip(this.CustomDPS));
-            dictValues.Add("Kill Shot", this.Kill.GenTooltip(this.CustomDPS));
+//            dictValues.Add("Steady Shot", Steady.GenTooltip(CustomDPS));
+            dictValues.Add("Steady Shot", Steady.DPS.ToString("F2"));
+//            dictValues.Add("Kill Shot", Kill.GenTooltip(CustomDPS));
+            dictValues.Add("Kill Shot", Kill.DPS.ToString("F2"));
 //            dictValues.Add("Explosive Shot", explosiveShot.GenTooltip());
 //            dictValues.Add("Black Arrow", blackArrow.GenTooltip());
-            dictValues.Add("Chimera Shot", this.Chimera.GenTooltip(this.CustomDPS));
+//            dictValues.Add("Chimera Shot", Chimera.GenTooltip(CustomDPS));
+            dictValues.Add("Chimera Shot", Chimera.DPS.ToString("F2"));
             
             //dictValues.Add("Rapid Fire", rapidFire.GenTooltip());
             //dictValues.Add("Readiness", readiness.GenTooltip());
             //dictValues.Add("Bestial Wrath", bestialWrath.GenTooltip());
 
             // Sting Stats
-//            dictValues.Add("Serpent Sting", serpentSting.GenTooltip());
+//            dictValues.Add("Serpent Sting", Serpent.GenTooltip(CustomDPS));
+            dictValues.Add("Serpent Sting", Serpent.DPS.ToString("F2"));
 
             // Trap Stats
             //dictValues.Add("Immolation Trap", immolationTrap.GenTooltip());
@@ -472,12 +403,12 @@ namespace Rawr.Hunter
         {
             switch (calculation)
             {
-                case "Health": return HunterUnBuffed.Health;
-                case "Agility": return HunterUnBuffed.Agility;
-                case "Crit %": return HunterUnBuffed.PhysicalCrit * 100f;
-                case "Haste %": return HunterUnBuffed.PhysicalHaste * 100f;
-                case "Attack Power": return HunterUnBuffed.RangedAttackPower;
-                //case "% Chance to Miss (Yellow)": return (StatConversion.WHITE_MISS_CHANCE_CAP[BossOpts.Level - character.Level] - BasicStats.PhysicalHit) * 100f;
+                case "Health": return Hunter.Health;
+                case "Agility": return Hunter.Agility;
+                case "Crit %": return Hunter.PhysicalCrit * 100f;
+                case "Haste %": return Hunter.PhysicalHaste * 100f;
+                case "Attack Power": return Hunter.RangedAttackPower;
+                case "Hit Rating Needed": return Hunter.HitRatingNeeded;
             }
             return 0;
         }

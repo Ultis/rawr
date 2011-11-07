@@ -48,6 +48,7 @@ namespace Rawr.Hunter {
             SetUpOther();
             //
             // This should now be the only group of 10 lines, the rest are loop-capable
+#if FALSE
             ShotPriorityBoxes.Clear();
             ShotPriorityBoxes.Add(CB_ShotPrio_01);
             ShotPriorityBoxes.Add(CB_ShotPrio_02);
@@ -59,7 +60,7 @@ namespace Rawr.Hunter {
             ShotPriorityBoxes.Add(CB_ShotPrio_08);
             ShotPriorityBoxes.Add(CB_ShotPrio_09);
             ShotPriorityBoxes.Add(CB_ShotPrio_10);
-
+#endif
             //CB_CalculationToGraph.Items.Add(Graph.GetCalculationNames());
             _loadingCalculationOptions = false;
         }
@@ -789,7 +790,7 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                 if (character != null && character.CalculationOptions != null && character.CalculationOptions is CalculationOptionsHunter) {
                     ((CalculationOptionsHunter)character.CalculationOptions).PropertyChanged
                         -= new PropertyChangedEventHandler(CalculationOptionsPanelHunter_PropertyChanged);
-                    character.TalentChangedEvent -= new System.EventHandler(CharTalents_Changed);
+//                    character.TalentChangedEvent -= new System.EventHandler(CharTalents_Changed);
                 }
                 // Apply the new character
                 character = value;
@@ -800,7 +801,7 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                 LayoutRoot.DataContext = CalcOpts;
                 // Add new event connections
                 CalcOpts.PropertyChanged += new PropertyChangedEventHandler(CalculationOptionsPanelHunter_PropertyChanged);
-                character.TalentChangedEvent += new System.EventHandler(CharTalents_Changed);
+//                character.TalentChangedEvent += new System.EventHandler(CharTalents_Changed);
                 // Run it once for any special UI config checks
                 CalculationOptionsPanelHunter_PropertyChanged(null, new PropertyChangedEventArgs(""));
             }
@@ -823,12 +824,13 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                 //PetBuffs.Character = Character;
                 PopulateArmoryPets();
                 PopulatePetAbilities();
-                CB_PriorityDefaults.SelectedIndex = ShotRotationIndexCheck();
+/*                CB_PriorityDefaults.SelectedIndex = ShotRotationIndexCheck();
                 if (ShotRotationFunctions.ShotRotationIsntSet(CalcOpts)) {
                     _loadingCalculationOptions = false;
                     CB_PriorityDefaults.SelectedIndex = ShotRotationFunctions.ShotRotationGetRightSpec(Character);
                     _loadingCalculationOptions = true;
                 }
+ */ 
                 // Bad Item Hiding
                 CalculationsHunter.HidingBadStuff_Spl = CalcOpts.HideBadItems_Spl;
                 CalculationsHunter.HidingBadStuff_PvP = CalcOpts.HideBadItems_PvP;
@@ -848,35 +850,11 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
         public void CalculationOptionsPanelHunter_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (_loadingCalculationOptions) { return; }
-            // Change abilities if stance changes
-            /*if (e.PropertyName == "FuryStance")
-            {
-                bool Checked = calcOpts.FuryStance;
-                // Fury
-                CK_M_F_WW.IsChecked = Checked;
-                CK_M_F_BS.IsChecked = Checked;
-                CK_M_F_BT.IsChecked = Checked;
-                // Fury Special
-                CK_M_F_DW.IsChecked = calcOpts.M_DeathWish && Checked;
-                CK_M_F_RK.IsChecked = calcOpts.M_Recklessness && Checked;
-                // Arms
-                CK_M_A_BLS.IsChecked = !Checked;
-                CK_M_A_MS.IsChecked = !Checked;
-                CK_M_A_RD.IsChecked = !Checked;
-                CK_M_A_OP.IsChecked = !Checked;
-                CK_M_A_TB.IsChecked = !Checked;
-                CK_M_A_SD.IsChecked = !Checked;
-                CK_M_A_SL.IsChecked = !Checked;
-                // Arms Special
-                CK_M_A_TH.IsChecked = calcOpts.M_ThunderClap && !Checked;
-                CK_M_A_ST.IsChecked = calcOpts.M_ShatteringThrow && !Checked;
-                CK_M_A_SW.IsChecked = calcOpts.M_SweepingStrikes && !Checked;
-            }*/
-            //
             if (Character != null) { Character.OnCalculationsInvalidated(); }
         }
         #endregion
 
+#if FALSE
         #region Rotations
         private void CB_PriorityDefaults_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -969,6 +947,9 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             CurrentSpec = CB_PriorityDefaults.SelectedIndex;
         }
         #endregion
+#endif
+
+
         #region Pet
         private void PopulatePetAbilities() {
             // the abilities should be in this order:
@@ -1169,22 +1150,23 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
         {
             List<Stats> statsList = new List<Stats>();
             if (CK_StatsAgility.IsChecked.GetValueOrDefault(true)) { statsList.Add(new Stats() { Agility = 1f }); }
-            if (CK_StatsAP.IsChecked.GetValueOrDefault(true)) { statsList.Add(new Stats() { AttackPower = 1f }); }
+            if (CK_StatsAP.IsChecked.GetValueOrDefault(true)) { statsList.Add(new Stats() { AttackPower = 2f }); }
             if (CK_StatsCrit.IsChecked.GetValueOrDefault(true)) { statsList.Add(new Stats() { CritRating = 1f }); }
             if (CK_StatsHit.IsChecked.GetValueOrDefault(true)) { statsList.Add(new Stats() { HitRating = 1f }); }
             if (CK_StatsHaste.IsChecked.GetValueOrDefault(true)) { statsList.Add(new Stats() { HasteRating = 1f }); }
+            if (CK_StatsMastery.IsChecked.GetValueOrDefault(true)) { statsList.Add(new Stats() { MasteryRating = 1f }); }
             return statsList.ToArray();
         }
         private void BT_StatsGraph_Click(object sender, EventArgs e)
         {
             CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
             Stats[] statsList = BuildStatsList();
-            Graph graph = new Graph();
+            StatGraphWindow graph = new StatGraphWindow();
             string explanatoryText = "This graph shows how adding or subtracting\nmultiples of a stat affects your dps.\n\nAt the Zero position is your current dps.\n" +
                          "To the right of the zero vertical is adding stats.\nTo the left of the zero vertical is subtracting stats.\n" +
                          "The vertical axis shows the amount of dps added or lost";
-            graph.SetupStatsGraph(Character, statsList, calcOpts.StatsIncrement, explanatoryText, calcOpts.CalculationToGraph);
-            //graph.Show();
+            graph.GetGraph.SetupStatsGraph(Character, statsList, calcOpts.StatsIncrement, explanatoryText, calcOpts.CalculationToGraph);
+            graph.Show();
         }
         //private void CK_StatsAgility_CheckedChanged(object sender, EventArgs e) { CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter; calcOpts.StatsList[0] = CK_StatsAgility.IsChecked.GetValueOrDefault(true); }
         //private void CK_StatsAP_CheckedChanged(object sender, EventArgs e) { CalculationOptionsHunter calcOpts      = Character.CalculationOptions as CalculationOptionsHunter; calcOpts.StatsList[1] = CK_StatsAP.IsChecked.GetValueOrDefault(true); }
@@ -1202,6 +1184,8 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
         }
         #endregion
     }
+
+#if FALSE
     public static class ShotRotationFunctions
     {
         public static int ShotRotationGetRightSpec(Character character)
@@ -1243,5 +1227,7 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                     == 0);
         }
     }
+    #endif
+
 }
 

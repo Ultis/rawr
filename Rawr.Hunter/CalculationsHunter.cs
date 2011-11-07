@@ -170,6 +170,8 @@ namespace Rawr.Hunter {
 
                         #region Shot Information
                         "Shot Stats:Aimed Shot",
+                        "Shot Stats:MMM Aimed Shot",
+                        "Shot Stats:CA Aimed Shot",
                         "Shot Stats:Arcane Shot",
                         "Shot Stats:Multi Shot",
                         "Shot Stats:Cobra Shot",

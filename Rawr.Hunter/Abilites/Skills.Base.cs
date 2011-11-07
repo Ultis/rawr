@@ -6,14 +6,21 @@ namespace Rawr.Hunter.Skills
 {
     public class AbilWrapper
     {
-        public AbilWrapper(Skills.Ability abil) { ability = abil; }
-        public Skills.Ability ability { get; set; }
+        public AbilWrapper(Ability abil) { ability = abil; }
+        public Ability ability { get; set; }
         public float numActivates { get; set; }
-        public float Focus { get { return ability.GetFocusUseOverDur(numActivates); } }
-        public float DPS { get { return ability.GetDPS(numActivates); } }
-//        public float HPS { get { return ability.GetHPS(numActivates); } }
+        public float CastTime { get { return ability.CastTime; } }
+        public float FocusCost { get { return ability.FocusCost; } }
+        public float Focus { get { return ability.FocusCost; } }
+        public float Damage { get { return ability.DamageOnUse * (float)AbilityWeight; } }
+        public float DPS { get; set; }
+        public double AbilityWeight { get; set; }
         public bool isDamaging { get { return ability.DamageOverride > 0f; } }
-        public string GenTooltip(float fRotationDPS) { return this.ability.GenTooltip(numActivates, fRotationDPS); }
+        public string GenTooltip(float fRotationDPS) { return ability.GenTooltip(fRotationDPS); }
+        public override string ToString()
+        {
+            return ability.Name;
+        }
     }
 
     public enum AttackTableSelector { Missed = 0, Crit, Hit }
@@ -252,9 +259,7 @@ namespace Rawr.Hunter.Skills
         /// Duration of the Ability - in seconds.
         /// </summary>
         private float DURATION; // In Seconds
-        //private float MANACOST;
         private float FOCUSCOST;
-        //private bool MANACOSTISPERC;
         /// <summary>
         /// Cast time - in seconds.
         /// </summary>
@@ -326,7 +331,22 @@ namespace Rawr.Hunter.Skills
         }
         public float Duration { get { return DURATION; } set { DURATION = value; } } // In Seconds
         public float FocusCost { get { return FOCUSCOST; } set { FOCUSCOST = value; } }
-        public float CastTime { get { return CASTTIME; } set { CASTTIME = value; } } // In Seconds
+        /// <summary>
+        /// Set without Haste, Returns with Haste
+        /// </summary>
+        public float CastTime 
+        { 
+            get 
+            {
+                float fCS = CASTTIME / (this.combatFactors.TotalHaste);
+                fCS = Math.Max(1f, fCS);
+                return fCS; 
+            } 
+            set 
+            { 
+                CASTTIME = value; 
+            } 
+        } // In Seconds
         /// <summary>Base Damage Value (500 = 500.00 Damage)</summary>
         protected float DamageBase { get { return DAMAGEBASE; } set { DAMAGEBASE = value; } }
         /// <summary>Percentage Based Damage Bonus (1.5 = 150% damage)</summary>
@@ -396,7 +416,10 @@ namespace Rawr.Hunter.Skills
         public bool UsesGCD { get; protected set; }
         public float GCDTime { get; protected set; } // In Seconds
         public float SwingsPerActivate { get; protected set; }
-        public float UseTime { get { return CalcOpts.Latency + (UseReact ? CalcOpts.React / 1000f : CalcOpts.AllowedReact) + Math.Min(Math.Max(1.5f, CastTime), GCDTime); } }
+        /// <summary>
+        /// Time in Seconds to Use the Ability
+        /// </summary>
+        public float UseTime { get { return CalcOpts.Latency + (UseReact ? CalcOpts.React / 1000f : CalcOpts.AllowedReact) + Math.Min(Math.Max(1f, CastTime), GCDTime); } }
         private bool? validatedSet = null;
         public virtual bool Validated
         {
@@ -435,7 +458,7 @@ namespace Rawr.Hunter.Skills
         {
             get
             {
-                float LatentGCD = 1.5f + CalcOpts.Latency + (UseReact ? CalcOpts.AllowedReact : 0f);
+                float LatentGCD = 1f + CalcOpts.Latency + (UseReact ? CalcOpts.AllowedReact : 0f);
                 float GCDPerc = LatentGCD / ((Duration > Cd ? Duration : Cd) + CalcOpts.Latency + (UseReact ? CalcOpts.AllowedReact : 0f));
                 if (FocusCost > 0f)
                 {
@@ -496,13 +519,6 @@ namespace Rawr.Hunter.Skills
             if (!Validated) { return 0f; }
             return acts * this.FocusCost;
         }
-
-        // WTF?
-        public virtual float GetHealing() 
-        { 
-            if (!Validated) { return 0f; } 
-            return 0f; 
-        }
         public virtual float GetAvgDamageOnUse(float acts)
         {
             if (!Validated) { return 0f; }
@@ -525,7 +541,7 @@ namespace Rawr.Hunter.Skills
             //float BaseCrit = IsMH ? combatFactors._c_mhycrit : combatFactors._c_ohycrit;
             return Math.Min(1f, (IsMH ? combatFactors._c_mhycrit : combatFactors._c_ohycrit) + BonusCritChance);
         }*/
-        protected virtual float GetXActs(AttackTableSelector i, float acts)
+        public virtual float GetXActs(AttackTableSelector i, float acts)
         {
             float retVal = 0f;
             switch (i)
@@ -537,6 +553,12 @@ namespace Rawr.Hunter.Skills
             }
             return retVal;
         }
+
+        public virtual string GenTooltip(float ttldps)
+        {
+            return GenTooltip(1, ttldps);
+        }
+
         public virtual string GenTooltip(float acts, float ttldps)
         {
             float misses = GetXActs(AttackTableSelector.Missed, acts), missesPerc = (acts == 0f ? 0f : misses / acts);

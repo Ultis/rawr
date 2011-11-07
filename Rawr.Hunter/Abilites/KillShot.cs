@@ -24,7 +24,7 @@ namespace Rawr.Hunter.Skills
             ReqSkillsRange = true;
             // In terms of modeling, the Glyph of Kill Shot is basically a 4 second cooldown reduction.
             Cd = 10 - (Talents.GlyphOfKillShot ? 4f : 0f);
-            FocusCost = 45f;
+            FocusCost = 0;
             // 150% weapon dmg + 45% RAP + 543
             DamageBase = (cf.AvgRwWeaponDmgUnhasted * 1.5f) + (StatS.RangedAttackPower * 0.45f) + 543f;
             Initialize();

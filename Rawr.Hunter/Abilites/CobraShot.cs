@@ -15,7 +15,7 @@ namespace Rawr.Hunter.Skills
         /// <para>Generates 9 Focus.</para>
         /// </summary>
         /// <TalentsAffecting>
-        /// Careful Aim - Increases the critical strike chance of your Steady Shot, Cobra Shot and Aimed Shot by 30/60% on targets who are above 80% health.
+        /// Careful Aim - Increases the critical strike chance of your Steady Shot, Cobra Shot and Aimed Shot by 30/60% on targets who are above 90% health.
         /// Rapid Killing - After killing an opponent that yields experience or honor, your next Aimed Shot, Steady Shot or Cobra Shot causes 10/20% additional damage.  Lasts 20 sec.
         /// Sniper Training - Increases the critical strike chance of your Kill Shot ability by 5/10/15%, and after remaining stationary for 6 sec, your Steady Shot and Cobra Shot deal 2/4/6% more damage for 15 sec.
         /// Termination - Your Steady Shot and Cobra Shot abilities grant an additional 3/6 Focus when dealt on targets at or below 25% health.
@@ -31,7 +31,7 @@ namespace Rawr.Hunter.Skills
             Talent2ChksValue = ((Specialization)Talents.HighestTree == Specialization.Marksmanship ? 0 : 1);
             ReqRangedWeap = true;
             ReqSkillsRange = true;
-            CastTime = 2f;
+            CastTime = 1.5f;
             FocusCost = -9;
             //Targets += StatS.BonusTargets;
             DamageBase = combatFactors.AvgRwWeaponDmgUnhasted + (StatS.RangedAttackPower * 0.017f) + 277.21f;

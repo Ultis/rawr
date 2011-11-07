@@ -128,35 +128,7 @@
                             <local:AspectUsage>FoxToRun</local:AspectUsage>
                         </ComboBox>
                         <CheckBox x:Name="CK_UseBeastDuringBW" HorizontalAlignment="Stretch" Content="Use Aspect of the Beast during Bestial Wrath" IsChecked="{Binding UseBeastDuringBestialWrath, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.ColumnSpan="3" Grid.Row="8" Margin="4,2" VerticalAlignment="Stretch" Height="20" />
-                        <CheckBox x:Name="CK_UseRotation" Content="Use Shot Rotation Test instead of Frequencies" IsChecked="{Binding UseRotationTest, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.ColumnSpan="3" Grid.Row="9" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="4,2" Height="20" />
-                        <CheckBox x:Name="CK_RandomProcs" Content="Randomize Procs on Shot Rotation Test" d:LayoutOverrides="Height" IsChecked="{Binding RandomizeProcs, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.ColumnSpan="3" Grid.Row="10" Margin="24,2,4,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="0" Height="20" />
-                        <dataInput:Label x:Name="LB_HShotPrios" Content="Shot Priorities" FontWeight="Bold" Grid.ColumnSpan="3" Margin="4" HorizontalContentAlignment="Center" Grid.Row="12" />
-                        <ComboBox x:Name="CB_PriorityDefaults" SelectionChanged="CB_PriorityDefaults_SelectedIndexChanged" Grid.ColumnSpan="3" Grid.Row="13" Margin="4,2" Height="20">
-                            <ComboBoxItem Content="Custom" IsSelected="True"/>
-                            <ComboBoxItem Content="Beast Master"/>
-                            <ComboBoxItem Content="Marksman"/>
-                            <ComboBoxItem Content="Survival"/>
-                        </ComboBox>
-                        <dataInput:Label x:Name="LB_ShotPrio_01" Content="Priority 01:" Grid.Row="14" Margin="4,2" />
-                        <ComboBox x:Name="CB_ShotPrio_01" Height="20" ItemsSource="{Binding Path=ShotList}" SelectedIndex="{Binding Path=PriorityIndex1, Mode=TwoWay}" Grid.Column="1" Grid.Row="14" Margin="4,2" Grid.ColumnSpan="2" />
-                        <dataInput:Label x:Name="LB_ShotPrio_02" Content="Priority 02:" Grid.Row="15" Margin="4,2" />
-                        <ComboBox x:Name="CB_ShotPrio_02" Height="20" ItemsSource="{Binding Path=ShotList}" SelectedIndex="{Binding Path=PriorityIndex2, Mode=TwoWay}" Grid.Column="1" Grid.Row="15" Margin="4,2" Grid.ColumnSpan="2" />
-                        <dataInput:Label x:Name="LB_ShotPrio_03" Content="Priority 03:" Grid.Row="16" Margin="4,2" />
-                        <ComboBox x:Name="CB_ShotPrio_03" Height="20" ItemsSource="{Binding Path=ShotList}" SelectedIndex="{Binding Path=PriorityIndex3, Mode=TwoWay}" Grid.Column="1" Grid.Row="16" Margin="4,2" Grid.ColumnSpan="2" />
-                        <dataInput:Label x:Name="LB_ShotPrio_04" Content="Priority 04:" Grid.Row="17" Margin="4,2" />
-                        <ComboBox x:Name="CB_ShotPrio_04" Height="20" ItemsSource="{Binding Path=ShotList}" SelectedIndex="{Binding Path=PriorityIndex4, Mode=TwoWay}" Grid.Column="1" Grid.Row="17" Margin="4,2" Grid.ColumnSpan="2" />
-                        <dataInput:Label x:Name="LB_ShotPrio_05" Content="Priority 05:" Grid.Row="18" Margin="4,2" />
-                        <ComboBox x:Name="CB_ShotPrio_05" Height="20" ItemsSource="{Binding Path=ShotList}" SelectedIndex="{Binding Path=PriorityIndex5, Mode=TwoWay}" Grid.Column="1" Grid.Row="18" Margin="4,2" Grid.ColumnSpan="2" />
-                        <dataInput:Label x:Name="LB_ShotPrio_06" Content="Priority 06:" Grid.Row="19" Margin="4,2" />
-                        <ComboBox x:Name="CB_ShotPrio_06" Height="20" ItemsSource="{Binding Path=ShotList}" SelectedIndex="{Binding Path=PriorityIndex6, Mode=TwoWay}" Grid.Column="1" Grid.Row="19" Margin="4,2" Grid.ColumnSpan="2" />
-                        <dataInput:Label x:Name="LB_ShotPrio_07" Content="Priority 07:" Grid.Row="20" Margin="4,2" />
-                        <ComboBox x:Name="CB_ShotPrio_07" Height="20" ItemsSource="{Binding Path=ShotList}" SelectedIndex="{Binding Path=PriorityIndex7, Mode=TwoWay}" Grid.Column="1" Grid.Row="20" Margin="4,2" Grid.ColumnSpan="2" />
-                        <dataInput:Label x:Name="LB_ShotPrio_08" Content="Priority 08:" Grid.Row="21" Margin="4,2" />
-                        <ComboBox x:Name="CB_ShotPrio_08" Height="20" ItemsSource="{Binding Path=ShotList}" SelectedIndex="{Binding Path=PriorityIndex8, Mode=TwoWay}" Grid.Column="1" Grid.Row="21" Margin="4,2" Grid.ColumnSpan="2" />
-                        <dataInput:Label x:Name="LB_ShotPrio_09" Content="Priority 09:" Grid.Row="22" Margin="4,2" />
-                        <ComboBox x:Name="CB_ShotPrio_09" Height="20" ItemsSource="{Binding Path=ShotList}" SelectedIndex="{Binding Path=PriorityIndex9, Mode=TwoWay}" Grid.Column="1" Grid.Row="22" Margin="4,2" Grid.ColumnSpan="2" />
-                        <dataInput:Label x:Name="LB_ShotPrio_10" Content="Priority 10:" Grid.Row="23" Margin="4,2" />
-                        <ComboBox x:Name="CB_ShotPrio_10" Height="20" ItemsSource="{Binding Path=ShotList}" SelectedIndex="{Binding Path=PriorityIndex10, Mode=TwoWay}" Grid.Column="1" Grid.Row="23" Margin="4,2" Grid.ColumnSpan="2" />
+
                     </Grid>
                 </ScrollViewer>
             </controls:TabItem>
@@ -243,6 +215,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -259,18 +232,19 @@
                     <dataInput:Label x:Name="LB_SurvScale" HorizontalAlignment="Stretch" Content="Survivability Scale:" Grid.Column="0" Grid.Row="2" Margin="4,2" VerticalAlignment="Stretch" Grid.ColumnSpan="3" />
                     <inputToolkit:NumericUpDown x:Name="NUD_SurvScale" HorizontalAlignment="Stretch" Value="{Binding SurvScale, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="10" Increment="0.1" DecimalPlaces="1" Grid.Column="3" Grid.Row="2" Margin="4,2" VerticalAlignment="Stretch" Height="20" Grid.ColumnSpan="3" />
                     <CheckBox x:Name="CK_SE_UseDur" Content="Use Duration for Special Effects" IsChecked="{Binding SE_UseDur, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Column="0" Grid.Row="3" Margin="4,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.ColumnSpan="6" />
-                    <dataInput:Label x:Name="LB_StatsGraph" VerticalAlignment="Stretch" Content="Stats Graph" FontWeight="Bold" IsEnabled="False" Grid.Row="5" Margin="4" HorizontalAlignment="Stretch" Grid.ColumnSpan="6" Visibility="Collapsed" />
-                    <CheckBox x:Name="CK_StatsAgility" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="Agility" IsEnabled="False" Grid.Row="6" Margin="4,2" Grid.ColumnSpan="3" IsChecked="{Binding Path=StatsList[0], Mode=TwoWay}" Visibility="Collapsed" />
-                    <CheckBox x:Name="CK_StatsAP" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="Attack Power" IsEnabled="False" Grid.Row="7" Margin="4,2" Grid.ColumnSpan="3" IsChecked="{Binding Path=StatsList[1], Mode=TwoWay}" Visibility="Collapsed" />
-                    <CheckBox x:Name="CK_StatsCrit" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="Crit Rating" IsEnabled="False" Grid.Row="8" Margin="4,2" Grid.ColumnSpan="3" IsChecked="{Binding Path=StatsList[2], Mode=TwoWay}" Visibility="Collapsed" />
-                    <CheckBox x:Name="CK_StatsHaste" VerticalAlignment="Stretch" Content="Haste" d:LayoutOverrides="Width" IsEnabled="False" Grid.Row="6" Margin="4,2" HorizontalAlignment="Stretch" Grid.Column="3" Grid.ColumnSpan="3" IsChecked="{Binding Path=StatsList[4], Mode=TwoWay}" Visibility="Collapsed" />
-                    <!--<CheckBox x:Name="CK_StatsArP" VerticalAlignment="Stretch" Content="Armor Pen Rating" d:LayoutOverrides="Width" IsEnabled="False" Grid.Row="7" Margin="4,2" HorizontalAlignment="Stretch" Grid.Column="3" Grid.ColumnSpan="3" IsChecked="{Binding Path=StatsList[5], Mode=TwoWay}" Visibility="Collapsed" />-->
-                    <CheckBox x:Name="CK_StatsHit" VerticalAlignment="Stretch" Content="Hit Rating" d:LayoutOverrides="Width" IsEnabled="False" Grid.Row="8" Margin="4,2" HorizontalAlignment="Stretch" Grid.Column="3" Grid.ColumnSpan="3" IsChecked="{Binding Path=StatsList[3], Mode=TwoWay}" Visibility="Collapsed" />
-                    <dataInput:Label x:Name="LB_StatsRatingToGraph" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="Rating to Graph" IsEnabled="False" Grid.Row="9" Margin="4,2" Grid.ColumnSpan="2" Visibility="Collapsed" />
-                    <ComboBox x:Name="CB_CalculationToGraph" VerticalAlignment="Stretch" IsEnabled="False" Grid.Row="9" Margin="4,2" HorizontalAlignment="Stretch" Grid.Column="2" Height="20" Grid.ColumnSpan="4" SelectedItem="{Binding Path=CalculationToGraph, Mode=TwoWay}" Visibility="Collapsed" />
-                    <dataInput:Label x:Name="LB_StatsIncrement" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Content="Increment:" IsEnabled="False" Grid.Row="10" Margin="4,2" Grid.ColumnSpan="2" Visibility="Collapsed" />
-                    <inputToolkit:NumericUpDown x:Name="NUD_StatsIncrement" VerticalAlignment="Stretch" Maximum="5000" Value="{Binding Path=StatsIncrement, Mode=TwoWay}" HorizontalAlignment="Stretch" IsEnabled="False" Grid.Row="10" Margin="4,2" Grid.Column="2" Height="20" Visibility="Collapsed" />
-                    <Button x:Name="BT_StatsGraph" VerticalAlignment="Stretch" Content="Display Stats Graph" IsEnabled="False" Grid.Row="10" Margin="4,2" HorizontalAlignment="Stretch" Height="20" Grid.Column="3" Grid.ColumnSpan="3" Visibility="Collapsed" />
+
+                    <dataInput:Label x:Name="LB_StatsGraph" VerticalAlignment="Stretch" Content="Stats Graph" FontWeight="Bold" Grid.Row="5" Margin="4" HorizontalAlignment="Stretch" Grid.ColumnSpan="6" />
+                    <CheckBox x:Name="CK_StatsAgility" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="Agility" Grid.Row="6" Margin="4,2" Grid.ColumnSpan="3" IsChecked="{Binding Path=StatsList[0], Mode=TwoWay}" />
+                    <CheckBox x:Name="CK_StatsAP" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="Attack Power" Grid.Row="7" Margin="4,2" Grid.ColumnSpan="3" IsChecked="{Binding Path=StatsList[1], Mode=TwoWay}" />
+                    <CheckBox x:Name="CK_StatsCrit" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="Crit Rating" Grid.Row="8" Margin="4,2" Grid.ColumnSpan="3" IsChecked="{Binding Path=StatsList[2], Mode=TwoWay}" />
+                    <CheckBox x:Name="CK_StatsHaste" VerticalAlignment="Stretch" Content="Haste" d:LayoutOverrides="Width" Grid.Row="6" Margin="4,2" HorizontalAlignment="Stretch" Grid.Column="3" Grid.ColumnSpan="3" IsChecked="{Binding Path=StatsList[4], Mode=TwoWay}" />
+                    <CheckBox x:Name="CK_StatsHit" VerticalAlignment="Stretch" Content="Hit Rating" d:LayoutOverrides="Width" Grid.Row="8" Margin="4,2" HorizontalAlignment="Stretch" Grid.Column="3" Grid.ColumnSpan="3" IsChecked="{Binding Path=StatsList[3], Mode=TwoWay}" />
+                    <CheckBox x:Name="CK_StatsMastery" VerticalAlignment="Stretch" Content="Mastery Rating" d:LayoutOverrides="Width" Grid.Row="7" Margin="4,2" HorizontalAlignment="Stretch" Grid.Column="3" Grid.ColumnSpan="3" IsChecked="{Binding Path=StatsList[5], Mode=TwoWay}" />
+                    <dataInput:Label x:Name="LB_StatsRatingToGraph" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="Rating to Graph" Grid.Row="9" Margin="4,2" Grid.ColumnSpan="2" />
+                    <ComboBox x:Name="CB_CalculationToGraph" VerticalAlignment="Stretch" Grid.Row="9" Margin="4,2" HorizontalAlignment="Stretch" Grid.Column="2" Height="20" Grid.ColumnSpan="4" SelectedItem="{Binding Path=CalculationToGraph, Mode=TwoWay}" />
+                    <dataInput:Label x:Name="LB_StatsIncrement" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Content="Increment:" Grid.Row="10" Margin="4,2" Grid.ColumnSpan="2" />
+                    <inputToolkit:NumericUpDown x:Name="NUD_StatsIncrement" VerticalAlignment="Stretch" Maximum="5000" Value="{Binding Path=StatsIncrement, Mode=TwoWay}" HorizontalAlignment="Stretch" Grid.Row="10" Margin="4,2" Grid.Column="2" Height="20" />
+                    <Button x:Name="BT_StatsGraph" VerticalAlignment="Stretch" Content="Display Stats Graph" Grid.Row="10" Margin="4,2" HorizontalAlignment="Stretch" Height="20" Grid.Column="3" Grid.ColumnSpan="3"  Click="BT_StatsGraph_Click" />
                 </Grid>
             </controls:TabItem>
         </controls:TabControl>

@@ -55,26 +55,8 @@ namespace Rawr.Hunter
             get { return _AspectUsage; }
             set { _AspectUsage = value; OnPropertyChanged("AspectUsage"); }
         }
-        public bool _UseBeastDuringBestialWrath = true;
-        public bool UseBeastDuringBestialWrath
-        {
-            get { return _UseBeastDuringBestialWrath; }
-            set { _UseBeastDuringBestialWrath = value; OnPropertyChanged("UseBeastDuringBestialWrath"); }
-        }
-        public bool _UseRotationTest = true;
-        public bool UseRotationTest
-        {
-            get { return _UseRotationTest; }
-            set { _UseRotationTest = value; OnPropertyChanged("UseRotationTest"); }
-        }
-        public bool _RandomizeProcs = false;
-        public bool RandomizeProcs
-        {
-            get { return _RandomizeProcs; }
-            set { _RandomizeProcs = value; OnPropertyChanged("RandomizeProcs"); }
-        }
         #endregion
-
+#if FALSE
         #region Rotations Tab
         public int _PriorityIndex1 = 0;
         public int PriorityIndex1
@@ -161,6 +143,7 @@ namespace Rawr.Hunter
             }
         }
         #endregion
+#endif
 
         #region Pet Tab
         [XmlIgnore]
@@ -320,7 +303,6 @@ namespace Rawr.Hunter
         private bool _useKillCommand = true;
         private float _gcdsToLayImmoTrap = 2.0f; // not editable
         private float _gcdsToLayExploTrap = 2.0f; // not editable
-        private float _gcdsToVolley = 4.0f; // not editable, 6 seconds
         private Shots _LALShotToUse = Shots.ExplosiveShot; // not editable
         private int _LALShotsReplaced = 2; // not editable
         private float _LALProcChance = 2; // not editable
@@ -328,12 +310,11 @@ namespace Rawr.Hunter
         public bool useKillCommand { get { return _useKillCommand; } set { _useKillCommand = value; OnPropertyChanged("useKillCommand"); } }
         public float gcdsToLayImmoTrap { get { return _gcdsToLayImmoTrap; } set { _gcdsToLayImmoTrap = value; OnPropertyChanged("gcdsToLayImmoTrap"); } }
         public float gcdsToLayExploTrap { get { return _gcdsToLayExploTrap; } set { _gcdsToLayExploTrap = value; OnPropertyChanged("gcdsToLayExploTrap"); } }
-        public float gcdsToVolley { get { return _gcdsToVolley; } set { _gcdsToVolley = value; OnPropertyChanged("gcdsToVolley"); } }
         public Shots LALShotToUse { get { return _LALShotToUse; } set { _LALShotToUse = value; OnPropertyChanged("LALShotToUse"); } }
         public int LALShotsReplaced { get { return _LALShotsReplaced; } set { _LALShotsReplaced = value; OnPropertyChanged("LALShotsReplaced"); } }
         public float LALProcChance { get { return _LALProcChance; } set { _LALProcChance = value; OnPropertyChanged("LALProcChance"); } }
         #endregion
-
+#if FALSE
         #region Shots
         [XmlIgnore]
         public static Shot None = new Shot(0, "None");
@@ -451,89 +432,7 @@ namespace Rawr.Hunter
         });
         #endregion
         #endregion
-
-        /*private bool[] _Maintenance;
-        public enum Maintenances
-        {
-            _RageGen__ = 0,
-            BerserkerRage_,
-            Bloodrage_,
-            _Maintenance__,
-            ShoutChoice_,
-            BattleShout_,
-            CommandingShout_,
-            DemoralizingShout_,
-            SunderArmor_,
-            ThunderClap_,
-            Hamstring_,
-            _Periodics__,
-            ShatteringThrow_,
-            SweepingStrikes_,
-            DeathWish_,
-            Recklessness_,
-            EnragedRegeneration_,
-            _DamageDealers__,
-            Fury_,
-            Whirlwind_,
-            Bloodthirst_,
-            Bloodsurge_,
-            Arms_,
-            Bladestorm_,
-            MortalStrike_,
-            Rend_,
-            Overpower_,
-            TasteForBlood_,
-            SuddenDeath_,
-            Slam_,
-            ExecuteSpam_,
-            _RageDumps__,
-            Cleave_,
-            HeroicStrike_
-        };
-        public bool[] Maintenance
-        {
-            get
-            {
-                return _Maintenance ??
-                    (_Maintenance = new bool[] {
-                        true,  // == Rage Gen ==
-                            true,  // Berserker Rage
-                            true,  // Bloodrage
-                        false, // == Maintenance ==
-                            false, // Shout Choice
-                                false, // Battle Shout
-                                false, // Commanding Shout
-                            false, // Demoralizing Shout
-                            false, // Sunder Armor
-                            false, // Thunder Clap
-                            false, // Hamstring
-                        true,  // == Periodics ==
-                            true,  // Shattering Throw
-                            true,  // Sweeping Strikes
-                            true,  // DeathWish
-                            true,  // Recklessness
-                            false, // Enraged Regeneration
-                        true,  // == Damage Dealers ==
-                            true,  // Fury
-                                true,  // Whirlwind
-                                true,  // Bloodthirst
-                                true,  // Bloodsurge
-                            true,  // Arms
-                                true,  // Bladestorm
-                                true,  // Mortal Strike
-                                true,  // Rend
-                                true,  // Overpower
-                                true,  // Taste for Blood
-                                true,  // Sudden Death
-                                true,  // Slam
-                            true,  // <20% Execute Spamming
-                        true,  // == Rage Dumps ==
-                            true,  // Cleave
-                            true   // Heroic Strike
-                    });
-            }
-            set { _Maintenance = value; OnPropertyChanged("Maintenance"); }
-        }*/
+#endif
 
         #region ICalculationOptionBase Members
         public string GetXml()
@@ -555,6 +454,7 @@ namespace Rawr.Hunter
         }
         #endregion
     }
+#if FALSE
     public class Shot
     {
         public Shot(int index, string name) { Index = index; Name = name; }
@@ -578,4 +478,6 @@ namespace Rawr.Hunter
         }
         public bool Equals(List<Shot> shots2Compare) { return (ShotList == shots2Compare); }
     }
+    #endif
+
 }

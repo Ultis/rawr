@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Rawr.Hunter.Skills;
+using Rawr.Base.Algorithms;
 
 namespace Rawr.Hunter {
     /// <summary>
@@ -83,9 +84,14 @@ namespace Rawr.Hunter {
             return dur;
         }
 
-        public void AddSegment(float fTimeInSec)
+        /// <summary>
+        /// Pass in the ammount of time that passes.  This moves the time pointer along the course of the fight.
+        /// </summary>
+        /// <param name="fTimeInSec">Time in Seconds</param>
+        public FightStage AddSegment(float fTimeInSec)
         {
             _TimePointer += fTimeInSec;
+            return CurrentStage;
         }
 
         public FightStage CurrentStage 
@@ -198,6 +204,8 @@ namespace Rawr.Hunter {
         public Skills.SteadyShot Steady;
         public Skills.CobraShot Cobra;
         public Skills.AimedShot Aimed;
+        public Skills.MMMAimedShot MMMAimed;
+        public Skills.CAAimedShot CAAimed;
         public Skills.ArcaneShot Arcane;        
         public Skills.ChimeraShot ChimeraShot;
         // Generic
@@ -222,8 +230,8 @@ namespace Rawr.Hunter {
         public Skills.FreezingTrap Freezing;
         public Skills.FrostTrap Frost;
 
-        public float _Steady_DPS = 0f, _Steady_HPS = 0f, _Steady_GCDs = 0f;
-        public float _Multi_DPS = 0f, _Multi_HPS = 0f, _Multi_GCDs = 0f;
+        public float _Steady_DPS = 0f, _Steady_GCDs = 0f;
+        public float _Multi_DPS = 0f, _Multi_GCDs = 0f;
         
         #endregion
 
@@ -281,6 +289,7 @@ namespace Rawr.Hunter {
             doIterations();
 
             float iActions = WhiteAtks.RwActivates;
+#if false
             iActions += AbilityList[typeof(SteadyShot)].numActivates;
             iActions += AbilityList[typeof(CobraShot)].numActivates;
             iActions += AbilityList[typeof(MultiShot)].numActivates;
@@ -289,13 +298,34 @@ namespace Rawr.Hunter {
             iActions += AbilityList[typeof(AimedShot)].numActivates;
             iActions += AbilityList[typeof(ChimeraShot)].numActivates;
             iActions += AbilityList[typeof(KillShot)].numActivates;
-            iActions += AbilityList[typeof(SerpentSting)].numActivates;
+            iActions += AbilityList[typeof(SerpentSting)].numActivates; 
+#endif
 
+            #region WildQuiver
             if (FightDuration > 0)
             {
                 float numWQProcs = (iActions * calcs.Hunter.MasteryRatePercent);
                 calcs.WildQuiverDPS = (numWQProcs * WhiteAtks.RwDamageOnUse) / FightDuration;
             }
+            #endregion
+
+            #region Piercing Shots
+            if (Talents.PiercingShots > 0)
+            {
+                float PiercingShotsPerc = Talents.PiercingShots * .1f;
+                float SScritRate = AbilityList[typeof(SteadyShot)].ability.GetXActs(AttackTableSelector.Crit, 1);
+                calcs.PiercingShotsDPSSteadyShot = AbilityList[typeof(SteadyShot)].DPS * SScritRate * PiercingShotsPerc;
+                float CScritRate = AbilityList[typeof(ChimeraShot)].ability.GetXActs(AttackTableSelector.Crit, 1);
+                calcs.PiercingShotsDPSChimeraShot = AbilityList[typeof(ChimeraShot)].DPS * CScritRate * PiercingShotsPerc;
+                float AScritRate = AbilityList[typeof(AimedShot)].ability.GetXActs(AttackTableSelector.Crit, 1);
+                calcs.PiercingShotsDPSAimedShot = AbilityList[typeof(AimedShot)].DPS * AScritRate * PiercingShotsPerc;
+                float MMMAScritRate = AbilityList[typeof(MMMAimedShot)].ability.GetXActs(AttackTableSelector.Crit, 1);
+                calcs.PiercingShotsDPSAimedShot += AbilityList[typeof(MMMAimedShot)].DPS * MMMAScritRate * PiercingShotsPerc;
+                float CAAScritRate = AbilityList[typeof(CAAimedShot)].ability.GetXActs(AttackTableSelector.Crit, 1);
+                calcs.PiercingShotsDPSAimedShot += AbilityList[typeof(CAAimedShot)].DPS * CAAScritRate * PiercingShotsPerc;
+            }
+            #endregion
+
             float fDPS = WhiteAtks.RwDPS;
             fDPS += calcs.WildQuiverDPS;
             fDPS += AbilityList[typeof(SteadyShot)].DPS;
@@ -303,10 +333,13 @@ namespace Rawr.Hunter {
             fDPS += AbilityList[typeof(MultiShot)].DPS;
             fDPS += AbilityList[typeof(ArcaneShot)].DPS;
             fDPS += AbilityList[typeof(ExplosiveShot)].DPS;
+            fDPS += AbilityList[typeof(MMMAimedShot)].DPS;
+            fDPS += AbilityList[typeof(CAAimedShot)].DPS;
             fDPS += AbilityList[typeof(AimedShot)].DPS;
             fDPS += AbilityList[typeof(ChimeraShot)].DPS;
             fDPS += AbilityList[typeof(KillShot)].DPS;
             fDPS += AbilityList[typeof(SerpentSting)].DPS;
+            fDPS += calcs.PiercingShotsDPS;
             calcs.CustomDPS = fDPS;
 
             #region Populate the display values.
@@ -323,14 +356,15 @@ namespace Rawr.Hunter {
 
             // Spec specific.
             calcs.Explosive = AbilityList[typeof(ExplosiveShot)]; // SV
-            calcs.BlackArrowD = BlackArrowD; // SV
+            //calcs.BlackArrowD = BlackArrowD; // SV
             calcs.Aimed = this.AbilityList[typeof(AimedShot)]; // MM
+            calcs.MMMAimed = this.AbilityList[typeof(MMMAimedShot)]; // MM
+            calcs.CAAimed = this.AbilityList[typeof(CAAimedShot)]; // MM
             calcs.Chimera = this.AbilityList[typeof(ChimeraShot)]; // MM
             // calcs.Intimidate = Intimidate; // BM
             calcs.Bestial = Bestial; // BM
 
             // Generic
-            calcs.Piercing = Piercing;
             calcs.Kill = AbilityList[typeof(KillShot)];
 
             // Buffs
@@ -408,6 +442,10 @@ namespace Rawr.Hunter {
             AddAbility(new AbilWrapper(BlackArrowD));
             Aimed = new Skills.AimedShot(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
             AddAbility(new AbilWrapper(Aimed));
+            CAAimed = new Skills.CAAimedShot(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            AddAbility(new AbilWrapper(CAAimed));
+            MMMAimed = new Skills.MMMAimedShot(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            AddAbility(new AbilWrapper(MMMAimed)); 
             ChimeraShot = new Skills.ChimeraShot(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
             AddAbility(new AbilWrapper(ChimeraShot));
             //Skills.Ability Intimidate = new Skills.Intimidate(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
@@ -446,189 +484,54 @@ namespace Rawr.Hunter {
         {
             if (this.Char.Ranged == null) return;
 
-            // Opening: first 10 % health.  Terrible hack at this point.
-            float fBodyDur = this.BossOpts.BerserkTimer;
-            float fOpeningDur = this.BossOpts.BerserkTimer * .1f;
-            fBodyDur -= fOpeningDur;
-            float fKSDur = this.BossOpts.BerserkTimer * (float)(this.BossOpts.Under35Perc + this.BossOpts.Under20Perc);
-            fBodyDur -= fKSDur;
-
-            List<AbilWrapper> AL = GetDamagingAbilities();
-
+            HunterStateSpaceGenerator HSSG;
+            MarkovProcess<AbilWrapper> mp;
 
             // For starters lets build up what the rotation would look like for a given Spec:
             #region  BM
-            if (GetRotationType(Talents) == RotationType.BeastMastery)
-            { }
+            if ((TalentTrees)Talents.HighestTree == TalentTrees.BeastMastery)
+            { 
+                // Normal Rotation:
+                //    Focus Fire when it’s ready
+                //    Kill Shot (if available)
+                //    Kill Command
+                //    Arcane Shot
+                //    Cobra Shot
+            }
             #endregion
             #region MM
-            else /*if (GetRotationType(Talents) == RotationType.Marksmanship)*/
+            else if ((TalentTrees)Talents.HighestTree == TalentTrees.Marksmanship)
             {
-                // Taken from:
-                // http://www.warcrafthuntersunion.com/2010/11/cataclysm-mm-hunter-shot-rotation-guide/
+                HSSG = new HunterStateSpaceGenerator(Talents, Fight); // Setup State Space.
+                HSSG.AbilityList = AbilityList;
+                List<State<AbilWrapper>> SSpace = HSSG.GenerateStateSpace();
+                mp = new MarkovProcess<AbilWrapper>(SSpace); // Generate weightings for each ability.
 
-                // Setup:  
-                // TODO: Assume Hunter's Mark
-                // TODO: Assume AOTHawk
-
-                // TODO: Check movement rate
-                #region Opening
-                // Open with RapidFire/Readiness/RapidFire
-                //      Aimed Shot procs (instant cast from Master Marksman procs)
-                //      Aimed Shot hardcast (manually casting the 2.9-second cast version)
-                //      Steady Shot
-                // May replace some of this if movement is high, for SerpentSting & Chimera to refresh.
-                // For now, static fight.
-                Fight.PercTimeForOpening = .1f;
-                // start w/ SS x2 to get ISS
-                Ability current = AbilityList[typeof(SteadyShot)].ability;
-                float SSCast2 = current.CastTime * 2;
-                float SSCast2ISS = SSCast2 / 1.15f;
-                float fISSDur = 8; // duration of ISS == 8 Sec.
-                int numActions = 0;
-                int ssCount = 0;
-                float CAAimedShots = 0; // Aimed shots with health > 90%
-                AbilityList[typeof(SteadyShot)].numActivates += 2; // ISS
-                Fight.AddSegment(SSCast2);
-                ssCount += 2;
-                while (Fight.CurrentStage == FightStage.Opening)
+                foreach (KeyValuePair<AbilWrapper, double> kvp in mp.AbilityWeight)
                 {
-                    // Master Marksman procs are after average of 8.33 SS.
-                    // Aimed during ISS Dur
-                    // We get bonus to Crit for these values only during Opening.
-                    current = AbilityList[typeof(AimedShot)].ability;
-                    // Aimed Shot Procs.
-                    if (GetAimedShotProc(ssCount))
-                    {
-                        AbilityList[typeof(AimedShot)].numActivates++;
-                        Fight.AddSegment(LatentGCD); 
-                        ssCount = 0;
-                    }
-                    // Bulk adds of the Aimed Shot within either:
-                    // ** How much time left in the phase to cast Aimed while ISS is still active.
-                    // ** How many Aimed Shots can we squeeze in an ISS duration.
-                    // Then refresh ISS.
-                    // TODO: Limited by Focus.
-                    numActions = (int)(Math.Min((Fight.TimeRemainingInStage / (current.CastTime / 1.15f)), (fISSDur - (SSCast2ISS + (ssCount == 0 ? 1 : 0)) )) / (current.CastTime / 1.15f));
-                    AbilityList[typeof(AimedShot)].numActivates += numActions;
-                    Fight.AddSegment(numActions * (current.CastTime / 1.15f));
-                    // Refresh ISS
-                    current = AbilityList[typeof(SteadyShot)].ability;
-                    numActions = 2;
-                    ssCount += numActions;
-                    AbilityList[typeof(SteadyShot)].numActivates += numActions; // ISS
-                    Fight.AddSegment(SSCast2ISS);
+                    kvp.Key.AbilityWeight = kvp.Value;
+                    kvp.Key.DPS = kvp.Key.Damage / (float)mp.AverageTransitionDuration;
                 }
-                #endregion
-                CAAimedShots = AbilityList[typeof(AimedShot)].numActivates;
-
-                #region Body: Above 35% health
-                //    Chimera Shot - Limited by CD.
-                //    Only need to do this once for this phase.
-                current = AbilityList[typeof(ChimeraShot)].ability;
-                float fCSCD = AbilityList[typeof(ChimeraShot)].ability.Cd;
-                numActions = (int)(Fight.TimeRemainingInStage / (fCSCD));
-                AbilityList[typeof(ChimeraShot)].numActivates += numActions;
-                Fight.AddSegment(numActions * LatentGCD);
-                while (Fight.CurrentStage == FightStage.Body)
-                {
-                    // Squeeze the rest of this in between CS's above
-                    // Reset Cooldown length.
-                    fCSCD = AbilityList[typeof(ChimeraShot)].ability.Cd;
-                    // Aimed Shot Procs.
-                    if (GetAimedShotProc(ssCount))
-                    {
-                        AbilityList[typeof(AimedShot)].numActivates++;
-                        Fight.AddSegment(LatentGCD); // just a GCD.
-                        ssCount = 0;
-                        // consume 1 GCD of the Cobra Shot CD.
-                        fCSCD--;
-                    }
-                    //    Arcane Shot - Limited by Focus
-                    // Consume the rest of the CD with Arcanes for now.  We'll worry about the focus later.
-                    fCSCD -= SSCast2ISS;
-                    current = AbilityList[typeof(ArcaneShot)].ability;
-                    numActions = (int)(Math.Min(fCSCD, (fISSDur - (SSCast2ISS + (ssCount == 0 ? 1 : 0)))));
-                    AbilityList[typeof(ArcaneShot)].numActivates += numActions; // ISS
-                    Fight.AddSegment(numActions * LatentGCD);
-                    //    Steady Shot (in pairs)
-                    current = AbilityList[typeof(SteadyShot)].ability;
-                    numActions = 2;
-                    ssCount += numActions;
-                    AbilityList[typeof(SteadyShot)].numActivates += numActions; // ISS
-                    Fight.AddSegment(SSCast2ISS);
-                    // TODO: Setup some eject if the CSCD > TimeLeftInStage
-                }
-                #endregion
-                // This transition may happen mid CobraShot CD.
-                #region Kill Shot time.
-                //    Chimera Shot - Limited by CD.
-                //    Only need to do this once for this phase.
-                current = AbilityList[typeof(ChimeraShot)].ability;
-                fCSCD = AbilityList[typeof(ChimeraShot)].ability.Cd;
-                numActions = (int)(Fight.TimeRemainingInStage / (fCSCD));
-                AbilityList[typeof(ChimeraShot)].numActivates += numActions;
-                float totalCSCDTime = fCSCD * numActions;
-                int numCS = numActions;
-                Fight.AddSegment(numActions * LatentGCD);
-                //    Kill Shot - limited by CD.
-                float fKSCD = AbilityList[typeof(KillShot)].ability.Cd;
-                current = AbilityList[typeof(KillShot)].ability;
-                numActions = (int)(Fight.TimeRemainingInStage / (fKSCD));
-                AbilityList[typeof(KillShot)].numActivates += numActions;
-                Fight.AddSegment(numActions * LatentGCD);
-                // Reduce the overall average CSCD by those consumed by KS.
-                float remainingTotalCSCDTime = totalCSCDTime - (fKSCD * numActions);
-                float BaseCSCDTime = remainingTotalCSCDTime / numCS; 
-                while ((Fight.CurrentStage == FightStage.Below35
-                    || Fight.CurrentStage == FightStage.Below20)
-                    && Fight.TimeRemaining > 0)
-                {
-                    // Squeeze the rest of this in between CS's above
-                    // Reset Cooldown length.
-                    fCSCD = BaseCSCDTime;
-                    // Aimed Shot Procs.
-                    if (GetAimedShotProc(ssCount))
-                    {
-                        AbilityList[typeof(AimedShot)].numActivates++;
-                        Fight.AddSegment(LatentGCD); // just a GCD.
-                        ssCount = 0;
-                        // consume 1 GCD of the Cobra Shot CD.
-                        fCSCD--;
-                    }
-                    //    Arcane Shot - Limited by Focus
-                    // Consume the rest of the CD with Arcanes for now.  We'll worry about the focus later.
-                    fCSCD -= SSCast2ISS;
-                    current = AbilityList[typeof(ArcaneShot)].ability;
-                    numActions = (int)(Math.Min(fCSCD, (fISSDur - (SSCast2ISS + (ssCount == 0 ? 1 : 0)))));
-                    AbilityList[typeof(ArcaneShot)].numActivates += numActions; // ISS
-                    Fight.AddSegment(numActions * LatentGCD);
-                    //    Steady Shot (in pairs)
-                    current = AbilityList[typeof(SteadyShot)].ability;
-                    numActions = 2;
-                    ssCount += numActions;
-                    AbilityList[typeof(SteadyShot)].numActivates += numActions; // ISS
-                    Fight.AddSegment(SSCast2ISS);
-                }
-                #endregion
-                float TotalAimedShots = AbilityList[typeof(AimedShot)].numActivates;
-                AbilityList[typeof(AimedShot)].ability.BonusCritChance += (CAAimedShots / TotalAimedShots) * (.3f * Talents.CarefulAim);
-                
             }
             #endregion
-
-            // SV
-        }
-
-        private bool GetAimedShotProc(int ssCount)
-        {
-            float fMM = Talents.MasterMarksman * .2f;
-            if (fMM > 0)
+            #region SV
+            else if ((TalentTrees)Talents.HighestTree == TalentTrees.Marksmanship)
             {
-                return ssCount > (5f / fMM);
+                // Normal Rotation:
+                //    Explosive Shot
+                //    Kill Shot (if available)
+                //    Black Arrow
+                //    Arcane Shot
+                //    Cobra Shot
+
+                // Lock & Load Rotation:
+                //    Explosive Shot
+                //    Cobra Shot (or Kill Command if you’re almost full on focus)
+                //    Explosive Shot
+                //    Cobra Shot (or Arcane Shot if you know you have plenty of focus for the next Black Arrow)
+                //    Explosive Shot
             }
-            else
-                return false;
+            #endregion
         }
 
         public void InvalidateCache()
@@ -640,7 +543,7 @@ namespace Rawr.Hunter {
         #region Attacks over Duration
         public enum ShotResult : int { Attempt=0, Land, Crit };
         [Flags]
-        public enum AttackType : int { Yellow, White}; // this should be [Flags] were Yellow & White are the flags so that Both would be Yellow + White
+        public enum AttackType : int { Yellow = 1 << 0, White = 1 << 1}; // this should be [Flags] were Yellow & White are the flags so that Both would be Yellow + White
         private float[,] _atkOverDurs = new float[EnumHelper.GetCount(typeof(ShotResult)), EnumHelper.GetCount(typeof(AttackType))];
         public float GetAttackOverDuration(ShotResult shotResult, AttackType attackType)
         {
@@ -656,7 +559,7 @@ namespace Rawr.Hunter {
             float mod;
             CombatTable table;
 
-            if ((at & AttackType.Yellow) == AttackType.Yellow) 
+            if (at.HasFlag(AttackType.Yellow))
             {
                 foreach (AbilWrapper abil in GetDamagingAbilities())
                 {
@@ -666,7 +569,7 @@ namespace Rawr.Hunter {
                     count += abil.numActivates * abil.ability.AvgTargets * abil.ability.SwingsPerActivate * mod;
                 }
             }
-            if ((at & AttackType.White) == AttackType.White) 
+            if (at.HasFlag(AttackType.White)) 
             {
                 table = WhiteAtks.RWAtkTable;
                 mod = GetTableFromSwingResult(sr, table);
@@ -726,45 +629,6 @@ namespace Rawr.Hunter {
                 }
                 return focus;
             }
-        }
-        #endregion
-
-        #region AddAnItem(s)
-        /// <summary>
-        /// Adds every maintenance ability to the rotation
-        /// </summary>
-        /// <param name="totalPercTimeLost">Time lost due to Boss Handler options</param>
-        /// <returns>Change in focus from these abilities</returns>
-        protected float DoMaintenanceActivates(float totalPercTimeLost)
-        {
-            float netFocus = 0f;
-
-            foreach (AbilWrapper aw in GetMaintenanceAbilities())
-            {
-                netFocus += AddMaintenanceAbility(totalPercTimeLost, aw);
-            }
-            if (netFocus != 0f && _needDisplayCalcs) GCDUsage += Environment.NewLine;
-            return netFocus;
-        }
-
-        /// <summary>
-        /// Adds a maintenance ability to the rotation if it's been validated
-        /// </summary>
-        /// <param name="totalPercTimeLost">Time lost due to stun/fear/movement</param>
-        /// <param name="abil">The ability to add</param>
-        /// <returns>The final result from Abil.GetManaUseOverDur</returns>
-        private float AddMaintenanceAbility(float totalPercTimeLost, AbilWrapper aw)
-        {
-            if (!aw.ability.Validated) return 0f;
-
-            float Abil_GCDs = Math.Min(GCDsAvailable, aw.ability.Activates * (1f - totalPercTimeLost));
-            aw.numActivates = Abil_GCDs;
-            //availGCDs -= Abil_GCDs;
-            if (_needDisplayCalcs && Abil_GCDs > 0)
-                GCDUsage += Abil_GCDs.ToString("000.00") + " : " + aw.ability.Name + (aw.ability.UsesGCD ? "\n" : "(Doesn't use GCDs)\n");
-
-            _DPS_TTL += aw.DPS;
-            return aw.ability.GetFocusUseOverDur(Abil_GCDs);
         }
         #endregion
 
@@ -1116,88 +980,6 @@ namespace Rawr.Hunter {
             return percTimeInMovement;*/
         }
         #endregion
-
-        public void AddValidatedSpecialEffects(Stats statsTotal, HunterTalents talents)
-        {
-            /*Ability ST = GetWrapper<ShatteringThrow>().ability,
-                    BTS = GetWrapper<BattleShout>().ability,
-                    CS = GetWrapper<CommandingShout>().ability,
-                    DS = GetWrapper<DemoralizingShout>().ability,
-                    TH = GetWrapper<ThunderClap>().ability,
-                    SN = GetWrapper<SunderArmor>().ability,
-                    SW = GetWrapper<SweepingStrikes>().ability,
-                    RK = GetWrapper<Recklessness>().ability;
-            if (ST.Validated)
-            {
-                SpecialEffect shatt = new SpecialEffect(Trigger.Use,
-                    new Stats() { ArmorPenetration = 0.20f, },
-                    ST.Duration, ST.Cd,
-                    ST.RWAtkTable.AnyLand);
-                statsTotal.AddSpecialEffect(shatt);
-            }
-            if (BTS.Validated)
-            {
-                SpecialEffect bs = new SpecialEffect(Trigger.Use,
-                    new Stats() { AttackPower = (548f * (1f + talents.CommandingPresence * 0.05f)), },
-                    BTS.Duration, BTS.Cd);
-                statsTotal.AddSpecialEffect(bs);
-            }
-            if (CS.Validated)
-            {
-                //float value = (2255f * (1f + talents.CommandingPresence * 0.05f));
-                SpecialEffect cs = new SpecialEffect(Trigger.Use,
-                    new Stats() { Health = 2255f * (1f + talents.CommandingPresence * 0.05f), },
-                    CS.Duration, CS.Cd);
-                statsTotal.AddSpecialEffect(cs);
-            }
-            if (DS.Validated)
-            {
-                //float value = (410f * (1f + talents.ImprovedDemoralizingShout * 0.08f));
-                SpecialEffect ds = new SpecialEffect(Trigger.Use,
-                    new Stats() { BossAttackPower = 410f * (1f + talents.ImprovedDemoralizingShout * 0.08f) * -1f, },
-                    DS.Duration, DS.Cd);
-                statsTotal.AddSpecialEffect(ds);
-            }
-            if (TH.Validated)
-            {
-                //float value = (0.10f * (1f + (float)Math.Ceiling(talents.ImprovedThunderClap * 10f / 3f) / 100f));
-                SpecialEffect tc = new SpecialEffect(Trigger.Use,
-                    new Stats() { BossAttackSpeedMultiplier = (-0.10f * (1f + talents.ImprovedThunderClap / 30f)), },
-                    TH.Duration, TH.Cd, TH.RWAtkTable.AnyLand);
-                statsTotal.AddSpecialEffect(tc);
-            }
-            if (SN.Validated)
-            {
-                //float value = 0.04f;
-                SpecialEffect sn = new SpecialEffect(Trigger.Use,
-                    new Stats() { ArmorPenetration = 0.04f, },
-                    SN.Duration, SN.Cd, SN.RWAtkTable.AnyLand, 5);
-                statsTotal.AddSpecialEffect(sn);
-            }
-            float landedAtksInterval = LandedAtksOverDur / CalcOpts.Duration;
-            float critRate = CriticalAtksOverDur / AttemptedAtksOverDur;
-            if (SW.Validated)
-            {
-                SpecialEffect sweep = new SpecialEffect(Trigger.Use,
-                    new Stats() { BonusTargets = 1f, },
-                    landedAtksInterval * 5f, SW.Cd);
-                statsTotal.AddSpecialEffect(sweep);
-            }
-            /*if (RK.Validated && CalcOpts.FuryStance)
-            {
-                SpecialEffect reck = new SpecialEffect(Trigger.Use,
-                    new Stats() { PhysicalCrit = 1f - critRate },
-                    landedAtksInterval * 3f, RK.Cd);
-                statsTotal.AddSpecialEffect(reck);
-            }*/
-            /*if (talents.Flurry > 0 && CalcOpts.FuryStance)
-            {
-                //float value = talents.Flurry * 0.05f;
-                SpecialEffect flurry = new SpecialEffect(Trigger.MeleeCrit,
-                    new Stats() { PhysicalHaste = talents.Flurry * 0.05f, }, landedAtksInterval * 3f, 0f);
-                statsTotal.AddSpecialEffect(flurry);
-            }*/
-        }
 
         internal void ResetHitTables() { foreach (AbilWrapper aw in GetAbilityList()) { if (aw.ability.CanCrit) { aw.ability.RWAtkTable.Reset(); } } }
     }

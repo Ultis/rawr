@@ -20,7 +20,6 @@ namespace Rawr.Hunter.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Rapid Fire";
-            //AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DeathWish_;
             Cd = (5f - Talents.Posthaste) * 60f; // In Seconds
             Duration = 15f;
             UseHitTable = false;

@@ -27,13 +27,13 @@ namespace Rawr.Hunter.Skills
             Duration = 15f;
             FocusCost = 25f;
             DamageBase = (StatS.RangedAttackPower * 0.4f + (460f * 15f / 3f));
+            
             BonusCritChance = 1f + (Talents.GlyphOfSerpentSting ? 0.06f : 0f) + (Talents.ImprovedSerpentSting * 0.05f);
             MinRange = 5f;
             MaxRange = 40f;
             CanCrit = true;
-            StatS.BonusDamageMultiplier = (.05f * Talents.NoxiousStings);
-            StatS.BonusCritDamageMultiplier = (.5f * Talents.Toxicology);
-            // TODO zhok: Glyph of Serpant Sting ... 6% crit buff
+            StatS.BonusDamageMultiplier += (.05f * Talents.NoxiousStings);
+            StatS.BonusCritDamageMultiplier += (.5f * Talents.Toxicology);
             // Improved Serpent Sting
             // Noxious Stings
             //
@@ -44,16 +44,16 @@ namespace Rawr.Hunter.Skills
             get
             {
                 if (!Validated) { return 0f; }
-
-                return getTotalDamage / NumTicks;
+                float fTickSize = (DamageBase * 3 / 15);
+                fTickSize *= DamageBonus * (1f + StatS.BonusDamageMultiplier) * (1f + StatS.BonusNatureDamageMultiplier) * (1 + (.15f * Talents.ImprovedSerpentSting));
+                fTickSize = fTickSize * (1f + StatS.PhysicalCrit) * BonusCritChance;
+                fTickSize *= (1f + StatS.BonusCritDamageMultiplier);
+                return fTickSize;
             }
         }
         public override float GetDPS(float acts)
         {
-            float dmgonuse = TickSize;
-            float numticks = NumTicks * acts;
-            float result = (GetDmgOverTickingTime(acts) / FightDuration) + (getTotalDamage * (.15f * Talents.ImprovedSerpentSting));
-            return result;
+            return getTotalDamage / FightDuration;
         }
         public float getTotalDamage
         {
@@ -61,7 +61,7 @@ namespace Rawr.Hunter.Skills
             {
                 if (!Validated) { return 0f; }
 
-                return (Damage * DamageBonus * (1f + StatS.BonusDamageMultiplier) * (1f + StatS.BonusNatureDamageMultiplier));
+                return TickSize * (Duration / TickLength);
             }
         }
     }
