@@ -595,7 +595,15 @@ namespace Rawr.Mage
             {
                 Spell combustion = CastingState.GetSpell(SpellId.Combustion);
                 double damage = (combustion.AverageDamage + combustion.DamagePerSpellPower * effectSpellPower + combustion.DamagePerMastery * effectMastery + combustion.DamagePerCrit * effectCrit) / 10f;
-                double factor = GetAverageFactor(Solver.SpecialEffectCombustion);
+                double factor;
+                if (CastingState.Solver.Mage4T13)
+                {
+                    factor = GetAverageFactor(Solver.SpecialEffectCombustion4T13);
+                }
+                else
+                {
+                    factor = GetAverageFactor(Solver.SpecialEffectCombustion);
+                }
                 effectDamagePerSecondSpell += damage * factor;
             }
             if (Ticks > 0)
@@ -799,7 +807,16 @@ namespace Rawr.Mage
             if (CastingState.CalculationOptions.ProcCombustion && CastingState.MageTalents.Combustion == 1)
             {
                 Spell combustion = CastingState.GetSpell(SpellId.Combustion);
-                combustion.AddSpellContribution(dict, GetAverageFactor(Solver.SpecialEffectCombustion) * duration / 10f, 0, (float)effectSpellPower, (float)effectMastery, (float)effectCrit, (float)effectManaAdeptMultiplier, averageMana);
+                float factor;
+                if (CastingState.Solver.Mage4T13)
+                {
+                    factor = GetAverageFactor(Solver.SpecialEffectCombustion4T13);
+                }
+                else
+                {
+                    factor = GetAverageFactor(Solver.SpecialEffectCombustion);
+                }
+                combustion.AddSpellContribution(dict, factor * duration / 10f, 0, (float)effectSpellPower, (float)effectMastery, (float)effectCrit, (float)effectManaAdeptMultiplier, averageMana);
             }
             if (Ticks > 0)
             {

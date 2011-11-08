@@ -157,6 +157,7 @@ namespace Rawr.Mage
 
         public static readonly SpecialEffect SpecialEffect2T12 = new SpecialEffect(Trigger.MageNukeCast, new Stats() { FireSummonedDamage = 4 * 7016.5f / 15f }, 15f, 45f, 0.2f, 1);
         public static readonly SpecialEffect SpecialEffectCombustion = new SpecialEffect(Trigger.DamageSpellCrit, new Stats() { }, 10f, 120f, 1f);
+        public static readonly SpecialEffect SpecialEffectCombustion4T13 = new SpecialEffect(Trigger.DamageSpellCrit, new Stats() { }, 10f, 70f, 1f);
         public static readonly SpecialEffect SpecialEffect2T13 = new SpecialEffect(Trigger.MageNukeCast2, new Stats() { HasteRating = 50f }, 30f, 0f, 1f, 10);
 
         public int MaxTalents { get; set; }
