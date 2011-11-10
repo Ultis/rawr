@@ -270,7 +270,7 @@ namespace Rawr.Rogue
             float natureDmgMult = (1f + spellDmgMult) * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + potentPoisonsMult) - 1f;
             float poisonDmgMult = (1f + spellDmgMult) * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + potentPoisonsMult + RV.Talents.VilePoisonsDmgMult[talents.VilePoisons]) - 1f;
             float sSCostReduc = RV.Talents.ImpSinisterStrikeCostReduc * talents.ImprovedSinisterStrike;
-            float sSDmgMult = (1f + RV.Talents.ImpSinisterStrikeDmgMult * talents.ImprovedSinisterStrike) * (1f + RV.Talents.AggressionDmgMult[talents.Aggression]) - 1f;
+            float sSDmgMult = (1f + RV.Talents.ImpSinisterStrikeDmgMult * talents.ImprovedSinisterStrike) * (1f + RV.Talents.AggressionDmgMult[talents.Aggression] * (1f + stats.FangsoftheFatherMultiplier)) - 1f;
             #endregion
 
             float exposeArmor = character.ActiveBuffs.Contains(Buff.GetBuffByName("Corrosive Spit")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Tear Armor")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Sunder Armor")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Faerie Fire")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Expose Armor")) ? 0f : RV.Expose.ArmorReduc;
@@ -483,7 +483,7 @@ namespace Rawr.Rogue
             float mutiDamageOffRaw = (baseOffDamageNorm * RV.Muti.WeapDmgMult + RV.Muti.BonusDmg) * meleeBonus * (1f + mutiDmgMult) * (1f + (targetPoisonable ? 0.2f : 0f)) * modArmor;
             mutiDamageOffRaw *= ((spec == 0 && mainHand._type == ItemType.Dagger && offHand._type == ItemType.Dagger) ? 1f : 0f);
             float mutiDamageRaw = mutiDamageMainRaw + mutiDamageOffRaw;
-            float rStrikeDamageRaw = (baseDamage * RV.RS.WeapDmgMult) * meleeBonus * modArmor;
+            float rStrikeDamageRaw = (baseDamage * RV.RS.WeapDmgMult) * meleeBonus * (1f + stats.FangsoftheFatherMultiplier) * modArmor;
             rStrikeDamageRaw *= talents.RevealingStrike > 0 ? 1f : 0f;
             float ambushDmgRaw = (baseDamageNorm + RV.Ambush.BonusDmg) * RV.Ambush.WeapDmgMult * (mainHand._type == ItemType.Dagger ? RV.Ambush.DaggerDmgMult : 1f) * (1f + ambushDmgMult);
             float[] ruptDamageRaw = new float[] {0,
@@ -1263,6 +1263,7 @@ namespace Rawr.Rogue
                BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier,
                BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
                BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
+               FangsoftheFatherMultiplier = stats.FangsoftheFatherMultiplier,
 
                // BossHandler
                SnareRootDurReduc = stats.SnareRootDurReduc,
@@ -1340,6 +1341,7 @@ namespace Rawr.Rogue
                     stats.BonusNatureDamageMultiplier +
                     stats.BonusFrostDamageMultiplier +
                     stats.BonusFireDamageMultiplier +
+                    stats.FangsoftheFatherMultiplier + 
 
                     // BossHandler
                     stats.SnareRootDurReduc +

@@ -1092,6 +1092,10 @@ namespace Rawr {
             }
             #endregion
             #region Specialty Stat Procs
+            else if ((match = new Regex(@"Increases the damage dealt by Sinister Strike and Revealing Strike by (?<amount>\d+)%").Match(line)).Success)
+            {   // Fangs of the Father Sinister and Revealing Strike damage Multiplier
+                stats.FangsoftheFatherMultiplier = ((float)int.Parse(match.Groups["amount"].Value) / 100f);
+            }
             // damaging the target for an amount equal to (?<amount>\d+)% of your maximum health and healing you for twice that amount
             else if ((match = new Regex(@"damaging the target for an amount equal to (?<amount>\d+(\.\d+)?)% of your maximum health and healing you for twice that amount").Match(line)).Success)
             {   // Madness of Deathwing Tanking Weapon proc
