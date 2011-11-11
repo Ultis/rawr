@@ -187,6 +187,7 @@ namespace Rawr
         #endregion
         #region ===== Item Proc Stats =====
         MaxHealthDamageProc,
+        FangsoftheFatherMultiplier,
         #endregion
         #region ===== Other Stats =====
         BonusArcaneDamageMultiplier,
@@ -1712,6 +1713,15 @@ namespace Rawr
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.MaxHealthDamageProc]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.MaxHealthDamageProc] = value; }
+        }
+        [DefaultValueAttribute(0f)]
+        [DisplayName("% Fangs of the Father Strike Multiplier")]
+        [Percentage]
+        [Category("Equipment Effects")]
+        public float FangsoftheFatherMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.FangsoftheFatherMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.FangsoftheFatherMultiplier] = value; }
         }
         #endregion
         #region ===== Other Stats =====
