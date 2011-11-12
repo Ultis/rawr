@@ -546,6 +546,11 @@ namespace Rawr.Tree {
                             Trigger.SpellHit, 
                             Trigger.HoTTick,
                             Trigger.DamageOrHealingDone,
+
+                            Trigger.DamageSpellCast,
+                            Trigger.DamageSpellHit,
+                            Trigger.DamageSpellCrit,
+                            Trigger.DoTTick,
                         });
             }
             //set { _RelevantTriggers = value; }

@@ -39,6 +39,7 @@ namespace Rawr.Tree {
         TankTolLbCcHt, // the LB is on the raid, but the CCHT is on the tank
 
         ReLifebloom,
+        InsectSwarm,
 
         Count
     };
@@ -240,6 +241,7 @@ namespace Rawr.Tree {
 
         public double ProcTriggerInterval { get; set; }
         public double ProcPeriodicTriggerInterval { get; set; }
+        public double DamageProcPeriodicTriggerInterval { get; set; }
 
         public Stats BasicStats { get; set; }
         public double BaseSpellPower { get; set; }

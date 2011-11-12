@@ -35,6 +35,7 @@ namespace Rawr.Tree
         int T13Count;
         DruidTalents Talents;
         bool Restoration;
+        bool InsectSwarm;
 
         class TreeComputedData
         {
@@ -103,6 +104,21 @@ namespace Rawr.Tree
             // NOTE: this ignores crit from procs, but hopefully this shouldn't matter much
             triggerChances[Trigger.HealingSpellCrit] = triggerChances[Trigger.SpellCrit] =
                 StatConversion.GetSpellCritFromIntellect(calc.BasicStats.Intellect) + StatConversion.GetSpellCritFromRating(calc.BasicStats.CritRating) + calc.BasicStats.SpellCrit;
+
+
+            foreach (SpecialEffect effect in calc.BasicStats.SpecialEffects())
+            {
+                if (effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.DoTTick || effect.Trigger == Trigger.DamageSpellCrit)
+                    InsectSwarm = true;
+            }
+
+            if (InsectSwarm)
+            {
+                triggerIntervals[Trigger.DamageSpellCast] = triggerIntervals[Trigger.DamageSpellHit] = triggerIntervals[Trigger.DoTTick] = triggerIntervals[Trigger.DamageSpellCrit] = (float)calc.DamageProcPeriodicTriggerInterval;
+
+                triggerChances[Trigger.DamageSpellCast] = triggerChances[Trigger.DamageSpellHit] = triggerChances[Trigger.DoTTick] = 1;
+                triggerChances[Trigger.DamageSpellCrit] = StatConversion.GetSpellCritFromIntellect(calc.BasicStats.Intellect) + StatConversion.GetSpellCritFromRating(calc.BasicStats.CritRating) + calc.BasicStats.SpellCrit;
+            }
 
             foreach (SpecialEffect effect in calc.BasicStats.SpecialEffects())
             {
@@ -486,12 +502,20 @@ namespace Rawr.Tree
 
             calc.ProcTriggerInterval = 1 / (CPS + TPS);
             calc.ProcPeriodicTriggerInterval = 1 / TPS;
+
+            double DTPS = 0;
+            for (int div = 0; div < (int)calc.Division.Count; ++div)
+            {
+                DTPS += 0.5 / calc.Stats[div].Haste.HastedSecond;
+            }
+            calc.DamageProcPeriodicTriggerInterval = 1 / DTPS;
         }
 
         void compute()
         {
             calc.ProcTriggerInterval = opts.ProcTriggerInterval;
             calc.ProcPeriodicTriggerInterval = opts.ProcPeriodicTriggerInterval;
+               calc.DamageProcPeriodicTriggerInterval = 2;
             for (int i = 0; i <= opts.ProcTriggerIterations; ++i)
                 computeIteration();
         }
@@ -876,6 +900,11 @@ namespace Rawr.Tree
             actions[(int)TreeAction.ReLifebloom].Direct = 0;
             actions[(int)TreeAction.ReLifebloom].Periodic = 0;
             actions[(int)TreeAction.ReLifebloom].Cooldown = data.LifebloomRefreshInterval;
+
+            // TODO: should increase the time to compensate for having to recast due to missing (we are most likely not hit capped)
+            actions[(int)TreeAction.InsectSwarm].Time = stats.Haste.HastedGCD;
+            actions[(int)TreeAction.InsectSwarm].Mana = ((int)Math.Floor(CalculationsTree.BaseMana * 8 / 100f) - stats.SpellsManaCostReduction) * stats.SpellsManaCostMultiplier;
+            actions[(int)TreeAction.InsectSwarm].Cooldown = 12 + Talents.Genesis * 2;
             #endregion
 
             ContinuousAction[] factions = new ContinuousAction[(int)TreeAction.Count];
@@ -899,6 +928,8 @@ namespace Rawr.Tree
             bool procNaturesGraceWithCCs = false;
 
             bool naturesGraceHandled = false;
+            if (InsectSwarm)
+                naturesGraceHandled = true;
 
             double dhrate = 0;
 
@@ -938,6 +969,8 @@ namespace Rawr.Tree
         void addPassiveHealing(ActionDistribution dist, TreeStats stats)
         {
             dist.AddPassive((int)TreePassive.HealingTrinkets, stats.Healed * stats.DirectHealMultiplier * getCritMultiplier(stats, 0, 0));
+            if (InsectSwarm)
+                dist.AddActionOnCooldown((int)TreeAction.InsectSwarm);
         }
 
         void addSelfHealing(ActionDistribution dist, ContinuousAction[] actions, ComputedSpell[] spells, double weight)
