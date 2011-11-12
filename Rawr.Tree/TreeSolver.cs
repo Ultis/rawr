@@ -106,10 +106,13 @@ namespace Rawr.Tree
                 StatConversion.GetSpellCritFromIntellect(calc.BasicStats.Intellect) + StatConversion.GetSpellCritFromRating(calc.BasicStats.CritRating) + calc.BasicStats.SpellCrit;
 
 
-            foreach (SpecialEffect effect in calc.BasicStats.SpecialEffects())
+            if(opts.TriggerDamageEffects)
             {
-                if (effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.DoTTick || effect.Trigger == Trigger.DamageSpellCrit)
-                    InsectSwarm = true;
+                foreach (SpecialEffect effect in calc.BasicStats.SpecialEffects())
+                {
+                    if (effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.DoTTick || effect.Trigger == Trigger.DamageSpellCrit)
+                        InsectSwarm = true;
+                }
             }
 
             if (InsectSwarm)
@@ -122,7 +125,7 @@ namespace Rawr.Tree
 
             foreach (SpecialEffect effect in calc.BasicStats.SpecialEffects())
             {
-                if (CalculationsTree.RelevantTriggers.Contains(effect.Trigger))
+                if (triggerIntervals.ContainsKey(effect.Trigger))
                 {
                     if (effect.Stats.Intellect > 0 || effect.Stats.HighestStat > 0)
                     {

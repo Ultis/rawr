@@ -8,7 +8,7 @@
     xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.WPFToolkit"
     xmlns:System="clr-namespace:System;assembly=mscorlib"
     mc:Ignorable="d" xmlns:local="clr-namespace:Rawr.Tree"
-    x:Class="Rawr.Tree.CalculationOptionsPanelTree" d:DesignHeight="694" d:DesignWidth="438">
+    x:Class="Rawr.Tree.CalculationOptionsPanelTree" d:DesignHeight="694" d:DesignWidth="333">
 
     <UserControl.Resources>
         <local:CalculationOptionsTree x:Key="CalculationOptionsTreeDataSource" d:IsDataSource="True"/>
@@ -27,6 +27,7 @@
 					<RowDefinition Height="Auto"/>
 					<RowDefinition Height="Auto"/>
 					<RowDefinition Height="29" />
+					<RowDefinition Height="Auto" />
 					<RowDefinition Height="Auto" />
 					<RowDefinition Height="Auto" />
 					<RowDefinition Height="Auto" />
@@ -81,17 +82,19 @@
 
 				<CheckBox Grid.Row="6" IsChecked="{Binding Path=Restoration, Mode=TwoWay}" MinWidth="50" Content="Restoration specialization" Grid.ColumnSpan="3" Margin="4,2,2,2" ToolTipService.ToolTip="Whether the druid is a restoration druid as opposed to a moonkin or feral; if you unselect this, you should also unselect all deep Restoration talents and ideally fully specify the feral or balance spec." />
 
-				<Border Grid.Row="7" Grid.ColumnSpan="5" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
+				<CheckBox Grid.Row="7" IsChecked="{Binding Path=TriggerDamageEffects, Mode=TwoWay}" MinWidth="50" Content="Keep up Insect Swarm to trigger effects, if needed" Grid.ColumnSpan="3" Margin="4,2,2,2" ToolTipService.ToolTip="Whether to keep up Insect Swarm in case there are effects triggered by damage spells, to activate them (has no effect if no equipped trinkets or other items require damage spells to be activated)." />
+
+				<Border Grid.Row="8" Grid.ColumnSpan="5" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
 					<TextBlock Margin="4" FontWeight="Bold" Text="PTR changes" VerticalAlignment="Center" />
 				</Border>
 
-				<CheckBox Grid.Row="8" IsChecked="{Binding Path=WildGrowthNerf, Mode=TwoWay}" MinWidth="50" Content="Wild Growth 20% nerf" Grid.ColumnSpan="3" Margin="4,2,2,2" ToolTipService.ToolTip="Whether to apply the 20% nerf to Wild Growth" />
-				<CheckBox Grid.Row="9" IsChecked="{Binding Path=GlyphOfWildGrowthCDIncrease, Mode=TwoWay}" MinWidth="50" Content="Glyph of Wild Growth cooldown increase" Grid.ColumnSpan="3" Margin="4,2,2,2" ToolTipService.ToolTip="Whether to apply the change to Glyph of Wild Growth increasing its cooldown by 2 seconds." />
+				<CheckBox Grid.Row="9" IsChecked="{Binding Path=WildGrowthNerf, Mode=TwoWay}" MinWidth="50" Content="Wild Growth 20% nerf" Grid.ColumnSpan="3" Margin="4,2,2,2" ToolTipService.ToolTip="Whether to apply the 20% nerf to Wild Growth" />
+				<CheckBox Grid.Row="10" IsChecked="{Binding Path=GlyphOfWildGrowthCDIncrease, Mode=TwoWay}" MinWidth="50" Content="Glyph of Wild Growth cooldown increase" Grid.ColumnSpan="3" Margin="4,2,2,2" ToolTipService.ToolTip="Whether to apply the change to Glyph of Wild Growth increasing its cooldown by 2 seconds." />
 
-				<Border Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="4" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
+				<Border Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="4" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
 					<TextBlock Margin="4" FontWeight="Bold" Text="Stat Graph Options" VerticalAlignment="Center" />
 				</Border>
-				<Grid Grid.Row="11" Grid.ColumnSpan="4">
+				<Grid Grid.Row="12" Grid.ColumnSpan="4">
 					<Grid.RowDefinitions>
 						<RowDefinition Height="Auto" />
 						<RowDefinition Height="Auto" />

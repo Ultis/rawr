@@ -339,6 +339,14 @@ namespace Rawr.Tree
             set { activityRate = value; OnPropertyChanged("ActivityRate"); }
         }
 
+        private bool triggerDamageEffects = false;
+        [DefaultValue(false)]
+        public bool TriggerDamageEffects
+        {
+            get { return triggerDamageEffects; }
+            set { triggerDamageEffects = value; OnPropertyChanged("TriggerDamageEffects"); }
+        }
+
         #region Stat Graph
         [DefaultValue(new bool[] { true, true, true, true, true, true })]
         public bool[] StatsList { get { return _statsList; } set { _statsList = value; OnPropertyChanged("StatsList"); } }
