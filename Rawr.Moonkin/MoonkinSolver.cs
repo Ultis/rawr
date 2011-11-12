@@ -12,7 +12,7 @@ namespace Rawr.Moonkin
         public static float BaseMana = 18635f;
         public static float OOC_PROC_CHANCE = 0.0583f;
         public static float EUPHORIA_PERCENT = 0.08f;
-        public static float DRAGONWRATH_PROC_RATE = 0.11f;
+        public static float DRAGONWRATH_PROC_RATE = 0.675f;
         public static float ECLIPSE_BASE = 0.25f;
 
         #region Cast Distributions
@@ -858,14 +858,14 @@ namespace Rawr.Moonkin
             Starsurge.AllDamageModifier *= 1 + stats.BonusNukeDamageModifier;
 
             // PTR changes go here
-            if (((CalculationOptionsMoonkin)character.CalculationOptions).PTRMode)
+            /*if (((CalculationOptionsMoonkin)character.CalculationOptions).PTRMode)
             {
                 MoonkinSolver.DRAGONWRATH_PROC_RATE = 0.0675f;
             }
             else
             {
                 MoonkinSolver.DRAGONWRATH_PROC_RATE = 0.11f;
-            }
+            }*/
 
             // Dragonwrath, Tarecgosa's Rest: X% chance on damaging spell cast to proc a duplicate version of the spell.
             // If it duplicates a DoT tick, it fires Wrath of Tarecgosa for an equivalent amount of damage.
