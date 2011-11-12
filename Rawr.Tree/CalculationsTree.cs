@@ -171,19 +171,18 @@ namespace Rawr.Tree {
         private string[] tierNames = { "Uncommon", "Rare", "Epic", "Jewelcrafter" };
 
         // Red
-        private int[] brilliant = { 52173, 52207, 52207, 52257 };
+        private int[] brilliant = { 52173, 52207, 71881, 52257 };
 
         // Orange
-        private int[] reckless = { 52144, 52208, 52208, 52208 };
-        private int[] artful = { 52140, 52205, 52205, 52205 };
-        private int[] potent = { 52147, 52239, 52239, 52239 };
+        private int[] reckless = { 52144, 52208, 71850, 52208 };
+        private int[] artful = { 52140, 52205, 71854, 52205 };
+        private int[] potent = { 52147, 52239, 71842, 52239 };
 
         // Purple
-        private int[] purified = { 52100, 52236, 52236, 52236 };
+        private int[] purified = { 52100, 52236, 71868, 52236 };
 
         // Meta
-        private int ember = 52296;
-        private int revitalizing = 52297;
+        private int[] metas = { 52296, 52297, 41333, 41376 };
 
         //Cogwheel
         private int cog_fractured = 59480;  //Mastery
@@ -199,27 +198,16 @@ namespace Rawr.Tree {
             get
             {
                 List<GemmingTemplate> retval = new List<GemmingTemplate>();
+                
                 for (int tier = 0; tier < 4; ++tier)
                 {
-                    retval.AddRange(TreeGemmingTemplateBlock(tier, ember));
-                    retval.AddRange(TreeGemmingTemplateBlock(tier, revitalizing));
+                    foreach (int meta in metas)
+                        retval.AddRange(TreeGemmingTemplateBlock(tier, meta));
                 }
 
-                retval.AddRange(new GemmingTemplate[] {
-                    // Engineering cogwheel templates (meta and 2 cogs each, no repeats)
-                    CreateTreeCogwheelTemplate(ember, cog_fractured, cog_quick),
-                    CreateTreeCogwheelTemplate(ember, cog_fractured, cog_smooth),
-                    CreateTreeCogwheelTemplate(ember, cog_fractured, cog_sparkling),
-                    CreateTreeCogwheelTemplate(ember, cog_quick, cog_smooth),
-                    CreateTreeCogwheelTemplate(ember, cog_quick, cog_sparkling),
-                    CreateTreeCogwheelTemplate(ember, cog_smooth, cog_sparkling),
-                    CreateTreeCogwheelTemplate(revitalizing, cog_fractured, cog_quick),
-                    CreateTreeCogwheelTemplate(revitalizing, cog_fractured, cog_smooth),
-                    CreateTreeCogwheelTemplate(revitalizing, cog_fractured, cog_sparkling),
-                    CreateTreeCogwheelTemplate(revitalizing, cog_quick, cog_smooth),
-                    CreateTreeCogwheelTemplate(revitalizing, cog_quick, cog_sparkling),
-                    CreateTreeCogwheelTemplate(revitalizing, cog_smooth, cog_sparkling),
-                });
+                foreach (int meta in metas)
+                    retval.AddRange(TreeCogwheelTemplateBlock(meta));
+
                 return retval;
             }
         }
@@ -253,6 +241,21 @@ namespace Rawr.Tree {
                 PrismaticId = prismatic[tier],
                 MetaId = meta
             };
+        }
+
+        private List<GemmingTemplate> TreeCogwheelTemplateBlock(int meta)
+        {
+            List<GemmingTemplate> retval = new List<GemmingTemplate>();
+            retval.AddRange(new GemmingTemplate[] {
+                    // Engineering cogwheel templates (meta and 2 cogs each, no repeats)
+                    CreateTreeCogwheelTemplate(meta, cog_fractured, cog_quick),
+                    CreateTreeCogwheelTemplate(meta, cog_fractured, cog_smooth),
+                    CreateTreeCogwheelTemplate(meta, cog_fractured, cog_sparkling),
+                    CreateTreeCogwheelTemplate(meta, cog_quick, cog_smooth),
+                    CreateTreeCogwheelTemplate(meta, cog_quick, cog_sparkling),
+                    CreateTreeCogwheelTemplate(meta, cog_smooth, cog_sparkling),
+                });
+            return retval;
         }
 
         private GemmingTemplate CreateTreeCogwheelTemplate(int meta, int cogwheel1, int cogwheel2)
