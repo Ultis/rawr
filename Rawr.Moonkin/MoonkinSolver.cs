@@ -12,7 +12,7 @@ namespace Rawr.Moonkin
         public static float BaseMana = 18635f;
         public static float OOC_PROC_CHANCE = 0.0583f;
         public static float EUPHORIA_PERCENT = 0.08f;
-        public static float DRAGONWRATH_PROC_RATE = 0.675f;
+        public static float DRAGONWRATH_PROC_RATE = 0.0675f;
         public static float ECLIPSE_BASE = 0.25f;
 
         #region Cast Distributions
