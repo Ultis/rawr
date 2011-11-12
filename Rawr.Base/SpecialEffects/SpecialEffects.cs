@@ -696,7 +696,7 @@ namespace Rawr {
             {   // Preternatural Evasion, 
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeAttack,
                      new Stats() { DodgeRating = int.Parse(match.Groups["amount"].Value) },
-                     int.Parse(match.Groups["dur"].Value), int.Parse(match.Groups["dur"].Value), 1f, int.Parse(match.Groups["stack"].Value)));
+                     int.Parse(match.Groups["dur"].Value), 0f, 1f, int.Parse(match.Groups["stack"].Value)));
             }
             #endregion
             #region Haste Rating
@@ -841,7 +841,7 @@ namespace Rawr {
             {   // Combat Mind, Will of Unbinding
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast,
                     new Stats() { Intellect = (float)int.Parse(match.Groups["amount"].Value) },
-                    (float)int.Parse(match.Groups["dur"].Value), (float)int.Parse(match.Groups["dur"].Value), 1f, int.Parse(match.Groups["stack"].Value)));
+                    (float)int.Parse(match.Groups["dur"].Value), 0f, 1f, int.Parse(match.Groups["stack"].Value)));
             }
             #endregion
             #region Mastery Rating
