@@ -904,8 +904,8 @@ namespace Rawr.Tree
             actions[(int)TreeAction.ReLifebloom].Periodic = 0;
             actions[(int)TreeAction.ReLifebloom].Cooldown = data.LifebloomRefreshInterval;
 
-            // TODO: should increase the time to compensate for having to recast due to missing (we are most likely not hit capped)
-            actions[(int)TreeAction.InsectSwarm].Time = stats.Haste.HastedGCD;
+            // TODO: actually compute hit instead of assuming we have 0 hit; also maybe have an option/BossHandler value for the target level (there might a permanent add with lower level than the boss)
+            actions[(int)TreeAction.InsectSwarm].Time = stats.Haste.HastedGCD / (1 - StatConversion.GetSpellMiss(character.Level - character.BossOptions.Level, false));
             actions[(int)TreeAction.InsectSwarm].Mana = ((int)Math.Floor(CalculationsTree.BaseMana * 8 / 100f) - stats.SpellsManaCostReduction) * stats.SpellsManaCostMultiplier;
             actions[(int)TreeAction.InsectSwarm].Cooldown = 12 + Talents.Genesis * 2;
             #endregion
