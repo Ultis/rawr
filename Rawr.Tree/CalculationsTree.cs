@@ -845,19 +845,19 @@ namespace Rawr.Tree {
 
         public override void SetDefaults(Character character)
         {
-            character.ActiveBuffsAdd(("Arcane Tactics"));
-            character.ActiveBuffsAdd(("Arcane Brilliance (Mana)"));
-            character.ActiveBuffsAdd(("Arcane Brilliance (SP%)"));
-            character.ActiveBuffsAdd(("Blessing of Might (Mp5)"));
-            character.ActiveBuffsAdd(("Tree Form"));
-            character.ActiveBuffsAdd(("Elemental Oath"));
-            character.ActiveBuffsAdd(("Replenishment"));
-            character.ActiveBuffsAdd(("Power Word: Fortitude"));
-            character.ActiveBuffsAdd(("Mark of the Wild"));
-            character.ActiveBuffsAdd(("Heroism/Bloodlust"));
-            character.ActiveBuffsAdd(("Power Infusion"));
-            character.ActiveBuffsAdd(("Flask of the Draconic Mind"));
-            character.ActiveBuffsAdd(("Intellect Food"));
+            character.ActiveBuffsAdd("Devotion Aura");
+            character.ActiveBuffsAdd("Arcane Brilliance (Mana)");
+            character.ActiveBuffsAdd("Arcane Brilliance (SP%)");
+            character.ActiveBuffsAdd("Blessing of Might (Mp5)");
+            character.ActiveBuffsAdd("Leader of the Pack");
+            character.ActiveBuffsAdd("Revitalize");
+            character.ActiveBuffsAdd("Power Word: Fortitude");
+            character.ActiveBuffsAdd("Mark of the Wild");
+            character.ActiveBuffsAdd("Heroism/Bloodlust");
+            character.ActiveBuffsAdd("Moonkin Form");
+            character.ActiveBuffsAdd("Flask of the Draconic Mind");
+            character.ActiveBuffsAdd("Intellect Food");
+            character.ActiveBuffsAdd("Mythical Mana Potion");
         }
         #endregion
 
