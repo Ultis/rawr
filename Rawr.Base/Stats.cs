@@ -2458,6 +2458,7 @@ namespace Rawr
             if (x._rawSpecialEffectDataSize > 0 || y._rawSpecialEffectDataSize > 0) return false;
             return ArrayUtils.AllEqual(x._rawAdditiveData, y._rawAdditiveData) &&
                 ArrayUtils.AllEqual(x._rawMultiplicativeData, y._rawMultiplicativeData) &&
+                ArrayUtils.AllEqual(x._rawInverseMultiplicativeData, y._rawInverseMultiplicativeData) &&
                 ArrayUtils.AllEqual(x._rawNoStackData, y._rawNoStackData);
         }
         public static bool operator !=(Stats x, Stats y)
