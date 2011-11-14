@@ -82,7 +82,7 @@
 
 				<CheckBox Grid.Row="6" IsChecked="{Binding Path=Restoration, Mode=TwoWay}" MinWidth="50" Content="Restoration specialization" Grid.ColumnSpan="3" Margin="4,2,2,2" ToolTipService.ToolTip="Whether the druid is a restoration druid as opposed to a moonkin or feral; if you unselect this, you should also unselect all deep Restoration talents and ideally fully specify the feral or balance spec." />
 
-				<CheckBox Grid.Row="7" IsChecked="{Binding Path=TriggerDamageEffects, Mode=TwoWay}" MinWidth="50" Content="Keep up Insect Swarm to trigger effects, if needed" Grid.ColumnSpan="3" Margin="4,2,2,2" ToolTipService.ToolTip="Whether to keep up Insect Swarm in case there are effects triggered by damage spells, to activate them (has no effect if no trinkets or other items have any such effects)." />
+				<CheckBox Grid.Row="7" IsChecked="{Binding Path=TriggerDamageEffects, Mode=TwoWay}" MinWidth="50" Content="Keep up Insect Swarm to trigger effects, if needed" Grid.ColumnSpan="3" Margin="4,2,2,2" ToolTipService.ToolTip="Whether to keep up Insect Swarm in case there are effects triggered by damage spells, to activate them (has no effect if no equipped trinkets or other items require damage spells to be activated)." />
 
 				<Border Grid.Row="8" Grid.ColumnSpan="5" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
 					<TextBlock Margin="4" FontWeight="Bold" Text="PTR changes" VerticalAlignment="Center" />
