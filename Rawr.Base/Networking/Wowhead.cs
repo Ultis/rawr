@@ -1319,7 +1319,7 @@ namespace Rawr
                     2450, // Main-Hand, One-Hand
                     3400, // Polearm, Staff, Two-Hand, Gun, Bow, Crossbow
                 };
-                string currentArenaSeasonLabel = "Ruthless" /*"Cataclysmic"*/; // "Such-in-such" Gladiator
+                string currentArenaSeasonLabel = "Cataclysmic"; // "Such-in-such" Gladiator
                 if (json.TryGetValue("source", out tmp)) {
                     object[] sourceArr = (object[])tmp;
                     object[] sourcemoreArr = null;
@@ -1623,7 +1623,7 @@ namespace Rawr
                     } else if (sourcemore != null && sourcemore.TryGetValue("p", out tmp)) {
                         // It's a PvP item
                         item.LocationInfo = new ItemLocationList() { PvpItem.Construct() };
-                        (item.LocationInfo[0] as PvpItem).Points = 0;
+                        (item.LocationInfo[0] as PvpItem).Points = 1;
                         if (item.Name.Contains(currentArenaSeasonLabel))
                             (item.LocationInfo[0] as PvpItem).PointType = "Conquest";
                         else
@@ -1699,15 +1699,124 @@ namespace Rawr
                                 break;
                         }
                         // We need to call for more source info
+                        if (htmlTooltip.Contains("Elite</span>"))
+                        {
+                            (item.LocationInfo[0] as PvpItem).ArenaRating = 2200;
+                            (item.LocationInfo[0] as PvpItem).TokenType = item.Name;
+                            (item.LocationInfo[0] as PvpItem).TokenCount = 1;
+                            switch (item.Slot)
+                            {
+                                case ItemSlot.Feet:
+                                case ItemSlot.Head:
+                                case ItemSlot.Shoulders:
+                                case ItemSlot.Chest:
+                                case ItemSlot.Hands:
+                                case ItemSlot.Legs:
+                                    (item.LocationInfo[0] as PvpItem).Points = 0;
+                                    break;
+                            }
+                        }
                     }
                     #endregion
                 } else if (item.Stats.Resilience > 0) {
                     // We DON'T have Source Data, BUT the item has resilience on it, so it's a pvp item
                     item.LocationInfo = new ItemLocationList() { PvpItem.Construct() };
                     (item.LocationInfo[0] as PvpItem).Points = 0;
-                    (item.LocationInfo[0] as PvpItem).PointType = "Honor";
                     // We need to call for more source info
-                } else {
+                    if (item.Name.Contains(currentArenaSeasonLabel))
+                        (item.LocationInfo[0] as PvpItem).PointType = "Conquest";
+                    else
+                        (item.LocationInfo[0] as PvpItem).PointType = "Honor";
+                    switch (item.Type)
+                    {
+                        case ItemType.Wand:
+                        case ItemType.Thrown:
+                        case ItemType.Relic:
+                            (item.LocationInfo[0] as PvpItem).Points = pvpCosts[0];
+                            break;
+                        case ItemType.Shield:
+                        case ItemType.None:
+                            switch (item.Slot)
+                            {
+                                case ItemSlot.OffHand:
+                                    (item.LocationInfo[0] as PvpItem).Points = pvpCosts[1];
+                                    break;
+                                case ItemSlot.Back:
+                                case ItemSlot.Finger:
+                                case ItemSlot.Neck:
+                                    (item.LocationInfo[0] as PvpItem).Points = pvpCosts[2];
+                                    break;
+                                case ItemSlot.Trinket:
+                                    (item.LocationInfo[0] as PvpItem).Points = pvpCosts[3];
+                                    break;
+                            }
+                            break;
+                        case ItemType.Cloth:
+                        case ItemType.Leather:
+                        case ItemType.Mail:
+                        case ItemType.Plate:
+                            switch (item.Slot)
+                            {
+                                case ItemSlot.Wrist:
+                                    (item.LocationInfo[0] as PvpItem).Points = pvpCosts[2];
+                                    break;
+                                case ItemSlot.Feet:
+                                case ItemSlot.Hands:
+                                case ItemSlot.Shoulders:
+                                case ItemSlot.Waist:
+                                    (item.LocationInfo[0] as PvpItem).Points = pvpCosts[3];
+                                    break;
+                                case ItemSlot.Chest:
+                                case ItemSlot.Head:
+                                case ItemSlot.Legs:
+                                    (item.LocationInfo[0] as PvpItem).Points = pvpCosts[4];
+                                    break;
+                            }
+                            break;
+                        case ItemType.Dagger:
+                        case ItemType.OneHandAxe:
+                        case ItemType.OneHandMace:
+                        case ItemType.OneHandSword:
+                        case ItemType.FistWeapon:
+                            if (item.Slot == ItemSlot.OffHand)
+                                (item.LocationInfo[0] as PvpItem).Points = pvpCosts[1];
+                            else
+                                (item.LocationInfo[0] as PvpItem).Points = pvpCosts[5];
+                            break;
+                        case ItemType.Polearm:
+                        case ItemType.Staff:
+                        case ItemType.TwoHandAxe:
+                        case ItemType.TwoHandMace:
+                        case ItemType.TwoHandSword:
+                        case ItemType.Gun:
+                        case ItemType.Crossbow:
+                        case ItemType.Bow:
+                            (item.LocationInfo[0] as PvpItem).Points = pvpCosts[6];
+                            break;
+                        default:
+                            (item.LocationInfo[0] as PvpItem).Points = 0;
+                            break;
+                    }
+                    if (htmlTooltip.Contains("Elite</span>"))
+                    {
+                        (item.LocationInfo[0] as PvpItem).ArenaRating = 2200;
+                        (item.LocationInfo[0] as PvpItem).TokenType = item.Name;
+                        (item.LocationInfo[0] as PvpItem).TokenCount = 1;
+                        switch (item.Slot)
+                        {
+                            case ItemSlot.Feet:
+                            case ItemSlot.Head:
+                            case ItemSlot.Shoulders:
+                            case ItemSlot.Chest:
+                            case ItemSlot.Hands:
+                            case ItemSlot.Legs:
+                                (item.LocationInfo[0] as PvpItem).Points = 0;
+                                break;
+                        }
+                    }
+                }
+                else
+                {
                     // We DON'T have Source Data
                     // Since we are doing nothing, the ItemSource cache doesn't change
                     // Therefore the original ItemSource persists, if it's there

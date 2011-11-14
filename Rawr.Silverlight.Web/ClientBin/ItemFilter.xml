@@ -2810,7 +2810,7 @@
     <ItemFilterRegex>
       <Name>Baradin Hold</Name>
       <Enabled>true</Enabled>
-      <Pattern>Baradin Hold|Argaloth|Occuthar</Pattern>
+      <Pattern>Baradin Hold|Argaloth|Occuthar|Alizabal</Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
       <BoP>true</BoP>

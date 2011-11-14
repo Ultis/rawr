@@ -693,7 +693,7 @@ namespace Rawr {
                      int.Parse(match.Groups["dur"].Value), 45, 0.20f));
             }
             else if ((match = new Regex(@"Your melee attacks grant (?<amount>\d+) dodge rating for the next (?<dur>\d+) sec, stacking up to (?<stack>\d+) times").Match(line)).Success)
-            {   // Preternatural Evasion, 
+            {   // Preternatural Evasion, Resolve of Undying
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeAttack,
                      new Stats() { DodgeRating = int.Parse(match.Groups["amount"].Value) },
                      int.Parse(match.Groups["dur"].Value), 0f, 1f, int.Parse(match.Groups["stack"].Value)));
