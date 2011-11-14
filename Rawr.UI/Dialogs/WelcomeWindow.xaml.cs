@@ -160,7 +160,65 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes()
         {
-#region Rawr 4.2.6 (October 16, 2011) [r63473]
+            #region Rawr 4.2.7 (November 13, 2011) [r63784]
+            VNStuff.Add("Rawr 4.2.7 (November 13, 2011) [r63784]",
+            @"Cataclysm Release
+Rawr.Base:
+- Fix for progressive optimize.
+
+Rawr.Items:
+- Madness of Deathwing's weapon procs are now modeled
+- Item update for 4.3
+
+Rawr.Bear:
+- Intellect gear should no longer show up in the item selection list
+- Gear Set Bonus's should be more condensed.
+
+Rawr.Mage:
+- PTR mode, very rough support for T13.
+
+Rawr.DPSDK:
+- Defect : Fix the KM crit rate.
+- Fix the RP math in the rotations.
+- Update more 4.3 PTR values (Bone Shield count & Unholy Might)
+- Wrap the 4.3 changes w/ the PTR Mode flag from general options incase we have another release before 4.3
+- Update Blood Rotation for Outbreak change. (1 more DS since we have those runes free)
+- Adding DND to Unholy rotation. It's not a complete fix, but just an experimental start to deal w/ UH numbers.
+- Adding Damage object. Plan is to implement this as a global damage value that can be used as a core value esp for any ability that may have multiple damage sources from a single ability.
+
+Rawr.TankDK:
+- Update DS healing to not be reliant on hit.
+- Refactor model to better deal with DS Heals and Blood Shield. 
+- Fix for Defect 21634: Negative Burst value in stam.
+- Fix for T12 set bonus evaluations
+- Provide the option to roll burst back into the body of values (burst changes to survival will appear in survival, and burst changes to mitigation will appear in mitigation)
+- Update defaults to go with the changes I implemented.
+
+Rawr.Cat:
+- No more Intellect gear showing up in the item select
+- Set bonus list is more condensed
+- Selecting Fully Buffed Cat should no longer crash the program
+- More buffs are now selected when loading from Battle.Net
+- Default glyphs are turned off so that when importing from Battle.Net, the imported glyphs are not overwritten by what the default glyphs
+- Added several Hit and Expertise Optimizer options
+- Added a few information mouseovers in the Info area
+- Slightly adjusted the T12 4-piece.
+- Gave some value to Physical Damage procs. Though it needs a better fix.
+
+Rawr.Moonkin:
+- Add epic gem templates.
+
+Rawr.Hunter:
+- MM is generating some numbers.
+
+Rawr.Tree:
+- Add epic gem templates
+- Support trinkets activated by damage spells (e.g. Necromantic Focus, Insignia of the Corrupted Mind, Will of Unbinding) by automatically keeping up Insect Swarm if a damage-triggered effect is present; 3/3 Genesis is recommended for that since it increases the duration of DoTs
+- Make triggering damage effects configurable and turned off by default, since it may confuse users otherwise
+- Account for miss chance on DoT; currently assumes 0 hit instead of bothering to compute actual spell hit from gear (but we are an healer, so that's accurate in most cases)
+");
+            #endregion
+            #region Rawr 4.2.6 (October 16, 2011) [r63473]
 VNStuff.Add("Rawr 4.2.6 (October 16, 2011) [r63473]",
 @"Cataclysm Release
 Rawr.Base:
