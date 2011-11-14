@@ -17,35 +17,35 @@ namespace Rawr.Cat
             {
                 // Relevant Gem IDs for Cats
                 //Red
-                int[] delicate = { 52082, 52212 }; // Agi
+                int[] delicate = { 52082, 52212, 71879 }; // Agi
 
                 //Purple
-                int[] shifting = { 52096, 52238 }; // Agi/Sta
-                int[] accurate = { 52105, 52203 }; // Exp/Hit
-                int[] glinting = { 52102, 52220 }; // Agi/Hit
+                int[] shifting = { 52096, 52238, 71869 }; // Agi/Sta
+                int[] accurate = { 52105, 52203, 71863 }; // Exp/Hit
+                int[] glinting = { 52102, 52220, 71862 }; // Agi/Hit
                 
                 //Blue
-                int[] solid = { 52086, 52242 }; // Sta
+                int[] solid = { 52086, 52242, 71820 }; // Sta
                 
                 //Green
-                int[] jagged = { 52121, 52223 }; // Crit/Sta
-                int[] nimble = { 52120, 52227 }; // Dodge/Hit
-                int[] piercing = { 52122, 52228 }; // Crit/Hit
-                int[] puissant = { 52126, 52231 }; // Mastery/Sta
-                int[] regal = { 52119, 52233 }; // Dodge/Sta
-                int[] senseis = { 52128, 52233 }; // Mastery/Hit
+                int[] jagged = { 52121, 52223, 71834 }; // Crit/Sta
+                int[] nimble = { 52120, 52227, 71837 }; // Dodge/Hit
+                int[] piercing = { 52122, 52228, 71823 }; // Crit/Hit
+                int[] puissant = { 52126, 52231, 71838 }; // Mastery/Sta
+                int[] regal = { 52119, 52233, 71835 }; // Dodge/Sta
+                int[] senseis = { 52128, 52233, 71825 }; // Mastery/Hit
                 
                 //Yellow
-                int[] fractured = { 52094, 52219 }; // Mastery
-                int[] subtle = { 52090, 52247 }; // Dodge
+                int[] fractured = { 52094, 52219, 71877 }; // Mastery
+                int[] subtle = { 52090, 52247, 71875 }; // Dodge
                 
                 //Orange
-                int[] adept = { 52115, 52204 }; // Agi/Mastery
-                int[] deadly = { 52109, 52209 }; // Agi/Crit
-                int[] deft = { 52112, 52211 }; // Agi/Haste
-                int[] keen = { 52118, 52224 }; // Exp/Mastery
-                int[] polished = { 52106, 52229 }; // Agi/Dodge
-                int[] resolute = { 52107, 52249 }; // Exp/Dodge
+                int[] adept = { 52115, 52204, 71852 }; // Agi/Mastery
+                int[] deadly = { 52109, 52209, 71840 }; // Agi/Crit
+                int[] deft = { 52112, 52211, 71848 }; // Agi/Haste
+                int[] keen = { 52118, 52224, 71853 }; // Exp/Mastery
+                int[] polished = { 52106, 52229, 71844 }; // Agi/Dodge
+                int[] resolute = { 52107, 52249, 71845 }; // Exp/Dodge
 
                 //Prismatic
 
@@ -67,7 +67,7 @@ namespace Rawr.Cat
                 int[] cog_spr = { 59496, 59496, 59496, 59496 }; fixArray(cog_spr);
 
                 List<GemmingTemplate> list = new List<GemmingTemplate>();
-                for (int tier = 0; tier < 2; tier++)
+                for (int tier = 0; tier < 3; tier++)
                 {
                     for (int meta = 0; meta < 3; meta++)
                     {
