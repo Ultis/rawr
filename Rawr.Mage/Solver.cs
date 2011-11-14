@@ -3439,7 +3439,8 @@ namespace Rawr.Mage
             CombustionCooldown = 120f;
             if (Mage4T13)
             {
-                IcyVeinsCooldown = 80.0f * (1 - 0.07f * MageTalents.IceFloes + (MageTalents.IceFloes == 3 ? 0.01f : 0.00f));
+                // for IV very rough right now, optimum seems to be roughly 8 stacks
+                IcyVeinsCooldown = 60.0f * (1 - 0.07f * MageTalents.IceFloes + (MageTalents.IceFloes == 3 ? 0.01f : 0.00f));
                 CombustionCooldown = 70f;
             }
             /*WaterElementalCooldown = (180.0f - (MageTalents.GlyphOfWaterElemental ? 30.0f : 0.0f));
