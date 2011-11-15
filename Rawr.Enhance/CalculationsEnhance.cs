@@ -25,7 +25,7 @@ namespace Rawr.Enhance
                     _defaultGemmingTemplates = new List<GemmingTemplate>();
                     _defaultGemmingTemplates.AddRange(gemming.addTemplates("Uncommon", 0, agile, false));
                     _defaultGemmingTemplates.AddRange(gemming.addTemplates("Rare", 1, agile, true));
-                    //_defaultGemmingTemplates.AddRange(gemming.addTemplates("Epic", 2, agile, false));
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Epic", 2, agile, false));
                     _defaultGemmingTemplates.AddRange(gemming.addTemplates("Jewelcrafter", 3, agile, false));
 
                     _defaultGemmingTemplates.AddRange(gemming.addCogwheelTemplates("Engineer", 0, agile, false));
