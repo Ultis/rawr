@@ -44,8 +44,8 @@ namespace Rawr
         Goblin   =  9, // Cataclysm
         BloodElf = 10, // Burning Crusade
         Draenei  = 11, // Burning Crusade
-        PandarianAlliance = 12, // Mists of Pandaria (TODO: Get correct enum)
-        PandarianHorde = 13, // Mists of Pandaria (TODO: Get correct enum)
+        PandarenAlliance = 12, // Mists of Pandaria (TODO: Get correct enum)
+        PandarenHorde = 13, // Mists of Pandaria (TODO: Get correct enum)
         Worgen   = 22, // Cataclysm
     }
 

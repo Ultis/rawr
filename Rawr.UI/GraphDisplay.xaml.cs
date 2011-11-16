@@ -318,8 +318,8 @@ namespace Rawr.UI
             CharacterRace.Draenei,
             CharacterRace.Worgen,
             CharacterRace.Goblin,
-            CharacterRace.PandarianAlliance,
-            CharacterRace.PandarianHorde,
+            CharacterRace.PandarenAlliance,
+            CharacterRace.PandarenHorde,
         };
         public static Dictionary<CharacterRace, string[]> CharacterRaceBonuses = new Dictionary<CharacterRace,string[]>()
         {
@@ -418,7 +418,7 @@ namespace Rawr.UI
                     "Time is Money: Cash in on a 1% increase to attack and casting speed.",
                 }
             },
-            {CharacterRace.PandarianAlliance, new string[] {
+            {CharacterRace.PandarenAlliance, new string[] {
                     "Epicurean: Increases the stat benefits from food by 100%",
                     "Gourmand: Cooking Skill increased by 15.",
                     "Inner Peace: Your rested experience bonus lasts twice as long.",
@@ -426,7 +426,7 @@ namespace Rawr.UI
                     "Quaking Palm: You touch a secret pressure point on an enemy target, putting it to sleep for 3 seconds.",
                 }
             },
-            {CharacterRace.PandarianHorde, new string[] {
+            {CharacterRace.PandarenHorde, new string[] {
                     "Epicurean: Increases the stat benefits from food by 100%",
                     "Gourmand: Cooking Skill increased by 15.",
                     "Inner Peace: Your rested experience bonus lasts twice as long.",
@@ -545,8 +545,8 @@ namespace Rawr.UI
             { CharacterRace.BloodElf, "race_bloodelf_male" },
             { CharacterRace.Draenei, "race_draenei_male" },
             { CharacterRace.Worgen, "race_worgen_male" },
-            { CharacterRace.PandarianAlliance, "race_pandaren_female" },
-            { CharacterRace.PandarianHorde, "race_pandaren_male" },
+            { CharacterRace.PandarenAlliance, "race_pandaren_female" },
+            { CharacterRace.PandarenHorde, "race_pandaren_male" },
         };
         #endregion
         private void UpdateGraphRaces(string subgraph)

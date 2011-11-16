@@ -299,10 +299,6 @@ namespace Rawr
                     S.PhysicalCrit += 0.01f;
                     S.SpellCrit += 0.01f;
                 }
-                else if (characterRace == CharacterRace.PandarianAlliance)
-                {
-                    
-                }
                 else if (characterRace == CharacterRace.Tauren)
                 {
                     // S.NatureResistance = 85f;
@@ -347,7 +343,7 @@ namespace Rawr
                     // TODO: The damage of the rocket belt proc is dependent on the character's current AP and SP
                     S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { FireDamage = 1f + (level * 2) }, 0f, 120f));
                 }
-                else if (characterRace == CharacterRace.PandarianHorde)
+                else if (characterRace == CharacterRace.PandarenAlliance || characterRace == CharacterRace.PandarenHorde)
                 {
 
                 }
