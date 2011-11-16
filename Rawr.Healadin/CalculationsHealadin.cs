@@ -335,6 +335,7 @@ namespace Rawr.Healadin
                 }
                 statsAverage.ManaRestore *= fightLength;
                 statsAverage.Healed *= fightLength;
+                statsAverage.HealedPerSP *= fightLength;
 
                 stats = statsBaseGear + statsBuffs + statsRace + statsAverage;
                 ConvertRatings(stats, talents, calcOpts);
@@ -663,8 +664,9 @@ namespace Rawr.Healadin
                 SpellsManaCostReduction = stats.SpellsManaCostReduction,
                 HolySpellsManaCostReduction = stats.HolySpellsManaCostReduction,
 
-                // Ony Shiny Shard of the Flame
+                // Healing Trinket Procs
                 Healed = stats.Healed,
+                HealedPerSP = stats.HealedPerSP,
             };
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
@@ -722,7 +724,8 @@ namespace Rawr.Healadin
                 stats.SpellsManaCostReduction +
                 stats.HolySpellsManaCostReduction +
 
-                stats.Healed
+                stats.Healed +
+                stats.HealedPerSP
                 ) != 0;
 
             bool hasTrigger = false;

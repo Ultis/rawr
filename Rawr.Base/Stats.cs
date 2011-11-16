@@ -38,6 +38,7 @@ namespace Rawr
         HealthRestoreFromMaxHealth,
         BonusHealingReceived,
         Healed, // This stores Healing values for targets, not self, like Forethought Talisman's Passive Effect
+        HealedPerSP,
         #endregion
         #region ===== Offensive Stats =====
         // Rating
@@ -665,6 +666,15 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Healed]; }
             set { _rawAdditiveData[(int)AdditiveStat.Healed] = value; }
+        }
+        /// <summary>This stores Healing values for targets per point of Spell Power, not self, like part of Windward Heart's Passive Effect</summary>
+        [DefaultValueAttribute(0f)]
+        [DisplayName("Healed/SP")]
+        [Category("Equipment Effects")]
+        public float HealedPerSP
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.HealedPerSP]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HealedPerSP] = value; }
         }
         #endregion
         #region ===== Offensive Stats =====

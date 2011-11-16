@@ -393,6 +393,7 @@ namespace Rawr.HealPriest
                 BonusManaPotionEffectMultiplier = stats.BonusManaPotionEffectMultiplier,
                 ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
                 Healed = stats.Healed,
+                HealedPerSP = stats.HealedPerSP,
 
                 ManaRestore = stats.ManaRestore,
                 SpellsManaCostReduction = stats.SpellsManaCostReduction,
@@ -450,7 +451,7 @@ namespace Rawr.HealPriest
                 + stats.BonusSpellPowerMultiplier
                 + stats.BonusIntellectMultiplier + stats.BonusSpiritMultiplier + stats.BonusManaMultiplier + stats.BonusCritHealMultiplier
                 + stats.HealingReceivedMultiplier + stats.BonusHealingDoneMultiplier + stats.BonusManaPotionEffectMultiplier
-                + stats.ManaRestoreFromMaxManaPerSecond + stats.Healed
+                + stats.ManaRestoreFromMaxManaPerSecond + stats.Healed + stats.HealedPerSP
 
                 + stats.ManaRestore + stats.SpellsManaCostReduction + stats.HolySpellsManaCostReduction + stats.HighestStat
                 + stats.ShieldFromHealedProc

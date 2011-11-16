@@ -113,6 +113,7 @@ namespace Rawr.RestoSham
                 BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
                 NatureSpellsManaCostReduction = stats.NatureSpellsManaCostReduction,
                 Healed = stats.Healed,
+                HealedPerSP = stats.HealedPerSP,
                 Hp5 = stats.Hp5,
                 MovementSpeed = stats.MovementSpeed,
                 SnareRootDurReduc = stats.SnareRootDurReduc,

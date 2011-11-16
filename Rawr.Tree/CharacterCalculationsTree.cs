@@ -104,7 +104,7 @@ namespace Rawr.Tree {
             PeriodicHealMultiplier = DirectHealMultiplier * (1 + stats.BonusPeriodicHealingMultiplier);
             SpellsManaCostMultiplier = 1 - stats.ManaCostReductionMultiplier;
 
-            Healed = stats.Healed;
+            Healed = stats.Healed + stats.HealedPerSP * SpellPower;
         }
     }
 

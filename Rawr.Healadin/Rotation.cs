@@ -398,7 +398,7 @@ namespace Rawr.Healadin
             // adding Holy Radiance and LoH after BoL calculation, as they do not count towards BoL heals
             calc.TotalHealed += calc.HealedHR + calc.HealedLoH + calc.HealedIH + calc.HealedBoL; 
 
-            calc.HealedOther = Stats.Healed;
+            calc.HealedOther = Stats.Healed + Stats.HealedPerSP * calc.SpellPowerTotal;
             calc.HealedOther += calc.TotalHealed * Stats.ShieldFromHealedProc;
 
             calc.TotalHealed += calc.HealedOther;

@@ -825,8 +825,21 @@ namespace Rawr {
             }
             else if ((match = new Regex(@"Your critical heals have a chance to instantly heal the most injured nearby party member for (?<min>\d+) to (?<max>\d+)").Match(line)).Success)
             {   // Nick of Time, Windward Heart
+                float HealedPerSP = 0f;
+                switch (id)
+                {
+                    case 77981: // LFR Windward Heart
+                        HealedPerSP = 1.107f;
+                        break;
+                    case 77209: // Normal Windward Heart
+                        HealedPerSP = 1.250f;
+                        break;
+                    case 78001: // Heroic Windward Heart
+                        HealedPerSP = 1.411f;
+                        break;
+                }
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellCrit,
-                    new Stats() { Healed = (int.Parse(match.Groups["min"].Value) + int.Parse(match.Groups["max"].Value)) / 2f, },
+                    new Stats() { Healed = (int.Parse(match.Groups["min"].Value) + int.Parse(match.Groups["max"].Value)) / 2f, HealedPerSP = HealedPerSP},
                     0f, 45f, 0.10f));
             }
             #endregion
