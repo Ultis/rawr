@@ -517,6 +517,9 @@ namespace Rawr
         /// Character role that this model is for.
         /// </summary>
         public CharacterRole TargetRole { get { return _role; } }
+
+        public ClassInfo TargetClassInfo { get { return ClassInfo.Classes[(int)TargetClass]; } }
+        public RoleInfo TargetRoleInfo { get { return TargetClassInfo.Roles[(int)TargetRole]; } }
         
         /// <summary>
         /// Method to get a new instance of the model's custom ComparisonCalculation class.

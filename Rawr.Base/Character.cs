@@ -202,6 +202,8 @@ namespace Rawr
         /// <summary>This is a Helper variable for use with the Stats Pane UI</summary>
         [XmlIgnore]
         public int ClassIndex { get { return (int)Class; } set { Class = (CharacterClass)value; } }
+        [XmlIgnore]
+        public ClassInfo ClassInfo { get { return ClassInfo.Classes[(int)Class]; } }
         public event EventHandler ClassChanged;
         public void OnClassChanged() { if (ClassChanged != null) { ClassChanged(this, EventArgs.Empty); } }
         #endregion
@@ -238,6 +240,8 @@ namespace Rawr
                 return _currentRole;
             }
         }
+        [XmlIgnore]
+        public RoleInfo RoleInfo { get { return ClassInfo.Roles[(int)_currentRole]; } }
         #endregion
         #region Character Level (Always 85)
         /// <summary>The level of the Character. In Cataclysm, we support level 85.<br />

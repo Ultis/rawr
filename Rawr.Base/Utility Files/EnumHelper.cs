@@ -95,6 +95,14 @@ namespace Rawr
 
 #endif
 
+        public static int GetRange(Type enumType)
+        {
+            int r = 0;
+            foreach(object v in Enum.GetValues(enumType))
+            {
+                r = Math.Max(r, (int)v + 1);
+            }
+            return r;
+        }
     }
-
 }
