@@ -4,7 +4,7 @@ using System.Globalization;
 
 namespace Rawr.Retribution
 {
-    [Rawr.Calculations.RawrModelInfo("Retribution", "Spell_Holy_CrusaderStrike", CharacterClass.Paladin)]
+    [Rawr.Calculations.RawrModelInfo("Retribution", "Spell_Holy_CrusaderStrike", CharacterClass.Paladin, CharacterRole.MeleeDPS)]
     public class CalculationsRetribution : CalculationsBase
     {
         #region Model Properties
@@ -322,7 +322,6 @@ namespace Rawr.Retribution
         }
         #endregion
 
-        public override CharacterClass TargetClass { get { return CharacterClass.Paladin; } }
         public override ComparisonCalculationBase CreateNewComparisonCalculation()
         {
             return new ComparisonCalculationRetribution();

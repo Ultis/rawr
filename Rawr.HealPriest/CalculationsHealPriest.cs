@@ -4,7 +4,7 @@ using System.Windows.Media;
 
 namespace Rawr.HealPriest
 {
-    [Rawr.Calculations.RawrModelInfo("HealPriest", "Spell_Holy_Renew", CharacterClass.Priest)]
+    [Rawr.Calculations.RawrModelInfo("HealPriest", "Spell_Holy_Renew", CharacterClass.Priest, CharacterRole.Healer)]
     public class CalculationsHealPriest : CalculationsBase
     {
         #region Variables and Properties
@@ -265,7 +265,6 @@ namespace Rawr.HealPriest
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
         public override ICalculationOptionsPanel CalculationOptionsPanel { get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelHealPriest()); } }
 
-        public override CharacterClass TargetClass { get { return CharacterClass.Priest; } }
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationHealPriest(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsHealPriest(); }
 

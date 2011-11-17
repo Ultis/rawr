@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Rawr.Rogue
 {
-    [Rawr.Calculations.RawrModelInfo("Rogue", "Ability_Rogue_SliceDice", CharacterClass.Rogue)]
+    [Rawr.Calculations.RawrModelInfo("Rogue", "Ability_Rogue_SliceDice", CharacterClass.Rogue, CharacterRole.MeleeDPS)]
     public class CalculationsRogue : CalculationsBase
     {
         #region Variables and Properties
@@ -192,7 +192,6 @@ namespace Rawr.Rogue
             }
         }
 
-        public override CharacterClass TargetClass { get { return CharacterClass.Rogue; } }
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationsRogue(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsRogue(); }
         public bool PTRMode = false;

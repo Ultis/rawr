@@ -7,7 +7,7 @@ using Rawr.DK;
 
 namespace Rawr.DPSDK
 {
-    [Rawr.Calculations.RawrModelInfo("DPSDK", "spell_deathknight_classicon", CharacterClass.DeathKnight)]
+    [Rawr.Calculations.RawrModelInfo("DPSDK", "spell_deathknight_classicon", CharacterClass.DeathKnight, CharacterRole.MeleeDPS)]
     public class CalculationsDPSDK : CalculationsBase
     {
         #region DPSDK Gemming Templates
@@ -392,7 +392,6 @@ namespace Rawr.DPSDK
             }
         }
 
-        public override CharacterClass TargetClass { get { return CharacterClass.DeathKnight; } }
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationDPSDK(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsDPSDK(); }
         public override ICalculationOptionBase DeserializeDataObject(string xml) {

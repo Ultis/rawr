@@ -5,7 +5,7 @@ using System.Windows.Media;
 
 namespace Rawr.Moonkin
 {
-    [Rawr.Calculations.RawrModelInfo("Moonkin", "Spell_Nature_ForceOfNature", CharacterClass.Druid)]
+    [Rawr.Calculations.RawrModelInfo("Moonkin", "Spell_Nature_ForceOfNature", CharacterClass.Druid, CharacterRole.RangedDPS)]
     public class CalculationsMoonkin : CalculationsBase
     {
         #region Variables and Properties
@@ -198,7 +198,6 @@ namespace Rawr.Moonkin
             }
         }
 
-        public override CharacterClass TargetClass { get { return CharacterClass.Druid; } }
         public override ICalculationOptionsPanel CalculationOptionsPanel { get { if (calculationOptionsPanel == null) { calculationOptionsPanel = new CalculationOptionsPanelMoonkin(); } return calculationOptionsPanel; } }
         private ICalculationOptionsPanel calculationOptionsPanel = null;
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationMoonkin(); }

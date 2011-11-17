@@ -9,7 +9,7 @@ using System.Xml.Serialization;
 using Rawr.Hunter.Skills;
 
 namespace Rawr.Hunter {
-    [Rawr.Calculations.RawrModelInfo("Hunter", "Inv_Weapon_Bow_07", CharacterClass.Hunter)]
+    [Rawr.Calculations.RawrModelInfo("Hunter", "Inv_Weapon_Bow_07", CharacterClass.Hunter, CharacterRole.RangedDPS)]
     public class CalculationsHunter : CalculationsBase
     {
         #region Variables and Properties
@@ -261,7 +261,6 @@ namespace Rawr.Hunter {
         }
         #endregion
 
-        public override CharacterClass TargetClass { get { return CharacterClass.Hunter; } }
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationHunter(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsHunter(); }
         public ICalculationOptionsPanel _calculationOptionsPanel = null;

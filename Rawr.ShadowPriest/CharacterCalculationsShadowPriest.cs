@@ -4,7 +4,7 @@ using Rawr.ShadowPriest.Spells;
 
 namespace Rawr.ShadowPriest
 {
-    [Rawr.Calculations.RawrModelInfo("ShadowPriest", "Spell_Shadow_Shadowform", CharacterClass.Priest)]
+    [Rawr.Calculations.RawrModelInfo("ShadowPriest", "Spell_Shadow_Shadowform", CharacterClass.Priest, CharacterRole.RangedDPS)]
     public class CharacterCalculationsShadowPriest : CharacterCalculationsBase
     {
         public CharacterCalculationsShadowPriest()

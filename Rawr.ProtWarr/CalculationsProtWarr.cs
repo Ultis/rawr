@@ -29,7 +29,7 @@ namespace Rawr.ProtWarr
         }
     }
 
-    [Rawr.Calculations.RawrModelInfo("ProtWarr", "Ability_Warrior_DefensiveStance", CharacterClass.Warrior)]
+    [Rawr.Calculations.RawrModelInfo("ProtWarr", "Ability_Warrior_DefensiveStance", CharacterClass.Warrior, CharacterRole.Tank)]
     public class CalculationsProtWarr : CalculationsBase
     {
         public override List<GemmingTemplate> DefaultGemmingTemplates
@@ -371,7 +371,6 @@ threat and limited threat scaled by the threat scale.",
             return _relevantGlyphs;
         }
 
-        public override CharacterClass TargetClass { get { return CharacterClass.Warrior; } }
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationProtWarr(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsProtWarr(); }
 

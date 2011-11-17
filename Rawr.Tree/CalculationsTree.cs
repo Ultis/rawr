@@ -65,7 +65,7 @@ namespace Rawr.Tree {
     }
 
 
-    [Rawr.Calculations.RawrModelInfo("Tree", "Ability_Druid_TreeofLife", CharacterClass.Druid)]
+    [Rawr.Calculations.RawrModelInfo("Tree", "Ability_Druid_TreeofLife", CharacterClass.Druid, CharacterRole.Healer)]
     public class CalculationsTree : CalculationsBase
     {
         internal const int BaseMana = 18635;
@@ -445,7 +445,6 @@ namespace Rawr.Tree {
             }
         }
 
-        public override CharacterClass TargetClass { get { return CharacterClass.Druid; } }
         public override ICalculationOptionsPanel CalculationOptionsPanel { get { if (calculationOptionsPanel == null) { calculationOptionsPanel = new CalculationOptionsPanelTree(); } return calculationOptionsPanel; } }
         private ICalculationOptionsPanel calculationOptionsPanel = null;
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationTree(); }

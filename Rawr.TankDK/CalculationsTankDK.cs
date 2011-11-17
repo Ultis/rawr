@@ -9,7 +9,7 @@ using Rawr.DK;
 
 namespace Rawr.TankDK
 {
-    [Rawr.Calculations.RawrModelInfo("TankDK", "spell_deathknight_darkconviction", CharacterClass.DeathKnight)]
+    [Rawr.Calculations.RawrModelInfo("TankDK", "spell_deathknight_darkconviction", CharacterClass.DeathKnight, CharacterRole.Tank)]
     public class CalculationsTankDK : CalculationsBase
     {
         #region Inherited Variables and Properties
@@ -378,9 +378,6 @@ Points individually may be important.",
             }
         }
         private List<ItemType> _relevantItemTypes = null;
-
-        /// <summary>Character class that this model is for.</summary>
-        public override CharacterClass TargetClass { get { return CharacterClass.DeathKnight; } }
 
         /// <summary>Method to get a new instance of the model's custom ComparisonCalculation class.</summary>
         /// <returns>A new instance of the model's custom ComparisonCalculation class, 

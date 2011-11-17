@@ -6,7 +6,7 @@ using System.Windows.Media;
 
 namespace Rawr.Enhance
 {
-    [Rawr.Calculations.RawrModelInfo("Enhance", "inv_jewelry_talisman_04", CharacterClass.Shaman)]
+    [Rawr.Calculations.RawrModelInfo("Enhance", "inv_jewelry_talisman_04", CharacterClass.Shaman, CharacterRole.MeleeDPS)]
     public class CalculationsEnhance : CalculationsBase
     {
         #region Gemming Templates
@@ -190,7 +190,6 @@ namespace Rawr.Enhance
             }
         }
 
-        public override CharacterClass TargetClass { get { return CharacterClass.Shaman; } }
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationEnhance(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsEnhance(); }
 

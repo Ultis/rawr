@@ -36,6 +36,19 @@ namespace Rawr
             }
         }
 
+        private static Dictionary<string, CharacterRole> _modelRoles = null;
+        public static Dictionary<string, CharacterRole> ModelRoles
+        {
+            get
+            {
+                if (_modelRoles == null)
+                {
+                    Models.ToString();
+                }
+                return _modelRoles;
+            }
+        }
+
         public static void RegisterModel(Type type)
         {
             if (type.IsSubclassOf(typeof(CalculationsBase)))
@@ -45,6 +58,7 @@ namespace Rawr
                 Models[modelInfos[0].Name] = type;
                 _modelIcons[modelInfos[0].Name] = modelInfos[0].IconPath;
                 _modelClasses[modelInfos[0].Name] = modelInfos[0].TargetClass;
+                _modelRoles[modelInfos[0].Name] = modelInfos[0].TargetRole;
             }
         }
 
@@ -58,6 +72,7 @@ namespace Rawr
                     _models = new Dictionary<string, Type>();
                     _modelIcons = new Dictionary<string, string>();
                     _modelClasses = new Dictionary<string, CharacterClass>();
+                    _modelRoles = new Dictionary<string, CharacterRole>();
                 }
                 return _models;
             }
@@ -108,20 +123,23 @@ namespace Rawr
         [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
         public sealed class RawrModelInfoAttribute : Attribute
         {
-            public RawrModelInfoAttribute(string name, string iconPath, CharacterClass targetClass)
+            public RawrModelInfoAttribute(string name, string iconPath, CharacterClass targetClass, CharacterRole targetRole)
             {
                 _name = name;
                 _iconPath = iconPath;
                 _targetClass = targetClass;
+                _targetRole = targetRole;
             }
 
             private readonly string _name;
             private readonly string _iconPath;
             private readonly CharacterClass _targetClass;
+            private readonly CharacterRole _targetRole;
 
             public string Name { get { return _name; } }
             public string IconPath { get { return _iconPath; } }
             public CharacterClass TargetClass { get { return _targetClass; } }
+            public CharacterRole TargetRole { get { return _targetRole; } }
         }
 
         private static CalculationsBase _instance;
@@ -393,6 +411,15 @@ namespace Rawr
     /// </summary>
     public abstract class CalculationsBase
     {
+        public CalculationsBase()
+        {
+            Calculations.RawrModelInfoAttribute[] attrs = (Calculations.RawrModelInfoAttribute[])this.GetType().GetCustomAttributes(typeof(Calculations.RawrModelInfoAttribute), true);
+            if (attrs == null || attrs.Length == 0)
+                throw new Exception("Model class missing RawrModelInfoAttribute attribute");
+            _class = attrs[0].TargetClass;
+            _role = attrs[0].TargetRole;
+        }
+
         /// <summary>
         /// Name of the model. When loaded in model cache, it's assigned the value of its corresponding key
         /// </summary>
@@ -479,10 +506,17 @@ namespace Rawr
         /// </example>
         public abstract List<ItemType> RelevantItemTypes { get; }
 
+        private readonly CharacterClass _class;
         /// <summary>
         /// Character class that this model is for.
         /// </summary>
-        public abstract CharacterClass TargetClass { get; }
+        public CharacterClass TargetClass { get { return _class; } }
+
+        private readonly CharacterRole _role;
+        /// <summary>
+        /// Character role that this model is for.
+        /// </summary>
+        public CharacterRole TargetRole { get { return _role; } }
         
         /// <summary>
         /// Method to get a new instance of the model's custom ComparisonCalculation class.

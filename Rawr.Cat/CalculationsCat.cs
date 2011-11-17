@@ -5,7 +5,7 @@ using System.Windows.Media;
 
 namespace Rawr.Cat
 {
-    [Rawr.Calculations.RawrModelInfo("Cat", "Ability_Druid_CatForm", CharacterClass.Druid)]
+    [Rawr.Calculations.RawrModelInfo("Cat", "Ability_Druid_CatForm", CharacterClass.Druid, CharacterRole.MeleeDPS)]
     public class CalculationsCat : CalculationsBase
     {
         #region Gemming Templates
@@ -278,7 +278,6 @@ namespace Rawr.Cat
             }
         }
 
-        public override CharacterClass TargetClass { get { return CharacterClass.Druid; } }
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationCat(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsCat(); }
 

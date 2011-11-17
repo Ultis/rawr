@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Rawr.Healadin
 {
-    [Rawr.Calculations.RawrModelInfo("Healadin", "Spell_Holy_HolyBolt", CharacterClass.Paladin)]
+    [Rawr.Calculations.RawrModelInfo("Healadin", "Spell_Holy_HolyBolt", CharacterClass.Paladin, CharacterRole.Healer)]
     public class CalculationsHealadin : CalculationsBase
     {
 
@@ -221,7 +221,6 @@ namespace Rawr.Healadin
             }
         }
 
-        public override CharacterClass TargetClass { get { return CharacterClass.Paladin; } }
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationHealadin(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsHealadin(); }
 

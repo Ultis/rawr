@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace Rawr.Mage
 {
-    [Rawr.Calculations.RawrModelInfo("Mage", "Spell_Holy_MagicalSentry", CharacterClass.Mage)]
+    [Rawr.Calculations.RawrModelInfo("Mage", "Spell_Holy_MagicalSentry", CharacterClass.Mage, CharacterRole.RangedDPS)]
     public sealed class CalculationsMage : CalculationsBase
     {
         private List<GemmingTemplate> _defaultGemmingTemplates = null;
@@ -445,7 +445,6 @@ namespace Rawr.Mage
             }
         }
 
-        public override CharacterClass TargetClass { get { return CharacterClass.Mage; } }
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationMage(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsMage(); }
 

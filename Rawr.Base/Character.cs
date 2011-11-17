@@ -210,6 +210,8 @@ namespace Rawr
         [XmlElement("CurrentModel")] // this should not have a default value, otherwise loading a bear character while in cat will load it as cat
         public string _currentModel;
         [XmlIgnore]
+        public CharacterRole _currentRole;
+        [XmlIgnore]
         public string CurrentModel {
             get {
                 if (string.IsNullOrEmpty(_currentModel)) {
@@ -217,12 +219,24 @@ namespace Rawr
                         if (kvp.Value == Calculations.Instance.GetType()) {
                             _currentModel = kvp.Key;
                             Class = Calculations.ModelClasses[_currentModel];
+                            _currentRole = Calculations.ModelRoles[_currentModel];
                         }
                     }
                 }
                 return _currentModel;
             }
             set { _currentModel = value; }
+        }
+        [XmlIgnore]
+        public CharacterRole Role
+        {
+            get {
+                if (_currentRole == 0)
+                {
+                    string s = CurrentModel;
+                }
+                return _currentRole;
+            }
         }
         #endregion
         #region Character Level (Always 85)

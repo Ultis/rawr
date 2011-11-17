@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 using System.Windows;
 
 namespace Rawr.DPSWarr {
-    [Rawr.Calculations.RawrModelInfo("DPSWarr", "Ability_Rogue_Ambush", CharacterClass.Warrior)]
+    [Rawr.Calculations.RawrModelInfo("DPSWarr", "Ability_Rogue_Ambush", CharacterClass.Warrior, CharacterRole.MeleeDPS)]
     public class CalculationsDPSWarr : CalculationsBase {
         #region Variables and Properties
 
@@ -446,7 +446,6 @@ a GCD's length, you will use this while running back into place",
             }
         }
 
-        public override CharacterClass TargetClass { get { return CharacterClass.Warrior; } }
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationDPSWarr(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsDPSWarr(); }
         public ICalculationOptionsPanel _calculationOptionsPanel = null;

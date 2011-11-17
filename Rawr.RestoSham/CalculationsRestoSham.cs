@@ -5,7 +5,7 @@ using System.Windows.Media;
 
 namespace Rawr.RestoSham
 {
-    [Rawr.Calculations.RawrModelInfo("RestoSham", "Spell_Nature_Magicimmunity", CharacterClass.Shaman)]
+    [Rawr.Calculations.RawrModelInfo("RestoSham", "Spell_Nature_Magicimmunity", CharacterClass.Shaman, CharacterRole.Healer)]
     public class CalculationsRestoSham : CalculationsBase
     {
         #region Fields
@@ -25,14 +25,6 @@ namespace Rawr.RestoSham
         #endregion
 
         #region Basic Model Information and Initialization
-
-        //
-        // This model is for shammies!
-        //
-        public override CharacterClass TargetClass
-        {
-            get { return CharacterClass.Shaman; }
-        }
 
         /// <summary>
         /// Method to get a new instance of the model's custom ComparisonCalculation class.

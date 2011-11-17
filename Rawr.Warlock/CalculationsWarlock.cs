@@ -6,11 +6,10 @@ using System.Xml.Serialization;
 
 namespace Rawr.Warlock
 {
-    [Rawr.Calculations.RawrModelInfo("Warlock", "Spell_Nature_FaerieFire", CharacterClass.Warlock)]
+    [Rawr.Calculations.RawrModelInfo("Warlock", "Spell_Nature_FaerieFire", CharacterClass.Warlock, CharacterRole.RangedDPS)]
     public class CalculationsWarlock : CalculationsBase
     {
         // Basic Model Functionality
-        public override CharacterClass TargetClass { get { return CharacterClass.Warlock; } }
         private CalculationOptionsPanelWarlock _calculationOptionsPanel = null;
         public override ICalculationOptionsPanel CalculationOptionsPanel
         {

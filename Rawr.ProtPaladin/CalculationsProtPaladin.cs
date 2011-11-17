@@ -8,7 +8,7 @@ using Rawr.Base;
 
 namespace Rawr.ProtPaladin
 {
-    [Rawr.Calculations.RawrModelInfo("ProtPaladin", "Ability_Paladin_JudgementsOfTheJust", CharacterClass.Paladin)]
+    [Rawr.Calculations.RawrModelInfo("ProtPaladin", "Ability_Paladin_JudgementsOfTheJust", CharacterClass.Paladin, CharacterRole.Tank)]
     public class CalculationsProtPaladin : CalculationsBase
     {
         #region Variables and Properties
@@ -305,7 +305,6 @@ focus on Survival Points.",
             }
         }
 
-        public override CharacterClass TargetClass { get { return CharacterClass.Paladin; } }
         #endregion
 
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationProtPaladin(); }

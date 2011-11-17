@@ -5,7 +5,7 @@ using System.Windows.Media;
 using Rawr.Elemental.Spells;
 
 namespace Rawr.Elemental {
-    [Rawr.Calculations.RawrModelInfo("Elemental", "Spell_Nature_Lightning", CharacterClass.Shaman)]
+    [Rawr.Calculations.RawrModelInfo("Elemental", "Spell_Nature_Lightning", CharacterClass.Shaman, CharacterRole.RangedDPS)]
     public class CalculationsElemental : CalculationsBase {
         #region Variables and Properties
 
@@ -159,7 +159,6 @@ namespace Rawr.Elemental {
             }
         }
 
-        public override CharacterClass TargetClass { get { return CharacterClass.Shaman; } }
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationElemental(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsElemental(); }
         private ICalculationOptionsPanel _calculationOptionsPanel = null;

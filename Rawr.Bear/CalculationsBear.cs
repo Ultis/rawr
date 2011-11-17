@@ -27,7 +27,7 @@ namespace Rawr.Bear
     /// <summary>
     /// Core class representing the Rawr.Bear model
     /// </summary>
-    [Rawr.Calculations.RawrModelInfo("Bear", "Ability_Racial_BearForm", CharacterClass.Druid)]
+    [Rawr.Calculations.RawrModelInfo("Bear", "Ability_Racial_BearForm", CharacterClass.Druid, CharacterRole.Tank)]
     public class CalculationsBear : CalculationsBase
     {
         #region Basic Model Properties and Methods
@@ -378,10 +378,6 @@ the Threat Scale defined on the Options tab.",
             }
         }
 
-        /// <summary>
-        /// The class that Rawr.Bear is designed for (Druid)
-        /// </summary>
-        public override CharacterClass TargetClass { get { return CharacterClass.Druid; } }
         /// <summary>
         /// Creates a new ComparisonCalculationBear instance
         /// </summary>

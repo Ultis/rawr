@@ -11,7 +11,7 @@ namespace Rawr.ShadowPriest
     /// <summary>
     /// Shadow Priest Model Calculations
     /// </summary>
-    [Calculations.RawrModelInfo(MODEL_NAME, "Spell_Shadow_Shadowform", CharacterClass.Priest)]
+    [Calculations.RawrModelInfo(MODEL_NAME, "Spell_Shadow_Shadowform", CharacterClass.Priest, CharacterRole.RangedDPS)]
     public class CalculationsShadowPriest : CalculationsBase
     {
         private const string MODEL_NAME = "ShadowPriest";
@@ -191,11 +191,6 @@ namespace Rawr.ShadowPriest
         
         #region Character
 
-        public override CharacterClass TargetClass
-        {
-            get { return CharacterClass.Priest; }
-        }
-        
         #region Character Stats
         
         public override Stats GetCharacterStats(Character character, Item additionalItem)
