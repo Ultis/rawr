@@ -278,28 +278,6 @@ namespace Rawr.Moonkin
         }
 
         /// <summary>
-        /// List of itemtypes that are relevant for moonkin
-        /// </summary>
-        private List<ItemType> _relevantItemTypes = null;
-        public override List<ItemType> RelevantItemTypes
-        {
-            get
-            {
-                return _relevantItemTypes ?? (_relevantItemTypes = new List<ItemType>(new ItemType[]
-                {
-                            ItemType.None,
-                            ItemType.Leather,
-                            ItemType.Dagger,
-                            ItemType.Staff,
-                            ItemType.FistWeapon,
-                            ItemType.OneHandMace,
-                            ItemType.TwoHandMace,
-                            ItemType.Relic,
-                }));
-            }
-        }
-
-        /// <summary>
         /// List of SpecialEffect Triggers that are relevant for moonkin model
         /// Every trigger listed here needs an implementation in ProcessSpecialEffects()
         /// A trigger not listed here should not appear in ProcessSpecialEffects()

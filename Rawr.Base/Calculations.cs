@@ -504,7 +504,8 @@ namespace Rawr
         /// });
         /// ]]>
         /// </example>
-        public abstract List<ItemType> RelevantItemTypes { get; }
+        public virtual bool[] RelevantItemType { get { return TargetRoleInfo.UsefulItemType; } }
+        public virtual ItemType[] RelevantItemTypes { get { return TargetRoleInfo.UsefulItemTypes; } }
 
         private readonly CharacterClass _class;
         /// <summary>
@@ -1741,7 +1742,7 @@ namespace Rawr
             try
             {
                 bool b = (string.IsNullOrEmpty(item.RequiredClasses) || item.RequiredClasses.Replace(" ", "").Contains(TargetClass.ToString()));
-                b &= (RelevantItemTypes.Contains(item.Type));
+                b &= (RelevantItemType[(int)item.Type]);
                 if (b)
                 {
                     if (HasRelevantStats(item.Stats) || HasRelevantRandomSuffix(item))

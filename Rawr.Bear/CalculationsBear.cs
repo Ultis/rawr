@@ -354,30 +354,6 @@ the Threat Scale defined on the Options tab.",
             }
         }
 
-        private List<ItemType> _relevantItemTypes = null;
-        /// <summary>
-        /// ItemTypes that are relevant to Rawr.Bear
-        /// </summary>
-        public override List<ItemType> RelevantItemTypes
-        {
-            get
-            {
-                if (_relevantItemTypes == null)
-                {
-                    _relevantItemTypes = new List<ItemType>(new ItemType[]
-                    {
-                        ItemType.None,
-                        ItemType.Leather,
-                        ItemType.Relic,
-                        ItemType.Staff,
-                        ItemType.TwoHandMace,
-                        ItemType.Polearm
-                    });
-                }
-                return _relevantItemTypes;
-            }
-        }
-
         /// <summary>
         /// Creates a new ComparisonCalculationBear instance
         /// </summary>

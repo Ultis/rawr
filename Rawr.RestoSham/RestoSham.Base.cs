@@ -10,24 +10,6 @@ namespace Rawr.RestoSham
     public static class Relevants
     {
         /// <summary>
-        /// List of <see cref="ItemType"/> values that are relevant to this model.
-        /// </summary>
-        public static List<ItemType> RelevantItemTypes = new List<ItemType>()
-        {
-            ItemType.None,
-            ItemType.Cloth,
-            ItemType.Leather,
-            ItemType.Mail,
-            ItemType.Relic,
-            ItemType.OneHandMace,
-            ItemType.OneHandAxe,
-            ItemType.Shield,
-            ItemType.Staff,
-            ItemType.FistWeapon,
-            ItemType.Dagger
-        };
-
-        /// <summary>
         /// List of <see cref="String"/> values that represent the Glyphs relevant to this model.
         /// </summary>
         public static List<String> RelevantGlyphs = new List<String>()

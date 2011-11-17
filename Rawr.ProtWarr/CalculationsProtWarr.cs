@@ -261,33 +261,6 @@ threat and limited threat scaled by the threat scale.",
             }
         }
 
-        private List<ItemType> _relevantItemTypes = null;
-        public override List<ItemType> RelevantItemTypes
-        {
-            get
-            {
-                if (_relevantItemTypes == null)
-                {
-                    _relevantItemTypes = new List<ItemType>(new ItemType[]
-                    {
-                        ItemType.None,
-                        ItemType.Plate,
-                        ItemType.Bow,
-                        ItemType.Crossbow,
-                        ItemType.Gun,
-                        ItemType.Thrown,
-                        ItemType.FistWeapon,
-                        ItemType.Dagger,
-                        ItemType.OneHandAxe,
-                        ItemType.OneHandMace,
-                        ItemType.OneHandSword,
-                        ItemType.Shield
-                    });
-                }
-                return _relevantItemTypes;
-            }
-        }
-
         public override void SetDefaults(Character character)
         {
             character.ActiveBuffsAdd("Battle Shout");

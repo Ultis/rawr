@@ -288,23 +288,6 @@ namespace Rawr.Hunter {
 
         #region Relevancy
 
-        private List<ItemType> _relevantItemTypes = null;
-        public override List<ItemType> RelevantItemTypes {
-            get {
-                if (_relevantItemTypes == null) {
-                    _relevantItemTypes = new List<ItemType>(new[] {
-                        ItemType.None,
-                        ItemType.Leather, ItemType.Mail,
-                        ItemType.Bow, ItemType.Crossbow, ItemType.Gun,
-                        ItemType.FistWeapon, ItemType.Dagger, ItemType.OneHandAxe, ItemType.OneHandSword,
-                        ItemType.Polearm, ItemType.Staff,
-                        ItemType.TwoHandAxe, ItemType.TwoHandSword
-                    });
-                }
-                return _relevantItemTypes;
-            }
-        }
-
         private static List<string> _relevantGlyphs = null;
         public override List<string> GetRelevantGlyphs()
         {

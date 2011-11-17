@@ -379,32 +379,7 @@ namespace Rawr.ShadowPriest
         }
 
         #endregion
-        
-        #region Relevant Items
-        
-        private List<ItemType> _relevantItemTypes = null;
-
-        public override List<ItemType> RelevantItemTypes
-        {
-            get
-            {
-                if (_relevantItemTypes == null)
-                {
-                    _relevantItemTypes = new List<ItemType>(new ItemType[]{
-                        ItemType.None,
-                        ItemType.Cloth,
-                        ItemType.Dagger,
-                        ItemType.Wand,
-                        ItemType.OneHandMace,
-                        ItemType.Staff
-                    });
-                }
-                return _relevantItemTypes;
-            }
-        }
-        
-        #endregion
-        
+                
         #endregion
         
         #region CalculationBase

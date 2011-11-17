@@ -112,7 +112,7 @@ namespace Rawr.zzTestzz
         public void RelevantItemTypesTest()
         {
             CalculationsBase target = CreateCalculationsBase(); // TODO: Initialize to an appropriate value
-            List<ItemType> actual;
+            ItemType[] actual;
             actual = target.RelevantItemTypes;
             Assert.Inconclusive("Verify the correctness of this test method.");
         }

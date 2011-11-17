@@ -279,18 +279,6 @@ namespace Rawr.RestoSham
             return Relevants.RelevantGlyphs;
         }
 
-        /// <summary>
-        /// List&lt;ItemType&gt; containing all of the ItemTypes relevant to this model. Typically this
-        /// means all types of armor/weapons that the intended class is able to use, but may also
-        /// be trimmed down further if some aren't typically used. ItemType.None should almost
-        /// always be included, because that type includes items with no proficiancy requirement, such
-        /// as rings, necklaces, cloaks, held in off hand items, etc.
-        /// </summary>
-        public override List<ItemType> RelevantItemTypes
-        {
-            get { return Relevants.RelevantItemTypes; }
-        }
-
         #endregion
 
         #region Chart Methods

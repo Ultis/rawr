@@ -176,34 +176,6 @@ namespace Rawr.Elemental {
         #endregion
 
         #region Relevancy
-        private List<ItemType> _relevantItemTypes = null;
-        public override List<ItemType> RelevantItemTypes
-        {
-            get
-            {
-                if (_relevantItemTypes == null)
-                {
-                    _relevantItemTypes = new List<ItemType>(new ItemType[]
-                    {
-                        ItemType.None,
-                        ItemType.Cloth,
-                        ItemType.Leather,
-                        ItemType.Mail,
-                        ItemType.Dagger,
-                        ItemType.FistWeapon,
-                        ItemType.OneHandAxe,
-                        ItemType.OneHandMace,
-                        ItemType.Shield,
-                        ItemType.Staff,
-                        ItemType.Relic,
-                        ItemType.TwoHandAxe,
-                        ItemType.TwoHandMace
-                    });
-                }
-                return _relevantItemTypes;
-            }
-        }
-
         public override bool IsItemRelevant(Item item)
         {
             if (item.Slot == ItemSlot.Ranged && item.Type != ItemType.Relic)

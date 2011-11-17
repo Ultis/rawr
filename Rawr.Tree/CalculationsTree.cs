@@ -501,28 +501,6 @@ namespace Rawr.Tree {
             return _relevantGlyphs;
         }
 
-        /// <summary>
-        /// List of itemtypes that are relevant for Tree
-        /// </summary>
-        private List<ItemType> _relevantItemTypes = null;
-        public override List<ItemType> RelevantItemTypes
-        {
-            get
-            {
-                return _relevantItemTypes ?? (_relevantItemTypes = new List<ItemType>(new ItemType[]
-                {
-                            ItemType.None,
-                            ItemType.Leather,
-                            ItemType.Dagger,
-                            ItemType.Staff,
-                            ItemType.FistWeapon,
-                            ItemType.OneHandMace,
-                            ItemType.TwoHandMace,
-                            ItemType.Relic,
-                }));
-            }
-        }
-
 
         /// <summary>
         /// List of SpecialEffect Triggers that are relevant for tree model

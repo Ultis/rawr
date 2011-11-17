@@ -245,21 +245,6 @@ namespace Rawr.Warlock
             return new ComparisonCalculationBase[0];
         }
 
-        // Relevancy
-        private List<ItemType> _relevantItemTypes = null;
-        public override List<ItemType> RelevantItemTypes
-        {
-            get
-            {
-                if (_relevantItemTypes == null)
-                {
-                    _relevantItemTypes = new List<ItemType>(6) { 
-                        ItemType.None, ItemType.Cloth, ItemType.Dagger, ItemType.Wand, ItemType.OneHandSword, ItemType.Staff 
-                    };
-                }
-                return _relevantItemTypes;
-            }
-        }
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
             get

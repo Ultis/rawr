@@ -954,32 +954,6 @@ namespace Rawr.Enhance
         #endregion
 
         #region Relevant Stats
-        private List<ItemType> _relevantItemTypes = null;
-        public override List<ItemType> RelevantItemTypes
-        {
-            get
-            {
-                if (_relevantItemTypes == null)
-                {
-                    _relevantItemTypes = new List<ItemType>(new ItemType[]
-                    {
-                        ItemType.None,
-                        //ItemType.Cloth,
-                        //ItemType.Leather,
-                        ItemType.Mail,
-                        ItemType.Relic,
-                    //	ItemType.Staff,
-                    //	ItemType.TwoHandMace, // Removed two handed options so as not to screw up recommendations
-                    //  ItemType.TwoHandAxe,  // Two handers are simply NOT viable for Enhancement Shamans
-                    //  ItemType.Dagger,      // Nor are daggers
-                        ItemType.OneHandAxe,
-                        ItemType.OneHandMace,
-                        ItemType.FistWeapon
-                    });
-                }
-                return _relevantItemTypes;
-            }
-        }
 
         public override bool IsItemRelevant(Item item)
         {

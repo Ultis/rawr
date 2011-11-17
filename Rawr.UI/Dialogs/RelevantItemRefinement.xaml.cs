@@ -15,7 +15,7 @@ namespace Rawr.UI
     public partial class RelevantItemRefinement : ChildWindow
     {
 
-        private List<ItemType> modelRelevant;
+        private ItemType[] modelRelevant;
         private List<ItemType> userRelevant;
 
         private List<CheckBox> checkBoxes;

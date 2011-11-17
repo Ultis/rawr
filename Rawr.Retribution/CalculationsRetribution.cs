@@ -598,25 +598,6 @@ namespace Rawr.Retribution
         #endregion
 
         #region Relevancy Methods
-        /// <summary>
-        /// List of itemtypes that are relevant for retribution
-        /// </summary>
-        private List<ItemType> _relevantItemTypes;
-        public override List<ItemType> RelevantItemTypes
-        {
-            get
-            {
-                return _relevantItemTypes ?? (_relevantItemTypes = new List<ItemType>(new ItemType[]
-                {
-                    ItemType.None,
-                    ItemType.Plate,
-                    ItemType.Relic,
-                    ItemType.TwoHandAxe,
-                    ItemType.TwoHandMace,
-                    ItemType.TwoHandSword
-                }));
-            }
-        }
 
         /// <summary>
         /// List of SpecialEffect Triggers that are relevant for retribution model

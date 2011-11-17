@@ -478,23 +478,6 @@ a GCD's length, you will use this while running back into place",
 
         #region Relevancy
 
-        private List<ItemType> _relevantItemTypes = null;
-        public override List<ItemType> RelevantItemTypes {
-            get {
-                if (_relevantItemTypes == null) {
-                    _relevantItemTypes = new List<ItemType>(new[] {
-                        ItemType.None,
-                        ItemType.Plate,
-                        ItemType.Bow, ItemType.Crossbow, ItemType.Gun, ItemType.Thrown,
-                        ItemType.Dagger, ItemType.FistWeapon, ItemType.OneHandMace, ItemType.OneHandSword, ItemType.OneHandAxe,
-                        ItemType.Polearm,
-                        ItemType.TwoHandMace, ItemType.TwoHandSword, ItemType.TwoHandAxe,
-                    });
-                }
-                return _relevantItemTypes;
-            }
-        }
-
         public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot) {
             if (enchant == null) { return false; }
             // Hide the ranged weapon enchants. None of them apply to melee damage at all.

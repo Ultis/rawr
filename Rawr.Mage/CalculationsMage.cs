@@ -293,27 +293,6 @@ namespace Rawr.Mage
         private CalculationOptionsPanelMage _calculationOptionsPanel = null;
         public override ICalculationOptionsPanel CalculationOptionsPanel { get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelMage()); } }
 
-        private List<ItemType> _relevantItemTypes = null;
-        public override List<ItemType> RelevantItemTypes
-        {
-            get
-            {
-                if (_relevantItemTypes == null)
-                {
-                    _relevantItemTypes = new List<ItemType>(new ItemType[]
-                    {
-                        ItemType.None,
-                        ItemType.Cloth,
-                        ItemType.Dagger,
-                        ItemType.OneHandSword,
-                        ItemType.Staff,
-                        ItemType.Wand,
-                    });
-                }
-                return _relevantItemTypes;
-            }
-        }
-
         public override void SetDefaults(Character character)
         {
             character.ActiveBuffsAdd("Arcane Tactics");

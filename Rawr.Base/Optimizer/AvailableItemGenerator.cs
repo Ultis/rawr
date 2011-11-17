@@ -1912,7 +1912,7 @@ namespace Rawr.Optimizer
                 {
                     // have to use the relevant types from the model, so we get types that can be equipped at all
                     //if (item != null && ItemFilter.GetRelevantItemTypesList(model).Contains(item.Type))
-                    if (item != null && model.RelevantItemTypes.Contains(item.Type))
+                    if (item != null && model.RelevantItemType[(int)item.Type])
                     {
                         isRelevant = true;
                         break;

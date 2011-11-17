@@ -2263,13 +2263,13 @@ namespace Rawr.UI
         }
 
         // From Refine Types of Items Listed
-        private List<ItemType> modelRelevant;
+        private ItemType[] modelRelevant;
         private List<ItemType> userRelevant;
         private List<CheckBox> checkBoxes;
         public void UpdateBoxes()
         {
             if (Calculations.Instance == null || Calculations.Instance.RelevantItemTypes == null) return;
-            modelRelevant = Calculations.Instance != null && Calculations.Instance.RelevantItemTypes != null ? Calculations.Instance.RelevantItemTypes : new List<ItemType>();
+            modelRelevant = Calculations.Instance != null && Calculations.Instance.RelevantItemTypes != null ? Calculations.Instance.RelevantItemTypes : new ItemType[0];
             userRelevant = Calculations.Instance != null ? ItemFilter.GetRelevantItemTypesList(Calculations.Instance) : new List<ItemType>();
             foreach (CheckBox box in checkBoxes)
             {

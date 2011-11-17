@@ -170,28 +170,6 @@ namespace Rawr.Rogue
             }
         }
 
-        private List<ItemType> _relevantItemTypes = null;
-        public override List<ItemType> RelevantItemTypes {
-            get {
-                if (_relevantItemTypes == null) {
-                    _relevantItemTypes = new List<ItemType>(new[] {
-                        ItemType.None,
-                        ItemType.Leather,
-                        ItemType.Bow,
-                        ItemType.Crossbow,
-                        ItemType.Gun,
-                        ItemType.Thrown,
-                        ItemType.Dagger,
-                        ItemType.FistWeapon,
-                        ItemType.OneHandAxe,
-                        ItemType.OneHandMace,
-                        ItemType.OneHandSword
-                    });
-                }
-                return _relevantItemTypes;
-            }
-        }
-
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationsRogue(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsRogue(); }
         public bool PTRMode = false;

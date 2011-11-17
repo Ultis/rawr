@@ -324,24 +324,6 @@ namespace Rawr.HealPriest
             return _relevantGlyphs;
         }
 
-        private List<ItemType> _relevantItemTypes = null;
-        public override List<ItemType> RelevantItemTypes
-        {
-            get {
-                if (_relevantItemTypes == null) {
-                    _relevantItemTypes = new List<ItemType>(new ItemType[]{
-                        ItemType.None,
-                        ItemType.Cloth,
-                        ItemType.Dagger,
-                        ItemType.Wand,
-                        ItemType.OneHandMace,
-                        ItemType.Staff
-                    });
-                }
-                return _relevantItemTypes;
-            }
-        }
-
         public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot)
         {
             if (slot == ItemSlot.Ranged) return false;

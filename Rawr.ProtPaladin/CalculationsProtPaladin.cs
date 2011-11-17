@@ -1163,23 +1163,6 @@ focus on Survival Points.",
         }
 
         #region Relevancy Methods
-        private List<ItemType> _relevantItemTypes = null;
-        public override List<ItemType> RelevantItemTypes {
-            get {
-                if (_relevantItemTypes == null) {
-                    _relevantItemTypes = new List<ItemType>(new ItemType[] {
-                        ItemType.Plate,
-                        ItemType.None,
-                        ItemType.Shield,
-                        ItemType.Relic,
-                        ItemType.OneHandAxe,
-                        ItemType.OneHandMace,
-                        ItemType.OneHandSword,
-                    });
-                }
-                return _relevantItemTypes;
-            }
-        }
 
         private static List<string> _relevantGlyphs;
         public override List<string> GetRelevantGlyphs() {

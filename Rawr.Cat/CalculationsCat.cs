@@ -257,27 +257,6 @@ namespace Rawr.Cat
             }
         }
 
-        private List<ItemType> _relevantItemTypes = null;
-        public override List<ItemType> RelevantItemTypes
-        {
-            get
-            {
-                if (_relevantItemTypes == null)
-                {
-                    _relevantItemTypes = new List<ItemType>(new ItemType[]
-                    {
-                        ItemType.None,
-                        ItemType.Leather,
-                        ItemType.Relic,
-                        ItemType.Staff,
-                        ItemType.TwoHandMace,
-                        ItemType.Polearm
-                    });
-                }
-                return _relevantItemTypes;
-            }
-        }
-
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationCat(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsCat(); }
 

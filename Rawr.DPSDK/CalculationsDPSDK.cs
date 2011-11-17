@@ -360,38 +360,6 @@ namespace Rawr.DPSDK
             get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelDPSDK()); }
         }
 
-        private List<ItemType> _relevantItemTypes = null;
-        /// <summary>
-        /// List<ItemType> containing all of the ItemTypes relevant to this model. Typically this
-        /// means all types of armor/weapons that the intended class is able to use, but may also
-        /// be trimmed down further if some aren't typically used. ItemType.None should almost
-        /// always be included, because that type includes items with no proficiancy requirement, such
-        /// as rings, necklaces, cloaks, held in off hand items, etc.
-        /// </summary>
-        public override List<ItemType> RelevantItemTypes
-        {
-            get
-            {
-                if (_relevantItemTypes == null) 
-                {
-                    _relevantItemTypes = new List<ItemType>(new ItemType[]
-                    {
-                        ItemType.None,
-                        ItemType.Plate,
-                        ItemType.Relic,
-                        ItemType.Polearm,
-                        ItemType.TwoHandAxe,
-                        ItemType.TwoHandMace,
-                        ItemType.TwoHandSword,
-                        ItemType.OneHandAxe,
-                        ItemType.OneHandMace,
-                        ItemType.OneHandSword
-                    });
-                }
-                return _relevantItemTypes;
-            }
-        }
-
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationDPSDK(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsDPSDK(); }
         public override ICalculationOptionBase DeserializeDataObject(string xml) {

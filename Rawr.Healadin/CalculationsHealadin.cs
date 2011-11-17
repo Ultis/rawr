@@ -545,28 +545,6 @@ namespace Rawr.Healadin
             set { isHitIrrelevant = value; }
         }
 
-        private List<ItemType> relevantItemTypes = null;
-        public override List<ItemType> RelevantItemTypes
-        {
-            get
-            {
-                if (relevantItemTypes == null)
-                {
-                    relevantItemTypes = new List<ItemType>(new ItemType[]
-                    {
-                        ItemType.Plate,
-                        ItemType.None,
-                        ItemType.Shield,
-                        ItemType.Relic,
-                        ItemType.OneHandAxe,
-                        ItemType.OneHandMace,
-                        ItemType.OneHandSword
-                    });
-                }
-                return relevantItemTypes;
-            }
-        }
-
         private static List<string> relevantGlyphs;
         public override List<string> GetRelevantGlyphs()
         {
