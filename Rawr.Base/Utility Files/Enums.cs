@@ -19,6 +19,14 @@ namespace Rawr
         Druid = 11,
     }
 
+    public enum CharacterRole
+    {
+        RangedDPS = 1,
+        MeleeDPS = 2,
+        Healer = 3,
+        Tank = 4
+    }
+
     public enum CharacterFaction
     {
         Alliance = 1,
