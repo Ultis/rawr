@@ -494,51 +494,14 @@ namespace Rawr.UI
 
         private void UpdateRaceLimitations()
         {
-            foreach (ComboBoxItem i in RaceCombo.Items)
+            for(int idx = 0; idx < RaceCombo.Items.Count; ++idx)
             {
-                if (i.Content != null && i.Content.ToString() != ""
-                    && GetClassAllowableRaces[Character.CurrentModel].Contains(i.Content.ToString())) {
+                ComboBoxItem i = (ComboBoxItem)RaceCombo.Items[idx];
+                if (Character.ClassInfo.AllowedRace[(int)idx])
                     i.Visibility = Visibility.Visible;
-                }else{
+                else
                     i.Visibility = Visibility.Collapsed;
-                }
             }
-        }
-        private static Dictionary<string, List<string>> classAllowableRaces = null;
-        public static Dictionary<string, List<string>> GetClassAllowableRaces
-        {
-            get
-            {
-                if (classAllowableRaces == null)
-                {
-                    classAllowableRaces = new Dictionary<string, List<string>>();
-                    classAllowableRaces.Add("DPSDK", new List<string>() { "Draenei", "Dwarf", "Gnome", "Human", "Night Elf", "Blood Elf", "Orc", "Tauren", "Troll", "Undead", "Worgen", "Goblin", /*"Pandaren",*/ });
-                    classAllowableRaces.Add("TankDK", new List<string>() { "Draenei", "Dwarf", "Gnome", "Human", "Night Elf", "Blood Elf", "Orc", "Tauren", "Troll", "Undead", "Worgen", "Goblin", /*"Pandaren",*/ });
-                    classAllowableRaces.Add("Bear", new List<string>() { /*"Draenei",*/ /*"Dwarf",*/ /*"Gnome",*/ /*"Human",*/ "Night Elf", /*"Blood Elf",*/ /*"Orc",*/ "Tauren", "Troll", /*"Undead",*/ "Worgen", /*"Goblin", "Pandaren",*/ });
-                    classAllowableRaces.Add("Cat", new List<string>() { /*"Draenei",*/ /*"Dwarf",*/ /*"Gnome",*/ /*"Human",*/ "Night Elf", /*"Blood Elf",*/ /*"Orc",*/ "Tauren", "Troll", /*"Undead",*/ "Worgen", /*"Goblin", "Pandaren",*/ });
-                    classAllowableRaces.Add("Moonkin", new List<string>() { /*"Draenei",*/ /*"Dwarf",*/ /*"Gnome",*/ /*"Human",*/ "Night Elf", /*"Blood Elf",*/ /*"Orc",*/ "Tauren", "Troll", /*"Undead",*/ "Worgen", /*"Goblin", "Pandaren",*/ });
-                    classAllowableRaces.Add("Tree", new List<string>() { /*"Draenei",*/ /*"Dwarf",*/ /*"Gnome",*/ /*"Human",*/ "Night Elf", /*"Blood Elf",*/ /*"Orc",*/ "Tauren", "Troll", /*"Undead",*/ "Worgen", /*"Goblin", "Pandaren",*/ });
-                    classAllowableRaces.Add("Hunter", new List<string>() { "Draenei", "Dwarf", /*"Gnome",*/ "Human", "Night Elf", "Blood Elf", "Orc", "Tauren", "Troll", "Undead", "Worgen", "Goblin", }); // "Pandaren", });
-                    classAllowableRaces.Add("Mage", new List<string>() { "Draenei", "Dwarf", "Gnome", "Human", "Night Elf", "Blood Elf", "Orc", /*"Tauren",*/ "Troll", "Undead", "Worgen", "Goblin", }); // "Pandaren", });
-                    classAllowableRaces.Add("Healadin", new List<string>() { "Draenei", "Dwarf", /*"Gnome",*/ "Human", /*"Night Elf",*/ "Blood Elf", /*"Orc",*/ "Tauren", /*"Troll",*/ /*"Undead",*/ /*"Worgen",*/ /*"Goblin", "Pandaren",*/ });
-                    classAllowableRaces.Add("ProtPaladin", new List<string>() { "Draenei", "Dwarf", /*"Gnome",*/ "Human", /*"Night Elf",*/ "Blood Elf", /*"Orc",*/ "Tauren", /*"Troll",*/ /*"Undead",*/ /*"Worgen",*/ /*"Goblin", "Pandaren",*/ });
-                    classAllowableRaces.Add("Retribution", new List<string>() { "Draenei", "Dwarf", /*"Gnome",*/ "Human", /*"Night Elf",*/ "Blood Elf", /*"Orc",*/ "Tauren", /*"Troll",*/ /*"Undead",*/ /*"Worgen",*/ /*"Goblin", "Pandaren",*/ });
-                    classAllowableRaces.Add("HealPriest", new List<string>() { "Draenei", "Dwarf", "Gnome", "Human", "Night Elf", "Blood Elf", /*"Orc",*/ "Tauren", "Troll", "Undead", "Worgen", "Goblin", }); // "Pandaren", });
-                    classAllowableRaces.Add("ShadowPriest", new List<string>() { "Draenei", "Dwarf", "Gnome", "Human", "Night Elf", "Blood Elf", /*"Orc",*/ "Tauren", "Troll", "Undead", "Worgen", "Goblin", }); // "Pandaren", });
-                    classAllowableRaces.Add("Rogue", new List<string>() { /*"Draenei",*/ "Dwarf", "Gnome", "Human", "Night Elf", "Blood Elf", "Orc", /*"Tauren",*/ "Troll", "Undead", "Worgen", "Goblin", }); // "Pandaren", });
-                    classAllowableRaces.Add("Enhance", new List<string>() { "Draenei", "Dwarf", /*"Gnome",*/ /*"Human",*/ /*"Night Elf",*/ /*"Blood Elf",*/ "Orc", "Tauren", "Troll", /*"Undead",*/ /*"Worgen",*/ "Goblin", }); // "Pandaren", });
-                    classAllowableRaces.Add("Elemental", new List<string>() { "Draenei", "Dwarf", /*"Gnome",*/ /*"Human",*/ /*"Night Elf",*/ /*"Blood Elf",*/ "Orc", "Tauren", "Troll", /*"Undead",*/ /*"Worgen",*/ "Goblin", }); // "Pandaren", });
-                    classAllowableRaces.Add("RestoSham", new List<string>() { "Draenei", "Dwarf", /*"Gnome",*/ /*"Human",*/ /*"Night Elf",*/ /*"Blood Elf",*/ "Orc", "Tauren", "Troll", /*"Undead",*/ /*"Worgen",*/ "Goblin", }); // "Pandaren", });
-                    classAllowableRaces.Add("Warlock", new List<string>() { /*"Draenei",*/ "Dwarf", "Gnome", "Human", /*"Night Elf",*/ "Blood Elf", "Orc", /*"Tauren",*/ "Troll", "Undead", "Worgen", "Goblin", /*"Pandaren",*/ });
-                    classAllowableRaces.Add("DPSWarr", new List<string>() { "Draenei", "Dwarf", "Gnome", "Human", "Night Elf", "Blood Elf", "Orc", "Tauren", "Troll", "Undead", "Worgen", "Goblin", }); // "Pandaren", });
-                    classAllowableRaces.Add("ProtWarr", new List<string>() { "Draenei", "Dwarf", "Gnome", "Human", "Night Elf", "Blood Elf", "Orc", "Tauren", "Troll", "Undead", "Worgen", "Goblin", }); // "Pandaren", });
-                    // classAllowableRaces.Add("Brewmaster", new List<string>() { "Draenei", "Dwarf", "Gnome", "Human", "Night Elf", "Blood Elf", "Orc", "Tauren", "Troll", "Undead", /*"Worgen", "Goblin",*/ "Pandaren", });
-                    // classAllowableRaces.Add("Mistweaver", new List<string>() { "Draenei", "Dwarf", "Gnome", "Human", "Night Elf", "Blood Elf", "Orc", "Tauren", "Troll", "Undead", /*"Worgen", "Goblin",*/ "Pandaren", });
-                    // classAllowableRaces.Add("Windwalker", new List<string>() { "Draenei", "Dwarf", "Gnome", "Human", "Night Elf", "Blood Elf", "Orc", "Tauren", "Troll", "Undead", /*"Worgen", "Goblin",*/ "Pandaren", });
-                }
-                return classAllowableRaces;
-            }
-            set { classAllowableRaces = value; }
         }
 
         private void InstallOffline(object sender, System.Windows.RoutedEventArgs e)

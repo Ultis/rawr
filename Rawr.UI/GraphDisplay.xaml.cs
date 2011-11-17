@@ -574,15 +574,7 @@ namespace Rawr.UI
 
             foreach (CharacterRace r in CharacterRaces)
             {
-                bool isAllowed = false;
-                foreach (string cl in MainPage.GetClassAllowableRaces[Character.CurrentModel])
-                {
-                    if (cl.Replace(" ", "") == r.ToString()/* || r.ToString() == "None"*/)
-                    {
-                        isAllowed = true; break;
-                    } // otherwise skip it as it's not a valid Race/Class combo
-                }
-                if (!isAllowed) { continue; }
+                if (!Character.ClassInfo.AllowedRace[(int)r]) { continue; }
                 newChar.Race = r;
                 newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true, false);
                 compare = Calculations.GetCharacterComparisonCalculations(noneCalc, newCalc, r.ToString(), Character.Race == r, false);
