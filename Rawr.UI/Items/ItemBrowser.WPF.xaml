@@ -158,10 +158,6 @@
                     <ListBoxItem Content="Wand"/>
                     <ListBoxItem Content="Thrown"/>
                     <ListBoxItem Content="Relic"/>
-                    <ListBoxItem Content="Arrow"/>
-                    <ListBoxItem Content="Bullet"/>
-                    <ListBoxItem Content="Quiver"/>
-                    <ListBoxItem Content="Ammo Pouch"/>
                 </ListBox>
                 <ListBox x:Name="QualityList" Margin="2,2,2,2" Grid.Column="4" Grid.RowSpan="3" SelectionMode="Multiple" Height="120" SelectionChanged="FilterChanged">
                     <ListBoxItem Content="Temp"/>

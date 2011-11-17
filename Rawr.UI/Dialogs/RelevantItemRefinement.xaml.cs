@@ -66,20 +66,8 @@ namespace Rawr.UI
             userRelevant = ItemFilter.GetRelevantItemTypesList(Calculations.Instance);
             foreach (CheckBox box in checkBoxes)
             {
-                if (box == CheckBoxRelic)
-                {
-                    box.IsEnabled = modelRelevant.Contains(ItemType.Libram) || modelRelevant.Contains(ItemType.Idol)
-                      || modelRelevant.Contains(ItemType.Totem) || modelRelevant.Contains(ItemType.Sigil)
-                      || modelRelevant.Contains(ItemType.Relic);
-                    box.IsChecked = userRelevant.Contains(ItemType.Libram) || userRelevant.Contains(ItemType.Idol)
-                        || userRelevant.Contains(ItemType.Totem) || userRelevant.Contains(ItemType.Sigil)
-                        || userRelevant.Contains(ItemType.Relic);
-                }
-                else
-                {
-                    box.IsEnabled = modelRelevant.Contains((ItemType)Enum.Parse(typeof(ItemType), (string)box.Tag, true));
-                    box.IsChecked = userRelevant.Contains((ItemType)Enum.Parse(typeof(ItemType), (string)box.Tag, true));
-                }
+                box.IsEnabled = modelRelevant.Contains((ItemType)Enum.Parse(typeof(ItemType), (string)box.Tag, true));
+                box.IsChecked = userRelevant.Contains((ItemType)Enum.Parse(typeof(ItemType), (string)box.Tag, true));
             }
         }
 
@@ -91,18 +79,7 @@ namespace Rawr.UI
             {
                 if (box.IsChecked.GetValueOrDefault(false) && box.IsEnabled)
                 {
-                    if (box == CheckBoxRelic)
-                    {
-                        if (modelRelevant.Contains(ItemType.Libram)) userRelevant.Add(ItemType.Libram);
-                        if (modelRelevant.Contains(ItemType.Totem)) userRelevant.Add(ItemType.Totem);
-                        if (modelRelevant.Contains(ItemType.Idol)) userRelevant.Add(ItemType.Idol);
-                        if (modelRelevant.Contains(ItemType.Sigil)) userRelevant.Add(ItemType.Sigil);
-                        if (modelRelevant.Contains(ItemType.Relic)) userRelevant.Add(ItemType.Relic);
-                    }
-                    else
-                    {
-                        userRelevant.Add((ItemType)Enum.Parse(typeof(ItemType), (string)box.Tag, true));
-                    }
+                    userRelevant.Add((ItemType)Enum.Parse(typeof(ItemType), (string)box.Tag, true));
                 }
             }
             ItemCache.OnItemsChanged();

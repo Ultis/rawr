@@ -364,7 +364,6 @@ Points individually may be important.",
                     {
                         ItemType.None,
                         ItemType.Plate,
-                        ItemType.Sigil,
                         ItemType.Relic,
                         ItemType.Polearm,
                         ItemType.TwoHandAxe,
@@ -820,7 +819,7 @@ Points individually may be important.",
 
         public override bool IsItemRelevant(Item item) 
         {
-            if (item.Slot == ItemSlot.Ranged && (item.Type != ItemType.Sigil && item.Type != ItemType.Relic)) { return false; }
+            if (item.Slot == ItemSlot.Ranged && item.Type != ItemType.Relic) { return false; }
             return base.IsItemRelevant(item);
         }
         #endregion

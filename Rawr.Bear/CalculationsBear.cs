@@ -368,7 +368,6 @@ the Threat Scale defined on the Options tab.",
                     {
                         ItemType.None,
                         ItemType.Leather,
-                        ItemType.Idol,
                         ItemType.Relic,
                         ItemType.Staff,
                         ItemType.TwoHandMace,
@@ -1359,7 +1358,7 @@ the Threat Scale defined on the Options tab.",
         public override bool IsItemRelevant(Item item)
         {
             if (item.Slot == ItemSlot.OffHand ||
-                (item.Slot == ItemSlot.Ranged && item.Type != ItemType.Idol && item.Type != ItemType.Relic) ||
+                (item.Slot == ItemSlot.Ranged && item.Type != ItemType.Relic) ||
                 item.Stats.SpellPower > 0 || item.Stats.Intellect > 0) 
                 return false;
             return base.IsItemRelevant(item);

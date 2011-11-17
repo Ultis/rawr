@@ -519,7 +519,6 @@ namespace Rawr.Tree {
                             ItemType.FistWeapon,
                             ItemType.OneHandMace,
                             ItemType.TwoHandMace,
-                            ItemType.Idol,
                             ItemType.Relic,
                 }));
             }

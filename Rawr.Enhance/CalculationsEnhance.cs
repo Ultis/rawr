@@ -968,7 +968,7 @@ namespace Rawr.Enhance
                         //ItemType.Cloth,
                         //ItemType.Leather,
                         ItemType.Mail,
-                        ItemType.Totem,ItemType.Relic,
+                        ItemType.Relic,
                     //	ItemType.Staff,
                     //	ItemType.TwoHandMace, // Removed two handed options so as not to screw up recommendations
                     //  ItemType.TwoHandAxe,  // Two handers are simply NOT viable for Enhancement Shamans
@@ -984,7 +984,7 @@ namespace Rawr.Enhance
 
         public override bool IsItemRelevant(Item item)
         {
-            if ((item.Slot == ItemSlot.Ranged && (item.Type != ItemType.Totem && item.Type != ItemType.Relic)))
+            if (item.Slot == ItemSlot.Ranged && item.Type != ItemType.Relic)
                 return false;
             if (item.Slot == ItemSlot.OffHand && item.Type == ItemType.None)
                 return false;

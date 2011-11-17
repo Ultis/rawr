@@ -741,30 +741,6 @@ namespace Rawr
                 case "Thrown":
                     return ItemType.Thrown;
 
-                case "Idol":
-                    return ItemType.Idol;
-
-                case "Libram":
-                    return ItemType.Libram;
-
-                case "Totem":
-                    return ItemType.Totem;
-
-                case "Arrow":
-                    return ItemType.Arrow;
-
-                case "Bullet":
-                    return ItemType.Bullet;
-
-                case "Quiver":
-                    return ItemType.Quiver;
-
-                case "Ammo Pouch":
-                    return ItemType.AmmoPouch;
-
-                case "Sigil":
-                    return ItemType.Sigil;
-
                 default:
                     return ItemType.None;
             }

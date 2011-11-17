@@ -295,7 +295,6 @@ namespace Rawr.Moonkin
                             ItemType.FistWeapon,
                             ItemType.OneHandMace,
                             ItemType.TwoHandMace,
-                            ItemType.Idol,
                             ItemType.Relic,
                 }));
             }

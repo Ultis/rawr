@@ -378,7 +378,6 @@ namespace Rawr.DPSDK
                     {
                         ItemType.None,
                         ItemType.Plate,
-                        ItemType.Sigil,
                         ItemType.Relic,
                         ItemType.Polearm,
                         ItemType.TwoHandAxe,
@@ -1575,8 +1574,7 @@ namespace Rawr.DPSDK
         #region Relevant Stats?
         public override bool IsItemRelevant(Item item)
         {
-            if (item.Slot == ItemSlot.OffHand /*  ||
-                (item.Slot == ItemSlot.Ranged && item.Type != ItemType.Sigil) */)
+            if (item.Slot == ItemSlot.OffHand)
                 return false;
             return base.IsItemRelevant(item);
         }

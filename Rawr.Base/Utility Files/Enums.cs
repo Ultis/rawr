@@ -162,16 +162,7 @@ namespace Rawr
         Wand,
         Thrown,
 
-        Idol,
-        Libram,
-        Totem,
-        Sigil,
-        Relic, // The 4 above all convert to Relic in Cata
-
-        Arrow,
-        Bullet,
-        Quiver,
-        AmmoPouch
+        Relic,
     }
 
     public enum ItemSlot

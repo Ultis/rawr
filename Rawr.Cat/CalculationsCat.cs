@@ -268,7 +268,6 @@ namespace Rawr.Cat
                     {
                         ItemType.None,
                         ItemType.Leather,
-                        ItemType.Idol, 
                         ItemType.Relic,
                         ItemType.Staff,
                         ItemType.TwoHandMace,
@@ -869,7 +868,7 @@ namespace Rawr.Cat
         public override bool IsItemRelevant(Item item)
         {
             if (item.Slot == ItemSlot.OffHand ||
-                (item.Slot == ItemSlot.Ranged && item.Type != ItemType.Idol && item.Type != ItemType.Relic) ||
+                (item.Slot == ItemSlot.Ranged && item.Type != ItemType.Relic) ||
                 item.Stats.SpellPower > 0 || item.Stats.Intellect > 0) 
                 return false;
             foreach (var effect in item.Stats.SpecialEffects(s => s.Stats.SpellPower > 0))

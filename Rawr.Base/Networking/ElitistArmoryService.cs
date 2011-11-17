@@ -920,14 +920,6 @@ namespace Rawr
                 case "gun": return ItemType.Gun;
                 case "wand": return ItemType.Wand;
                 case "thrown": return ItemType.Thrown;
-                case "arrow": return ItemType.Arrow;
-                case "bullet": return ItemType.Bullet;
-                case "quiver": return ItemType.Quiver;
-                case "ammo pouch": return ItemType.AmmoPouch;
-                case "idol": //return ItemType.Idol;
-                case "libram": //return ItemType.Libram;
-                case "totem": //return ItemType.Totem;
-                case "sigil": //return ItemType.Sigil;
                 case "relic": return ItemType.Relic; // Those are all Relics in Cata
 
                 default:

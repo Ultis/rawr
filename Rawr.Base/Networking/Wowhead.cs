@@ -3274,14 +3274,6 @@ namespace Rawr
                 case "Gun": return ItemType.Gun;
                 case "Wand": return ItemType.Wand;
                 case "Thrown": return ItemType.Thrown;
-                case "Arrow": return ItemType.Arrow;
-                case "Bullet": return ItemType.Bullet;
-                case "Quiver": return ItemType.Quiver;
-                case "Ammo Pouch": return ItemType.AmmoPouch;
-                case "Idol": //return ItemType.Idol;
-                case "Libram": //return ItemType.Libram;
-                case "Totem": //return ItemType.Totem;
-                case "Sigil": //return ItemType.Sigil;
                 case "Relic": return ItemType.Relic;
                 default: return ItemType.None;
             }
@@ -4939,14 +4931,6 @@ namespace Rawr
                 case "2.3": return ItemType.Gun;
                 case "2.19": return ItemType.Wand;
                 case "2.16": return ItemType.Thrown;
-                case "6.2": return ItemType.Arrow;
-                case "6.3": return ItemType.Bullet;
-                case "11.2": return ItemType.Quiver;
-                case "11.3": return ItemType.AmmoPouch;
-                case "4.8": //return ItemType.Idol;
-                case "4.7": //return ItemType.Libram;
-                case "4.9": //return ItemType.Totem;
-                case "4.10": //return ItemType.Sigil;
                 case "4.11": return ItemType.Relic;
                 default: return ItemType.None;
             }
@@ -6212,14 +6196,6 @@ namespace Rawr
                 case "Gun":         return ItemType.Gun;
                 case "Wand":        return ItemType.Wand;
                 case "Thrown":      return ItemType.Thrown;
-                case "Arrow":       return ItemType.Arrow;
-                case "Bullet":      return ItemType.Bullet;
-                case "Quiver":      return ItemType.Quiver;
-                case "Ammo Pouch":  return ItemType.AmmoPouch;
-                case "Idol":        //return ItemType.Idol;
-                case "Libram":      //return ItemType.Libram;
-                case "Totem":       //return ItemType.Totem;
-                case "Sigil":       //return ItemType.Sigil;
                 case "Relic":       return ItemType.Relic;
                 default:            return ItemType.None;
             }
